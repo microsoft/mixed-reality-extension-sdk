@@ -1,0 +1,8 @@
+{
+  "extends": "./tsconfig.packages.json",
+  "include": [
+    "gltf-gen/src/**/*",
+    "sdk/src/**/*",
+    "sdk-azure/src/**/*"
+  ]
+}

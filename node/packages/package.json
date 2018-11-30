@@ -1,0 +1,25 @@
+{
+  "name": "packages",
+  "private": true,
+  "version": "0.1.0",
+  "description": "",
+  "engines": {
+    "node": ">=8.12.0",
+    "npm": ">=6.4.1"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "tslint --fix --project ./tsconfig.lint.json",
+    "lint-docs": "tslint --project ./tsconfig.lint.json --config ./tslint.docs.json",
+    "clean": "tsc --build --clean",
+    "build": "tslint --project ./tsconfig.lint.json && tsc --build",
+    "build-docs": "typedoc --externalPattern \"**/node_modules/**\" --externalPattern \"**/index.ts\" --excludeExternals --excludeNotExported --excludeProtected --excludePrivate --hideGenerator --mode file --name \"Mixed Reality Extension SDK\" --readme none --out ../docs ./sdk/src"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "tslint": "5.11.0",
+    "typedoc": "^0.12.0",
+    "typescript": "3.0.3"
+  }
+}

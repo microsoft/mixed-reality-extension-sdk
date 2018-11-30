@@ -1,0 +1,29 @@
+{
+  "name": "gltf-gen",
+  "version": "0.1.0",
+  "description": "",
+  "private": true,
+  "main": "built/index.js",
+  "engines": {
+    "node": ">=6.0.0"
+  },
+  "scripts": {
+    "update-schema": "gltf-typescript-generator src/gen/gltf.ts https://rawgit.com/KhronosGroup/glTF/master/specification/2.0/schema/glTF.schema.json",
+    "test": "npm run build && node built/tests/index.js",
+    "clean": "tsc --build --clean",
+    "build": "tslint -p ./tsconfig.json src/**/*.ts && tsc --build"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/mime-types": "^2.1.0",
+    "@types/node": "^10.12.0",
+    "gltf-typescript-generator": "^0.0.3",
+    "gltf-validator": "^2.0.0-dev.2.5",
+    "tslint": "5.11.0",
+    "typescript": "3.0.3"
+  },
+  "dependencies": {
+    "mixed-reality-extension-sdk": "^0.1.0"
+  }
+}

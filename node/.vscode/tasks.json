@@ -1,0 +1,65 @@
+{
+  // See https://go.microsoft.com/fwlink/?LinkId=733558
+  // for the documentation about the tasks.json format
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "type": "npm",
+      "script": "build",
+      "path": "packages/",
+      "problemMatcher": []
+    },
+    {
+      "type": "npm",
+      "script": "build",
+      "path": "packages/sdk/",
+      "problemMatcher": []
+    },
+    {
+      "type": "npm",
+      "script": "build",
+      "path": "packages/sdk-azure/",
+      "problemMatcher": []
+    },
+    {
+      "type": "npm",
+      "script": "build",
+      "path": "packages/functional-tests/",
+      "problemMatcher": []
+    },
+    {
+      "type": "npm",
+      "script": "build",
+      "path": "packages/gltf-gen/",
+      "problemMatcher": []
+    },
+    {
+      "type": "npm",
+      "script": "build",
+      "problemMatcher": []
+    },
+    {
+      "type": "npm",
+      "script": "lint",
+      "path": "packages/",
+      "problemMatcher": []
+    },
+    {
+      "type": "npm",
+      "script": "lint",
+      "problemMatcher": []
+    },
+    {
+      "type": "npm",
+      "script": "lint-docs",
+      "path": "packages/",
+      "problemMatcher": []
+    },
+    {
+      "type": "npm",
+      "script": "build-docs",
+      "path": "packages/",
+      "problemMatcher": []
+    }
+  ]
+}

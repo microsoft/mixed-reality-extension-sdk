@@ -1,0 +1,17 @@
+{
+    "files": [],
+    "references": [
+        {
+            "path": "./sdk"
+        },
+        {
+            "path": "./sdk-azure"
+        },
+        {
+            "path": "./gltf-gen"
+        },
+        {
+            "path": "./functional-tests"
+        }
+    ]
+}
