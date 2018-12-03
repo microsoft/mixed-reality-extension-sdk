@@ -3,7 +3,7 @@
  * Licensed under the MIT License.
  */
 
-import { Vector2, Vector3, Vector4 } from 'mixed-reality-extension-sdk';
+import { Vector2, Vector3, Vector4 } from '@microsoft/mixed-reality-extension-sdk';
 import {
     ColorAttribute,
     NormalAttribute,

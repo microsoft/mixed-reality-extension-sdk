@@ -41,7 +41,7 @@ export class GltfFactory {
         const document: GLTF.GlTf = {
             asset: {
                 version: '2.0',
-                generator: 'gltf-gen'
+                generator: '@microsoft/gltf-gen'
             }
         };
 

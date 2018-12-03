@@ -3,8 +3,8 @@
  * Licensed under the MIT License.
  */
 
+import * as MRESDK from '@microsoft/mixed-reality-extension-sdk';
 import * as http from 'http';
-import * as MRESDK from 'mixed-reality-extension-sdk';
 import * as Restify from 'restify';
 import App from './app';
 
@@ -30,7 +30,11 @@ let baseUrl: string;
 function serveStaticFiles(server: http.Server) {
     const restify = server as Restify.Server;
     // The static files location
-    baseUrl = process.env.BASE_URL || (process.env.WEBSITE_HOSTNAME ? `//${process.env.WEBSITE_HOSTNAME}` : restify.url.replace(/\[::\]/, '127.0.0.1'));
+    baseUrl =
+        process.env.BASE_URL ||
+        (process.env.WEBSITE_HOSTNAME ?
+            `//${process.env.WEBSITE_HOSTNAME}` :
+            restify.url.replace(/\[::\]/, '127.0.0.1'));
     // Setup static files route
     restify.get('/*', Restify.plugins.serveStatic({
         directory: `${__dirname}/../public`,
