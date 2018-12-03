@@ -1,7 +1,7 @@
 {
   "name": "@microsoft/gltf-gen",
   "version": "0.1.0",
-  "description": "",
+  "description": "Generate glTF buffers on the fly from vertex data",
   "main": "built/index.js",
   "types": "built/index.d.ts",
   "author": "Microsoft Corporation",
