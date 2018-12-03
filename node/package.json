@@ -17,7 +17,8 @@
     "build-docs": "lerna run build-docs",
     "lint": "lerna run lint",
     "lint-docs": "lerna run lint-docs",
-    "publish": "lerna publish"
+    "publish": "lerna publish",
+    "prepublishOnly": "tsc --build"
   },
   "author": "",
   "license": "ISC",
