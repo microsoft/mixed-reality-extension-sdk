@@ -3,8 +3,8 @@
  * Licensed under the MIT License.
  */
 
-import * as MRESDK from 'mixed-reality-extension-sdk';
-import * as MRESDKRPC from 'mixed-reality-extension-sdk/built/rpc';
+import * as MRESDK from '@microsoft/mixed-reality-extension-sdk';
+import * as MRESDKRPC from '@microsoft/mixed-reality-extension-sdk/built/rpc';
 import AssetPreloadTest from './tests/asset-preload';
 import ClockSyncTest from './tests/clock-sync-test';
 import GltfAnimationTest from './tests/gltf-animation-test';

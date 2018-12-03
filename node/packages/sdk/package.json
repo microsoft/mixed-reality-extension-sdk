@@ -1,12 +1,29 @@
 {
-  "name": "mixed-reality-extension-sdk",
+  "name": "@microsoft/mixed-reality-extension-sdk",
   "version": "0.1.0",
-  "description": "",
+  "description": "The Mixed Reality Extension SDK enables developers to build 3D world extensions for AltspaceVR, using Node.JS.",
   "main": "built/index.js",
   "types": "built/index.d.ts",
+  "author": "Microsoft Corporation",
+  "license": "MIT",
+  "keywords": [
+    "mixed reality",
+    "virtual reality",
+    "vr",
+    "altspacevr",
+    "sdk",
+    "node"
+  ],
   "engines": {
     "node": ">=8.12.0",
     "npm": ">=6.4.1"
+  },
+  "bugs": {
+    "url": "https://github.com/Microsoft/mixed-reality-extension-sdk/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Microsoft/mixed-reality-extension-sdk.git"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -14,8 +31,6 @@
     "build": "tslint -p ./tsconfig.json src/**/*.ts && tsc --build",
     "prepublishOnly": "tsc --build"
   },
-  "author": "",
-  "license": "ISC",
   "devDependencies": {
     "@types/deepmerge": "^2.1.0",
     "@types/node": "^10.3.1",

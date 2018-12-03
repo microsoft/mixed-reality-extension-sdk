@@ -3,8 +3,8 @@
  * Licensed under the MIT License.
  */
 
-import * as MRESDK from 'mixed-reality-extension-sdk';
-import { Actor, AnimationWrapMode } from 'mixed-reality-extension-sdk';
+import * as MRESDK from '@microsoft/mixed-reality-extension-sdk';
+import { Actor, AnimationWrapMode } from '@microsoft/mixed-reality-extension-sdk';
 import App from '../app';
 import delay from '../utils/delay';
 import destroyActors from '../utils/destroyActors';
