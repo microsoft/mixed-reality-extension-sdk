@@ -12,7 +12,7 @@
     "test": "npm run build && node built/tests/index.js",
     "clean": "tsc --build --clean",
     "build": "tslint -p ./tsconfig.json src/**/*.ts && tsc --build",
-    "prepare": "tsc --build"
+    "prepublishOnly": "tsc --build"
   },
   "author": "",
   "license": "ISC",
