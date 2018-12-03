@@ -21,11 +21,6 @@ const CurrentProtocolVersion = 1;
  */
 export function verifyClient(
     info: any, cb: (verified: boolean, code?: number, message?: string) => any): any {
-    const makeResponse = (code: string, message: string): string => {
-        const error = { code, message };
-        return JSON.stringify(error, null, 0);
-    };
-
     // Look for the upgrade request.
     const req = info.req || {};
 
@@ -37,9 +32,13 @@ export function verifyClient(
 
     // Check protocol version.
     if (!isSupportedProtocolVersion(protocolVersion)) {
-        return cb(false, 403,
-            makeResponse(
-                'ERR_UNSUPPORTED_PROTOCOL_VERSION', "Unsupported protocol version"));
+        // In a perfect world we would return a 403 (Forbidden) response, but due to a shortcoming in
+        // C# ClientWebSocket, we have no way to convey error details in the HTTP response:
+        //     "ClientWebSocket does not provide upgrade request error details"
+        //      https://github.com/dotnet/corefx/issues/29163
+        // As a workaround, we inject an unexpected subprotocol, resulting in an "unsupported protocol"
+        // error on the client.
+        req.headers['sec-websocket-protocol'] = 'ERR_UNSUPPORTED_PROTOCOL';
     }
 
     // Client looks valid to connect.
