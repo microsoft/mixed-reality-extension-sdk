@@ -37,9 +37,20 @@ export function verifyClient(
 
     // Check protocol version.
     if (!isSupportedProtocolVersion(protocolVersion)) {
+
+        // In a perfect world we would return a 403 (Forbidden) response, but due to a shortcoming in
+        // C# ClientWebSocket, we have no way to convey error details in the HTTP response:
+        //     "ClientWebSocket does not provide upgrade request error details"
+        //      https://github.com/dotnet/corefx/issues/29163
+        // As a workaround, we destroy the connection resulting in an invalid header response.
+        if (req.socket && req.socket.destroy) {
+            req.socket.destroy(403);
+        }
+/*
         return cb(false, 403,
             makeResponse(
                 'ERR_UNSUPPORTED_PROTOCOL_VERSION', "Unsupported protocol version"));
+*/
     }
 
     // Client looks valid to connect.
