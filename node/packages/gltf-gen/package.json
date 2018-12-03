@@ -11,7 +11,8 @@
     "update-schema": "gltf-typescript-generator src/gen/gltf.ts https://rawgit.com/KhronosGroup/glTF/master/specification/2.0/schema/glTF.schema.json",
     "test": "npm run build && node built/tests/index.js",
     "clean": "tsc --build --clean",
-    "build": "tslint -p ./tsconfig.json src/**/*.ts && tsc --build"
+    "build": "tslint -p ./tsconfig.json src/**/*.ts && tsc --build",
+    "prepublishOnly": "tsc --build"
   },
   "author": "",
   "license": "ISC",
