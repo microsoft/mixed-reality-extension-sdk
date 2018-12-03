@@ -62,6 +62,13 @@
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Describes the properties of a collider.</p>
+					</div>
+				</div>
+			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
@@ -83,7 +90,10 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="colliderlike.html#type" class="tsd-kind-icon">type</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="colliderlike.html#colliderparams" class="tsd-kind-icon">collider<wbr>Params</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="colliderlike.html#collisionlayer" class="tsd-kind-icon">collision<wbr>Layer</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="colliderlike.html#enabled" class="tsd-kind-icon">enabled</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="colliderlike.html#istrigger" class="tsd-kind-icon">is<wbr>Trigger</a></li>
 							</ul>
 						</section>
 					</div>
@@ -92,12 +102,42 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="type" class="tsd-anchor"></a>
-					<h3>type</h3>
-					<div class="tsd-signature tsd-kind-icon">type<span class="tsd-signature-symbol">:</span> <a href="../enums/collidertype.html" class="tsd-signature-type">ColliderType</a></div>
+					<a name="colliderparams" class="tsd-anchor"></a>
+					<h3>collider<wbr>Params</h3>
+					<div class="tsd-signature tsd-kind-icon">collider<wbr>Params<span class="tsd-signature-symbol">:</span> <a href="../index.html#colliderparams" class="tsd-signature-type">ColliderParams</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in types/runtime/collider.ts:9</li>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/9ab5704/node/packages/sdk/src/types/runtime/collider.ts#L15">types/runtime/collider.ts:15</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="collisionlayer" class="tsd-anchor"></a>
+					<h3>collision<wbr>Layer</h3>
+					<div class="tsd-signature tsd-kind-icon">collision<wbr>Layer<span class="tsd-signature-symbol">:</span> <a href="../enums/collisionlayer.html" class="tsd-signature-type">CollisionLayer</a></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/9ab5704/node/packages/sdk/src/types/runtime/collider.ts#L14">types/runtime/collider.ts:14</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="enabled" class="tsd-anchor"></a>
+					<h3>enabled</h3>
+					<div class="tsd-signature tsd-kind-icon">enabled<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/9ab5704/node/packages/sdk/src/types/runtime/collider.ts#L12">types/runtime/collider.ts:12</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="istrigger" class="tsd-anchor"></a>
+					<h3>is<wbr>Trigger</h3>
+					<div class="tsd-signature tsd-kind-icon">is<wbr>Trigger<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/9ab5704/node/packages/sdk/src/types/runtime/collider.ts#L13">types/runtime/collider.ts:13</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -119,7 +159,16 @@
 						<a href="colliderlike.html" class="tsd-kind-icon">Collider<wbr>Like</a>
 						<ul>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="colliderlike.html#type" class="tsd-kind-icon">type</a>
+								<a href="colliderlike.html#colliderparams" class="tsd-kind-icon">collider<wbr>Params</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="colliderlike.html#collisionlayer" class="tsd-kind-icon">collision<wbr>Layer</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="colliderlike.html#enabled" class="tsd-kind-icon">enabled</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="colliderlike.html#istrigger" class="tsd-kind-icon">is<wbr>Trigger</a>
 							</li>
 						</ul>
 					</li>
