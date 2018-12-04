@@ -1,5 +1,7 @@
 # Mixed Reality Extension SDK
 
+<img width='200' height='200' src='branding/MRe-RGB.png'/>
+
 The Mixed Reality Extension SDK lets developers and community members extend
 the AltspaceVR host app's worlds with multi-user games and other dynamic
 experiences.
