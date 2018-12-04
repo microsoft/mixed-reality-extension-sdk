@@ -15,7 +15,7 @@
     "lint-docs": "tslint --project ./tsconfig.lint.json --config ./tslint.docs.json",
     "clean": "tsc --build --clean",
     "build": "tslint --project ./tsconfig.lint.json && tsc --build",
-    "build-docs": "typedoc --externalPattern \"**/functional-tests/**\" --externalPattern \"**/node_modules/**\" --excludeExternals --excludeNotExported --excludeProtected --excludePrivate --hideGenerator --mode file --name \"Mixed Reality Extension SDK\" --readme none --out ../docs ./sdk/src"
+    "build-docs": "typedoc --externalPattern \"**/functional-tests/**\" --externalPattern \"**/node_modules/**\" --excludeExternals --excludeNotExported --excludeProtected --excludePrivate --hideGenerator --mode file --name \"Mixed Reality Extension SDK\" --readme none --out ../../docs ./sdk/src"
   },
   "devDependencies": {
     "tslint": "5.11.0",
