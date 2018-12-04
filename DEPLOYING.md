@@ -20,9 +20,8 @@ you will be able to use the URL `ws://localhost:3901` to see a hello world
 sample.
 
 If you follow the functional test building instructions from [README.md](
-https://github.com/Microsoft/mixed-reality-extension-sdk/blob/master/README.md#BuildAndRun),
-use the URL `ws://localhost:3901?test=rigid-body-test` to see a functional test
-scene. 
+README.md#BuildAndRun), use the URL `ws://localhost:3901?test=rigid-body-test`
+to see a functional test scene. 
 
 
 ## Kicking the Tires Together
@@ -52,7 +51,7 @@ Coming Soon.
 Regardless of the deployment method you use, you will end up with a URL to the
 deployed server. This is what the host app uses to connect to the MRE. Use that
 URL with the [AltspaceVR testing instructions](
-https://github.com/Microsoft/mixed-reality-extension-sdk-samples/blob/master/README.md#Testing-an-MRE-In-AltspaceVR),
+README.md#Testing-an-MRE-In-AltspaceVR),
 
 
 ## Inviting Friends in AltspaceVR

@@ -31,8 +31,7 @@ developers focus on adding content, not debugging networking code.
 activity, and seamlessly blend with the AltspaceVR host app's native content.
 * Quick to start: Clone this repo (or the samples repo), deploy an MRE
 locally, and see the extension running in the host app within minutes.
-* We welcome contributions. Please see [CONTRIBUTING.md](
-https://github.com/Microsoft/mixed-reality-extension-sdk/blob/master/CONTRIBUTING.md)
+* We welcome contributions. Please see [CONTRIBUTING.md](CONTRIBUTING.md)
 if you are interested in helping out.
 
 
@@ -137,8 +136,7 @@ server: user Debug->Stop Debugging (shift+F5)
 
 ## Hosting and Multi-User Testing 
 To learn about additional deployment options and multi-user testing in
-AltspaceVR, see [DEPLOYING.md](
-https://github.com/Microsoft/mixed-reality-extension-sdk/blob/master/DEPLOYING.md)
+AltspaceVR, see [DEPLOYING.md](DEPLOYING.md)
 
 
 ## Getting In Touch
