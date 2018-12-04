@@ -52,7 +52,7 @@ Coming Soon.
 Regardless of the deployment method you use, you will end up with a URL to the
 deployed server. This is what the host app uses to connect to the MRE. Use that
 URL with the [AltspaceVR testing instructions](
-https://github.com/Microsoft/mixed-reality-extension-sdk-samples/blob/master/README.md#TestingInAltspaceVR),
+https://github.com/Microsoft/mixed-reality-extension-sdk-samples/blob/master/README.md#Testing-an-MRE-In-AltspaceVR),
 
 
 ## Inviting Friends in AltspaceVR

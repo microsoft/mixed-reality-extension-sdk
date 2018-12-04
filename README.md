@@ -16,7 +16,7 @@ https://github.com/Microsoft/mixed-reality-extension-sdk-samples) repo, and
 build it.
 
 If you want to build the actual SDK itself, jump to [Build and Run section of
-this document](#BuildAndRun)
+this document](#How-to-Build-and-Deploy-the-SDK-functional-tests)
 
 
 ## Overview
@@ -97,7 +97,7 @@ enough to not require any server redeploys.
 1.0 release.
 
 
-## How to Build and Deploy the SDK functional tests {#BuildAndRun}
+## How to Build and Deploy the SDK functional tests
 From command prompt:
 * `git clone http://github.com/microsoft/mixed-reality-extension-sdk`
 * `cd mixed-reality-extension-sdk\node`
@@ -106,9 +106,9 @@ little if there are no changes)
 * `npm run build` This should not report any errors.
 * `cd packages/apps/functional-tests`
 * `npm start` This should print "INF: Multi-peer Adapter listening on..."
-* See also: [Using Visual Studio Code instead of command line](#UsingVSCode)
+* See also: [Using Visual Studio Code instead of command line](#Using-Visual-Studio-Code)
 
-## Testing an MRE In AltspaceVR {#TestingInAltspaceVR}
+## Testing an MRE In AltspaceVR
 * Go to your personal home
 * Make sure you are signed in properly, not a guest
 * Activate the Space Editor
@@ -121,7 +121,7 @@ little if there are no changes)
 You should now see a functional test scene load up inside AltspaceVR. 
 
 
-## Using Visual Studio Code {#UsingVSCode}
+## Using Visual Studio Code
 We recommend Visual Studio Code, a lightweight code editor, which is easy to
 use and offers full debugging capabilities for Node.js servers. 
 * Install from here: [Visual Studio Code](https://code.visualstudio.com/)
