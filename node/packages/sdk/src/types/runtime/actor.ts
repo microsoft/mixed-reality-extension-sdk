@@ -25,7 +25,7 @@ import {
     PrimitiveDefinition,
     Vector3Like } from '../..';
 import BufferedEventEmitter from '../../utils/bufferedEventEmitter';
-import { ForwardPromise } from '../forwardPromise';
+import { createForwardPromise, ForwardPromise } from '../forwardPromise';
 import { InternalActor } from '../internal/actor';
 import { CollisionEventType, CreateColliderType } from '../network/payloads';
 import { SubscriptionType } from '../network/subscriptionType';
@@ -230,7 +230,7 @@ export class Actor implements ActorLike {
             observe(this._light, 'light', (...path: string[]) => this.actorChanged(...path));
             return this.context.internal.enableLight(this.id, this._light.toJSON());
         }
-        return ForwardPromise.Resolve(this._light);
+        return createForwardPromise(this._light, Promise.resolve(this._light));
     }
 
     /**
@@ -245,7 +245,7 @@ export class Actor implements ActorLike {
             this.subscribe('rigidbody');
             return this.context.internal.enableRigidBody(this.id, this._rigidBody.toJSON());
         }
-        return ForwardPromise.Resolve(this._rigidBody);
+        return createForwardPromise(this._rigidBody, Promise.resolve(this._rigidBody));
     }
 
     // TODO @tombu: This will be enabled once the feature is ready for prime time.
@@ -313,7 +313,7 @@ export class Actor implements ActorLike {
             observe(this._text, 'text', (...path: string[]) => this.actorChanged(...path));
             return this.context.internal.enableText(this.id, this._text.toJSON());
         }
-        return ForwardPromise.Resolve(this._text);
+        return createForwardPromise(this._text, Promise.resolve(this._text));
     }
 
     /**
