@@ -1,6 +1,6 @@
-## Want to help out? Great! 
-Here are a couple of ways to help:
+# Mixed Reality Extension SDK Contribution Guide
 
+Want to help out? Great! Here are a couple of ways to help:
 
 ## Build Something Cool
 If you make something with this SDK, tell us about it. We'd love to hear your experience, both the good and the bad.
@@ -13,31 +13,34 @@ Submit bugs and feature requests on the [issues page](https://github.com/microso
 ## Contribute Code
 Submit [pull requests](https://github.com/Microsoft/mixed-reality-extension-sdk/pulls) for bug fixes and features.
 
-### Learning TypeScript
+
+
+## Learning TypeScript
 If you already know JavaScript, TypeScript is quick to get started with. TypeScript is a superset of JavaScript that adds static typing. Here is a [5 minute tour of TypeScript](http://www.typescriptlang.org/docs/handbook/typescript-in-5-minutes.html).
 
-### Where to start
+
+## Where to start
 Not sure what to implement? There are a number of [issues labeled Help Wanted](https://github.com/18F/open-source-policy/labels/help%20wanted), which could all be good starting points.
 
 Other areas could be to create additional functional tests and samples, and to comment on the documentation. 
 
 This repository only contains the server side of the SDK, so any protocol changes have to be coordinated with the AltspaceVR client development team.
 
-### Tips to create good pull requests
+
+## Tips to create good pull requests
 Before accepting pull requests, we run all functional tests within the host app.
 * Clear description
 * Single issue per pull request
 
 
-### Coding guidelines
-
+## Coding guidelines
 * Run TS-Lint to be clean
 * If using Visual Studio Code, use the auto-formatter (alt+shift+f)
 * add copyright header to new files
 
 
+---
 ## Legal
-
 This project welcomes contributions and suggestions.  Most contributions require you to agree to a
 Contributor License Agreement (CLA) declaring that you have the right to, and actually do, grant us
 the rights to use your contribution. For details, visit https://cla.microsoft.com.
