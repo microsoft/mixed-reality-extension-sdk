@@ -1,6 +1,6 @@
 {
   "name": "@microsoft/gltf-gen",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "description": "Generate glTF buffers on the fly from vertex data",
   "main": "built/index.js",
   "types": "built/index.d.ts",
@@ -41,6 +41,6 @@
     "typescript": "3.0.3"
   },
   "dependencies": {
-    "@microsoft/mixed-reality-extension-sdk": "^0.1.0"
+    "@microsoft/mixed-reality-extension-sdk": "^0.1.2"
   }
 }

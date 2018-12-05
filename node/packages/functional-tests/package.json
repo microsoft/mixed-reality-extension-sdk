@@ -1,6 +1,6 @@
 {
   "name": "functional-tests",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "private": true,
   "description": "",
   "main": "built/server.js",
@@ -24,7 +24,7 @@
     "typescript": "3.0.3"
   },
   "dependencies": {
-    "@microsoft/mixed-reality-extension-sdk": "^0.1.0",
+    "@microsoft/mixed-reality-extension-sdk": "^0.1.2",
     "restify": "^7.2.0"
   }
 }
