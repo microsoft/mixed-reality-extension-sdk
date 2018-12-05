@@ -3,8 +3,8 @@
 <img width='200' height='200' src='branding/MRe-RGB.png'/>
 
 The Mixed Reality Extension SDK lets developers and community members extend
-the AltspaceVR host app's worlds with multi-user games and other dynamic
-experiences.
+the [AltspaceVR](https://altvr.com/) host app's worlds with multi-user games
+and other dynamic experiences.
 
 ## Prerequisites
 * Install [Node.js 8.12](https://nodejs.org/download/release/v8.12.0/) or
