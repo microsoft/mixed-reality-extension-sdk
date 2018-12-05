@@ -22,14 +22,16 @@ export class WebHost {
     public get baseUrl() { return this._baseUrl; }
 
     public constructor(
-        options: { baseDir?: string, baseUrl?: string, port?: number, logger?: Logger }
-            = { baseDir: '.', baseUrl: null, port: 3901, logger: new NullLogger() }
+        options: { baseDir?: string, baseUrl?: string, port?: string | number, logger?: Logger }
+            = { baseDir: '.', baseUrl: null, port: null, logger: new NullLogger() }
     ) {
         this._baseDir = options.baseDir;
         this._baseUrl = options.baseUrl;
 
+        const port = options.port || process.env.PORT || 3901;
+
         // Create a Multi-peer adapter
-        this._adapter = new MultipeerAdapter({ port: options.port, logger: options.logger });
+        this._adapter = new MultipeerAdapter({ port, logger: options.logger });
 
         // Start listening for new app connections from a multi-peer client
         this._adapter.listen()
