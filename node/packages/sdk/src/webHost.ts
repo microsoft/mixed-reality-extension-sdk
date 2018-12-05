@@ -40,7 +40,7 @@ export class WebHost {
     private serveStaticFiles(server: http.Server): void {
         const restify = server as Restify.Server;
         // The static files location
-        if (this._baseUrl === null) {
+        if (!this._baseUrl) {
             this._baseUrl =
                 process.env.BASE_URL || (
                     process.env.WEBSITE_HOSTNAME ?
