@@ -64,7 +64,7 @@ import {
 import * as Protocols from '../../protocols';
 import { Execution } from '../../protocols/execution';
 import { Handshake } from '../../protocols/handshake';
-import { ForwardPromise } from '../forwardPromise';
+import { createForwardPromise, ForwardPromise } from '../forwardPromise';
 import { OperatingModel } from '../network/operatingModel';
 import { BoxColliderParams, ColliderLike, CollisionEvent, CollisionLayer, SphereColliderParams } from '../runtime';
 
@@ -246,7 +246,7 @@ export class InternalContext {
         const wait = parent ? parent.created() : Promise.resolve();
 
         // If we have a parent, make sure it is done getting created first.
-        return new ForwardPromise<Actor>(actor, (resolve, reject) => {
+        return createForwardPromise<Actor>(actor, new Promise((resolve, reject) => {
             wait.then(() => {
                 // Send a message to the engine to instantiate the object.
                 this.protocol.sendPayload(
@@ -280,7 +280,7 @@ export class InternalContext {
                 this.context.logger.log('error', `Failed to instantiate actor ${actor.id}.`, reason);
                 // TODO: Remove actor from context?
             });
-        });
+        }));
     }
 
     public createAnimation(
@@ -428,9 +428,9 @@ export class InternalContext {
     public enableRigidBody(actorId: string, rigidBody?: Partial<RigidBodyLike>): ForwardPromise<RigidBody> {
         const actor = this.actorSet[actorId];
         if (!actor) {
-            return ForwardPromise.Reject(`Actor ${actorId} not found`);
+            return Promise.reject(`Actor ${actorId} not found`);
         } else {
-            return new ForwardPromise(actor.rigidBody, (resolve, reject) => {
+            return createForwardPromise(actor.rigidBody, new Promise((resolve, reject) => {
                 actor.created().then(() => {
                     this.protocol.sendPayload({
                         type: 'enable-rigidbody',
@@ -450,7 +450,7 @@ export class InternalContext {
                 }).catch((reason: any) => {
                     this.context.logger.log('error', `Failed enable rigid body on actor ${actor.id}.`, reason);
                 });
-            });
+            }));
         }
     }
 
@@ -464,9 +464,9 @@ export class InternalContext {
     ): ForwardPromise<Collider> {
         const actor = this.actorSet[actorId];
         if (!actor) {
-            return ForwardPromise.Reject(`Actor ${actorId} not found`);
+            return Promise.reject(`Actor ${actorId} not found`);
         } else {
-            return new ForwardPromise(actor.collider, (resolve, reject) => {
+            return createForwardPromise<Collider>(actor.collider, new Promise((resolve, reject) => {
                 actor.created().then(() => {
                     let colliderPayload = {
                         type: 'enable-collider',
@@ -524,16 +524,16 @@ export class InternalContext {
                 }).catch((reason: any) => {
                     this.context.logger.log('error', `Failed enable collider on actor ${actor.id}.`, reason);
                 });
-            });
+            }));
         }
     }
 
     public enableLight(actorId: string, light?: Partial<LightLike>): ForwardPromise<Light> {
         const actor = this.actorSet[actorId];
         if (!actor) {
-            return ForwardPromise.Reject(`Actor ${actorId} not found`);
+            return Promise.reject(`Actor ${actorId} not found`);
         } else {
-            return new ForwardPromise(actor.light, (resolve, reject) => {
+            return createForwardPromise<Light>(actor.light, new Promise((resolve, reject) => {
                 actor.created().then(() => {
                     this.protocol.sendPayload({
                         type: 'enable-light',
@@ -553,16 +553,16 @@ export class InternalContext {
                 }).catch((reason: any) => {
                     this.context.logger.log('error', `Failed to enable light on ${actor.id}.`, reason);
                 });
-            });
+            }));
         }
     }
 
     public enableText(actorId: string, text?: Partial<TextLike>): ForwardPromise<Text> {
         const actor = this.actorSet[actorId];
         if (!actor) {
-            return ForwardPromise.Reject(`Actor ${actorId} not found`);
+            return Promise.reject(`Actor ${actorId} not found`);
         } else {
-            return new ForwardPromise(actor.text, (resolve, reject) => {
+            return createForwardPromise<Text>(actor.text, new Promise((resolve, reject) => {
                 actor.created().then(() => {
                     this.protocol.sendPayload({
                         type: 'enable-text',
@@ -582,7 +582,7 @@ export class InternalContext {
                 }).catch((reason: any) => {
                     this.context.logger.log('error', `Failed to enable text on ${actor.id}.`, reason);
                 });
-            });
+            }));
         }
     }
 
