@@ -30,7 +30,8 @@ rendering, and input handling.
 * Hides the complexity of multi-user synchronization and prediction, so
 developers focus on adding content, not debugging networking code.
 * Designed to be secure for users, tolerate high latency, minimize server
-activity, and seamlessly blend with the AltspaceVR host app's native content.
+activity, and seamlessly blend with the [AltspaceVR](https://altvr.com/)
+host app's native content.
 * Quick to start: Clone this repo (or the samples repo), deploy an MRE
 locally, and see the extension running in the host app within minutes.
 * We welcome contributions. Please see [CONTRIBUTING.md](CONTRIBUTING.md)
@@ -110,7 +111,7 @@ little if there are no changes)
 * See also: [Using Visual Studio Code instead of command line](#Using-Visual-Studio-Code)
 
 ## Testing an MRE In AltspaceVR
-* Go to your personal home
+* In [AltspaceVR](https://altvr.com/), go to your personal home
 * Make sure you are signed in properly, not a guest
 * Activate the Space Editor
 * Click Basics group
