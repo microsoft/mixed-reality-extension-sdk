@@ -37,12 +37,112 @@ On a command line
 * cd to the folder where you unzipped ngrok.exe
 * run the command `ngrok http 3901`
 
+## Deploy to a Free or Low-Cost Cloud Service
 
-## Deploy to a low-cost external hosting service 
-Coming Soon. For now we recommend testing localhost or ngrok deploys only.
+There are many free or low-cost cloud hosting services available. We list but a
+few of them here.
 
+### opeNode.io
 
-## Deploy to an enterprise grade cloud service
+[opeNode.io](https://www.openode.io/) offers a free starter plan that gets you
+up and running quickly without having to provide a credit card. Deploying apps
+is pretty simple using their command line tool. Pricing is very reasonable if
+the free tier doesn't work for you.
+
+#### Sign up
+Go to the [openode.io website](https://openode.io) and sign up. Be sure to
+verify your email. opeNode will not run your app until this step is complete.
+
+#### Create a new instance for your app
+1. On the website, click on [My Instances](https://www.openode.io/admin/). This
+page lists your existing apps (called "instances" here), and allows you to create
+new ones.
+
+2. Below Instances, click on [Add new](https://www.openode.io/admin/new).
+
+3. Give your instance a subdomain and click the Create button. The subdomain is the name
+of your app, and also part of your app's URL (where AltspaceVR will connect later).
+
+You now have an instance where you can deploy your app! The next page you see
+contains step-by-step deployment instructions using opeNode's command line interface (CLI).
+This same process is outlined in the next section.
+
+#### Deploy your app to your new instance
+1. On your local machine, open a command prompt.
+
+2. If needed, install the opeNode command line interface (only needs to be done once):
+```
+npm install -g openode
+```
+
+3. Change directory to your project:
+```
+cd YOUR_PROJECT_DIRECTORY
+```
+
+4. If needed, create a Dockerfile using the openode CLI (only needs to be done once per project):
+```
+openode template
+```
+This creates a file on disk named `Dockerfile`
+
+5. Edit the Dockerfile
+
+The Node version specified in the Dockerfile is newer than the MRE SDK's Node depencency. To eliminate
+potential incompatibility, edit the first line of the Dockerfile so that it specifies Node v8.12:
+```
+FROM node:8.12
+```
+
+Your app can be bundled with static files located in the `public` folder. These files include glTF
+models, audio resources, etc. For the app to be able to serve these files to the client, it needs to
+know the URL where it is running. The best way to get this URL is to first deploy to your instance
+*without* this setting in your Dockerfile, then come back, add the setting, and redeploy.
+
+After your app deploys you will see a message that looks like this:
+```js
+[ { result: 'success',
+    URL: 'http://YOUR_SITE_NAME.fr.openode.io/' } ]
+```
+
+Copy the `URL` value, edit your Dockerfile and add this line just below the line that reads `ENV PORT=80`:
+```
+ENV BASE_URL=//YOUR_SITE_NAME.fr.openode.io
+```
+(Notice that `http:` was removed from the front of the value)
+
+Save and close the Dockerfile.
+
+5. Deploy your app
+
+To start a deployment, run this command:
+```
+openode deploy
+```
+This step copies your project to your opeNode instance, installs npm dependencies, and then starts it running.
+The first time you deploy your MRE SDK app, you may see an error message that starts with this:
+```
+dtrace-provider@0.8.7 install /opt/app/node_modules/dtrace-provider
+> node-gyp rebuild || node suppress-error.js
+
+gyp ERR! configure error
+gyp ERR! stack Error: Can't find Python executable "python", you can set the PYTHON env variable.
+```
+If you see this error, run `openode deploy` one more time and it should clear up. If you see this
+error again, please [open a GitHub issue here](https://github.com/Microsoft/mixed-reality-extension-sdk/issues/new).
+
+Once your deployment succeeds, you're ready to connect from AltspaceVR! For instructions
+on instantiating your app within AltspaceVR, checkout the [sample repo's README.md](
+https://github.com/Microsoft/mixed-reality-extension-sdk-samples/blob/master/README.md)
+
+### Other Cloud Platforms
+
+Have a hosting service recommendation? Please add it to this doc and submit a PR!
+
+## Deploy to an Enterprise Grade Cloud Service
+
+### Microsoft Azure
+
 Coming Soon.
 
 
