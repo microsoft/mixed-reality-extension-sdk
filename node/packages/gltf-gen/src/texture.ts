@@ -8,7 +8,16 @@ import { TextureMagFilter, TextureMinFilter, TextureWrapMode } from './enums';
 import GLTF from './gen/gltf';
 import { Serializable } from './serializable';
 
-export class Texture extends Serializable {
+export interface TextureLike {
+    name?: string,
+    source?: Image,
+    magFilter?: TextureMagFilter,
+    minFilter?: TextureMinFilter,
+    wrapS?: TextureWrapMode,
+    wrapT?: TextureWrapMode
+}
+
+export class Texture extends Serializable implements TextureLike {
 
     public name: string;
 
@@ -19,18 +28,14 @@ export class Texture extends Serializable {
     public wrapS: TextureWrapMode = TextureWrapMode.Repeat;
     public wrapT: TextureWrapMode = TextureWrapMode.Repeat;
 
-    constructor({ name, source, magFilter, minFilter, wrapS, wrapT }
-        : {
-            name?: string, source?: Image, magFilter?: TextureMagFilter,
-            minFilter?: TextureMinFilter, wrapS?: TextureWrapMode, wrapT?: TextureWrapMode
-        } = {}) {
+    constructor(init: TextureLike = {}) {
         super();
-        this.name = name;
-        this.source = source;
-        this.magFilter = magFilter || this.magFilter;
-        this.minFilter = minFilter || this.minFilter;
-        this.wrapS = wrapS || this.wrapS;
-        this.wrapT = wrapT || this.wrapT;
+        this.name = init.name;
+        this.source = init.source;
+        this.magFilter = init.magFilter || this.magFilter;
+        this.minFilter = init.minFilter || this.minFilter;
+        this.wrapS = init.wrapS || this.wrapS;
+        this.wrapT = init.wrapT || this.wrapT;
     }
 
     public serialize(document: GLTF.GlTf, data: Buffer): GLTF.GlTfId {

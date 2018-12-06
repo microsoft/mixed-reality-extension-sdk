@@ -10,7 +10,13 @@ import { roundUpToNextMultipleOf4 } from './util';
 import { Vertex } from './vertex';
 import { VertexAttribute } from './vertexattributes';
 
-export class MeshPrimitive {
+export interface MeshPrimitiveLike {
+    vertices?: Vertex[],
+    triangles?: number[],
+    material?: Material
+};
+
+export class MeshPrimitive implements MeshPrimitiveLike {
     public vertices: Vertex[] = [];
     public triangles: number[] = [];
 
@@ -23,13 +29,15 @@ export class MeshPrimitive {
     private usesTexCoord1: boolean;
     private usesColor0: boolean;
 
-    constructor({ vertices, triangles, material, instanceParent }:
-        { vertices?: Vertex[], triangles?: number[], material?: Material, instanceParent?: MeshPrimitive } = {}) {
-        this.vertices = vertices || this.vertices;
-        this.triangles = triangles || this.triangles;
-        this.material = material || this.material;
-
-        this.instanceParent = instanceParent;
+    constructor(init: MeshPrimitiveLike = {}, instanceParent?: MeshPrimitive) {
+        if (instanceParent) {
+            this.instanceParent = instanceParent;
+        }
+        else {
+            this.vertices = init.vertices || this.vertices;
+            this.triangles = init.triangles || this.triangles;
+            this.material = init.material || this.material;
+        }
     }
 
     private _updateAttributeUsage(): void {

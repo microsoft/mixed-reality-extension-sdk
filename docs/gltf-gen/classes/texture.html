@@ -75,6 +75,12 @@
 					</li>
 				</ul>
 			</section>
+			<section class="tsd-panel">
+				<h3>Implements</h3>
+				<ul class="tsd-hierarchy">
+					<li><a href="../interfaces/texturelike.html" class="tsd-signature-type">TextureLike</a></li>
+				</ul>
+			</section>
 			<section class="tsd-panel-group tsd-index-group">
 				<h2>Index</h2>
 				<section class="tsd-panel tsd-index-panel">
@@ -112,21 +118,19 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Texture<span class="tsd-signature-symbol">(</span>__namedParameters<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">object</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="texture.html" class="tsd-signature-type">Texture</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Texture<span class="tsd-signature-symbol">(</span>init<span class="tsd-signature-symbol">?: </span><a href="../interfaces/texturelike.html" class="tsd-signature-type">TextureLike</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="texture.html" class="tsd-signature-type">Texture</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/a87b177/node/packages/gltf-gen/src/texture.ts#L20">texture.ts:20</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/a8dcd32/node/packages/gltf-gen/src/texture.ts#L29">texture.ts:29</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> __namedParameters: <span class="tsd-signature-type">object</span><span class="tsd-signature-symbol"> =&nbsp;{}</span></h5>
-									<ul class="tsd-parameters">
-									</ul>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> init: <a href="../interfaces/texturelike.html" class="tsd-signature-type">TextureLike</a><span class="tsd-signature-symbol"> =&nbsp;{}</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="texture.html" class="tsd-signature-type">Texture</a></h4>
@@ -141,8 +145,9 @@
 					<h3>mag<wbr>Filter</h3>
 					<div class="tsd-signature tsd-kind-icon">mag<wbr>Filter<span class="tsd-signature-symbol">:</span> <a href="../enums/texturemagfilter.html" class="tsd-signature-type">TextureMagFilter</a><span class="tsd-signature-symbol"> =&nbsp;TextureMagFilter.Linear</span></div>
 					<aside class="tsd-sources">
+						<p>Implementation of <a href="../interfaces/texturelike.html">TextureLike</a>.<a href="../interfaces/texturelike.html#magfilter">magFilter</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/a87b177/node/packages/gltf-gen/src/texture.ts#L17">texture.ts:17</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/a8dcd32/node/packages/gltf-gen/src/texture.ts#L26">texture.ts:26</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -151,8 +156,9 @@
 					<h3>min<wbr>Filter</h3>
 					<div class="tsd-signature tsd-kind-icon">min<wbr>Filter<span class="tsd-signature-symbol">:</span> <a href="../enums/textureminfilter.html" class="tsd-signature-type">TextureMinFilter</a><span class="tsd-signature-symbol"> =&nbsp;TextureMinFilter.Linear</span></div>
 					<aside class="tsd-sources">
+						<p>Implementation of <a href="../interfaces/texturelike.html">TextureLike</a>.<a href="../interfaces/texturelike.html#minfilter">minFilter</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/a87b177/node/packages/gltf-gen/src/texture.ts#L18">texture.ts:18</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/a8dcd32/node/packages/gltf-gen/src/texture.ts#L27">texture.ts:27</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -161,8 +167,9 @@
 					<h3>name</h3>
 					<div class="tsd-signature tsd-kind-icon">name<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
+						<p>Implementation of <a href="../interfaces/texturelike.html">TextureLike</a>.<a href="../interfaces/texturelike.html#name">name</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/a87b177/node/packages/gltf-gen/src/texture.ts#L13">texture.ts:13</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/a8dcd32/node/packages/gltf-gen/src/texture.ts#L22">texture.ts:22</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -171,8 +178,9 @@
 					<h3>source</h3>
 					<div class="tsd-signature tsd-kind-icon">source<span class="tsd-signature-symbol">:</span> <a href="image.html" class="tsd-signature-type">Image</a></div>
 					<aside class="tsd-sources">
+						<p>Implementation of <a href="../interfaces/texturelike.html">TextureLike</a>.<a href="../interfaces/texturelike.html#source">source</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/a87b177/node/packages/gltf-gen/src/texture.ts#L15">texture.ts:15</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/a8dcd32/node/packages/gltf-gen/src/texture.ts#L24">texture.ts:24</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -181,8 +189,9 @@
 					<h3>wrapS</h3>
 					<div class="tsd-signature tsd-kind-icon">wrapS<span class="tsd-signature-symbol">:</span> <a href="../enums/texturewrapmode.html" class="tsd-signature-type">TextureWrapMode</a><span class="tsd-signature-symbol"> =&nbsp;TextureWrapMode.Repeat</span></div>
 					<aside class="tsd-sources">
+						<p>Implementation of <a href="../interfaces/texturelike.html">TextureLike</a>.<a href="../interfaces/texturelike.html#wraps">wrapS</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/a87b177/node/packages/gltf-gen/src/texture.ts#L19">texture.ts:19</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/a8dcd32/node/packages/gltf-gen/src/texture.ts#L28">texture.ts:28</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -191,8 +200,9 @@
 					<h3>wrapT</h3>
 					<div class="tsd-signature tsd-kind-icon">wrapT<span class="tsd-signature-symbol">:</span> <a href="../enums/texturewrapmode.html" class="tsd-signature-type">TextureWrapMode</a><span class="tsd-signature-symbol"> =&nbsp;TextureWrapMode.Repeat</span></div>
 					<aside class="tsd-sources">
+						<p>Implementation of <a href="../interfaces/texturelike.html">TextureLike</a>.<a href="../interfaces/texturelike.html#wrapt">wrapT</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/a87b177/node/packages/gltf-gen/src/texture.ts#L20">texture.ts:20</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/a8dcd32/node/packages/gltf-gen/src/texture.ts#L29">texture.ts:29</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -210,7 +220,7 @@
 							<aside class="tsd-sources">
 								<p>Overrides Serializable.getByteSize</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/a87b177/node/packages/gltf-gen/src/texture.ts#L80">texture.ts:80</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/a8dcd32/node/packages/gltf-gen/src/texture.ts#L85">texture.ts:85</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -234,7 +244,7 @@
 							<aside class="tsd-sources">
 								<p>Overrides Serializable.serialize</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/a87b177/node/packages/gltf-gen/src/texture.ts#L36">texture.ts:36</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/a8dcd32/node/packages/gltf-gen/src/texture.ts#L41">texture.ts:41</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -340,8 +350,29 @@
 					<li class=" tsd-kind-class">
 						<a href="vertex.html" class="tsd-kind-icon">Vertex</a>
 					</li>
-					<li class=" tsd-kind-function">
-						<a href="../index.html#rounduptonextmultipleof4" class="tsd-kind-icon">round<wbr>UpTo<wbr>Next<wbr>Multiple<wbr>Of4</a>
+					<li class=" tsd-kind-interface">
+						<a href="../interfaces/imagelike.html" class="tsd-kind-icon">Image<wbr>Like</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="../interfaces/materiallike.html" class="tsd-kind-icon">Material<wbr>Like</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="../interfaces/meshlike.html" class="tsd-kind-icon">Mesh<wbr>Like</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="../interfaces/meshprimitivelike.html" class="tsd-kind-icon">Mesh<wbr>Primitive<wbr>Like</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="../interfaces/nodelike.html" class="tsd-kind-icon">Node<wbr>Like</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="../interfaces/scenelike.html" class="tsd-kind-icon">Scene<wbr>Like</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="../interfaces/texturelike.html" class="tsd-kind-icon">Texture<wbr>Like</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="../interfaces/vertexlike.html" class="tsd-kind-icon">Vertex<wbr>Like</a>
 					</li>
 				</ul>
 			</nav>

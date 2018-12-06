@@ -8,7 +8,9 @@ import { lookup as MimeLookup } from 'mime-types';
 import GLTF from './gen/gltf';
 import { Serializable } from './serializable';
 
-export class Image extends Serializable {
+export interface ImageLike { name?: string, uri?: string, embeddedFilePath?: string }
+
+export class Image extends Serializable implements ImageLike {
 
     public name: string;
 
@@ -43,11 +45,11 @@ export class Image extends Serializable {
         this.manualMime = type;
     }
 
-    constructor({ name, uri, embeddedFilePath }: { name?: string, uri?: string, embeddedFilePath?: string } = {}) {
+    constructor(init: ImageLike = {}) {
         super();
-        this.name = name;
-        this.uri = uri;
-        this.embeddedFilePath = embeddedFilePath;
+        this.name = init.name;
+        this.uri = init.uri;
+        this.embeddedFilePath = init.embeddedFilePath;
     }
 
     public serialize(document: GLTF.GlTf, data: Buffer): GLTF.GlTfId {

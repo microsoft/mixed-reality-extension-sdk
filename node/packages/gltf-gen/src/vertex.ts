@@ -17,7 +17,16 @@ type Attribute2 = Vector2 | [number, number];
 type Attribute3 = Vector3 | [number, number, number];
 type Attribute4 = Vector4 | [number, number, number, number];
 
-export class Vertex {
+export interface VertexLike {
+    position?: Attribute3,
+    normal?: Attribute3,
+    tangent?: Attribute4,
+    texCoord0?: Attribute2,
+    texCoord1?: Attribute2,
+    color0?: Attribute3
+}
+
+export class Vertex implements VertexLike {
     public position: Vector3;
     public normal: Vector3;
     public tangent: Vector4;
@@ -25,39 +34,36 @@ export class Vertex {
     public texCoord1: Vector2;
     public color0: Vector3;
 
-    constructor({ position, normal, tangent, texCoord0, texCoord1, color0 }: {
-        position?: Attribute3, normal?: Attribute3, tangent?: Attribute4,
-        texCoord0?: Attribute2, texCoord1?: Attribute2, color0?: Attribute3
-    } = {}) {
-        if (position) {
-            this.position = position instanceof Vector3 ?
-                position :
-                new Vector3(position[0], position[1], position[2]);
+    constructor(init: VertexLike = {}) {
+        if (init.position) {
+            this.position = init.position instanceof Vector3 ?
+                init.position :
+                new Vector3(init.position[0], init.position[1], init.position[2]);
         }
-        if (normal) {
-            this.normal = normal instanceof Vector3 ?
-                normal :
-                new Vector3(normal[0], normal[1], normal[2]);
+        if (init.normal) {
+            this.normal = init.normal instanceof Vector3 ?
+                init.normal :
+                new Vector3(init.normal[0], init.normal[1], init.normal[2]);
         }
-        if (tangent) {
-            this.tangent = tangent instanceof Vector4 ?
-                tangent :
-                new Vector4(tangent[0], tangent[1], tangent[2], tangent[3]);
+        if (init.tangent) {
+            this.tangent = init.tangent instanceof Vector4 ?
+                init.tangent :
+                new Vector4(init.tangent[0], init.tangent[1], init.tangent[2], init.tangent[3]);
         }
-        if (texCoord0) {
-            this.texCoord0 = texCoord0 instanceof Vector2 ?
-                texCoord0 :
-                new Vector2(texCoord0[0], texCoord0[1]);
+        if (init.texCoord0) {
+            this.texCoord0 = init.texCoord0 instanceof Vector2 ?
+                init.texCoord0 :
+                new Vector2(init.texCoord0[0], init.texCoord0[1]);
         }
-        if (texCoord1) {
-            this.texCoord1 = texCoord1 instanceof Vector2 ?
-                texCoord1 :
-                new Vector2(texCoord1[0], texCoord1[1]);
+        if (init.texCoord1) {
+            this.texCoord1 = init.texCoord1 instanceof Vector2 ?
+                init.texCoord1 :
+                new Vector2(init.texCoord1[0], init.texCoord1[1]);
         }
-        if (color0) {
-            this.color0 = color0 instanceof Vector3 ?
-                color0 :
-                new Vector3(color0[0], color0[1], color0[2]);
+        if (init.color0) {
+            this.color0 = init.color0 instanceof Vector3 ?
+                init.color0 :
+                new Vector3(init.color0[0], init.color0[1], init.color0[2]);
         }
     }
 

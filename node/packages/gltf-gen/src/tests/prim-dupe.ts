@@ -24,12 +24,11 @@ export default class PrimDupeTest implements Test {
         });
 
         const prim2 = new GltfGen.MeshPrimitive({
-            instanceParent: prim1,
             material: new GltfGen.Material({ name: 'blue' })
-        });
+        }, prim1);
 
-        const factory = new GltfGen.GltfFactory({
-            scenes: [new GltfGen.Scene({
+        const factory = new GltfGen.GltfFactory(
+            [new GltfGen.Scene({
                 nodes: [
                     new GltfGen.Node({
                         mesh: new GltfGen.Mesh({
@@ -43,7 +42,7 @@ export default class PrimDupeTest implements Test {
                     })
                 ]
             })]
-        });
+        );
 
         return await factory.generateGLTF();
     }

@@ -75,6 +75,12 @@
 					</li>
 				</ul>
 			</section>
+			<section class="tsd-panel">
+				<h3>Implements</h3>
+				<ul class="tsd-hierarchy">
+					<li><a href="../interfaces/materiallike.html" class="tsd-signature-type">MaterialLike</a></li>
+				</ul>
+			</section>
 			<section class="tsd-panel-group tsd-index-group">
 				<h2>Index</h2>
 				<section class="tsd-panel tsd-index-panel">
@@ -126,21 +132,19 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Material<span class="tsd-signature-symbol">(</span>__namedParameters<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">object</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="material.html" class="tsd-signature-type">Material</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Material<span class="tsd-signature-symbol">(</span>init<span class="tsd-signature-symbol">?: </span><a href="../interfaces/materiallike.html" class="tsd-signature-type">MaterialLike</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="material.html" class="tsd-signature-type">Material</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/a87b177/node/packages/gltf-gen/src/material.ts#L39">material.ts:39</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/a8dcd32/node/packages/gltf-gen/src/material.ts#L62">material.ts:62</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> __namedParameters: <span class="tsd-signature-type">object</span><span class="tsd-signature-symbol"> =&nbsp;{}</span></h5>
-									<ul class="tsd-parameters">
-									</ul>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> init: <a href="../interfaces/materiallike.html" class="tsd-signature-type">MaterialLike</a><span class="tsd-signature-symbol"> =&nbsp;{}</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="material.html" class="tsd-signature-type">Material</a></h4>
@@ -155,8 +159,9 @@
 					<h3>alpha<wbr>Cutoff</h3>
 					<div class="tsd-signature tsd-kind-icon">alpha<wbr>Cutoff<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;0.5</span></div>
 					<aside class="tsd-sources">
+						<p>Implementation of <a href="../interfaces/materiallike.html">MaterialLike</a>.<a href="../interfaces/materiallike.html#alphacutoff">alphaCutoff</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/a87b177/node/packages/gltf-gen/src/material.ts#L37">material.ts:37</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/a8dcd32/node/packages/gltf-gen/src/material.ts#L60">material.ts:60</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -165,8 +170,9 @@
 					<h3>alpha<wbr>Mode</h3>
 					<div class="tsd-signature tsd-kind-icon">alpha<wbr>Mode<span class="tsd-signature-symbol">:</span> <a href="../enums/alphamode.html" class="tsd-signature-type">AlphaMode</a><span class="tsd-signature-symbol"> =&nbsp;AlphaMode.Opaque</span></div>
 					<aside class="tsd-sources">
+						<p>Implementation of <a href="../interfaces/materiallike.html">MaterialLike</a>.<a href="../interfaces/materiallike.html#alphamode">alphaMode</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/a87b177/node/packages/gltf-gen/src/material.ts#L36">material.ts:36</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/a8dcd32/node/packages/gltf-gen/src/material.ts#L59">material.ts:59</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -175,8 +181,9 @@
 					<h3>base<wbr>Color<wbr>Factor</h3>
 					<div class="tsd-signature tsd-kind-icon">base<wbr>Color<wbr>Factor<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Color4</span><span class="tsd-signature-symbol"> =&nbsp;new Color4(1, 1, 1, 1)</span></div>
 					<aside class="tsd-sources">
+						<p>Implementation of <a href="../interfaces/materiallike.html">MaterialLike</a>.<a href="../interfaces/materiallike.html#basecolorfactor">baseColorFactor</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/a87b177/node/packages/gltf-gen/src/material.ts#L17">material.ts:17</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/a8dcd32/node/packages/gltf-gen/src/material.ts#L40">material.ts:40</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -185,8 +192,9 @@
 					<h3>base<wbr>Color<wbr>Tex<wbr>Coord</h3>
 					<div class="tsd-signature tsd-kind-icon">base<wbr>Color<wbr>Tex<wbr>Coord<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;0</span></div>
 					<aside class="tsd-sources">
+						<p>Implementation of <a href="../interfaces/materiallike.html">MaterialLike</a>.<a href="../interfaces/materiallike.html#basecolortexcoord">baseColorTexCoord</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/a87b177/node/packages/gltf-gen/src/material.ts#L16">material.ts:16</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/a8dcd32/node/packages/gltf-gen/src/material.ts#L39">material.ts:39</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -195,8 +203,9 @@
 					<h3>base<wbr>Color<wbr>Texture</h3>
 					<div class="tsd-signature tsd-kind-icon">base<wbr>Color<wbr>Texture<span class="tsd-signature-symbol">:</span> <a href="texture.html" class="tsd-signature-type">Texture</a></div>
 					<aside class="tsd-sources">
+						<p>Implementation of <a href="../interfaces/materiallike.html">MaterialLike</a>.<a href="../interfaces/materiallike.html#basecolortexture">baseColorTexture</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/a87b177/node/packages/gltf-gen/src/material.ts#L15">material.ts:15</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/a8dcd32/node/packages/gltf-gen/src/material.ts#L38">material.ts:38</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -205,8 +214,9 @@
 					<h3>double<wbr>Sided</h3>
 					<div class="tsd-signature tsd-kind-icon">double<wbr>Sided<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> =&nbsp;false</span></div>
 					<aside class="tsd-sources">
+						<p>Implementation of <a href="../interfaces/materiallike.html">MaterialLike</a>.<a href="../interfaces/materiallike.html#doublesided">doubleSided</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/a87b177/node/packages/gltf-gen/src/material.ts#L39">material.ts:39</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/a8dcd32/node/packages/gltf-gen/src/material.ts#L62">material.ts:62</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -215,8 +225,9 @@
 					<h3>emissive<wbr>Factor</h3>
 					<div class="tsd-signature tsd-kind-icon">emissive<wbr>Factor<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Color3</span><span class="tsd-signature-symbol"> =&nbsp;new Color3(0, 0, 0)</span></div>
 					<aside class="tsd-sources">
+						<p>Implementation of <a href="../interfaces/materiallike.html">MaterialLike</a>.<a href="../interfaces/materiallike.html#emissivefactor">emissiveFactor</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/a87b177/node/packages/gltf-gen/src/material.ts#L34">material.ts:34</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/a8dcd32/node/packages/gltf-gen/src/material.ts#L57">material.ts:57</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -225,8 +236,9 @@
 					<h3>emissive<wbr>Tex<wbr>Coord</h3>
 					<div class="tsd-signature tsd-kind-icon">emissive<wbr>Tex<wbr>Coord<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;0</span></div>
 					<aside class="tsd-sources">
+						<p>Implementation of <a href="../interfaces/materiallike.html">MaterialLike</a>.<a href="../interfaces/materiallike.html#emissivetexcoord">emissiveTexCoord</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/a87b177/node/packages/gltf-gen/src/material.ts#L33">material.ts:33</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/a8dcd32/node/packages/gltf-gen/src/material.ts#L56">material.ts:56</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -235,8 +247,9 @@
 					<h3>emissive<wbr>Texture</h3>
 					<div class="tsd-signature tsd-kind-icon">emissive<wbr>Texture<span class="tsd-signature-symbol">:</span> <a href="texture.html" class="tsd-signature-type">Texture</a></div>
 					<aside class="tsd-sources">
+						<p>Implementation of <a href="../interfaces/materiallike.html">MaterialLike</a>.<a href="../interfaces/materiallike.html#emissivetexture">emissiveTexture</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/a87b177/node/packages/gltf-gen/src/material.ts#L32">material.ts:32</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/a8dcd32/node/packages/gltf-gen/src/material.ts#L55">material.ts:55</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -245,8 +258,9 @@
 					<h3>metallic<wbr>Factor</h3>
 					<div class="tsd-signature tsd-kind-icon">metallic<wbr>Factor<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;1</span></div>
 					<aside class="tsd-sources">
+						<p>Implementation of <a href="../interfaces/materiallike.html">MaterialLike</a>.<a href="../interfaces/materiallike.html#metallicfactor">metallicFactor</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/a87b177/node/packages/gltf-gen/src/material.ts#L21">material.ts:21</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/a8dcd32/node/packages/gltf-gen/src/material.ts#L44">material.ts:44</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -255,8 +269,9 @@
 					<h3>metallic<wbr>Roughness<wbr>Tex<wbr>Coord</h3>
 					<div class="tsd-signature tsd-kind-icon">metallic<wbr>Roughness<wbr>Tex<wbr>Coord<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;0</span></div>
 					<aside class="tsd-sources">
+						<p>Implementation of <a href="../interfaces/materiallike.html">MaterialLike</a>.<a href="../interfaces/materiallike.html#metallicroughnesstexcoord">metallicRoughnessTexCoord</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/a87b177/node/packages/gltf-gen/src/material.ts#L20">material.ts:20</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/a8dcd32/node/packages/gltf-gen/src/material.ts#L43">material.ts:43</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -265,8 +280,9 @@
 					<h3>metallic<wbr>Roughness<wbr>Texture</h3>
 					<div class="tsd-signature tsd-kind-icon">metallic<wbr>Roughness<wbr>Texture<span class="tsd-signature-symbol">:</span> <a href="texture.html" class="tsd-signature-type">Texture</a></div>
 					<aside class="tsd-sources">
+						<p>Implementation of <a href="../interfaces/materiallike.html">MaterialLike</a>.<a href="../interfaces/materiallike.html#metallicroughnesstexture">metallicRoughnessTexture</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/a87b177/node/packages/gltf-gen/src/material.ts#L19">material.ts:19</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/a8dcd32/node/packages/gltf-gen/src/material.ts#L42">material.ts:42</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -275,8 +291,9 @@
 					<h3>name</h3>
 					<div class="tsd-signature tsd-kind-icon">name<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
+						<p>Implementation of <a href="../interfaces/materiallike.html">MaterialLike</a>.<a href="../interfaces/materiallike.html#name">name</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/a87b177/node/packages/gltf-gen/src/material.ts#L13">material.ts:13</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/a8dcd32/node/packages/gltf-gen/src/material.ts#L36">material.ts:36</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -285,8 +302,9 @@
 					<h3>normal<wbr>Tex<wbr>Coord</h3>
 					<div class="tsd-signature tsd-kind-icon">normal<wbr>Tex<wbr>Coord<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;0</span></div>
 					<aside class="tsd-sources">
+						<p>Implementation of <a href="../interfaces/materiallike.html">MaterialLike</a>.<a href="../interfaces/materiallike.html#normaltexcoord">normalTexCoord</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/a87b177/node/packages/gltf-gen/src/material.ts#L25">material.ts:25</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/a8dcd32/node/packages/gltf-gen/src/material.ts#L48">material.ts:48</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -295,8 +313,9 @@
 					<h3>normal<wbr>Tex<wbr>Scale</h3>
 					<div class="tsd-signature tsd-kind-icon">normal<wbr>Tex<wbr>Scale<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;1</span></div>
 					<aside class="tsd-sources">
+						<p>Implementation of <a href="../interfaces/materiallike.html">MaterialLike</a>.<a href="../interfaces/materiallike.html#normaltexscale">normalTexScale</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/a87b177/node/packages/gltf-gen/src/material.ts#L26">material.ts:26</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/a8dcd32/node/packages/gltf-gen/src/material.ts#L49">material.ts:49</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -305,8 +324,9 @@
 					<h3>normal<wbr>Texture</h3>
 					<div class="tsd-signature tsd-kind-icon">normal<wbr>Texture<span class="tsd-signature-symbol">:</span> <a href="texture.html" class="tsd-signature-type">Texture</a></div>
 					<aside class="tsd-sources">
+						<p>Implementation of <a href="../interfaces/materiallike.html">MaterialLike</a>.<a href="../interfaces/materiallike.html#normaltexture">normalTexture</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/a87b177/node/packages/gltf-gen/src/material.ts#L24">material.ts:24</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/a8dcd32/node/packages/gltf-gen/src/material.ts#L47">material.ts:47</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -315,8 +335,9 @@
 					<h3>occlusion<wbr>Tex<wbr>Coord</h3>
 					<div class="tsd-signature tsd-kind-icon">occlusion<wbr>Tex<wbr>Coord<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;0</span></div>
 					<aside class="tsd-sources">
+						<p>Implementation of <a href="../interfaces/materiallike.html">MaterialLike</a>.<a href="../interfaces/materiallike.html#occlusiontexcoord">occlusionTexCoord</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/a87b177/node/packages/gltf-gen/src/material.ts#L29">material.ts:29</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/a8dcd32/node/packages/gltf-gen/src/material.ts#L52">material.ts:52</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -325,8 +346,9 @@
 					<h3>occlusion<wbr>Tex<wbr>Strength</h3>
 					<div class="tsd-signature tsd-kind-icon">occlusion<wbr>Tex<wbr>Strength<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;1</span></div>
 					<aside class="tsd-sources">
+						<p>Implementation of <a href="../interfaces/materiallike.html">MaterialLike</a>.<a href="../interfaces/materiallike.html#occlusiontexstrength">occlusionTexStrength</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/a87b177/node/packages/gltf-gen/src/material.ts#L30">material.ts:30</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/a8dcd32/node/packages/gltf-gen/src/material.ts#L53">material.ts:53</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -335,8 +357,9 @@
 					<h3>occlusion<wbr>Texture</h3>
 					<div class="tsd-signature tsd-kind-icon">occlusion<wbr>Texture<span class="tsd-signature-symbol">:</span> <a href="texture.html" class="tsd-signature-type">Texture</a></div>
 					<aside class="tsd-sources">
+						<p>Implementation of <a href="../interfaces/materiallike.html">MaterialLike</a>.<a href="../interfaces/materiallike.html#occlusiontexture">occlusionTexture</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/a87b177/node/packages/gltf-gen/src/material.ts#L28">material.ts:28</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/a8dcd32/node/packages/gltf-gen/src/material.ts#L51">material.ts:51</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -345,8 +368,9 @@
 					<h3>roughness<wbr>Factor</h3>
 					<div class="tsd-signature tsd-kind-icon">roughness<wbr>Factor<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;1</span></div>
 					<aside class="tsd-sources">
+						<p>Implementation of <a href="../interfaces/materiallike.html">MaterialLike</a>.<a href="../interfaces/materiallike.html#roughnessfactor">roughnessFactor</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/a87b177/node/packages/gltf-gen/src/material.ts#L22">material.ts:22</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/a8dcd32/node/packages/gltf-gen/src/material.ts#L45">material.ts:45</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -364,7 +388,7 @@
 							<aside class="tsd-sources">
 								<p>Overrides Serializable.getByteSize</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/a87b177/node/packages/gltf-gen/src/material.ts#L194">material.ts:194</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/a8dcd32/node/packages/gltf-gen/src/material.ts#L175">material.ts:175</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -388,7 +412,7 @@
 							<aside class="tsd-sources">
 								<p>Overrides Serializable.serialize</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/a87b177/node/packages/gltf-gen/src/material.ts#L107">material.ts:107</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/a8dcd32/node/packages/gltf-gen/src/material.ts#L88">material.ts:88</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -536,8 +560,29 @@
 					<li class=" tsd-kind-class">
 						<a href="vertex.html" class="tsd-kind-icon">Vertex</a>
 					</li>
-					<li class=" tsd-kind-function">
-						<a href="../index.html#rounduptonextmultipleof4" class="tsd-kind-icon">round<wbr>UpTo<wbr>Next<wbr>Multiple<wbr>Of4</a>
+					<li class=" tsd-kind-interface">
+						<a href="../interfaces/imagelike.html" class="tsd-kind-icon">Image<wbr>Like</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="../interfaces/materiallike.html" class="tsd-kind-icon">Material<wbr>Like</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="../interfaces/meshlike.html" class="tsd-kind-icon">Mesh<wbr>Like</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="../interfaces/meshprimitivelike.html" class="tsd-kind-icon">Mesh<wbr>Primitive<wbr>Like</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="../interfaces/nodelike.html" class="tsd-kind-icon">Node<wbr>Like</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="../interfaces/scenelike.html" class="tsd-kind-icon">Scene<wbr>Like</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="../interfaces/texturelike.html" class="tsd-kind-icon">Texture<wbr>Like</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="../interfaces/vertexlike.html" class="tsd-kind-icon">Vertex<wbr>Like</a>
 					</li>
 				</ul>
 			</nav>
