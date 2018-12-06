@@ -25,9 +25,9 @@
     "url": "https://github.com/Microsoft/mixed-reality-extension-sdk.git"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "clean": "tsc --build --clean",
-    "build": "tslint -p ./tsconfig.json src/**/*.ts && tsc --build",
+    "build": "npm run lint && tsc --build",
+    "lint": "tslint -p ./tsconfig.json -c ../tslint.json",
     "prepublishOnly": "tsc --build"
   },
   "devDependencies": {

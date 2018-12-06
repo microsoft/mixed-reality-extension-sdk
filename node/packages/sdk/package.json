@@ -26,10 +26,12 @@
     "url": "https://github.com/Microsoft/mixed-reality-extension-sdk.git"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "clean": "tsc --build --clean",
-    "build": "tslint -p ./tsconfig.json src/**/*.ts && tsc --build",
-    "prepublishOnly": "tsc --build"
+    "build": "npm run lint && tsc --build",
+    "build-docs": "typedoc --externalPattern \"**/node_modules/**\" --excludeExternals --excludeNotExported --excludeProtected --excludePrivate --hideGenerator --mode file --name \"Mixed Reality Extension SDK\" --readme none --out ../../../docs ./src",
+    "lint": "tslint -p ./tsconfig.json -c ../tslint.json",
+    "lint-docs": "tslint -p ./tsconfig.json -c ../tslint.docs.json",
+    "prepublishOnly": "npm run build"
   },
   "devDependencies": {
     "@types/deepmerge": "^2.1.0",
