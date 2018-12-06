@@ -87,17 +87,16 @@ openode template
 This creates a file on disk named `Dockerfile`
 
 5. Edit the Dockerfile
-
 The Node version specified in the Dockerfile is newer than the MRE SDK's Node depencency. To eliminate
 potential incompatibility, edit the first line of the Dockerfile so that it specifies Node v8.12:
 ```
 FROM node:8.12
 ```
-
 Your app can be bundled with static files located in the `public` folder. These files include glTF
 models, audio resources, etc. For the app to be able to serve these files to the client, it needs to
 know the URL where it is running. The best way to get this URL is to first deploy to your instance
-*without* this setting in your Dockerfile, then come back, add the setting, and redeploy.
+*without* this setting in your Dockerfile, then come back, add the setting, and redeploy. Deploying
+is described in the next step.
 
 After your app deploys you will see a message that looks like this:
 ```js
@@ -113,7 +112,7 @@ ENV BASE_URL=//YOUR_SITE_NAME.fr.openode.io
 
 Save and close the Dockerfile.
 
-5. Deploy your app
+6. Deploy your app
 
 To start a deployment, run this command:
 ```
