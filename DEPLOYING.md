@@ -44,9 +44,9 @@ few of them here.
 
 ### opeNode.io
 
-[opeNode.io](https://www.openode.io/) offers a free starter plan that gets you
-up and running quickly without having to provide a credit card. Deploying apps
-is pretty simple using their command line tool. Pricing is very reasonable if
+The [opeNode.io](https://www.openode.io/) platform offers a free starter plan that gets you
+up and running quickly without having to provide a payment method. Deploying apps
+is straight forward using their command line tool, and pricing is reasonable if
 the free tier doesn't work for you.
 
 #### Sign up
