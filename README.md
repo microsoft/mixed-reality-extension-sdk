@@ -106,7 +106,6 @@ From command prompt:
 * `npm install` This will install all dependent packages. (and will do very
 little if there are no changes)
 * `npm run build` This should not report any errors.
-* `cd packages/apps/functional-tests`
 * `npm start` This should print "INF: Multi-peer Adapter listening on..."
 * See also: [Using Visual Studio Code instead of command line](
 #Using-Visual-Studio-Code)
