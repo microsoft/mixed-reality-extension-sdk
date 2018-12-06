@@ -123,6 +123,9 @@ in any random value)
 * Click Confirm
 * If the app doesn't seem to load, click on the gear icon next the MRE object
 in to the present objects list, and make sure "Is Playing" is checked.
+* After the app has been placed, you will see the MRE Anchor (the white box with
+red/green/blue spikes on it), and you can use it to move the MRE around. To
+hide the anchor, uncheck "Edit Mode".
 
 You should now see a functional test load up inside AltspaceVR. 
 
