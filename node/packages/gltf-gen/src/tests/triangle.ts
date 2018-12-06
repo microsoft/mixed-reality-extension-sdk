@@ -6,6 +6,7 @@
 import * as GltfGen from '..';
 import { Test } from './index';
 
+/** @hidden */
 export default class Triangle implements Test {
     public name = 'Triangle';
     public shouldPrintJson = true;

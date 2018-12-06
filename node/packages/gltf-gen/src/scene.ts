@@ -3,18 +3,20 @@
  * Licensed under the MIT License.
  */
 
-import * as GLTF from './gen/gltf';
+import GLTF from './gen/gltf';
 import { Node } from './node';
 import { Serializable } from './serializable';
 
-export class Scene extends Serializable {
+export interface SceneLike { name?: string, nodes?: Node[] }
+
+export class Scene extends Serializable implements SceneLike {
     public name: string;
     public nodes: Node[] = [];
 
-    constructor({ name, nodes }: { name?: string, nodes?: Node[] } = {}) {
+    constructor(init: SceneLike = {}) {
         super();
-        this.name = name;
-        this.nodes = nodes || this.nodes;
+        this.name = init.name;
+        this.nodes = init.nodes || this.nodes;
     }
 
     public serialize(document: GLTF.GlTf, data: Buffer): GLTF.GlTfId {

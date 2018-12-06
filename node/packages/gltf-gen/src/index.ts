@@ -13,6 +13,4 @@ export * from './vertex';
 export * from './material';
 export * from './texture';
 export * from './image';
-
-import * as GLTF from './gen/gltf';
-export { GLTF };
+export * from './gen/gltf';

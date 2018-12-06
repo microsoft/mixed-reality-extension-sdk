@@ -6,6 +6,7 @@
 import { Test } from '.';
 import * as GltfGen from '..';
 
+/** @hidden */
 export default class EmptyTest implements Test {
     public name = 'Empty glTF';
     public shouldPrintJson = false;

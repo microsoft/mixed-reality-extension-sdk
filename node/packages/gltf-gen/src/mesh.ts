@@ -3,18 +3,20 @@
  * Licensed under the MIT License.
  */
 
-import * as GLTF from './gen/gltf';
+import GLTF from './gen/gltf';
 import { MeshPrimitive } from './meshprimitive';
 import { Serializable } from './serializable';
 
-export class Mesh extends Serializable {
+export interface MeshLike { name?: string, primitives?: MeshPrimitive[] }
+
+export class Mesh extends Serializable implements MeshLike {
     public name: string;
     public primitives: MeshPrimitive[] = [];
 
-    constructor({ name, primitives }: { name?: string, primitives?: MeshPrimitive[] } = {}) {
+    constructor(init: MeshLike = {}) {
         super();
-        this.name = name;
-        this.primitives = primitives || this.primitives;
+        this.name = init.name;
+        this.primitives = init.primitives || this.primitives;
     }
 
     public serialize(document: GLTF.GlTf, data: Buffer): GLTF.GlTfId {

@@ -11,6 +11,7 @@ import PrimDupe from './prim-dupe';
 import Triangle from './triangle';
 import { prettyPrintBuffer } from './util';
 
+/** @hidden */
 export interface Test {
     name: string;
     shouldPrintJson: boolean;

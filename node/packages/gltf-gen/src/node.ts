@@ -4,11 +4,21 @@
  */
 
 import { Matrix, Quaternion, Vector3 } from '@microsoft/mixed-reality-extension-sdk';
-import * as GLTF from './gen/gltf';
+import GLTF from './gen/gltf';
 import { Mesh } from './mesh';
 import { Serializable } from './serializable';
 
-export class Node extends Serializable {
+export interface NodeLike {
+    name?: string,
+    mesh?: Mesh,
+    translation?: Vector3,
+    rotation?: Quaternion,
+    scale?: Vector3,
+    matrix?: Matrix,
+    children?: Node[]
+}
+
+export class Node extends Serializable implements NodeLike {
     public name: string;
     public mesh: Mesh;
 
@@ -19,21 +29,17 @@ export class Node extends Serializable {
 
     public children: Node[] = [];
 
-    constructor({ name, mesh, translation, rotation, scale, matrix, children }:
-        {
-            name?: string, mesh?: Mesh, translation?: Vector3, rotation?: Quaternion,
-            scale?: Vector3, matrix?: Matrix, children?: Node[]
-        } = {}) {
+    constructor(init: NodeLike = {}) {
         super();
-        this.name = name;
-        this.mesh = mesh;
+        this.name = init.name;
+        this.mesh = init.mesh;
 
-        this.translation = translation || this.translation;
-        this.rotation = rotation || this.rotation;
-        this.scale = scale || this.scale;
-        this.matrix = matrix;
+        this.translation = init.translation || this.translation;
+        this.rotation = init.rotation || this.rotation;
+        this.scale = init.scale || this.scale;
+        this.matrix = init.matrix;
 
-        this.children = children || this.children;
+        this.children = init.children || this.children;
     }
 
     public serialize(document: GLTF.GlTf, data: Buffer): GLTF.GlTfId {

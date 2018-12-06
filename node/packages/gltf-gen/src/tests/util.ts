@@ -5,6 +5,7 @@
 
 // tslint:disable:no-console
 
+/** @hidden */
 export function prettyPrintBuffer(buffer: Buffer, offset: number) {
     const rawString = buffer.toString('hex', offset);
     let prettyString = '0000 | ';

@@ -4,7 +4,7 @@
  */
 
 import { Material, Mesh, MeshPrimitive, Node, Scene, Texture } from '.';
-import * as GLTF from './gen/gltf';
+import GLTF from './gen/gltf';
 import { roundUpToNextMultipleOf4 } from './util';
 
 /**
@@ -16,9 +16,11 @@ export class GltfFactory {
     public meshes: Mesh[];
     public scenes: Scene[];
 
-    public constructor({ meshes, materials, textures, scenes }: {
-        meshes?: Mesh[], materials?: Material[], textures?: Texture[], scenes?: Scene[]
-    } = {}) {
+    public constructor(
+        scenes: Scene[] = [],
+        meshes: Mesh[] = [],
+        materials: Material[] = [],
+        textures: Texture[] = []) {
         this.textures = textures || [];
         this.materials = materials || [];
         this.meshes = meshes || [];
@@ -79,8 +81,8 @@ export class GltfFactory {
     }
 
     public static FromSinglePrimitive(prim: MeshPrimitive): GltfFactory {
-        return new GltfFactory({
-            scenes: [new Scene({
+        return new GltfFactory(
+            [new Scene({
                 nodes: [
                     new Node({
                         mesh: new Mesh({
@@ -89,6 +91,6 @@ export class GltfFactory {
                     })
                 ]
             })]
-        });
+        );
     }
 }

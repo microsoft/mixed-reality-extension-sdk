@@ -5,11 +5,34 @@
 
 import { Color3, Color4 } from '@microsoft/mixed-reality-extension-sdk';
 import { AlphaMode } from './enums';
-import * as GLTF from './gen/gltf';
+import GLTF from './gen/gltf';
 import { Serializable } from './serializable';
 import { Texture } from './texture';
 
-export class Material extends Serializable {
+export interface MaterialLike {
+    name?: string,
+    baseColorTexture?: Texture,
+    baseColorTexCoord?: number,
+    baseColorFactor?: Color4,
+    metallicRoughnessTexture?: Texture,
+    metallicRoughnessTexCoord?: number,
+    metallicFactor?: number,
+    roughnessFactor?: number,
+    normalTexture?: Texture,
+    normalTexCoord?: number,
+    normalTexScale?: number,
+    occlusionTexture?: Texture,
+    occlusionTexCoord?: number,
+    occlusionTexStrength?: number,
+    emissiveTexture?: Texture,
+    emissiveTexCoord?: number,
+    emissiveFactor?: Color3,
+    alphaMode?: AlphaMode,
+    alphaCutoff?: number,
+    doubleSided?: boolean
+}
+
+export class Material extends Serializable implements MaterialLike {
     public name: string;
 
     public baseColorTexture: Texture;
@@ -38,70 +61,28 @@ export class Material extends Serializable {
 
     public doubleSided = false;
 
-    constructor({
-        name,
-        baseColorTexture,
-        baseColorTexCoord,
-        baseColorFactor,
-        metallicRoughnessTexture,
-        metallicRoughnessTexCoord,
-        metallicFactor,
-        roughnessFactor,
-        normalTexture,
-        normalTexCoord,
-        normalTexScale,
-        occlusionTexture,
-        occlusionTexCoord,
-        occlusionTexStrength,
-        emissiveTexture,
-        emissiveTexCoord,
-        emissiveFactor,
-        alphaMode,
-        alphaCutoff,
-        doubleSided
-    }: {
-            name?: string,
-            baseColorTexture?: Texture,
-            baseColorTexCoord?: number,
-            baseColorFactor?: Color4,
-            metallicRoughnessTexture?: Texture,
-            metallicRoughnessTexCoord?: number,
-            metallicFactor?: number,
-            roughnessFactor?: number,
-            normalTexture?: Texture,
-            normalTexCoord?: number,
-            normalTexScale?: number,
-            occlusionTexture?: Texture,
-            occlusionTexCoord?: number,
-            occlusionTexStrength?: number,
-            emissiveTexture?: Texture,
-            emissiveTexCoord?: number,
-            emissiveFactor?: Color3,
-            alphaMode?: AlphaMode,
-            alphaCutoff?: number,
-            doubleSided?: boolean
-        } = {}) {
+    constructor(init: MaterialLike = {}) {
         super();
-        this.name = name;
-        this.baseColorTexture = baseColorTexture;
-        this.baseColorTexCoord = baseColorTexCoord || this.baseColorTexCoord;
-        this.baseColorFactor = baseColorFactor || this.baseColorFactor;
-        this.metallicRoughnessTexture = metallicRoughnessTexture;
-        this.metallicRoughnessTexCoord = metallicRoughnessTexCoord || this.metallicRoughnessTexCoord;
-        this.metallicFactor = metallicFactor || this.metallicFactor;
-        this.roughnessFactor = roughnessFactor || this.roughnessFactor;
-        this.normalTexture = normalTexture;
-        this.normalTexCoord = normalTexCoord || this.normalTexCoord;
-        this.normalTexScale = normalTexScale || this.normalTexScale;
-        this.occlusionTexture = occlusionTexture;
-        this.occlusionTexCoord = occlusionTexCoord || this.occlusionTexCoord;
-        this.occlusionTexStrength = occlusionTexStrength || this.occlusionTexStrength;
-        this.emissiveTexture = emissiveTexture;
-        this.emissiveTexCoord = emissiveTexCoord || this.emissiveTexCoord;
-        this.emissiveFactor = emissiveFactor || this.emissiveFactor;
-        this.alphaMode = alphaMode || this.alphaMode;
-        this.alphaCutoff = alphaCutoff || this.alphaCutoff;
-        this.doubleSided = doubleSided || this.doubleSided;
+        this.name = init.name;
+        this.baseColorTexture = init.baseColorTexture;
+        this.baseColorTexCoord = init.baseColorTexCoord || this.baseColorTexCoord;
+        this.baseColorFactor = init.baseColorFactor || this.baseColorFactor;
+        this.metallicRoughnessTexture = init.metallicRoughnessTexture;
+        this.metallicRoughnessTexCoord = init.metallicRoughnessTexCoord || this.metallicRoughnessTexCoord;
+        this.metallicFactor = init.metallicFactor || this.metallicFactor;
+        this.roughnessFactor = init.roughnessFactor || this.roughnessFactor;
+        this.normalTexture = init.normalTexture;
+        this.normalTexCoord = init.normalTexCoord || this.normalTexCoord;
+        this.normalTexScale = init.normalTexScale || this.normalTexScale;
+        this.occlusionTexture = init.occlusionTexture;
+        this.occlusionTexCoord = init.occlusionTexCoord || this.occlusionTexCoord;
+        this.occlusionTexStrength = init.occlusionTexStrength || this.occlusionTexStrength;
+        this.emissiveTexture = init.emissiveTexture;
+        this.emissiveTexCoord = init.emissiveTexCoord || this.emissiveTexCoord;
+        this.emissiveFactor = init.emissiveFactor || this.emissiveFactor;
+        this.alphaMode = init.alphaMode || this.alphaMode;
+        this.alphaCutoff = init.alphaCutoff || this.alphaCutoff;
+        this.doubleSided = init.doubleSided || this.doubleSided;
     }
 
     public serialize(document: GLTF.GlTf, data: Buffer): GLTF.GlTfId {
