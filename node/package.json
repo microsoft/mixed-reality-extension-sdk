@@ -28,7 +28,8 @@
     "build-docs": "lerna run build-docs",
     "lint": "lerna run lint",
     "lint-docs": "lerna run lint-docs",
-    "publish": "lerna publish"
+    "publish": "lerna publish",
+    "start": "node ./packages/functional-tests/"
   },
   "devDependencies": {
     "lerna": "3.4.2",
