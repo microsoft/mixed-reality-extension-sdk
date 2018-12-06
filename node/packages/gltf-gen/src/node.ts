@@ -4,7 +4,7 @@
  */
 
 import { Matrix, Quaternion, Vector3 } from '@microsoft/mixed-reality-extension-sdk';
-import * as GLTF from './gen/gltf';
+import GLTF from './gen/gltf';
 import { Mesh } from './mesh';
 import { Serializable } from './serializable';
 

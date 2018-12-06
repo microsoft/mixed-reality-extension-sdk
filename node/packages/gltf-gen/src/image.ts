@@ -5,7 +5,7 @@
 
 import { readFileSync, statSync } from 'fs';
 import { lookup as MimeLookup } from 'mime-types';
-import * as GLTF from './gen/gltf';
+import GLTF from './gen/gltf';
 import { Serializable } from './serializable';
 
 export class Image extends Serializable {

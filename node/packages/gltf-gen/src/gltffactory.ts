@@ -4,7 +4,7 @@
  */
 
 import { Material, Mesh, MeshPrimitive, Node, Scene, Texture } from '.';
-import * as GLTF from './gen/gltf';
+import GLTF from './gen/gltf';
 import { roundUpToNextMultipleOf4 } from './util';
 
 /**

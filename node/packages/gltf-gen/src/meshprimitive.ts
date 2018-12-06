@@ -4,7 +4,7 @@
  */
 
 import { AccessorComponentType, AccessorType } from './enums';
-import * as GLTF from './gen/gltf';
+import GLTF from './gen/gltf';
 import { Material } from './material';
 import { roundUpToNextMultipleOf4 } from './util';
 import { Vertex } from './vertex';
@@ -30,9 +30,6 @@ export class MeshPrimitive {
         this.material = material || this.material;
 
         this.instanceParent = instanceParent;
-    }
-
-    public regenerateNormals(): void {
     }
 
     private _updateAttributeUsage(): void {

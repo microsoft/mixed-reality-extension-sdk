@@ -5,7 +5,7 @@
 
 import { Image } from '.';
 import { TextureMagFilter, TextureMinFilter, TextureWrapMode } from './enums';
-import * as GLTF from './gen/gltf';
+import GLTF from './gen/gltf';
 import { Serializable } from './serializable';
 
 export class Texture extends Serializable {

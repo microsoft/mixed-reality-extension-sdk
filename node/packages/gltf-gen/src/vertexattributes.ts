@@ -9,6 +9,7 @@ import { Vertex } from './vertex';
 
 // tslint:disable:max-classes-per-file
 
+/** @hidden */
 export abstract class VertexAttribute {
     public componentType: AccessorComponentType = AccessorComponentType.Float;
     public multiType: AccessorType = AccessorType.Scalar;
@@ -82,6 +83,7 @@ export abstract class VertexAttribute {
     }
 }
 
+/** @hidden */
 export class PositionAttribute extends VertexAttribute {
     // tslint:disable:variable-name
     protected _min: Vector3;
@@ -113,6 +115,7 @@ export class PositionAttribute extends VertexAttribute {
     }
 }
 
+/** @hidden */
 export class NormalAttribute extends VertexAttribute {
     // tslint:disable:variable-name
     protected _min: Vector3;
@@ -144,6 +147,7 @@ export class NormalAttribute extends VertexAttribute {
     }
 }
 
+/** @hidden */
 export class TangentAttribute extends VertexAttribute {
     // tslint:disable:variable-name
     protected _min: Vector4;
@@ -176,6 +180,7 @@ export class TangentAttribute extends VertexAttribute {
     }
 }
 
+/** @hidden */
 export class TexCoordAttribute extends VertexAttribute {
     private index: number;
     // tslint:disable:variable-name
@@ -209,6 +214,7 @@ export class TexCoordAttribute extends VertexAttribute {
     }
 }
 
+/** @hidden */
 export class ColorAttribute extends VertexAttribute {
     private index: number;
     // tslint:disable:variable-name

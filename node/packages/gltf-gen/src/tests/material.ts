@@ -7,6 +7,7 @@ import { Color4 } from '@microsoft/mixed-reality-extension-sdk';
 import { Test } from '.';
 import * as GltfGen from '..';
 
+/** @hidden */
 export default class MaterialTest implements Test {
     public name = 'Material';
     public shouldPrintJson = true;

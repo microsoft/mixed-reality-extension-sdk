@@ -5,7 +5,7 @@
 
 import { Color3, Color4 } from '@microsoft/mixed-reality-extension-sdk';
 import { AlphaMode } from './enums';
-import * as GLTF from './gen/gltf';
+import GLTF from './gen/gltf';
 import { Serializable } from './serializable';
 import { Texture } from './texture';
 

@@ -3,7 +3,7 @@
  * Licensed under the MIT License.
  */
 
-import * as GLTF from './gen/gltf';
+import GLTF from './gen/gltf';
 import { MeshPrimitive } from './meshprimitive';
 import { Serializable } from './serializable';
 

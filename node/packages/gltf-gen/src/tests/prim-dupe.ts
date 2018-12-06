@@ -6,6 +6,7 @@
 import { Test } from '.';
 import * as GltfGen from '..';
 
+/** @hidden */
 export default class PrimDupeTest implements Test {
     public name = 'Instanced prims';
     public shouldPrintBuffer = false;

@@ -3,8 +3,9 @@
  * Licensed under the MIT License.
  */
 
-import * as GLTF from './gen/gltf';
+import GLTF from './gen/gltf';
 
+/** @hidden */
 export abstract class Serializable {
     protected cachedSerialId: GLTF.GlTfId;
     public abstract serialize(document: GLTF.GlTf, buffer: Buffer): GLTF.GlTfId;

@@ -3,7 +3,7 @@
  * Licensed under the MIT License.
  */
 
-import * as GLTF from './gen/gltf';
+import GLTF from './gen/gltf';
 import { Node } from './node';
 import { Serializable } from './serializable';
 
