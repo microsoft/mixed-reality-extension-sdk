@@ -108,7 +108,8 @@ little if there are no changes)
 * `npm run build` This should not report any errors.
 * `cd packages/apps/functional-tests`
 * `npm start` This should print "INF: Multi-peer Adapter listening on..."
-* See also: [Using Visual Studio Code instead of command line](#Using-Visual-Studio-Code)
+* See also: [Using Visual Studio Code instead of command line](
+#Using-Visual-Studio-Code)
 
 ## Testing an MRE In AltspaceVR
 * In [AltspaceVR](https://altvr.com/), go to your personal home
@@ -117,11 +118,22 @@ little if there are no changes)
 * Click Basics group
 * Click on SDKApp
 * For the URL field, please enter the URL (for example 
-`ws://localhost:3901?test=rigid-body-test` for the functional test)
+`ws://localhost:3901?test=rigid-body-test` for a functional test)
+* Enter a session ID (This step will eventually be optional. For now, put 
+in any random value)
 * Click Confirm
+* If the app doesn't seem to load, click on the gear icon next the MRE object
+in to the present objects list, and make sure "Is Playing" is checked.
 
-You should now see a functional test scene load up inside AltspaceVR. 
+You should now see a functional test load up inside AltspaceVR. 
 
+## Pre-deployed MREs
+We have deployed the hello world and functional test MREs to servers in Azure. 
+The URLs are
+* `ws://mre-hello-world.azurewebsites.net`
+* `ws://mre-functional-tests.azurewebsites.net?test=testname` (replace testname 
+with gltf-animation-test, input-test, rigid-body-test, text-test, 
+primitives-test, look-at-test, or clock-sync-test)
 
 ## Using Visual Studio Code
 We recommend Visual Studio Code, a lightweight code editor, which is easy to
