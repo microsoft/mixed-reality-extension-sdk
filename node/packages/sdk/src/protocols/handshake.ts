@@ -4,7 +4,7 @@
  */
 
 import { ServerPreprocessing } from '.';
-import { Services } from '..';
+import { Connection } from '..';
 import { OperatingModel } from '../types/network/operatingModel';
 import * as Payloads from '../types/network/payloads';
 import { Protocol } from './protocol';
@@ -14,8 +14,8 @@ import { Protocol } from './protocol';
  * Class to manage the handshake process with a client.
  */
 export class Handshake extends Protocol {
-    constructor(services: Services, private operatingModel: OperatingModel) {
-        super(services);
+    constructor(conn: Connection, private sessionId: string, private operatingModel: OperatingModel) {
+        super(conn);
         // Behave like a server-side endpoint (send heartbeats, measure connection quality)
         this.use(new ServerPreprocessing());
     }
@@ -24,7 +24,7 @@ export class Handshake extends Protocol {
     public 'recv-handshake' = (payload: Payloads.Handshake) => {
         this.sendPayload({
             type: 'handshake-reply',
-            sessionId: this.services.sessionId,
+            sessionId: this.sessionId,
             operatingModel: this.operatingModel,
         } as Payloads.HandshakeReply);
     }

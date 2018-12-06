@@ -61,6 +61,7 @@ import {
     UpdateSubscriptions,
 } from '../network/payloads';
 
+import { log } from '../../log';
 import * as Protocols from '../../protocols';
 import { Execution } from '../../protocols/execution';
 import { Handshake } from '../../protocols/handshake';
@@ -90,7 +91,7 @@ export class InternalContext {
         this.context.conn.on('close', this.onClose);
 
         // Startup the handshake protocol
-        this.protocol = new Handshake(this.context, OperatingModel.ServerAuthoritative);
+        this.protocol = new Handshake(this.context.conn, this.context.sessionId, OperatingModel.ServerAuthoritative);
         this.onHandshakeComplete = this.onHandshakeComplete.bind(this);
         this.protocol.on('protocol.handshake-complete', this.onHandshakeComplete);
     }
@@ -277,7 +278,7 @@ export class InternalContext {
                         }
                     });
             }).catch((reason: any) => {
-                this.context.logger.log('error', `Failed to instantiate actor ${actor.id}.`, reason);
+                log.error(null, `Failed to instantiate actor ${actor.id}.`, reason);
                 // TODO: Remove actor from context?
             });
         }));
@@ -324,10 +325,9 @@ export class InternalContext {
                             reject(reason);
                         }
                     });
-            }).catch((reason) => this.context.logger.log('error', reason));
+            }).catch((reason) => log.error(null, reason));
         }).catch((reason: any) => {
-            this.context.logger.log(
-                'error', `Failed to create animation ${options.animationName} on actor ${actor.id}.`, reason);
+            log.error(null, `Failed to create animation ${options.animationName} on actor ${actor.id}.`, reason);
         });
     }
 
@@ -347,9 +347,9 @@ export class InternalContext {
                         hasRootMotion
                     } as StartAnimation);
                 })
-                .catch((reason) => this.context.logger.log('error', reason));
+                .catch((reason) => log.error(null, reason));
         } else {
-            this.context.logger.log('error', `Actor ${actorId} not found`);
+            log.error(null, `Actor ${actorId} not found`);
         }
     }
 
@@ -365,9 +365,9 @@ export class InternalContext {
                     actorId,
                     animationName
                 } as StopAnimation))
-                .catch((reason) => this.context.logger.log('error', reason));
+                .catch((reason) => log.error(null, reason));
         } else {
-            this.context.logger.log('error', `Actor ${actorId} not found`);
+            log.error(null, `Actor ${actorId} not found`);
         }
     }
 
@@ -383,9 +383,9 @@ export class InternalContext {
                     actorId,
                     animationName,
                 } as PauseAnimation))
-                .catch((reason) => this.context.logger.log('error', reason));
+                .catch((reason) => log.error(null, reason));
         } else {
-            this.context.logger.log('error', `Actor ${actorId} not found`);
+            log.error(null, `Actor ${actorId} not found`);
         }
     }
 
@@ -401,9 +401,9 @@ export class InternalContext {
                     actorId,
                     animationName
                 } as ResumeAnimation))
-                .catch((reason) => this.context.logger.log('error', reason));
+                .catch((reason) => log.error(null, reason));
         } else {
-            this.context.logger.log('error', `Actor ${actorId} not found`);
+            log.error(null, `Actor ${actorId} not found`);
         }
     }
 
@@ -419,9 +419,9 @@ export class InternalContext {
                     actorId,
                     animationName
                 } as ResetAnimation))
-                .catch((reason) => this.context.logger.log('error', reason));
+                .catch((reason) => log.error(null, reason));
         } else {
-            this.context.logger.log('error', `Actor ${actorId} not found`);
+            log.error(null, `Actor ${actorId} not found`);
         }
     }
 
@@ -448,7 +448,7 @@ export class InternalContext {
                             reject
                         });
                 }).catch((reason: any) => {
-                    this.context.logger.log('error', `Failed enable rigid body on actor ${actor.id}.`, reason);
+                    log.error(null, `Failed enable rigid body on actor ${actor.id}.`, reason);
                 });
             }));
         }
@@ -505,24 +505,24 @@ export class InternalContext {
                             };
                             break;
                         default:
-                            this.context.logger.log('error',
+                            log.error(null,
                                 'Trying to enable a collider on the actor with an invalid collider type.' +
                                 `Type given is ${colliderType}`);
                     }
 
                     this.protocol.sendPayload(colliderPayload, {
-                            resolve: (payload: OperationResult) => {
-                                this.protocol.recvPayload(payload);
-                                if (payload.resultCode === 'error') {
-                                    reject(payload.message);
-                                } else {
-                                    resolve(actor.collider);
-                                }
-                            },
-                            reject
-                        });
+                        resolve: (payload: OperationResult) => {
+                            this.protocol.recvPayload(payload);
+                            if (payload.resultCode === 'error') {
+                                reject(payload.message);
+                            } else {
+                                resolve(actor.collider);
+                            }
+                        },
+                        reject
+                    });
                 }).catch((reason: any) => {
-                    this.context.logger.log('error', `Failed enable collider on actor ${actor.id}.`, reason);
+                    log.error(null, `Failed enable collider on actor ${actor.id}.`, reason);
                 });
             }));
         }
@@ -551,7 +551,7 @@ export class InternalContext {
                             reject
                         });
                 }).catch((reason: any) => {
-                    this.context.logger.log('error', `Failed to enable light on ${actor.id}.`, reason);
+                    log.error(null, `Failed to enable light on ${actor.id}.`, reason);
                 });
             }));
         }
@@ -580,7 +580,7 @@ export class InternalContext {
                             reject
                         });
                 }).catch((reason: any) => {
-                    this.context.logger.log('error', `Failed to enable text on ${actor.id}.`, reason);
+                    log.error(null, `Failed to enable text on ${actor.id}.`, reason);
                 });
             }));
         }
@@ -605,7 +605,7 @@ export class InternalContext {
                     removes: options.removes
                 } as UpdateSubscriptions);
             }).catch((reason: any) => {
-                this.context.logger.log('error', `Failed to update subscriptions on actor ${actor.id}.`, reason);
+                log.error(null, `Failed to update subscriptions on actor ${actor.id}.`, reason);
             });
         }
     }
@@ -627,8 +627,7 @@ export class InternalContext {
                     removes: options.removes
                 } as UpdateCollisionEventSubscriptions);
             }).catch((reason: any) => {
-                this.context.logger.log('error',
-                    `Failed to update collision event subscriptions on actor ${actor.id}.`, reason);
+                log.error(null, `Failed to update collision event subscriptions on actor ${actor.id}.`, reason);
             });
         }
     }
@@ -841,8 +840,7 @@ export class InternalContext {
                     behaviorType: newBehaviorType || 'none'
                 } as SetBehavior);
             }).catch((reason: any) => {
-                this.context.logger.log('error', `Failed to set behavior on actor ${actor.id}.`, reason);
-                throw new Error(reason);
+                log.error(null, `Failed to set behavior on actor ${actor.id}.`, reason);
             });
         }
     }

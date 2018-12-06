@@ -17,7 +17,7 @@ export class ClientHandshake extends Handshake {
     public get name(): string { return `${this.constructor.name} client ${this.client.id}`; }
 
     constructor(private client: Client) {
-        super(client.services, OperatingModel.PeerAuthoritative);
+        super(client.conn, client.session.sessionId, OperatingModel.PeerAuthoritative);
     }
 
     /** @override */

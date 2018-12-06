@@ -7,13 +7,7 @@ import UUID from 'uuid/v4';
 import {
     Actor,
     Connection,
-    Logger,
     NullConnection,
-    NullLogger,
-    NullStorage,
-    Services,
-    Storage,
-    Telemetry,
     User,
 } from '../..';
 import { InternalContext } from '../../types/internal/context';
@@ -25,8 +19,6 @@ import BufferedEventEmitter from '../../utils/bufferedEventEmitter';
  */
 export interface ContextSettings {
     connection?: Connection;
-    storage?: Storage;
-    logger?: Logger;
     sessionId?: string;
 }
 
@@ -34,7 +26,7 @@ export interface ContextSettings {
  * Container for an application session. The Context contains all application state for a session of your application.
  * This includes Actors, Users, Assets, and other state.
  */
-export class Context implements Services {
+export class Context {
     // tslint:disable:variable-name
     private _internal: InternalContext;
     /** @hidden */
@@ -46,18 +38,12 @@ export class Context implements Services {
 
     private _assets: AssetManager;
     private _sessionId: string;
-    private _storage: Storage;
     private _conn: Connection;
-    private _logger: Logger;
-    private _telemetry: Telemetry;
     // tslint:enable:variable-name
 
     public get assets() { return this._assets; }
     public get sessionId() { return this._sessionId; }
-    public get storage() { return this._storage; }
     public get conn() { return this._conn; }
-    public get logger() { return this._logger; }
-    public get telemetry() { return this._telemetry; }
     public get actors() { return Object.keys(this.internal.actorSet).map(actorId => this.internal.actorSet[actorId]); }
     public get rootActors() {
         return Object.keys(this.internal.actorSet)
@@ -73,9 +59,7 @@ export class Context implements Services {
      */
     // tslint:disable-next-line:member-ordering
     constructor(settings: ContextSettings) {
-        this._storage = settings.storage || new NullStorage();
         this._conn = settings.connection || new NullConnection();
-        this._logger = settings.logger || new NullLogger();
         this._sessionId = settings.sessionId || UUID();
         this._internal = new InternalContext(this);
         this._assets = new AssetManager(this);

@@ -5,7 +5,8 @@
 
 import { EventEmitter } from 'events';
 import UUID from 'uuid/v4';
-import { Message, Services } from '..';
+import { Connection, Message } from '..';
+import { log } from '../log';
 import { Payload } from '../types/network/payloads';
 import { ExportedPromise } from '../utils/exportedPromise';
 import { Middleware } from './middleware';
@@ -17,14 +18,12 @@ import { Middleware } from './middleware';
 export class Protocol extends EventEmitter {
     private middlewares: Middleware[] = [];
 
-    public get conn() { return this.services.conn; }
-    public get logger() { return this.services.logger; }
-    public get services() { return this._services; }
+    public get conn() { return this._conn; }
     public get promises() { return this.conn.promises; }
-    public get name(): string { return this.constructor.name; }
+    public get name() { return this.constructor.name; }
 
     // tslint:disable-next-line:variable-name
-    constructor(private _services: Services) {
+    constructor(private _conn: Connection) {
         super();
         this.onReceive = this.onReceive.bind(this);
     }
@@ -70,7 +69,7 @@ export class Protocol extends EventEmitter {
             };
         }
 
-        this.logger.log('debug', `${this.name} send`, JSON.stringify(message));
+        log.verbose('network', `${this.name} send`, JSON.stringify(message));
         this.conn.send(message);
     }
 
@@ -86,7 +85,7 @@ export class Protocol extends EventEmitter {
             }
         }
 
-        this.logger.log('debug', `${this.name} recv`, JSON.stringify(message));
+        log.verbose('network', `${this.name} recv`, JSON.stringify(message));
         if (message.replyToId) {
             this.handleReplyMessage(message);
         } else {
@@ -98,11 +97,11 @@ export class Protocol extends EventEmitter {
         if (payload && payload.type && payload.type.length) {
             // tslint:disable-next-line:no-any
             const handler = (this as any)[`recv-${payload.type}`] || (() => {
-                this.logger.log('error', `${this.name} has no handler for payload ${payload.type}!`);
+                log.error(null, `${this.name} has no handler for payload ${payload.type}!`);
             });
             handler(payload);
         } else {
-            this.logger.log('error', `${this.name} invalid message payload!`);
+            log.error(null, `${this.name} invalid message payload!`);
         }
     }
 
@@ -120,7 +119,7 @@ export class Protocol extends EventEmitter {
     protected handleReplyMessage(message: Message) {
         const queuedPromise = this.promises[message.replyToId];
         if (!queuedPromise) {
-            this.logger.log('error', `${this.name} received unexpected reply message! replyToId: ${message.replyToId}`);
+            log.error(null, `${this.name} received unexpected reply message! replyToId: ${message.replyToId}`);
         } else {
             delete this.promises[message.replyToId];
             queuedPromise.promise.resolve(message.payload, message);

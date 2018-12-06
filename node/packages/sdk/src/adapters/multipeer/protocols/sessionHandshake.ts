@@ -12,8 +12,8 @@ import * as Payloads from '../../../types/network/payloads';
  * Protocol for handling handshake with the app instance (Session is a client of App)
  */
 export class SessionHandshake extends Protocols.Protocol {
-    constructor(private session: Session) {
-        super(session.services);
+    constructor(session: Session) {
+        super(session.conn);
         // Behave like a client-side endpoint (record latency, respond to heartbeats).
         this.use(new Protocols.ClientPreprocessing(this));
     }

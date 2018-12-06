@@ -5,7 +5,8 @@
 
 import * as http from 'http';
 import * as Restify from 'restify';
-import { Adapter, Logger, MultipeerAdapter, NullLogger } from '.';
+import { Adapter, MultipeerAdapter } from '.';
+import { log } from './log';
 
 /**
  * Sets up an HTTP server, and generates an MRE context for your app to use.
@@ -22,8 +23,8 @@ export class WebHost {
     public get baseUrl() { return this._baseUrl; }
 
     public constructor(
-        options: { baseDir?: string, baseUrl?: string, port?: string | number, logger?: Logger }
-            = { baseDir: '.', baseUrl: null, port: null, logger: new NullLogger() }
+        options: { baseDir?: string, baseUrl?: string, port?: string | number }
+            = { baseDir: '.', baseUrl: null, port: null }
     ) {
         this._baseDir = options.baseDir;
         this._baseUrl = options.baseUrl;
@@ -31,12 +32,12 @@ export class WebHost {
         const port = options.port || process.env.PORT || 3901;
 
         // Create a Multi-peer adapter
-        this._adapter = new MultipeerAdapter({ port, logger: options.logger });
+        this._adapter = new MultipeerAdapter({ port });
 
         // Start listening for new app connections from a multi-peer client
         this._adapter.listen()
             .then(server => this.serveStaticFiles(server))
-            .catch(reason => options.logger.log('error', "Failed to start HTTP server: " + reason));
+            .catch(reason => log.error(null, `Failed to start HTTP server: ${reason}`));
     }
 
     private serveStaticFiles(server: http.Server): void {

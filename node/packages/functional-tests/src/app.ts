@@ -4,7 +4,7 @@
  */
 
 import * as MRESDK from '@microsoft/mixed-reality-extension-sdk';
-import * as MRESDKRPC from '@microsoft/mixed-reality-extension-sdk/built/rpc';
+import * as MRERPC from '@microsoft/mixed-reality-extension-sdk/built/rpc';
 import AssetPreloadTest from './tests/asset-preload';
 import ClockSyncTest from './tests/clock-sync-test';
 import GltfAnimationTest from './tests/gltf-animation-test';
@@ -15,13 +15,15 @@ import RigidBodyTest from './tests/rigid-body-test';
 import Test from './tests/test';
 import TextTest from './tests/text-test';
 
+// tslint:disable:no-console
+
 /**
  * Functional Test Application.
  */
 export default class App {
     private activeTests: { [id: string]: Test } = {};
     // tslint:disable-next-line:variable-name
-    private _rpc: MRESDKRPC.ContextRPC;
+    private _rpc: MRERPC.ContextRPC;
 
     public get context() { return this._context; }
     public get rpc() { return this._rpc; }
@@ -42,7 +44,7 @@ export default class App {
 
     // tslint:disable-next-line:variable-name
     constructor(private _context: MRESDK.Context, private params: MRESDK.ParameterSet, private baseUrl: string) {
-        this._rpc = new MRESDKRPC.ContextRPC(_context);
+        this._rpc = new MRERPC.ContextRPC(_context);
 
         this.userJoined = this.userJoined.bind(this);
         this.userLeft = this.userLeft.bind(this);
@@ -52,7 +54,7 @@ export default class App {
     }
 
     private userJoined = async (user: MRESDK.User) => {
-        this.context.logger.log('info', `user-joined: ${user.name}, ${user.id}`);
+        console.log(`user-joined: ${user.name}, ${user.id}`);
 
         let testName: string;
         if (Array.isArray(this.params.test) && this.params.test.length > 0) {
@@ -65,20 +67,20 @@ export default class App {
     }
 
     private userLeft = (user: MRESDK.User) => {
-        this.context.logger.log('info', `user-left: ${user.name}, ${user.id}`);
+        console.log(`user-left: ${user.name}, ${user.id}`);
     }
 
     private async startTest(testName: string) {
         if (this.activeTests[testName]) {
-            this.context.logger.log('info', `Test already running: '${testName}'`);
+            console.log(`Test already running: '${testName}'`);
         } else if (!this.testFactories[testName]) {
-            this.context.logger.log('error', `Unrecognized test: '${testName}'`);
+            console.log(`error: Unrecognized test: '${testName}'`);
         } else {
             const test = this.activeTests[testName] = this.testFactories[testName]();
             this.rpc.send('functional-test:test-started', testName);
-            this.context.logger.log('info', `Test started: '${testName}'`);
+            console.log(`Test started: '${testName}'`);
             const success = await test.run();
-            this.context.logger.log('info', `Test complete: '${testName}'. Success: ${success}`);
+            console.log(`Test complete: '${testName}'. Success: ${success}`);
             this.rpc.send('functional-test:test-complete', testName, success);
             this.rpc.send('functional-test:close-connection');
 

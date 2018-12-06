@@ -24,9 +24,8 @@ export class Session extends EventEmitter {
     // tslint:enable:variable-name
 
     public get conn() { return this._conn; }
-    public get logger() { return this._logger; }
+    public get sessionId() { return this._sessionId; }
     public get protocol() { return this._protocol; }
-    public get services() { return { conn: this.conn, logger: this.logger }; }
     public get clients() { return Object.keys(this._clientSet).map(clientId => this._clientSet[clientId]); }
     public get actors() { return Object.keys(this._actorSet).map(actorId => this._actorSet[actorId]); }
     public get rootActors() {
@@ -51,7 +50,7 @@ export class Session extends EventEmitter {
      * Creates a new Session instance
      */
     // tslint:disable-next-line:variable-name
-    constructor(private _conn: MRESDK.Connection, private _logger: MRESDK.Logger, private _peerAuthoritative: boolean) {
+    constructor(private _conn: MRESDK.Connection, private _sessionId: string, private _peerAuthoritative: boolean) {
         super();
         this.recvFromClient = this.recvFromClient.bind(this);
         this.recvFromApp = this.recvFromApp.bind(this);

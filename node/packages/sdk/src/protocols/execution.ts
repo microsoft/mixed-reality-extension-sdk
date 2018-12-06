@@ -21,6 +21,7 @@ import {
     UserLeft,
     UserUpdate,
 } from '../types/network/payloads';
+import { log, logIssueToApplication } from './../log';
 import { Sync } from './sync';
 
 /**
@@ -29,7 +30,7 @@ import { Sync } from './sync';
  */
 export class Execution extends Protocol {
     constructor(private context: Context) {
-        super(context);
+        super(context.conn);
         // Behave like a server-side endpoint (send heartbeats, measure connection quality)
         this.use(new ServerPreprocessing());
     }
@@ -63,10 +64,12 @@ export class Execution extends Protocol {
 
     /** @private */
     public 'recv-operation-result' = (operationResult: OperationResult) => {
-        this.services.logger.log(operationResult.resultCode, operationResult.message || '');
+        log.log('network', operationResult.resultCode, operationResult.message);
+        logIssueToApplication(operationResult.resultCode, operationResult.message);
         if (Array.isArray(operationResult.traces)) {
             operationResult.traces.forEach(trace => {
-                this.services.logger.log(trace.severity, trace.message);
+                log.log('network', trace.severity, trace.message);
+                logIssueToApplication(trace.severity, trace.message);
             });
         }
     }
@@ -79,7 +82,8 @@ export class Execution extends Protocol {
     /** @private */
     public 'recv-traces' = (payload: Traces) => {
         payload.traces.forEach(trace => {
-            this.services.logger.log(trace.severity, trace.message);
+            log.log('network', trace.severity, trace.message);
+            logIssueToApplication(trace.severity, trace.message);
         });
     }
 
@@ -103,7 +107,7 @@ export class Execution extends Protocol {
         // Switch over to the Sync protocol to handle this request
         this.stopListening();
 
-        const sync = new Sync(this.context);
+        const sync = new Sync(this.conn);
         sync.on('protocol.sync-complete', () => {
             this.startListening();
         });

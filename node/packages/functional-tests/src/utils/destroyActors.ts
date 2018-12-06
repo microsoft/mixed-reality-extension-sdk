@@ -3,9 +3,9 @@
  * Licensed under the MIT License.
  */
 
-import * as MRESDK from '@microsoft/mixed-reality-extension-sdk';
+import { Actor } from '@microsoft/mixed-reality-extension-sdk';
 
-export default function destroyActors(actors: MRESDK.Actor | MRESDK.Actor[]): MRESDK.Actor[] {
+export default function destroyActors(actors: Actor | Actor[]): Actor[] {
     if (!Array.isArray(actors)) {
         actors = [actors];
     }

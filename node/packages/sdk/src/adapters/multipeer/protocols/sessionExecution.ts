@@ -13,7 +13,7 @@ import * as Protocols from '../../../protocols';
  */
 export class SessionExecution extends Protocols.Protocol implements Protocols.Middleware {
     constructor(private session: Session) {
-        super(session.services);
+        super(session.conn);
         this.beforeRecv = this.beforeRecv.bind(this);
         // Behave like a client-side endpoint (record latency, respond to heartbeats).
         this.use(new Protocols.ClientPreprocessing(this));

@@ -21,7 +21,7 @@ export class ClientSync extends Protocols.Protocol {
     public get name(): string { return `${this.constructor.name} client ${this.client.id}`; }
 
     constructor(private client: Client) {
-        super(client.services);
+        super(client.conn);
         // Behave like a server-side endpoint (send heartbeats, measure connection quality)
         this.use(new Protocols.ServerPreprocessing());
     }
