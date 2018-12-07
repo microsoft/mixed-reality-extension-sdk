@@ -117,7 +117,7 @@ export class Client extends EventEmitter {
         if (this.protocol) {
             this.protocol.sendPayload(payload, promise);
         } else {
-            log.error('network', `error: No protocol for payload send: ${payload.type}`);
+            log.error('network', `No protocol for payload send: ${payload.type}`);
         }
     }
 
