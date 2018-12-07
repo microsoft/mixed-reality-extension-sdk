@@ -21,7 +21,7 @@ import {
     UserLeft,
     UserUpdate,
 } from '../types/network/payloads';
-import { log, logIssueToApplication } from './../log';
+import { log } from './../log';
 import { Sync } from './sync';
 
 /**
@@ -65,11 +65,9 @@ export class Execution extends Protocol {
     /** @private */
     public 'recv-operation-result' = (operationResult: OperationResult) => {
         log.log('network', operationResult.resultCode, operationResult.message);
-        logIssueToApplication(operationResult.resultCode, operationResult.message);
         if (Array.isArray(operationResult.traces)) {
             operationResult.traces.forEach(trace => {
                 log.log('network', trace.severity, trace.message);
-                logIssueToApplication(trace.severity, trace.message);
             });
         }
     }
@@ -83,7 +81,6 @@ export class Execution extends Protocol {
     public 'recv-traces' = (payload: Traces) => {
         payload.traces.forEach(trace => {
             log.log('network', trace.severity, trace.message);
-            logIssueToApplication(trace.severity, trace.message);
         });
     }
 

@@ -8,6 +8,9 @@ import debug from 'debug';
 const pjson = require('../package.json');
 
 class Log {
+
+    public logToApplication = true;
+
     private loggers: { [area: string]: debug.IDebugger } = {};
 
     private area(facility: string, severity: string): string {
@@ -52,10 +55,16 @@ class Log {
 
     public warning(facility: string, formatter: any, ...args: any[]) {
         this.log(facility, 'warning', formatter, ...args);
+        if (this.logToApplication && !this.enabled(facility, 'warning')) {
+            logToApplication('warning', formatter, ...args);
+        }
     }
 
     public error(facility: string, formatter: any, ...args: any[]) {
         this.log(facility, 'error', formatter, ...args);
+        if (this.logToApplication && !this.enabled(facility, 'error')) {
+            logToApplication('error', formatter, ...args);
+        }
     }
 
     public info(facility: string, formatter: any, ...args: any[]) {
@@ -93,9 +102,7 @@ class Log {
 
 export const log = new Log();
 
-export function logIssueToApplication(severity: string, ...args: any[]) {
-    if (severity === 'error' || severity === 'warning') {
-        // tslint:disable-next-line:no-console
-        console.log(severity, ...args);
-    }
+function logToApplication(severity: string, ...args: any[]) {
+    // tslint:disable-next-line:no-console
+    console.log(severity, ...args);
 }
