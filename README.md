@@ -20,6 +20,9 @@ build it.
 If you want to build the actual SDK itself, jump to [Build and Run section of
 this document](#How-to-Build-and-Deploy-the-SDK-functional-tests)
 
+To see the APIs, jump to [SDK documentation](
+https://microsoft.github.io/mixed-reality-extension-sdk/)
+
 
 ## Overview
 * Written in TypeScript, and built on top of Node.js.
