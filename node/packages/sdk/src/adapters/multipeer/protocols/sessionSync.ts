@@ -13,7 +13,7 @@ import * as Payloads from '../../../types/network/payloads';
  */
 export class SessionSync extends Protocols.Protocol {
     constructor(session: Session) {
-        super(session.services);
+        super(session.conn);
         // Behave like a client-side endpoint (record latency, respond to heartbeats).
         this.use(new Protocols.ClientPreprocessing(this));
     }

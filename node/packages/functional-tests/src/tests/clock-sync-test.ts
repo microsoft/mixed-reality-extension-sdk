@@ -45,17 +45,21 @@ export default class ClockSyncTest extends Test {
         });
 
         // Create the digits.
-        const meshHundredths = this.createAnimatableDigit('hundredths', '0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0', tester.value.id);
+        const meshHundredths =
+            this.createAnimatableDigit('hundredths', '0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0', tester.value.id);
         const meshTenths = this.createAnimatableDigit('tenths', '0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0', tester.value.id);
         const meshSeconds = this.createAnimatableDigit('seconds', '0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0', tester.value.id);
         const mesh10Seconds = this.createAnimatableDigit('10seconds', '0\n1\n2\n3\n4\n5\n0', tester.value.id);
         const meshMinutes = this.createAnimatableDigit('minutes', '0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0', tester.value.id);
         const mesh10Minutes = this.createAnimatableDigit('10minutes', '0\n1\n2\n3\n4\n5\n0', tester.value.id);
-        const meshHours = this.createAnimatableDigit('hours', '0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n0', tester.value.id);
+        const meshHours =
+            this.createAnimatableDigit('hours',
+            '0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n0', tester.value.id);
         const mesh10Hours = this.createAnimatableDigit('10hours', ' \n1\n2\n ', tester.value.id);
 
         // Make a handy array of all the digits.
-        const actors = [meshHundredths, meshTenths, meshSeconds, mesh10Seconds, meshMinutes, mesh10Minutes, meshHours, mesh10Hours];
+        const actors = [
+            meshHundredths, meshTenths, meshSeconds, mesh10Seconds, meshMinutes, mesh10Minutes, meshHours, mesh10Hours];
 
         // Build animations.
         const yOffset = boxYPosition + lineHeight * 0.5;
@@ -102,7 +106,15 @@ export default class ClockSyncTest extends Test {
         });
     }
 
-    public buildDigitAnimation(mesh: MRESDK.Actor, xOffset: number, yOffset: number, secondsPerStep: number, digits: number, frameCount: number, lineHeight: number): Promise<void> {
+    public buildDigitAnimation(
+        mesh: MRESDK.Actor,
+        xOffset: number,
+        yOffset: number,
+        secondsPerStep: number,
+        digits: number,
+        frameCount: number,
+        lineHeight: number): Promise<void> {
+
         const keyframes: MRESDK.AnimationKeyframe[] = [];
 
         // test: set to 0.01 to speed up 100x
@@ -134,12 +146,12 @@ export default class ClockSyncTest extends Test {
             });
 
             if (i < frameCount && secondsPerStep >= 1) {
-                let frameNumber = i + 1;
+                let frameNumber1 = i + 1;
                 if (i + 1 >= frameCount) {
-                    frameNumber = frameCount;
+                    frameNumber1 = frameCount;
                 }
                 keyframes.push({
-                    time: timeScale * (frameNumber * secondsPerStep - interpolationTimeSeconds),
+                    time: timeScale * (frameNumber1 * secondsPerStep - interpolationTimeSeconds),
                     value
                 });
             }

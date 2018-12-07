@@ -12,6 +12,7 @@ import { Adapter, AdapterOptions } from '..';
 import { Context, ParameterSet, Pipe, WebSocket } from '../../';
 import * as Constants from '../../constants';
 import { verifyClient } from '../../utils/verifyClient';
+import { log } from './../../log';
 import { Client } from './client';
 import { Session } from './session';
 
@@ -63,7 +64,7 @@ export class MultipeerAdapter extends Adapter {
             return new Promise<http.Server>((resolve) => {
                 const server = this.server = Restify.createServer({ name: "Multi-peer Adapter" });
                 this.server.listen(this.port, () => {
-                    this.logger.log('info', `${server.name} listening on ${JSON.stringify(server.address())}`);
+                    log.info(null, `${server.name} listening on ${JSON.stringify(server.address())}`);
                     this.startListening();
                     resolve(server);
                 });
@@ -84,14 +85,13 @@ export class MultipeerAdapter extends Adapter {
             // Create a new context for the connection, passing it the remote side of the pipe.
             const context = new Context({
                 sessionId,
-                connection: pipe.remote,
-                logger: this.logger,
+                connection: pipe.remote
             });
             // Start the connection update loop (todo move this)
             context.internal.start();
             // Instantiate a new session
             session = this.sessions[sessionId] = new Session(
-                pipe.local, this.logger, this.options.peerAuthoritative);
+                pipe.local, sessionId, this.options.peerAuthoritative);
             // Handle session close
             const $this = this;
             session.on('close', () => delete $this.sessions[sessionId]);
@@ -109,7 +109,7 @@ export class MultipeerAdapter extends Adapter {
 
         // Handle WebSocket connection upgrades
         wss.on('connection', async (ws: WS, request: http.IncomingMessage) => {
-            this.logger.log('info', "New Multi-peer connection");
+            log.info(null, "New Multi-peer connection");
 
             // Read the sessionId header.
             let sessionId = request.headers[Constants.SessionHeader] as string || UUID();

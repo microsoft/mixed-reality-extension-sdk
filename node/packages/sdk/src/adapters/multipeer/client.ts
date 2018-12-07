@@ -11,6 +11,7 @@ import * as MRESDK from '../..';
 import * as Protocols from '../../protocols';
 import * as Payloads from '../../types/network/payloads';
 import { ExportedPromise } from '../../utils/exportedPromise';
+import { log } from './../../log';
 
 interface QueuedMessage {
     message: MRESDK.Message;
@@ -36,10 +37,8 @@ export class Client extends EventEmitter {
     public get id() { return this._id; }
     public get order() { return this._order; }
     public get protocol() { return this._protocol; }
-    public get services() { return { conn: this.conn, logger: this.logger }; }
     public get session() { return this._session; }
     public get conn() { return this._conn; }
-    public get logger() { return this._session.logger; }
     public get authoritative() {
         return (0 === this.session.clients.sort((a, b) => a.order - b.order)
             .findIndex(client => client.id === this.id));
@@ -110,7 +109,7 @@ export class Client extends EventEmitter {
         if (this.protocol) {
             this.protocol.sendMessage(message, promise);
         } else {
-            this.logger.log('error', `No protocol for message send: ${message.payload.type}`);
+            log.error('network', `No protocol for message send: ${message.payload.type}`);
         }
     }
 
@@ -118,7 +117,7 @@ export class Client extends EventEmitter {
         if (this.protocol) {
             this.protocol.sendPayload(payload, promise);
         } else {
-            this.logger.log('error', `No protocol for payload send: ${payload.type}`);
+            log.error('network', `No protocol for payload send: ${payload.type}`);
         }
     }
 

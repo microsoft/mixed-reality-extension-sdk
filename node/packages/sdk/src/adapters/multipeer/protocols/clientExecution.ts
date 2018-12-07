@@ -19,7 +19,7 @@ export class ClientExecution extends Protocols.Protocol implements Protocols.Mid
     public get name(): string { return `${this.constructor.name} client ${this.client.id}`; }
 
     constructor(private client: Client) {
-        super(client.services);
+        super(client.conn);
         this.heartbeat = new Protocols.Heartbeat(this);
         this.beforeRecv = this.beforeRecv.bind(this);
         // Behave like a server-side endpoint (send heartbeats, measure connection quality)

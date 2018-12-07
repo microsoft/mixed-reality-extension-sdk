@@ -4,7 +4,7 @@
  */
 
 import * as http from 'http';
-import { ConsoleLogger, Context, Logger, ParameterSet } from '..';
+import { Context, ParameterSet } from '..';
 import BufferedEventEmitter from '../utils/bufferedEventEmitter';
 
 /**
@@ -21,10 +21,6 @@ export type AdapterOptions = {
      * PORT environment variable, then default to 3901
      */
     port?: string | number;
-    /**
-     * @member {Logger} logger Optional. Provide a facility to log debug messages. Will default to the console otherwise
-     */
-    logger?: Logger;
 };
 
 /**
@@ -37,7 +33,6 @@ export abstract class Adapter {
 
     protected get options() { return this._options; }
 
-    public get logger() { return this._options.logger; }
     public get server() { return this._options.server; }
     public set server(value: http.Server) { this._options.server = value; }
     public get port() { return this._options.port; }
@@ -45,7 +40,6 @@ export abstract class Adapter {
     // tslint:disable-next-line:variable-name
     constructor(protected _options: AdapterOptions) {
         this._options = { ..._options };
-        this._options.logger = this._options.logger || new ConsoleLogger();
         this._options.port =
             this._options.port ||
             process.env.port ||

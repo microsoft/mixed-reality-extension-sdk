@@ -10,6 +10,8 @@ import delay from '../utils/delay';
 import destroyActors from '../utils/destroyActors';
 import Test from './test';
 
+// tslint:disable:no-console
+
 let stateCounter = 0;
 
 export default class InputTest extends Test {
@@ -138,34 +140,34 @@ export default class InputTest extends Test {
         });
 
         const buttonBehavior = actor.value.setBehavior(MRESDK.ButtonBehavior);
-        this.app.context.logger.log('debug', `Added event.`);
+        console.log(`Added event.`);
 
         buttonBehavior.onClick('pressed', (userId: string) => {
-            if (stateCounter == 0) {
+            if (stateCounter === 0) {
                 actor.value.startAnimation('animmove', true);
                 stateCounter = 1;
-            } else if (stateCounter == 1) {
+            } else if (stateCounter === 1) {
                 actor.value.stopAnimation('animmove');
                 actor.value.startAnimation('animturn', true);
                 stateCounter = 2;
-            } else if (stateCounter == 2) {
+            } else if (stateCounter === 2) {
                 actor.value.stopAnimation('animturn');
                 actor.value.startAnimation('animscale', true);
                 stateCounter = 3;
-            } else if (stateCounter == 3) {
+            } else if (stateCounter === 3) {
                 actor.value.stopAnimation('animscale');
                 stateCounter = 0;
             }
 
-            this.app.context.logger.log('debug', `Click on actor.`);
+            console.log('debug', `Click on actor.`);
         });
 
         buttonBehavior.onHover('enter', (userId: string) => {
-            this.app.context.logger.log('debug', `Hover entered on actor.`);
+            console.log('debug', `Hover entered on actor.`);
         });
 
         buttonBehavior.onHover('exit', (userId: string) => {
-            this.app.context.logger.log('debug', `Hover exited on actor.`);
+            console.log('debug', `Hover exited on actor.`);
         });
 
         await delay(30 * 1000);

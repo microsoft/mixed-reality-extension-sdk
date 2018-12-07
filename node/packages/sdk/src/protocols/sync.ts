@@ -4,7 +4,7 @@
  */
 
 import { ServerPreprocessing } from '.';
-import { Services } from '..';
+import { Connection } from '..';
 import * as Payloads from '../types/network/payloads';
 import { Protocol } from './protocol';
 
@@ -13,8 +13,8 @@ import { Protocol } from './protocol';
  * Class to manage the join process with a client.
  */
 export class Sync extends Protocol {
-    constructor(services: Services) {
-        super(services);
+    constructor(conn: Connection) {
+        super(conn);
         // Behave like a server-side endpoint (send heartbeats, measure connection quality)
         this.use(new ServerPreprocessing());
     }

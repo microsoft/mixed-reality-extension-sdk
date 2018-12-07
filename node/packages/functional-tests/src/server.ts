@@ -4,9 +4,15 @@
  */
 
 import * as MRESDK from '@microsoft/mixed-reality-extension-sdk';
+import { log } from '@microsoft/mixed-reality-extension-sdk/built/log';
 import * as http from 'http';
 import * as Restify from 'restify';
 import App from './app';
+
+// tslint:disable:no-console
+
+log.enable(null, 'info');
+log.enable('network', 'error');
 
 process.on('uncaughtException', (error: Error) => {
     console.log("Uncaught exception:", error);
@@ -15,10 +21,6 @@ process.on('uncaughtException', (error: Error) => {
 process.on('unhandledRejection', (reason: any, promise: Promise<void>) => {
     console.log("Unhandled rejection:", reason);
 });
-
-// Create a console logger for apps to use
-const logger = new MRESDK.ConsoleLogger();
-// logger.disable('debug', 'success');
 
 // Base URL where we will serve static files
 let baseUrl: string;
@@ -43,7 +45,7 @@ function serveStaticFiles(server: http.Server) {
 }
 
 // Create a Multi-peer adapter
-const adapter = new MRESDK.MultipeerAdapter({ logger });
+const adapter = new MRESDK.MultipeerAdapter();
 
 // Listen for new connections from a multi-peer client
 adapter.listen().then((server) => serveStaticFiles(server));

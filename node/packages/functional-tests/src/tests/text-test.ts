@@ -9,6 +9,7 @@ import delay from '../utils/delay';
 import destroyActors from '../utils/destroyActors';
 import Test from './test';
 
+// tslint:disable-next-line:variable-name
 const Options = {
     enabled: [true, false],
     contents: ["changing", "content"],

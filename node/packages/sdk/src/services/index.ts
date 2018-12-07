@@ -5,6 +5,4 @@
 
 export * from './storage';
 export * from './connection';
-export * from './logger';
 export * from './telemetry';
-export * from './services';

@@ -12,6 +12,7 @@ import { Adapter, AdapterOptions } from '..';
 import { Context, WebSocket } from '../..';
 import * as Constants from '../../constants';
 import { verifyClient } from '../../utils/verifyClient';
+import { log } from './../../log';
 
 /**
  * WebSocket Adapter options.
@@ -44,7 +45,7 @@ export class WebSocketAdapter extends Adapter {
             return new Promise<http.Server>((resolve) => {
                 const server = this.server = Restify.createServer({ name: "WebSocket Adapter" });
                 this.server.listen(this.port, () => {
-                    this.logger.log('info', `${server.name} listening on ${JSON.stringify(server.address())}`);
+                    log.info(null, `${server.name} listening on ${JSON.stringify(server.address())}`);
                     this.startListening();
                     resolve(server);
                 });
@@ -62,7 +63,7 @@ export class WebSocketAdapter extends Adapter {
 
         // Handle connection upgrades
         wss.on('connection', (ws: WS, request: http.IncomingMessage) => {
-            this.logger.log('info', "New WebSocket connection");
+            log.info(null, "New WebSocket connection");
 
             // Read the sessionId header.
             let sessionId = request.headers[Constants.SessionHeader] as string || UUID();
@@ -76,8 +77,7 @@ export class WebSocketAdapter extends Adapter {
 
             const context = new Context({
                 sessionId,
-                connection,
-                logger: this.logger
+                connection
             });
             context.internal.start();
             this.emitter.emit('connection', context, params);
