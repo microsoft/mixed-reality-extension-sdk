@@ -3,7 +3,6 @@
  * Licensed under the MIT License.
  */
 
-import * as http from 'http';
 import * as Restify from 'restify';
 import { Adapter, MultipeerAdapter } from '.';
 import { log } from './log';
@@ -36,23 +35,28 @@ export class WebHost {
 
         // Start listening for new app connections from a multi-peer client
         this._adapter.listen()
-            .then(server => this.serveStaticFiles(server))
+            .then(server => {
+                log.logToApp(`${server.name} listening on ${JSON.stringify(server.address())}`);
+                this.serveStaticFiles(server);
+            })
             .catch(reason => log.error(null, `Failed to start HTTP server: ${reason}`));
     }
 
-    private serveStaticFiles(server: http.Server): void {
-        const restify = server as Restify.Server;
+    private serveStaticFiles(server: Restify.Server): void {
         // The static files location
         if (!this._baseUrl) {
             this._baseUrl =
                 process.env.BASE_URL || (
                     process.env.WEBSITE_HOSTNAME ?
-                        `//${process.env.WEBSITE_HOSTNAME}` :
-                        restify.url.replace(/\[::\]/, '127.0.0.1')
+                        `https://${process.env.WEBSITE_HOSTNAME}` :
+                        server.url.replace(/\[::\]/, '127.0.0.1')
                 );
         }
+        log.logToApp(`baseUrl: ${this.baseUrl}`);
+        log.logToApp(`baseDir: ${this.baseDir}`);
+
         // Setup static files route
-        restify.get('/*', Restify.plugins.serveStatic({
+        server.get('/*', Restify.plugins.serveStatic({
             directory: this._baseDir,
             default: 'index.html'
         }));
