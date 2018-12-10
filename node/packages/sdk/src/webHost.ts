@@ -25,12 +25,9 @@ export class WebHost {
     public constructor(
         options: { baseDir?: string, baseUrl?: string, port?: string | number } = {}
     ) {
-        this._baseDir = options.baseDir || resolvePath(__dirname, '../public');
-
-        this._baseUrl = options.baseUrl;
-        // Look for environment override.
-        this._baseUrl = this._baseUrl || process.env.BASE_URL;
-        // Azure defines WEBSITE_HOSTNAME, but it's a relative url.
+        this._baseDir = options.baseDir || process.env.BASE_DIR || resolvePath(__dirname, '../public');
+        this._baseUrl = options.baseUrl || process.env.BASE_URL;
+        // Azure defines WEBSITE_HOSTNAME.
         this._baseUrl = this._baseUrl ||
             process.env.WEBSITE_HOSTNAME ? `https://${process.env.WEBSITE_HOSTNAME}` : undefined;
 
