@@ -39,13 +39,12 @@ export class WebSocketAdapter extends Adapter {
      * Start the adapter listening for new connections.
      * @param onNewConnection Handler for new connections.
      */
-    public listen(): Promise<http.Server> {
+    public listen(): Promise<Restify.Server> {
         if (!this.server) {
             // If necessary, create a new web server.
-            return new Promise<http.Server>((resolve) => {
+            return new Promise<Restify.Server>((resolve) => {
                 const server = this.server = Restify.createServer({ name: "WebSocket Adapter" });
                 this.server.listen(this.port, () => {
-                    log.info(null, `${server.name} listening on ${JSON.stringify(server.address())}`);
                     this.startListening();
                     resolve(server);
                 });

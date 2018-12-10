@@ -7,42 +7,40 @@ import debug from 'debug';
 // tslint:disable-next-line:no-var-requires
 const pjson = require('../package.json');
 
-class Log {
+const kApp = 'app';
 
-    public logToApplication = true;
+class Log {
 
     private loggers: { [area: string]: debug.IDebugger } = {};
 
-    private area(facility: string, severity: string): string {
-        facility = this.cleanupFacility(facility);
-        severity = this.cleanupSeverity(severity);
-        let area = pjson.name;
-        if (facility) {
-            area = `${area}:${facility}`;
+    constructor() {
+        this.enableArea(kApp);
+    }
+
+    public get logToAppEnabled() {
+        return !!this.loggers[kApp];
+    }
+    public set logToAppEnabled(enable: boolean) {
+        if (enable) {
+            this.enableArea(kApp);
+        } else {
+            this.disableArea(kApp);
         }
-        if (severity) {
-            area = `${area}:${severity}`;
-        }
-        return area;
     }
 
     public enable(facility?: string, severity?: string) {
         const area = this.area(facility, severity);
-        if (!this.loggers[area]) {
-            this.loggers[area] = debug(area);
-            const areas = Object.keys(this.loggers).join(',');
-            debug.enable(areas);
-        }
+        this.enableArea(area);
     }
 
     public disable(facility?: string, severity?: string) {
-        delete this.loggers[this.area(facility, severity)];
-        const areas = Object.keys(this.loggers).join(',');
-        debug.enable(areas);
+        const area = this.area(facility, severity);
+        this.disableArea(area);
     }
 
     public enabled(facility?: string, severity?: string) {
-        return !!this.loggers[this.area(facility, severity)];
+        const area = this.area(facility, severity);
+        return this.areaEnabled(area);
     }
 
     private logger(facility: string, severity: string): debug.IDebugger {
@@ -55,15 +53,15 @@ class Log {
 
     public warning(facility: string, formatter: any, ...args: any[]) {
         this.log(facility, 'warning', formatter, ...args);
-        if (this.logToApplication && !this.enabled(facility, 'warning')) {
-            logToApplication('warning', formatter, ...args);
+        if (!this.enabled(facility, 'warning')) {
+            this.logToApp(formatter, ...args);
         }
     }
 
     public error(facility: string, formatter: any, ...args: any[]) {
         this.log(facility, 'error', formatter, ...args);
-        if (this.logToApplication && !this.enabled(facility, 'error')) {
-            logToApplication('error', formatter, ...args);
+        if (!this.enabled(facility, 'error')) {
+            this.logToApp(formatter, ...args);
         }
     }
 
@@ -84,6 +82,44 @@ class Log {
         }
     }
 
+    public logToApp(formatter: any, ...args: any[]) {
+        const logger = this.loggers[kApp];
+        if (logger) {
+            logger(formatter, ...args);
+        }
+    }
+
+    private area(facility: string, severity: string): string {
+        facility = this.cleanupFacility(facility);
+        severity = this.cleanupSeverity(severity);
+        let area = pjson.name;
+        if (facility) {
+            area = `${area}:${facility}`;
+        }
+        if (severity) {
+            area = `${area}:${severity}`;
+        }
+        return area;
+    }
+
+    private enableArea(area: string) {
+        if (!this.loggers[area]) {
+            this.loggers[area] = debug(area);
+            const areas = Object.keys(this.loggers).join(',');
+            debug.enable(areas);
+        }
+    }
+
+    private disableArea(area: string) {
+        delete this.loggers[area];
+        const areas = Object.keys(this.loggers).join(',');
+        debug.enable(areas);
+    }
+
+    private areaEnabled(area: string) {
+        return !!this.loggers[area];
+    }
+
     private cleanupFacility(facility: string) {
         switch (facility) {
             case '': return null;
@@ -101,8 +137,3 @@ class Log {
 }
 
 export const log = new Log();
-
-function logToApplication(severity: string, ...args: any[]) {
-    // tslint:disable-next-line:no-console
-    console.log(severity, ...args);
-}

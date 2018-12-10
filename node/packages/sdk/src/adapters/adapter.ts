@@ -3,7 +3,7 @@
  * Licensed under the MIT License.
  */
 
-import * as http from 'http';
+import * as Restify from 'restify';
 import { Context, ParameterSet } from '..';
 import BufferedEventEmitter from '../utils/bufferedEventEmitter';
 
@@ -14,7 +14,7 @@ export type AdapterOptions = {
     /**
      * @member {http.Server} server Provide an existing web server to use. Will create one otherwise
      */
-    server?: http.Server;
+    server?: Restify.Server;
     /**
      * @member {string | number} port Optional. When options.server is not supplied and an internal web server is to be
      * created, this is the port number it should listen on. If this value is not given, it will attempt to read the
@@ -34,7 +34,7 @@ export abstract class Adapter {
     protected get options() { return this._options; }
 
     public get server() { return this._options.server; }
-    public set server(value: http.Server) { this._options.server = value; }
+    public set server(value: Restify.Server) { this._options.server = value; }
     public get port() { return this._options.port; }
 
     // tslint:disable-next-line:variable-name
@@ -47,7 +47,7 @@ export abstract class Adapter {
             3901;
     }
 
-    public abstract listen(): Promise<http.Server>;
+    public abstract listen(): Promise<Restify.Server>;
 
     /**
      * The onConnection event is raised when a new Context is created for an application session. This happens when the

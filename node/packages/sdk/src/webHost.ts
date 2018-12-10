@@ -3,7 +3,7 @@
  * Licensed under the MIT License.
  */
 
-import * as http from 'http';
+import { resolve as resolvePath } from 'path';
 import * as Restify from 'restify';
 import { Adapter, MultipeerAdapter } from '.';
 import { log } from './log';
@@ -23,36 +23,35 @@ export class WebHost {
     public get baseUrl() { return this._baseUrl; }
 
     public constructor(
-        options: { baseDir?: string, baseUrl?: string, port?: string | number }
-            = { baseDir: '.', baseUrl: null, port: null }
+        options: { baseDir?: string, baseUrl?: string, port?: string | number } = {}
     ) {
-        this._baseDir = options.baseDir;
-        this._baseUrl = options.baseUrl;
+        this._baseDir = options.baseDir || process.env.BASE_DIR || resolvePath(__dirname, '../public');
+        this._baseUrl = options.baseUrl || process.env.BASE_URL;
+        // Azure defines WEBSITE_HOSTNAME.
+        this._baseUrl = this._baseUrl ||
+            process.env.WEBSITE_HOSTNAME ? `https://${process.env.WEBSITE_HOSTNAME}` : undefined;
 
+        // Resolve the port number. Heroku defines a PORT environment var (remapped from 80).
         const port = options.port || process.env.PORT || 3901;
 
         // Create a Multi-peer adapter
         this._adapter = new MultipeerAdapter({ port });
 
-        // Start listening for new app connections from a multi-peer client
+        // Start listening for new app connections from a multi-peer client.
         this._adapter.listen()
-            .then(server => this.serveStaticFiles(server))
+            .then(server => {
+                this._baseUrl = this._baseUrl || server.url.replace(/\[::\]/, '127.0.0.1');
+                log.logToApp(`${server.name} listening on ${JSON.stringify(server.address())}`);
+                log.logToApp(`baseUrl: ${this.baseUrl}`);
+                log.logToApp(`baseDir: ${this.baseDir}`);
+                this.serveStaticFiles(server);
+            })
             .catch(reason => log.error(null, `Failed to start HTTP server: ${reason}`));
     }
 
-    private serveStaticFiles(server: http.Server): void {
-        const restify = server as Restify.Server;
-        // The static files location
-        if (!this._baseUrl) {
-            this._baseUrl =
-                process.env.BASE_URL || (
-                    process.env.WEBSITE_HOSTNAME ?
-                        `//${process.env.WEBSITE_HOSTNAME}` :
-                        restify.url.replace(/\[::\]/, '127.0.0.1')
-                );
-        }
+    private serveStaticFiles(server: Restify.Server) {
         // Setup static files route
-        restify.get('/*', Restify.plugins.serveStatic({
+        server.get('/*', Restify.plugins.serveStatic({
             directory: this._baseDir,
             default: 'index.html'
         }));
