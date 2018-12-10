@@ -23,8 +23,7 @@ export class WebHost {
     public get baseUrl() { return this._baseUrl; }
 
     public constructor(
-        options: { baseDir?: string, baseUrl?: string, port?: string | number }
-            = { baseDir: '.', baseUrl: null, port: null }
+        options: { baseDir?: string, baseUrl?: string, port?: string | number } = {}
     ) {
         this._baseDir = options.baseDir || resolvePath(__dirname, '../public');
 
