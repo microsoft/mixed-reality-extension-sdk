@@ -2,7 +2,16 @@
     "files": [],
     "references": [
         {
-            "path": "./packages"
+            "path": "./packages/sdk"
+        },
+        {
+            "path": "./packages/sdk-azure"
+        },
+        {
+            "path": "./packages/gltf-gen"
+        },
+        {
+            "path": "./packages/functional-tests"
         }
     ]
 }
