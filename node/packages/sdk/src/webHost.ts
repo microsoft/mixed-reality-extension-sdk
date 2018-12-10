@@ -3,6 +3,7 @@
  * Licensed under the MIT License.
  */
 
+import { resolve as resolvePath } from 'path';
 import * as Restify from 'restify';
 import { Adapter, MultipeerAdapter } from '.';
 import { log } from './log';
@@ -25,36 +26,34 @@ export class WebHost {
         options: { baseDir?: string, baseUrl?: string, port?: string | number }
             = { baseDir: '.', baseUrl: null, port: null }
     ) {
-        this._baseDir = options.baseDir;
-        this._baseUrl = options.baseUrl;
+        this._baseDir = options.baseDir || resolvePath(__dirname, '../public');
 
+        this._baseUrl = options.baseUrl;
+        // Look for environment override.
+        this._baseUrl = this._baseUrl || process.env.BASE_URL;
+        // Azure defines WEBSITE_HOSTNAME, but it's a relative url.
+        this._baseUrl = this._baseUrl ||
+            process.env.WEBSITE_HOSTNAME ? `https://${process.env.WEBSITE_HOSTNAME}` : undefined;
+
+        // Resolve the port number. Heroku defines a PORT environment var (remapped from 80).
         const port = options.port || process.env.PORT || 3901;
 
         // Create a Multi-peer adapter
         this._adapter = new MultipeerAdapter({ port });
 
-        // Start listening for new app connections from a multi-peer client
+        // Start listening for new app connections from a multi-peer client.
         this._adapter.listen()
             .then(server => {
+                this._baseUrl = this._baseUrl || server.url.replace(/\[::\]/, '127.0.0.1');
                 log.logToApp(`${server.name} listening on ${JSON.stringify(server.address())}`);
+                log.logToApp(`baseUrl: ${this.baseUrl}`);
+                log.logToApp(`baseDir: ${this.baseDir}`);
                 this.serveStaticFiles(server);
             })
             .catch(reason => log.error(null, `Failed to start HTTP server: ${reason}`));
     }
 
-    private serveStaticFiles(server: Restify.Server): void {
-        // The static files location
-        if (!this._baseUrl) {
-            this._baseUrl =
-                process.env.BASE_URL || (
-                    process.env.WEBSITE_HOSTNAME ?
-                        `https://${process.env.WEBSITE_HOSTNAME}` :
-                        server.url.replace(/\[::\]/, '127.0.0.1')
-                );
-        }
-        log.logToApp(`baseUrl: ${this.baseUrl}`);
-        log.logToApp(`baseDir: ${this.baseDir}`);
-
+    private serveStaticFiles(server: Restify.Server) {
         // Setup static files route
         server.get('/*', Restify.plugins.serveStatic({
             directory: this._baseDir,
