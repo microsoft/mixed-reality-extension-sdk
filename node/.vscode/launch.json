@@ -9,6 +9,20 @@
             "request": "attach",
             "name": "Attach to app",
             "port": 9229
-        }
+        },
+        {
+          "type": "node",
+          "request": "launch",
+          "name": "Launch functional-tests app",
+          "runtimeExecutable": "npm",
+          "runtimeArgs": [
+            "run-script",
+            "debug"
+          ],
+          "port": 9229,
+          "cwd": "${workspaceFolder}/packages/functional-tests",
+          "internalConsoleOptions": "openOnSessionStart",
+          "autoAttachChildProcesses": true
+        },
     ]
 }
