@@ -25,11 +25,13 @@ export class WebHost {
     public constructor(
         options: { baseDir?: string, baseUrl?: string, port?: string | number } = {}
     ) {
-        this._baseDir = options.baseDir || process.env.BASE_DIR || resolvePath(__dirname, '../public');
+        this._baseDir = options.baseDir || process.env.BASE_DIR || resolvePath('./public');
         this._baseUrl = options.baseUrl || process.env.BASE_URL;
+
         // Azure defines WEBSITE_HOSTNAME.
-        this._baseUrl = this._baseUrl ||
-            process.env.WEBSITE_HOSTNAME ? `https://${process.env.WEBSITE_HOSTNAME}` : undefined;
+        if (!this._baseUrl && process.env.WEBSITE_HOSTNAME) {
+            this._baseUrl = `https://${process.env.WEBSITE_HOSTNAME}`;
+        }
 
         // Resolve the port number. Heroku defines a PORT environment var (remapped from 80).
         const port = options.port || process.env.PORT || 3901;
