@@ -105,7 +105,7 @@ enough to not require any server redeploys.
 ## How to Build and Deploy the SDK functional tests
 From command prompt:
 * `git clone http://github.com/microsoft/mixed-reality-extension-sdk`
-* `cd mixed-reality-extension-sdk\node`
+* `cd mixed-reality-extension-sdk`
 * `npm install` This will install all dependent packages. (and will do very
 little if there are no changes)
 * `npm run build` This should not report any errors.
