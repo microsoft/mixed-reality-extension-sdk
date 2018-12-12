@@ -30,7 +30,7 @@
     "test": "npm run build && node built/tests/index.js",
     "clean": "tsc --build --clean",
     "build": "npm run lint && tsc --build",
-    "build-docs": "typedoc --externalPattern \"**/node_modules/**\" --excludeExternals --excludeNotExported --excludeProtected --excludePrivate --hideGenerator --mode file --name \"glTF Generator\" --readme none --out ../../../docs/gltf-gen ./src",
+    "build-docs": "typedoc --externalPattern \"**/node_modules/**\" --excludeExternals --excludeNotExported --excludeProtected --excludePrivate --hideGenerator --mode file --name \"glTF Generator\" --readme none --out ../../docs/gltf-gen ./src",
     "lint": "tslint -p ./tsconfig.json -c ../tslint.json",
     "lint-docs": "tslint -p ./tsconfig.json -c ../tslint.docs.json",
     "prepublishOnly": "tsc --build"
