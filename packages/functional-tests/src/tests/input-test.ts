@@ -10,8 +10,6 @@ import delay from '../utils/delay';
 import destroyActors from '../utils/destroyActors';
 import Test from './test';
 
-// tslint:disable:no-console
-
 let stateCounter = 0;
 
 export default class InputTest extends Test {
