@@ -48,7 +48,7 @@ export class WebHost {
                 log.logToApp(`baseDir: ${this.baseDir}`);
                 this.serveStaticFiles(server);
             })
-            .catch(reason => log.error(null, `Failed to start HTTP server: ${reason}`));
+            .catch(reason => log.error('app', `Failed to start HTTP server: ${reason}`));
     }
 
     private serveStaticFiles(server: Restify.Server) {
