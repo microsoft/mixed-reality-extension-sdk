@@ -155,7 +155,7 @@ export default class RigidBodyTest extends Test {
         await delay(5000);
 
         // Clean up.
-        // destroyActors(actors.map(actor => actor.value));
+        destroyActors(actors.map(actor => actor.value));
 
         return true;
     }
