@@ -108,7 +108,7 @@ export class MultipeerAdapter extends Adapter {
 
         // Handle WebSocket connection upgrades
         wss.on('connection', async (ws: WS, request: http.IncomingMessage) => {
-            log.info(null, "New Multi-peer connection");
+            log.info('network', "New Multi-peer connection");
 
             // Read the sessionId header.
             let sessionId = request.headers[Constants.SessionHeader] as string || UUID();

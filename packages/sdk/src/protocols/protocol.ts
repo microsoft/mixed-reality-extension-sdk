@@ -74,6 +74,8 @@ export class Protocol extends EventEmitter {
     }
 
     public recvMessage(message: Message) {
+        log.verbose('network', `${this.name} recv`, JSON.stringify(message));
+
         // Run message through all the middlewares
         const middlewares = this.middlewares.slice();
         for (const middleware of middlewares) {
@@ -85,7 +87,6 @@ export class Protocol extends EventEmitter {
             }
         }
 
-        log.verbose('network', `${this.name} recv`, JSON.stringify(message));
         if (message.replyToId) {
             this.handleReplyMessage(message);
         } else {
@@ -97,11 +98,11 @@ export class Protocol extends EventEmitter {
         if (payload && payload.type && payload.type.length) {
             // tslint:disable-next-line:no-any
             const handler = (this as any)[`recv-${payload.type}`] || (() => {
-                log.error(null, `${this.name} has no handler for payload ${payload.type}!`);
+                log.error('network', `${this.name} has no handler for payload ${payload.type}!`);
             });
             handler(payload);
         } else {
-            log.error(null, `${this.name} invalid message payload!`);
+            log.error('network', `${this.name} invalid message payload!`);
         }
     }
 
@@ -119,7 +120,7 @@ export class Protocol extends EventEmitter {
     protected handleReplyMessage(message: Message) {
         const queuedPromise = this.promises[message.replyToId];
         if (!queuedPromise) {
-            log.error(null, `${this.name} received unexpected reply message! replyToId: ${message.replyToId}`);
+            log.error('network', `${this.name} received unexpected reply message! replyToId: ${message.replyToId}`);
         } else {
             delete this.promises[message.replyToId];
             queuedPromise.promise.resolve(message.payload, message);
