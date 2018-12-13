@@ -27,8 +27,10 @@ export default class RigidBodyTest extends Test {
     public async runSphereTest(): Promise<boolean> {
         const actors: Array<MRESDK.ForwardPromise<MRESDK.Actor>> = [];
 
+        const sphereCount = 20;
+
         // Spawn a stack of spheres.
-        for (let i = 0; i < 20; ++i) {
+        for (let i = 0; i < sphereCount; ++i) {
             const actor = MRESDK.Actor.CreatePrimitive(this.app.context, {
                 definition: {
                     shape: MRESDK.PrimitiveShape.Sphere,
@@ -153,12 +155,18 @@ export default class RigidBodyTest extends Test {
         await delay(5000);
 
         // Clean up.
-        destroyActors(actors.map(actor => actor.value));
+        // destroyActors(actors.map(actor => actor.value));
 
         return true;
     }
 
-    public createBoxLayer(count: number, x: number, y: number, size: number, spacing: number): Array<MRESDK.ForwardPromise<MRESDK.Actor>> {
+    public createBoxLayer(
+        count: number,
+        x: number,
+        y: number,
+        size: number,
+        spacing: number
+    ): Array<MRESDK.ForwardPromise<MRESDK.Actor>> {
         const actors: Array<MRESDK.ForwardPromise<MRESDK.Actor>> = [];
         for (let i = 0; i < count; ++i) {
             const actor = MRESDK.Actor.CreatePrimitive(this.app.context, {

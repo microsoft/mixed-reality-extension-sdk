@@ -15,14 +15,11 @@ import RigidBodyTest from './tests/rigid-body-test';
 import Test from './tests/test';
 import TextTest from './tests/text-test';
 
-// tslint:disable:no-console
-
 /**
  * Functional Test Application.
  */
 export default class App {
     private activeTests: { [id: string]: Test } = {};
-    // tslint:disable-next-line:variable-name
     private _rpc: MRERPC.ContextRPC;
 
     public get context() { return this._context; }
@@ -42,7 +39,6 @@ export default class App {
         'asset-preload': (): Test => new AssetPreloadTest(this, this.baseUrl)
     };
 
-    // tslint:disable-next-line:variable-name
     constructor(private _context: MRESDK.Context, private params: MRESDK.ParameterSet, private baseUrl: string) {
         this._rpc = new MRERPC.ContextRPC(_context);
 
