@@ -21,6 +21,7 @@ import TextTest from './tests/text-test';
 export default class App {
     private activeTests: { [id: string]: Test } = {};
     private _rpc: MRERPC.ContextRPC;
+    private latestUser: MRESDK.User;
 
     public get context() { return this._context; }
     public get rpc() { return this._rpc; }
@@ -30,13 +31,13 @@ export default class App {
      */
     private testFactories: { [key: string]: () => Test } = {
         'gltf-animation-test': (): Test => new GltfAnimationTest(this, this.baseUrl),
-        'look-at-test': (): Test => new LookAtTest(this, this.baseUrl),
+        'look-at-test': (): Test => new LookAtTest(this, this.baseUrl, this.latestUser),
         'rigid-body-test': (): Test => new RigidBodyTest(this),
         'text-test': (): Test => new TextTest(this),
         'clock-sync-test': (): Test => new ClockSyncTest(this, this.baseUrl),
         'primitives-test': (): Test => new PrimitivesTest(this, this.baseUrl),
         'input-test': (): Test => new InputTest(this, this.baseUrl),
-        'asset-preload': (): Test => new AssetPreloadTest(this, this.baseUrl)
+        'asset-preload': (): Test => new AssetPreloadTest(this, this.baseUrl, this.latestUser)
     };
 
     constructor(private _context: MRESDK.Context, private params: MRESDK.ParameterSet, private baseUrl: string) {
@@ -51,6 +52,8 @@ export default class App {
 
     private userJoined = async (user: MRESDK.User) => {
         console.log(`user-joined: ${user.name}, ${user.id}`);
+
+        this.latestUser = user;
 
         let testName: string;
         if (Array.isArray(this.params.test) && this.params.test.length > 0) {

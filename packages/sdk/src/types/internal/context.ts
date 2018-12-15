@@ -18,6 +18,7 @@ import {
     Context,
     Light,
     LightLike,
+    LookAtMode,
     PrimitiveDefinition,
     RigidBody,
     RigidBodyLike,
@@ -46,6 +47,7 @@ import {
     EnableLight,
     EnableRigidBody,
     EnableText,
+    LookAt,
     ObjectSpawned,
     OperationResult,
     PauseAnimation,
@@ -422,6 +424,24 @@ export class InternalContext {
                 .catch((reason) => log.error('app', reason));
         } else {
             log.error('app', `Failed to reset animation ${animationName}. Actor ${actorId} not found`);
+        }
+    }
+
+    public lookAt(actorId: string, targetId: string, lookAtMode: LookAtMode) {
+        const actor = this.actorSet[actorId];
+        if (actor) {
+            actor.created().then(() => {
+                this.protocol.sendPayload({
+                    type: 'look-at',
+                    actorId,
+                    targetId,
+                    lookAtMode
+                } as LookAt);
+            }).catch((reason: any) => {
+                log.error('app', `Failed enable rigid body on actor ${actor.id}. ${(reason || '').toString()}`.trim());
+            });
+        } else {
+            log.error('app', `Failed lookAt. Actor ${actorId} not found`);
         }
     }
 

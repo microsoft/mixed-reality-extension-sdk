@@ -21,9 +21,7 @@
           ],
           "port": 9229,
           "cwd": "${workspaceFolder}/packages/functional-tests",
-          "internalConsoleOptions": "openOnSessionStart",
-          "autoAttachChildProcesses": true,
-          "outputCapture": "std"
+          "autoAttachChildProcesses": true
         },
     ]
 }
