@@ -60,16 +60,20 @@ export default class App {
         let testName: string;
         if (Array.isArray(this.params.test) && this.params.test.length > 0) {
             testName = this.params.test[0];
-            await this.startTest(testName);
         } else {
             testName = this.params.test as string;
+        }
+        if (testName) {
+            await this.startTest(testName);
+            this.rpc.send('functional-test:close-connection');
+        } else {
             await this.launchTestBrowser();
         }
     }
-
     private userLeft = (user: MRESDK.User) => {
         console.log(`user-left: ${user.name}, ${user.id}`);
     }
+
 
     private async startTest(testName: string) {
         if (this.activeTests[testName]) {
@@ -83,7 +87,6 @@ export default class App {
             const success = await test.run();
             console.log(`Test complete: '${testName}'. Success: ${success}`);
             this.rpc.send('functional-test:test-complete', testName, success);
-            this.rpc.send('functional-test:close-connection');
 
             delete this.activeTests[testName];
         }
@@ -93,47 +96,46 @@ export default class App {
     private async launchTestBrowser() {
         while (true) {
             const tester = MRESDK.Actor.CreateEmpty(this.context, {});
-            var selectedTestName = undefined;
-            await new Promise<void>((resolve) => {
+            const selectedTestName = await new Promise<string>((resolve) => {
                 let y = 0;
-                for (let key in this.testFactories) {
-                    console.log(key);
-                    let button = MRESDK.Actor.CreatePrimitive(this.context, {
-                        definition: {
-                            shape: MRESDK.PrimitiveShape.Box,
-                            dimensions: { x: 0.3, y: 0.3, z: 0.01 }
-                        },
-                        addCollider: true,
-                        actor: {
-                            name: key,
-                            parentId: tester.value.id,
-                            transform: {
-                                position: { x: 0, y: y, z: 0 }
-                            }
-                        }
-                    });
-
-                    const buttonBehavior = button.value.setBehavior(MRESDK.ButtonBehavior);
-                    buttonBehavior.onClick('pressed', (userId: string) => {
-                        selectedTestName = button.value.name;
-                        resolve();
-                    });
-
-                    MRESDK.Actor.CreateEmpty(this.context, {
-                        actor: {
-                            name: 'label',
-                            parentId: tester.value.id,
-                            text: {
-                                contents: key,
-                                height: 0.5,
-                                anchor: MRESDK.TextAnchorLocation.MiddleLeft
+                for (const key in this.testFactories) {
+                    if (this.testFactories.hasOwnProperty(key)) {
+                        const button = MRESDK.Actor.CreatePrimitive(this.context, {
+                            definition: {
+                                shape: MRESDK.PrimitiveShape.Box,
+                                dimensions: { x: 0.3, y: 0.3, z: 0.01 }
                             },
-                            transform: {
-                                position: { x: 0.5, y: y, z: 0 }
+                            addCollider: true,
+                            actor: {
+                                name: key,
+                                parentId: tester.value.id,
+                                transform: {
+                                    position: { x: 0, y, z: 0 }
+                                }
                             }
-                        }
-                    });
-                    y = y + 0.5;
+                        });
+
+                        const buttonBehavior = button.value.setBehavior(MRESDK.ButtonBehavior);
+                        buttonBehavior.onClick('pressed', (userId: string) => {
+                            resolve(button.value.name);
+                        });
+
+                        MRESDK.Actor.CreateEmpty(this.context, {
+                            actor: {
+                                name: 'label',
+                                parentId: tester.value.id,
+                                text: {
+                                    contents: key,
+                                    height: 0.5,
+                                    anchor: MRESDK.TextAnchorLocation.MiddleLeft
+                                },
+                                transform: {
+                                    position: { x: 0.5, y, z: 0 }
+                                }
+                            }
+                        });
+                        y = y + 0.5;
+                    }
                 }
             });
             destroyActors(tester.value);
