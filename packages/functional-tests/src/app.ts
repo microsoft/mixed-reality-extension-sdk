@@ -67,7 +67,7 @@ export default class App {
             this.rpc.send('functional-test:close-connection');
         } else {
             if (!this.firstUser) {
-                this.launchTestBrowser();
+                this.runFunctionalTestMenu();
             }
             this.firstUser = user;
         }
@@ -92,53 +92,56 @@ export default class App {
             delete this.activeTests[testName];
         }
     }
+    private async displayFunctionalTestChoices(rootActor: MRESDK.ActorLike): Promise<string> {
+        return new Promise<string>((resolve) => {
+            let y = 0;
+            for (const key in this.testFactories) {
+                if (this.testFactories.hasOwnProperty(key)) {
+                    const button = MRESDK.Actor.CreatePrimitive(this.context, {
+                        definition: {
+                            shape: MRESDK.PrimitiveShape.Box,
+                            dimensions: { x: 0.3, y: 0.3, z: 0.01 }
+                        },
+                        addCollider: true,
+                        actor: {
+                            name: key,
+                            parentId: rootActor.id,
+                            transform: {
+                                position: { x: 0, y, z: 0 }
+                            }
+                        }
+                    });
 
-    private async launchTestBrowser() {
-        while (true) {
-            const tester = MRESDK.Actor.CreateEmpty(this.context, {});
-            const selectedTestName = await new Promise<string>((resolve) => {
-                let y = 0;
-                for (const key in this.testFactories) {
-                    if (this.testFactories.hasOwnProperty(key)) {
-                        const button = MRESDK.Actor.CreatePrimitive(this.context, {
-                            definition: {
-                                shape: MRESDK.PrimitiveShape.Box,
-                                dimensions: { x: 0.3, y: 0.3, z: 0.01 }
+                    const buttonBehavior = button.value.setBehavior(MRESDK.ButtonBehavior);
+                    buttonBehavior.onClick('pressed', (userId: string) => {
+                        resolve(button.value.name);
+                    });
+
+                    MRESDK.Actor.CreateEmpty(this.context, {
+                        actor: {
+                            name: 'label',
+                            parentId: rootActor.id,
+                            text: {
+                                contents: key,
+                                height: 0.5,
+                                anchor: MRESDK.TextAnchorLocation.MiddleLeft
                             },
-                            addCollider: true,
-                            actor: {
-                                name: key,
-                                parentId: tester.value.id,
-                                transform: {
-                                    position: { x: 0, y, z: 0 }
-                                }
+                            transform: {
+                                position: { x: 0.5, y, z: 0 }
                             }
-                        });
-
-                        const buttonBehavior = button.value.setBehavior(MRESDK.ButtonBehavior);
-                        buttonBehavior.onClick('pressed', (userId: string) => {
-                            resolve(button.value.name);
-                        });
-
-                        MRESDK.Actor.CreateEmpty(this.context, {
-                            actor: {
-                                name: 'label',
-                                parentId: tester.value.id,
-                                text: {
-                                    contents: key,
-                                    height: 0.5,
-                                    anchor: MRESDK.TextAnchorLocation.MiddleLeft
-                                },
-                                transform: {
-                                    position: { x: 0.5, y, z: 0 }
-                                }
-                            }
-                        });
-                        y = y + 0.5;
-                    }
+                        }
+                    });
+                    y = y + 0.5;
                 }
-            });
-            destroyActors(tester.value);
+            }
+        });
+    }
+
+    private async runFunctionalTestMenu() {
+        while (true) {
+            const rootActor = MRESDK.Actor.CreateEmpty(this.context, {});
+            const selectedTestName = await this.displayFunctionalTestChoices(rootActor.value);
+            destroyActors(rootActor.value);
             await this.startTest(selectedTestName, this.firstUser);
         }
     }
