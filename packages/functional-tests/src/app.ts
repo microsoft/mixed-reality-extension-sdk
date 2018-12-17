@@ -7,8 +7,6 @@ import * as MRESDK from '@microsoft/mixed-reality-extension-sdk';
 import * as MRERPC from '@microsoft/mixed-reality-extension-sdk/built/rpc';
 import AssetPreloadTest from './tests/asset-preload';
 import ClockSyncTest from './tests/clock-sync-test';
-import delay from './utils/delay';
-import destroyActors from './utils/destroyActors';
 import GltfAnimationTest from './tests/gltf-animation-test';
 import InputTest from './tests/input-test';
 import LookAtTest from './tests/look-at-test';
@@ -16,6 +14,8 @@ import PrimitivesTest from './tests/primitives-test';
 import RigidBodyTest from './tests/rigid-body-test';
 import Test from './tests/test';
 import TextTest from './tests/text-test';
+import delay from './utils/delay';
+import destroyActors from './utils/destroyActors';
 
 /**
  * Functional Test Application.
@@ -74,7 +74,6 @@ export default class App {
         console.log(`user-left: ${user.name}, ${user.id}`);
     }
 
-
     private async startTest(testName: string) {
         if (this.activeTests[testName]) {
             console.log(`Test already running: '${testName}'`);
@@ -91,7 +90,6 @@ export default class App {
             delete this.activeTests[testName];
         }
     }
-
 
     private async launchTestBrowser() {
         while (true) {
