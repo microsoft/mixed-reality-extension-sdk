@@ -7,58 +7,138 @@
       "type": "npm",
       "script": "build",
       "path": "packages/",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": true,
+        "clear": true
+      },
       "problemMatcher": []
     },
     {
       "type": "npm",
       "script": "build",
       "path": "packages/sdk/",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": true,
+        "clear": true
+      },
       "problemMatcher": []
     },
     {
       "type": "npm",
       "script": "build",
       "path": "packages/sdk-azure/",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": true,
+        "clear": true
+      },
       "problemMatcher": []
     },
     {
       "type": "npm",
       "script": "build",
       "path": "packages/functional-tests/",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": true,
+        "clear": true
+      },
       "problemMatcher": []
     },
     {
       "type": "npm",
       "script": "build",
       "path": "packages/gltf-gen/",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": true,
+        "clear": true
+      },
       "problemMatcher": []
     },
     {
       "type": "npm",
       "script": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": true,
+        "clear": true
+      },
       "problemMatcher": []
     },
     {
       "type": "npm",
       "script": "lint",
       "path": "packages/",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": true,
+        "clear": true
+      },
       "problemMatcher": []
     },
     {
       "type": "npm",
       "script": "lint",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": true,
+        "clear": true
+      },
       "problemMatcher": []
     },
     {
       "type": "npm",
       "script": "lint-docs",
       "path": "packages/",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": true,
+        "clear": true
+      },
       "problemMatcher": []
     },
     {
       "type": "npm",
       "script": "build-docs",
       "path": "packages/",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": true,
+        "clear": true
+      },
       "problemMatcher": []
     }
   ]
