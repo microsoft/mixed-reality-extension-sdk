@@ -23,7 +23,7 @@ import destroyActors from './utils/destroyActors';
 export default class App {
     private activeTests: { [id: string]: Test } = {};
     private _rpc: MRERPC.ContextRPC;
-    private latestUser: MRESDK.User;
+    private firstUser: MRESDK.User;
 
     public get context() { return this._context; }
     public get rpc() { return this._rpc; }
@@ -31,15 +31,15 @@ export default class App {
     /**
      * Registry of functional tests. Add your test here.
      */
-    private testFactories: { [key: string]: () => Test } = {
+    private testFactories: { [key: string]: (user: MRESDK.User) => Test } = {
         'gltf-animation-test': (): Test => new GltfAnimationTest(this, this.baseUrl),
-        'look-at-test': (): Test => new LookAtTest(this, this.baseUrl, this.latestUser),
+        'look-at-test': (user: MRESDK.User): Test => new LookAtTest(this, this.baseUrl, user),
         'rigid-body-test': (): Test => new RigidBodyTest(this),
         'text-test': (): Test => new TextTest(this),
         'clock-sync-test': (): Test => new ClockSyncTest(this, this.baseUrl),
         'primitives-test': (): Test => new PrimitivesTest(this, this.baseUrl),
         'input-test': (): Test => new InputTest(this, this.baseUrl),
-        'asset-preload': (): Test => new AssetPreloadTest(this, this.baseUrl, this.latestUser)
+        'asset-preload': (user: MRESDK.User): Test => new AssetPreloadTest(this, this.baseUrl, user)
     };
 
     constructor(private _context: MRESDK.Context, private params: MRESDK.ParameterSet, private baseUrl: string) {
@@ -55,7 +55,6 @@ export default class App {
     private userJoined = async (user: MRESDK.User) => {
         console.log(`user-joined: ${user.name}, ${user.id}`);
 
-        this.latestUser = user;
 
         let testName: string;
         if (Array.isArray(this.params.test) && this.params.test.length > 0) {
@@ -64,23 +63,26 @@ export default class App {
             testName = this.params.test as string;
         }
         if (testName) {
-            await this.startTest(testName);
+            await this.startTest(testName, user);
             this.rpc.send('functional-test:close-connection');
         } else {
-            await this.launchTestBrowser();
+            if (!this.firstUser) {
+                this.launchTestBrowser();
+            }
+            this.firstUser = user;
         }
     }
     private userLeft = (user: MRESDK.User) => {
         console.log(`user-left: ${user.name}, ${user.id}`);
     }
 
-    private async startTest(testName: string) {
+    private async startTest(testName: string,  user: MRESDK.User) {
         if (this.activeTests[testName]) {
             console.log(`Test already running: '${testName}'`);
         } else if (!this.testFactories[testName]) {
             console.log(`error: Unrecognized test: '${testName}'`);
         } else {
-            const test = this.activeTests[testName] = this.testFactories[testName]();
+            const test = this.activeTests[testName] = this.testFactories[testName](user);
             this.rpc.send('functional-test:test-started', testName);
             console.log(`Test started: '${testName}'`);
             const success = await test.run();
@@ -137,7 +139,7 @@ export default class App {
                 }
             });
             destroyActors(tester.value);
-            await this.startTest(selectedTestName);
+            await this.startTest(selectedTestName, this.firstUser);
         }
     }
 }
