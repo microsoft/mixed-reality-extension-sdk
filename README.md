@@ -43,7 +43,7 @@ if you are interested in helping out.
 
 ## Features
 The SDK enables you to create extensions that can
-* Modify the scene graph by loading GLTF assets and scene files, instantiating
+* Modify the scene graph by loading glTF assets and scene files, instantiating
 primitives or the host app's built-in assets, or programmatically build meshes.
 * Create or load keyframe animations.
 * Assign rigid body properties, physics forces, collision geometry, and have
