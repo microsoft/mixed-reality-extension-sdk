@@ -22,6 +22,6 @@
           "port": 9229,
           "cwd": "${workspaceFolder}/packages/functional-tests",
           "autoAttachChildProcesses": true
-        },
+        }
     ]
 }
