@@ -9,7 +9,7 @@ import delay from '../utils/delay';
 import destroyActors from '../utils/destroyActors';
 import Test from './test';
 
-const Options = {
+const options = {
     enabled: [true, false],
     contents: ["changing", "content"],
     ppl: [10, 20, 50],
@@ -117,36 +117,36 @@ export default class TextTest extends Test {
     }
 
     private cycleOptions(): void {
-        this.enabled.text.enabled = Options.enabled[
-            (Options.enabled.indexOf(this.enabled.text.enabled) + 1) % Options.enabled.length
+        this.enabled.text.enabled = options.enabled[
+            (options.enabled.indexOf(this.enabled.text.enabled) + 1) % options.enabled.length
         ];
 
-        this.contents.text.contents = Options.contents[
-            (Options.contents.indexOf(this.contents.text.contents) + 1) % Options.contents.length
+        this.contents.text.contents = options.contents[
+            (options.contents.indexOf(this.contents.text.contents) + 1) % options.contents.length
         ];
 
-        this.ppl.text.pixelsPerLine = Options.ppl[
-            (Options.ppl.indexOf(this.ppl.text.pixelsPerLine) + 1) % Options.ppl.length
+        this.ppl.text.pixelsPerLine = options.ppl[
+            (options.ppl.indexOf(this.ppl.text.pixelsPerLine) + 1) % options.ppl.length
         ];
 
-        this.height.text.height = Options.height[
-            (Options.height.indexOf(this.height.text.height) + 1) % Options.height.length
+        this.height.text.height = options.height[
+            (options.height.indexOf(this.height.text.height) + 1) % options.height.length
         ];
 
-        this.anchor.text.anchor = Options.anchor[
-            (Options.anchor.indexOf(this.anchor.text.anchor) + 1) % Options.anchor.length
+        this.anchor.text.anchor = options.anchor[
+            (options.anchor.indexOf(this.anchor.text.anchor) + 1) % options.anchor.length
         ];
 
-        this.justify.text.justify = Options.justify[
-            (Options.justify.indexOf(this.justify.text.justify) + 1) % Options.justify.length
+        this.justify.text.justify = options.justify[
+            (options.justify.indexOf(this.justify.text.justify) + 1) % options.justify.length
         ];
 
-        this.font.text.font = Options.font[
-            (Options.font.indexOf(this.font.text.font) + 1) % Options.font.length
+        this.font.text.font = options.font[
+            (options.font.indexOf(this.font.text.font) + 1) % options.font.length
         ];
 
-        this.color.text.color = Options.color[
-            (Options.color.findIndex(c => c.equals(this.color.text.color)) + 1) % Options.color.length
+        this.color.text.color = options.color[
+            (options.color.findIndex(c => c.equals(this.color.text.color)) + 1) % options.color.length
         ];
     }
 

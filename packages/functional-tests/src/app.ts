@@ -75,7 +75,6 @@ export default class App {
     private userLeft = (user: MRESDK.User) => {
         console.log(`user-left: ${user.name}, ${user.id}`);
     }
-
     private async startTest(testName: string,  user: MRESDK.User) {
         if (this.activeTests[testName]) {
             console.log(`Test already running: '${testName}'`);

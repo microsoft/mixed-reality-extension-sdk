@@ -27,7 +27,7 @@ export default class LookAtTest extends Test {
         const tester = await MRESDK.Actor.CreateFromGLTF(this.app.context, {
             resourceUrl: `${this.baseUrl}/monkey.glb`
         });
-        tester.createAnimation({
+        await tester.createAnimation({
             animationName: 'circle',
             wrapMode: MRESDK.AnimationWrapMode.Loop,
             events: [],
