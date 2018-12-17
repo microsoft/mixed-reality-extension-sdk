@@ -7,6 +7,8 @@ import * as MRESDK from '@microsoft/mixed-reality-extension-sdk';
 import * as MRERPC from '@microsoft/mixed-reality-extension-sdk/built/rpc';
 import AssetPreloadTest from './tests/asset-preload';
 import ClockSyncTest from './tests/clock-sync-test';
+import delay from './utils/delay';
+import destroyActors from './utils/destroyActors';
 import GltfAnimationTest from './tests/gltf-animation-test';
 import InputTest from './tests/input-test';
 import LookAtTest from './tests/look-at-test';
@@ -58,11 +60,11 @@ export default class App {
         let testName: string;
         if (Array.isArray(this.params.test) && this.params.test.length > 0) {
             testName = this.params.test[0];
+            await this.startTest(testName);
         } else {
             testName = this.params.test as string;
+            await this.launchTestBrowser();
         }
-
-        await this.startTest(testName);
     }
 
     private userLeft = (user: MRESDK.User) => {
@@ -84,6 +86,58 @@ export default class App {
             this.rpc.send('functional-test:close-connection');
 
             delete this.activeTests[testName];
+        }
+    }
+
+
+    private async launchTestBrowser() {
+        while (true) {
+            const tester = MRESDK.Actor.CreateEmpty(this.context, {});
+            var selectedTestName = undefined;
+            await new Promise<void>((resolve) => {
+                let y = 0;
+                for (let key in this.testFactories) {
+                    console.log(key);
+                    let button = MRESDK.Actor.CreatePrimitive(this.context, {
+                        definition: {
+                            shape: MRESDK.PrimitiveShape.Box,
+                            dimensions: { x: 0.3, y: 0.3, z: 0.01 }
+                        },
+                        addCollider: true,
+                        actor: {
+                            name: key,
+                            parentId: tester.value.id,
+                            transform: {
+                                position: { x: 0, y: y, z: 0 }
+                            }
+                        }
+                    });
+
+                    const buttonBehavior = button.value.setBehavior(MRESDK.ButtonBehavior);
+                    buttonBehavior.onClick('pressed', (userId: string) => {
+                        selectedTestName = button.value.name;
+                        resolve();
+                    });
+
+                    MRESDK.Actor.CreateEmpty(this.context, {
+                        actor: {
+                            name: 'label',
+                            parentId: tester.value.id,
+                            text: {
+                                contents: key,
+                                height: 0.5,
+                                anchor: MRESDK.TextAnchorLocation.MiddleLeft
+                            },
+                            transform: {
+                                position: { x: 0.5, y: y, z: 0 }
+                            }
+                        }
+                    });
+                    y = y + 0.5;
+                }
+            });
+            destroyActors(tester.value);
+            await this.startTest(selectedTestName);
         }
     }
 }
