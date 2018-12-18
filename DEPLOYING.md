@@ -50,8 +50,7 @@ is straight forward using their command line tool, and pricing is reasonable if
 the free tier doesn't work for you.
 
 #### Sign up
-Go to the [openode.io website](https://openode.io) and sign up. Be sure to
-verify your email. opeNode will not run your app until this step is complete.
+Go to the [openode.io website](https://openode.io) and sign up.
 
 #### Create a new instance for your app
 1. On the website, click on [My Instances](https://www.openode.io/admin/). This
@@ -91,7 +90,7 @@ This creates a file on disk named `Dockerfile`
 The Node version specified in the Dockerfile is newer than the MRE SDK's Node depencency. To eliminate
 potential incompatibility, edit the first line of the Dockerfile so that it specifies Node v8.12:
 ```
-FROM node:8.12
+FROM node:8.12.0-alpine
 ```
 Your app can be bundled with static files located in the `public` folder. These files include glTF
 models, audio resources, etc. For the app to be able to serve these files to the client, it needs to
@@ -107,9 +106,8 @@ After your app deploys you will see a message that looks like this:
 
 Copy the `URL` value, edit your Dockerfile and add this line just below the line that reads `ENV PORT=80`:
 ```
-ENV BASE_URL=//YOUR_SITE_NAME.fr.openode.io
+ENV BASE_URL=http://YOUR_SITE_NAME.fr.openode.io
 ```
-(Notice that `http:` was removed from the front of the value)
 
 Save and close the Dockerfile.
 
