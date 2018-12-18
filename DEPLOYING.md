@@ -70,7 +70,8 @@ This same process is outlined in the next section.
 #### Deploy your app to your new instance
 1. On your local machine, open a command prompt.
 
-2. If needed, install the opeNode command line interface (only needs to be done once):
+2. If needed, install the opeNode command line interface (only needs to be done once - this requires
+the command prompt to be launched in administrator mode):
 ```
 npm install -g openode
 ```
