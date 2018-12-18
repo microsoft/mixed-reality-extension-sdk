@@ -106,7 +106,7 @@ After your app deploys you will see a message that looks like this:
 
 Copy the `URL` value, edit your Dockerfile and add this line just below the line that reads `ENV PORT=80`:
 ```
-ENV BASE_URL=//YOUR_SITE_NAME.fr.openode.io
+ENV BASE_URL=http://YOUR_SITE_NAME.fr.openode.io
 ```
 (Notice that `http:` was removed from the front of the value)
 
