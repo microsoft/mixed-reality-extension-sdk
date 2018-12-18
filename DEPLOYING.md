@@ -50,8 +50,7 @@ is straight forward using their command line tool, and pricing is reasonable if
 the free tier doesn't work for you.
 
 #### Sign up
-Go to the [openode.io website](https://openode.io) and sign up. Be sure to
-verify your email. opeNode will not run your app until this step is complete.
+Go to the [openode.io website](https://openode.io) and sign up.
 
 #### Create a new instance for your app
 1. On the website, click on [My Instances](https://www.openode.io/admin/). This
