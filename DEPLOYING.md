@@ -108,7 +108,6 @@ Copy the `URL` value, edit your Dockerfile and add this line just below the line
 ```
 ENV BASE_URL=http://YOUR_SITE_NAME.fr.openode.io
 ```
-(Notice that `http:` was removed from the front of the value)
 
 Save and close the Dockerfile.
 
