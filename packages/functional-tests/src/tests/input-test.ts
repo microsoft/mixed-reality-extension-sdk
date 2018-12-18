@@ -79,7 +79,7 @@ export default class InputTest extends Test {
                 }
             }
         });
-        actor.value.createAnimation({
+        const moveAnimation = actor.value.createAnimation({
             animationName: 'animmove',
             wrapMode: AnimationWrapMode.Once,
             events: [],
@@ -104,7 +104,7 @@ export default class InputTest extends Test {
                 }
             }
         });
-        actor.value.createAnimation({
+        const turnAnimation = actor.value.createAnimation({
             animationName: 'animturn',
             wrapMode: AnimationWrapMode.Once,
             events: [],
@@ -129,14 +129,14 @@ export default class InputTest extends Test {
                 }
             }
         });
-        actor.value.createAnimation({
+        const scaleAnimation = actor.value.createAnimation({
             animationName: 'animscale',
             wrapMode: AnimationWrapMode.Once,
             events: [],
             keyframes: keyframes3
 
         });
-
+        await Promise.all([moveAnimation, turnAnimation, scaleAnimation]);
         const buttonBehavior = actor.value.setBehavior(MRESDK.ButtonBehavior);
         console.log(`Added event.`);
 
