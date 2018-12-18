@@ -27,23 +27,55 @@ export default class ClockSyncTest extends Test {
         // Make a root object.
         const tester = MRESDK.Actor.CreateEmpty(this.app.context, {});
 
-        const boxYPosition = 1;
-        const lineHeight = 1.15; // magic value based on default font
-
-        // Create the clock background strip.
-        MRESDK.Actor.CreatePrimitive(this.app.context, {
-            definition: {
-                shape: MRESDK.PrimitiveShape.Box,
-                dimensions: { x: 10.5, y: 0.1, z: 1.0 }
-            },
+        const textPromise = MRESDK.Actor.CreateEmpty(this.app.context, {
             actor: {
+                name: 'label',
                 parentId: tester.value.id,
                 transform: {
-                    position: { x: 0.0, y: boxYPosition, z: 0.1 }
+                    position: { x: 0, y: 2.5, z: -0.5 }
+                },
+                text: {
+                    contents: "A clock driven by looping animations. Click to exit test",
+                    anchor: MRESDK.TextAnchorLocation.MiddleCenter,
+                    color: { r: 30 / 255, g: 206 / 255, b: 213 / 255 },
+                    height: 0.3
                 }
             }
         });
 
+        const textScale = 0.15;
+        const boxYPosition = 20;
+        const boxHeight = 20 * textScale;
+        const boxWidth = 10 * textScale;
+        const boxGap = textScale * 0.6;
+        const lineHeight = 1.20; // magic value based on default font
+
+        const topBox = MRESDK.Actor.CreatePrimitive(this.app.context, {
+            definition: {
+                shape: MRESDK.PrimitiveShape.Box,
+                dimensions: { x: boxWidth, y: boxHeight, z: 0.2 }
+            },
+            addCollider: true,
+            actor: {
+                parentId: tester.value.id,
+                transform: {
+                    position: { x: 0.0, y: boxYPosition * textScale + (boxHeight / 2 + boxGap), z: 0.05 }
+                }
+            }
+        });
+        const bottomBox = MRESDK.Actor.CreatePrimitive(this.app.context, {
+            definition: {
+                shape: MRESDK.PrimitiveShape.Box,
+                dimensions: { x: boxWidth, y: boxHeight, z: 0.2 }
+            },
+            addCollider: true,
+            actor: {
+                parentId: tester.value.id,
+                transform: {
+                    position: { x: 0.0, y: boxYPosition * textScale - (boxHeight / 2 + boxGap), z: 0.05 }
+                }
+            }
+        });
         // Create the digits.
         const meshHundredths =
             this.createAnimatableDigit('hundredths', '0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0', tester.value.id);
@@ -64,14 +96,14 @@ export default class ClockSyncTest extends Test {
         // Build animations.
         const yOffset = boxYPosition + lineHeight * 0.5;
         const animations = [
-            this.buildDigitAnimation(meshHundredths.value, 4.25, yOffset, 1 / 100, 10, 10, lineHeight),
-            this.buildDigitAnimation(meshTenths.value, 3.25, yOffset, 1 / 10, 10, 10, lineHeight),
-            this.buildDigitAnimation(meshSeconds.value, 1.75, yOffset, 1, 10, 10, lineHeight),
-            this.buildDigitAnimation(mesh10Seconds.value, 0.75, yOffset, 10, 6, 6, lineHeight),
-            this.buildDigitAnimation(meshMinutes.value, -0.75, yOffset, 60, 10, 10, lineHeight),
-            this.buildDigitAnimation(mesh10Minutes.value, -1.75, yOffset, 10 * 60, 6, 6, lineHeight),
-            this.buildDigitAnimation(meshHours.value, -3.25, yOffset, 60 * 60, 24, 24, lineHeight),
-            this.buildDigitAnimation(mesh10Hours.value, -4.25, yOffset, 10 * 60 * 60, 3, 2.4, lineHeight)
+            this.buildDigitAnimation(meshHundredths.value, 4.25, yOffset, 1 / 100, 10, 10, lineHeight, textScale),
+            this.buildDigitAnimation(meshTenths.value, 3.25, yOffset, 1 / 10, 10, 10, lineHeight, textScale),
+            this.buildDigitAnimation(meshSeconds.value, 1.75, yOffset, 1, 10, 10, lineHeight, textScale),
+            this.buildDigitAnimation(mesh10Seconds.value, 0.75, yOffset, 10, 6, 6, lineHeight, textScale),
+            this.buildDigitAnimation(meshMinutes.value, -0.75, yOffset, 60, 10, 10, lineHeight, textScale),
+            this.buildDigitAnimation(mesh10Minutes.value, -1.75, yOffset, 10 * 60, 6, 6, lineHeight, textScale),
+            this.buildDigitAnimation(meshHours.value, -3.25, yOffset, 60 * 60, 24, 24, lineHeight, textScale),
+            this.buildDigitAnimation(mesh10Hours.value, -4.25, yOffset, 10 * 60 * 60, 3, 2.4, lineHeight, textScale)
         ];
 
         // Wait for all actors and animations to instantiate on the host.
@@ -81,13 +113,24 @@ export default class ClockSyncTest extends Test {
         actors.forEach(actor => actor.value.startAnimation('anim'));
 
         // Wait for some seconds.
-        await delay(20000);
+        await new Promise<void>((resolve) => {
+            const topBoxBehavior = topBox.value.setBehavior(MRESDK.ButtonBehavior);
+            // When clicked, do a 360 sideways.
+            topBoxBehavior.onClick('pressed', (userId: string) => {
+                resolve();
+            });
+            const bottomBoxBehavior = bottomBox.value.setBehavior(MRESDK.ButtonBehavior);
+            // When clicked, do a 360 sideways.
+            bottomBoxBehavior.onClick('pressed', (userId: string) => {
+                resolve();
+            });
+        });
 
         // Stop the animations.
         actors.forEach(actor => actor.value.stopAnimation('anim'));
 
         // Wait a bit.
-        await delay(3000);
+        await delay(1 * 1000);
 
         // Destroy the actors we created.
         destroyActors(tester.value);
@@ -115,7 +158,8 @@ export default class ClockSyncTest extends Test {
         secondsPerStep: number,
         digits: number,
         frameCount: number,
-        lineHeight: number): Promise<void> {
+        lineHeight: number,
+        scale: number): Promise<void> {
 
         const keyframes: MRESDK.AnimationKeyframe[] = [];
 
@@ -131,10 +175,11 @@ export default class ClockSyncTest extends Test {
             const value = {
                 transform: {
                     position: {
-                        x: xOffset,
-                        y: yOffset + i * lineHeight,
+                        x: (xOffset) * scale,
+                        y: (yOffset + i * lineHeight) * scale,
                         z: 0,
-                    }
+                    },
+                    scale: {x: scale, y: scale, z: scale }
                 }
             };
 
