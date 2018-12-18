@@ -90,7 +90,7 @@ This creates a file on disk named `Dockerfile`
 The Node version specified in the Dockerfile is newer than the MRE SDK's Node depencency. To eliminate
 potential incompatibility, edit the first line of the Dockerfile so that it specifies Node v8.12:
 ```
-FROM node:8.12
+FROM node:8.12.0-alpine
 ```
 Your app can be bundled with static files located in the `public` folder. These files include glTF
 models, audio resources, etc. For the app to be able to serve these files to the client, it needs to
