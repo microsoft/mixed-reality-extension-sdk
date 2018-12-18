@@ -135,6 +135,9 @@ Once your deployment succeeds, you're ready to connect from AltspaceVR! For inst
 on instantiating your app within AltspaceVR, checkout the [sample repo's README.md](
 https://github.com/Microsoft/mixed-reality-extension-sdk-samples/blob/master/README.md)
 
+If you want to re-deploy, you should use `openode stop` before calling `openode deploy`, otherwise the deploy will 
+fail. If a deploy fails, you can just call `openode deploy` again.
+
 ### Other Cloud Platforms
 
 Have a hosting service recommendation? Please add it to this doc and submit a PR!
