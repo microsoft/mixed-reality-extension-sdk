@@ -55,7 +55,6 @@ export default class App {
     private userJoined = async (user: MRESDK.User) => {
         console.log(`user-joined: ${user.name}, ${user.id}`);
 
-
         let testName: string;
         if (Array.isArray(this.params.test) && this.params.test.length > 0) {
             testName = this.params.test[0];
@@ -67,7 +66,7 @@ export default class App {
             this.rpc.send('functional-test:close-connection');
         } else {
             if (!this.firstUser) {
-                this.runFunctionalTestMenu();
+                const promise = this.runFunctionalTestMenu();
             }
             this.firstUser = user;
         }
