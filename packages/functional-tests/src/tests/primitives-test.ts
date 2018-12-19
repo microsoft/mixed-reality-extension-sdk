@@ -50,7 +50,7 @@ export default class PrimitivesTest extends Test {
         }
 
         // Wait a bit.
-        await delay(20000);
+        await delay(4 * 1000);
 
         // Destroy the actors we created.
         destroyActors(tester.value);

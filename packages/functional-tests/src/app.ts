@@ -12,6 +12,7 @@ import InputTest from './tests/input-test';
 import LookAtTest from './tests/look-at-test';
 import PrimitivesTest from './tests/primitives-test';
 import RigidBodyTest from './tests/rigid-body-test';
+import RootMotionTest from './tests/root-motion-test';
 import Test from './tests/test';
 import TextTest from './tests/text-test';
 import delay from './utils/delay';
@@ -39,7 +40,8 @@ export default class App {
         'clock-sync-test': (): Test => new ClockSyncTest(this, this.baseUrl),
         'primitives-test': (): Test => new PrimitivesTest(this, this.baseUrl),
         'input-test': (): Test => new InputTest(this, this.baseUrl),
-        'asset-preload': (user: MRESDK.User): Test => new AssetPreloadTest(this, this.baseUrl, user)
+        'root-motion-test': (): Test => new RootMotionTest(this, this.baseUrl),
+        'asset-preload-test': (user: MRESDK.User): Test => new AssetPreloadTest(this, this.baseUrl, user)
     };
 
     constructor(private _context: MRESDK.Context, private params: MRESDK.ParameterSet, private baseUrl: string) {
