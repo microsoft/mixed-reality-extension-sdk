@@ -7,6 +7,7 @@ the [AltspaceVR](https://altvr.com/) host app's worlds with multi-user games
 and other dynamic experiences.
 
 ## Prerequisites
+* Install Git
 * Install [Node.js 8.12](https://nodejs.org/download/release/v8.12.0/) or
 newer, which includes NPM 6.4.1 or newer, from nodejs.org
 
@@ -15,7 +16,7 @@ newer, which includes NPM 6.4.1 or newer, from nodejs.org
 The easiest way to start with the MRE SDK is to head over to the 
 [mixed-reality-extension-sdk-samples](
 https://github.com/Microsoft/mixed-reality-extension-sdk-samples) repo, and
-build it.
+build a sample.
 
 If you want to build the actual SDK itself, jump to [Build and Run section of
 this document](#How-to-Build-and-Deploy-the-SDK-functional-tests)
@@ -23,6 +24,11 @@ this document](#How-to-Build-and-Deploy-the-SDK-functional-tests)
 To see the APIs, jump to [SDK documentation](
 https://microsoft.github.io/mixed-reality-extension-sdk/)
 
+If you have made a game or application in Unity3D, and you want it to support
+MREs, or you want to debug into the client runtime code itself, go to the [
+Mixed Reality Extension Unity](
+https://github.com/microsoft/mixed-reality-extension-unity) repository.
+ 
 
 ## Overview
 * Written in TypeScript, and built on top of Node.js.
@@ -49,7 +55,6 @@ primitives or the host app's built-in assets, or programmatically build meshes.
 * Assign rigid body properties, physics forces, collision geometry, and have
 objects collide naturally with the host app world, or with other extensions.
 * Apply input behaviors and register event handlers on the behaviors.
-
 
 ## Current State
 Developer Preview
@@ -87,9 +92,12 @@ quality, rich 3d experiences. There are many features we want to add, including
 
 
 ## Major known Issues
-* Rigid body physics state is not synchronized properly between users, so rigid
-body experiments should be done alone.
-* Text labels always renders on top of all geometry
+* Rigid body physics state syncronization is somewhat jittery 
+* Users can't reliably directly interact with rigid body objects.
+* Text alignment is backwards.
+* A number of client-side errors don't get send to the node log, which makes
+debugging hard. This includes glTF loading errors and using the wrong name
+when playing animations.
 
 
 ## Roadmap

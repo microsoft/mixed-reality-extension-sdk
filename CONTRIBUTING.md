@@ -16,7 +16,11 @@ verify fixes.
 ## Contribute Code
 Submit [pull requests](
 https://github.com/Microsoft/mixed-reality-extension-sdk/pulls) for bug fixes
-and features.
+and features. This repository only contains the server side of the SDK, so any 
+protocol changes have to be matched with a pull request in the
+[mixed-reality-extension-unity](
+https://github.com/microsoft/mixed-reality-extension-unity) repository.
+
 
 
 ## Learning TypeScript
@@ -34,8 +38,6 @@ that could all be good starting points.
 Other areas could be to create additional functional tests and samples, and to
 comment on the documentation. 
 
-This repository only contains the server side of the SDK, so any protocol 
-changes have to be coordinated with the AltspaceVR client development team.
 
 
 ## Tips to create good pull requests
@@ -43,6 +45,7 @@ Before accepting pull requests, we run all functional tests within the host
 app.
 * Clear description
 * Single issue per pull request
+* Mention if there is a matching pull request in the unity repository
 
 
 ## Coding guidelines
