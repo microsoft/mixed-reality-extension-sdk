@@ -15,15 +15,17 @@ import {
     Text,
     TextLike,
     Transform,
-    TransformLike } from '.';
+    TransformLike,
+    User
+} from '.';
 import {
     AnimationEvent,
     AnimationKeyframe,
     AnimationWrapMode,
     Context,
     LookAtMode,
-    PrimitiveDefinition,
-    Vector3Like } from '../..';
+    PrimitiveDefinition
+} from '../..';
 import BufferedEventEmitter from '../../utils/bufferedEventEmitter';
 import { createForwardPromise, ForwardPromise } from '../forwardPromise';
 import { InternalActor } from '../internal/actor';
@@ -41,7 +43,6 @@ export interface ActorLike {
     parentId: string;
     name: string;
     tag: string;
-    lookAt: LookAtMode;
     subscriptions: SubscriptionType[];
     transform: Partial<TransformLike>;
     light: Partial<LightLike>;
@@ -79,7 +80,6 @@ export class Actor implements ActorLike {
     private _rigidBody?: RigidBody;
     private _collider?: Collider;
     private _text?: Text;
-    private _lookAt?: LookAtMode = LookAtMode.None;
     // tslint:enable:variable-name
 
     /**
@@ -97,8 +97,6 @@ export class Actor implements ActorLike {
     public get rigidBody() { return this._rigidBody; }
     public get collider() { return this._collider; }
     public get text() { return this._text; }
-    public get lookAt() { return this._lookAt; }
-    public set lookAt(value) { this._lookAt = value; this.actorChanged('lookAt'); }
     public get children() { return this.context.actors.filter(actor => actor.parentId === this.id); }
     public get parent() { return this._context.actor(this._parentId); }
     public get parentId() { return this._parentId; }
@@ -419,6 +417,18 @@ export class Actor implements ActorLike {
         this.context.internal.resumeAnimation(this.id, animationName);
     }
 
+    public lookAt(targetOrId: Actor | User | string, lookAtMode: LookAtMode) {
+        let targetId: string;
+        if (lookAtMode !== LookAtMode.None) {
+            if (typeof (targetOrId) === 'object' && targetOrId.id !== undefined) {
+                targetId = targetOrId.id;
+            } else if (typeof (targetOrId) === 'string') {
+                targetId = targetOrId;
+            }
+        }
+        this.context.internal.lookAt(this.id, targetId, lookAtMode);
+    }
+
     /**
      * Finds child actors matching `name`.
      * @param name The name of the actors to find.
@@ -489,7 +499,6 @@ export class Actor implements ActorLike {
         if (sactor.name) this._name = sactor.name;
         if (sactor.tag) this._tag = sactor.tag;
         if (sactor.transform) this._transform.copyDirect(sactor.transform);
-        if (sactor.lookAt) this._lookAt = sactor.lookAt;
         if (sactor.light) {
             if (!this._light)
                 this.enableLight(sactor.light);
@@ -519,7 +528,6 @@ export class Actor implements ActorLike {
             parentId: this._parentId,
             name: this._name,
             tag: this._tag,
-            lookAt: this._lookAt,
             transform: this._transform.toJSON(),
             light: this._light ? this._light.toJSON() : undefined,
             rigidBody: this._rigidBody ? this._rigidBody.toJSON() : undefined,
