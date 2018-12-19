@@ -32,16 +32,16 @@ export default class App {
     /**
      * Registry of functional tests. Add your test here.
      */
-    private testFactories: { [key: string]: (user: MRESDK.User) => Test } = {
+    private testFactories: { [key: string]: () => Test } = {
         'gltf-animation-test': (): Test => new GltfAnimationTest(this, this.baseUrl),
-        'look-at-test': (user: MRESDK.User): Test => new LookAtTest(this, this.baseUrl, user),
+        'look-at-test': (): Test => new LookAtTest(this, this.baseUrl),
         'rigid-body-test': (): Test => new RigidBodyTest(this),
         'text-test': (): Test => new TextTest(this),
         'clock-sync-test': (): Test => new ClockSyncTest(this, this.baseUrl),
         'primitives-test': (): Test => new PrimitivesTest(this, this.baseUrl),
         'input-test': (): Test => new InputTest(this, this.baseUrl),
         'root-motion-test': (): Test => new RootMotionTest(this, this.baseUrl),
-        'asset-preload-test': (user: MRESDK.User): Test => new AssetPreloadTest(this, this.baseUrl, user)
+        'asset-preload': (): Test => new AssetPreloadTest(this, this.baseUrl)
     };
 
     constructor(private _context: MRESDK.Context, private params: MRESDK.ParameterSet, private baseUrl: string) {
@@ -56,7 +56,6 @@ export default class App {
 
     private userJoined = async (user: MRESDK.User) => {
         console.log(`user-joined: ${user.name}, ${user.id}`);
-
         let testName: string;
         if (Array.isArray(this.params.test) && this.params.test.length > 0) {
             testName = this.params.test[0];
@@ -82,7 +81,7 @@ export default class App {
         } else if (!this.testFactories[testName]) {
             console.log(`error: Unrecognized test: '${testName}'`);
         } else {
-            const test = this.activeTests[testName] = this.testFactories[testName](user);
+            const test = this.activeTests[testName] = this.testFactories[testName]();
             this.rpc.send('functional-test:test-started', testName);
             console.log(`Test started: '${testName}'`);
             const success = await test.run();
