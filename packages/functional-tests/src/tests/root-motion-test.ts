@@ -11,7 +11,7 @@ import delay from '../utils/delay';
 import destroyActors from '../utils/destroyActors';
 import Test from './test';
 
-export default class InputTest extends Test {
+export default class RootMotionTest extends Test {
 
     constructor(app: App, private baseUrl: string) {
         super(app);
@@ -20,12 +20,12 @@ export default class InputTest extends Test {
     public async run(): Promise<boolean> {
         let success = true;
 
-        success = success && await this.runInputTest();
+        success = success && await this.runRootMotionTest();
 
         return success;
     }
 
-    public async runInputTest(): Promise<boolean> {
+    public async runRootMotionTest(): Promise<boolean> {
 
         const tester = MRESDK.Actor.CreateEmpty(this.app.context, {});
 
@@ -56,7 +56,7 @@ export default class InputTest extends Test {
                 }
             }
         });
-        // Create a cannonball.
+
         const actor = MRESDK.Actor.CreatePrimitive(this.app.context, {
             definition: {
                 shape: MRESDK.PrimitiveShape.Box,
