@@ -1,7 +1,7 @@
 {
   "name": "@microsoft/mixed-reality-extension-sdk-azure",
   "private": true,
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "",
   "main": "built/index.js",
   "types": "built/index.d.ts",
@@ -36,6 +36,6 @@
     "typescript": "3.0.3"
   },
   "dependencies": {
-    "@microsoft/mixed-reality-extension-sdk": "^0.2.1"
+    "@microsoft/mixed-reality-extension-sdk": "^0.2.2"
   }
 }
