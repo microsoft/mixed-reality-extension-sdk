@@ -22,6 +22,8 @@ export class WebHost {
     public get baseDir() { return this._baseDir; }
     public get baseUrl() { return this._baseUrl; }
 
+    private binaryMap: { [path: string]: ArrayBuffer } = {};
+
     public constructor(
         options: { baseDir?: string, baseUrl?: string, port?: string | number } = {}
     ) {
@@ -52,10 +54,41 @@ export class WebHost {
     }
 
     private serveStaticFiles(server: Restify.Server) {
-        // Setup static files route
-        server.get('/*', Restify.plugins.serveStatic({
-            directory: this._baseDir,
-            default: 'index.html'
-        }));
+        server.get('/*',
+            // host static binaries
+            (req, res, next) => this.serveStaticBinaries(req, res, next),
+            // host static files
+            Restify.plugins.serveStatic({
+                directory: this._baseDir,
+                default: 'index.html'
+            }
+            ));
+    }
+
+    private proceduralRegex = new RegExp(`^${this._baseUrl}/procedural/(.+)$`);
+
+    private serveStaticBinaries(req: Restify.Request, res: Restify.Response, next: Restify.Next) {
+        // grab path part of URL
+        const matches = this.proceduralRegex.exec(req.url);
+        const procPath = matches && matches[1] || null;
+
+        // see if there's a handler registered for it
+        if (!procPath || !this.binaryMap[procPath]) {
+            return next();
+        }
+
+        // if so, serve binary
+        res.sendRaw(200, this.binaryMap[procPath]);
+    }
+
+    /**
+     * Serve arbitrary binary blobs from a URL
+     * @param filename A unique string ID for the blob
+     * @param blob A binary blob
+     * @returns The URL to fetch the provided blob
+     */
+    public registerStaticProcedural(filename: string, blob: ArrayBuffer): string {
+        this.binaryMap[filename] = blob;
+        return `${this._baseUrl}/procedural/${filename}`;
     }
 }
