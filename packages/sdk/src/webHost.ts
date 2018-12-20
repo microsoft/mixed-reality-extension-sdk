@@ -65,7 +65,7 @@ export class WebHost {
             ));
     }
 
-    private proceduralRegex = new RegExp(`^${this._baseUrl}/procedural/(.+)$`);
+    private readonly proceduralRegex = new RegExp(`^${this._baseUrl}/procedural/(.+)$`);
 
     private serveStaticBinaries(req: Restify.Request, res: Restify.Response, next: Restify.Next) {
         // grab path part of URL
