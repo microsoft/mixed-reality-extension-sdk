@@ -4,15 +4,11 @@
  */
 
 import * as MRESDK from '@microsoft/mixed-reality-extension-sdk';
-import { Actor, AnimationWrapMode } from '@microsoft/mixed-reality-extension-sdk';
+import { Actor } from '@microsoft/mixed-reality-extension-sdk';
 import App from '../app';
 import delay from '../utils/delay';
 import destroyActors from '../utils/destroyActors';
 import Test from './test';
-
-// tslint:disable:no-console
-
-let stateCounter = 0;
 
 export default class InputTest extends Test {
 
@@ -31,150 +27,133 @@ export default class InputTest extends Test {
     public async runInputTest(): Promise<boolean> {
 
         const tester = MRESDK.Actor.CreateEmpty(this.app.context, {});
-        const actorRoot = MRESDK.Actor.CreateEmpty(this.app.context, {
+
+        // Create a new actor with no mesh, but some text. This operation is asynchronous, so
+        // it returns a "forward" promise (a special promise, as we'll see later).
+        const textPromise = Actor.CreateEmpty(this.app.context, {
             actor: {
-                name: "actorRoot",
+                name: 'label',
                 parentId: tester.value.id,
                 transform: {
-                    position: { x: 0, y: 0.2, z: 0 },
-                }
-            }
-        });
-        // Create a cannonball.
-        const actor = MRESDK.Actor.CreatePrimitive(this.app.context, {
-            definition: {
-                shape: MRESDK.PrimitiveShape.Box,
-                dimensions: {
-                    x: 1,
-                    y: 0.4,
-                    z: 3
+                    position: { x: 0, y: 0.5, z: 0 }
                 },
-            },
-            addCollider: true,
+                text: {
+                    contents: "Please Hover",
+                    anchor: MRESDK.TextAnchorLocation.MiddleCenter,
+                    color: { r: 30 / 255, g: 206 / 255, b: 213 / 255 },
+                    height: 0.3
+                }
+            }
+        });
+
+        const text = textPromise.value;
+
+        // Load a glTF model
+        const modelPromise = Actor.CreateFromGLTF(this.app.context, {
+            // at the given URL
+            resourceUrl: `${this.baseUrl}/monkey.glb`,
+            // and spawn box colliders around the meshes.
+            colliderType: 'box',
+            // Also apply the following generic actor properties.
             actor: {
-                parentId: actorRoot.value.id,
-            }
-        });
-
-        const keyframes: MRESDK.AnimationKeyframe[] = [];
-        keyframes.push({
-            time: 0.0,
-            value: {
+                name: 'clickable',
+                // Parent the glTF model to the text actor.
+                parentId: tester.value.id,
                 transform: {
-                    position: {
-                        x: 0,
-                        y: 0,
-                        z: 0,
-                    }
+                    position: { x: 0, y: 1.3, z: 0 },
+                    scale: { x: 0.4, y: 0.4, z: 0.4 }
                 }
             }
-        });
-        keyframes.push({
-            time: 1.0,
-            value: {
-                transform: {
-                    position: {
-                        x: 0,
-                        y: 0,
-                        z: 1,
-                    }
+            });
+
+        const model = modelPromise.value;
+        // Create some animations on the cube.
+        model.createAnimation({
+            animationName: 'GrowIn',
+            keyframes: this.growAnimationData,
+            events: []
+        }).catch(reason => console.log(`Failed to create grow animation: ${reason}`));
+
+        model.createAnimation({
+            animationName: 'ShrinkOut',
+            keyframes: this.shrinkAnimationData,
+            events: []
+        }).catch(reason => console.log(`Failed to create shrink animation: ${reason}`));
+
+        model.createAnimation({
+            animationName: 'DoAFlip',
+            keyframes: this.generateSpinKeyframes(0.5, MRESDK.Vector3.Up()),
+            events: []
+        }).catch(reason => console.log(`Failed to create flip animation: ${reason}`));
+
+        // Set up cursor interaction. We add the input behavior ButtonBehavior to the cube.
+        // Button behaviors have two pairs of events: hover start/stop, and click start/stop.
+        const buttonBehavior = model.setBehavior(MRESDK.ButtonBehavior);
+
+        await new Promise<void>((resolve) => {
+            let stateCounter = 0;
+            // Trigger the grow/shrink animations on hover.
+            buttonBehavior.onHover('enter', (userId: string) => {
+                model.startAnimation('GrowIn');
+                if (stateCounter === 0) {
+                   stateCounter ++;
+                   text.text.contents = "Please Click";
                 }
-            }
-        });
-        actor.value.createAnimation({
-            animationName: 'animmove',
-            wrapMode: AnimationWrapMode.Once,
-            events: [],
-            keyframes
-
-        });
-
-        const keyframes2: MRESDK.AnimationKeyframe[] = [];
-        keyframes2.push({
-            time: 0.0,
-            value: {
-                transform: {
-                    rotation: { x: 0, y: 0, z: 0, w: 1 },
+            });
+            // When clicked, do a 360 sideways.
+            buttonBehavior.onClick('pressed', (userId: string) => {
+                model.startAnimation('DoAFlip');
+                if (stateCounter === 1) {
+                    stateCounter ++;
+                    text.text.contents = "Please Unhover";
                 }
-            }
-        });
-        keyframes2.push({
-            time: 1.0,
-            value: {
-                transform: {
-                    rotation: { x: 0, y: 0.707, z: 0, w: 0.707 },
+             });
+
+            buttonBehavior.onHover('exit', (userId: string) => {
+                model.startAnimation('ShrinkOut');
+                if (stateCounter === 2) {
+                    resolve();
+                } else {
+                    stateCounter = 0;
+                    text.text.contents = "Please Hover Again";
                 }
-            }
-        });
-        actor.value.createAnimation({
-            animationName: 'animturn',
-            wrapMode: AnimationWrapMode.Once,
-            events: [],
-            keyframes: keyframes2
+             });
 
         });
 
-        const keyframes3: MRESDK.AnimationKeyframe[] = [];
-        keyframes3.push({
-            time: 0.0,
-            value: {
-                transform: {
-                    scale: { x: 1, y: 1, z: 1 },
-                }
-            }
-        });
-        keyframes3.push({
-            time: 1.0,
-            value: {
-                transform: {
-                    scale: { x: 1.3, y: 1.3, z: 1.3 },
-                }
-            }
-        });
-        actor.value.createAnimation({
-            animationName: 'animscale',
-            wrapMode: AnimationWrapMode.Once,
-            events: [],
-            keyframes: keyframes3
-
-        });
-
-        const buttonBehavior = actor.value.setBehavior(MRESDK.ButtonBehavior);
-        console.log(`Added event.`);
-
-        buttonBehavior.onClick('pressed', (userId: string) => {
-            if (stateCounter === 0) {
-                actor.value.startAnimation('animmove', true);
-                stateCounter = 1;
-            } else if (stateCounter === 1) {
-                actor.value.stopAnimation('animmove');
-                actor.value.startAnimation('animturn', true);
-                stateCounter = 2;
-            } else if (stateCounter === 2) {
-                actor.value.stopAnimation('animturn');
-                actor.value.startAnimation('animscale', true);
-                stateCounter = 3;
-            } else if (stateCounter === 3) {
-                actor.value.stopAnimation('animscale');
-                stateCounter = 0;
-            }
-
-            console.log('debug', `Click on actor.`);
-        });
-
-        buttonBehavior.onHover('enter', (userId: string) => {
-            console.log('debug', `Hover entered on actor.`);
-        });
-
-        buttonBehavior.onHover('exit', (userId: string) => {
-            console.log('debug', `Hover exited on actor.`);
-        });
-
-        await delay(30 * 1000);
+        await delay(0.3 * 1000);
+        text.text.contents = "Thank you for your cooperation";
+        await delay(1.2 * 1000);
 
         destroyActors(tester.value);
 
         return true;
     }
+
+     private generateSpinKeyframes(duration: number, axis: MRESDK.Vector3): MRESDK.AnimationKeyframe[] {
+        return [{
+            time: 0 * duration,
+            value: { transform: { rotation: MRESDK.Quaternion.RotationAxis(axis, 0) } }
+        }, {
+            time: 1 * duration,
+            value: { transform: { rotation: MRESDK. Quaternion.RotationAxis(axis, Math.PI) } }
+        }];
+    }
+
+    private growAnimationData: MRESDK.AnimationKeyframe[] = [{
+        time: 0,
+        value: { transform: { scale: { x: 0.4, y: 0.4, z: 0.4 } } }
+    }, {
+        time: 0.3,
+        value: { transform: { scale: { x: 0.5, y: 0.5, z: 0.5 } } }
+    }];
+
+    private shrinkAnimationData: MRESDK.AnimationKeyframe[] = [{
+        time: 0,
+        value: { transform: { scale: { x: 0.5, y: 0.5, z: 0.5 } } }
+    }, {
+        time: 0.3,
+        value: { transform: { scale: { x: 0.4, y: 0.4, z: 0.4 } } }
+    }];
 
 }

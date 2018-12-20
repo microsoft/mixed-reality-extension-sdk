@@ -69,7 +69,8 @@ This same process is outlined in the next section.
 #### Deploy your app to your new instance
 1. On your local machine, open a command prompt.
 
-2. If needed, install the opeNode command line interface (only needs to be done once):
+2. If needed, install the opeNode command line interface (only needs to be done once - this requires
+the command prompt to be launched in administrator mode):
 ```
 npm install -g openode
 ```
@@ -131,6 +132,9 @@ error again, please [open a GitHub issue here](https://github.com/Microsoft/mixe
 Once your deployment succeeds, you're ready to connect from AltspaceVR! For instructions
 on instantiating your app within AltspaceVR, checkout the [sample repo's README.md](
 https://github.com/Microsoft/mixed-reality-extension-sdk-samples/blob/master/README.md)
+
+If you want to re-deploy, you should use `openode stop` before calling `openode deploy`, otherwise the deploy will 
+fail. If a deploy fails, you can just call `openode deploy` again.
 
 ### Other Cloud Platforms
 

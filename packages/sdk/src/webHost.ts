@@ -3,7 +3,6 @@
  * Licensed under the MIT License.
  */
 
-import { resolve as resolvePath } from 'path';
 import * as Restify from 'restify';
 import { Adapter, MultipeerAdapter } from '.';
 import { log } from './log';
@@ -25,7 +24,11 @@ export class WebHost {
     public constructor(
         options: { baseDir?: string, baseUrl?: string, port?: string | number } = {}
     ) {
-        this._baseDir = options.baseDir || process.env.BASE_DIR || resolvePath('./public');
+        const pjson = require('../package.json');
+        log.logToApp(`Node: ${process.version}`);
+        log.logToApp(`${pjson.name}: v${pjson.version}`);
+
+        this._baseDir = options.baseDir || process.env.BASE_DIR;
         this._baseUrl = options.baseUrl || process.env.BASE_URL;
 
         // Azure defines WEBSITE_HOSTNAME.
@@ -46,9 +49,11 @@ export class WebHost {
                 log.logToApp(`${server.name} listening on ${JSON.stringify(server.address())}`);
                 log.logToApp(`baseUrl: ${this.baseUrl}`);
                 log.logToApp(`baseDir: ${this.baseDir}`);
-                this.serveStaticFiles(server);
+                if (!!this.baseDir) {
+                    this.serveStaticFiles(server);
+                }
             })
-            .catch(reason => log.error(null, `Failed to start HTTP server: ${reason}`));
+            .catch(reason => log.error('app', `Failed to start HTTP server: ${reason}`));
     }
 
     private serveStaticFiles(server: Restify.Server) {

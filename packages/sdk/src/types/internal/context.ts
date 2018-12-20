@@ -18,6 +18,7 @@ import {
     Context,
     Light,
     LightLike,
+    LookAtMode,
     PrimitiveDefinition,
     RigidBody,
     RigidBodyLike,
@@ -46,6 +47,7 @@ import {
     EnableLight,
     EnableRigidBody,
     EnableText,
+    LookAt,
     ObjectSpawned,
     OperationResult,
     PauseAnimation,
@@ -278,7 +280,7 @@ export class InternalContext {
                         }
                     });
             }).catch((reason: any) => {
-                log.error(null, `Failed to instantiate actor ${actor.id}.`, reason);
+                reject(`Failed to instantiate actor ${actor.id}. ${(reason || '').toString()}`.trim());
                 // TODO: Remove actor from context?
             });
         }));
@@ -295,7 +297,7 @@ export class InternalContext {
     ): Promise<void> {
         const actor = this.actorSet[actorId];
         if (!actor) {
-            return Promise.reject(`Actor ${actorId} not found`);
+            return Promise.reject(`Failed to create animation. Actor ${actorId} not found`);
         }
         options = {
             wrapMode: AnimationWrapMode.Once,
@@ -325,9 +327,9 @@ export class InternalContext {
                             reject(reason);
                         }
                     });
-            }).catch((reason) => log.error(null, reason));
-        }).catch((reason: any) => {
-            log.error(null, `Failed to create animation ${options.animationName} on actor ${actor.id}.`, reason);
+            }).catch((reason) => {
+                reject(`Failed to create animation: ${(reason || '').toString()}`.trim());
+            });
         });
     }
 
@@ -347,9 +349,9 @@ export class InternalContext {
                         hasRootMotion
                     } as StartAnimation);
                 })
-                .catch((reason) => log.error(null, reason));
+                .catch((reason) => log.error('app', reason));
         } else {
-            log.error(null, `Actor ${actorId} not found`);
+            log.error('app', `Failed to start animation ${animationName}. Actor ${actorId} not found`);
         }
     }
 
@@ -365,9 +367,9 @@ export class InternalContext {
                     actorId,
                     animationName
                 } as StopAnimation))
-                .catch((reason) => log.error(null, reason));
+                .catch((reason) => log.error('app', reason));
         } else {
-            log.error(null, `Actor ${actorId} not found`);
+            log.error('app', `Failed to stop animation ${animationName}. Actor ${actorId} not found`);
         }
     }
 
@@ -383,9 +385,9 @@ export class InternalContext {
                     actorId,
                     animationName,
                 } as PauseAnimation))
-                .catch((reason) => log.error(null, reason));
+                .catch((reason) => log.error('app', reason));
         } else {
-            log.error(null, `Actor ${actorId} not found`);
+            log.error('app', `Failed to pause animation ${animationName}. Actor ${actorId} not found`);
         }
     }
 
@@ -401,9 +403,9 @@ export class InternalContext {
                     actorId,
                     animationName
                 } as ResumeAnimation))
-                .catch((reason) => log.error(null, reason));
+                .catch((reason) => log.error('app', reason));
         } else {
-            log.error(null, `Actor ${actorId} not found`);
+            log.error('app', `Failed to resume animation ${animationName}. Actor ${actorId} not found`);
         }
     }
 
@@ -419,16 +421,34 @@ export class InternalContext {
                     actorId,
                     animationName
                 } as ResetAnimation))
-                .catch((reason) => log.error(null, reason));
+                .catch((reason) => log.error('app', reason));
         } else {
-            log.error(null, `Actor ${actorId} not found`);
+            log.error('app', `Failed to reset animation ${animationName}. Actor ${actorId} not found`);
+        }
+    }
+
+    public lookAt(actorId: string, targetId: string, lookAtMode: LookAtMode) {
+        const actor = this.actorSet[actorId];
+        if (actor) {
+            actor.created().then(() => {
+                this.protocol.sendPayload({
+                    type: 'look-at',
+                    actorId,
+                    targetId,
+                    lookAtMode
+                } as LookAt);
+            }).catch((reason: any) => {
+                log.error('app', `Failed enable rigid body on actor ${actor.id}. ${(reason || '').toString()}`.trim());
+            });
+        } else {
+            log.error('app', `Failed lookAt. Actor ${actorId} not found`);
         }
     }
 
     public enableRigidBody(actorId: string, rigidBody?: Partial<RigidBodyLike>): ForwardPromise<RigidBody> {
         const actor = this.actorSet[actorId];
         if (!actor) {
-            return Promise.reject(`Actor ${actorId} not found`);
+            return Promise.reject(`Failed enable rigid body. Actor ${actorId} not found`);
         } else {
             return createForwardPromise(actor.rigidBody, new Promise((resolve, reject) => {
                 actor.created().then(() => {
@@ -448,7 +468,7 @@ export class InternalContext {
                             reject
                         });
                 }).catch((reason: any) => {
-                    log.error(null, `Failed enable rigid body on actor ${actor.id}.`, reason);
+                    reject(`Failed enable rigid body on actor ${actor.id}. ${(reason || '').toString()}`.trim());
                 });
             }));
         }
@@ -464,7 +484,7 @@ export class InternalContext {
     ): ForwardPromise<Collider> {
         const actor = this.actorSet[actorId];
         if (!actor) {
-            return Promise.reject(`Actor ${actorId} not found`);
+            return Promise.reject(`Failed enable collider. Actor ${actorId} not found`);
         } else {
             return createForwardPromise<Collider>(actor.collider, new Promise((resolve, reject) => {
                 actor.created().then(() => {
@@ -505,7 +525,7 @@ export class InternalContext {
                             };
                             break;
                         default:
-                            log.error(null,
+                            reject(
                                 'Trying to enable a collider on the actor with an invalid collider type.' +
                                 `Type given is ${colliderType}`);
                     }
@@ -522,7 +542,7 @@ export class InternalContext {
                         reject
                     });
                 }).catch((reason: any) => {
-                    log.error(null, `Failed enable collider on actor ${actor.id}.`, reason);
+                    reject(`Failed enable collider on actor ${actor.id}. ${(reason || '').toString()}`.trim());
                 });
             }));
         }
@@ -531,7 +551,7 @@ export class InternalContext {
     public enableLight(actorId: string, light?: Partial<LightLike>): ForwardPromise<Light> {
         const actor = this.actorSet[actorId];
         if (!actor) {
-            return Promise.reject(`Actor ${actorId} not found`);
+            return Promise.reject(`Failed to enable light. Actor ${actorId} not found`);
         } else {
             return createForwardPromise<Light>(actor.light, new Promise((resolve, reject) => {
                 actor.created().then(() => {
@@ -551,7 +571,7 @@ export class InternalContext {
                             reject
                         });
                 }).catch((reason: any) => {
-                    log.error(null, `Failed to enable light on ${actor.id}.`, reason);
+                    reject(`Failed to enable light on ${actor.id}. ${(reason || '').toString()}`.trim());
                 });
             }));
         }
@@ -560,7 +580,7 @@ export class InternalContext {
     public enableText(actorId: string, text?: Partial<TextLike>): ForwardPromise<Text> {
         const actor = this.actorSet[actorId];
         if (!actor) {
-            return Promise.reject(`Actor ${actorId} not found`);
+            return Promise.reject(`Failed to enable text. Actor ${actorId} not found`);
         } else {
             return createForwardPromise<Text>(actor.text, new Promise((resolve, reject) => {
                 actor.created().then(() => {
@@ -580,7 +600,7 @@ export class InternalContext {
                             reject
                         });
                 }).catch((reason: any) => {
-                    log.error(null, `Failed to enable text on ${actor.id}.`, reason);
+                    reject(`Failed to enable text on ${actor.id}. ${(reason || '').toString()}`.trim());
                 });
             }));
         }
@@ -605,8 +625,10 @@ export class InternalContext {
                     removes: options.removes
                 } as UpdateSubscriptions);
             }).catch((reason: any) => {
-                log.error(null, `Failed to update subscriptions on actor ${actor.id}.`, reason);
+                log.error('app', `Failed to update subscriptions on actor ${actor.id}.`, reason);
             });
+        } else {
+            log.error('app', `Failed to update subscriptions. Actor ${actorId} not found.`);
         }
     }
 
@@ -616,7 +638,7 @@ export class InternalContext {
             adds?: CollisionEventType | CollisionEventType[],
             removes?: CollisionEventType | CollisionEventType[]
         }
-    ): void {
+    ) {
         const actor = this.actorSet[actorId];
         if (actor) {
             actor.created().then(() => {
@@ -627,8 +649,10 @@ export class InternalContext {
                     removes: options.removes
                 } as UpdateCollisionEventSubscriptions);
             }).catch((reason: any) => {
-                log.error(null, `Failed to update collision event subscriptions on actor ${actor.id}.`, reason);
+                log.error('app', `Failed to update collision event subscriptions on actor ${actor.id}.`, reason);
             });
+        } else {
+            log.error('app', `Failed to update collision event subscriptions. Actor ${actorId} not found.`);
         }
     }
 
@@ -840,7 +864,7 @@ export class InternalContext {
                     behaviorType: newBehaviorType || 'none'
                 } as SetBehavior);
             }).catch((reason: any) => {
-                log.error(null, `Failed to set behavior on actor ${actor.id}.`, reason);
+                log.error('app', `Failed to set behavior on actor ${actor.id}.`, reason);
             });
         }
     }
