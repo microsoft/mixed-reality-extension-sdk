@@ -62,7 +62,7 @@ export class WebSocketAdapter extends Adapter {
 
         // Handle connection upgrades
         wss.on('connection', (ws: WS, request: http.IncomingMessage) => {
-            log.info(null, "New WebSocket connection");
+            log.info('network', "New WebSocket connection");
 
             // Read the sessionId header.
             let sessionId = request.headers[Constants.SessionHeader] as string || UUID();

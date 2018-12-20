@@ -76,9 +76,9 @@
 						<section class="tsd-index-section ">
 							<h3>Enumeration members</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="lookatmode.html#localuserxy" class="tsd-kind-icon">Local<wbr>UserXY</a></li>
-								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="lookatmode.html#localusery" class="tsd-kind-icon">Local<wbr>UserY</a></li>
 								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="lookatmode.html#none" class="tsd-kind-icon">None</a></li>
+								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="lookatmode.html#targetxy" class="tsd-kind-icon">TargetXY</a></li>
+								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="lookatmode.html#targety" class="tsd-kind-icon">TargetY</a></li>
 							</ul>
 						</section>
 					</div>
@@ -87,47 +87,47 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Enumeration members</h2>
 				<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum">
-					<a name="localuserxy" class="tsd-anchor"></a>
-					<h3>Local<wbr>UserXY</h3>
-					<div class="tsd-signature tsd-kind-icon">Local<wbr>UserXY<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> =&nbsp;&quot;LocalUserXY&quot;</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/9ab5704/node/packages/sdk/src/types/lookatMode.ts#L24">types/lookatMode.ts:24</a></li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>Actor rotates around its X and Y axes to face the local user, offset by its rotation</p>
-						</div>
-					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum">
-					<a name="localusery" class="tsd-anchor"></a>
-					<h3>Local<wbr>UserY</h3>
-					<div class="tsd-signature tsd-kind-icon">Local<wbr>UserY<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> =&nbsp;&quot;LocalUserY&quot;</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/9ab5704/node/packages/sdk/src/types/lookatMode.ts#L19">types/lookatMode.ts:19</a></li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>Actor rotates around its Y axis to face the local user, offset by its rotation</p>
-						</div>
-					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum">
 					<a name="none" class="tsd-anchor"></a>
 					<h3>None</h3>
 					<div class="tsd-signature tsd-kind-icon">None<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> =&nbsp;&quot;None&quot;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/9ab5704/node/packages/sdk/src/types/lookatMode.ts#L14">types/lookatMode.ts:14</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/3816ee5/packages/sdk/src/types/lookatMode.ts#L14">types/lookatMode.ts:14</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
 							<p>Actor is world-locked and does not rotate</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum">
+					<a name="targetxy" class="tsd-anchor"></a>
+					<h3>TargetXY</h3>
+					<div class="tsd-signature tsd-kind-icon">TargetXY<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> =&nbsp;&quot;TargetXY&quot;</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/3816ee5/packages/sdk/src/types/lookatMode.ts#L24">types/lookatMode.ts:24</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Actor rotates around its X and Y axes to face the target, offset by its rotation</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum">
+					<a name="targety" class="tsd-anchor"></a>
+					<h3>TargetY</h3>
+					<div class="tsd-signature tsd-kind-icon">TargetY<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> =&nbsp;&quot;TargetY&quot;</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/3816ee5/packages/sdk/src/types/lookatMode.ts#L19">types/lookatMode.ts:19</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Actor rotates around its Y axis to face the target, offset by its rotation</p>
 						</div>
 					</div>
 				</section>
@@ -149,13 +149,13 @@
 						<a href="lookatmode.html" class="tsd-kind-icon">Look<wbr>AtMode</a>
 						<ul>
 							<li class=" tsd-kind-enum-member tsd-parent-kind-enum">
-								<a href="lookatmode.html#localuserxy" class="tsd-kind-icon">Local<wbr>UserXY</a>
-							</li>
-							<li class=" tsd-kind-enum-member tsd-parent-kind-enum">
-								<a href="lookatmode.html#localusery" class="tsd-kind-icon">Local<wbr>UserY</a>
-							</li>
-							<li class=" tsd-kind-enum-member tsd-parent-kind-enum">
 								<a href="lookatmode.html#none" class="tsd-kind-icon">None</a>
+							</li>
+							<li class=" tsd-kind-enum-member tsd-parent-kind-enum">
+								<a href="lookatmode.html#targetxy" class="tsd-kind-icon">TargetXY</a>
+							</li>
+							<li class=" tsd-kind-enum-member tsd-parent-kind-enum">
+								<a href="lookatmode.html#targety" class="tsd-kind-icon">TargetY</a>
 							</li>
 						</ul>
 					</li>

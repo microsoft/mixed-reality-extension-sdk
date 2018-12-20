@@ -24,9 +24,9 @@
     "bootstrap": "lerna bootstrap",
     "postinstall": "npm run bootstrap",
     "clean": "tsc --build --clean",
-    "build": "tslint -p ./packages/tsconfig.lint.json && tsc --build",
+    "build": "tsc --build && npm run lint",
     "build-docs": "lerna run build-docs",
-    "lint": "lerna run lint",
+    "lint": "tslint -p ./packages/tsconfig.lint.json",
     "lint-docs": "lerna run lint-docs",
     "publish": "lerna publish",
     "start": "node ./packages/functional-tests/"
