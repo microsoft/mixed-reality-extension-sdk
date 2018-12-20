@@ -79,15 +79,15 @@ export default class LookAtTest extends Test {
 
         this.app.rpc.send('functional-test:trace-message', 'look-at-test', "LookAtMode.TargetXY");
         tester.lookAt(this.user, MRESDK.LookAtMode.TargetXY);
-        await delay(8000);
+        await delay(4000);
 
         this.app.rpc.send('functional-test:trace-message', 'look-at-test', "LookAtMode.TargetY");
         tester.lookAt(this.user, MRESDK.LookAtMode.TargetY);
-        await delay(8000);
+        await delay(4000);
 
         this.app.rpc.send('functional-test:trace-message', 'look-at-test', "LookAtMode.None");
         tester.lookAt(null, MRESDK.LookAtMode.None);
-        await delay(2000);
+        await delay(1000);
 
         tester.stopAnimation('circle');
         destroyActors(tester);

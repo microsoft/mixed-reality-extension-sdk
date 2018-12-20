@@ -34,7 +34,7 @@ export default class RootMotionTest extends Test {
                 name: 'label',
                 parentId: tester.value.id,
                 transform: {
-                    position: { x: 0, y: 0.5, z: 0 }
+                    position: { x: 0, y: 1.0, z: 1 }
                 },
                 text: {
                     contents: "Click to make actor move, turn, and scale",
@@ -52,7 +52,7 @@ export default class RootMotionTest extends Test {
                 name: "actorRoot",
                 parentId: tester.value.id,
                 transform: {
-                    position: { x: 0, y: 0.2, z: 0 },
+                    position: { x: 0, y: 0.3, z: 0 },
                 }
             }
         });
@@ -61,9 +61,9 @@ export default class RootMotionTest extends Test {
             definition: {
                 shape: MRESDK.PrimitiveShape.Box,
                 dimensions: {
-                    x: 1,
-                    y: 0.4,
-                    z: 3
+                    x: 0.3,
+                    y: 0.6,
+                    z: 1.1
                 },
             },
             addCollider: true,
@@ -92,7 +92,7 @@ export default class RootMotionTest extends Test {
                     position: {
                         x: 0,
                         y: 0,
-                        z: -3,
+                        z: -0.7,
                     }
                 }
             }
@@ -162,28 +162,26 @@ export default class RootMotionTest extends Test {
             let stateCounter = 0;
 
             buttonBehavior.onClick('pressed', (userId: string) => {
-                if ((stateCounter % 6) === 0) {
+                if ((stateCounter % 3) === 0) {
                     actor.value.startAnimation('animmove', true);
                     if (stateCounter !== 0) {
                         actor.value.stopAnimation('animscale');
                     }
-                } else if ((stateCounter % 6) === 2) {
+                } else if ((stateCounter % 3) === 1) {
                     actor.value.stopAnimation('animmove');
                     actor.value.startAnimation('animturn', true);
-                } else if ((stateCounter % 6) === 4) {
+                } else if ((stateCounter % 3) === 2) {
                     actor.value.stopAnimation('animturn');
                     actor.value.startAnimation('animscale', true);
                 }
                 stateCounter++;
 
-                if (stateCounter === 18) {
+                if (stateCounter === 7) {
                     resolve();
                 }
                 console.log('debug', `Click on actor.`);
             });
         });
-
-        await delay(1.0 * 1000);
 
         destroyActors(tester.value);
 
