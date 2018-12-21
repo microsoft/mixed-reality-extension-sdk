@@ -38,7 +38,6 @@ export default class InputTest extends Test {
                     position: { x: 0, y: 0.5, z: 0 }
                 },
                 text: {
-                    contents: "Please Hover",
                     anchor: MRESDK.TextAnchorLocation.MiddleCenter,
                     color: { r: 30 / 255, g: 206 / 255, b: 213 / 255 },
                     height: 0.3
@@ -47,6 +46,8 @@ export default class InputTest extends Test {
         });
 
         const text = textPromise.value;
+        await textPromise;
+        text.text.contents = "Please Hover";
 
         // Load a glTF model
         const modelPromise = Actor.CreateFromGLTF(this.app.context, {

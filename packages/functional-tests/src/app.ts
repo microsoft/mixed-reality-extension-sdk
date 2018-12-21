@@ -9,6 +9,7 @@ import AssetPreloadTest from './tests/asset-preload';
 import ClockSyncTest from './tests/clock-sync-test';
 import GltfAnimationTest from './tests/gltf-animation-test';
 import InputTest from './tests/input-test';
+import LibraryTest from './tests/library-test';
 import LookAtTest from './tests/look-at-test';
 import PrimitivesTest from './tests/primitives-test';
 import RigidBodyTest from './tests/rigid-body-test';
@@ -38,6 +39,7 @@ export default class App {
         'rigid-body-test': (): Test => new RigidBodyTest(this),
         'text-test': (): Test => new TextTest(this),
         'clock-sync-test': (): Test => new ClockSyncTest(this, this.baseUrl),
+        'library-test': (): Test => new LibraryTest(this, this.baseUrl),
         'primitives-test': (): Test => new PrimitivesTest(this, this.baseUrl),
         'input-test': (): Test => new InputTest(this, this.baseUrl),
         'root-motion-test': (): Test => new RootMotionTest(this, this.baseUrl),
