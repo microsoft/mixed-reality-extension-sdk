@@ -55,7 +55,7 @@ export default class App {
     }
 
     private userJoined = async (user: MRESDK.User) => {
-        console.log(`user-joined: ${user.name}, ${user.id}`);
+        console.log(`user-joined: ${user.name}, ${user.id}, ${user.properties.remoteAddress}`);
 
         let testName: string;
         if (Array.isArray(this.params.test) && this.params.test.length > 0) {
@@ -76,7 +76,7 @@ export default class App {
     private userLeft = (user: MRESDK.User) => {
         console.log(`user-left: ${user.name}, ${user.id}`);
     }
-    private async startTest(testName: string,  user: MRESDK.User) {
+    private async startTest(testName: string, user: MRESDK.User) {
         if (this.activeTests[testName]) {
             console.log(`Test already running: '${testName}'`);
         } else if (!this.testFactories[testName]) {

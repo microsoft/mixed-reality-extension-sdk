@@ -11,8 +11,11 @@ import { Message } from '../..';
  * An implementation of the Connection interface that wraps a WebSocket.
  */
 export class WebSocket extends EventedConnection {
+
+    public get remoteAddress() { return this._remoteAddress; }
+
     // tslint:disable-next-line:variable-name
-    constructor(private _ws: WS) {
+    constructor(private _ws: WS, private _remoteAddress: string) {
         super();
 
         this._ws.on('close', () => {

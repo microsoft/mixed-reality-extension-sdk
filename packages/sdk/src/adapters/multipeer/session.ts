@@ -425,6 +425,15 @@ export class Session extends EventEmitter {
     public 'client-preprocess-user-joined' = (client: Client, payload: Payloads.UserJoined) => {
         // Associate the client connection with the user id.
         client.userId = payload.user.id;
+
+        // add remote ip address to the joining user
+        if (client.conn instanceof MRESDK.WebSocket) {
+            payload.user.properties = {
+                ...payload.user.properties,
+                remoteAddress: client.conn.remoteAddress
+            };
+        }
+
         return payload;
     }
 
