@@ -14,12 +14,12 @@ export enum LookAtMode {
     None = 'None',
 
     /**
-     * Actor rotates around its Y axis to face the local user, offset by its rotation
+     * Actor rotates around its Y axis to face the target, offset by its rotation
      */
-    LocalUserY = 'LocalUserY',
+    TargetY = 'TargetY',
 
     /**
-     * Actor rotates around its X and Y axes to face the local user, offset by its rotation
+     * Actor rotates around its X and Y axes to face the target, offset by its rotation
      */
-    LocalUserXY = 'LocalUserXY'
+    TargetXY = 'TargetXY'
 }

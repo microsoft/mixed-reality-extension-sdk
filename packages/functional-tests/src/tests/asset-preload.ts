@@ -21,7 +21,6 @@ export default class AssetPreloadTest extends Test {
                 transform: {
                     position: { x: 0, y: 2, z: 0 }
                 },
-                lookAt: MRESDK.LookAtMode.LocalUserXY,
                 text: {
                     contents: 'Initialized',
                     height: 0.3,
@@ -29,6 +28,7 @@ export default class AssetPreloadTest extends Test {
                 }
             }
         });
+        label.lookAt(this.user, MRESDK.LookAtMode.TargetXY);
         await delay(1000);
 
         label.text.contents = 'Preloading asset';
@@ -46,7 +46,7 @@ export default class AssetPreloadTest extends Test {
             }
         });
         label.text.contents = 'Prefab instantiated';
-        await delay(10000);
+        await delay(3*1000);
 
         destroyActors([actor, label]);
         return true;

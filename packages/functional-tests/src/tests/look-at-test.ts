@@ -73,20 +73,23 @@ export default class LookAtTest extends Test {
         tester.startAnimation('circle');
 
         this.app.rpc.send('functional-test:trace-message', 'look-at-test', "LookAtMode.None");
-        tester.lookAt = MRESDK.LookAtMode.None;
+
+        tester.lookAt(null, MRESDK.LookAtMode.None);
         await delay(2000);
 
-        this.app.rpc.send('functional-test:trace-message', 'look-at-test', "LookAtMode.LocalUserXY");
-        tester.lookAt = MRESDK.LookAtMode.LocalUserXY;
-        await delay(8000);
+        this.app.rpc.send('functional-test:trace-message', 'look-at-test', "LookAtMode.TargetXY");
+        tester.lookAt(this.user, MRESDK.LookAtMode.TargetXY);
+        await delay(4000);
 
-        this.app.rpc.send('functional-test:trace-message', 'look-at-test', "LookAtMode.LocalUserY");
-        tester.lookAt = MRESDK.LookAtMode.LocalUserY;
-        await delay(8000);
+        this.app.rpc.send('functional-test:trace-message', 'look-at-test', "LookAtMode.TargetY");
+        tester.lookAt(this.user, MRESDK.LookAtMode.TargetY);
+        await delay(4000);
+
+        this.app.rpc.send('functional-test:trace-message', 'look-at-test', "LookAtMode.None");
+        tester.lookAt(null, MRESDK.LookAtMode.None);
+        await delay(1000);
 
         tester.stopAnimation('circle');
-        await delay(2000);
-
         destroyActors(tester);
 
         return true;
