@@ -427,11 +427,9 @@ export class Session extends EventEmitter {
         client.userId = payload.user.id;
 
         // add remote ip address to the joining user
-        if (client.conn instanceof MRESDK.WebSocket) {
-            payload.user.properties = {
-                ...payload.user.properties,
-                remoteAddress: client.conn.remoteAddress
-            };
+        const props = payload.user.properties = payload.user.properties || {};
+        if (client.conn instanceof MRESDK.WebSocket && !props.remoteAddress) {
+            props.remoteAddress = client.conn.remoteAddress;
         }
 
         return payload;
