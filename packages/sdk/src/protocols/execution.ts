@@ -4,7 +4,7 @@
  */
 
 import { Protocol, ServerPreprocessing } from '.';
-import { ActionEvent, CollisionEvent, Context } from '..';
+import { ActionEvent, CollisionEvent, Context, WebSocket } from '..';
 import {
     ActorUpdate,
     CollisionEventRaised,
@@ -19,7 +19,7 @@ import {
     Traces,
     UserJoined,
     UserLeft,
-    UserUpdate,
+    UserUpdate
 } from '../types/network/payloads';
 import { log } from './../log';
 import { Sync } from './sync';
@@ -86,6 +86,12 @@ export class Execution extends Protocol {
 
     /** @private */
     public 'recv-user-joined' = (payload: UserJoined) => {
+
+        const props = payload.user.properties = payload.user.properties || {};
+        if (this.conn instanceof WebSocket && !props.remoteAddress) {
+            props.remoteAddress = this.conn.remoteAddress;
+        }
+
         this.emit('protocol.user-joined', payload.user);
     }
 

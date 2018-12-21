@@ -16,6 +16,11 @@ export interface UserLike {
     name: string;
     transform: TransformLike;
     subscriptions: SubscriptionType[];
+
+    /**
+     * A grab bag of miscellaneous, possibly host-dependent, properties.
+     */
+    properties: { [name: string]: any };
 }
 
 export interface UserSet {
@@ -31,6 +36,7 @@ export class User implements UserLike {
     private _name: string;
     private _transform: Transform;
     private _subscriptions: SubscriptionType[] = [];
+    private _properties: { [name: string]: any };
     // tslint:enable:variable-name
 
     public get context() { return this._context; }
@@ -38,6 +44,8 @@ export class User implements UserLike {
     public get name() { return this._name; }
     public get transform() { return this._transform; }
     public get subscriptions() { return this._subscriptions; }
+    /** @inheritdoc */
+    public get properties() { return Object.freeze({ ...this._properties }); }
 
     /**
      * PUBLIC METHODS
@@ -61,6 +69,9 @@ export class User implements UserLike {
         }
         if (typeof user.transform !== 'undefined') {
             this._transform.copyDirect(user.transform);
+        }
+        if (typeof user.properties !== 'undefined') {
+            this._properties = user.properties;
         }
         return this;
     }
@@ -96,6 +107,7 @@ export class User implements UserLike {
             name: this.name,
             transform: this.transform.toJSON(),
             subscriptions: this.subscriptions,
+            properties: this.properties
         } as UserLike;
     }
 }

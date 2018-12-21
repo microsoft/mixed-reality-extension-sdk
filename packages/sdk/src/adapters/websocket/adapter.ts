@@ -72,7 +72,7 @@ export class WebSocketAdapter extends Adapter {
             const params = QueryString.parseUrl(request.url).query;
 
             // Wrap the new WebSocket in a MRESDK.WebSocket.
-            const connection = new WebSocket(ws);
+            const connection = new WebSocket(ws, request.socket.remoteAddress);
 
             const context = new Context({
                 sessionId,

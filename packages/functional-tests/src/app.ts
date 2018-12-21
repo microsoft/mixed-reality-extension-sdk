@@ -59,7 +59,7 @@ export default class App {
     }
 
     private userJoined = async (user: MRESDK.User) => {
-        console.log(`user-joined: ${user.name}, ${user.id}`);
+        console.log(`user-joined: ${user.name}, ${user.id}, ${user.properties.remoteAddress}`);
 
         let testName: string;
         if (Array.isArray(this.params.test) && this.params.test.length > 0) {

@@ -120,7 +120,7 @@ export class MultipeerAdapter extends Adapter {
             // Get the session for the sessionId
             const session = await this.getOrCreateSession(sessionId, params);
 
-            const conn = new WebSocket(ws);
+            const conn = new WebSocket(ws, request.socket.remoteAddress);
 
             // Instantiate a client for this connection
             const client = new Client(conn);
