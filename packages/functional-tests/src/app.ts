@@ -8,7 +8,7 @@ import * as MRERPC from '@microsoft/mixed-reality-extension-sdk/built/rpc';
 import AssetPreloadTest from './tests/asset-preload';
 import ClockSyncTest from './tests/clock-sync-test';
 import GltfAnimationTest from './tests/gltf-animation-test';
-import GltfGen from './tests/gltf-gen';
+import GltfGenTest from './tests/gltf-gen-test';
 import InputTest from './tests/input-test';
 import LookAtTest from './tests/look-at-test';
 import PrimitivesTest from './tests/primitives-test';
@@ -41,7 +41,7 @@ export default class App {
         'clock-sync-test': (): Test => new ClockSyncTest(this, this.baseUrl),
         'primitives-test': (): Test => new PrimitivesTest(this, this.baseUrl),
         'input-test': (): Test => new InputTest(this, this.baseUrl),
-        'gltf-gen': (): Test => new GltfGen(this, this.baseUrl),
+        'gltf-gen-test': (): Test => new GltfGenTest(this, this.baseUrl),
         'root-motion-test': (): Test => new RootMotionTest(this, this.baseUrl),
         'asset-preload-test': (user: MRESDK.User): Test => new AssetPreloadTest(this, this.baseUrl, user)
     };
