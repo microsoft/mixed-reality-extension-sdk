@@ -13,4 +13,5 @@ export * from './vertex';
 export * from './material';
 export * from './texture';
 export * from './image';
+export * from './geometry/index';
 export * from './gen/gltf';

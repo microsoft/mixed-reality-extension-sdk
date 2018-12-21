@@ -36,8 +36,9 @@ export class MeshPrimitive implements MeshPrimitiveLike {
         else {
             this.vertices = init.vertices || this.vertices;
             this.triangles = init.triangles || this.triangles;
-            this.material = init.material || this.material;
         }
+
+        this.material = init.material || this.material;
     }
 
     private _updateAttributeUsage(): void {

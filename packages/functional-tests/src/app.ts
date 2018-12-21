@@ -8,6 +8,7 @@ import * as MRERPC from '@microsoft/mixed-reality-extension-sdk/built/rpc';
 import AssetPreloadTest from './tests/asset-preload';
 import ClockSyncTest from './tests/clock-sync-test';
 import GltfAnimationTest from './tests/gltf-animation-test';
+import GltfGenTest from './tests/gltf-gen-test';
 import InputTest from './tests/input-test';
 import LibraryTest from './tests/library-test';
 import LookAtTest from './tests/look-at-test';
@@ -42,6 +43,7 @@ export default class App {
         'library-test': (): Test => new LibraryTest(this, this.baseUrl),
         'primitives-test': (): Test => new PrimitivesTest(this, this.baseUrl),
         'input-test': (): Test => new InputTest(this, this.baseUrl),
+        'gltf-gen-test': (): Test => new GltfGenTest(this, this.baseUrl),
         'root-motion-test': (): Test => new RootMotionTest(this, this.baseUrl),
         'asset-preload-test': (user: MRESDK.User): Test => new AssetPreloadTest(this, this.baseUrl, user)
     };
@@ -78,7 +80,7 @@ export default class App {
     private userLeft = (user: MRESDK.User) => {
         console.log(`user-left: ${user.name}, ${user.id}`);
     }
-    private async startTest(testName: string,  user: MRESDK.User) {
+    private async startTest(testName: string, user: MRESDK.User) {
         if (this.activeTests[testName]) {
             console.log(`Test already running: '${testName}'`);
         } else if (!this.testFactories[testName]) {
@@ -87,7 +89,13 @@ export default class App {
             const test = this.activeTests[testName] = this.testFactories[testName](user);
             this.rpc.send('functional-test:test-started', testName);
             console.log(`Test started: '${testName}'`);
-            const success = await test.run();
+            let success: boolean;
+            try {
+                success = await test.run();
+            } catch (e) {
+                console.log(e);
+                success = false;
+            }
             console.log(`Test complete: '${testName}'. Success: ${success}`);
             this.rpc.send('functional-test:test-complete', testName, success);
 

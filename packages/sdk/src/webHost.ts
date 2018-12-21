@@ -7,6 +7,8 @@ import * as Restify from 'restify';
 import { Adapter, MultipeerAdapter } from '.';
 import { log } from './log';
 
+const BUFFER_KEYWORD = 'buffers';
+
 /**
  * Sets up an HTTP server, and generates an MRE context for your app to use.
  */
@@ -20,6 +22,8 @@ export class WebHost {
     public get adapter() { return this._adapter; }
     public get baseDir() { return this._baseDir; }
     public get baseUrl() { return this._baseUrl; }
+
+    private bufferMap: { [path: string]: Buffer } = {};
 
     public constructor(
         options: { baseDir?: string, baseUrl?: string, port?: string | number } = {}
@@ -57,10 +61,41 @@ export class WebHost {
     }
 
     private serveStaticFiles(server: Restify.Server) {
-        // Setup static files route
-        server.get('/*', Restify.plugins.serveStatic({
-            directory: this._baseDir,
-            default: 'index.html'
-        }));
+        server.get('/*',
+            // host static binaries
+            (req, res, next) => this.serveStaticBuffers(req, res, next),
+            // host static files
+            Restify.plugins.serveStatic({
+                directory: this._baseDir,
+                default: 'index.html'
+            }
+            ));
+    }
+
+    private readonly bufferRegex = new RegExp(`^/${BUFFER_KEYWORD}/(.+)$`);
+
+    private serveStaticBuffers(req: Restify.Request, res: Restify.Response, next: Restify.Next) {
+        // grab path part of URL
+        const matches = this.bufferRegex.exec(req.url);
+        const procPath = matches && matches[1] || null;
+
+        // see if there's a handler registered for it
+        if (!procPath || !this.bufferMap[procPath]) {
+            return next();
+        }
+
+        // if so, serve binary
+        res.sendRaw(200, this.bufferMap[procPath]);
+    }
+
+    /**
+     * Serve arbitrary binary blobs from a URL
+     * @param filename A unique string ID for the blob
+     * @param blob A binary blob
+     * @returns The URL to fetch the provided blob
+     */
+    public registerStaticBuffer(filename: string, blob: Buffer): string {
+        this.bufferMap[filename] = blob;
+        return `${this._baseUrl}/${BUFFER_KEYWORD}/${filename}`;
     }
 }
