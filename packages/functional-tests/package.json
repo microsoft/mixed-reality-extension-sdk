@@ -23,6 +23,7 @@
   },
   "dependencies": {
     "@microsoft/mixed-reality-extension-sdk": "^0.2.1",
+    "@microsoft/gltf-gen": "^0.2.2",
     "restify": "^7.2.0"
   }
 }

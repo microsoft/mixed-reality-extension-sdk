@@ -8,6 +8,8 @@ import * as Restify from 'restify';
 import { Adapter, MultipeerAdapter } from '.';
 import { log } from './log';
 
+const BUFFER_KEYWORD = 'buffers';
+
 /**
  * Sets up an HTTP server, and generates an MRE context for your app to use.
  */
@@ -22,7 +24,7 @@ export class WebHost {
     public get baseDir() { return this._baseDir; }
     public get baseUrl() { return this._baseUrl; }
 
-    private binaryMap: { [path: string]: ArrayBuffer } = {};
+    private bufferMap: { [path: string]: Buffer } = {};
 
     public constructor(
         options: { baseDir?: string, baseUrl?: string, port?: string | number } = {}
@@ -56,7 +58,7 @@ export class WebHost {
     private serveStaticFiles(server: Restify.Server) {
         server.get('/*',
             // host static binaries
-            (req, res, next) => this.serveStaticBinaries(req, res, next),
+            (req, res, next) => this.serveStaticBuffers(req, res, next),
             // host static files
             Restify.plugins.serveStatic({
                 directory: this._baseDir,
@@ -65,20 +67,20 @@ export class WebHost {
             ));
     }
 
-    private readonly proceduralRegex = new RegExp(`^${this._baseUrl}/procedural/(.+)$`);
+    private readonly bufferRegex = new RegExp(`^/${BUFFER_KEYWORD}/(.+)$`);
 
-    private serveStaticBinaries(req: Restify.Request, res: Restify.Response, next: Restify.Next) {
+    private serveStaticBuffers(req: Restify.Request, res: Restify.Response, next: Restify.Next) {
         // grab path part of URL
-        const matches = this.proceduralRegex.exec(req.url);
+        const matches = this.bufferRegex.exec(req.url);
         const procPath = matches && matches[1] || null;
 
         // see if there's a handler registered for it
-        if (!procPath || !this.binaryMap[procPath]) {
+        if (!procPath || !this.bufferMap[procPath]) {
             return next();
         }
 
         // if so, serve binary
-        res.sendRaw(200, this.binaryMap[procPath]);
+        res.sendRaw(200, this.bufferMap[procPath]);
     }
 
     /**
@@ -87,8 +89,8 @@ export class WebHost {
      * @param blob A binary blob
      * @returns The URL to fetch the provided blob
      */
-    public registerStaticProcedural(filename: string, blob: ArrayBuffer): string {
-        this.binaryMap[filename] = blob;
-        return `${this._baseUrl}/procedural/${filename}`;
+    public registerStaticBuffer(filename: string, blob: Buffer): string {
+        this.bufferMap[filename] = blob;
+        return `${this._baseUrl}/${BUFFER_KEYWORD}/${filename}`;
     }
 }

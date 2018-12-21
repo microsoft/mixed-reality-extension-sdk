@@ -7,6 +7,7 @@ import { readFileSync, statSync } from 'fs';
 import { lookup as MimeLookup } from 'mime-types';
 import GLTF from './gen/gltf';
 import { Serializable } from './serializable';
+import { roundUpToNextMultipleOf4 } from './util';
 
 export interface ImageLike { name?: string, uri?: string, embeddedFilePath?: string }
 
@@ -91,9 +92,12 @@ export class Image extends Serializable implements ImageLike {
 
         // fill padding with zeros
         const blockEnd = bufferView.byteOffset + Math.ceil(this.embeddedFileSize / 4) * 4;
-        bufferViewData.writeUInt8(0, blockEnd - 1);
-        bufferViewData.writeUInt8(0, blockEnd - 2);
-        bufferViewData.writeUInt8(0, blockEnd - 3);
+        // fill padding with zeros
+        for (let i = roundUpToNextMultipleOf4(bufferView.byteOffset + bufferView.byteLength) - 1;
+            i >= bufferView.byteOffset + bufferView.byteLength;
+            i--) {
+            data.writeUInt8(0, i);
+        }
 
         readFileSync(this.embeddedFilePath).copy(bufferViewData);
 

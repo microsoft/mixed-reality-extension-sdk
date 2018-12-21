@@ -8,6 +8,7 @@ import * as MRERPC from '@microsoft/mixed-reality-extension-sdk/built/rpc';
 import AssetPreloadTest from './tests/asset-preload';
 import ClockSyncTest from './tests/clock-sync-test';
 import GltfAnimationTest from './tests/gltf-animation-test';
+import GltfGen from './tests/gltf-gen';
 import InputTest from './tests/input-test';
 import LookAtTest from './tests/look-at-test';
 import PrimitivesTest from './tests/primitives-test';
@@ -39,7 +40,8 @@ export default class App {
         'clock-sync-test': (): Test => new ClockSyncTest(this, this.baseUrl),
         'primitives-test': (): Test => new PrimitivesTest(this, this.baseUrl),
         'input-test': (): Test => new InputTest(this, this.baseUrl),
-        'asset-preload': (): Test => new AssetPreloadTest(this, this.baseUrl)
+        'asset-preload': (): Test => new AssetPreloadTest(this, this.baseUrl),
+        'gltf-gen': (): Test => new GltfGen(this, this.baseUrl)
     };
 
     // tslint:disable-next-line:variable-name
@@ -79,7 +81,14 @@ export default class App {
             const test = this.activeTests[testName] = this.testFactories[testName]();
             this.rpc.send('functional-test:test-started', testName);
             console.log(`Test started: '${testName}'`);
-            const success = await test.run();
+            let success: boolean;
+            try {
+                success = await test.run();
+            }
+            catch (e) {
+                console.log(e);
+                success = false;
+            }
             console.log(`Test complete: '${testName}'. Success: ${success}`);
             this.rpc.send('functional-test:test-complete', testName, success);
             this.rpc.send('functional-test:close-connection');

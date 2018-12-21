@@ -23,3 +23,5 @@ const server = new MRESDK.WebHost({
 
 // Handle new application sessions
 server.adapter.onConnection((context, params) => new App(context, params, server.baseUrl));
+
+export default server;
