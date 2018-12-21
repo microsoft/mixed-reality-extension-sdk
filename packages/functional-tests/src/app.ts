@@ -90,8 +90,7 @@ export default class App {
             let success: boolean;
             try {
                 success = await test.run();
-            }
-            catch (e) {
+            } catch (e) {
                 console.log(e);
                 success = false;
             }

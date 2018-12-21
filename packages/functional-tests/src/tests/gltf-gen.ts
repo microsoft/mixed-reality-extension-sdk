@@ -3,14 +3,16 @@
  * Licensed under the MIT License.
  */
 
-import * as MRE from '@microsoft/mixed-reality-extension-sdk';
+import { resolve } from 'path';
+
 import * as GltfGen from '@microsoft/gltf-gen';
+import * as MRE from '@microsoft/mixed-reality-extension-sdk';
+
 import App from '../app';
 import Server from '../server';
 import delay from '../utils/delay';
 import destroyActors from '../utils/destroyActors';
 import Test from './test';
-import { resolve } from 'path';
 
 export default class GltfGenTest extends Test {
 
@@ -19,7 +21,7 @@ export default class GltfGenTest extends Test {
     }
 
     public async run(): Promise<boolean> {
-        let spherePrim = new GltfGen.Sphere(0.5);
+        const spherePrim = new GltfGen.Sphere(0.5);
         spherePrim.material = new GltfGen.Material({
             baseColorTexture: new GltfGen.Texture({
                 source: new GltfGen.Image({
@@ -27,7 +29,7 @@ export default class GltfGenTest extends Test {
                 })
             })
         });
-        let gltfFactory = new GltfGen.GltfFactory([new GltfGen.Scene({
+        const gltfFactory = new GltfGen.GltfFactory([new GltfGen.Scene({
             nodes: [new GltfGen.Node({
                 mesh: new GltfGen.Mesh({
                     primitives: [spherePrim]
