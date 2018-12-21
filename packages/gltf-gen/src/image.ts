@@ -91,8 +91,6 @@ export class Image extends Serializable implements ImageLike {
         const bufferViewData = data.slice(bufferView.byteOffset, bufferView.byteOffset + bufferView.byteLength);
 
         // fill padding with zeros
-        const blockEnd = bufferView.byteOffset + Math.ceil(this.embeddedFileSize / 4) * 4;
-        // fill padding with zeros
         for (let i = roundUpToNextMultipleOf4(bufferView.byteOffset + bufferView.byteLength) - 1;
             i >= bufferView.byteOffset + bufferView.byteLength;
             i--) {

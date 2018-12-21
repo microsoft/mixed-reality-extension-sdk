@@ -34,21 +34,21 @@ export class Sphere extends MeshPrimitive {
         // generate verts in rings starting from the north pole
         for (let lat = latAngle; lat < Math.PI - 0.001; lat += latAngle) {
             const ringStart = this.vertices.length;
-            for (let long = 0; long < 2 * Math.PI - 0.001; long += longAngle) {
+            for (let long = 0; long < 2 * Math.PI + 0.001; long += longAngle) {
 
                 // generate a vertex
                 const normal = new Vector3(Math.sin(lat) * Math.cos(long), Math.cos(lat), Math.sin(lat) * Math.sin(long))
                 const vert = new Vertex({
                     position: normal.scale(radius),
                     normal: normal,
-                    texCoord0: new Vector2(long / (2 * Math.PI), lat / Math.PI)
+                    texCoord0: new Vector2(1 - long / (2 * Math.PI), lat / Math.PI)
                 });
 
                 // get the indices of the neighboring verts
                 const i = this.vertices.push(vert) - 1,
-                    longNbr = i - 1 + (i == ringStart ? longLines : 0),
-                    latNbr = i <= longLines ? 0 : i - longLines,
-                    latLongNbr = longNbr - longLines;
+                    longNbr = i - 1 + (i == ringStart ? longLines + 1 : 0),
+                    latNbr = i <= longLines + 1 ? 0 : i - longLines - 1,
+                    latLongNbr = longNbr - longLines - 1;
 
                 // fill in the tri/quad connecting this vert to the sphereA
                 this.triangles.push(i, longNbr, latNbr);
@@ -66,9 +66,9 @@ export class Sphere extends MeshPrimitive {
         const southIdx = this.vertices.push(south) - 1;
 
         // connect last long ring to the south pole
-        const ringStart = southIdx - longLines;
-        for (let i = southIdx - longLines; i < southIdx; i++) {
-            const longNbr = i - 1 + (i == ringStart ? longLines : 0);
+        const ringStart = southIdx - longLines - 1;
+        for (let i = southIdx - longLines - 1; i < southIdx; i++) {
+            const longNbr = i - 1 + (i == ringStart ? longLines + 1 : 0);
             this.triangles.push(longNbr, i, southIdx);
         }
     }
