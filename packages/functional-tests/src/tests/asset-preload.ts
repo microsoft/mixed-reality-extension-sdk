@@ -46,7 +46,8 @@ export default class AssetPreloadTest extends Test {
             }
         });
         label.text.contents = 'Prefab instantiated';
-        await delay(3*1000);
+
+        await delay(3 * 1000);
 
         destroyActors([actor, label]);
         return true;
