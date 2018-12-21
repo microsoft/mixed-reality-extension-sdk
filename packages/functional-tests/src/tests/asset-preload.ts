@@ -11,7 +11,7 @@ import Test from './test';
 
 export default class AssetPreloadTest extends Test {
 
-    constructor(app: App, private baseUrl: string) {
+    constructor(app: App, private baseUrl: string, private user: MRESDK.User) {
         super(app);
     }
 

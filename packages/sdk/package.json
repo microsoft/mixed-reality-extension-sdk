@@ -1,6 +1,6 @@
 {
   "name": "@microsoft/mixed-reality-extension-sdk",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "The Mixed Reality Extension SDK enables developers to build 3D world extensions for AltspaceVR, using Node.JS.",
   "main": "built/index.js",
   "types": "built/index.d.ts",
@@ -27,7 +27,7 @@
   },
   "scripts": {
     "clean": "tsc --build --clean",
-    "build": "npm run lint && tsc --build",
+    "build": "tsc --build && npm run lint",
     "build-docs": "typedoc --externalPattern \"**/node_modules/**\" --excludeExternals --excludeNotExported --excludeProtected --excludePrivate --hideGenerator --mode file --name \"Mixed Reality Extension SDK\" --readme none --out ../../docs ./src",
     "lint": "tslint -p ./tsconfig.json -c ../tslint.json",
     "lint-docs": "tslint -p ./tsconfig.json -c ../tslint.docs.json",
@@ -41,6 +41,7 @@
     "@types/uuid": "^3.4.3",
     "@types/ws": "^6.0.1",
     "tslint": "5.11.0",
+    "typedoc": "0.13.0",
     "typescript": "3.0.3"
   },
   "dependencies": {

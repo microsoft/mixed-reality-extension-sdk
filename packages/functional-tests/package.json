@@ -1,6 +1,6 @@
 {
   "name": "functional-tests",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "private": true,
   "description": "",
   "main": "built/server.js",
@@ -12,18 +12,22 @@
   },
   "scripts": {
     "clean": "tsc --build --clean",
-    "build": "tsc --build",
+    "build": " tsc --build && npm run lint",
+    "lint": "tslint -p ./tsconfig.json -c tslint.json",
+    "start": "node .",
     "debug": "node --nolazy --inspect-brk=9229 .",
     "deploy": "@powershell ../../scripts/compress.ps1 -app 'functional-tests' && @powershell ../../scripts/deploy.ps1 -group 'mre-apps-linux' -name 'mre-functional-tests' -app 'functional-tests' && rm functional-tests.zip"
   },
   "devDependencies": {
     "@types/node": "^10.3.1",
     "@types/restify": "^7.2.0",
+    "tslint": "5.11.0",
     "typescript": "3.0.3"
   },
   "dependencies": {
-    "@microsoft/mixed-reality-extension-sdk": "^0.2.1",
     "@microsoft/gltf-gen": "^0.2.2",
-    "restify": "^7.2.0"
+    "@microsoft/mixed-reality-extension-sdk": "^0.2.2",
+    "restify": "^7.2.0",
+    "tslib": "1.9.3"
   }
 }

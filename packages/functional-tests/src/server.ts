@@ -8,13 +8,10 @@ import { log } from '@microsoft/mixed-reality-extension-sdk/built/log';
 import { resolve as resolvePath } from 'path';
 import App from './app';
 
-// tslint:disable:no-console
-
 process.on('uncaughtException', (err) => console.log('uncaughtException', err));
 process.on('unhandledRejection', (reason) => console.log('unhandledRejection', reason));
 
-log.enable(null, 'info');
-log.enable('network', 'error');
+// log.enable('network');
 
 // Start listening for connections, and serve static files
 const server = new MRESDK.WebHost({
