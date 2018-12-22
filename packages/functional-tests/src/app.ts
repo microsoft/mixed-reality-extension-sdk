@@ -5,7 +5,7 @@
 
 import * as MRESDK from '@microsoft/mixed-reality-extension-sdk';
 import * as MRERPC from '@microsoft/mixed-reality-extension-sdk/built/rpc';
-import AssetPreloadTest from './tests/asset-preload';
+import AssetPreloadTest from './tests/asset-preload-test';
 import ClockSyncTest from './tests/clock-sync-test';
 import GltfAnimationTest from './tests/gltf-animation-test';
 import GltfGenTest from './tests/gltf-gen-test';
@@ -45,7 +45,7 @@ export default class App {
         'input-test': (): Test => new InputTest(this, this.baseUrl),
         'gltf-gen-test': (): Test => new GltfGenTest(this, this.baseUrl),
         'root-motion-test': (): Test => new RootMotionTest(this, this.baseUrl),
-        'asset-preload': (): Test => new AssetPreloadTest(this, this.baseUrl)
+        'asset-preload-test': (): Test => new AssetPreloadTest(this, this.baseUrl)
     };
 
     constructor(private _context: MRESDK.Context, private params: MRESDK.ParameterSet, private baseUrl: string) {
