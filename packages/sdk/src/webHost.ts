@@ -86,6 +86,7 @@ export class WebHost {
 
         // if so, serve binary
         res.sendRaw(200, this.bufferMap[procPath]);
+        next();
     }
 
     /**
