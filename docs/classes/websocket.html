@@ -104,11 +104,12 @@
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static"><a href="websocket.html#defaultmaxlisteners" class="tsd-kind-icon">default<wbr>Max<wbr>Listeners</a></li>
 							</ul>
 						</section>
-						<section class="tsd-index-section tsd-is-inherited">
+						<section class="tsd-index-section ">
 							<h3>Accessors</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited"><a href="websocket.html#promises" class="tsd-kind-icon">promises</a></li>
 								<li class="tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited"><a href="websocket.html#quality" class="tsd-kind-icon">quality</a></li>
+								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="websocket.html#remoteaddress" class="tsd-kind-icon">remote<wbr>Address</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
@@ -144,19 +145,22 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Web<wbr>Socket<span class="tsd-signature-symbol">(</span>_ws<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">WS</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="websocket.html" class="tsd-signature-type">WebSocket</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Web<wbr>Socket<span class="tsd-signature-symbol">(</span>_ws<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">WS</span>, _remoteAddress<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="websocket.html" class="tsd-signature-type">WebSocket</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/3816ee5/packages/sdk/src/services/connection/webSocket.ts#L13">services/connection/webSocket.ts:13</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/90dddc4/packages/sdk/src/services/connection/webSocket.ts#L15">services/connection/webSocket.ts:15</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5>_ws: <span class="tsd-signature-type">WS</span></h5>
+								</li>
+								<li>
+									<h5>_remoteAddress: <span class="tsd-signature-type">string</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="websocket.html" class="tsd-signature-type">WebSocket</a></h4>
@@ -173,12 +177,12 @@
 					<aside class="tsd-sources">
 						<p>Inherited from EventEmitter.defaultMaxListeners</p>
 						<ul>
-							<li>Defined in D:/github/mixed-reality-extension-sdk/packages/sdk/node_modules/@types/node/index.d.ts:1079</li>
+							<li>Defined in C:/Users/svergenz/Projects/mixed-reality-extension-sdk/packages/sdk/node_modules/@types/node/index.d.ts:1079</li>
 						</ul>
 					</aside>
 				</section>
 			</section>
-			<section class="tsd-panel-group tsd-member-group tsd-is-inherited">
+			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Accessors</h2>
 				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited">
 					<a name="promises" class="tsd-anchor"></a>
@@ -191,7 +195,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from EventedConnection.promises</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/3816ee5/packages/sdk/src/services/connection/eventedConnection.ts#L27">services/connection/eventedConnection.ts:27</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/90dddc4/packages/sdk/src/services/connection/eventedConnection.ts#L27">services/connection/eventedConnection.ts:27</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -220,7 +224,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from EventedConnection.quality</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/3816ee5/packages/sdk/src/services/connection/eventedConnection.ts#L24">services/connection/eventedConnection.ts:24</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/90dddc4/packages/sdk/src/services/connection/eventedConnection.ts#L24">services/connection/eventedConnection.ts:24</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -230,6 +234,23 @@
 								</dl>
 							</div>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">ConnectionQuality</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
+					<a name="remoteaddress" class="tsd-anchor"></a>
+					<h3>remote<wbr>Address</h3>
+					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> remoteAddress<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/90dddc4/packages/sdk/src/services/connection/webSocket.ts#L15">services/connection/webSocket.ts:15</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -248,7 +269,7 @@
 								<p>Inherited from EventEmitter.addListener</p>
 								<p>Overrides EventEmitter.addListener</p>
 								<ul>
-									<li>Defined in D:/github/mixed-reality-extension-sdk/packages/sdk/node_modules/@types/node/index.d.ts:1081</li>
+									<li>Defined in C:/Users/svergenz/Projects/mixed-reality-extension-sdk/packages/sdk/node_modules/@types/node/index.d.ts:1081</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -294,7 +315,7 @@
 								<p>Implementation of <a href="../interfaces/connection.html">Connection</a>.<a href="../interfaces/connection.html#close">close</a></p>
 								<p>Overrides EventedConnection.close</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/3816ee5/packages/sdk/src/services/connection/webSocket.ts#L41">services/connection/webSocket.ts:41</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/90dddc4/packages/sdk/src/services/connection/webSocket.ts#L44">services/connection/webSocket.ts:44</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -319,7 +340,7 @@
 								<p>Inherited from EventEmitter.emit</p>
 								<p>Overrides EventEmitter.emit</p>
 								<ul>
-									<li>Defined in D:/github/mixed-reality-extension-sdk/packages/sdk/node_modules/@types/node/index.d.ts:1093</li>
+									<li>Defined in C:/Users/svergenz/Projects/mixed-reality-extension-sdk/packages/sdk/node_modules/@types/node/index.d.ts:1093</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -347,7 +368,7 @@
 								<p>Inherited from EventEmitter.eventNames</p>
 								<p>Overrides EventEmitter.eventNames</p>
 								<ul>
-									<li>Defined in D:/github/mixed-reality-extension-sdk/packages/sdk/node_modules/@types/node/index.d.ts:1094</li>
+									<li>Defined in C:/Users/svergenz/Projects/mixed-reality-extension-sdk/packages/sdk/node_modules/@types/node/index.d.ts:1094</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">symbol</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -366,7 +387,7 @@
 								<p>Inherited from EventEmitter.getMaxListeners</p>
 								<p>Overrides EventEmitter.getMaxListeners</p>
 								<ul>
-									<li>Defined in D:/github/mixed-reality-extension-sdk/packages/sdk/node_modules/@types/node/index.d.ts:1090</li>
+									<li>Defined in C:/Users/svergenz/Projects/mixed-reality-extension-sdk/packages/sdk/node_modules/@types/node/index.d.ts:1090</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
@@ -385,7 +406,7 @@
 								<p>Inherited from EventEmitter.listenerCount</p>
 								<p>Overrides EventEmitter.listenerCount</p>
 								<ul>
-									<li>Defined in D:/github/mixed-reality-extension-sdk/packages/sdk/node_modules/@types/node/index.d.ts:1095</li>
+									<li>Defined in C:/Users/svergenz/Projects/mixed-reality-extension-sdk/packages/sdk/node_modules/@types/node/index.d.ts:1095</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -410,7 +431,7 @@
 								<p>Inherited from EventEmitter.listeners</p>
 								<p>Overrides EventEmitter.listeners</p>
 								<ul>
-									<li>Defined in D:/github/mixed-reality-extension-sdk/packages/sdk/node_modules/@types/node/index.d.ts:1091</li>
+									<li>Defined in C:/Users/svergenz/Projects/mixed-reality-extension-sdk/packages/sdk/node_modules/@types/node/index.d.ts:1091</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -435,7 +456,7 @@
 								<p>Inherited from EventedConnection.off</p>
 								<p>Overrides EventEmitter.off</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/3816ee5/packages/sdk/src/services/connection/eventedConnection.ts#L31">services/connection/eventedConnection.ts:31</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/90dddc4/packages/sdk/src/services/connection/eventedConnection.ts#L31">services/connection/eventedConnection.ts:31</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -487,7 +508,7 @@
 								<p>Inherited from EventEmitter.on</p>
 								<p>Overrides EventEmitter.on</p>
 								<ul>
-									<li>Defined in D:/github/mixed-reality-extension-sdk/packages/sdk/node_modules/@types/node/index.d.ts:1082</li>
+									<li>Defined in C:/Users/svergenz/Projects/mixed-reality-extension-sdk/packages/sdk/node_modules/@types/node/index.d.ts:1082</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -533,7 +554,7 @@
 								<p>Inherited from EventEmitter.once</p>
 								<p>Overrides EventEmitter.once</p>
 								<ul>
-									<li>Defined in D:/github/mixed-reality-extension-sdk/packages/sdk/node_modules/@types/node/index.d.ts:1083</li>
+									<li>Defined in C:/Users/svergenz/Projects/mixed-reality-extension-sdk/packages/sdk/node_modules/@types/node/index.d.ts:1083</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -579,7 +600,7 @@
 								<p>Inherited from EventEmitter.prependListener</p>
 								<p>Overrides EventEmitter.prependListener</p>
 								<ul>
-									<li>Defined in D:/github/mixed-reality-extension-sdk/packages/sdk/node_modules/@types/node/index.d.ts:1084</li>
+									<li>Defined in C:/Users/svergenz/Projects/mixed-reality-extension-sdk/packages/sdk/node_modules/@types/node/index.d.ts:1084</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -625,7 +646,7 @@
 								<p>Inherited from EventEmitter.prependOnceListener</p>
 								<p>Overrides EventEmitter.prependOnceListener</p>
 								<ul>
-									<li>Defined in D:/github/mixed-reality-extension-sdk/packages/sdk/node_modules/@types/node/index.d.ts:1085</li>
+									<li>Defined in C:/Users/svergenz/Projects/mixed-reality-extension-sdk/packages/sdk/node_modules/@types/node/index.d.ts:1085</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -671,7 +692,7 @@
 								<p>Inherited from EventEmitter.rawListeners</p>
 								<p>Overrides EventEmitter.rawListeners</p>
 								<ul>
-									<li>Defined in D:/github/mixed-reality-extension-sdk/packages/sdk/node_modules/@types/node/index.d.ts:1092</li>
+									<li>Defined in C:/Users/svergenz/Projects/mixed-reality-extension-sdk/packages/sdk/node_modules/@types/node/index.d.ts:1092</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -696,7 +717,7 @@
 								<p>Implementation of <a href="../interfaces/connection.html">Connection</a>.<a href="../interfaces/connection.html#recv">recv</a></p>
 								<p>Inherited from EventedConnection.recv</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/3816ee5/packages/sdk/src/services/connection/eventedConnection.ts#L46">services/connection/eventedConnection.ts:46</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/90dddc4/packages/sdk/src/services/connection/eventedConnection.ts#L46">services/connection/eventedConnection.ts:46</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -726,7 +747,7 @@
 								<p>Inherited from EventEmitter.removeAllListeners</p>
 								<p>Overrides EventEmitter.removeAllListeners</p>
 								<ul>
-									<li>Defined in D:/github/mixed-reality-extension-sdk/packages/sdk/node_modules/@types/node/index.d.ts:1088</li>
+									<li>Defined in C:/Users/svergenz/Projects/mixed-reality-extension-sdk/packages/sdk/node_modules/@types/node/index.d.ts:1088</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -751,7 +772,7 @@
 								<p>Inherited from EventEmitter.removeListener</p>
 								<p>Overrides EventEmitter.removeListener</p>
 								<ul>
-									<li>Defined in D:/github/mixed-reality-extension-sdk/packages/sdk/node_modules/@types/node/index.d.ts:1086</li>
+									<li>Defined in C:/Users/svergenz/Projects/mixed-reality-extension-sdk/packages/sdk/node_modules/@types/node/index.d.ts:1086</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -797,7 +818,7 @@
 								<p>Implementation of <a href="../interfaces/connection.html">Connection</a>.<a href="../interfaces/connection.html#send">send</a></p>
 								<p>Inherited from EventedConnection.send</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/3816ee5/packages/sdk/src/services/connection/eventedConnection.ts#L41">services/connection/eventedConnection.ts:41</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/90dddc4/packages/sdk/src/services/connection/eventedConnection.ts#L41">services/connection/eventedConnection.ts:41</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -827,7 +848,7 @@
 								<p>Inherited from EventEmitter.setMaxListeners</p>
 								<p>Overrides EventEmitter.setMaxListeners</p>
 								<ul>
-									<li>Defined in D:/github/mixed-reality-extension-sdk/packages/sdk/node_modules/@types/node/index.d.ts:1089</li>
+									<li>Defined in C:/Users/svergenz/Projects/mixed-reality-extension-sdk/packages/sdk/node_modules/@types/node/index.d.ts:1089</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -851,7 +872,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from EventEmitter.listenerCount</p>
 								<ul>
-									<li>Defined in D:/github/mixed-reality-extension-sdk/packages/sdk/node_modules/@types/node/index.d.ts:1078</li>
+									<li>Defined in C:/Users/svergenz/Projects/mixed-reality-extension-sdk/packages/sdk/node_modules/@types/node/index.d.ts:1078</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -902,6 +923,9 @@
 							</li>
 							<li class=" tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited">
 								<a href="websocket.html#quality" class="tsd-kind-icon">quality</a>
+							</li>
+							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
+								<a href="websocket.html#remoteaddress" class="tsd-kind-icon">remote<wbr>Address</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited">
 								<a href="websocket.html#addlistener" class="tsd-kind-icon">add<wbr>Listener</a>
