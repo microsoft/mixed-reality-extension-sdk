@@ -8,6 +8,7 @@ import * as MRERPC from '@microsoft/mixed-reality-extension-sdk/built/rpc';
 import AssetPreloadTest from './tests/asset-preload-test';
 import ClockSyncTest from './tests/clock-sync-test';
 import GltfAnimationTest from './tests/gltf-animation-test';
+import GltfConcurrencyTest from './tests/gltf-concurrency-test';
 import GltfGenTest from './tests/gltf-gen-test';
 import InputTest from './tests/input-test';
 import LibraryTest from './tests/library-test';
@@ -36,6 +37,7 @@ export default class App {
      */
     private testFactories: { [key: string]: () => Test } = {
         'gltf-animation-test': (): Test => new GltfAnimationTest(this, this.baseUrl),
+        'gltf-concurrency-test': (): Test => new GltfConcurrencyTest(this, this.baseUrl),
         'look-at-test': (): Test => new LookAtTest(this, this.baseUrl),
         'rigid-body-test': (): Test => new RigidBodyTest(this),
         'text-test': (): Test => new TextTest(this),
