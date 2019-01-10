@@ -264,7 +264,11 @@ export class InternalContext {
                                 }
                             }
 
-                            resolve(actor);
+                            if (success) {
+                                resolve(actor);
+                            } else {
+                                reject(objectSpawned.result.message);
+                            }
                         },
                         reject: (reason?: any) => {
                             for (const createdActorLike of payload.actors) {
