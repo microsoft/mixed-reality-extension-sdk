@@ -17,6 +17,7 @@ import RigidBodyTest from './tests/rigid-body-test';
 import RootMotionTest from './tests/root-motion-test';
 import Test from './tests/test';
 import TextTest from './tests/text-test';
+import UserTest from './tests/user-test';
 import delay from './utils/delay';
 import destroyActors from './utils/destroyActors';
 
@@ -27,9 +28,11 @@ export default class App {
     private activeTests: { [id: string]: Test } = {};
     private _rpc: MRERPC.ContextRPC;
     private firstUser: MRESDK.User;
+    private _connectedUsers: { [id: string]: MRESDK.User } = {};
 
     public get context() { return this._context; }
     public get rpc() { return this._rpc; }
+    public get connectedUsers() { return this._connectedUsers; }
 
     /**
      * Registry of functional tests. Add your test here.
@@ -45,6 +48,7 @@ export default class App {
         'input-test': (): Test => new InputTest(this, this.baseUrl),
         'gltf-gen-test': (): Test => new GltfGenTest(this, this.baseUrl),
         'root-motion-test': (): Test => new RootMotionTest(this, this.baseUrl),
+        'user-test': (user: MRESDK.User): Test => new UserTest(this, this.baseUrl, user),
         'asset-preload-test': (user: MRESDK.User): Test => new AssetPreloadTest(this, this.baseUrl, user)
     };
 
@@ -60,6 +64,7 @@ export default class App {
 
     private userJoined = async (user: MRESDK.User) => {
         console.log(`user-joined: ${user.name}, ${user.id}, ${user.properties.remoteAddress}`);
+        this._connectedUsers[user.id] = user;
 
         let testName: string;
         if (Array.isArray(this.params.test) && this.params.test.length > 0) {
@@ -79,6 +84,7 @@ export default class App {
     }
     private userLeft = (user: MRESDK.User) => {
         console.log(`user-left: ${user.name}, ${user.id}`);
+        delete this._connectedUsers[user.id];
     }
     private async startTest(testName: string, user: MRESDK.User) {
         if (this.activeTests[testName]) {
