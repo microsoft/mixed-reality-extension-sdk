@@ -10,12 +10,14 @@ import {
     CollisionLayer,
     Light,
     LightLike,
+    Material,
     RigidBody,
     RigidBodyLike,
     Text,
     TextLike,
     Transform,
-    TransformLike } from '.';
+    TransformLike
+} from '.';
 import {
     AnimationEvent,
     AnimationKeyframe,
@@ -23,7 +25,8 @@ import {
     Context,
     LookAtMode,
     PrimitiveDefinition,
-    Vector3Like } from '../..';
+    Vector3Like
+} from '../..';
 import BufferedEventEmitter from '../../utils/bufferedEventEmitter';
 import { createForwardPromise, ForwardPromise } from '../forwardPromise';
 import { InternalActor } from '../internal/actor';
@@ -48,6 +51,7 @@ export interface ActorLike {
     rigidBody: Partial<RigidBodyLike>;
     collider: Partial<ColliderLike>;
     text: Partial<TextLike>;
+    materialId: string;
 }
 
 /**
@@ -80,6 +84,7 @@ export class Actor implements ActorLike {
     private _collider?: Collider;
     private _text?: Text;
     private _lookAt?: LookAtMode = LookAtMode.None;
+    private _materialId?: string;
     // tslint:enable:variable-name
 
     /**
@@ -111,6 +116,21 @@ export class Actor implements ActorLike {
         }
         this._parentId = value;
         this.actorChanged('parentId');
+    }
+    public get material() { return this._context.assets.byId(this._materialId) as Material; }
+    public set material(value) {
+        this.materialId = value && value.id || undefined;
+    }
+    public get materialId() { return this._materialId; }
+    public set materialId(value) {
+        if (value && value.startsWith('0000')) {
+            value = undefined;
+        }
+        if (!this.context.assets.byId(value)) {
+            value = undefined; // throw?
+        }
+        this._materialId = value;
+        this.actorChanged('materialId');
     }
 
     // tslint:disable-next-line:variable-name
@@ -217,6 +237,10 @@ export class Actor implements ActorLike {
      */
     public destroy(): void {
         this.context.internal.destroyActor(this.id);
+    }
+
+    public applyMaterial(material: Material) {
+
     }
 
     /**
