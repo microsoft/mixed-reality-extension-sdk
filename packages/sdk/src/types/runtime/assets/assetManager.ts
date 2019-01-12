@@ -84,7 +84,7 @@ export class AssetManager {
 
         for (const def of response.assets) {
             def.source = group.source;
-            let asset = Asset.Parse(this, def);
+            const asset = Asset.Parse(this, def);
             group.add(asset);
             this.assets[def.id] = asset;
         }
