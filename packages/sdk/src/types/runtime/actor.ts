@@ -420,7 +420,7 @@ export class Actor implements ActorLike {
     }
 
     /**
-     * (Advanced) Sets the time, speed and wight of an animation.
+     * (Advanced) Sets the time, speed, and enabled state of an animation.
      * @param animationName The name of the animation.
      * @param options The time, speed and enabled state to apply. All values are optional. Only the values
      * provided will be applied.
