@@ -3,7 +3,7 @@
  * Licensed under the MIT License.
  */
 
-import { ActionEvent, Actor, ActorLike, Behavior, CollisionData } from '../..';
+import { ActionEvent, Actor, ActorLike, Behavior, CollisionData, SetAnimationStateOptions } from '../..';
 import { ExportedPromise } from '../../utils/exportedPromise';
 import { CollisionEventType } from '../network/payloads';
 
@@ -31,6 +31,18 @@ export class InternalActor {
     public collisionEventRaised(collisionEventType: CollisionEventType, collisionData: CollisionData) {
         if (this.actor) {
             this.actor.emitter.emit(collisionEventType, collisionData);
+        }
+    }
+
+    public setAnimationStateEventRaised(animationName: string, state: SetAnimationStateOptions) {
+        if (this.actor) {
+            if (state.enabled !== undefined) {
+                if (state.enabled) {
+                    this.actor.emitter.emit('animation-enabled', animationName);
+                } else {
+                    this.actor.emitter.emit('animation-disabled', animationName);
+                }
+            }
         }
     }
 

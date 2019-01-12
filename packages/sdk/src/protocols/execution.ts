@@ -14,6 +14,7 @@ import {
     ObjectSpawned,
     OperationResult,
     PerformAction,
+    SetAnimationState,
     StateUpdate,
     SyncRequest,
     Traces,
@@ -128,11 +129,20 @@ export class Execution extends Protocol {
         } as ActionEvent);
     }
 
+    /** @private */
     public 'recv-collision-event-raised' = (payload: CollisionEventRaised) => {
         this.emit('protocol.collision-event-raised', {
             colliderOwnerId: payload.actorId,
             collisionEventType: payload.collisionEventType,
             collisionData: payload.collisionData
         } as CollisionEvent);
+    }
+
+    /** @private */
+    public 'recv-set-animation-state' = (payload: SetAnimationState) => {
+        this.emit('protocol.set-animation-state',
+            payload.actorId,
+            payload.animationName,
+            payload.state);
     }
 }

@@ -33,10 +33,10 @@ export default class GltfAnimationTest extends Test {
                 }
             }
         });
-        tester.startAnimation('animation:0');
+        tester.enableAnimation('animation:0');
         this.app.rpc.send('functional-test:trace-message', 'gltf-animation-test', "start animation");
         await delay(6000);
-        tester.stopAnimation('animation:0');
+        tester.disableAnimation('animation:0');
         this.app.rpc.send('functional-test:trace-message', 'gltf-animation-test', "stop animation");
         await delay(2000);
 

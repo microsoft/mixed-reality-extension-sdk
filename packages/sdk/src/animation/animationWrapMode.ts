@@ -8,7 +8,9 @@
  */
 export enum AnimationWrapMode {
     /**
-     * Stop the animation once it reaches then end.
+     * When the animation reaches the end, perform these actions:
+     *  - Disable the animation.
+     *  - Reset the animation time to zero.
      */
     Once = 'once',
 
@@ -16,4 +18,9 @@ export enum AnimationWrapMode {
      * Restart the animation at the beginning once it reaches the end.
      */
     Loop = 'loop',
+
+    /**
+     * At the end of the animation, run the animation backward to the beginning, and vice versa.
+     */
+    PingPong = 'ping-pong',
 }

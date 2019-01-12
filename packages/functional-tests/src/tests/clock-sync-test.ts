@@ -86,7 +86,7 @@ export default class ClockSyncTest extends Test {
         const mesh10Minutes = this.createAnimatableDigit('10minutes', '0\n1\n2\n3\n4\n5\n0', tester.value.id);
         const meshHours =
             this.createAnimatableDigit('hours',
-            '0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n0', tester.value.id);
+                '0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n0', tester.value.id);
         const mesh10Hours = this.createAnimatableDigit('10hours', ' \n1\n2\n ', tester.value.id);
 
         // Make a handy array of all the digits.
@@ -110,7 +110,7 @@ export default class ClockSyncTest extends Test {
         await Promise.all([actors, animations]);
 
         // Start the animations.
-        actors.forEach(actor => actor.value.startAnimation('anim'));
+        actors.forEach(actor => actor.value.enableAnimation('anim'));
 
         // Wait for some seconds.
         await new Promise<void>((resolve) => {
@@ -127,7 +127,7 @@ export default class ClockSyncTest extends Test {
         });
 
         // Stop the animations.
-        actors.forEach(actor => actor.value.stopAnimation('anim'));
+        actors.forEach(actor => actor.value.disableAnimation('anim'));
 
         // Wait a bit.
         await delay(1 * 1000);
@@ -179,7 +179,7 @@ export default class ClockSyncTest extends Test {
                         y: (yOffset + i * lineHeight) * scale,
                         z: 0,
                     },
-                    scale: {x: scale, y: scale, z: scale }
+                    scale: { x: scale, y: scale, z: scale }
                 }
             };
 
@@ -204,11 +204,10 @@ export default class ClockSyncTest extends Test {
             }
         }
 
-        return mesh.createAnimation({
-            animationName: 'anim',
-            wrapMode: MRESDK.AnimationWrapMode.Loop,
-            events: [],
-            keyframes
-        });
+        return mesh.createAnimation(
+            'anim', {
+                wrapMode: MRESDK.AnimationWrapMode.Loop,
+                keyframes
+            });
     }
 }

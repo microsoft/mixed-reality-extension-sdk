@@ -65,27 +65,24 @@ export default class InputTest extends Test {
                     scale: { x: 0.4, y: 0.4, z: 0.4 }
                 }
             }
-            });
+        });
 
         const model = modelPromise.value;
         // Create some animations on the cube.
-        model.createAnimation({
-            animationName: 'GrowIn',
-            keyframes: this.growAnimationData,
-            events: []
-        }).catch(reason => console.log(`Failed to create grow animation: ${reason}`));
+        model.createAnimation(
+            'GrowIn', {
+                keyframes: this.growAnimationData
+            }).catch(reason => console.log(`Failed to create grow animation: ${reason}`));
 
-        model.createAnimation({
-            animationName: 'ShrinkOut',
-            keyframes: this.shrinkAnimationData,
-            events: []
-        }).catch(reason => console.log(`Failed to create shrink animation: ${reason}`));
+        model.createAnimation(
+            'ShrinkOut', {
+                keyframes: this.shrinkAnimationData
+            }).catch(reason => console.log(`Failed to create shrink animation: ${reason}`));
 
-        model.createAnimation({
-            animationName: 'DoAFlip',
-            keyframes: this.generateSpinKeyframes(0.5, MRESDK.Vector3.Up()),
-            events: []
-        }).catch(reason => console.log(`Failed to create flip animation: ${reason}`));
+        model.createAnimation(
+            'DoAFlip', {
+                keyframes: this.generateSpinKeyframes(0.5, MRESDK.Vector3.Up())
+            }).catch(reason => console.log(`Failed to create flip animation: ${reason}`));
 
         // Set up cursor interaction. We add the input behavior ButtonBehavior to the cube.
         // Button behaviors have two pairs of events: hover start/stop, and click start/stop.
@@ -95,30 +92,30 @@ export default class InputTest extends Test {
             let stateCounter = 0;
             // Trigger the grow/shrink animations on hover.
             buttonBehavior.onHover('enter', (userId: string) => {
-                model.startAnimation('GrowIn');
+                model.enableAnimation('GrowIn');
                 if (stateCounter === 0) {
-                   stateCounter ++;
-                   text.text.contents = "Please Click";
+                    stateCounter++;
+                    text.text.contents = "Please Click";
                 }
             });
             // When clicked, do a 360 sideways.
             buttonBehavior.onClick('pressed', (userId: string) => {
-                model.startAnimation('DoAFlip');
+                model.enableAnimation('DoAFlip');
                 if (stateCounter === 1) {
-                    stateCounter ++;
+                    stateCounter++;
                     text.text.contents = "Please Unhover";
                 }
-             });
+            });
 
             buttonBehavior.onHover('exit', (userId: string) => {
-                model.startAnimation('ShrinkOut');
+                model.enableAnimation('ShrinkOut');
                 if (stateCounter === 2) {
                     resolve();
                 } else {
                     stateCounter = 0;
                     text.text.contents = "Please Hover Again";
                 }
-             });
+            });
 
         });
 
@@ -131,13 +128,13 @@ export default class InputTest extends Test {
         return true;
     }
 
-     private generateSpinKeyframes(duration: number, axis: MRESDK.Vector3): MRESDK.AnimationKeyframe[] {
+    private generateSpinKeyframes(duration: number, axis: MRESDK.Vector3): MRESDK.AnimationKeyframe[] {
         return [{
             time: 0 * duration,
             value: { transform: { rotation: MRESDK.Quaternion.RotationAxis(axis, 0) } }
         }, {
             time: 1 * duration,
-            value: { transform: { rotation: MRESDK. Quaternion.RotationAxis(axis, Math.PI) } }
+            value: { transform: { rotation: MRESDK.Quaternion.RotationAxis(axis, Math.PI) } }
         }];
     }
 

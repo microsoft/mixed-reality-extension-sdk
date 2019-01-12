@@ -28,7 +28,9 @@ export class ClientSync extends Protocols.Protocol {
 
     /** @override */
     public sendMessage(message: MRESDK.Message, promise?: ExportedPromise) {
-        if (message.payload.type === 'heartbeat' || message.payload.type === 'sync-animations') {
+        if (message.payload.type === 'heartbeat' ||
+            message.payload.type === 'sync-animations' ||
+            message.payload.type === 'interpolate-actor') {
             // These messages are part of the synchronization process and so we always let them through.
             super.sendMessage(message, promise);
         } else if (this.actorCreateMessagesSent && message.payload.type.startsWith('create-')) {
@@ -94,6 +96,7 @@ export class ClientSync extends Protocols.Protocol {
     private createAnimations(): Promise<any> {
         const promises = [];
         for (const actor of this.client.session.actors) {
+            this.createActorInterpolations(actor);
             promises.push(this.createActorAnimations(actor));
         }
         return Promise.all(promises);
@@ -169,6 +172,17 @@ export class ClientSync extends Protocols.Protocol {
             promises.push(this.sendAndExpectResponse(createAnimation.message));
         }
         return Promise.all(promises);
+    }
+
+    private createActorInterpolations(actor: Partial<SyncActor>) {
+        for (let activeInterpolation of actor.activeInterpolations || []) {
+            // Don't start the interpolations on the new client. They will be started in the syncAnimations phase.
+            activeInterpolation = {
+                ...activeInterpolation,
+                enabled: false
+            };
+            super.sendPayload(activeInterpolation);
+        }
     }
 
     private sendAndExpectResponse(message: MRESDK.Message) {

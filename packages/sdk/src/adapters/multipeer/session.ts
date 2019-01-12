@@ -198,7 +198,7 @@ export class Session extends EventEmitter {
     }
 
     private isAnimating(syncActor: Partial<SyncActor>) {
-        return !!(syncActor.createdAnimations || []).find(item => item.animating);
+        return !!(syncActor.createdAnimations || []).find(item => item.enabled);
     }
 
     private createActor(payload: Payloads.CreateActorCommon, message: MRESDK.Message<Payloads.CreateActorCommon>) {
@@ -216,56 +216,34 @@ export class Session extends EventEmitter {
         message: MRESDK.Message<Payloads.CreateAnimation>) => {
         const syncActor = this.actorSet[payload.actorId];
         if (syncActor) {
+            const enabled = message.payload.initialState && !!message.payload.initialState.enabled;
             syncActor.createdAnimations = syncActor.createdAnimations || [];
-            syncActor.createdAnimations.push({ message, animating: false });
+            syncActor.createdAnimations.push({ message, enabled });
         }
         return payload;
     }
 
     /** @private */
-    public 'app-preprocess-start-animation' = (payload: Payloads.StartAnimation) => {
-        const syncActor = this.actorSet[payload.actorId];
-        if (syncActor) {
-            const animation = this.findAnimation(syncActor, payload.animationName);
-            if (animation) {
-                animation.animating = true;
+    public 'app-preprocess-set-animation-state' = (payload: Payloads.SetAnimationState) => {
+        // If the app enabled or disabled the animation, update our local sync state to match.
+        if (payload.state.enabled !== undefined) {
+            const syncActor = this.actorSet[payload.actorId];
+            if (syncActor) {
+                const animation = this.findAnimation(syncActor, payload.animationName);
+                if (animation) {
+                    animation.enabled = payload.state.enabled;
+                }
             }
         }
         return payload;
     }
 
     /** @private */
-    public 'app-preprocess-stop-animation' = (payload: Payloads.StopAnimation) => {
+    public 'app-preprocess-interpolate-actor' = (payload: Payloads.InterpolateActor) => {
         const syncActor = this.actorSet[payload.actorId];
         if (syncActor) {
-            const animation = this.findAnimation(syncActor, payload.animationName);
-            if (animation) {
-                animation.animating = false;
-            }
-        }
-        return payload;
-    }
-
-    /** @private */
-    public 'app-preprocess-resume-animation' = (payload: Payloads.ResumeAnimation) => {
-        const syncActor = this.actorSet[payload.actorId];
-        if (syncActor) {
-            const animation = this.findAnimation(syncActor, payload.animationName);
-            if (animation) {
-                animation.animating = true;
-            }
-        }
-        return payload;
-    }
-
-    /** @private */
-    public 'app-preprocess-pause-animation' = (payload: Payloads.PauseAnimation) => {
-        const syncActor = this.actorSet[payload.actorId];
-        if (syncActor) {
-            const animation = this.findAnimation(syncActor, payload.animationName);
-            if (animation) {
-                animation.animating = false;
-            }
+            syncActor.activeInterpolations = syncActor.activeInterpolations || [];
+            syncActor.activeInterpolations.push(deepmerge({}, payload));
         }
         return payload;
     }
@@ -484,26 +462,36 @@ export class Session extends EventEmitter {
                     syncActor.actorId = spawned.id;
                 }
             }
-            // Allow the message to propagate to the app
+            // Allow the message to propagate to the app.
             return payload;
         }
     }
 
     /** @private */
-    public 'client-preprocess-stop-animation' = (client: Client, payload: Payloads.StopAnimation) => {
+    public 'client-preprocess-set-animation-state' = (client: Client, payload: Payloads.SetAnimationState) => {
         // Check that this is the authoritative client
         if (client.authoritative) {
             // Check that the actor exists
             const syncActor = this.actorSet[payload.actorId];
             if (syncActor) {
-                const animation = this.findAnimation(syncActor, payload.animationName);
-                if (animation) {
-                    animation.animating = false;
+                // If the animation was disabled on the client, notify other clients and also
+                // update our local sync state.
+                if (payload.state.enabled !== undefined && !payload.state.enabled) {
+                    const createdAnimation = (syncActor.createdAnimations || []).filter(
+                        item => item.message.payload.animationName === payload.animationName).shift();
+                    if (createdAnimation) {
+                        createdAnimation.enabled = payload.state.enabled;
+                        // Propagate to other clients.
+                        this.sendPayloadToClients(payload, client.id);
+                    }
+                    // Remove the completed interpolation.
+                    syncActor.activeInterpolations =
+                        (syncActor.activeInterpolations || []).filter(
+                            item => item.animationName !== payload.animationName);
                 }
             }
-            // Sync the change to the other clients
-            this.sendPayloadToClients(payload, client.id);
-            // By not returning the payload, we cancel this message. It doesn't need to propagate to the app
+            // Allow the message to propagate to the app.
+            return payload;
         }
     }
 }
