@@ -109,10 +109,10 @@ export class Actor implements ActorLike {
     public get parentId() { return this._parentId; }
     public set parentId(value) {
         if (value && value.startsWith('0000')) {
-            value = undefined;
+            value = null;
         }
         if (!this.context.actor(value)) {
-            value = undefined; // throw?
+            value = null; // throw?
         }
         this._parentId = value;
         this.actorChanged('parentId');
@@ -124,10 +124,10 @@ export class Actor implements ActorLike {
     public get materialId() { return this._materialId; }
     public set materialId(value) {
         if (value && value.startsWith('0000')) {
-            value = undefined;
+            value = null;
         }
         if (!this.context.assets.byId(value)) {
-            value = undefined; // throw?
+            value = null; // throw?
         }
         this._materialId = value;
         this.actorChanged('materialId');

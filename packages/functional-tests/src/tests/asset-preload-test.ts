@@ -67,7 +67,7 @@ ${prefabs.prefabs.count + mats.prefabs.count} prefabs, ${prefabs.materials.count
         });
         label.text.contents = 'Prefab instantiated';
 
-        await delay(3 * 1000);
+        await delay(3000);
 
         function assignMat(actor: MRESDK.Actor, mat: MRESDK.Material) {
             actor.material = mat;
@@ -77,6 +77,12 @@ ${prefabs.prefabs.count + mats.prefabs.count} prefabs, ${prefabs.materials.count
         assignMat(head, mats.materials.byIndex(0));
         assignMat(sphere, prefabs.materials.byIndex(0));
         label.text.contents = 'Materials swapped';
+
+        await delay(3000);
+
+        assignMat(head, null);
+        assignMat(sphere, null);
+        label.text.contents = 'Materials cleared';
 
         await delay(3000);
 
