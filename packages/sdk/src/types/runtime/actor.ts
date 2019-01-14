@@ -239,10 +239,6 @@ export class Actor implements ActorLike {
         this.context.internal.destroyActor(this.id);
     }
 
-    public applyMaterial(material: Material) {
-
-    }
-
     /**
      * Adds a light component to the actor.
      * @param light Light characteristics.
