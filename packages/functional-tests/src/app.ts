@@ -5,9 +5,10 @@
 
 import * as MRESDK from '@microsoft/mixed-reality-extension-sdk';
 import * as MRERPC from '@microsoft/mixed-reality-extension-sdk/built/rpc';
-import AssetPreloadTest from './tests/asset-preload';
+import AssetPreloadTest from './tests/asset-preload-test';
 import ClockSyncTest from './tests/clock-sync-test';
 import GltfAnimationTest from './tests/gltf-animation-test';
+import GltfConcurrencyTest from './tests/gltf-concurrency-test';
 import GltfGenTest from './tests/gltf-gen-test';
 import InputTest from './tests/input-test';
 import LibraryTest from './tests/library-test';
@@ -39,7 +40,8 @@ export default class App {
      */
     private testFactories: { [key: string]: (user: MRESDK.User) => Test } = {
         'gltf-animation-test': (): Test => new GltfAnimationTest(this, this.baseUrl),
-        'look-at-test': (user: MRESDK.User): Test => new LookAtTest(this, this.baseUrl, user),
+        'gltf-concurrency-test': (): Test => new GltfConcurrencyTest(this, this.baseUrl),
+        'look-at-test': (): Test => new LookAtTest(this, this.baseUrl),
         'rigid-body-test': (): Test => new RigidBodyTest(this),
         'text-test': (): Test => new TextTest(this),
         'clock-sync-test': (): Test => new ClockSyncTest(this, this.baseUrl),
@@ -49,7 +51,7 @@ export default class App {
         'gltf-gen-test': (): Test => new GltfGenTest(this, this.baseUrl),
         'root-motion-test': (): Test => new RootMotionTest(this, this.baseUrl),
         'user-test': (user: MRESDK.User): Test => new UserTest(this, this.baseUrl, user),
-        'asset-preload-test': (user: MRESDK.User): Test => new AssetPreloadTest(this, this.baseUrl, user)
+        'asset-preload-test': (): Test => new AssetPreloadTest(this, this.baseUrl)
     };
 
     constructor(private _context: MRESDK.Context, private params: MRESDK.ParameterSet, private baseUrl: string) {

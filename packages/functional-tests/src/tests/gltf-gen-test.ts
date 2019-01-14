@@ -26,6 +26,7 @@ export default class GltfGenTest extends Test {
             baseColorTexture: new GltfGen.Texture({
                 source: new GltfGen.Image({
                     embeddedFilePath: resolve(__dirname, '../../public/uv-grid.png')
+                    // uri: `${this.baseUrl}/uv-grid.png` // alternate form (don't embed)
                 })
             })
         });

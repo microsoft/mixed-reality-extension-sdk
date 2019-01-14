@@ -10,7 +10,6 @@ import {
     AnimationState,
     AnimationWrapMode,
 } from '../../..';
-import { LookAtMode } from '../../lookatMode';
 import { PrimitiveDefinition } from '../../primitiveTypes';
 import { ActorLike, ColliderType, LightLike, RigidBodyLike, TextLike, UserLike } from '../../runtime';
 import { ActionState, BehaviorType } from '../../runtime/behaviors';
@@ -445,15 +444,4 @@ export type ResumeAnimation = Payload & {
 export type SyncAnimations = Payload & {
     type: 'sync-animations';
     animationStates: AnimationState[];
-};
-
-/**
- * @hidden
- * App to engine. Instruct the actor to face another actor or user.
- */
-export type LookAt = Payload & {
-    type: 'look-at';
-    actorId: string;
-    targetId: string;
-    lookAtMode: LookAtMode;
 };

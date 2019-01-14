@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>GltfFactory | glTF Generator</title>
+	<title>Sphere | glTF Generator</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -52,10 +52,10 @@
 					<a href="../index.html">Globals</a>
 				</li>
 				<li>
-					<a href="gltffactory.html">GltfFactory</a>
+					<a href="sphere.html">Sphere</a>
 				</li>
 			</ul>
-			<h1>Class GltfFactory</h1>
+			<h1>Class Sphere</h1>
 		</div>
 	</div>
 </header>
@@ -65,7 +65,7 @@
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>Generates a glTF document from mesh data</p>
+						<p>A MeshPrimitive prepopulated with sphere vertices and triangles</p>
 					</div>
 				</div>
 			</section>
@@ -73,8 +73,19 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">GltfFactory</span>
+						<a href="meshprimitive.html" class="tsd-signature-type">MeshPrimitive</a>
+						<ul class="tsd-hierarchy">
+							<li>
+								<span class="target">Sphere</span>
+							</li>
+						</ul>
 					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel">
+				<h3>Implements</h3>
+				<ul class="tsd-hierarchy">
+					<li><a href="../interfaces/meshprimitivelike.html" class="tsd-signature-type">MeshPrimitiveLike</a></li>
 				</ul>
 			</section>
 			<section class="tsd-panel-group tsd-index-group">
@@ -84,23 +95,22 @@
 						<section class="tsd-index-section ">
 							<h3>Constructors</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="gltffactory.html#constructor" class="tsd-kind-icon">constructor</a></li>
+								<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite"><a href="sphere.html#constructor" class="tsd-kind-icon">constructor</a></li>
 							</ul>
 						</section>
-						<section class="tsd-index-section ">
+						<section class="tsd-index-section tsd-is-inherited">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-class"><a href="gltffactory.html#materials" class="tsd-kind-icon">materials</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class"><a href="gltffactory.html#meshes" class="tsd-kind-icon">meshes</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class"><a href="gltffactory.html#scenes" class="tsd-kind-icon">scenes</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class"><a href="gltffactory.html#textures" class="tsd-kind-icon">textures</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a href="sphere.html#material" class="tsd-kind-icon">material</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a href="sphere.html#triangles" class="tsd-kind-icon">triangles</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a href="sphere.html#vertices" class="tsd-kind-icon">vertices</a></li>
 							</ul>
 						</section>
-						<section class="tsd-index-section ">
+						<section class="tsd-index-section tsd-is-inherited">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="gltffactory.html#generategltf" class="tsd-kind-icon">generateGLTF</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="gltffactory.html#fromsingleprimitive" class="tsd-kind-icon">From<wbr>Single<wbr>Primitive</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="sphere.html#getbytesize" class="tsd-kind-icon">get<wbr>Byte<wbr>Size</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="sphere.html#serialize" class="tsd-kind-icon">serialize</a></li>
 							</ul>
 						</section>
 					</div>
@@ -108,124 +118,146 @@
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Constructors</h2>
-				<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class">
+				<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite">
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
-					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Gltf<wbr>Factory<span class="tsd-signature-symbol">(</span>scenes<span class="tsd-signature-symbol">?: </span><a href="scene.html" class="tsd-signature-type">Scene</a><span class="tsd-signature-symbol">[]</span>, meshes<span class="tsd-signature-symbol">?: </span><a href="mesh.html" class="tsd-signature-type">Mesh</a><span class="tsd-signature-symbol">[]</span>, materials<span class="tsd-signature-symbol">?: </span><a href="material.html" class="tsd-signature-type">Material</a><span class="tsd-signature-symbol">[]</span>, textures<span class="tsd-signature-symbol">?: </span><a href="texture.html" class="tsd-signature-type">Texture</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="gltffactory.html" class="tsd-signature-type">GltfFactory</a></li>
+					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite">
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Sphere<span class="tsd-signature-symbol">(</span>radius<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, longLines<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span>, latLines<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="sphere.html" class="tsd-signature-type">Sphere</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
+								<p>Overrides <a href="meshprimitive.html">MeshPrimitive</a>.<a href="meshprimitive.html#constructor">constructor</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/90dddc4/packages/gltf-gen/src/gltffactory.ts#L17">gltffactory.ts:17</a></li>
-								</ul>
-							</aside>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> scenes: <a href="scene.html" class="tsd-signature-type">Scene</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> =&nbsp;[]</span></h5>
-								</li>
-								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> meshes: <a href="mesh.html" class="tsd-signature-type">Mesh</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> =&nbsp;[]</span></h5>
-								</li>
-								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> materials: <a href="material.html" class="tsd-signature-type">Material</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> =&nbsp;[]</span></h5>
-								</li>
-								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> textures: <a href="texture.html" class="tsd-signature-type">Texture</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> =&nbsp;[]</span></h5>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="gltffactory.html" class="tsd-signature-type">GltfFactory</a></h4>
-						</li>
-					</ul>
-				</section>
-			</section>
-			<section class="tsd-panel-group tsd-member-group ">
-				<h2>Properties</h2>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
-					<a name="materials" class="tsd-anchor"></a>
-					<h3>materials</h3>
-					<div class="tsd-signature tsd-kind-icon">materials<span class="tsd-signature-symbol">:</span> <a href="material.html" class="tsd-signature-type">Material</a><span class="tsd-signature-symbol">[]</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/90dddc4/packages/gltf-gen/src/gltffactory.ts#L15">gltffactory.ts:15</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
-					<a name="meshes" class="tsd-anchor"></a>
-					<h3>meshes</h3>
-					<div class="tsd-signature tsd-kind-icon">meshes<span class="tsd-signature-symbol">:</span> <a href="mesh.html" class="tsd-signature-type">Mesh</a><span class="tsd-signature-symbol">[]</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/90dddc4/packages/gltf-gen/src/gltffactory.ts#L16">gltffactory.ts:16</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
-					<a name="scenes" class="tsd-anchor"></a>
-					<h3>scenes</h3>
-					<div class="tsd-signature tsd-kind-icon">scenes<span class="tsd-signature-symbol">:</span> <a href="scene.html" class="tsd-signature-type">Scene</a><span class="tsd-signature-symbol">[]</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/90dddc4/packages/gltf-gen/src/gltffactory.ts#L17">gltffactory.ts:17</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
-					<a name="textures" class="tsd-anchor"></a>
-					<h3>textures</h3>
-					<div class="tsd-signature tsd-kind-icon">textures<span class="tsd-signature-symbol">:</span> <a href="texture.html" class="tsd-signature-type">Texture</a><span class="tsd-signature-symbol">[]</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/90dddc4/packages/gltf-gen/src/gltffactory.ts#L14">gltffactory.ts:14</a></li>
-						</ul>
-					</aside>
-				</section>
-			</section>
-			<section class="tsd-panel-group tsd-member-group ">
-				<h2>Methods</h2>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="generategltf" class="tsd-anchor"></a>
-					<h3>generateGLTF</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">generateGLTF<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Buffer</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/90dddc4/packages/gltf-gen/src/gltffactory.ts#L33">gltffactory.ts:33</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/90dddc4/packages/gltf-gen/src/geometry/sphere.ts#L12">geometry/sphere.ts:12</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Generate a sphere mesh primitive</p>
+								</div>
 							</div>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Buffer</span></h4>
-							<p>A buffer containing a glTF document in GLB format</p>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>radius: <span class="tsd-signature-type">number</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<div class="lead">
+											<p>The radius of the generated sphere</p>
+										</div>
+									</div>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> longLines: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;12</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<div class="lead">
+											<p>The number of polar vertex rings</p>
+										</div>
+									</div>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> latLines: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;8</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<div class="lead">
+											<p>The number of equatorial vertex rings (not counting poles)</p>
+										</div>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="sphere.html" class="tsd-signature-type">Sphere</a></h4>
 						</li>
 					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-static">
-					<a name="fromsingleprimitive" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagStatic">Static</span> From<wbr>Single<wbr>Primitive</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-static">
-						<li class="tsd-signature tsd-kind-icon">From<wbr>Single<wbr>Primitive<span class="tsd-signature-symbol">(</span>prim<span class="tsd-signature-symbol">: </span><a href="meshprimitive.html" class="tsd-signature-type">MeshPrimitive</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="gltffactory.html" class="tsd-signature-type">GltfFactory</a></li>
+			</section>
+			<section class="tsd-panel-group tsd-member-group tsd-is-inherited">
+				<h2>Properties</h2>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
+					<a name="material" class="tsd-anchor"></a>
+					<h3>material</h3>
+					<div class="tsd-signature tsd-kind-icon">material<span class="tsd-signature-symbol">:</span> <a href="material.html" class="tsd-signature-type">Material</a></div>
+					<aside class="tsd-sources">
+						<p>Implementation of <a href="../interfaces/meshprimitivelike.html">MeshPrimitiveLike</a>.<a href="../interfaces/meshprimitivelike.html#material">material</a></p>
+						<p>Inherited from <a href="meshprimitive.html">MeshPrimitive</a>.<a href="meshprimitive.html#material">material</a></p>
+						<ul>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/90dddc4/packages/gltf-gen/src/meshprimitive.ts#L23">meshprimitive.ts:23</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
+					<a name="triangles" class="tsd-anchor"></a>
+					<h3>triangles</h3>
+					<div class="tsd-signature tsd-kind-icon">triangles<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> =&nbsp;[]</span></div>
+					<aside class="tsd-sources">
+						<p>Implementation of <a href="../interfaces/meshprimitivelike.html">MeshPrimitiveLike</a>.<a href="../interfaces/meshprimitivelike.html#triangles">triangles</a></p>
+						<p>Inherited from <a href="meshprimitive.html">MeshPrimitive</a>.<a href="meshprimitive.html#triangles">triangles</a></p>
+						<ul>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/90dddc4/packages/gltf-gen/src/meshprimitive.ts#L21">meshprimitive.ts:21</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
+					<a name="vertices" class="tsd-anchor"></a>
+					<h3>vertices</h3>
+					<div class="tsd-signature tsd-kind-icon">vertices<span class="tsd-signature-symbol">:</span> <a href="vertex.html" class="tsd-signature-type">Vertex</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> =&nbsp;[]</span></div>
+					<aside class="tsd-sources">
+						<p>Implementation of <a href="../interfaces/meshprimitivelike.html">MeshPrimitiveLike</a>.<a href="../interfaces/meshprimitivelike.html#vertices">vertices</a></p>
+						<p>Inherited from <a href="meshprimitive.html">MeshPrimitive</a>.<a href="meshprimitive.html#vertices">vertices</a></p>
+						<ul>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/90dddc4/packages/gltf-gen/src/meshprimitive.ts#L20">meshprimitive.ts:20</a></li>
+						</ul>
+					</aside>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group tsd-is-inherited">
+				<h2>Methods</h2>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+					<a name="getbytesize" class="tsd-anchor"></a>
+					<h3>get<wbr>Byte<wbr>Size</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Byte<wbr>Size<span class="tsd-signature-symbol">(</span>scanId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
+								<p>Inherited from <a href="meshprimitive.html">MeshPrimitive</a>.<a href="meshprimitive.html#getbytesize">getByteSize</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/90dddc4/packages/gltf-gen/src/gltffactory.ts#L83">gltffactory.ts:83</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/90dddc4/packages/gltf-gen/src/meshprimitive.ts#L60">meshprimitive.ts:60</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>prim: <a href="meshprimitive.html" class="tsd-signature-type">MeshPrimitive</a></h5>
+									<h5>scanId: <span class="tsd-signature-type">number</span></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="gltffactory.html" class="tsd-signature-type">GltfFactory</a></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+					<a name="serialize" class="tsd-anchor"></a>
+					<h3>serialize</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+						<li class="tsd-signature tsd-kind-icon">serialize<span class="tsd-signature-symbol">(</span>document<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">GlTf</span>, data<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Buffer</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">MeshPrimitive</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="meshprimitive.html">MeshPrimitive</a>.<a href="meshprimitive.html#serialize">serialize</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/90dddc4/packages/gltf-gen/src/meshprimitive.ts#L92">meshprimitive.ts:92</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>document: <span class="tsd-signature-type">GlTf</span></h5>
+								</li>
+								<li>
+									<h5>data: <span class="tsd-signature-type">Buffer</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">MeshPrimitive</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -259,36 +291,9 @@
 					<li class=" tsd-kind-enum">
 						<a href="../enums/texturewrapmode.html" class="tsd-kind-icon">Texture<wbr>Wrap<wbr>Mode</a>
 					</li>
-				</ul>
-				<ul class="current">
-					<li class="current tsd-kind-class">
+					<li class=" tsd-kind-class">
 						<a href="gltffactory.html" class="tsd-kind-icon">Gltf<wbr>Factory</a>
-						<ul>
-							<li class=" tsd-kind-constructor tsd-parent-kind-class">
-								<a href="gltffactory.html#constructor" class="tsd-kind-icon">constructor</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class">
-								<a href="gltffactory.html#materials" class="tsd-kind-icon">materials</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class">
-								<a href="gltffactory.html#meshes" class="tsd-kind-icon">meshes</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class">
-								<a href="gltffactory.html#scenes" class="tsd-kind-icon">scenes</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class">
-								<a href="gltffactory.html#textures" class="tsd-kind-icon">textures</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="gltffactory.html#generategltf" class="tsd-kind-icon">generateGLTF</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-static">
-								<a href="gltffactory.html#fromsingleprimitive" class="tsd-kind-icon">From<wbr>Single<wbr>Primitive</a>
-							</li>
-						</ul>
 					</li>
-				</ul>
-				<ul class="after-current">
 					<li class=" tsd-kind-class">
 						<a href="image.html" class="tsd-kind-icon">Image</a>
 					</li>
@@ -307,9 +312,33 @@
 					<li class=" tsd-kind-class">
 						<a href="scene.html" class="tsd-kind-icon">Scene</a>
 					</li>
-					<li class=" tsd-kind-class">
+				</ul>
+				<ul class="current">
+					<li class="current tsd-kind-class">
 						<a href="sphere.html" class="tsd-kind-icon">Sphere</a>
+						<ul>
+							<li class=" tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite">
+								<a href="sphere.html#constructor" class="tsd-kind-icon">constructor</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
+								<a href="sphere.html#material" class="tsd-kind-icon">material</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
+								<a href="sphere.html#triangles" class="tsd-kind-icon">triangles</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
+								<a href="sphere.html#vertices" class="tsd-kind-icon">vertices</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+								<a href="sphere.html#getbytesize" class="tsd-kind-icon">get<wbr>Byte<wbr>Size</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+								<a href="sphere.html#serialize" class="tsd-kind-icon">serialize</a>
+							</li>
+						</ul>
 					</li>
+				</ul>
+				<ul class="after-current">
 					<li class=" tsd-kind-class">
 						<a href="texture.html" class="tsd-kind-icon">Texture</a>
 					</li>

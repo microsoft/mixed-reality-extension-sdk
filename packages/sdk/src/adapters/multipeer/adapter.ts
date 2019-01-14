@@ -16,6 +16,9 @@ import { log } from './../../log';
 import { Client } from './client';
 import { Session } from './session';
 
+// tslint:disable-next-line:no-var-requires
+const forwarded = require('forwarded-for');
+
 /**
  * Multi-peer adapter options
  */
@@ -120,7 +123,10 @@ export class MultipeerAdapter extends Adapter {
             // Get the session for the sessionId
             const session = await this.getOrCreateSession(sessionId, params);
 
-            const conn = new WebSocket(ws, request.socket.remoteAddress);
+            // Get the client's IP address rather than the last proxy connecting to you
+            const address = forwarded(request, request.headers);
+
+            const conn = new WebSocket(ws, address.ip);
 
             // Instantiate a client for this connection
             const client = new Client(conn);
