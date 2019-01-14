@@ -223,10 +223,12 @@ export class InternalContext {
     public CreateFromPrefab(options: {
         prefabId: string,
         actor?: Partial<ActorLike>,
+        addCollider?: boolean,
         subscriptions?: SubscriptionType[]
     }): ForwardPromise<Actor> {
         options = { ...options };
         options = {
+            addCollider: false,
             subscriptions: [],
             ...options,
             actor: {

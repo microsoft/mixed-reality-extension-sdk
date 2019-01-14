@@ -211,6 +211,7 @@ export class Actor implements ActorLike {
      */
     public static CreateFromPrefab(context: Context, options: {
         prefabId: string,
+        colliderType?: CreateColliderType,
         actor?: Partial<ActorLike>,
         subscriptions?: SubscriptionType[]
     }): ForwardPromise<Actor> {

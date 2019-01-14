@@ -221,12 +221,20 @@ export class InternalContext {
 
     public CreateFromPrefab(options: {
         prefabId: string,
+        colliderType?: CreateColliderType,
         actor?: Partial<ActorLike>,
         subscriptions?: SubscriptionType[]
     }): ForwardPromise<Actor> {
+<<<<<<< HEAD
         options = {
             subscriptions: [],
             ...options,
+=======
+        return this.createActorFromPayload({
+            type: 'create-from-prefab',
+            prefabId: options.prefabId,
+            colliderType: options.colliderType,
+>>>>>>> [SDK] Add collider support to CreateFromPrefab
             actor: {
                 ...options.actor,
                 id: UUID()
@@ -341,11 +349,7 @@ export class InternalContext {
                 } as SetAnimationState))
                 .catch((reason) => log.error('app', reason));
         } else {
-<<<<<<< HEAD
             log.error('app', `Failed to set animation state on ${animationName}. Actor ${actorId} not found.`);
-=======
-            log.error('app', `Failed to set animation state on ${animationName}. Actor ${actorId} not found`);
->>>>>>> - Simplified the animation API. Client will remain backward compatible with the older API (except for root motion, see below), so I think we're fine to leave the protocol version where it is.
         }
     }
 
