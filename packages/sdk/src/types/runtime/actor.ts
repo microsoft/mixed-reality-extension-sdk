@@ -119,7 +119,7 @@ export class Actor implements ActorLike {
     }
     public get material() { return this._context.assets.byId(this._materialId) as Material; }
     public set material(value) {
-        this.materialId = value && value.id || undefined;
+        this.materialId = value && value.id || null;
     }
     public get materialId() { return this._materialId; }
     public set materialId(value) {
