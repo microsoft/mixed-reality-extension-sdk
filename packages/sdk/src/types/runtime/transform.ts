@@ -12,86 +12,36 @@ export interface TransformLike {
 }
 
 export class Transform implements TransformLike {
-    // tslint:disable:variable-name
-    private _position: Vector3;
-    private _rotation: Quaternion;
-    private _scale: Vector3;
-    // tslint:enable:variable-name
-
-    // Late-bound properties
-    private $position: Vector3;
-    private $rotation: Quaternion;
-    private $scale: Vector3;
-
-    /**
-     * PUBLIC ACCESSORS
-     */
-
-    public get position() { return this.$position; }
-    public set position(value: Partial<Vector3>) { this.$position = this._position; this._position.copy(value); }
-
-    public get rotation() { return this.$rotation; }
-    public set rotation(value: Quaternion) { this.$rotation = this._rotation; this._rotation.copy(value); }
-
-    public get scale() { return this.$scale; }
-    public set scale(value: Partial<Vector3>) { this.$scale = this._scale; this._scale.copy(value); }
+    public position: Vector3;
+    public rotation: Quaternion;
+    public scale: Vector3;
 
     /**
      * PUBLIC METHODS
      */
 
     constructor() {
-        this._position = Vector3.Zero();
-        this._rotation = Quaternion.Identity();
-        this._scale = Vector3.One();
-        this.$position = this._position;
-        this.$rotation = this._rotation;
-        this.$scale = this._scale;
-    }
-
-    public copyDirect(from: Partial<TransformLike>): this {
-        if (!from) {
-            return this;
-        }
-        if (typeof from.position !== 'undefined') {
-            this.$position = this._position;
-            this._position.copyDirect(from.position);
-        }
-        if (typeof from.rotation !== 'undefined') {
-            this.$rotation = this._rotation;
-            this._rotation.copyDirect(from.rotation);
-        }
-        if (typeof from.scale !== 'undefined') {
-            this.$scale = this._scale;
-            this._scale.copyDirect(from.scale);
-        }
-        return this;
+        this.position = Vector3.Zero();
+        this.rotation = Quaternion.Identity();
+        this.scale = Vector3.One();
     }
 
     public copy(from: Partial<TransformLike>): this {
         if (!from) {
             return this;
         }
-        if (typeof from.position !== 'undefined') {
-            this.$position = this._position;
-            this._position.copy(from.position);
+        if (from.position !== undefined) {
+            if (!this.position) this.position = Vector3.Zero();
+            this.position.copy(from.position);
         }
-        if (typeof from.rotation !== 'undefined') {
-            this.$rotation = this._rotation;
-            this._rotation.copy(from.rotation);
+        if (from.rotation !== undefined) {
+            if (!this.rotation) this.rotation = Quaternion.Identity();
+            this.rotation.copy(from.rotation);
         }
-        if (typeof from.scale !== 'undefined') {
-            this.$scale = this._scale;
-            this._scale.copy(from.scale);
+        if (from.scale !== undefined) {
+            if (!this.scale) this.scale = Vector3.One();
+            this.scale.copy(from.scale);
         }
         return this;
-    }
-
-    public toJSON() {
-        return {
-            position: this.$position ? this.$position.toJSON() : undefined,
-            rotation: this.$rotation ? this.$rotation.toJSON() : undefined,
-            scale: this.$scale ? this.$scale.toJSON() : undefined,
-        } as TransformLike;
     }
 }

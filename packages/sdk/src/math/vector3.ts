@@ -23,15 +23,6 @@ export interface Vector3Like {
  */
 export class Vector3 implements Vector3Like {
 
-    public get x() { return this._x; }
-    public set x(value) { this._x = value; }
-
-    public get y() { return this._y; }
-    public set y(value) { this._y = value; }
-
-    public get z() { return this._z; }
-    public set z(value) { this._z = value; }
-
     /**
      * Gets a boolean indicating that the vector is non uniform meaning x, y or z are not all the same
      */
@@ -709,15 +700,15 @@ export class Vector3 implements Vector3Like {
         /**
          * Defines the first coordinates (on X axis)
          */
-        private _x = 0,
+        public x = 0,
         /**
          * Defines the second coordinates (on Y axis)
          */
-        private _y = 0,
+        public y = 0,
         /**
          * Defines the third coordinates (on Z axis)
          */
-        private _z = 0,
+        public z = 0,
     ) {
     }
 
@@ -1248,27 +1239,15 @@ export class Vector3 implements Vector3Like {
         return this;
     }
 
+    /**
+     * Updates the Vector3 from the sparsely populated value.
+     * @param from The sparsely populated value to read from.
+     */
     public copy(from: Partial<Vector3Like>): this {
         if (!from) { return this; }
-        if (typeof from.x !== 'undefined') { this.x = from.x; }
-        if (typeof from.y !== 'undefined') { this.y = from.y; }
-        if (typeof from.z !== 'undefined') { this.z = from.z; }
+        if (from.x !== undefined) { this.x = from.x; }
+        if (from.y !== undefined) { this.y = from.y; }
+        if (from.z !== undefined) { this.z = from.z; }
         return this;
-    }
-
-    public copyDirect(from: Partial<Vector3Like>): this {
-        if (!from) { return this; }
-        if (typeof from.x !== 'undefined') { this._x = from.x; }
-        if (typeof from.y !== 'undefined') { this._y = from.y; }
-        if (typeof from.z !== 'undefined') { this._z = from.z; }
-        return this;
-    }
-
-    public toJSON() {
-        return {
-            x: this.x,
-            y: this.y,
-            z: this.z,
-        } as Vector3Like;
     }
 }

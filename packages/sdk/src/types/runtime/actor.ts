@@ -27,13 +27,13 @@ import {
     PrimitiveDefinition
 } from '../..';
 import BufferedEventEmitter from '../../utils/bufferedEventEmitter';
+import observe from '../../utils/observe';
+import readPath from '../../utils/readPath';
 import { createForwardPromise, ForwardPromise } from '../forwardPromise';
 import { InternalActor } from '../internal/actor';
 import { CollisionEventType, CreateColliderType } from '../network/payloads';
 import { SubscriptionType } from '../network/subscriptionType';
 import { Behavior } from './behaviors';
-import observe from './observe';
-import readPath from './readPath';
 
 /**
  * Describes the properties of an Actor.
@@ -115,6 +115,7 @@ export class Actor implements ActorLike {
     private constructor(private _context: Context, private _id: string) {
         this._internal = new InternalActor(this);
         this._transform = new Transform();
+        // Actor patching: Observe the transform for changed values.
         observe(this._transform, 'transform', (...path: string[]) => this.actorChanged(...path));
     }
 
@@ -224,9 +225,10 @@ export class Actor implements ActorLike {
     public enableLight(light?: Partial<LightLike>): ForwardPromise<Light> {
         if (!this._light) {
             this._light = new Light();
-            this._light.copyDirect(light);
+            this._light.copy(light);
+            // Actor patching: Observe the light component for changed values.
             observe(this._light, 'light', (...path: string[]) => this.actorChanged(...path));
-            return this.context.internal.enableLight(this.id, this._light.toJSON());
+            return this.context.internal.enableLight(this.id, this._light);
         }
         return createForwardPromise(this._light, Promise.resolve(this._light));
     }
@@ -238,10 +240,11 @@ export class Actor implements ActorLike {
     public enableRigidBody(rigidBody?: Partial<RigidBodyLike>): ForwardPromise<RigidBody> {
         if (!this._rigidBody) {
             this._rigidBody = new RigidBody(this);
-            this._rigidBody.copyDirect(rigidBody);
+            this._rigidBody.copy(rigidBody);
+            // Actor patching: Observe the light component for changed values.
             observe(this._rigidBody, 'rigidBody', (...path: string[]) => this.actorChanged(...path));
             this.subscribe('rigidbody');
-            return this.context.internal.enableRigidBody(this.id, this._rigidBody.toJSON());
+            return this.context.internal.enableRigidBody(this.id, this._rigidBody);
         }
         return createForwardPromise(this._rigidBody, Promise.resolve(this._rigidBody));
     }
@@ -307,9 +310,10 @@ export class Actor implements ActorLike {
     public enableText(text?: Partial<TextLike>): ForwardPromise<Text> {
         if (!this._text) {
             this._text = new Text();
-            this._text.copyDirect(text);
+            this._text.copy(text);
+            // Actor patching: Observe the text component for changed values.
             observe(this._text, 'text', (...path: string[]) => this.actorChanged(...path));
-            return this.context.internal.enableText(this.id, this._text.toJSON());
+            return this.context.internal.enableText(this.id, this._text);
         }
         return createForwardPromise(this._text, Promise.resolve(this._text));
     }
@@ -491,33 +495,39 @@ export class Actor implements ActorLike {
         return this;
     }
 
-    public copyDirect(sactor: Partial<ActorLike>): this {
+    public copy(from: Partial<ActorLike>): this {
+        // Pause change detection while we copy the values into the actor.
+        const wasObserving = this.internal.observing;
+        this.internal.observing = false;
+
         // tslint:disable:curly
-        if (!sactor) return this;
-        if (sactor.id) this._id = sactor.id;
-        if (sactor.parentId) this._parentId = sactor.parentId;
-        if (sactor.name) this._name = sactor.name;
-        if (sactor.tag) this._tag = sactor.tag;
-        if (sactor.transform) this._transform.copyDirect(sactor.transform);
-        if (sactor.light) {
+        if (!from) return this;
+        if (from.id) this._id = from.id;
+        if (from.parentId) this._parentId = from.parentId;
+        if (from.name) this._name = from.name;
+        if (from.tag) this._tag = from.tag;
+        if (from.transform) this._transform.copy(from.transform);
+        if (from.lookAt) this._lookAt = from.lookAt;
+        if (from.light) {
             if (!this._light)
-                this.enableLight(sactor.light);
+                this.enableLight(from.light);
             else
-                this.light.copyDirect(sactor.light);
+                this.light.copy(from.light);
         }
-        if (sactor.rigidBody) {
+        if (from.rigidBody) {
             if (!this._rigidBody)
-                this.enableRigidBody(sactor.rigidBody);
+                this.enableRigidBody(from.rigidBody);
             else
-                this.rigidBody.copyDirect(sactor.rigidBody);
+                this.rigidBody.copy(from.rigidBody);
         }
         // TODO @tombu:  Add in colliders here once feature is turned on.
-        if (sactor.text) {
+        if (from.text) {
             if (!this._text)
-                this.enableText(sactor.text);
+                this.enableText(from.text);
             else
-                this.text.copyDirect(sactor.text);
+                this.text.copy(from.text);
         }
+        this.internal.observing = wasObserving;
         return this;
         // tslint:enable:curly
     }
@@ -541,8 +551,10 @@ export class Actor implements ActorLike {
      */
 
     private actorChanged = (...path: string[]) => {
-        this.context.internal.incrementGeneration();
-        this.internal.patch = this.internal.patch || {} as ActorLike;
-        readPath(this, this.internal.patch, ...path);
+        if (this.internal.observing) {
+            this.context.internal.incrementGeneration();
+            this.internal.patch = this.internal.patch || {} as ActorLike;
+            readPath(this, this.internal.patch, ...path);
+        }
     }
 }

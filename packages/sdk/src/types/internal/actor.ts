@@ -11,6 +11,7 @@ import { CollisionEventType } from '../network/payloads';
  * @hidden
  */
 export class InternalActor {
+    public observing = true;
     public patch: ActorLike;
     public behavior: Behavior;
     public createdPromises: ExportedPromise[];

@@ -19,53 +19,34 @@ export interface ColliderLike {
  * A collider represents the abstraction of a physics collider object on the host.
  */
 export class Collider implements ColliderLike {
-    // tslint:disable:variable-name
-    private _enabled: Readonly<boolean>;
-    private _isTrigger: boolean;
-    private _collisionLayer: CollisionLayer;
-    // tslint:enable:variable-name
+    public enabled: Readonly<boolean>;
+    public isTrigger: boolean;
+    public collisionLayer: CollisionLayer;
 
     // Readonly params that are not patchable or observable.
-    private $colliderParams: Readonly<ColliderParams>;
+    // tslint:disable-next-line:variable-name
+    private _colliderParams: Readonly<ColliderParams>;
 
-    public get enabled() { return this._enabled; }
-    public set enabled(value: boolean) { this._enabled = value; }
-
-    public get isTrigger() { return this._isTrigger; }
-    public set isTrigger(value: boolean) { this._isTrigger = value; }
-
-    public get collisionLayer() { return this._collisionLayer; }
-    public set collisionLayer(value: CollisionLayer) { this._collisionLayer = value; }
-
-    public get colliderParams() { return this.$colliderParams; }
+    public get colliderParams() { return this._colliderParams; }
 
     constructor(private owner: Actor) {}
 
-    public copyDirect(scollider: Partial<ColliderLike>): this {
-        if (!scollider) {
+    public copy(from: Partial<ColliderLike>): this {
+        if (!from) {
             return this;
         }
-        if (typeof scollider.enabled !== undefined) {
-            this._enabled = scollider.enabled;
+        if (typeof from.enabled !== undefined) {
+            this.enabled = from.enabled;
         }
-        if (typeof scollider.isTrigger !== undefined) {
-            this._isTrigger = scollider.isTrigger;
+        if (typeof from.isTrigger !== undefined) {
+            this.isTrigger = from.isTrigger;
         }
-        if (typeof scollider.collisionLayer !== undefined) {
-            this._collisionLayer = scollider.collisionLayer;
+        if (typeof from.collisionLayer !== undefined) {
+            this.collisionLayer = from.collisionLayer;
         }
-        if (typeof scollider.colliderParams !== undefined) {
-            this.$colliderParams = scollider.colliderParams;
+        if (typeof from.colliderParams !== undefined) {
+            this._colliderParams = from.colliderParams;
         }
         return this;
-    }
-
-    public toJSON() {
-        return {
-            enabled: this._enabled,
-            isTrigger: this._isTrigger,
-            collisionLayer: this._collisionLayer,
-            colliderParams: this.$colliderParams
-        } as ColliderLike;
     }
 }

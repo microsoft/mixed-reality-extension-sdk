@@ -28,46 +28,20 @@ export interface RigidBodyLike {
 }
 
 export class RigidBody implements RigidBodyLike {
-    // tslint:disable:variable-name
-    private _position: Vector3;
-    private _rotation: Quaternion;
-    private _velocity: Vector3;
-    private _angularVelocity: Vector3;
-    private _mass: number;
-    private _detectCollisions: boolean;
-    private _collisionDetectionMode: CollisionDetectionMode;
-    private _useGravity: boolean;
+    public position: Vector3;
+    public rotation: Quaternion;
+    public velocity: Vector3;
+    public angularVelocity: Vector3;
+    public mass: number;
+    public detectCollisions: boolean;
+    public collisionDetectionMode: CollisionDetectionMode;
+    public useGravity: boolean;
+    // tslint:disable-next-line:variable-name
     private _constraints: RigidBodyConstraints[] = [];
-    // tslint:enable:variable-name
-
-    // late-bound observables
-    private $position: Vector3;
-    private $rotation: Quaternion;
-    private $velocity: Vector3;
-    private $angularVelocity: Vector3;
 
     /**
      * PUBLIC ACCESSORS
      */
-    public get position() { return this.$position; }
-    public set position(value: Partial<Vector3>) { this.$position = this._position; this._position.copy(value); }
-    public get rotation() { return this.$rotation; }
-    public set rotation(value) { this.$rotation = this._rotation; this._rotation.copy(value); }
-    public get velocity() { return this.$velocity; }
-    public set velocity(value: Partial<Vector3>) { this.$velocity = this._velocity; this._velocity.copy(value); }
-    public get angularVelocity() { return this.$angularVelocity; }
-    public set angularVelocity(value: Partial<Vector3>) {
-        this.$angularVelocity = this._angularVelocity;
-        this._angularVelocity.copy(value);
-    }
-    public get mass() { return this._mass; }
-    public set mass(value) { this._mass = value; }
-    public get detectCollisions() { return this._detectCollisions; }
-    public set detectCollisions(value) { this._detectCollisions = value; }
-    public get collisionDetectionMode() { return this._collisionDetectionMode; }
-    public set collisionDetectionMode(value) { this._collisionDetectionMode = value; }
-    public get useGravity() { return this._useGravity; }
-    public set useGravity(value) { this._useGravity = value; }
     public get constraints() { return this._constraints; }
     public set constraints(value: RigidBodyConstraints[]) {
         this._constraints = [...value];
@@ -80,62 +54,48 @@ export class RigidBody implements RigidBodyLike {
      */
 
     constructor(private owner: Actor) {
-        this._velocity = new Vector3();
-        this._angularVelocity = new Vector3();
-        this._position = new Vector3();
-        this._rotation = new Quaternion();
+        this.velocity = Vector3.Zero();
+        this.angularVelocity = Vector3.Zero();
+        this.position = Vector3.Zero();
+        this.rotation = Quaternion.Identity();
     }
 
-    public copyDirect(srigidbody: Partial<RigidBodyLike>): this {
-        if (!srigidbody) {
+    public copy(from: Partial<RigidBodyLike>): this {
+        if (!from) {
             return this;
         }
-        if (typeof srigidbody.position !== 'undefined') {
-            this.$position = this._position;
-            this._position.copyDirect(srigidbody.position);
+        if (from.position !== undefined) {
+            if (!this.position) this.position = new Vector3();
+            this.position.copy(from.position);
         }
-        if (typeof srigidbody.rotation !== 'undefined') {
-            this.$rotation = this._rotation;
-            this._rotation.copyDirect(srigidbody.rotation);
+        if (from.rotation !== undefined) {
+            if (!this.rotation) this.rotation = new Quaternion();
+            this.rotation.copy(from.rotation);
         }
-        if (typeof srigidbody.velocity !== 'undefined') {
-            this.$velocity = this._velocity;
-            this._velocity.copyDirect(srigidbody.velocity);
+        if (from.velocity !== undefined) {
+            if (!this.velocity) this.velocity = new Vector3();
+            this.velocity.copy(from.velocity);
         }
-        if (typeof srigidbody.angularVelocity !== 'undefined') {
-            this.$angularVelocity = this._angularVelocity;
-            this._angularVelocity.copyDirect(srigidbody.angularVelocity);
+        if (from.angularVelocity !== undefined) {
+            if (!this.angularVelocity) this.angularVelocity = new Vector3();
+            this.angularVelocity.copy(from.angularVelocity);
         }
-        if (typeof srigidbody.mass !== 'undefined') {
-            this._mass = srigidbody.mass;
+        if (from.mass !== undefined) {
+            this.mass = from.mass;
         }
-        if (typeof srigidbody.detectCollisions !== 'undefined') {
-            this._detectCollisions = srigidbody.detectCollisions;
+        if (from.detectCollisions !== undefined) {
+            this.detectCollisions = from.detectCollisions;
         }
-        if (typeof srigidbody.collisionDetectionMode !== 'undefined') {
-            this._collisionDetectionMode = srigidbody.collisionDetectionMode;
+        if (from.collisionDetectionMode !== undefined) {
+            this.collisionDetectionMode = from.collisionDetectionMode;
         }
-        if (typeof srigidbody.useGravity !== 'undefined') {
-            this._useGravity = srigidbody.useGravity;
+        if (from.useGravity !== undefined) {
+            this.useGravity = from.useGravity;
         }
-        if (typeof srigidbody.constraints !== 'undefined') {
-            this._constraints = srigidbody.constraints;
+        if (from.constraints !== undefined) {
+            this.constraints = from.constraints;
         }
         return this;
-    }
-
-    public toJSON() {
-        return {
-            position: this.$position ? this.$position.toJSON() : undefined,
-            rotation: this.$rotation ? this.$rotation.toJSON() : undefined,
-            velocity: this.$velocity ? this.$velocity.toJSON() : undefined,
-            angularVelocity: this.$angularVelocity ? this.$angularVelocity.toJSON() : undefined,
-            mass: this._mass,
-            detectCollisions: this._detectCollisions,
-            collisionDetectionMode: this._collisionDetectionMode,
-            useGravity: this._useGravity,
-            constraints: this._constraints,
-        } as RigidBodyLike;
     }
 
     /**

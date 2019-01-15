@@ -749,7 +749,7 @@ export class InternalContext {
             const isNewActor = !this.actorSet[sactor.id];
             const actor = isNewActor ? Actor.alloc(this.context, sactor.id) : this.actorSet[sactor.id];
             this.actorSet[sactor.id] = actor;
-            actor.copyDirect(sactor);
+            actor.copy(sactor);
             if (isNewActor) {
                 newActorIds.push(actor.id);
             }
@@ -775,7 +775,7 @@ export class InternalContext {
     public userJoined(suser: Partial<UserLike>) {
         if (!this.userSet[suser.id]) {
             const user = this.userSet[suser.id] = new User(this.context, suser.id);
-            user.copyDirect(suser);
+            user.copy(suser);
             this.context.emitter.emit('user-joined', user);
         }
     }
@@ -791,7 +791,7 @@ export class InternalContext {
     public updateUser(suser: Partial<UserLike>) {
         const isNewUser = !this.userSet[suser.id];
         const user = isNewUser ? new User(this.context, suser.id) : this.userSet[suser.id];
-        user.copyDirect(suser);
+        user.copy(suser);
         this.userSet[user.id] = user;
         if (isNewUser) {
             this.context.emitter.emit('user-joined', user);

@@ -19,15 +19,6 @@ export interface Color3Like {
  */
 export class Color3 implements Color3Like {
 
-    public get r() { return this._r; }
-    public set r(value) { this._r = value; }
-
-    public get g() { return this._g; }
-    public set g(value) { this._g = value; }
-
-    public get b() { return this._b; }
-    public set b(value) { this._b = value; }
-
     /**
      * Creates a new Color3 object from red, green, blue values, all between 0 and 1
      * @param r defines the red component (between 0 and 1, default is 0)
@@ -39,15 +30,15 @@ export class Color3 implements Color3Like {
         /**
          * Defines the red component (between 0 and 1, default is 0)
          */
-        private _r = 0,
+        public r = 0,
         /**
          * Defines the green component (between 0 and 1, default is 0)
          */
-        private _g = 0,
+        public g = 0,
         /**
          * Defines the blue component (between 0 and 1, default is 0)
          */
-        private _b = 0) {
+        public b = 0) {
     }
     // tslint:enable:variable-name
 
@@ -310,32 +301,16 @@ export class Color3 implements Color3Like {
         return this.copyFromFloats(r, g, b);
     }
 
+    /**
+     * Updates the Color3 from the sparsely populated value.
+     * @param from The sparsely populated value to read from.
+     */
     public copy(from: Partial<Color3Like>): this {
-        // tslint:disable:curly
         if (!from) return this;
-        if (typeof from.r !== 'undefined') this.r = from.r;
-        if (typeof from.g !== 'undefined') this.g = from.g;
-        if (typeof from.b !== 'undefined') this.b = from.b;
-        // tslint:enable:curly
+        if (from.r !== undefined) this.r = from.r;
+        if (from.g !== undefined) this.g = from.g;
+        if (from.b !== undefined) this.b = from.b;
         return this;
-    }
-
-    public copyDirect(from: Partial<Color3Like>): this {
-        // tslint:disable:curly
-        if (!from) return this;
-        if (typeof from.r !== 'undefined') this._r = from.r;
-        if (typeof from.g !== 'undefined') this._g = from.g;
-        if (typeof from.b !== 'undefined') this._b = from.b;
-        // tslint:enable:curly
-        return this;
-    }
-
-    public toJSON() {
-        return {
-            r: this.r,
-            g: this.g,
-            b: this.b,
-        } as Color3Like;
     }
 
     /**
