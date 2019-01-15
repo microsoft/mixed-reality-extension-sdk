@@ -25,7 +25,6 @@ export class Light implements LightLike {
     public range: number;
     // spot-only:
     public spotAngle: number;
-    // tslint:enable:variable-name
 
     /**
      * PUBLIC METHODS
