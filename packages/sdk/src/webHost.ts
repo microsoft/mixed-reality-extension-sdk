@@ -7,7 +7,7 @@ import * as Restify from 'restify';
 import { Adapter, MultipeerAdapter } from '.';
 import { log } from './log';
 
-import * as url from 'url';
+import { resolve as urlResolve } from 'url';
 
 const BUFFER_KEYWORD = 'buffers';
 
@@ -99,6 +99,6 @@ export class WebHost {
      */
     public registerStaticBuffer(filename: string, blob: Buffer): string {
         this.bufferMap[filename] = blob;
-        return new url.URL(`${BUFFER_KEYWORD}/${filename}`, this._baseUrl).toString();
+        return urlResolve(this._baseUrl, `${BUFFER_KEYWORD}/${filename}`);
     }
 }
