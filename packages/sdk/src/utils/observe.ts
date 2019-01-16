@@ -6,8 +6,7 @@
 /**
  * @hidden
  * Installs "watchers" for leaf properties in the target object, and calls the supplied callback
- * when they change and passing the entire path to the leaf, e.g.: ["transform", "velocity", "z"]
- * Watchers are only installed for leaf properties whose name begins with a '_' character.
+ * when they change and passing the entire path to the leaf, e.g.: ["transform", "position", "z"]
  */
 export default function observe(target: any, targetName: string, notifyChanged: (...path: string[]) => void) {
     observeLeafProperties(target, [targetName], notifyChanged);
