@@ -12,36 +12,42 @@ export interface TransformLike {
 }
 
 export class Transform implements TransformLike {
-    public position: Vector3;
-    public rotation: Quaternion;
-    public scale: Vector3;
+    // tslint:disable:variable-name
+    private _position: Vector3;
+    private _rotation: Quaternion;
+    private _scale: Vector3;
+    // tslint:enable:variable-name
+
+    public get position() { return this._position; }
+    public set position(value: Partial<Vector3>) { this._position.copy(value); }
+    public get rotation() { return this._rotation; }
+    public set rotation(value: Quaternion) { this._rotation.copy(value); }
+    public get scale() { return this._scale; }
+    public set scale(value: Partial<Vector3>) { this._scale.copy(value); }
 
     /**
      * PUBLIC METHODS
      */
 
     constructor() {
-        this.position = Vector3.Zero();
-        this.rotation = Quaternion.Identity();
-        this.scale = Vector3.One();
+        this._position = Vector3.Zero();
+        this._rotation = Quaternion.Identity();
+        this._scale = Vector3.One();
     }
 
     public copy(from: Partial<TransformLike>): this {
-        if (!from) {
-            return this;
-        }
-        if (from.position !== undefined) {
-            if (!this.position) this.position = Vector3.Zero();
-            this.position.copy(from.position);
-        }
-        if (from.rotation !== undefined) {
-            if (!this.rotation) this.rotation = Quaternion.Identity();
-            this.rotation.copy(from.rotation);
-        }
-        if (from.scale !== undefined) {
-            if (!this.scale) this.scale = Vector3.One();
-            this.scale.copy(from.scale);
-        }
+        if (!from) return this;
+        if (from.position !== undefined) this.position = from.position;
+        if (from.rotation !== undefined) this._rotation.copy(from.rotation);
+        if (from.scale !== undefined) this.scale = from.scale;
         return this;
+    }
+
+    public toJSON() {
+        return {
+            position: this.position,
+            rotation: this.rotation,
+            scale: this.scale
+        };
     }
 }

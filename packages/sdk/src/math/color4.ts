@@ -202,6 +202,20 @@ export class Color4 {
     }
 
     /**
+     * Returns a JSON representation of this color. This is necessary due to the way
+     * Actors detect changes on components like the actor's transform. They do this by adding
+     * properties for observation, and we don't want these properties serialized.
+     */
+    public toJSON() {
+        return {
+            r: this.r,
+            g: this.g,
+            b: this.b,
+            a: this.a,
+        };
+    }
+
+    /**
      * Returns the string "Color4"
      * @returns "Color4"
      */

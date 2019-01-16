@@ -55,21 +55,11 @@ export class User implements UserLike {
     }
 
     public copy(from: Partial<UserLike>): this {
-        if (!from) {
-            return this;
-        }
-        if (from.id !== undefined) {
-            this._id = from.id;
-        }
-        if (from.name !== undefined) {
-            this._name = from.name;
-        }
-        if (from.transform !== undefined) {
-            this._transform.copy(from.transform);
-        }
-        if (from.properties !== undefined) {
-            this._properties = from.properties;
-        }
+        if (!from) return this;
+        if (from.id !== undefined) this._id = from.id;
+        if (from.name !== undefined) this._name = from.name;
+        if (from.transform !== undefined) this._transform.copy(from.transform);
+        if (from.properties !== undefined) this._properties = from.properties;
         return this;
     }
 

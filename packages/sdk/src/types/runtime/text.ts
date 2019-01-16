@@ -40,6 +40,10 @@ export interface TextLike {
 }
 
 export class Text implements TextLike {
+    // tslint:disable:variable-name
+    private _color: Color3;
+    // tslint:enable:variable-name
+
     /**
      * Whether or not to draw the text
      */
@@ -71,7 +75,12 @@ export class Text implements TextLike {
     /**
      * The text's color
      */
-    public color: Color3 = Color3.White();
+    public get color() { return this._color; }
+    public set color(value: Partial<Color3>) { this._color.copy(value); }
+
+    constructor() {
+        this._color = Color3.White();
+    }
 
     public copy(from: Partial<TextLike>): this {
         if (!from) return this;
@@ -82,7 +91,20 @@ export class Text implements TextLike {
         if (from.anchor !== undefined) this.anchor = from.anchor;
         if (from.justify !== undefined) this.justify = from.justify;
         if (from.font !== undefined) this.font = from.font;
-        if (from.color !== undefined) this.color.copy(from.color);
+        if (from.color !== undefined) this.color = from.color;
         return this;
+    }
+
+    public toJSON() {
+        return {
+            enabled: this.enabled,
+            contents: this.contents,
+            height: this.height,
+            pixelsPerLine: this.pixelsPerLine,
+            anchor: this.anchor,
+            justify: this.justify,
+            font: this.font,
+            color: this.color,
+        };
     }
 }

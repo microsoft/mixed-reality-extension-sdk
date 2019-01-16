@@ -67,6 +67,7 @@ import { log } from '../../log';
 import * as Protocols from '../../protocols';
 import { Execution } from '../../protocols/execution';
 import { Handshake } from '../../protocols/handshake';
+import resolveJsonValues from '../../utils/resolveJsonValues';
 import { createForwardPromise, ForwardPromise } from '../forwardPromise';
 import { OperatingModel } from '../network/operatingModel';
 import { BoxColliderParams, ColliderLike, CollisionEvent, CollisionLayer, SphereColliderParams } from '../runtime';
@@ -133,15 +134,15 @@ export class InternalContext {
     }): ForwardPromise<Actor> {
         options = {
             subscriptions: [],
-            ...options
-        };
-        options = {
             ...options,
             actor: {
                 ...options.actor,
                 id: UUID()
             }
         };
+        // Resolve any embedded `toJSON` methods synchronously. It may be some time before this payload is sent.
+        // This ensures the referenced values aren't changed between now and then.
+        options.actor = resolveJsonValues(options.actor);
         const payload = {
             ...options,
             type: 'create-empty',
@@ -159,15 +160,15 @@ export class InternalContext {
         options = {
             subscriptions: [],
             colliderType: 'none',
-            ...options
-        };
-        options = {
             ...options,
             actor: {
                 ...options.actor,
                 id: UUID()
             }
         };
+        // Resolve any embedded `toJSON` methods synchronously. It may be some time before this payload is sent.
+        // This ensures the referenced values aren't changed between now and then.
+        options.actor = resolveJsonValues(options.actor);
         const payload = {
             ...options,
             type: 'create-from-gltf'
@@ -182,15 +183,15 @@ export class InternalContext {
     }): ForwardPromise<Actor> {
         options = {
             subscriptions: [],
-            ...options
-        };
-        options = {
             ...options,
             actor: {
                 ...options.actor,
                 id: UUID()
             }
         };
+        // Resolve any embedded `toJSON` methods synchronously. It may be some time before this payload is sent.
+        // This ensures the referenced values aren't changed between now and then.
+        options.actor = resolveJsonValues(options.actor);
         const payload = {
             ...options,
             type: 'create-from-library'
@@ -216,7 +217,9 @@ export class InternalContext {
                 id: UUID()
             }
         };
-        // Create the payload
+        // Resolve any embedded `toJSON` methods synchronously. It may be some time before this payload is sent.
+        // This ensures the referenced values aren't changed between now and then.
+        options.actor = resolveJsonValues(options.actor);
         const payload = {
             ...options,
             type: 'create-primitive'
@@ -229,14 +232,20 @@ export class InternalContext {
         actor?: Partial<ActorLike>,
         subscriptions?: SubscriptionType[]
     }): ForwardPromise<Actor> {
-        return this.createActorFromPayload({
-            type: 'create-from-prefab',
-            prefabId: options.prefabId,
+        options = {
+            subscriptions: [],
+            ...options,
             actor: {
                 ...options.actor,
                 id: UUID()
-            },
-            subscriptions: options.subscriptions || []
+            }
+        };
+        // Resolve any embedded `toJSON` methods synchronously. It may be some time before this payload is sent.
+        // This ensures the referenced values aren't changed between now and then.
+        options.actor = resolveJsonValues(options.actor);
+        return this.createActorFromPayload({
+            ...options,
+            type: 'create-from-prefab'
         } as CreateFromPrefab);
     }
 
@@ -307,6 +316,9 @@ export class InternalContext {
             wrapMode: AnimationWrapMode.Once,
             ...options
         };
+        // Resolve any embedded `toJSON` methods synchronously. It may be some time before this payload is sent.
+        // This ensures the referenced values aren't changed between now and then.
+        options.keyframes = resolveJsonValues(options.keyframes);
         // Enqueue a placeholder promise to indicate the operation is in progress.
         actor.internal.enqueueCreateAnimationPromise(
             options.animationName, {

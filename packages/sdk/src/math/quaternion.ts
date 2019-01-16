@@ -48,6 +48,20 @@ export class Quaternion implements QuaternionLike {
     }
 
     /**
+     * Returns a JSON representation of this quaternion. This is necessary due to the way
+     * Actors detect changes on components like the actor's transform. They do this by adding
+     * properties for observation, and we don't want these properties serialized.
+     */
+    public toJSON() {
+        return {
+            x: this.x,
+            y: this.y,
+            z: this.z,
+            w: this.w,
+        };
+    }
+
+    /**
      * Gets the class name of the quaternion
      * @returns the string "Quaternion"
      */
@@ -113,7 +127,7 @@ export class Quaternion implements QuaternionLike {
      * Updates the Quaternion from the value.
      * @param from The value to read from.
      */
-    public copy(from: QuaternionLike): this {
+    public copy(from: Partial<QuaternionLike>): this {
         if (!from) return this;
         if (from.x !== undefined) this.x = from.x;
         if (from.y !== undefined) this.y = from.y;

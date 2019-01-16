@@ -16,16 +16,12 @@ export default function observe(target: any, targetName: string, notifyChanged: 
 function observeLeafProperties(target: any, path: string[], notifyChanged: (...path: string[]) => void) {
     const names = Object.getOwnPropertyNames(target);
     for (const name of names) {
-        // Only hook properties that don't start with an underscore or a dollar sign. This is a way for objects
-        // to hide fields from being observed.
-        if (name.startsWith('_') || name.startsWith('$')) {
-            continue;
-        }
+        // Get the public name of this field by removing leading underscores.
+        const publicName = name.replace(/^_+/, '');
         // If the property is a simple type, then hook it.
         const type = typeof target[name];
         if (type === 'number' || type === 'string' || type === 'boolean') {
-            // Create a non-enumerable backing property to hold the field value. Setting the field non-enumerable
-            // ensures the field won't be serialized in JSON.stringify().
+            // Create a non-enumerable backing property to hold the field value.
             // tslint:disable-next-line:variable-name
             const __name = `__${name}`;
             Object.defineProperty(target, __name, {
@@ -36,18 +32,18 @@ function observeLeafProperties(target: any, path: string[], notifyChanged: (...p
             });
             // Override the getter and setter to call notifyChanged when the value changes.
             Object.defineProperty(target, name, {
-                configurable: true,
+                configurable: false,
                 enumerable: true,
                 get: () => target[__name],
                 set: (value) => {
                     if (target[__name] !== value) {
                         target[__name] = value;
-                        notifyChanged(...path, name);
+                        notifyChanged(...path, publicName);
                     }
                 },
             });
         } else if (type === 'object') {
-            observeLeafProperties(target[name], [...path, name], notifyChanged);
+            observeLeafProperties(target[name], [...path, publicName], notifyChanged);
         }
     }
 }

@@ -67,7 +67,7 @@ export class Actor implements ActorLike {
     /** @hidden */
     public get internal() { return this._internal; }
 
-    private _emitter = new BufferedEventEmitter();
+    private _emitter: BufferedEventEmitter;
     /** @hidden */
     public get emitter() { return this._emitter; }
 
@@ -114,6 +114,7 @@ export class Actor implements ActorLike {
     // tslint:disable-next-line:variable-name
     private constructor(private _context: Context, private _id: string) {
         this._internal = new InternalActor(this);
+        this._emitter = new BufferedEventEmitter();
         this._transform = new Transform();
         // Actor patching: Observe the transform for changed values.
         observe(this._transform, 'transform', (...path: string[]) => this.actorChanged(...path));
@@ -543,7 +544,7 @@ export class Actor implements ActorLike {
             rigidBody: this._rigidBody ? this._rigidBody.toJSON() : undefined,
             collider: this._collider ? this._collider.toJSON() : undefined,
             text: this._text ? this._text.toJSON() : undefined
-        } as ActorLike;
+        };
     }
 
     /**
