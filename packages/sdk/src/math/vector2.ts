@@ -292,6 +292,18 @@ export class Vector2 {
     }
 
     /**
+     * Returns a JSON representation of this vector. This is necessary due to the way
+     * Actors detect changes on components like the actor's transform. They do this by adding
+     * properties for observation, and we don't want these properties serialized.
+     */
+    public toJSON() {
+        return {
+            x: this.x,
+            y: this.y,
+        };
+    }
+
+    /**
      * Gets class name
      * @returns the string "Vector2"
      */

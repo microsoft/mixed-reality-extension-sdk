@@ -5,11 +5,8 @@
 
 import { Transform, TransformLike } from '.';
 import { Context } from '../..';
-import BufferedEventEmitter from '../../utils/bufferedEventEmitter';
-import EventEmitterLike from '../../utils/eventEmitterLike';
 import { InternalUser } from '../internal/user';
 import { SubscriptionType } from '../network/subscriptionType';
-import observe from './observe';
 
 export interface UserLike {
     id: string;
@@ -57,22 +54,12 @@ export class User implements UserLike {
         this._transform = new Transform();
     }
 
-    public copyDirect(user: Partial<UserLike>): this {
-        if (!user) {
-            return this;
-        }
-        if (typeof user.id !== 'undefined') {
-            this._id = user.id;
-        }
-        if (typeof user.name !== 'undefined') {
-            this._name = user.name;
-        }
-        if (typeof user.transform !== 'undefined') {
-            this._transform.copyDirect(user.transform);
-        }
-        if (typeof user.properties !== 'undefined') {
-            this._properties = user.properties;
-        }
+    public copy(from: Partial<UserLike>): this {
+        if (!from) return this;
+        if (from.id !== undefined) this._id = from.id;
+        if (from.name !== undefined) this._name = from.name;
+        if (from.transform !== undefined) this._transform.copy(from.transform);
+        if (from.properties !== undefined) this._properties = from.properties;
         return this;
     }
 
@@ -99,15 +86,5 @@ export class User implements UserLike {
         this._subscriptions = this._subscriptions.filter(subscription => removes.indexOf(subscription) < 0);
         this._subscriptions.push(...adds);
         this.context.internal.updateSubscriptions(this.id, 'user', options);
-    }
-
-    public toJSON() {
-        return {
-            id: this.id,
-            name: this.name,
-            transform: this.transform.toJSON(),
-            subscriptions: this.subscriptions,
-            properties: this.properties
-        } as UserLike;
     }
 }

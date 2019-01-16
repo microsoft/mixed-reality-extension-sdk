@@ -35,6 +35,7 @@ import {
 import {
     ActorUpdate,
     CollisionEventType,
+    CreateActorCommon,
     CreateAnimation,
     CreateColliderType,
     CreateEmpty,
@@ -67,9 +68,16 @@ import { log } from '../../log';
 import * as Protocols from '../../protocols';
 import { Execution } from '../../protocols/execution';
 import { Handshake } from '../../protocols/handshake';
+import resolveJsonValues from '../../utils/resolveJsonValues';
 import { createForwardPromise, ForwardPromise } from '../forwardPromise';
 import { OperatingModel } from '../network/operatingModel';
-import { BoxColliderParams, ColliderLike, CollisionEvent, CollisionLayer, SphereColliderParams } from '../runtime';
+import {
+    BoxColliderParams,
+    ColliderLike,
+    CollisionEvent,
+    CollisionLayer,
+    SphereColliderParams,
+} from '../runtime';
 
 /**
  * @hidden
@@ -133,9 +141,6 @@ export class InternalContext {
     }): ForwardPromise<Actor> {
         options = {
             subscriptions: [],
-            ...options
-        };
-        options = {
             ...options,
             actor: {
                 ...options.actor,
@@ -159,9 +164,6 @@ export class InternalContext {
         options = {
             subscriptions: [],
             colliderType: 'none',
-            ...options
-        };
-        options = {
             ...options,
             actor: {
                 ...options.actor,
@@ -182,9 +184,6 @@ export class InternalContext {
     }): ForwardPromise<Actor> {
         options = {
             subscriptions: [],
-            ...options
-        };
-        options = {
             ...options,
             actor: {
                 ...options.actor,
@@ -216,7 +215,6 @@ export class InternalContext {
                 id: UUID()
             }
         };
-        // Create the payload
         const payload = {
             ...options,
             type: 'create-primitive'
@@ -229,18 +227,24 @@ export class InternalContext {
         actor?: Partial<ActorLike>,
         subscriptions?: SubscriptionType[]
     }): ForwardPromise<Actor> {
-        return this.createActorFromPayload({
-            type: 'create-from-prefab',
-            prefabId: options.prefabId,
+        options = {
+            subscriptions: [],
+            ...options,
             actor: {
                 ...options.actor,
                 id: UUID()
-            },
-            subscriptions: options.subscriptions || []
+            }
+        };
+        return this.createActorFromPayload({
+            ...options,
+            type: 'create-from-prefab'
         } as CreateFromPrefab);
     }
 
-    public createActorFromPayload(payload: any): ForwardPromise<Actor> {
+    private createActorFromPayload(payload: CreateActorCommon): ForwardPromise<Actor> {
+        // Resolve by-reference values now, ensuring they won't change in the
+        // time between now and when this message is actually sent.
+        payload.actor = resolveJsonValues(payload.actor);
         // Create the actor locally.
         this.updateActors(payload.actor);
         // Get a reference to the new actor.
@@ -272,16 +276,7 @@ export class InternalContext {
                                 reject(objectSpawned.result.message);
                             }
                         },
-                        reject: (reason?: any) => {
-                            for (const createdActorLike of payload.actors) {
-                                const createdActor = this.actorSet[createdActorLike.id];
-                                if (createdActor) {
-                                    createdActor.internal.notifyCreated(false, reason);
-                                }
-                            }
-
-                            reject(reason);
-                        }
+                        reject
                     });
             }).catch((reason: any) => {
                 reject(`Failed to instantiate actor ${actor.id}. ${(reason || '').toString()}`.trim());
@@ -307,6 +302,9 @@ export class InternalContext {
             wrapMode: AnimationWrapMode.Once,
             ...options
         };
+        // Resolve by-reference values now, ensuring they won't change in the
+        // time between now and when this message is actually sent.
+        options.keyframes = resolveJsonValues(options.keyframes);
         // Enqueue a placeholder promise to indicate the operation is in progress.
         actor.internal.enqueueCreateAnimationPromise(
             options.animationName, {
@@ -355,7 +353,7 @@ export class InternalContext {
                 })
                 .catch((reason) => log.error('app', reason));
         } else {
-            log.error('app', `Failed to start animation ${animationName}. Actor ${actorId} not found`);
+            log.error('app', `Failed to start animation ${animationName}. Actor ${actorId} not found.`);
         }
     }
 
@@ -373,7 +371,7 @@ export class InternalContext {
                 } as StopAnimation))
                 .catch((reason) => log.error('app', reason));
         } else {
-            log.error('app', `Failed to stop animation ${animationName}. Actor ${actorId} not found`);
+            log.error('app', `Failed to stop animation ${animationName}. Actor ${actorId} not found.`);
         }
     }
 
@@ -391,7 +389,7 @@ export class InternalContext {
                 } as PauseAnimation))
                 .catch((reason) => log.error('app', reason));
         } else {
-            log.error('app', `Failed to pause animation ${animationName}. Actor ${actorId} not found`);
+            log.error('app', `Failed to pause animation ${animationName}. Actor ${actorId} not found.`);
         }
     }
 
@@ -409,7 +407,7 @@ export class InternalContext {
                 } as ResumeAnimation))
                 .catch((reason) => log.error('app', reason));
         } else {
-            log.error('app', `Failed to resume animation ${animationName}. Actor ${actorId} not found`);
+            log.error('app', `Failed to resume animation ${animationName}. Actor ${actorId} not found.`);
         }
     }
 
@@ -427,7 +425,7 @@ export class InternalContext {
                 } as ResetAnimation))
                 .catch((reason) => log.error('app', reason));
         } else {
-            log.error('app', `Failed to reset animation ${animationName}. Actor ${actorId} not found`);
+            log.error('app', `Failed to reset animation ${animationName}. Actor ${actorId} not found.`);
         }
     }
 
@@ -445,7 +443,7 @@ export class InternalContext {
                 log.error('app', `Failed enable rigid body on actor ${actor.id}. ${(reason || '').toString()}`.trim());
             });
         } else {
-            log.error('app', `Failed lookAt. Actor ${actorId} not found`);
+            log.error('app', `Failed lookAt. Actor ${actorId} not found.`);
         }
     }
 
@@ -454,6 +452,9 @@ export class InternalContext {
         if (!actor) {
             return Promise.reject(`Failed enable rigid body. Actor ${actorId} not found`);
         } else {
+            // Resolve by-reference values now, ensuring they won't change in the
+            // time between now and when this message is actually sent.
+            rigidBody = resolveJsonValues(rigidBody);
             return createForwardPromise(actor.rigidBody, new Promise((resolve, reject) => {
                 actor.created().then(() => {
                     this.protocol.sendPayload({
@@ -490,6 +491,10 @@ export class InternalContext {
         if (!actor) {
             return Promise.reject(`Failed enable collider. Actor ${actorId} not found`);
         } else {
+            // Resolve by-reference values now, ensuring they won't change in the
+            // time between now and when this message is actually sent.
+            center = resolveJsonValues(center);
+            size = resolveJsonValues(size);
             return createForwardPromise<Collider>(actor.collider, new Promise((resolve, reject) => {
                 actor.created().then(() => {
                     let colliderPayload = {
@@ -557,6 +562,9 @@ export class InternalContext {
         if (!actor) {
             return Promise.reject(`Failed to enable light. Actor ${actorId} not found`);
         } else {
+            // Resolve by-reference values now, ensuring they won't change in the
+            // time between now and when this message is actually sent.
+            light = resolveJsonValues(light);
             return createForwardPromise<Light>(actor.light, new Promise((resolve, reject) => {
                 actor.created().then(() => {
                     this.protocol.sendPayload({
@@ -586,6 +594,9 @@ export class InternalContext {
         if (!actor) {
             return Promise.reject(`Failed to enable text. Actor ${actorId} not found`);
         } else {
+            // Resolve by-reference values now, ensuring they won't change in the
+            // time between now and when this message is actually sent.
+            text = resolveJsonValues(text);
             return createForwardPromise<Text>(actor.text, new Promise((resolve, reject) => {
                 actor.created().then(() => {
                     this.protocol.sendPayload({
@@ -749,7 +760,7 @@ export class InternalContext {
             const isNewActor = !this.actorSet[sactor.id];
             const actor = isNewActor ? Actor.alloc(this.context, sactor.id) : this.actorSet[sactor.id];
             this.actorSet[sactor.id] = actor;
-            actor.copyDirect(sactor);
+            actor.copy(sactor);
             if (isNewActor) {
                 newActorIds.push(actor.id);
             }
@@ -775,7 +786,7 @@ export class InternalContext {
     public userJoined(suser: Partial<UserLike>) {
         if (!this.userSet[suser.id]) {
             const user = this.userSet[suser.id] = new User(this.context, suser.id);
-            user.copyDirect(suser);
+            user.copy(suser);
             this.context.emitter.emit('user-joined', user);
         }
     }
@@ -791,7 +802,7 @@ export class InternalContext {
     public updateUser(suser: Partial<UserLike>) {
         const isNewUser = !this.userSet[suser.id];
         const user = isNewUser ? new User(this.context, suser.id) : this.userSet[suser.id];
-        user.copyDirect(suser);
+        user.copy(suser);
         this.userSet[user.id] = user;
         if (isNewUser) {
             this.context.emitter.emit('user-joined', user);

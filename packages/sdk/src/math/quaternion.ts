@@ -20,14 +20,6 @@ export interface QuaternionLike {
  * @see https://en.wikipedia.org/wiki/Quaternion
  */
 export class Quaternion implements QuaternionLike {
-    public get x() { return this._x; }
-    public set x(value) { this._x = value; }
-    public get y() { return this._y; }
-    public set y(value) { this._y = value; }
-    public get z() { return this._z; }
-    public set z(value) { this._z = value; }
-    public get w() { return this._w; }
-    public set w(value) { this._w = value; }
 
     /**
      * Creates a new Quaternion from the given floats
@@ -38,13 +30,13 @@ export class Quaternion implements QuaternionLike {
      */
     constructor(
         /** defines the first component (0 by default) */
-        private _x = 0.0,
+        public x = 0.0,
         /** defines the second component (0 by default) */
-        private _y = 0.0,
+        public y = 0.0,
         /** defines the third component (0 by default) */
-        private _z = 0.0,
+        public z = 0.0,
         /** defines the fourth component (1.0 by default) */
-        private _w = 1.0) {
+        public w = 1.0) {
     }
 
     /**
@@ -53,6 +45,20 @@ export class Quaternion implements QuaternionLike {
      */
     public toString(): string {
         return "{X: " + this.x + " Y:" + this.y + " Z:" + this.z + " W:" + this.w + "}";
+    }
+
+    /**
+     * Returns a JSON representation of this quaternion. This is necessary due to the way
+     * Actors detect changes on components like the actor's transform. They do this by adding
+     * properties for observation, and we don't want these properties serialized.
+     */
+    public toJSON() {
+        return {
+            x: this.x,
+            y: this.y,
+            z: this.z,
+            w: this.w,
+        } as QuaternionLike;
     }
 
     /**
@@ -117,31 +123,17 @@ export class Quaternion implements QuaternionLike {
         return this;
     }
 
-    public copy(from: QuaternionLike): this {
+    /**
+     * Updates the Quaternion from the value.
+     * @param from The value to read from.
+     */
+    public copy(from: Partial<QuaternionLike>): this {
         if (!from) return this;
-        if (typeof from.x !== 'undefined') this.x = from.x;
-        if (typeof from.y !== 'undefined') this.y = from.y;
-        if (typeof from.z !== 'undefined') this.z = from.z;
-        if (typeof from.w !== 'undefined') this.w = from.w;
+        if (from.x !== undefined) this.x = from.x;
+        if (from.y !== undefined) this.y = from.y;
+        if (from.z !== undefined) this.z = from.z;
+        if (from.w !== undefined) this.w = from.w;
         return this;
-    }
-
-    public copyDirect(from: QuaternionLike): this {
-        if (!from) return this;
-        if (typeof from.x !== 'undefined') this._x = from.x;
-        if (typeof from.y !== 'undefined') this._y = from.y;
-        if (typeof from.z !== 'undefined') this._z = from.z;
-        if (typeof from.w !== 'undefined') this._w = from.w;
-        return this;
-    }
-
-    public toJSON() {
-        return {
-            x: this.x,
-            y: this.y,
-            z: this.z,
-            w: this.w
-        } as QuaternionLike;
     }
 
     /**

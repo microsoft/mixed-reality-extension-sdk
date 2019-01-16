@@ -50,6 +50,19 @@ export class Size implements ISize {
     public toString(): string {
         return `{W: ${this.width}, H: ${this.height}}`;
     }
+
+    /**
+     * Returns a JSON representation of this vector. This is necessary due to the way
+     * Actors detect changes on components like the actor's transform. They do this by adding
+     * properties for observation, and we don't want these properties serialized.
+     */
+    public toJSON() {
+        return {
+            width: this.width,
+            height: this.height,
+        };
+    }
+
     /**
      * "Size"
      * @returns the string "Size"

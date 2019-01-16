@@ -6,6 +6,8 @@
 import * as WS from 'ws';
 import { EventedConnection } from '.';
 import { Message } from '../..';
+import filterEmpty from '../../utils/filterEmpty';
+import validateJsonFieldName from '../../utils/validateJsonFieldName';
 
 /**
  * An implementation of the Connection interface that wraps a WebSocket.
@@ -32,7 +34,11 @@ export class WebSocket extends EventedConnection {
 
         super.on('send', (message: Message) => {
             try {
-                const json = JSON.stringify(message);
+                const json = JSON.stringify(
+                    message, (key, value) => {
+                        validateJsonFieldName(key);
+                        return filterEmpty(value);
+                    });
                 this._ws.send(json);
             } catch (e) {
                 this.emit('error', e);
@@ -44,7 +50,6 @@ export class WebSocket extends EventedConnection {
     public close(): void {
         try {
             this._ws.close();
-        } catch (e) {
-        }
+        } catch (e) { }
     }
 }
