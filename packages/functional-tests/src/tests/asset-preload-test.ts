@@ -11,7 +11,7 @@ import Test from './test';
 
 export default class AssetPreloadTest extends Test {
 
-    constructor(app: App, private baseUrl: string) {
+    constructor(app: App, private baseUrl: string, private user: MRESDK.User) {
         super(app);
     }
 
@@ -21,7 +21,6 @@ export default class AssetPreloadTest extends Test {
                 transform: {
                     position: { x: 0, y: 2, z: 0 }
                 },
-                lookAt: MRESDK.LookAtMode.LocalUserXY,
                 text: {
                     contents: 'Initialized',
                     height: 0.3,
@@ -29,6 +28,8 @@ export default class AssetPreloadTest extends Test {
                 }
             }
         });
+        label.lookAt(this.user, MRESDK.LookAtMode.TargetXY);
+
         await delay(1000);
 
         label.text.contents = 'Preloading asset';

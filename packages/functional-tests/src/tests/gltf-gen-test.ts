@@ -42,7 +42,7 @@ export default class GltfGenTest extends Test {
             resourceUrl: Server.registerStaticBuffer('sphere.glb', gltfFactory.generateGLTF())
         });
 
-        await delay(30000);
+        await delay(5000);
 
         destroyActors(sphere);
 
