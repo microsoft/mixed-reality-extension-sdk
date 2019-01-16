@@ -20,7 +20,7 @@ export default function readPath(src: any, dst: any, ...path: string[]) {
             }
             dst = dst[field];
         }
-        if (typeof src[field] === undefined) {
+        if (typeof src[field] === 'undefined') {
             throw new Error("readPath: Data structure mismatch.");
         }
         src = src[field];
