@@ -19,21 +19,20 @@ import {
     User
 } from '.';
 import {
-    AnimationEvent,
-    AnimationKeyframe,
-    AnimationWrapMode,
     Context,
+    CreateAnimationOptions,
     LookAtMode,
-    PrimitiveDefinition
+    PrimitiveDefinition,
+    SetAnimationStateOptions
 } from '../..';
 import BufferedEventEmitter from '../../utils/bufferedEventEmitter';
+import observe from '../../utils/observe';
+import readPath from '../../utils/readPath';
 import { createForwardPromise, ForwardPromise } from '../forwardPromise';
 import { InternalActor } from '../internal/actor';
 import { CollisionEventType, CreateColliderType } from '../network/payloads';
 import { SubscriptionType } from '../network/subscriptionType';
 import { Behavior } from './behaviors';
-import observe from './observe';
-import readPath from './readPath';
 
 /**
  * Describes the properties of an Actor.
@@ -68,7 +67,7 @@ export class Actor implements ActorLike {
     /** @hidden */
     public get internal() { return this._internal; }
 
-    private _emitter = new BufferedEventEmitter();
+    private _emitter: BufferedEventEmitter;
     /** @hidden */
     public get emitter() { return this._emitter; }
 
@@ -131,7 +130,9 @@ export class Actor implements ActorLike {
     // tslint:disable-next-line:variable-name
     private constructor(private _context: Context, private _id: string) {
         this._internal = new InternalActor(this);
+        this._emitter = new BufferedEventEmitter();
         this._transform = new Transform();
+        // Actor patching: Observe the transform for changed values.
         observe(this._transform, 'transform', (...path: string[]) => this.actorChanged(...path));
     }
 
@@ -241,9 +242,10 @@ export class Actor implements ActorLike {
     public enableLight(light?: Partial<LightLike>): ForwardPromise<Light> {
         if (!this._light) {
             this._light = new Light();
-            this._light.copyDirect(light);
+            this._light.copy(light);
+            // Actor patching: Observe the light component for changed values.
             observe(this._light, 'light', (...path: string[]) => this.actorChanged(...path));
-            return this.context.internal.enableLight(this.id, this._light.toJSON());
+            return this.context.internal.enableLight(this.id, this._light);
         }
         return createForwardPromise(this._light, Promise.resolve(this._light));
     }
@@ -255,10 +257,11 @@ export class Actor implements ActorLike {
     public enableRigidBody(rigidBody?: Partial<RigidBodyLike>): ForwardPromise<RigidBody> {
         if (!this._rigidBody) {
             this._rigidBody = new RigidBody(this);
-            this._rigidBody.copyDirect(rigidBody);
+            this._rigidBody.copy(rigidBody);
+            // Actor patching: Observe the rigidBody component for changed values.
             observe(this._rigidBody, 'rigidBody', (...path: string[]) => this.actorChanged(...path));
             this.subscribe('rigidbody');
-            return this.context.internal.enableRigidBody(this.id, this._rigidBody.toJSON());
+            return this.context.internal.enableRigidBody(this.id, this._rigidBody);
         }
         return createForwardPromise(this._rigidBody, Promise.resolve(this._rigidBody));
     }
@@ -324,9 +327,10 @@ export class Actor implements ActorLike {
     public enableText(text?: Partial<TextLike>): ForwardPromise<Text> {
         if (!this._text) {
             this._text = new Text();
-            this._text.copyDirect(text);
+            this._text.copy(text);
+            // Actor patching: Observe the text component for changed values.
             observe(this._text, 'text', (...path: string[]) => this.actorChanged(...path));
-            return this.context.internal.enableText(this.id, this._text.toJSON());
+            return this.context.internal.enableText(this.id, this._text);
         }
         return createForwardPromise(this._text, Promise.resolve(this._text));
     }
@@ -382,58 +386,84 @@ export class Actor implements ActorLike {
     }
 
     /**
-     * Create an animation on this actor.
+     * Creates an animation on the actor.
+     * @param animationName The name of the animation.
      * @param options The animation keyframes, events, and other characteristics.
      */
-    public createAnimation(options: {
-        animationName: string,
-        keyframes: AnimationKeyframe[],
-        events: AnimationEvent[],
-        wrapMode?: AnimationWrapMode
-    }): Promise<void> {
-        return this.context.internal.createAnimation(this.id, options);
+    public createAnimation(animationName: string, options: CreateAnimationOptions): Promise<void> {
+        return this.context.internal.createAnimation(this.id, animationName, options);
     }
 
     /**
-     * Start playing an animation on this actor.
-     * @param animationName The name of the animation to start playing.
+     * Enables the animation on the actor. Animation will start playing immediately.
+     * @param animationName The name of the animation.
      */
-    public startAnimation(animationName: string, hasRootMotion?: boolean) {
-        this.context.internal.startAnimation(this.id, animationName, hasRootMotion);
+    public enableAnimation(animationName: string) {
+        this.setAnimationState(animationName, { enabled: true });
     }
 
     /**
-     * Stop playing an animation on this actor and reset the animation's state.
-     * @param animationName The name of the animation to stop playing.
+     * Disables the animation on the actor. Animation will stop playing immediately.
+     * When an animation is disabled, it is also paused (its time does not move forward).
+     * @param animationName The name of the animation.
      */
-    public stopAnimation(animationName: string) {
-        this.context.internal.stopAnimation(this.id, animationName);
+    public disableAnimation(animationName: string) {
+        this.setAnimationState(animationName, { enabled: false });
     }
 
     /**
-     * Resets the animation to its initial state.
-     * @param animationName The name of the animation to reset.
-     */
-    public resetAnimation(animationName: string) {
-        this.context.internal.resetAnimation(this.id, animationName);
-    }
-
-    /**
-     * Pauses the animation.
-     * @param animationName The name of the animation to pause.
-     */
-    public pauseAnimation(animationName: string) {
-        this.context.internal.pauseAnimation(this.id, animationName);
-    }
-
-    /**
-     * Resumes the animation.
-     * @param animationName The name of the animation to resume.
+     * Starts the animation (sets animation speed to 1).
+     * @param animationName The name of the animation.
      */
     public resumeAnimation(animationName: string) {
-        this.context.internal.resumeAnimation(this.id, animationName);
+        this.setAnimationState(animationName, { enabled: true });
     }
 
+    /**
+     * Stops the animation (sets animation speed to zero).
+     * @param animationName The name of the animation.
+     */
+    public pauseAnimation(animationName: string) {
+        this.setAnimationState(animationName, { enabled: false });
+    }
+
+    /**
+     * Sets the animation time (units are in seconds).
+     * @param animationName The name of the animation.
+     * @param time The desired animation time. A negative value seeks to the end of the animation.
+     */
+    public setAnimationTime(animationName: string, time: number) {
+        this.setAnimationState(animationName, { time });
+    }
+
+    /**
+     * (Advanced) Sets the time, speed, and enabled state of an animation.
+     * @param animationName The name of the animation.
+     * @param options The time, speed and enabled state to apply. All values are optional. Only the values
+     * provided will be applied.
+     */
+    public setAnimationState(animationName: string, state: SetAnimationStateOptions) {
+        return this.context.internal.setAnimationState(this.id, animationName, state);
+    }
+
+    /**
+     * Animate actor properties to the given value, following the specified animation curve. Actor transform
+     * is the only animatable property at the moment. Other properties such as light color may become animatable
+     * in the future.
+     * @param value The desired final state of the animation.
+     * @param duration The length of the interpolation (in seconds).
+     * @param curve The cubic-bezier curve parameters. @see AnimationEaseCurves for predefined values.
+     * @returns Returns a Promise that is resolves after the animation completes.
+     */
+    public animateTo(value: Partial<ActorLike>, duration: number, curve: number[]): Promise<void> {
+        return this.context.internal.animateTo(this.id, value, duration, curve);
+    }
+
+    /**
+     * Instruct the actor to face another object, or stop facing an object.
+     * @param targetOrId The actor, user, or id of the object to face.
+     * @param lookAtMode How to face the target. @see LookUpMode.
+     */
     public lookAt(targetOrId: Actor | User | string, lookAtMode: LookAtMode) {
         let targetId: string;
         if (lookAtMode !== LookAtMode.None) {
@@ -508,33 +538,56 @@ export class Actor implements ActorLike {
         return this;
     }
 
-    public copyDirect(sactor: Partial<ActorLike>): this {
+    /**
+     * Set an event handler for the animation-disabled event.
+     * @param handler The handler to call when an animation reaches the end or is otherwise disabled.
+     */
+    public onAnimationDisabled(handler: (animationName: string) => any): this {
+        this.emitter.on('animation-disabled', handler);
+        return this;
+    }
+
+    /**
+     * Set an event handler for the animation-enabled event.
+     * @param handler The handler to call when an animation moves from the disabled to enabled state.
+     */
+    public onAnimationEnabled(handler: (animationName: string) => any): this {
+        this.emitter.on('animation-enabled', handler);
+        return this;
+    }
+
+    public copy(from: Partial<ActorLike>): this {
+        // Pause change detection while we copy the values into the actor.
+        const wasObserving = this.internal.observing;
+        this.internal.observing = false;
+
         // tslint:disable:curly
-        if (!sactor) return this;
-        if (sactor.id) this._id = sactor.id;
-        if (sactor.parentId) this._parentId = sactor.parentId;
-        if (sactor.name) this._name = sactor.name;
-        if (sactor.tag) this._tag = sactor.tag;
-        if (sactor.transform) this._transform.copyDirect(sactor.transform);
-        if (sactor.light) {
+        if (!from) return this;
+        if (from.id) this._id = from.id;
+        if (from.parentId) this._parentId = from.parentId;
+        if (from.name) this._name = from.name;
+        if (from.tag) this._tag = from.tag;
+        if (from.transform) this._transform.copy(from.transform);
+        if (from.light) {
             if (!this._light)
-                this.enableLight(sactor.light);
+                this.enableLight(from.light);
             else
-                this.light.copyDirect(sactor.light);
+                this.light.copy(from.light);
         }
-        if (sactor.rigidBody) {
+        if (from.rigidBody) {
             if (!this._rigidBody)
-                this.enableRigidBody(sactor.rigidBody);
+                this.enableRigidBody(from.rigidBody);
             else
-                this.rigidBody.copyDirect(sactor.rigidBody);
+                this.rigidBody.copy(from.rigidBody);
         }
         // TODO @tombu:  Add in colliders here once feature is turned on.
-        if (sactor.text) {
+        if (from.text) {
             if (!this._text)
-                this.enableText(sactor.text);
+                this.enableText(from.text);
             else
-                this.text.copyDirect(sactor.text);
+                this.text.copy(from.text);
         }
+        this.internal.observing = wasObserving;
         return this;
         // tslint:enable:curly
     }
@@ -558,8 +611,10 @@ export class Actor implements ActorLike {
      */
 
     private actorChanged = (...path: string[]) => {
-        this.context.internal.incrementGeneration();
-        this.internal.patch = this.internal.patch || {} as ActorLike;
-        readPath(this, this.internal.patch, ...path);
+        if (this.internal.observing) {
+            this.context.internal.incrementGeneration();
+            this.internal.patch = this.internal.patch || {} as ActorLike;
+            readPath(this, this.internal.patch, ...path);
+        }
     }
 }

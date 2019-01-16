@@ -4,15 +4,9 @@
  */
 
 import { OperationResultCode, Trace } from '..';
-import {
-    AnimationEvent,
-    AnimationKeyframe,
-    AnimationState,
-    AnimationWrapMode,
-} from '../../..';
-import { LookAtMode } from '../../lookatMode';
+import { AnimationState, CreateAnimationOptions, LookAtMode, SetAnimationStateOptions } from '../../..';
 import { PrimitiveDefinition } from '../../primitiveTypes';
-import { ActorLike, ColliderType, LightLike, RigidBodyLike, TextLike, UserLike } from '../../runtime';
+import { ActorLike, ColliderType, LightLike, TextLike, TransformLike, UserLike } from '../../runtime';
 import { ActionState, BehaviorType } from '../../runtime/behaviors';
 import { OperatingModel } from '../operatingModel';
 import { SubscriptionOwnerType, SubscriptionType } from '../subscriptionType';
@@ -63,17 +57,15 @@ export type PayloadType
     | 'rigidbody-add-torque'
     | 'rigidbody-add-relative-torque'
     | 'create-animation'
-    | 'start-animation'
-    | 'stop-animation'
-    | 'reset-animation'
-    | 'pause-animation'
-    | 'resume-animation'
+    | 'set-animation-state'
     | 'sync-animations'
+    | 'interpolate-actor'
     | 'set-behavior'
     | 'set-primary-behavior'
     | 'update-background-behaviors'
     | 'load-assets'
     | 'assets-loaded'
+    | 'look-at'
     ;
 
 /**
@@ -375,67 +367,21 @@ export type UpdateSubscriptions = Payload & {
  * @hidden
  * App to engine. Create an animation and associate it with an actor.
  */
-export type CreateAnimation = Payload & {
+export type CreateAnimation = Payload & CreateAnimationOptions & {
     type: 'create-animation';
     actorId: string;
     animationName: string;
-    keyframes: AnimationKeyframe[];
-    events: AnimationEvent[];
-    wrapMode: AnimationWrapMode;
 };
 
 /**
  * @hidden
- * App to engine. Starts an animation.
+ * App to engine. Sets animation state.
  */
-export type StartAnimation = Payload & {
-    type: 'start-animation';
+export type SetAnimationState = Payload & {
+    type: 'set-animation-state';
     actorId: string;
     animationName: string;
-    animationTime?: number;
-    paused?: boolean;
-    hasRootMotion?: boolean;
-};
-
-/**
- * @hidden
- * App to engine. Stops an animation.
- */
-export type StopAnimation = Payload & {
-    type: 'stop-animation';
-    actorId: string;
-    animationName: string;
-    animationTime?: number;
-};
-
-/**
- * @hidden
- * App to engine. Resets an animation.
- */
-export type ResetAnimation = Payload & {
-    type: 'reset-animation';
-    actorId: string;
-    animationName: string;
-};
-
-/**
- * @hidden
- * App to engine. Pauses an animation.
- */
-export type PauseAnimation = Payload & {
-    type: 'pause-animation';
-    actorId: string;
-    animationName: string;
-};
-
-/**
- * @hidden
- * App to engine. Resumes an animation.
- */
-export type ResumeAnimation = Payload & {
-    type: 'resume-animation';
-    actorId: string;
-    animationName: string;
+    state: SetAnimationStateOptions;
 };
 
 /**
@@ -445,6 +391,20 @@ export type ResumeAnimation = Payload & {
 export type SyncAnimations = Payload & {
     type: 'sync-animations';
     animationStates: AnimationState[];
+};
+
+/**
+ * @hidden
+ * App to engine. Interpolate the actor's transform.
+ */
+export type InterpolateActor = Payload & {
+    type: 'interpolate-actor';
+    actorId: string;
+    animationName: string;
+    value: Partial<ActorLike>;
+    duration: number;
+    curve: number[];
+    enabled: boolean;
 };
 
 /**

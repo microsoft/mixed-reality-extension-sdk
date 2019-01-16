@@ -19,15 +19,6 @@ export interface Color4Like {
  */
 export class Color4 {
 
-    public get r() { return this._r; }
-    public set r(value) { this._r = value; }
-    public get g() { return this._g; }
-    public set g(value) { this._g = value; }
-    public get b() { return this._b; }
-    public set b(value) { this._b = value; }
-    public get a() { return this._a; }
-    public set a(value) { this._a = value; }
-
     // tslint:disable:variable-name
     /**
      * Creates a new Color4 object from red, green, blue values, all between 0 and 1
@@ -40,19 +31,19 @@ export class Color4 {
         /**
          * Defines the red component (between 0 and 1, default is 0)
          */
-        private _r = 0,
+        public r = 0,
         /**
          * Defines the green component (between 0 and 1, default is 0)
          */
-        private _g = 0,
+        public g = 0,
         /**
          * Defines the blue component (between 0 and 1, default is 0)
          */
-        private _b = 0,
+        public b = 0,
         /**
          * Defines the alpha component (between 0 and 1, default is 1)
          */
-        private _a = 1) {
+        public a = 1) {
     }
     // tslint:enable:variable-name
 
@@ -211,6 +202,20 @@ export class Color4 {
     }
 
     /**
+     * Returns a JSON representation of this color. This is necessary due to the way
+     * Actors detect changes on components like the actor's transform. They do this by adding
+     * properties for observation, and we don't want these properties serialized.
+     */
+    public toJSON() {
+        return {
+            r: this.r,
+            g: this.g,
+            b: this.b,
+            a: this.a,
+        } as Color4Like;
+    }
+
+    /**
      * Returns the string "Color4"
      * @returns "Color4"
      */
@@ -281,31 +286,17 @@ export class Color4 {
         return this.copyFromFloats(r, g, b, a);
     }
 
+    /**
+     * Updates the Color4 from the sparsely populated value.
+     * @param from The sparsely populated value to read from.
+     */
     public copy(from: Partial<Color4Like>): this {
         if (!from) return this;
-        if (typeof from.r !== 'undefined') this.r = from.r;
-        if (typeof from.g !== 'undefined') this.g = from.g;
-        if (typeof from.b !== 'undefined') this.b = from.b;
-        if (typeof from.a !== 'undefined') this.a = from.a;
+        if (from.r !== undefined) this.r = from.r;
+        if (from.g !== undefined) this.g = from.g;
+        if (from.b !== undefined) this.b = from.b;
+        if (from.a !== undefined) this.a = from.a;
         return this;
-    }
-
-    public copyDirect(from: Partial<Color4Like>): this {
-        if (!from) return this;
-        if (typeof from.r !== 'undefined') this._r = from.r;
-        if (typeof from.g !== 'undefined') this._g = from.g;
-        if (typeof from.b !== 'undefined') this._b = from.b;
-        if (typeof from.a !== 'undefined') this._a = from.a;
-        return this;
-    }
-
-    public toJSON(): any {
-        return {
-            r: this.r,
-            g: this.g,
-            b: this.b,
-            a: this.a
-        } as Color4Like;
     }
 
     /**

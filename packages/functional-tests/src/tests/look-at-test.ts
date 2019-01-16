@@ -27,53 +27,51 @@ export default class LookAtTest extends Test {
         const tester = await MRESDK.Actor.CreateFromGLTF(this.app.context, {
             resourceUrl: `${this.baseUrl}/monkey.glb`
         });
-        await tester.createAnimation({
-            animationName: 'circle',
-            wrapMode: MRESDK.AnimationWrapMode.Loop,
-            events: [],
-            keyframes: [
-                {
-                    time: 0, value: {
-                        transform: {
-                            position: { x: 0, y: 0, z: 0 }
+        await tester.createAnimation(
+            'circle', {
+                wrapMode: MRESDK.AnimationWrapMode.Loop,
+                keyframes: [
+                    {
+                        time: 0, value: {
+                            transform: {
+                                position: { x: 0, y: 0, z: 0 }
+                            }
                         }
-                    }
-                },
-                {
-                    time: 1, value: {
-                        transform: {
-                            position: { x: 2, y: 2, z: 0 }
+                    },
+                    {
+                        time: 1, value: {
+                            transform: {
+                                position: { x: 2, y: 2, z: 0 }
+                            }
                         }
-                    }
-                },
-                {
-                    time: 2, value: {
-                        transform: {
-                            position: { x: 0, y: 4, z: 0 }
+                    },
+                    {
+                        time: 2, value: {
+                            transform: {
+                                position: { x: 0, y: 4, z: 0 }
+                            }
                         }
-                    }
-                },
-                {
-                    time: 3, value: {
-                        transform: {
-                            position: { x: -2, y: 2, z: 0 }
+                    },
+                    {
+                        time: 3, value: {
+                            transform: {
+                                position: { x: -2, y: 2, z: 0 }
+                            }
                         }
-                    }
-                },
-                {
-                    time: 4, value: {
-                        transform: {
-                            position: { x: 0, y: 0, z: 0 }
+                    },
+                    {
+                        time: 4, value: {
+                            transform: {
+                                position: { x: 0, y: 0, z: 0 }
+                            }
                         }
-                    }
-                },
-            ]
-        });
+                    },
+                ]
+            });
 
-        tester.startAnimation('circle');
+        tester.enableAnimation('circle');
 
         this.app.rpc.send('functional-test:trace-message', 'look-at-test', "LookAtMode.None");
-
         tester.lookAt(null, MRESDK.LookAtMode.None);
         await delay(2000);
 
@@ -89,7 +87,7 @@ export default class LookAtTest extends Test {
         tester.lookAt(null, MRESDK.LookAtMode.None);
         await delay(1000);
 
-        tester.stopAnimation('circle');
+        tester.disableAnimation('circle');
         destroyActors(tester);
 
         return true;

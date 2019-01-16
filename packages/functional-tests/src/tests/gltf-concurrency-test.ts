@@ -45,7 +45,7 @@ export default class GltfConcurrencyTest extends Test {
             return false;
         }
 
-        runner.startAnimation('animation:0');
+        runner.enableAnimation('animation:0');
         gearbox.transform.position.set(16, 0, 0);
         gearbox.transform.scale.set(.1, .1, .1);
         const bottle = await MRESDK.Actor.CreateFromPrefab(this.app.context, {

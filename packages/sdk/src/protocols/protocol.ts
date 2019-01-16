@@ -9,6 +9,7 @@ import { Connection, Message } from '..';
 import { log } from '../log';
 import { Payload } from '../types/network/payloads';
 import { ExportedPromise } from '../utils/exportedPromise';
+import filterEmpty from '../utils/filterEmpty';
 import { Middleware } from './middleware';
 
 /**
@@ -69,12 +70,15 @@ export class Protocol extends EventEmitter {
             };
         }
 
-        log.verbose('network', `${this.name} send`, JSON.stringify(message));
+        log.verbose('network', `${this.name} send`,
+            JSON.stringify(message, (key, value) => filterEmpty(value)));
+
         this.conn.send(message);
     }
 
     public recvMessage(message: Message) {
-        log.verbose('network', `${this.name} recv`, JSON.stringify(message));
+        log.verbose('network', `${this.name} recv`,
+            JSON.stringify(message, (key, value) => filterEmpty(value)));
 
         // Run message through all the middlewares
         const middlewares = this.middlewares.slice();

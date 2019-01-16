@@ -17,7 +17,7 @@ import { RigidBodyConstraints } from '../rigidBodyConstraints';
 
 export interface RigidBodyLike {
     position: Partial<Vector3Like>;
-    rotation: QuaternionLike;
+    rotation: Partial<QuaternionLike>;
     velocity: Partial<Vector3Like>;
     angularVelocity: Partial<Vector3Like>;
     mass: number;
@@ -33,41 +33,32 @@ export class RigidBody implements RigidBodyLike {
     private _rotation: Quaternion;
     private _velocity: Vector3;
     private _angularVelocity: Vector3;
-    private _mass: number;
-    private _detectCollisions: boolean;
-    private _collisionDetectionMode: CollisionDetectionMode;
-    private _useGravity: boolean;
-    private _constraints: RigidBodyConstraints[] = [];
+    private _constraints: RigidBodyConstraints[];
     // tslint:enable:variable-name
 
-    // late-bound observables
-    private $position: Vector3;
-    private $rotation: Quaternion;
-    private $velocity: Vector3;
-    private $angularVelocity: Vector3;
+    public mass = 1.0;
+    public detectCollisions = true;
+    public collisionDetectionMode = CollisionDetectionMode.Discrete;
+    public useGravity = true;
 
     /**
      * PUBLIC ACCESSORS
      */
-    public get position() { return this.$position; }
-    public set position(value: Partial<Vector3>) { this.$position = this._position; this._position.copy(value); }
-    public get rotation() { return this.$rotation; }
-    public set rotation(value) { this.$rotation = this._rotation; this._rotation.copy(value); }
-    public get velocity() { return this.$velocity; }
-    public set velocity(value: Partial<Vector3>) { this.$velocity = this._velocity; this._velocity.copy(value); }
-    public get angularVelocity() { return this.$angularVelocity; }
-    public set angularVelocity(value: Partial<Vector3>) {
-        this.$angularVelocity = this._angularVelocity;
-        this._angularVelocity.copy(value);
+
+    public get position() { return this._position || this.$owner.transform.position; }
+    public set position(value: Partial<Vector3>) {
+        this._position = this._position || this.$owner.transform.position.clone();
+        this._position.copy(value);
     }
-    public get mass() { return this._mass; }
-    public set mass(value) { this._mass = value; }
-    public get detectCollisions() { return this._detectCollisions; }
-    public set detectCollisions(value) { this._detectCollisions = value; }
-    public get collisionDetectionMode() { return this._collisionDetectionMode; }
-    public set collisionDetectionMode(value) { this._collisionDetectionMode = value; }
-    public get useGravity() { return this._useGravity; }
-    public set useGravity(value) { this._useGravity = value; }
+    public get rotation() { return this._rotation || this.$owner.transform.rotation; }
+    public set rotation(value: Partial<Quaternion>) {
+        this._rotation = this._rotation || this.$owner.transform.rotation.clone();
+        this._rotation.copy(value);
+    }
+    public get velocity() { return this._velocity; }
+    public set velocity(value: Partial<Vector3>) { this._velocity.copy(value); }
+    public get angularVelocity() { return this._angularVelocity; }
+    public set angularVelocity(value: Partial<Vector3>) { this._angularVelocity.copy(value); }
     public get constraints() { return this._constraints; }
     public set constraints(value: RigidBodyConstraints[]) {
         this._constraints = [...value];
@@ -79,72 +70,48 @@ export class RigidBody implements RigidBodyLike {
      * PUBLIC METHODS
      */
 
-    constructor(private owner: Actor) {
-        this._velocity = new Vector3();
-        this._angularVelocity = new Vector3();
-        this._position = new Vector3();
-        this._rotation = new Quaternion();
+    /**
+     * Creates a new RigidBody instance.
+     * @param $owner The owning actor instance. Field name is prefixed with a dollar sign so that it is ignored by
+     * the actor patch detection system.
+     */
+    constructor(private $owner: Actor) {
+        this._velocity = Vector3.Zero();
+        this._angularVelocity = Vector3.Zero();
+        this._constraints = [];
     }
 
-    public copyDirect(srigidbody: Partial<RigidBodyLike>): this {
-        if (!srigidbody) {
-            return this;
-        }
-        if (typeof srigidbody.position !== 'undefined') {
-            this.$position = this._position;
-            this._position.copyDirect(srigidbody.position);
-        }
-        if (typeof srigidbody.rotation !== 'undefined') {
-            this.$rotation = this._rotation;
-            this._rotation.copyDirect(srigidbody.rotation);
-        }
-        if (typeof srigidbody.velocity !== 'undefined') {
-            this.$velocity = this._velocity;
-            this._velocity.copyDirect(srigidbody.velocity);
-        }
-        if (typeof srigidbody.angularVelocity !== 'undefined') {
-            this.$angularVelocity = this._angularVelocity;
-            this._angularVelocity.copyDirect(srigidbody.angularVelocity);
-        }
-        if (typeof srigidbody.mass !== 'undefined') {
-            this._mass = srigidbody.mass;
-        }
-        if (typeof srigidbody.detectCollisions !== 'undefined') {
-            this._detectCollisions = srigidbody.detectCollisions;
-        }
-        if (typeof srigidbody.collisionDetectionMode !== 'undefined') {
-            this._collisionDetectionMode = srigidbody.collisionDetectionMode;
-        }
-        if (typeof srigidbody.useGravity !== 'undefined') {
-            this._useGravity = srigidbody.useGravity;
-        }
-        if (typeof srigidbody.constraints !== 'undefined') {
-            this._constraints = srigidbody.constraints;
-        }
+    public copy(from: Partial<RigidBodyLike>): this {
+        if (!from) return this;
+        if (from.position !== undefined) this.position = from.position;
+        if (from.rotation !== undefined) this.rotation = from.rotation;
+        if (from.velocity !== undefined) this.velocity = from.velocity;
+        if (from.angularVelocity !== undefined) this.angularVelocity = from.angularVelocity;
+        if (from.mass !== undefined) this.mass = from.mass;
+        if (from.detectCollisions !== undefined) this.detectCollisions = from.detectCollisions;
+        if (from.collisionDetectionMode !== undefined) this.collisionDetectionMode = from.collisionDetectionMode;
+        if (from.useGravity !== undefined) this.useGravity = from.useGravity;
+        if (from.constraints !== undefined) this.constraints = from.constraints;
         return this;
     }
 
     public toJSON() {
         return {
-            position: this.$position ? this.$position.toJSON() : undefined,
-            rotation: this.$rotation ? this.$rotation.toJSON() : undefined,
-            velocity: this.$velocity ? this.$velocity.toJSON() : undefined,
-            angularVelocity: this.$angularVelocity ? this.$angularVelocity.toJSON() : undefined,
-            mass: this._mass,
-            detectCollisions: this._detectCollisions,
-            collisionDetectionMode: this._collisionDetectionMode,
-            useGravity: this._useGravity,
-            constraints: this._constraints,
+            position: this.position.toJSON(),
+            rotation: this.rotation.toJSON(),
+            velocity: this.velocity.toJSON(),
+            angularVelocity: this.angularVelocity.toJSON(),
+            mass: this.mass,
+            detectCollisions: this.detectCollisions,
+            collisionDetectionMode: this.collisionDetectionMode,
+            useGravity: this.useGravity,
+            constraints: this.constraints,
         } as RigidBodyLike;
     }
 
-    /**
-     * PUBLIC METHODS
-     */
-
     public movePosition(position: Partial<Vector3Like>) {
-        this.owner.context.internal.sendRigidBodyCommand(
-            this.owner.id,
+        this.$owner.context.internal.sendRigidBodyCommand(
+            this.$owner.id,
             {
                 type: 'rigidbody-move-position',
                 position,
@@ -152,8 +119,8 @@ export class RigidBody implements RigidBodyLike {
     }
 
     public moveRotation(rotation: QuaternionLike) {
-        this.owner.context.internal.sendRigidBodyCommand(
-            this.owner.id,
+        this.$owner.context.internal.sendRigidBodyCommand(
+            this.$owner.id,
             {
                 type: 'rigidbody-move-rotation',
                 rotation,
@@ -161,8 +128,8 @@ export class RigidBody implements RigidBodyLike {
     }
 
     public addForce(force: Partial<Vector3Like>) {
-        this.owner.context.internal.sendRigidBodyCommand(
-            this.owner.id,
+        this.$owner.context.internal.sendRigidBodyCommand(
+            this.$owner.id,
             {
                 type: 'rigidbody-add-force',
                 force,
@@ -170,8 +137,8 @@ export class RigidBody implements RigidBodyLike {
     }
 
     public addForceAtPosition(force: Partial<Vector3Like>, position: Partial<Vector3Like>) {
-        this.owner.context.internal.sendRigidBodyCommand(
-            this.owner.id,
+        this.$owner.context.internal.sendRigidBodyCommand(
+            this.$owner.id,
             {
                 type: 'rigidbody-add-force-at-position',
                 force,
@@ -180,8 +147,8 @@ export class RigidBody implements RigidBodyLike {
     }
 
     public addTorque(torque: Partial<Vector3Like>) {
-        this.owner.context.internal.sendRigidBodyCommand(
-            this.owner.id,
+        this.$owner.context.internal.sendRigidBodyCommand(
+            this.$owner.id,
             {
                 type: 'rigidbody-add-torque',
                 torque,
@@ -189,8 +156,8 @@ export class RigidBody implements RigidBodyLike {
     }
 
     public addRelativeTorque(relativeTorque: Partial<Vector3Like>) {
-        this.owner.context.internal.sendRigidBodyCommand(
-            this.owner.id,
+        this.$owner.context.internal.sendRigidBodyCommand(
+            this.$owner.id,
             {
                 type: 'rigidbody-add-relative-torque',
                 relativeTorque,

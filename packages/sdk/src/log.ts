@@ -74,11 +74,13 @@ class Log {
     }
 
     public log(facility: string, severity: string, formatter: any, ...args: any[]) {
-        facility = this.cleanupFacility(facility);
-        severity = this.cleanupSeverity(severity);
-        const logger = this.logger(null, null) || this.logger(facility, null) || this.logger(facility, severity);
-        if (logger) {
-            logger(formatter, ...args);
+        if (formatter) {
+            facility = this.cleanupFacility(facility);
+            severity = this.cleanupSeverity(severity);
+            const logger = this.logger(null, null) || this.logger(facility, null) || this.logger(facility, severity);
+            if (logger) {
+                logger(formatter, ...args);
+            }
         }
     }
 

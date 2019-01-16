@@ -18,7 +18,7 @@ export type CreateActor = {
  */
 export type CreateAnimation = {
     message: MRESDK.Message<Payloads.CreateAnimation>;
-    animating: boolean;
+    enabled: boolean;
 };
 
 /**
@@ -28,5 +28,6 @@ export type SyncActor = {
     actorId: string;
     created: CreateActor;
     createdAnimations: CreateAnimation[];
+    activeInterpolations: Payloads.InterpolateActor[];
     behavior: MRESDK.BehaviorType;
 };
