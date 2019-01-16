@@ -8,7 +8,7 @@
  * If `obj` is an empty object, return undefined.
  */
 export default function filterEmpty(obj: any) {
-    if (typeof obj !== "object" || Object.keys(obj).length) {
+    if (typeof obj !== 'object' || Object.keys(obj).length) {
         return obj;
     }
 }
