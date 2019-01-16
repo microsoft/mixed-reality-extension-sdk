@@ -13,6 +13,7 @@ import { AssetsLoaded, LoadAssets } from '../../network/payloads';
  * and use the assets by ID on actors (e.g. [[Actor.CreateFromPrefab]]).
  */
 export class AssetManager {
+    private assets: { [id: string]: Asset } = {};
     private groups: { [k: string]: AssetGroup } = {};
     private inFlightLoads: { [k: string]: Promise<AssetGroup> } = {};
 
@@ -21,6 +22,9 @@ export class AssetManager {
 
     /** Fetch a group by name. */
     public group(name: string) { return this.groups[name]; }
+
+    /** Fetch an asset by id. */
+    public byId(id: string) { return this.assets[id]; }
 
     /**
      * @returns A promise that resolves when all pending asset load requests have been
@@ -80,7 +84,9 @@ export class AssetManager {
 
         for (const def of response.assets) {
             def.source = group.source;
-            group.add(Asset.Parse(this, def));
+            const asset = Asset.Parse(this, def);
+            group.add(asset);
+            this.assets[def.id] = asset;
         }
 
         this.groups[groupName] = group;

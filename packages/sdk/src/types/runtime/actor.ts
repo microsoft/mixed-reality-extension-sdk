@@ -7,9 +7,9 @@ import {
     Collider,
     ColliderLike,
     CollisionData,
-    CollisionLayer,
     Light,
     LightLike,
+    Material,
     RigidBody,
     RigidBodyLike,
     Text,
@@ -49,6 +49,7 @@ export interface ActorLike {
     rigidBody: Partial<RigidBodyLike>;
     collider: Partial<ColliderLike>;
     text: Partial<TextLike>;
+    materialId: string;
 }
 
 /**
@@ -80,6 +81,7 @@ export class Actor implements ActorLike {
     private _rigidBody?: RigidBody;
     private _collider?: Collider;
     private _text?: Text;
+    private _materialId?: string;
     // tslint:enable:variable-name
 
     /**
@@ -102,13 +104,28 @@ export class Actor implements ActorLike {
     public get parentId() { return this._parentId; }
     public set parentId(value) {
         if (value && value.startsWith('0000')) {
-            value = undefined;
+            value = null;
         }
         if (!this.context.actor(value)) {
-            value = undefined; // throw?
+            value = null; // throw?
         }
         this._parentId = value;
         this.actorChanged('parentId');
+    }
+    public get material() { return this._context.assets.byId(this._materialId) as Material; }
+    public set material(value) {
+        this.materialId = value && value.id || null;
+    }
+    public get materialId() { return this._materialId; }
+    public set materialId(value) {
+        if (value && value.startsWith('0000')) {
+            value = null;
+        }
+        if (!this.context.assets.byId(value)) {
+            value = null; // throw?
+        }
+        this._materialId = value;
+        this.actorChanged('materialId');
     }
 
     // tslint:disable-next-line:variable-name
