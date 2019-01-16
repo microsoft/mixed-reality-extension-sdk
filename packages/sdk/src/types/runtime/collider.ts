@@ -47,6 +47,6 @@ export class Collider implements ColliderLike {
             isTrigger: this.isTrigger,
             collisionLayer: this.collisionLayer,
             colliderParams: this.colliderParams
-        };
+        } as ColliderLike;
     }
 }

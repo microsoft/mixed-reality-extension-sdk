@@ -60,7 +60,7 @@ export class Color3 implements Color3Like {
             r: this.r,
             g: this.g,
             b: this.b,
-        };
+        } as Color3Like;
     }
 
     /**

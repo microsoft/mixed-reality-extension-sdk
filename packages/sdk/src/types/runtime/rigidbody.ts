@@ -97,7 +97,7 @@ export class RigidBody implements RigidBodyLike {
             collisionDetectionMode: this.collisionDetectionMode,
             useGravity: this.useGravity,
             constraints: this.constraints,
-        };
+        } as RigidBodyLike;
     }
 
     public movePosition(position: Partial<Vector3Like>) {

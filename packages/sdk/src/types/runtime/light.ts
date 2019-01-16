@@ -59,6 +59,6 @@ export class Light implements LightLike {
             range: this.range,
             intensity: this.intensity,
             spotAngle: this.spotAngle,
-        };
+        } as LightLike;
     }
 }

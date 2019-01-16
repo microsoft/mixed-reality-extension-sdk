@@ -543,7 +543,7 @@ export class Actor implements ActorLike {
             rigidBody: this._rigidBody ? this._rigidBody.toJSON() : undefined,
             collider: this._collider ? this._collider.toJSON() : undefined,
             text: this._text ? this._text.toJSON() : undefined
-        };
+        } as ActorLike;
     }
 
     /**

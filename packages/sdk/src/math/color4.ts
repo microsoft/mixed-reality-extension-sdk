@@ -212,7 +212,7 @@ export class Color4 {
             g: this.g,
             b: this.b,
             a: this.a,
-        };
+        } as Color4Like;
     }
 
     /**

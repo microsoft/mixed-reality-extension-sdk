@@ -105,6 +105,6 @@ export class Text implements TextLike {
             justify: this.justify,
             font: this.font,
             color: this.color.toJSON(),
-        };
+        } as TextLike;
     }
 }

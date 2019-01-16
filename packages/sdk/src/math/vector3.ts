@@ -730,7 +730,7 @@ export class Vector3 implements Vector3Like {
             x: this.x,
             y: this.y,
             z: this.z,
-        };
+        } as Vector3Like;
     }
 
     /**

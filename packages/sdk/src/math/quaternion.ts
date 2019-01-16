@@ -58,7 +58,7 @@ export class Quaternion implements QuaternionLike {
             y: this.y,
             z: this.z,
             w: this.w,
-        };
+        } as QuaternionLike;
     }
 
     /**
