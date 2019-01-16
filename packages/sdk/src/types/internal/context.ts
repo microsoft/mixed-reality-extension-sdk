@@ -73,13 +73,6 @@ import { Handshake } from '../../protocols/handshake';
 import resolveJsonValues from '../../utils/resolveJsonValues';
 import { createForwardPromise, ForwardPromise } from '../forwardPromise';
 import { OperatingModel } from '../network/operatingModel';
-import {
-    BoxColliderParams,
-    ColliderLike,
-    CollisionEvent,
-    CollisionLayer,
-    SphereColliderParams,
-} from '../runtime';
 
 /**
  * @hidden

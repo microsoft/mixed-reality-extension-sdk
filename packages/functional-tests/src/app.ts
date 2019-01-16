@@ -50,7 +50,6 @@ export default class App {
         'rigid-body-test': (): Test => new RigidBodyTest(this),
         'text-test': (): Test => new TextTest(this),
         'user-test': (user: MRESDK.User): Test => new UserTest(this, this.baseUrl, user),
-        'asset-preload-test': (user: MRESDK.User): Test => new AssetPreloadTest(this, this.baseUrl, user),
         'interpolation-test': (): Test => new InterpolationTest(this),
     };
 
