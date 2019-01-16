@@ -242,7 +242,7 @@ export class Actor implements ActorLike {
         if (!this._rigidBody) {
             this._rigidBody = new RigidBody(this);
             this._rigidBody.copy(rigidBody);
-            // Actor patching: Observe the light component for changed values.
+            // Actor patching: Observe the rigidBody component for changed values.
             observe(this._rigidBody, 'rigidBody', (...path: string[]) => this.actorChanged(...path));
             this.subscribe('rigidbody');
             return this.context.internal.enableRigidBody(this.id, this._rigidBody);
