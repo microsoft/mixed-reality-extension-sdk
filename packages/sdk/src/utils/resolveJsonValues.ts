@@ -14,7 +14,7 @@ export default function resolveJsonValues(obj: any) {
         for (const key of keys) {
             resolveJsonValues(obj[key]);
             const value = obj[key];
-            if (!!value && typeof value.toJSON === "function") {
+            if (!!value && typeof value.toJSON === 'function') {
                 obj[key] = value.toJSON();
             }
         }
