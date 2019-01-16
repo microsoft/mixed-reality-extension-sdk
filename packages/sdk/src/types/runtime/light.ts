@@ -55,7 +55,7 @@ export class Light implements LightLike {
         return {
             enabled: this.enabled,
             type: this.type,
-            color: this.color,
+            color: this.color.toJSON(),
             range: this.range,
             intensity: this.intensity,
             spotAngle: this.spotAngle,

@@ -48,7 +48,7 @@ export class RigidBody implements RigidBodyLike {
     public get position() { return this._position; }
     public set position(value: Partial<Vector3>) { this._position.copy(value); }
     public get rotation() { return this._rotation; }
-    public set rotation(value: Quaternion | QuaternionLike) { this._rotation.copy(value); }
+    public set rotation(value: Quaternion) { this._rotation.copy(value); }
     public get velocity() { return this._velocity; }
     public set velocity(value: Partial<Vector3>) { this._velocity.copy(value); }
     public get angularVelocity() { return this._angularVelocity; }
@@ -75,7 +75,7 @@ export class RigidBody implements RigidBodyLike {
     public copy(from: Partial<RigidBodyLike>): this {
         if (!from) return this;
         if (from.position !== undefined) this.position = from.position;
-        if (from.rotation !== undefined) this.rotation = from.rotation;
+        if (from.rotation !== undefined) this._rotation.copy(from.rotation);
         if (from.velocity !== undefined) this.velocity = from.velocity;
         if (from.angularVelocity !== undefined) this.angularVelocity = from.angularVelocity;
         if (from.mass !== undefined) this.mass = from.mass;
@@ -88,10 +88,10 @@ export class RigidBody implements RigidBodyLike {
 
     public toJSON() {
         return {
-            position: this.position,
-            rotation: this.rotation,
-            velocity: this.velocity,
-            angularVelocity: this.angularVelocity,
+            position: this.position.toJSON(),
+            rotation: this.rotation.toJSON(),
+            velocity: this.velocity.toJSON(),
+            angularVelocity: this.angularVelocity.toJSON(),
             mass: this.mass,
             detectCollisions: this.detectCollisions,
             collisionDetectionMode: this.collisionDetectionMode,

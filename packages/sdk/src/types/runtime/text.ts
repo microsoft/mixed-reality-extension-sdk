@@ -104,7 +104,7 @@ export class Text implements TextLike {
             anchor: this.anchor,
             justify: this.justify,
             font: this.font,
-            color: this.color,
+            color: this.color.toJSON(),
         };
     }
 }

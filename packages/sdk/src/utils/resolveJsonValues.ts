@@ -6,7 +6,7 @@
  /**
   * @hidden
   * Recursively look for values with a `toJSON()` method. If found,
-  * call it and replace the value with it's return value.
+  * call it and replace the value with the return value.
   */
 export default function resolveJsonValues(obj: any) {
     if (typeof obj === "object") {

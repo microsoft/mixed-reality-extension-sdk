@@ -45,9 +45,9 @@ export class Transform implements TransformLike {
 
     public toJSON() {
         return {
-            position: this.position,
-            rotation: this.rotation,
-            scale: this.scale
+            position: this.position.toJSON(),
+            rotation: this.rotation.toJSON(),
+            scale: this.scale.toJSON(),
         };
     }
 }
