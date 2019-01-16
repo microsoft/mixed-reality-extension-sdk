@@ -29,8 +29,12 @@ export class Collider implements ColliderLike {
 
     public get colliderParams() { return this._colliderParams; }
 
-    // tslint:disable-next-line:variable-name
-    constructor(private _owner: Actor) { }
+    /**
+     * Creates a new Collider instance.
+     * @param $owner The owning actor instance. Field name is prefixed with a dollar sign so that it is ignored by
+     * the actor patch detection system.
+     */
+    constructor(private $owner: Actor) { }
 
     public copy(from: Partial<ColliderLike>): this {
         if (!from) return this;

@@ -7,7 +7,7 @@ import { Quaternion, QuaternionLike, Vector3, Vector3Like } from '../..';
 
 export interface TransformLike {
     position: Partial<Vector3Like>;
-    rotation: QuaternionLike;
+    rotation: Partial<QuaternionLike>;
     scale: Partial<Vector3Like>;
 }
 
@@ -21,7 +21,7 @@ export class Transform implements TransformLike {
     public get position() { return this._position; }
     public set position(value: Partial<Vector3>) { this._position.copy(value); }
     public get rotation() { return this._rotation; }
-    public set rotation(value: Quaternion) { this._rotation.copy(value); }
+    public set rotation(value: Partial<Quaternion>) { this._rotation.copy(value); }
     public get scale() { return this._scale; }
     public set scale(value: Partial<Vector3>) { this._scale.copy(value); }
 
@@ -38,7 +38,7 @@ export class Transform implements TransformLike {
     public copy(from: Partial<TransformLike>): this {
         if (!from) return this;
         if (from.position !== undefined) this.position = from.position;
-        if (from.rotation !== undefined) this._rotation.copy(from.rotation);
+        if (from.rotation !== undefined) this.rotation = from.rotation;
         if (from.scale !== undefined) this.scale = from.scale;
         return this;
     }

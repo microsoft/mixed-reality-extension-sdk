@@ -15,6 +15,14 @@ export default function observe(target: any, targetName: string, notifyChanged: 
 function observeLeafProperties(target: any, path: string[], notifyChanged: (...path: string[]) => void) {
     const names = Object.getOwnPropertyNames(target);
     for (const name of names) {
+        // Fields starting with a dollar sign are not observed.
+        if (name.startsWith('$')) {
+            continue;
+        }
+        // TODO: Figure out array patching.
+        if (Array.isArray(target[name])) {
+            continue;
+        }
         // Get the public name of this field by removing leading underscores.
         const publicName = name.replace(/^_+/, '');
         // If the property is a simple type, then hook it.

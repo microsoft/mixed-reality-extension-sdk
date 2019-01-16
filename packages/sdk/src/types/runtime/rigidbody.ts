@@ -17,7 +17,7 @@ import { RigidBodyConstraints } from '../rigidBodyConstraints';
 
 export interface RigidBodyLike {
     position: Partial<Vector3Like>;
-    rotation: QuaternionLike;
+    rotation: Partial<QuaternionLike>;
     velocity: Partial<Vector3Like>;
     angularVelocity: Partial<Vector3Like>;
     mass: number;
@@ -36,19 +36,25 @@ export class RigidBody implements RigidBodyLike {
     private _constraints: RigidBodyConstraints[];
     // tslint:enable:variable-name
 
-    public mass: number;
-    public detectCollisions: boolean;
-    public collisionDetectionMode: CollisionDetectionMode;
-    public useGravity: boolean;
+    public mass = 1.0;
+    public detectCollisions = true;
+    public collisionDetectionMode = CollisionDetectionMode.Discrete;
+    public useGravity = true;
 
     /**
      * PUBLIC ACCESSORS
      */
 
-    public get position() { return this._position; }
-    public set position(value: Partial<Vector3>) { this._position.copy(value); }
-    public get rotation() { return this._rotation; }
-    public set rotation(value: Quaternion) { this._rotation.copy(value); }
+    public get position() { return this._position || this.$owner.transform.position; }
+    public set position(value: Partial<Vector3>) {
+        this._position = this._position || this.$owner.transform.position.clone();
+        this._position.copy(value);
+    }
+    public get rotation() { return this._rotation || this.$owner.transform.rotation; }
+    public set rotation(value: Partial<Quaternion>) {
+        this._rotation = this._rotation || this.$owner.transform.rotation.clone();
+        this._rotation.copy(value);
+    }
     public get velocity() { return this._velocity; }
     public set velocity(value: Partial<Vector3>) { this._velocity.copy(value); }
     public get angularVelocity() { return this._angularVelocity; }
@@ -64,9 +70,12 @@ export class RigidBody implements RigidBodyLike {
      * PUBLIC METHODS
      */
 
-    constructor(private owner: Actor) {
-        this._position = Vector3.Zero();
-        this._rotation = Quaternion.Identity();
+    /**
+     * Creates a new RigidBody instance.
+     * @param $owner The owning actor instance. Field name is prefixed with a dollar sign so that it is ignored by
+     * the actor patch detection system.
+     */
+    constructor(private $owner: Actor) {
         this._velocity = Vector3.Zero();
         this._angularVelocity = Vector3.Zero();
         this._constraints = [];
@@ -75,7 +84,7 @@ export class RigidBody implements RigidBodyLike {
     public copy(from: Partial<RigidBodyLike>): this {
         if (!from) return this;
         if (from.position !== undefined) this.position = from.position;
-        if (from.rotation !== undefined) this._rotation.copy(from.rotation);
+        if (from.rotation !== undefined) this.rotation = from.rotation;
         if (from.velocity !== undefined) this.velocity = from.velocity;
         if (from.angularVelocity !== undefined) this.angularVelocity = from.angularVelocity;
         if (from.mass !== undefined) this.mass = from.mass;
@@ -101,8 +110,8 @@ export class RigidBody implements RigidBodyLike {
     }
 
     public movePosition(position: Partial<Vector3Like>) {
-        this.owner.context.internal.sendRigidBodyCommand(
-            this.owner.id,
+        this.$owner.context.internal.sendRigidBodyCommand(
+            this.$owner.id,
             {
                 type: 'rigidbody-move-position',
                 position,
@@ -110,8 +119,8 @@ export class RigidBody implements RigidBodyLike {
     }
 
     public moveRotation(rotation: QuaternionLike) {
-        this.owner.context.internal.sendRigidBodyCommand(
-            this.owner.id,
+        this.$owner.context.internal.sendRigidBodyCommand(
+            this.$owner.id,
             {
                 type: 'rigidbody-move-rotation',
                 rotation,
@@ -119,8 +128,8 @@ export class RigidBody implements RigidBodyLike {
     }
 
     public addForce(force: Partial<Vector3Like>) {
-        this.owner.context.internal.sendRigidBodyCommand(
-            this.owner.id,
+        this.$owner.context.internal.sendRigidBodyCommand(
+            this.$owner.id,
             {
                 type: 'rigidbody-add-force',
                 force,
@@ -128,8 +137,8 @@ export class RigidBody implements RigidBodyLike {
     }
 
     public addForceAtPosition(force: Partial<Vector3Like>, position: Partial<Vector3Like>) {
-        this.owner.context.internal.sendRigidBodyCommand(
-            this.owner.id,
+        this.$owner.context.internal.sendRigidBodyCommand(
+            this.$owner.id,
             {
                 type: 'rigidbody-add-force-at-position',
                 force,
@@ -138,8 +147,8 @@ export class RigidBody implements RigidBodyLike {
     }
 
     public addTorque(torque: Partial<Vector3Like>) {
-        this.owner.context.internal.sendRigidBodyCommand(
-            this.owner.id,
+        this.$owner.context.internal.sendRigidBodyCommand(
+            this.$owner.id,
             {
                 type: 'rigidbody-add-torque',
                 torque,
@@ -147,8 +156,8 @@ export class RigidBody implements RigidBodyLike {
     }
 
     public addRelativeTorque(relativeTorque: Partial<Vector3Like>) {
-        this.owner.context.internal.sendRigidBodyCommand(
-            this.owner.id,
+        this.$owner.context.internal.sendRigidBodyCommand(
+            this.$owner.id,
             {
                 type: 'rigidbody-add-relative-torque',
                 relativeTorque,
