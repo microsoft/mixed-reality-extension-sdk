@@ -151,7 +151,7 @@ export class Actor implements ActorLike {
     /**
      * Creates a new, empty actor without geometry.
      * @param context The SDK context object.
-     * @param options Creation parameters and actor characteristics.
+     * @param options.actor The initial state of the actor.
      */
     public static CreateEmpty(context: Context, options?: {
         actor?: Partial<ActorLike>,
@@ -161,9 +161,27 @@ export class Actor implements ActorLike {
     }
 
     /**
-     * Creates a new actor from a GLTF resource.
+     * Creates a new actor from a glTF resource.
      * @param context The SDK context object.
-     * @param options Creation parameters and actor characteristics.
+     * @param options.resourceUrl The URL of the source .gltf or .glb file.
+     * @param options.assetName The name of the asset within the glTF to load. Leave empty to select the
+     * first scene in the file.
+     * @param options.colliderType The collider to assign to loaded objects. Leave blank for no colliders.
+     * @param options.actor The initial state of the root actor.
+     */
+    public static CreateFromGltf(context: Context, options: {
+        resourceUrl: string,
+        assetName?: string,
+        colliderType?: CreateColliderType,
+        actor?: Partial<ActorLike>,
+        subscriptions?: SubscriptionType[]
+    }): ForwardPromise<Actor> {
+        return context.internal.CreateFromGltf(options);
+    }
+
+    /**
+     * @deprecated
+     * Use `CreateFromGltf` instead.
      */
     public static CreateFromGLTF(context: Context, options: {
         resourceUrl: string,
@@ -172,14 +190,15 @@ export class Actor implements ActorLike {
         actor?: Partial<ActorLike>,
         subscriptions?: SubscriptionType[]
     }): ForwardPromise<Actor> {
-        return context.internal.CreateFromGLTF(options);
+        return context.internal.CreateFromGltf(options);
     }
 
     /**
      * Creates a new actor from a library resource.
      * AltspaceVR-specific list of library resources: https://account.altvr.com/kits
      * @param context The SDK context object.
-     * @param options Creation parameters and actor characteristics.
+     * @param options.resourceId The id of the library resource to instantiate.
+     * @param options.actor The initial state of the root actor.
      */
     public static CreateFromLibrary(context: Context, options: {
         resourceId: string,
@@ -192,7 +211,9 @@ export class Actor implements ActorLike {
     /**
      * Creates a new actor with a primitive shape.
      * @param context The SDK context object.
-     * @param options Creation parameters and actor characteristics.
+     * @param options.definiton @see PrimitiveDefinition
+     * @param options.addCollder Whether or not to add a collider to the actor.
+     * @param options.actor The initial state of the actor.
      */
     public static CreatePrimitive(context: Context, options: {
         definition: PrimitiveDefinition,
@@ -204,15 +225,17 @@ export class Actor implements ActorLike {
     }
 
     /**
-     * Creates a new actor hierarchy from the provided prefab
-     * @param context The current context
-     * @param options.prefabId The ID of the prefab asset
-     * @param options.actor The initial state of the root actor
+     * Creates a new actor hierarchy from the provided prefab.
+     * @param context The SDK context object.
+     * @param options.prefabId The ID of the prefab asset.
+     * @param options.actor The initial state of the root actor.
+     * @param options.enableColliders Whether or not to enable colliders on this object. The prefab must have been
+     * given a collider type when loaded @see AssetManager.loadGltf.
      */
     public static CreateFromPrefab(context: Context, options: {
         prefabId: string,
-        colliderType?: CreateColliderType,
         actor?: Partial<ActorLike>,
+        enableColliders?: boolean,
         subscriptions?: SubscriptionType[]
     }): ForwardPromise<Actor> {
         return context.internal.CreateFromPrefab(options);

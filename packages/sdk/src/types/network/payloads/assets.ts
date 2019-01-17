@@ -15,6 +15,7 @@ export type CreateColliderType = ColliderType | 'none';
 export type LoadAssets = Payload & {
     type: 'load-assets';
     source: AssetSource;
+    colliderType: CreateColliderType,
 };
 
 /**
@@ -32,5 +33,5 @@ export type AssetsLoaded = Payload & {
 export type CreateFromPrefab = CreateActorCommon & {
     type: 'create-from-prefab';
     prefabId: string;
-    colliderType: ColliderType;
+    enableColliders: boolean;
 };

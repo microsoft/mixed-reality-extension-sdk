@@ -5,7 +5,7 @@
 
 import { Asset, AssetGroup } from '.';
 import { Context } from '..';
-import { AssetsLoaded, LoadAssets } from '../../network/payloads';
+import { AssetsLoaded, CreateColliderType, LoadAssets } from '../../network/payloads';
 
 /**
  * A per-context singleton that manages all of an app's assets. Create a new asset group
@@ -56,20 +56,21 @@ export class AssetManager {
      * @param url The URL to a glTF model.
      * @returns The promise of a new asset group.
      */
-    public loadGltf(groupName: string, url: string): Promise<AssetGroup> {
+    public loadGltf(groupName: string, url: string, colliderType: CreateColliderType = 'none'): Promise<AssetGroup> {
         if (this.groups[groupName]) {
             throw new Error(
                 `Group name ${groupName} is already in use. Unload the old group, or choose a different name.`);
         }
 
-        const p = this.loadGltfHelper(groupName, url);
+        const p = this.loadGltfHelper(groupName, url, colliderType);
         const remove = (ag: AssetGroup) => { delete this.inFlightLoads[groupName]; return ag; };
         this.inFlightLoads[groupName] = p.then(remove, remove);
 
         return this.inFlightLoads[groupName];
     }
 
-    private async loadGltfHelper(groupName: string, url: string): Promise<AssetGroup> {
+    private async loadGltfHelper(
+        groupName: string, url: string, colliderType: CreateColliderType): Promise<AssetGroup> {
         const group = new AssetGroup(groupName, {
             containerType: 'gltf',
             uri: url
@@ -77,7 +78,8 @@ export class AssetManager {
 
         const payload = {
             type: 'load-assets',
-            source: group.source
+            source: group.source,
+            colliderType
         } as LoadAssets;
 
         const response = await this.sendLoadAssetsPayload(payload);

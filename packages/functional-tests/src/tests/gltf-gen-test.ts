@@ -38,7 +38,7 @@ export default class GltfGenTest extends Test {
             })]
         })]);
 
-        const sphere = await MRE.Actor.CreateFromGLTF(this.app.context, {
+        const sphere = await MRE.Actor.CreateFromGltf(this.app.context, {
             resourceUrl: Server.registerStaticBuffer('sphere.glb', gltfFactory.generateGLTF())
         });
 
