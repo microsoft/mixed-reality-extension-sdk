@@ -32,6 +32,7 @@ import { createForwardPromise, ForwardPromise } from '../forwardPromise';
 import { InternalActor } from '../internal/actor';
 import { CollisionEventType, CreateColliderType } from '../network/payloads';
 import { SubscriptionType } from '../network/subscriptionType';
+import { Patchable } from '../patchable';
 import { Behavior } from './behaviors';
 
 /**
@@ -61,7 +62,7 @@ export interface ActorSet {
 /**
  * An actor represents an object instantiated on the host.
  */
-export class Actor implements ActorLike {
+export class Actor implements ActorLike, Patchable<ActorLike> {
     // tslint:disable:variable-name
     private _internal: InternalActor;
     /** @hidden */
@@ -111,7 +112,7 @@ export class Actor implements ActorLike {
         this._parentId = value;
         this.actorChanged('parentId');
     }
-    public get material() { return this._context.assets.byId(this._materialId) as Material; }
+    public get material() { return this._context.assetManager.assets[this._materialId] as Material; }
     public set material(value) {
         this.materialId = value && value.id || null;
     }
@@ -120,7 +121,7 @@ export class Actor implements ActorLike {
         if (value && value.startsWith('0000')) {
             value = null;
         }
-        if (!this.context.assets.byId(value)) {
+        if (!this.context.assetManager.assets[value]) {
             value = null; // throw?
         }
         this._materialId = value;

@@ -6,11 +6,12 @@
 import { ActionEvent, Actor, ActorLike, Behavior, CollisionData, SetAnimationStateOptions } from '../..';
 import { ExportedPromise } from '../../utils/exportedPromise';
 import { CollisionEventType } from '../network/payloads';
+import { InternalPatchable } from '../patchable';
 
 /**
  * @hidden
  */
-export class InternalActor {
+export class InternalActor implements InternalPatchable<ActorLike> {
     public observing = true;
     public patch: ActorLike;
     public behavior: Behavior;

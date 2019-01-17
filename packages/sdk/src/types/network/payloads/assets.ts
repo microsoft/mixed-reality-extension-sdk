@@ -26,6 +26,12 @@ export type AssetsLoaded = Payload & {
     failureMessage: string;
 };
 
+/** @hidden */
+export type AssetUpdate = Payload & {
+    type: 'asset-update';
+    asset: Partial<AssetLike>;
+};
+
 /**
  * @hidden
  */

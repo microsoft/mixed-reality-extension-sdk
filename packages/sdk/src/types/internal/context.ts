@@ -11,6 +11,8 @@ import {
     ActorLike,
     ActorSet,
     AnimationWrapMode,
+    Asset,
+    AssetLike,
     BehaviorType,
     BoxColliderParams,
     Collider,
@@ -39,6 +41,7 @@ import {
 
 import {
     ActorUpdate,
+    AssetUpdate,
     CollisionEventType,
     CreateActorCommon,
     CreateAnimation,
@@ -73,6 +76,7 @@ import { Handshake } from '../../protocols/handshake';
 import resolveJsonValues from '../../utils/resolveJsonValues';
 import { createForwardPromise, ForwardPromise } from '../forwardPromise';
 import { OperatingModel } from '../network/operatingModel';
+import { Patchable } from '../patchable';
 
 /**
  * @hidden
@@ -88,8 +92,6 @@ export class InternalContext {
     public __rpc: any;
 
     constructor(public context: Context) {
-        // Bind update method
-        this.update = this.update.bind(this);
 
         // Respond when connection is closed
         this.onClose = this.onClose.bind(this);
@@ -623,7 +625,7 @@ export class InternalContext {
     public start() {
         this.protocol.startListening();
         if (!this.interval) {
-            this.interval = setInterval(this.update, 0);
+            this.interval = setInterval(() => this.update(), 0);
         }
     }
 
@@ -638,7 +640,7 @@ export class InternalContext {
         this.generation++;
     }
 
-    public update = () => {
+    public update() {
         // Early out if no state changes occurred.
         if (this.generation === this.prevGeneration) {
             return;
@@ -646,31 +648,31 @@ export class InternalContext {
 
         this.prevGeneration = this.generation;
 
-        // Gather updated actors.
-        const patchedActors = [];
-        for (const key in this.actorSet) {
-            if (!this.actorSet.hasOwnProperty(key)) {
-                continue;
-            }
-            const actor = this.actorSet[key];
-            if (actor) {
-                const patch = actor.internal.getPatchAndReset();
-                if (patch) {
-                    patchedActors.push(patch);
-                }
-            }
-        }
-
         // Build state diff payload array.
         const payloads: any[] = [];
 
-        if (patchedActors.length) {
-            payloads.push(...patchedActors.map(actor => {
-                return {
+        const syncObjects = [
+            ...Object.values(this.actorSet),
+            ...Object.values(this.context.assetManager.assets)
+        ] as Array<Patchable<any>>;
+
+        for (const patchable of syncObjects) {
+            const patch = patchable.internal.getPatchAndReset();
+            if (!patch) {
+                continue;
+            }
+
+            if (patchable instanceof Actor) {
+                payloads.push({
                     type: 'actor-update',
-                    actor
-                } as ActorUpdate;
-            }));
+                    actor: patch as ActorLike
+                } as ActorUpdate);
+            } else if (patchable instanceof Asset) {
+                payloads.push({
+                    type: 'asset-update',
+                    asset: patch as AssetLike
+                } as AssetUpdate);
+            }
         }
 
         if (payloads.length) {
