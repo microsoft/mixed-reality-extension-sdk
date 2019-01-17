@@ -136,6 +136,7 @@ export class InternalContext {
         actor?: Partial<ActorLike>,
         subscriptions?: SubscriptionType[]
     }): ForwardPromise<Actor> {
+        options = { ...options };
         options = {
             subscriptions: [],
             ...options,
@@ -158,6 +159,7 @@ export class InternalContext {
         actor?: Partial<ActorLike>,
         subscriptions?: SubscriptionType[]
     }): ForwardPromise<Actor> {
+        options = { ...options };
         options = {
             subscriptions: [],
             colliderType: 'none',
@@ -179,6 +181,7 @@ export class InternalContext {
         actor?: Partial<ActorLike>,
         subscriptions?: SubscriptionType[]
     }): ForwardPromise<Actor> {
+        options = { ...options };
         options = {
             subscriptions: [],
             ...options,
@@ -200,12 +203,10 @@ export class InternalContext {
         actor?: Partial<ActorLike>,
         subscriptions?: SubscriptionType[]
     }): ForwardPromise<Actor> {
+        options = { ...options };
         options = {
             subscriptions: [],
             addCollider: false,
-            ...options
-        };
-        options = {
             ...options,
             actor: {
                 ...options.actor,
@@ -224,6 +225,7 @@ export class InternalContext {
         actor?: Partial<ActorLike>,
         subscriptions?: SubscriptionType[]
     }): ForwardPromise<Actor> {
+        options = { ...options };
         options = {
             subscriptions: [],
             ...options,
