@@ -568,6 +568,7 @@ export class Actor implements ActorLike {
         if (from.name) this._name = from.name;
         if (from.tag) this._tag = from.tag;
         if (from.transform) this._transform.copy(from.transform);
+	if (from.materialId) this.materialId = from.materialId;
         if (from.light) {
             if (!this._light)
                 this.enableLight(from.light);
