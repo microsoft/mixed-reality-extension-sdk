@@ -59,6 +59,8 @@ export class RPC {
  */
 export class UserRPC extends RPC {
 
+    public get userId() { return this.user.id; }
+
     constructor(private user: User) {
         super(user.context);
         // this.user.internal.__rpc = this;
