@@ -137,7 +137,7 @@ export class Actor implements ActorLike {
      * @param context The SDK context object.
      * @param options Creation parameters and actor characteristics.
      */
-    public static CreateEmpty(context: Context, options: {
+    public static CreateEmpty(context: Context, options?: {
         actor?: Partial<ActorLike>,
         subscriptions?: SubscriptionType[]
     }): ForwardPromise<Actor> {
