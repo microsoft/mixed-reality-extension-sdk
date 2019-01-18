@@ -61,6 +61,7 @@ export class Material extends Asset implements MaterialLike, Patchable<AssetLike
         }
 
         this._color.copy(def.material.color);
+        // material patching: observe the color for changed values, and write them to a patch
         observe(this._color, 'color', (...path: string[]) => this.materialChanged(path));
     }
 
