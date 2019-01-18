@@ -37,6 +37,7 @@ export class ClientSync extends Protocols.Protocol {
             // These messages are actor creation messages. We want to queue these up because we've already
             // passed the `createActors` phases of the synchronization process, so we'll need to send these
             // later in the `syncQueuedMessages` phase.
+            // TODO: Handle `load-assets` messages in a similiar way.
             this.client.queueMessage(message, promise);
         } else if (!Client.ShouldIgnorePayloadWhileJoining(message.payload.type)) {
             // A message we should queue for delivery in the `syncQueuedMessages` phase of synchronization.
