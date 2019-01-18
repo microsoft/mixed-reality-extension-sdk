@@ -274,8 +274,8 @@ export class Session extends EventEmitter {
 
     /** @private */
     public 'app-preprocess-create-from-gltf' = (
-        payload: Payloads.CreateFromGltf,
-        message: MRESDK.Message<Payloads.CreateFromGltf>) => {
+        payload: Payloads.CreateFromGLTF,
+        message: MRESDK.Message<Payloads.CreateFromGLTF>) => {
         this.createActor(payload, message);
         return payload;
     }

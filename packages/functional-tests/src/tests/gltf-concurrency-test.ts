@@ -16,7 +16,7 @@ export default class GltfConcurrencyTest extends Test {
     }
 
     public async run(): Promise<boolean> {
-        const runnerPromise = MRESDK.Actor.CreateFromGltf(this.app.context, {
+        const runnerPromise = MRESDK.Actor.CreateFromGLTF(this.app.context, {
             // tslint:disable-next-line:max-line-length
             resourceUrl: `https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/CesiumMan/glTF-Binary/CesiumMan.glb`,
             actor: {
@@ -26,7 +26,7 @@ export default class GltfConcurrencyTest extends Test {
             }
         });
 
-        const gearboxPromise = MRESDK.Actor.CreateFromGltf(this.app.context, {
+        const gearboxPromise = MRESDK.Actor.CreateFromGLTF(this.app.context, {
             // tslint:disable-next-line:max-line-length
             resourceUrl: 'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/GearboxAssy/glTF/GearboxAssy.gltf'
         });

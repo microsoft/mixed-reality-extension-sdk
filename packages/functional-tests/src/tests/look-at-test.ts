@@ -24,7 +24,7 @@ export default class LookAtTest extends Test {
     }
 
     public async runLookAtTest(): Promise<boolean> {
-        const tester = await MRESDK.Actor.CreateFromGltf(this.app.context, {
+        const tester = await MRESDK.Actor.CreateFromGLTF(this.app.context, {
             resourceUrl: `${this.baseUrl}/monkey.glb`
         });
         await tester.createAnimation(
