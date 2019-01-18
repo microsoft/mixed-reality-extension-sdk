@@ -38,18 +38,19 @@ export default class App {
      * Registry of functional tests. Add your test here.
      */
     private testFactories: { [key: string]: (user: MRESDK.User) => Test } = {
+        'asset-preload-test': (user: MRESDK.User): Test => new AssetPreloadTest(this, this.baseUrl, user),
+        'clock-sync-test': (): Test => new ClockSyncTest(this, this.baseUrl),
         'gltf-animation-test': (): Test => new GltfAnimationTest(this, this.baseUrl),
+        'gltf-concurrency-test': (): Test => new GltfConcurrencyTest(this, this.baseUrl),
+        'gltf-gen-test': (): Test => new GltfGenTest(this, this.baseUrl),
+        'input-test': (): Test => new InputTest(this, this.baseUrl),
+        'interpolation-test': (): Test => new InterpolationTest(this),
+        'library-test': (): Test => new LibraryTest(this, this.baseUrl),
         'look-at-test': (user: MRESDK.User): Test => new LookAtTest(this, this.baseUrl, user),
+        'primitives-test': (): Test => new PrimitivesTest(this, this.baseUrl),
         'rigid-body-test': (): Test => new RigidBodyTest(this),
         'text-test': (): Test => new TextTest(this),
-        'clock-sync-test': (): Test => new ClockSyncTest(this, this.baseUrl),
-        'library-test': (): Test => new LibraryTest(this, this.baseUrl),
-        'primitives-test': (): Test => new PrimitivesTest(this, this.baseUrl),
-        'input-test': (): Test => new InputTest(this, this.baseUrl),
-        'gltf-gen-test': (): Test => new GltfGenTest(this, this.baseUrl),
         'user-test': (user: MRESDK.User): Test => new UserTest(this, this.baseUrl, user),
-        'asset-preload-test': (user: MRESDK.User): Test => new AssetPreloadTest(this, this.baseUrl, user),
-        'interpolation-test': (): Test => new InterpolationTest(this),
     };
 
     constructor(private _context: MRESDK.Context, private params: MRESDK.ParameterSet, private baseUrl: string) {
