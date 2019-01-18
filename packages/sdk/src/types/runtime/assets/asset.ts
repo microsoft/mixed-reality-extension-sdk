@@ -54,9 +54,9 @@ export interface AssetLike {
 /** The base class for all asset types. */
 export class Asset implements AssetLike {
     // tslint:disable:variable-name
-    protected _id: string;
-    protected _name: string;
-    protected _source: AssetSource;
+    private _id: string;
+    private _name: string;
+    private _source: AssetSource;
     // tslint:enable:variable-name
 
     /** @inheritdoc */
