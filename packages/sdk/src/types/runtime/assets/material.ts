@@ -96,8 +96,8 @@ export class Material extends Asset implements MaterialLike, Patchable<AssetLike
     private materialChanged(path: string[]): void {
         if (this.internal.observing) {
             this.manager.context.internal.incrementGeneration();
-            this.internal.patch = this.internal.patch || {} as AssetLike;
-            readPath(this, this.internal.patch, ...path);
+            this.internal.patch = this.internal.patch || { material: {} } as AssetLike;
+            readPath(this, this.internal.patch.material, ...path);
         }
     }
 }
