@@ -2,6 +2,7 @@
   "extends": "./tsconfig.packages.json",
   "include": [
     "gltf-gen/src/**/*",
+    "altspacevr-extras/src/**/*",
     "sdk/src/**/*",
     "sdk-azure/src/**/*",
     "functional-tests/src/**/*"

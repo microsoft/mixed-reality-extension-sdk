@@ -19,6 +19,9 @@
     },
     {
       "path": "../gltf-gen"
+    },
+    {
+      "path": "../altspacevr-extras"
     }
   ]
 }

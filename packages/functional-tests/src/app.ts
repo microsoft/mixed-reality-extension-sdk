@@ -5,6 +5,7 @@
 
 import * as MRESDK from '@microsoft/mixed-reality-extension-sdk';
 import * as MRERPC from '@microsoft/mixed-reality-extension-sdk/built/rpc';
+import AltspaceVRExtrasTest from './tests/altspacevr-extras-test';
 import AssetPreloadTest from './tests/asset-preload-test';
 import ClockSyncTest from './tests/clock-sync-test';
 import GltfAnimationTest from './tests/gltf-animation-test';
@@ -40,6 +41,7 @@ export default class App {
      */
     private testFactories: { [key: string]: (user: MRESDK.User) => Test } = {
         'asset-preload-test': (user: MRESDK.User): Test => new AssetPreloadTest(this, this.baseUrl, user),
+        'altspacevr-extras-test': (): Test => new AltspaceVRExtrasTest(this, this.baseUrl),
         'clock-sync-test': (): Test => new ClockSyncTest(this, this.baseUrl),
         'gltf-animation-test': (): Test => new GltfAnimationTest(this, this.baseUrl),
         'gltf-concurrency-test': (): Test => new GltfConcurrencyTest(this, this.baseUrl),
@@ -132,7 +134,7 @@ export default class App {
                     });
 
                     const buttonBehavior = button.value.setBehavior(MRESDK.ButtonBehavior);
-                    buttonBehavior.onClick('pressed', (userId: string) => {
+                    buttonBehavior.onClick('released', (userId: string) => {
                         resolve(button.value.name);
                     });
 

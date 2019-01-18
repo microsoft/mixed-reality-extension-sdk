@@ -1,17 +1,20 @@
 {
     "files": [],
-    "references": [
-        {
-            "path": "./packages/sdk"
-        },
-        {
-            "path": "./packages/sdk-azure"
-        },
-        {
-            "path": "./packages/gltf-gen"
-        },
-        {
-            "path": "./packages/functional-tests"
-        }
-    ]
+  "references": [
+    {
+      "path": "./packages/sdk"
+    },
+    {
+      "path": "./packages/sdk-azure"
+    },
+    {
+      "path": "./packages/gltf-gen"
+    },
+    {
+      "path": "./packages/altspacevr-extras"
+    },
+    {
+      "path": "./packages/functional-tests"
+    }
+  ]
 }
