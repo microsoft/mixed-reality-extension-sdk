@@ -68,7 +68,7 @@ export class Asset implements AssetLike {
     /** @inheritdoc */
     public get source() { return this._source; }
 
-    protected constructor(private manager: AssetManager, def: AssetLike) {
+    protected constructor(public manager: AssetManager, def: AssetLike) {
         this._id = def.id;
         this._name = def.name;
         this._source = def.source;
@@ -81,6 +81,15 @@ export class Asset implements AssetLike {
             name: this._name,
             source: this._source
         };
+    }
+
+    /** @hidden */
+    protected copy(from: Partial<AssetLike>): void {
+        // tslint:disable:curly
+        if (from.id) this._id = from.id;
+        if (from.name) this._name = from.name;
+        if (from.source) this._source = from.source;
+        // tslint:enable:curly
     }
 
     /** @hidden */

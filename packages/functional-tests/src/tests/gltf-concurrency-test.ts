@@ -31,7 +31,7 @@ export default class GltfConcurrencyTest extends Test {
             resourceUrl: 'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/GearboxAssy/glTF/GearboxAssy.gltf'
         });
 
-        const bottlePromise = this.app.context.assets.loadGltf('bottle',
+        const bottlePromise = this.app.context.assetManager.loadGltf('bottle',
             // tslint:disable-next-line:max-line-length
             'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/WaterBottle/glTF/WaterBottle.gltf');
 

@@ -65,6 +65,7 @@ export type PayloadType
     | 'update-background-behaviors'
     | 'load-assets'
     | 'assets-loaded'
+    | 'asset-update'
     | 'look-at'
     ;
 

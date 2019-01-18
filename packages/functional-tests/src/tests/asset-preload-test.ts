@@ -38,8 +38,8 @@ export default class AssetPreloadTest extends Test {
 
         label.text.contents = 'Preloading assets';
         const [prefabs, mats] = await Promise.all([
-            this.app.context.assets.loadGltf('monkey', this.baseUrl + '/monkey.glb'),
-            this.app.context.assets.loadGltf('uvgrid', this.generateMaterial())
+            this.app.context.assetManager.loadGltf('monkey', this.baseUrl + '/monkey.glb'),
+            this.app.context.assetManager.loadGltf('uvgrid', this.generateMaterial())
         ]);
         label.text.contents = `Assets preloaded:
 ${prefabs.prefabs.count + mats.prefabs.count} prefabs, ${prefabs.materials.count + mats.materials.count} materials`;

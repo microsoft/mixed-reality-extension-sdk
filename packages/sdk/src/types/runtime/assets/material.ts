@@ -5,6 +5,10 @@
 
 import { Asset, AssetLike, AssetManager } from '.';
 import { Color3, Color4 } from '../../../math';
+import observe from '../../../utils/observe';
+import readPath from '../../../utils/readPath';
+import { InternalAsset } from '../../internal/asset';
+import { Patchable } from '../../patchable';
 
 /**
  * Describes the properties of a Material.
@@ -34,10 +38,14 @@ export enum AlphaMode {
 /**
  * Represents a material on a mesh.
  */
-export class Material extends Asset implements MaterialLike {
+export class Material extends Asset implements MaterialLike, Patchable<AssetLike> {
     // tslint:disable:variable-name
     private _color = Color4.FromColor3(Color3.White(), 1.0);
+    private _internal = new InternalAsset(this);
     // tslint:enable:variable-name
+
+    /** @hidden */
+    public get internal() { return this._internal; }
 
     /** @inheritdoc */
     public get color() { return this._color; }
@@ -53,10 +61,27 @@ export class Material extends Asset implements MaterialLike {
         }
 
         this._color.copy(def.material.color);
+        // material patching: observe the color for changed values, and write them to a patch
+        observe(this._color, 'color', (...path: string[]) => this.materialChanged(path));
+    }
 
-        // materials are immutable for now, so don't let people change
-        // the color, for fear of desync
-        Object.freeze(this._color);
+    public copy(from: Partial<AssetLike>): this {
+        if (!from) {
+            return this;
+        }
+
+        // Pause change detection while we copy the values into the actor.
+        const wasObserving = this.internal.observing;
+        this.internal.observing = false;
+
+        // tslint:disable:curly
+        super.copy(from);
+        if (from.material && from.material.color)
+            this._color.copy(from.material.color);
+        // tslint:enable:curly
+
+        this.internal.observing = wasObserving;
+        return this;
     }
 
     /** @hidden */
@@ -67,5 +92,13 @@ export class Material extends Asset implements MaterialLike {
                 color: this._color.toJSON()
             }
         };
+    }
+
+    private materialChanged(path: string[]): void {
+        if (this.internal.observing) {
+            this.manager.context.internal.incrementGeneration();
+            this.internal.patch = this.internal.patch || { material: {} } as AssetLike;
+            readPath(this, this.internal.patch.material, ...path);
+        }
     }
 }

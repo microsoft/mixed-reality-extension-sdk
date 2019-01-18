@@ -14,6 +14,7 @@ import InputTest from './tests/input-test';
 import InterpolationTest from './tests/interpolation-test';
 import LibraryTest from './tests/library-test';
 import LookAtTest from './tests/look-at-test';
+import MutableAssetTest from './tests/mutable-asset-test';
 import PrimitivesTest from './tests/primitives-test';
 import RigidBodyTest from './tests/rigid-body-test';
 import Test from './tests/test';
@@ -46,6 +47,7 @@ export default class App {
         'input-test': (): Test => new InputTest(this, this.baseUrl),
         'library-test': (): Test => new LibraryTest(this, this.baseUrl),
         'look-at-test': (user: MRESDK.User): Test => new LookAtTest(this, this.baseUrl, user),
+        'mutable-asset-test': (user: MRESDK.User): Test => new MutableAssetTest(this, this.baseUrl, user),
         'primitives-test': (): Test => new PrimitivesTest(this, this.baseUrl),
         'rigid-body-test': (): Test => new RigidBodyTest(this),
         'text-test': (): Test => new TextTest(this),

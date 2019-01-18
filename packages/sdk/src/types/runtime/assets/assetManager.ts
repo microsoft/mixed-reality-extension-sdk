@@ -13,18 +13,20 @@ import { AssetsLoaded, LoadAssets } from '../../network/payloads';
  * and use the assets by ID on actors (e.g. [[Actor.CreateFromPrefab]]).
  */
 export class AssetManager {
-    private assets: { [id: string]: Asset } = {};
-    private groups: { [k: string]: AssetGroup } = {};
+    // tslint:disable:variable-name
+    private _assets: { [id: string]: Asset } = {};
+    private _groups: { [k: string]: AssetGroup } = {};
+    // tslint:enable:variable-name
     private inFlightLoads: { [k: string]: Promise<AssetGroup> } = {};
 
     /** @hidden */
-    public constructor(private context: Context) { }
+    public constructor(public context: Context) { }
 
     /** Fetch a group by name. */
-    public group(name: string) { return this.groups[name]; }
+    public get groups() { return Object.freeze({ ...this._groups }); }
 
     /** Fetch an asset by id. */
-    public byId(id: string) { return this.assets[id]; }
+    public get assets() { return Object.freeze({ ...this._assets }); }
 
     /**
      * @returns A promise that resolves when all pending asset load requests have been
@@ -86,10 +88,10 @@ export class AssetManager {
             def.source = group.source;
             const asset = Asset.Parse(this, def);
             group.add(asset);
-            this.assets[def.id] = asset;
+            this._assets[def.id] = asset;
         }
 
-        this.groups[groupName] = group;
+        this._groups[groupName] = group;
         return group;
     }
 
