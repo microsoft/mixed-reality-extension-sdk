@@ -614,9 +614,10 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 
     private actorChanged = (...path: string[]) => {
         if (this.internal.observing) {
-            this.context.internal.incrementGeneration();
             this.internal.patch = this.internal.patch || {} as ActorLike;
             readPath(this, this.internal.patch, ...path);
+            // Wait until the actor has been created before triggering a state update.
+            this.created().then(() => this.context.internal.incrementGeneration());
         }
     }
 }
