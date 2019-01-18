@@ -7,7 +7,7 @@ import { Asset, AssetLike, AssetManager } from '.';
 import { Color3, Color4 } from '../../../math';
 import observe from '../../../utils/observe';
 import readPath from '../../../utils/readPath';
-import { InternalMaterial } from '../../internal/material';
+import { InternalAsset } from '../../internal/asset';
 import { Patchable } from '../../patchable';
 
 /**
@@ -41,7 +41,7 @@ export enum AlphaMode {
 export class Material extends Asset implements MaterialLike, Patchable<AssetLike> {
     // tslint:disable:variable-name
     private _color = Color4.FromColor3(Color3.White(), 1.0);
-    private _internal = new InternalMaterial(this);
+    private _internal = new InternalAsset(this);
     // tslint:enable:variable-name
 
     /** @hidden */

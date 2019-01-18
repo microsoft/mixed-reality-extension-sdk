@@ -3,22 +3,22 @@
  * Licensed under the MIT License.
  */
 
-import { AssetLike, Material, MaterialLike } from '../..';
+import { Asset, AssetLike } from '../..';
 import { InternalPatchable } from '../patchable';
 
 /**
  * @hidden
  */
-export class InternalMaterial implements InternalPatchable<AssetLike> {
+export class InternalAsset implements InternalPatchable<AssetLike> {
     public observing = true;
     public patch: AssetLike;
 
-    public constructor(public material: Material) { }
+    public constructor(public asset: Asset) { }
 
     public getPatchAndReset(): AssetLike {
         const patch = this.patch;
         if (patch) {
-            patch.id = this.material.id;
+            patch.id = this.asset.id;
             delete this.patch;
         }
         return patch;
