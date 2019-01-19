@@ -39,7 +39,7 @@ import {
     CreateAnimation,
     CreateColliderType,
     CreateEmpty,
-    CreateFromGLTF,
+    CreateFromGltf,
     CreateFromLibrary,
     CreateFromPrefab,
     CreatePrimitive,
@@ -155,7 +155,7 @@ export class InternalContext {
         return this.createActorFromPayload(payload);
     }
 
-    public CreateFromGLTF(options: {
+    public CreateFromGltf(options: {
         resourceUrl: string,
         assetName?: string,
         colliderType?: CreateColliderType,
@@ -175,7 +175,7 @@ export class InternalContext {
         const payload = {
             ...options,
             type: 'create-from-gltf'
-        } as CreateFromGLTF;
+        } as CreateFromGltf;
         return this.createActorFromPayload(payload);
     }
 
