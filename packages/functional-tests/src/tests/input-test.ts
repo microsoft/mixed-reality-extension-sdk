@@ -35,7 +35,8 @@ export default class InputTest extends Test {
                 name: 'label',
                 parentId: tester.value.id,
                 transform: {
-                    position: { x: 0, y: 0.5, z: 0 }
+                    position: { x: 0, y: 0.5, z: 0 },
+                    rotation: MRESDK.Quaternion.FromEulerAngles(0, 180 * MRESDK.DegreesToRadians, 0)
                 },
                 text: {
                     anchor: MRESDK.TextAnchorLocation.MiddleCenter,

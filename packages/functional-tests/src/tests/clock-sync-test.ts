@@ -32,7 +32,8 @@ export default class ClockSyncTest extends Test {
                 name: 'label',
                 parentId: tester.value.id,
                 transform: {
-                    position: { x: 0, y: 2.5, z: -0.5 }
+                    position: { x: 0, y: 2.5, z: -0.5 },
+                    rotation: MRESDK.Quaternion.FromEulerAngles(0, 180 * MRESDK.DegreesToRadians, 0)
                 },
                 text: {
                     contents: "A clock driven by looping animations. Click to exit test",
@@ -96,14 +97,14 @@ export default class ClockSyncTest extends Test {
         // Build animations.
         const yOffset = boxYPosition + lineHeight * 0.5;
         const animations = [
-            this.buildDigitAnimation(meshHundredths.value, 4.25, yOffset, 1 / 100, 10, 10, lineHeight, textScale),
-            this.buildDigitAnimation(meshTenths.value, 3.25, yOffset, 1 / 10, 10, 10, lineHeight, textScale),
-            this.buildDigitAnimation(meshSeconds.value, 1.75, yOffset, 1, 10, 10, lineHeight, textScale),
-            this.buildDigitAnimation(mesh10Seconds.value, 0.75, yOffset, 10, 6, 6, lineHeight, textScale),
-            this.buildDigitAnimation(meshMinutes.value, -0.75, yOffset, 60, 10, 10, lineHeight, textScale),
-            this.buildDigitAnimation(mesh10Minutes.value, -1.75, yOffset, 10 * 60, 6, 6, lineHeight, textScale),
-            this.buildDigitAnimation(meshHours.value, -3.25, yOffset, 60 * 60, 24, 24, lineHeight, textScale),
-            this.buildDigitAnimation(mesh10Hours.value, -4.25, yOffset, 10 * 60 * 60, 3, 2.4, lineHeight, textScale)
+            this.buildDigitAnimation(meshHundredths.value, -4.25, yOffset, 1 / 100, 10, 10, lineHeight, textScale),
+            this.buildDigitAnimation(meshTenths.value, -3.25, yOffset, 1 / 10, 10, 10, lineHeight, textScale),
+            this.buildDigitAnimation(meshSeconds.value, -1.75, yOffset, 1, 10, 10, lineHeight, textScale),
+            this.buildDigitAnimation(mesh10Seconds.value, -0.75, yOffset, 10, 6, 6, lineHeight, textScale),
+            this.buildDigitAnimation(meshMinutes.value, 0.75, yOffset, 60, 10, 10, lineHeight, textScale),
+            this.buildDigitAnimation(mesh10Minutes.value, 1.75, yOffset, 10 * 60, 6, 6, lineHeight, textScale),
+            this.buildDigitAnimation(meshHours.value, 3.25, yOffset, 60 * 60, 24, 24, lineHeight, textScale),
+            this.buildDigitAnimation(mesh10Hours.value, 4.25, yOffset, 10 * 60 * 60, 3, 2.4, lineHeight, textScale)
         ];
 
         // Wait for all actors and animations to instantiate on the host.
@@ -143,6 +144,9 @@ export default class ClockSyncTest extends Test {
             actor: {
                 name,
                 parentId,
+                transform: {
+                    rotation: MRESDK.Quaternion.FromEulerAngles(0, 180 * MRESDK.DegreesToRadians, 0)
+                },
                 text: {
                     contents: digits,
                     anchor: MRESDK.TextAnchorLocation.TopCenter

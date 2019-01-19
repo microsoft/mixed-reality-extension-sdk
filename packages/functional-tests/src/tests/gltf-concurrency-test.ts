@@ -18,12 +18,7 @@ export default class GltfConcurrencyTest extends Test {
     public async run(): Promise<boolean> {
         const runnerPromise = MRESDK.Actor.CreateFromGLTF(this.app.context, {
             // tslint:disable-next-line:max-line-length
-            resourceUrl: `https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/CesiumMan/glTF-Binary/CesiumMan.glb`,
-            actor: {
-                transform: {
-                    // rotation: Math3D.Quaternion.Euler(0, 180, 0)
-                }
-            }
+            resourceUrl: `https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/CesiumMan/glTF-Binary/CesiumMan.glb`
         });
 
         const gearboxPromise = MRESDK.Actor.CreateFromGLTF(this.app.context, {

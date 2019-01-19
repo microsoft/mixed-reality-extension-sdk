@@ -19,7 +19,8 @@ export default class AssetPreloadTest extends Test {
         const label = await MRESDK.Actor.CreateEmpty(this.app.context, {
             actor: {
                 transform: {
-                    position: { x: 0, y: 2, z: 0 }
+                    position: { x: 0, y: 2, z: 0 },
+                    rotation: MRESDK.Quaternion.FromEulerAngles(0, 180 * MRESDK.DegreesToRadians, 0)
                 },
                 text: {
                     contents: 'Initialized',
@@ -28,7 +29,6 @@ export default class AssetPreloadTest extends Test {
                 }
             }
         });
-        label.lookAt(this.user, MRESDK.LookAtMode.TargetXY);
 
         await delay(1000);
 

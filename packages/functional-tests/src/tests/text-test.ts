@@ -154,6 +154,9 @@ export default class TextTest extends Test {
         return MRESDK.Actor.CreateEmpty(this.app.context, {
             actor: {
                 name: text.replace('\n', ' '),
+                transform: {
+                    rotation: MRESDK.Quaternion.FromEulerAngles(0, 180 * MRESDK.DegreesToRadians, 0)
+                },
                 text: {
                     contents: text,
                     anchor: MRESDK.TextAnchorLocation.MiddleCenter

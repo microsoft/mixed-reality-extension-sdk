@@ -33,7 +33,8 @@ export default class LibraryTest extends Test {
                 name: 'label',
                 parentId: tester.value.id,
                 transform: {
-                    position: { x: 0, y: 2, z: 0 }
+                    position: { x: 0, y: 2, z: 0 },
+                    rotation: MRESDK.Quaternion.FromEulerAngles(0, 180 * MRESDK.DegreesToRadians, 0)
                 },
                 text: {
                     anchor: MRESDK.TextAnchorLocation.MiddleCenter,
@@ -54,7 +55,7 @@ export default class LibraryTest extends Test {
                 parentId: tester.value.id,
                 transform: {
                     position: { x: 0, y: 0, z: 0.5 },
-                    scale: { x: 0.1, y: 0.1, z: 0.1}
+                    scale: { x: 0.1, y: 0.1, z: 0.1 }
                 }
             }
         }));
@@ -66,7 +67,7 @@ export default class LibraryTest extends Test {
                 transform: {
                     position: { x: -1, y: 0, z: 0.5 },
                     rotation: MRESDK.Quaternion.RotationAxis(MRESDK.Vector3.Up(), -45.0 * MRESDK.DegreesToRadians),
-                    scale: { x: 0.7, y: 0.7, z: 0.7}
+                    scale: { x: 0.7, y: 0.7, z: 0.7 }
                 }
             }
         }));
@@ -76,7 +77,7 @@ export default class LibraryTest extends Test {
                 name: 'Halloween Kit: Pumpkin Happy',
                 parentId: tester.value.id,
                 transform: {
-                    position: { x: 1, y: 0, z : 0.5 },
+                    position: { x: 1, y: 0, z: 0.5 },
                 }
             }
         }));
@@ -86,8 +87,8 @@ export default class LibraryTest extends Test {
                 name: 'Alien Planet Kit: Island 06',
                 parentId: tester.value.id,
                 transform: {
-                    position: { x: 2, y: 1, z : 0.5 },
-                    scale: { x: 0.1, y: 0.1, z: 0.1}
+                    position: { x: 2, y: 1, z: 0.5 },
+                    scale: { x: 0.1, y: 0.1, z: 0.1 }
                 }
             }
         }));

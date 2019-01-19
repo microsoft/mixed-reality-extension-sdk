@@ -33,7 +33,8 @@ export default class PrimitivesTest extends Test {
                 name: 'label',
                 parentId: tester.value.id,
                 transform: {
-                    position: { x: 0, y: 2, z: -1 }
+                    position: { x: 0, y: 2, z: -1 },
+                    rotation: MRESDK.Quaternion.FromEulerAngles(0, 180 * MRESDK.DegreesToRadians, 0)
                 },
                 text: {
                     contents: "Primitives Test",
