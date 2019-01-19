@@ -2,6 +2,7 @@
     "extends": "../tslint.json",
     "rules": {
         "no-console": false,
-        "variable-name": false
+        "variable-name": false,
+        "deprecation": true
     }
 }

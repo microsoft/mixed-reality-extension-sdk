@@ -50,7 +50,7 @@ export default class InputTest extends Test {
         text.text.contents = "Please Hover";
 
         // Load a glTF model
-        const modelPromise = Actor.CreateFromGLTF(this.app.context, {
+        const modelPromise = Actor.CreateFromGltf(this.app.context, {
             // at the given URL
             resourceUrl: `${this.baseUrl}/monkey.glb`,
             // and spawn box colliders around the meshes.

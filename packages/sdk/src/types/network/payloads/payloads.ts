@@ -188,7 +188,7 @@ export type CreateFromLibrary = CreateActorCommon & {
  * App to engine. Request for engine to load a game object from a glTF file.
  * Response is an ObjectSpawned payload.
  */
-export type CreateFromGLTF = CreateActorCommon & {
+export type CreateFromGltf = CreateActorCommon & {
     type: 'create-from-gltf';
     resourceUrl: string;
     assetName: string;
