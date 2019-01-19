@@ -33,5 +33,4 @@ export type AssetsLoaded = Payload & {
 export type CreateFromPrefab = CreateActorCommon & {
     type: 'create-from-prefab';
     prefabId: string;
-    enableColliders: boolean;
 };

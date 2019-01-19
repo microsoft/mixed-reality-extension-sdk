@@ -215,13 +215,11 @@ export class Actor implements ActorLike {
      * @param context The SDK context object.
      * @param options.prefabId The ID of the prefab asset.
      * @param options.actor The initial state of the root actor.
-     * @param options.enableColliders Whether or not to enable colliders on this object. The prefab must have been
      * given a collider type when loaded @see AssetManager.loadGltf.
      */
     public static CreateFromPrefab(context: Context, options: {
         prefabId: string,
         actor?: Partial<ActorLike>,
-        enableColliders?: boolean,
         subscriptions?: SubscriptionType[]
     }): ForwardPromise<Actor> {
         return context.internal.CreateFromPrefab(options);
