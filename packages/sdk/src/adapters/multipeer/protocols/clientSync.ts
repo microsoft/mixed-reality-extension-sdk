@@ -15,7 +15,8 @@ import { ExportedPromise } from '../../../utils/exportedPromise';
  */
 export class ClientSync extends Protocols.Protocol {
 
-    private actorCreateMessagesSent: boolean;
+    private createActorsInvoked = false;
+    private syncAssetsInvoked = false;
 
     /** @override */
     public get name(): string { return `${this.constructor.name} client ${this.client.id}`; }
@@ -33,9 +34,14 @@ export class ClientSync extends Protocols.Protocol {
             message.payload.type === 'interpolate-actor') {
             // These messages are part of the synchronization process and so we always let them through.
             super.sendMessage(message, promise);
-        } else if (this.actorCreateMessagesSent && message.payload.type.startsWith('create-')) {
+        } else if (this.syncAssetsInvoked && message.payload.type === 'load-assets') {
+            // These messages are load-asset messages. We want to queue these up because we've already
+            // passed the `syncAssets` phase of the synchronization process, so we'll need to send these
+            // later in the `syncQueuedMessages` phase.
+            this.client.queueMessage(message, promise);
+        } else if (this.createActorsInvoked && message.payload.type.startsWith('create-')) {
             // These messages are actor creation messages. We want to queue these up because we've already
-            // passed the `createActors` phases of the synchronization process, so we'll need to send these
+            // passed the `createActors` phase of the synchronization process, so we'll need to send these
             // later in the `syncQueuedMessages` phase.
             this.client.queueMessage(message, promise);
         } else if (!Client.ShouldIgnorePayloadWhileJoining(message.payload.type)) {
@@ -68,6 +74,7 @@ export class ClientSync extends Protocols.Protocol {
     }
 
     private async syncAssets(): Promise<void> {
+        this.syncAssetsInvoked = true;
         await Promise.all(
             this.client.session.assetSet.map(
                 msg => this.sendAndExpectResponse(msg)));
@@ -88,7 +95,7 @@ export class ClientSync extends Protocols.Protocol {
         }
         // After sending the create* messages we must let future messages through when they're sent, even while this
         // client is still in the process of joining.
-        this.actorCreateMessagesSent = true;
+        this.createActorsInvoked = true;
         // Wait for all actors to be created
         return Promise.all(promises.filter(promise => !!promise));
     }

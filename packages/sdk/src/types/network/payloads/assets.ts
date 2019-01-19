@@ -15,6 +15,7 @@ export type CreateColliderType = ColliderType | 'none';
 export type LoadAssets = Payload & {
     type: 'load-assets';
     source: AssetSource;
+    colliderType: CreateColliderType;
 };
 
 /**

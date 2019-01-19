@@ -134,7 +134,7 @@ export class InternalContext {
         this.context.emitter.emit('started');
     }
 
-    public CreateEmpty(options: {
+    public CreateEmpty(options?: {
         actor?: Partial<ActorLike>,
         subscriptions?: SubscriptionType[]
     }): ForwardPromise<Actor> {

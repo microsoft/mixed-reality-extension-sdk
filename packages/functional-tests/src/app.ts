@@ -45,6 +45,7 @@ export default class App {
         'gltf-concurrency-test': (): Test => new GltfConcurrencyTest(this, this.baseUrl),
         'gltf-gen-test': (): Test => new GltfGenTest(this, this.baseUrl),
         'input-test': (): Test => new InputTest(this, this.baseUrl),
+        'interpolation-test': (): Test => new InterpolationTest(this),
         'library-test': (): Test => new LibraryTest(this, this.baseUrl),
         'look-at-test': (user: MRESDK.User): Test => new LookAtTest(this, this.baseUrl, user),
         'mutable-asset-test': (user: MRESDK.User): Test => new MutableAssetTest(this, this.baseUrl, user),
@@ -52,7 +53,6 @@ export default class App {
         'rigid-body-test': (): Test => new RigidBodyTest(this),
         'text-test': (): Test => new TextTest(this),
         'user-test': (user: MRESDK.User): Test => new UserTest(this, this.baseUrl, user),
-        'interpolation-test': (): Test => new InterpolationTest(this),
     };
 
     constructor(private _context: MRESDK.Context, private params: MRESDK.ParameterSet, private baseUrl: string) {

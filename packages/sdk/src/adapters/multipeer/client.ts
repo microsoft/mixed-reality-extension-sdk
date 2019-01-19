@@ -159,6 +159,6 @@ export class Client extends EventEmitter {
     public static ShouldIgnorePayloadWhileJoining(type: string): boolean {
         // Ignore "create" payloads while joining, since all created things will be synchronized
         // from the ClientSync protocol.
-        return type.startsWith('create-');
+        return type.startsWith('create-') || type === 'load-assets';
     }
 }
