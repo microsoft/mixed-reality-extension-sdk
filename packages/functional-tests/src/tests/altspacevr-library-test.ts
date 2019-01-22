@@ -10,7 +10,7 @@ import delay from '../utils/delay';
 import destroyActors from '../utils/destroyActors';
 import Test from './test';
 
-export default class LibraryTest extends Test {
+export default class AltspaceVRLibraryTest extends Test {
 
     constructor(app: App, private baseUrl: string) {
         super(app);
@@ -19,12 +19,12 @@ export default class LibraryTest extends Test {
     public async run(): Promise<boolean> {
         let success = true;
 
-        success = success && await this.runLibraryTest();
+        success = success && await this.runAltspaceVRLibraryTest();
 
         return success;
     }
 
-    public async runLibraryTest(): Promise<boolean> {
+    public async runAltspaceVRLibraryTest(): Promise<boolean> {
         // Make a root object.
         const tester = MRESDK.Actor.CreateEmpty(this.app.context, {});
 
@@ -88,6 +88,16 @@ export default class LibraryTest extends Test {
                 transform: {
                     position: { x: 2, y: 1, z : 0.5 },
                     scale: { x: 0.1, y: 0.1, z: 0.1}
+                }
+            }
+        }));
+        libraryActors.push(MRESDK.Actor.CreateFromLibrary(this.app.context, {
+            resourceId: "Teleporter:613940881048732244",
+            actor: {
+                name: 'Teleporter to Campfire',
+                parentId: tester.value.id,
+                transform: {
+                    position: { x: 3, y: 0, z : 0 }
                 }
             }
         }));

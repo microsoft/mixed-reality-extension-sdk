@@ -5,6 +5,8 @@
 
 import * as MRESDK from '@microsoft/mixed-reality-extension-sdk';
 import * as MRERPC from '@microsoft/mixed-reality-extension-sdk/built/rpc';
+import AltspaceVRLibraryTest from './tests/altspacevr-library-test';
+import AltspaceVRVideoTest from './tests/altspacevr-video-test';
 import AssetPreloadTest from './tests/asset-preload-test';
 import ClockSyncTest from './tests/clock-sync-test';
 import GltfAnimationTest from './tests/gltf-animation-test';
@@ -12,7 +14,6 @@ import GltfConcurrencyTest from './tests/gltf-concurrency-test';
 import GltfGenTest from './tests/gltf-gen-test';
 import InputTest from './tests/input-test';
 import InterpolationTest from './tests/interpolation-test';
-import LibraryTest from './tests/library-test';
 import LookAtTest from './tests/look-at-test';
 import MutableAssetTest from './tests/mutable-asset-test';
 import PrimitivesTest from './tests/primitives-test';
@@ -39,6 +40,8 @@ export default class App {
      * Registry of functional tests. Add your test here.
      */
     private testFactories: { [key: string]: (user: MRESDK.User) => Test } = {
+        'altspacevr-library-test': (): Test => new AltspaceVRLibraryTest(this, this.baseUrl),
+        'altspacevr-video-test': (): Test => new AltspaceVRVideoTest(this, this.baseUrl),
         'asset-preload-test': (user: MRESDK.User): Test => new AssetPreloadTest(this, this.baseUrl, user),
         'clock-sync-test': (): Test => new ClockSyncTest(this, this.baseUrl),
         'gltf-animation-test': (): Test => new GltfAnimationTest(this, this.baseUrl),
@@ -46,7 +49,6 @@ export default class App {
         'gltf-gen-test': (): Test => new GltfGenTest(this, this.baseUrl),
         'input-test': (): Test => new InputTest(this, this.baseUrl),
         'interpolation-test': (): Test => new InterpolationTest(this),
-        'library-test': (): Test => new LibraryTest(this, this.baseUrl),
         'look-at-test': (user: MRESDK.User): Test => new LookAtTest(this, this.baseUrl, user),
         'mutable-asset-test': (user: MRESDK.User): Test => new MutableAssetTest(this, this.baseUrl, user),
         'primitives-test': (): Test => new PrimitivesTest(this, this.baseUrl),
@@ -132,7 +134,7 @@ export default class App {
                     });
 
                     const buttonBehavior = button.value.setBehavior(MRESDK.ButtonBehavior);
-                    buttonBehavior.onClick('pressed', (userId: string) => {
+                    buttonBehavior.onClick('released', (userId: string) => {
                         resolve(button.value.name);
                     });
 
