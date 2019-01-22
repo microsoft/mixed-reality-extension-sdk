@@ -90,12 +90,7 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="materiallike.html#alphacutoff" class="tsd-kind-icon">alpha<wbr>Cutoff</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="materiallike.html#alphamode" class="tsd-kind-icon">alpha<wbr>Mode</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="materiallike.html#color" class="tsd-kind-icon">color</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="materiallike.html#metallic" class="tsd-kind-icon">metallic</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="materiallike.html#roughness" class="tsd-kind-icon">roughness</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="materiallike.html#textureid" class="tsd-kind-icon">texture<wbr>Id</a></li>
 							</ul>
 						</section>
 					</div>
@@ -104,94 +99,17 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="alphacutoff" class="tsd-anchor"></a>
-					<h3>alpha<wbr>Cutoff</h3>
-					<div class="tsd-signature tsd-kind-icon">alpha<wbr>Cutoff<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/98c91cc/packages/sdk/src/types/runtime/assets/material.ts#L30">types/runtime/assets/material.ts:30</a></li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>If in Mask mode, the alpha value cutoff for visibility.</p>
-						</div>
-					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="alphamode" class="tsd-anchor"></a>
-					<h3>alpha<wbr>Mode</h3>
-					<div class="tsd-signature tsd-kind-icon">alpha<wbr>Mode<span class="tsd-signature-symbol">:</span> <a href="../enums/alphamode.html" class="tsd-signature-type">AlphaMode</a></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/98c91cc/packages/sdk/src/types/runtime/assets/material.ts#L28">types/runtime/assets/material.ts:28</a></li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>How to interpret the alpha channels of this material&#39;s color and texture.</p>
-						</div>
-					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="color" class="tsd-anchor"></a>
 					<h3>color</h3>
-					<div class="tsd-signature tsd-kind-icon">color<span class="tsd-signature-symbol">:</span> <a href="../classes/color4.html" class="tsd-signature-type">Color4</a></div>
+					<div class="tsd-signature tsd-kind-icon">color<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="../classes/color4.html" class="tsd-signature-type">Color4</a><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/98c91cc/packages/sdk/src/types/runtime/assets/material.ts#L14">types/runtime/assets/material.ts:14</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/1113416/packages/sdk/src/types/runtime/assets/material.ts#L14">types/runtime/assets/material.ts:14</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
 							<p>The base color of this material.</p>
-						</div>
-					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="metallic" class="tsd-anchor"></a>
-					<h3>metallic</h3>
-					<div class="tsd-signature tsd-kind-icon">metallic<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/98c91cc/packages/sdk/src/types/runtime/assets/material.ts#L21">types/runtime/assets/material.ts:21</a></li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>How metallic this material is.
-							Metallic objects reflect light more strongly than non-metallic objects.</p>
-						</div>
-					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="roughness" class="tsd-anchor"></a>
-					<h3>roughness</h3>
-					<div class="tsd-signature tsd-kind-icon">roughness<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/98c91cc/packages/sdk/src/types/runtime/assets/material.ts#L26">types/runtime/assets/material.ts:26</a></li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>How rough this material is.
-							Rough objects reflect light more diffusely than smooth ones.</p>
-						</div>
-					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="textureid" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> texture<wbr>Id</h3>
-					<div class="tsd-signature tsd-kind-icon">texture<wbr>Id<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/98c91cc/packages/sdk/src/types/runtime/assets/material.ts#L16">types/runtime/assets/material.ts:16</a></li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>The texture ID assigned to this material, if any.</p>
 						</div>
 					</div>
 				</section>
@@ -213,22 +131,7 @@
 						<a href="materiallike.html" class="tsd-kind-icon">Material<wbr>Like</a>
 						<ul>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="materiallike.html#alphacutoff" class="tsd-kind-icon">alpha<wbr>Cutoff</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="materiallike.html#alphamode" class="tsd-kind-icon">alpha<wbr>Mode</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
 								<a href="materiallike.html#color" class="tsd-kind-icon">color</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="materiallike.html#metallic" class="tsd-kind-icon">metallic</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="materiallike.html#roughness" class="tsd-kind-icon">roughness</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="materiallike.html#textureid" class="tsd-kind-icon">texture<wbr>Id</a>
 							</li>
 						</ul>
 					</li>
