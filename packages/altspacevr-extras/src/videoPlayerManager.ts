@@ -13,7 +13,7 @@ import {
     UserRPC
 } from '@microsoft/mixed-reality-extension-sdk/built/rpc';
 
-type Video = { URL: string; basisTime: number };
+type Video = { url: string; basisTime: number };
 type VideoList = { [actorId: string]: Video };
 
 /**
@@ -22,16 +22,16 @@ type VideoList = { [actorId: string]: Video };
 
 export class VideoPlayerManager {
     private _RPC: ContextRPC;
-    private userCount = 0;
+    private hasAnyUserJoined = false;
     private videos: VideoList = {};
 
-    constructor(private context: Context, initialUserCount?: number) {
-        if (initialUserCount !== undefined) {
-            this.userCount = initialUserCount;
+    constructor(private context: Context) {
+        if (context.users.length > 0) {
+            this.hasAnyUserJoined = true;
         }
+
         this._RPC = new ContextRPC(context);
         this.context.onUserJoined(user => this.userJoined(user));
-        this.context.onUserLeft(user => this.userLeft(user));
     }
 
     private userJoined(user: User) {
@@ -42,31 +42,27 @@ export class VideoPlayerManager {
                     userRPC.emit('VideoPlay',
                         {
                             parentId: actorID,
-                            URL: this.videos[actorID].URL,
+                            URL: this.videos[actorID].url,
                             startTime: this.videos[actorID].basisTime + Date.now() / 1000.0
                         });
                 }
             }
         }
-        this.userCount++;
+        this.hasAnyUserJoined = true;
     }
 
-    private userLeft(user: User) {
-        this.userCount--;
-    }
-
-    public Play(actorID: string, URL: string, startTime: number) {
-        if (this.videos[actorID] === undefined || this.videos[actorID].URL !== URL) {
-            this.videos[actorID] = { URL, basisTime: startTime - Date.now() / 1000.0 };
-            if (this.userCount > 0) {
-                this._RPC.emit('VideoPlay', { parentId: actorID, URL, startTime });
+    public play(actorID: string, url: string, startTime: number) {
+        if (this.videos[actorID] === undefined || this.videos[actorID].url !== url) {
+            this.videos[actorID] = { url, basisTime: startTime - Date.now() / 1000.0 };
+            if (this.hasAnyUserJoined) {
+                this._RPC.emit('VideoPlay', { parentId: actorID, URL: url, startTime });
             }
         }
     }
 
-    public Stop(actorID: string) {
+    public stop(actorID: string) {
         if (this.videos[actorID] !== undefined) {
-            if (this.userCount > 0) {
+            if (this.hasAnyUserJoined) {
                 this._RPC.emit('VideoPlay', { parentId: actorID, URL: "", startTime: 0.0 });
             }
             delete this.videos[actorID];

@@ -4,7 +4,6 @@
  */
 
 import * as MRESDK from '@microsoft/mixed-reality-extension-sdk';
-import { Actor } from '@microsoft/mixed-reality-extension-sdk';
 import App from '../app';
 import delay from '../utils/delay';
 import destroyActors from '../utils/destroyActors';
@@ -14,26 +13,26 @@ import {
     VideoPlayerManager
 } from '@microsoft/mixed-reality-extension-altspacevr-extras';
 
-export default class AltspaceVRExtrasTest extends Test {
+export default class AltspaceVRVideoTest extends Test {
     private videoPlayerManager: VideoPlayerManager;
 
     constructor(app: App, private baseUrl: string) {
         super(app);
-        this.videoPlayerManager = new VideoPlayerManager(app.context, Object.keys(app.connectedUsers).length);
+        this.videoPlayerManager = new VideoPlayerManager(app.context);
     }
 
     public async run(): Promise<boolean> {
         let success = true;
-        success = success && await this.runAltspaceVRExtrasTest();
+        success = success && await this.runAltspaceVRVideoTest();
         return success;
     }
     private _state = 0;
 
-    public async runAltspaceVRExtrasTest(): Promise<boolean> {
+    public async runAltspaceVRVideoTest(): Promise<boolean> {
         // Make a root object.
         const tester = MRESDK.Actor.CreateEmpty(this.app.context, {});
 
-        const textPromise = Actor.CreateEmpty(this.app.context, {
+        const textPromise = MRESDK.Actor.CreateEmpty(this.app.context, {
             actor: {
                 name: 'label',
                 parentId: tester.value.id,
@@ -51,7 +50,7 @@ export default class AltspaceVRExtrasTest extends Test {
         const text = textPromise.value;
         text.text.contents = "Playing Movie!";
 
-        const videoPromise = Actor.CreateEmpty(this.app.context, {
+        const videoPromise = MRESDK.Actor.CreateEmpty(this.app.context, {
             actor: {
                 parentId: tester.value.id,
                 name: 'label',
@@ -63,7 +62,7 @@ export default class AltspaceVRExtrasTest extends Test {
         });
         await videoPromise;
 
-        this.videoPlayerManager.Play(
+        this.videoPlayerManager.play(
             videoPromise.value.id,
             'https://www.youtube.com/watch?v=z1YNh9BQVRg',
             0.0);
@@ -92,14 +91,14 @@ export default class AltspaceVRExtrasTest extends Test {
                 this._state++;
                 if (this._state === 1) {
                     text.text.contents = "Switched Movie!";
-                    this.videoPlayerManager.Play(
+                    this.videoPlayerManager.play(
                         videoPromise.value.id,
                         'https://www.youtube.com/watch?v=UowkIRSDHfs',
                         0.0);
                 }
                 if (this._state === 2) {
                     text.text.contents = "Stopped Movie!";
-                    this.videoPlayerManager.Stop(videoPromise.value.id);
+                    this.videoPlayerManager.stop(videoPromise.value.id);
                 }
                 if (this._state === 3) {
                     resolve();
