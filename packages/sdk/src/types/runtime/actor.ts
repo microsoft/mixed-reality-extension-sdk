@@ -25,6 +25,7 @@ import {
     PrimitiveDefinition,
     SetAnimationStateOptions
 } from '../..';
+import { log } from '../../log';
 import BufferedEventEmitter from '../../utils/bufferedEventEmitter';
 import observe from '../../utils/observe';
 import readPath from '../../utils/readPath';
@@ -639,7 +640,9 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
             this.internal.patch = this.internal.patch || {} as ActorLike;
             readPath(this, this.internal.patch, ...path);
             // Wait until the actor has been created before triggering a state update.
-            this.created().then(() => this.context.internal.incrementGeneration());
+            this.created()
+                .then(() => this.context.internal.incrementGeneration())
+                .catch(reason => log.error('app', reason));
         }
     }
 }
