@@ -25,6 +25,7 @@ import {
     PrimitiveDefinition,
     SetAnimationStateOptions
 } from '../..';
+import { log } from '../../log';
 import BufferedEventEmitter from '../../utils/bufferedEventEmitter';
 import observe from '../../utils/observe';
 import readPath from '../../utils/readPath';
@@ -165,6 +166,20 @@ export class Actor implements ActorLike {
      * @param context The SDK context object.
      * @param options Creation parameters and actor characteristics.
      */
+    public static CreateFromGltf(context: Context, options: {
+        resourceUrl: string,
+        assetName?: string,
+        colliderType?: CreateColliderType,
+        actor?: Partial<ActorLike>,
+        subscriptions?: SubscriptionType[]
+    }): ForwardPromise<Actor> {
+        return context.internal.CreateFromGltf(options);
+    }
+
+    /**
+     * @deprecated
+     * Use CreateFromGltf instead.
+     */
     public static CreateFromGLTF(context: Context, options: {
         resourceUrl: string,
         assetName?: string,
@@ -172,7 +187,7 @@ export class Actor implements ActorLike {
         actor?: Partial<ActorLike>,
         subscriptions?: SubscriptionType[]
     }): ForwardPromise<Actor> {
-        return context.internal.CreateFromGLTF(options);
+        return context.internal.CreateFromGltf(options);
     }
 
     /**
@@ -613,9 +628,12 @@ export class Actor implements ActorLike {
 
     private actorChanged = (...path: string[]) => {
         if (this.internal.observing) {
-            this.context.internal.incrementGeneration();
             this.internal.patch = this.internal.patch || {} as ActorLike;
             readPath(this, this.internal.patch, ...path);
+            // Wait until the actor has been created before triggering a state update.
+            this.created()
+                .then(() => this.context.internal.incrementGeneration())
+                .catch(reason => log.error('app', reason));
         }
     }
 }

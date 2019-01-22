@@ -16,6 +16,9 @@
   "references": [
     {
       "path": "../sdk"
+    },
+    {
+      "path": "../gltf-gen"
     }
   ]
 }
