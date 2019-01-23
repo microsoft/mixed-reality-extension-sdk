@@ -78,6 +78,7 @@
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="animationwrapmode.html#loop" class="tsd-kind-icon">Loop</a></li>
 								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="animationwrapmode.html#once" class="tsd-kind-icon">Once</a></li>
+								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="animationwrapmode.html#pingpong" class="tsd-kind-icon">Ping<wbr>Pong</a></li>
 							</ul>
 						</section>
 					</div>
@@ -91,7 +92,7 @@
 					<div class="tsd-signature tsd-kind-icon">Loop<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> =&nbsp;&quot;loop&quot;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/98c91cc/packages/sdk/src/animation/animationWrapMode.ts#L18">animation/animationWrapMode.ts:18</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/1113416/packages/sdk/src/animation/animationWrapMode.ts#L20">animation/animationWrapMode.ts:20</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -106,12 +107,31 @@
 					<div class="tsd-signature tsd-kind-icon">Once<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> =&nbsp;&quot;once&quot;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/98c91cc/packages/sdk/src/animation/animationWrapMode.ts#L13">animation/animationWrapMode.ts:13</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/1113416/packages/sdk/src/animation/animationWrapMode.ts#L15">animation/animationWrapMode.ts:15</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>Stop the animation once it reaches then end.</p>
+							<p>When the animation reaches the end, perform these actions:</p>
+							<ul>
+								<li>Disable the animation.</li>
+								<li>Reset the animation time to zero.</li>
+							</ul>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum">
+					<a name="pingpong" class="tsd-anchor"></a>
+					<h3>Ping<wbr>Pong</h3>
+					<div class="tsd-signature tsd-kind-icon">Ping<wbr>Pong<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> =&nbsp;&quot;ping-pong&quot;</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/1113416/packages/sdk/src/animation/animationWrapMode.ts#L25">animation/animationWrapMode.ts:25</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>At the end of the animation, run the animation backward to the beginning, and vice versa.</p>
 						</div>
 					</div>
 				</section>
@@ -137,6 +157,9 @@
 							</li>
 							<li class=" tsd-kind-enum-member tsd-parent-kind-enum">
 								<a href="animationwrapmode.html#once" class="tsd-kind-icon">Once</a>
+							</li>
+							<li class=" tsd-kind-enum-member tsd-parent-kind-enum">
+								<a href="animationwrapmode.html#pingpong" class="tsd-kind-icon">Ping<wbr>Pong</a>
 							</li>
 						</ul>
 					</li>

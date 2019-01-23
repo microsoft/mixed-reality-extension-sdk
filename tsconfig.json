@@ -5,9 +5,6 @@
       "path": "./packages/sdk"
     },
     {
-      "path": "./packages/sdk-azure"
-    },
-    {
       "path": "./packages/gltf-gen"
     },
     {

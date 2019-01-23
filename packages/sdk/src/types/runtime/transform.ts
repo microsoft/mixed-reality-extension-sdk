@@ -19,11 +19,11 @@ export class Transform implements TransformLike {
     // tslint:enable:variable-name
 
     public get position() { return this._position; }
-    public set position(value: Partial<Vector3>) { this._position.copy(value); }
+    public set position(value: Vector3) { this._position.copy(value); }
     public get rotation() { return this._rotation; }
-    public set rotation(value: Partial<Quaternion>) { this._rotation.copy(value); }
+    public set rotation(value: Quaternion) { this._rotation.copy(value); }
     public get scale() { return this._scale; }
-    public set scale(value: Partial<Vector3>) { this._scale.copy(value); }
+    public set scale(value: Vector3) { this._scale.copy(value); }
 
     /**
      * PUBLIC METHODS
@@ -37,9 +37,9 @@ export class Transform implements TransformLike {
 
     public copy(from: Partial<TransformLike>): this {
         if (!from) return this;
-        if (from.position !== undefined) this.position = from.position;
-        if (from.rotation !== undefined) this.rotation = from.rotation;
-        if (from.scale !== undefined) this.scale = from.scale;
+        if (from.position !== undefined) this.position.copy(from.position);
+        if (from.rotation !== undefined) this.rotation.copy(from.rotation);
+        if (from.scale !== undefined) this.scale.copy(from.scale);
         return this;
     }
 
