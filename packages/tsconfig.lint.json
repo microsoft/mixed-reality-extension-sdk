@@ -3,7 +3,6 @@
   "include": [
     "gltf-gen/src/**/*",
     "sdk/src/**/*",
-    "sdk-azure/src/**/*",
     "functional-tests/src/**/*"
   ]
 }
