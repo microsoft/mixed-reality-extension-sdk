@@ -45,9 +45,9 @@ With this structure, I'd expect there to mostly be 1 or 2 active release version
 1. Merge sdk/green into sdk/red
 2. Merge samples/green into samples/red
 3. Make sure protocol version is incremented in red branches if needed:
-  a. MREUnityRuntimeLib\Constants.cs: ProtocolVersion
-  b. packages\sdk\src\utils\verifyClient.ts: CurrentProtocolVersion
-  c. **TODO: We should change to have both current and min protocol versions. Unity rejects if MRE currentprotocolversion is higher than unity.Current or older than unity.min, and MRE rejects only if Unity.current is older than min (because newer clients are compatible with  older MREs)**
+   1. MREUnityRuntimeLib\Constants.cs: ProtocolVersion
+   2. packages\sdk\src\utils\verifyClient.ts: CurrentProtocolVersion
+   3. **TODO: We should change to have both current and min protocol versions. Unity rejects if MRE currentprotocolversion is higher than unity.Current or older than unity.min, and MRE rejects only if Unity.current is older than min (because newer clients are compatible with  older MREs)**
 4. Test pass* for red branches
 5. Create new unity/sdk/sample branches named v0.[new_minor].n, matching the red (NOTE: if there was already a new SDK release created, but it wasn't "shipped", we can stomp that - i.e. if v0.[new_minor-1].n was never used in any host app, we can just reset hard, instead of creating v0.[new_minor].n)
 6. Build Unity DLLs* from unity/v0.[new_minor].n
@@ -61,11 +61,11 @@ With this structure, I'd expect there to mostly be 1 or 2 active release version
    1. Publish NPM package* from v0.[ target].n tagged @latest 
    2. Update Master branches* for sdk/samples
 5. If target is not master version
-   a. Publish NPM package* from v0.[ target].n tagged @next
+   1. Publish NPM package* from v0.[ target].n tagged @next
 6. If branches for (target +1) exists
-   a. Merge sdk/v0.[ target].n into sdk/v0.[ target +1].n 
-   b. Merge samples/v0.[ target].n into samples/v0.[ target +1].n 
-   c. Repeat steps 3-6 with target = target +1
+   1. Merge sdk/v0.[ target].n into sdk/v0.[ target +1].n 
+   2. Merge samples/v0.[ target].n into samples/v0.[ target +1].n 
+   3. Repeat steps 3-6 with target = target +1
 7. Merge sdk/green into sdk/red
 8. Merge samples/green into samples/red
 9. Test pass* for red branches
@@ -74,18 +74,18 @@ With this structure, I'd expect there to mostly be 1 or 2 active release version
 1. Develop hotfix* targeting the unity/v0.[target].n branch. 
 2. Build Unity DLLs* from unity/r0.[target].n
 3. If target is current master version
-  a. Update master branches* for Unity
+   1. Update master branches* for Unity
 4. If branches for (targetversion+1) exists
-  a. Cherry pick hotfix from unity/r0.[target].n to unity/r0.[targetversion+1].n, 
-  b. Repeat steps 2-3 with target=target+1
+   1. Cherry pick hotfix from unity/r0.[target].n to unity/r0.[targetversion+1].n, 
+   2. Repeat steps 2-3 with target=target+1
 5. Merge cherry pick hotfix to unity/red
 6. Test pass* for red branches
 
 ### [Black] When we update the minimum supported version (i.e. just after Altspace releases)
 
 1. Re-tag the latest NPM package from sdk/v0.[new_minor].n with @latest instead of @next
-  a. npm dist-tag add <pkg> @latest
-  b. npm dist-tag rm <pkg> @next
+   1. npm dist-tag add <pkg> @latest
+   2. npm dist-tag rm <pkg> @next
 2. Update Master Branches* for all repositories
 3. Merge sdk/v0.[new_minor].n to sdk/green
 4. Merge samples/v0.[new_minor].n to samples/green
@@ -109,13 +109,13 @@ With this structure, I'd expect there to mostly be 1 or 2 active release version
 1. Main purpose of test pass is to look for regressions – not if new features work properly.
 2. **<Is this thorough enough?>**
 3. Run all functional tests.
-  a. Test localhost deploy functional tests
-    i. Run functional test scene in unity test bed
-    ii. using the functional test menu in synchronization scene in testbed. Go in and out of each test twice. Keep an eye on the synchronized instance and make sure both work
+   1. Test localhost deploy functional tests
+      1. Run functional test scene in unity test bed
+      2. using the functional test menu in synchronization scene in testbed. Go in and out of each test twice. Keep an eye on the synchronized instance and make sure both work
 4. Deploy functional test temporarily to openode/Heroku/azure/ngrok and test 
 5. Verify functional tests runs on Android.
 6. Run all samples
-  a. **TODO: insert link to instructions for running with local NPM package instead of public**
+   1. **TODO: insert link to instructions for running with local NPM package instead of public**
 7. If problems are found, fix and restart test pass
 
 ### Publish NPM Packages
@@ -126,17 +126,17 @@ With this structure, I'd expect there to mostly be 1 or 2 active release version
 5. npm install
 6. npm run build
 7. lerna publish –dist-tag <either next or latest>
-  a. when it asks for version number, use 0.[minor].[patch], where minor comes from branch, and patch version is 1+the last published NPM package for that minor version (to find last published version see https://www.npmjs.com/package/@microsoft/mixed-reality-extension-sdk?activeTab=versions)
+   1. when it asks for version number, use 0.[minor].[patch], where minor comes from branch, and patch version is 1+the last published NPM package for that minor version (to find last published version see https://www.npmjs.com/package/@microsoft/mixed-reality-extension-sdk?activeTab=versions)
 8. For each updated package.json version number, notepad-update the version number in every corresponding package-lock.json in both sdk and samples repo. Lerna doesn’t do this (but should).
 9. Git commit package.json and package-lock.json changes to sdk\v1.[minor].n
 10. npm run build-docs (to regenerate documentation)
 11. commit documentation changes to sdk\v1.[minor].n
 12. in samples\v1.[minor].n, for each of the samples update the patch version:
-  a. npm update @microsoft/mixed-reality-extension-sdk@0.[minor].[patch]
-  b. npm install
-  c. npm run build
-  d. verify it loads
-  e. git commit package.json and package-lock.json changes to samples\v1.[minor].n
+    1. npm update @microsoft/mixed-reality-extension-sdk@0.[minor].[patch]
+    2. npm install
+    3. npm run build
+    4. verify it loads
+    5. git commit package.json and package-lock.json changes to samples\v1.[minor].n
 
 ### Update Master Branches
 1. Publish docs from that branch to ??? github pages
@@ -154,35 +154,35 @@ With this structure, I'd expect there to mostly be 1 or 2 active release version
 2. **go to https://microsoft.visualstudio.com/Analog/_build?definitionId=31240 and find build matching the commit ID**
 3. **Permanently store it with version number at?????**
 4. If minor version matches altspaceVR dev or RC branch’s current minor version, or if update is desired then updating AltspaceVR DLLs:
-  a. Copy all the following files from MRE build server’s artifacts to Altspace’s Assets\Plugins folder:
-    1. Newtonsoft.Json.xml
-    2. Newtonsoft.Json.dll
-    3. GLTFSerialization.dll
-    4. UnityGLTF.dll
-    5. MREUnityRuntimeLib.dll
-  b. Update Altspace’s Assets\Plugins\AAA-References.md (info about newtonsoft and unitygltf can be found in the MRE build server’s artifacts’ libraries.md
-  c. Run through all functional tests in 2 user mode **todo: set up an SDK test space**
-  d. Verify on android as one of the two users.
+   1. Copy all the following files from MRE build server’s artifacts to Altspace’s Assets\Plugins folder:
+      1. Newtonsoft.Json.xml
+      2. Newtonsoft.Json.dll
+      3. GLTFSerialization.dll
+      4. UnityGLTF.dll
+      5. MREUnityRuntimeLib.dll
+   2. Update Altspace’s Assets\Plugins\AAA-References.md (info about newtonsoft and unitygltf can be found in the MRE build server’s artifacts’ libraries.md
+   3. Run through all functional tests in 2 user mode **todo: set up an SDK test space**
+   4. Verify on android as one of the two users.
 
 ### Update UnityGLTF DLL
 1. This change should be treated like all other unity-only changes, just make sure to
-  a. Sync https://github.com/KhronosGroup/UnityGLTF and build it by doing **???**
-  b. Copy all the following files to \MREUnityRuntime\Libraries
-    i. UnityGLTF.dll
-    ii. UnityGLTF.pdb
-    iii. GLTFSerialization.dll
-    iv. GLTFSerialization.pdb
-  c. Update \MREUnityRuntime\Libraries\libraries.md
+   1. Sync https://github.com/KhronosGroup/UnityGLTF and build it by doing **???**
+   2. Copy all the following files to \MREUnityRuntime\Libraries
+      1. UnityGLTF.dll
+      2. UnityGLTF.pdb
+      3. GLTFSerialization.dll
+      4. GLTFSerialization.pdb
+   3. Update \MREUnityRuntime\Libraries\libraries.md
 
 ### Update NewtonSoft.JSON DLL
 1. This change should be treated like all other unity-only changes, just make sure to
-  a. Sync https://github.com/AltspaceVR/Newtonsoft.Json (note there is a commit added to disable dynamic code generation – 
-  b. Rebase this repo’s master branch on top of the base newtonsoft repo’s master branch (there are 1-2 commits there – they could be squashed)
-  c. Follow build instructions in that repo’s ALTSPACE.md file (Ignore the part where ALTSPACE.md the instructions that say to copy dll/xml into altspace repository – that’s outdated and should be changed. By putting the dll/xml in MRE, it will automatically flow into Altspace with the next MRE DLL update)
-  d. Copy these “portable+net40+win8+wpa81+wp8+sl5” files to \MREUnityRuntime\Libraries
-    i. NewtonSoft.Json.dll
-    ii. NewtonSoft.Json.pdb
-    iii. NewtonSoft.Json.xml
-  e. Update \MREUnityRuntime\Libraries\libraries.md
+   1. Sync https://github.com/AltspaceVR/Newtonsoft.Json (note there is a commit added to disable dynamic code generation – 
+   2. Rebase this repo’s master branch on top of the base newtonsoft repo’s master branch (there are 1-2 commits there – they could be squashed)
+   3. Follow build instructions in that repo’s ALTSPACE.md file (Ignore the part where ALTSPACE.md the instructions that say to copy dll/xml into altspace repository – that’s outdated and should be changed. By putting the dll/xml in MRE, it will automatically flow into Altspace with the next MRE DLL update)
+   4. Copy these “portable+net40+win8+wpa81+wp8+sl5” files to \MREUnityRuntime\Libraries
+      1. NewtonSoft.Json.dll
+      2. NewtonSoft.Json.pdb
+      3. NewtonSoft.Json.xml
+   5. Update \MREUnityRuntime\Libraries\libraries.md
 2. Be super careful to test Android after this, as that is pretty fragile.
 
