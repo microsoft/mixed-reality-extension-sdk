@@ -98,12 +98,14 @@ With this structure, I'd expect there to mostly be 1 or 2 active release version
 
 ### Develop Feature/Develop Hotfix
 1. Create Branch [username]/[featurename] (or feature/[featurename], bug/[bugname] or hotfix/[hotfixname] from a target branch, for all relevant repos (SDK/user/samples)
-2. Write code, commit to branch, push up
-3. Ensure your feature has test coverage in the functional-test app, and add if necessary
-4. Test pass* for the branch
-5. Do PR towards target branch, with nice description.
-6. If failure or revisions, go to step 2
-7. When PR is approved for all relevant repos (SDK/User/Samples), do the PR squash merge for all repos simultaneously.
+2. go to [the MRE Github Issues page](https://github.com/Microsoft/mixed-reality-extension-sdk/projects/1) and move related issues to In Progress
+3. Write code, commit to branch, push up
+4. Ensure your feature has test coverage in the functional-test app, and add if necessary
+5. Test pass* for the branch
+6. Do PR towards target branch, with nice description.
+7. If failure or revisions, go to step 2
+8. When PR is approved for all relevant repos (SDK/User/Samples), do the PR squash merge for all repos simultaneously.
+9. go to [the MRE Github Issues page](https://github.com/Microsoft/mixed-reality-extension-sdk/projects/1) and move related issues to Fixed
 
 ### Test Pass
 1. Main purpose of test pass is to look for regressions – not if new features work properly.
@@ -126,7 +128,7 @@ With this structure, I'd expect there to mostly be 1 or 2 active release version
 5. npm install
 6. npm run build
 7. lerna publish –dist-tag <either next or latest>
-   1. when it asks for version number, use 0.[minor].[patch], where minor comes from branch, and patch version is 1+the last published NPM package for that minor version (to find last published version see https://www.npmjs.com/package/@microsoft/mixed-reality-extension-sdk?activeTab=versions)
+   1. when it asks for version number, use 0.[minor].[patch], where minor comes from branch, and patch version is 1+the last published NPM package for that minor version (to find last published version see [MRE version page on NPMJS](https://www.npmjs.com/package/@microsoft/mixed-reality-extension-sdk?activeTab=versions)
 8. For each updated package.json version number, notepad-update the version number in every corresponding package-lock.json in both sdk and samples repo. Lerna doesn’t do this (but should).
 9. Git commit package.json and package-lock.json changes to sdk\v1.[minor].n
 10. npm run build-docs (to regenerate documentation)
@@ -148,10 +150,11 @@ With this structure, I'd expect there to mostly be 1 or 2 active release version
 7. Slack: Make announcement to #announcements channel, share announcement on #general channel.
 8. Twitter: Announce new features
 9. Teams: announce on Altspace Community Support->SDK or General
+10. go to [the MRE Github Issues page](https://github.com/Microsoft/mixed-reality-extension-sdk/projects/1) and move released issues from Fixed to Released
 
 ### Build Unity DLLs
 1. It builds on server at every commit 
-2. **go to https://microsoft.visualstudio.com/Analog/_build?definitionId=31240 and find build matching the commit ID**
+2. **go to the build server and find build matching the commit ID**
 3. **Permanently store it with version number at?????**
 4. If minor version matches altspaceVR dev or RC branch’s current minor version, or if update is desired then updating AltspaceVR DLLs:
    1. Copy all the following files from MRE build server’s artifacts to Altspace’s Assets\Plugins folder:
@@ -166,7 +169,7 @@ With this structure, I'd expect there to mostly be 1 or 2 active release version
 
 ### Update UnityGLTF DLL
 1. This change should be treated like all other unity-only changes, just make sure to
-   1. Sync https://github.com/KhronosGroup/UnityGLTF and build it by doing **???**
+   1. Sync [UnityGLTF repository](https://github.com/KhronosGroup/UnityGLTF) and build it by doing **???**
    2. Copy all the following files to \MREUnityRuntime\Libraries
       1. UnityGLTF.dll
       2. UnityGLTF.pdb
@@ -176,7 +179,7 @@ With this structure, I'd expect there to mostly be 1 or 2 active release version
 
 ### Update NewtonSoft.JSON DLL
 1. This change should be treated like all other unity-only changes, just make sure to
-   1. Sync https://github.com/AltspaceVR/Newtonsoft.Json (note there is a commit added to disable dynamic code generation – 
+   1. Sync [AltspaceVR Newtonsoft Repository](https://github.com/AltspaceVR/Newtonsoft.Json) (note there is a commit added to disable dynamic code generation – 
    2. Rebase this repo’s master branch on top of the base newtonsoft repo’s master branch (there are 1-2 commits there – they could be squashed)
    3. Follow build instructions in that repo’s ALTSPACE.md file (Ignore the part where ALTSPACE.md the instructions that say to copy dll/xml into altspace repository – that’s outdated and should be changed. By putting the dll/xml in MRE, it will automatically flow into Altspace with the next MRE DLL update)
    4. Copy these “portable+net40+win8+wpa81+wp8+sl5” files to \MREUnityRuntime\Libraries
