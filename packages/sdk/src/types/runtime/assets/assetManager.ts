@@ -65,8 +65,9 @@ export class AssetManager {
         }
 
         const p = this.loadGltfHelper(groupName, url, colliderType);
-        const remove = (ag: AssetGroup) => { delete this.inFlightLoads[groupName]; return ag; };
-        this.inFlightLoads[groupName] = p.then(remove, remove);
+        this.inFlightLoads[groupName] = p.then(
+            (ag: AssetGroup) => { delete this.inFlightLoads[groupName]; return ag; },
+            (err) => { delete this.inFlightLoads[groupName]; return Promise.reject(err); });
 
         return this.inFlightLoads[groupName];
     }
@@ -85,6 +86,9 @@ export class AssetManager {
         } as LoadAssets;
 
         const response = await this.sendLoadAssetsPayload(payload);
+        if (response.failureMessage) {
+            throw new Error(response.failureMessage);
+        }
 
         for (const def of response.assets) {
             def.source = group.source;
