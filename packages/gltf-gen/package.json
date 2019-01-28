@@ -45,7 +45,7 @@
     "typescript": "3.0.3"
   },
   "dependencies": {
-    "@microsoft/mixed-reality-extension-sdk": "^0.4.0",
+    "@microsoft/mixed-reality-extension-sdk": "^0.5.0",
     "mime-types": "~2.1.19"
   }
 }
