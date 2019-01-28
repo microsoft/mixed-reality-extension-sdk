@@ -15,7 +15,6 @@ import {
     OperationResult,
     PerformAction,
     SetAnimationState,
-    StateUpdate,
     SyncRequest,
     Traces,
     UserJoined,
@@ -44,13 +43,6 @@ export class Execution extends Protocol {
     /** @private */
     public 'recv-object-spawned' = (payload: ObjectSpawned) => {
         this.emit('protocol.update-actors', payload.actors);
-    }
-
-    /** @private */
-    public 'recv-state-update' = (update: StateUpdate) => {
-        for (const payload of update.payloads) {
-            this.recvPayload(payload);
-        }
     }
 
     /** @private */

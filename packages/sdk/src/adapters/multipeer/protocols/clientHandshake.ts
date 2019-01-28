@@ -3,8 +3,8 @@
  * Licensed under the MIT License.
  */
 
-import { Client } from '..';
-import * as MRESDK from '../../..';
+import { Client, MissingRule, Rules } from '..';
+import { Message } from '../../..';
 import { Handshake } from '../../../protocols/handshake';
 import { OperatingModel } from '../../../types/network/operatingModel';
 import { ExportedPromise } from '../../../utils/exportedPromise';
@@ -20,12 +20,30 @@ export class ClientHandshake extends Handshake {
         super(client.conn, client.session.sessionId, OperatingModel.PeerAuthoritative);
     }
 
-    /** @override */
-    public sendMessage(message: MRESDK.Message, promise?: ExportedPromise) {
-        if (message.payload.type === 'handshake-reply') {
-            super.sendMessage(message, promise);
-        } else if (!Client.ShouldIgnorePayloadWhileJoining(message.payload.type)) {
-            this.client.queueMessage(message, promise);
+    /**
+     * @override
+     * Handle the outgoing message according to the handshake rules specified for this payload.
+     */
+    public sendMessage(message: Message, promise?: ExportedPromise) {
+        const rule = Rules[message.payload.type] || MissingRule;
+        const handling = rule.handshake.during;
+        // tslint:disable-next-line:switch-default
+        switch (handling) {
+            case 'allow': {
+                super.sendMessage(message, promise);
+                break;
+            }
+            case 'queue': {
+                this.client.queueMessage(message, promise);
+                break;
+            }
+            case 'ignore': {
+                break;
+            }
+            case 'error': {
+                // tslint:disable-next-line:no-console
+                console.log(`[ERROR] ${this.name}: Invalid message for send during handshake: ${message.payload.type}`);
+            }
         }
     }
 }

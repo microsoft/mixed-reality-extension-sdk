@@ -8,6 +8,7 @@ import { EventedConnection } from '.';
 import { Message } from '..';
 import filterEmpty from '../utils/filterEmpty';
 import validateJsonFieldName from '../utils/validateJsonFieldName';
+import { log } from './../log';
 
 /**
  * An implementation of the Connection interface that wraps a WebSocket.
@@ -41,7 +42,7 @@ export class WebSocket extends EventedConnection {
                     });
                 this._ws.send(json);
             } catch (e) {
-                this.emit('error', e);
+                log.error('network', e);
             }
         });
     }

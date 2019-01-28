@@ -4,7 +4,7 @@
  */
 
 import { Client } from '..';
-import * as MRESDK from '../../..';
+import { Message } from '../../..';
 import * as Protocols from '../../../protocols';
 
 /**
@@ -52,7 +52,7 @@ export class ClientExecution extends Protocols.Protocol implements Protocols.Mid
         }, 1000 * (4 + 2 * Math.random()));
     }
 
-    public beforeRecv = (message: MRESDK.Message): MRESDK.Message => {
+    public beforeRecv = (message: Message): Message => {
         if (this.promises[message.replyToId]) {
             // If we have a queued promise for this message, let it through
             return message;

@@ -3,21 +3,21 @@
  * Licensed under the MIT License.
  */
 
-import * as MRESDK from '../..';
+import { BehaviorType, Message } from '../..';
 import * as Payloads from '../../types/network/payloads';
 
 /**
  * @hidden
  */
 export type CreateActor = {
-    message: MRESDK.Message<Payloads.CreateActorCommon>;
+    message: Message<Payloads.CreateActorCommon>;
 };
 
 /**
  * @hidden
  */
 export type CreateAnimation = {
-    message: MRESDK.Message<Payloads.CreateAnimation>;
+    message: Message<Payloads.CreateAnimation>;
     enabled: boolean;
 };
 
@@ -29,5 +29,5 @@ export type SyncActor = {
     created: CreateActor;
     createdAnimations: CreateAnimation[];
     activeInterpolations: Payloads.InterpolateActor[];
-    behavior: MRESDK.BehaviorType;
+    behavior: BehaviorType;
 };

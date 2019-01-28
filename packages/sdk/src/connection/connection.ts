@@ -3,7 +3,7 @@
  * Licensed under the MIT License.
  */
 
-import { Message } from '../types/network';
+import { Message } from '..';
 import { ExponentialMovingAverage } from '../utils/exponentialMovingAverage';
 import { QueuedPromise } from '../utils/queuedPromise';
 import { TrackingClock } from '../utils/trackingClock';

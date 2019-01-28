@@ -13,60 +13,56 @@ import { SubscriptionOwnerType, SubscriptionType } from '../subscriptionType';
 
 /**
  * @hidden
+ * *** KEEP ENTRIES SORTED ***
  */
 export type PayloadType
-    = 'traces'
-    | 'operation-result'
-    | 'multi-operation-result'
-    | 'handshake'
-    | 'handshake-reply'
-    | 'handshake-complete'
-    | 'heartbeat'
-    | 'heartbeat-reply'
+    = 'actor-correction'
+    | 'actor-update'
     | 'app2engine-rpc'
-    | 'engine2app-rpc'
-    | 'object-spawned'
-    | 'actor-update'
-    | 'destroy-actors'
-    | 'state-update'
-    | 'user-update'
-    | 'user-joined'
-    | 'user-left'
-    | 'perform-action'
-    | 'sync-request'
-    | 'create-from-library'
-    | 'create-from-gltf'
+    | 'asset-update'
+    | 'assets-loaded'
+    | 'create-animation'
     | 'create-empty'
-    | 'create-primitive'
+    | 'create-from-gltf'
+    | 'create-from-library'
     | 'create-from-prefab'
-    | 'actor-update'
-    | 'actor-correction'
+    | 'create-primitive'
     | 'destroy-actors'
-    | 'state-update'
-    | 'sync-complete'
-    | 'set-authoritative'
+    | 'enable-collider'
     | 'enable-light'
     | 'enable-rigidbody'
     | 'enable-text'
-    | 'update-subscriptions'
+    | 'engine2app-rpc'
+    | 'handshake'
+    | 'handshake-complete'
+    | 'handshake-reply'
+    | 'heartbeat'
+    | 'heartbeat-reply'
+    | 'interpolate-actor'
+    | 'load-assets'
+    | 'look-at'
+    | 'multi-operation-result'
+    | 'object-spawned'
+    | 'operation-result'
+    | 'perform-action'
+    | 'rigidbody-add-force'
+    | 'rigidbody-add-force-at-position'
+    | 'rigidbody-add-relative-torque'
+    | 'rigidbody-add-torque'
     | 'rigidbody-commands'
     | 'rigidbody-move-position'
     | 'rigidbody-move-rotation'
-    | 'rigidbody-add-force'
-    | 'rigidbody-add-force-at-position'
-    | 'rigidbody-add-torque'
-    | 'rigidbody-add-relative-torque'
-    | 'create-animation'
     | 'set-animation-state'
-    | 'sync-animations'
-    | 'interpolate-actor'
+    | 'set-authoritative'
     | 'set-behavior'
-    | 'set-primary-behavior'
-    | 'update-background-behaviors'
-    | 'load-assets'
-    | 'assets-loaded'
-    | 'asset-update'
-    | 'look-at'
+    | 'sync-animations'
+    | 'sync-complete'
+    | 'sync-request'
+    | 'traces'
+    | 'update-subscriptions'
+    | 'user-joined'
+    | 'user-left'
+    | 'user-update'
     ;
 
 /**
@@ -243,15 +239,6 @@ export type ActorUpdate = Payload & {
 export type DestroyActors = Payload & {
     type: 'destroy-actors';
     actorIds: string[];
-};
-
-/**
- * @hidden
- * Bi-directional. Envelope for multiple update and event payloads (ActorUpdate, etc).
- */
-export type StateUpdate = Payload & {
-    type: 'state-update';
-    payloads: Array<Partial<Payload>>;
 };
 
 /**
