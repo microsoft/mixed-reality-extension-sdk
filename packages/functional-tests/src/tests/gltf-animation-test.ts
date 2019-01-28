@@ -26,7 +26,7 @@ export default class GltfAnimationTest extends Test {
     public async runGltfAnimationTest(): Promise<boolean> {
         const tester = await MRESDK.Actor.CreateFromGltf(this.app.context, {
             // tslint:disable-next-line:max-line-length
-            resourceUrl: `https://github.com/KhronosGroup/glTF-Sample-Models/raw/master/2.0/CesiumMan/glTF-Binary/CesiumMan.glb`,
+            resourceUrl: `https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/CesiumMan/glTF-Binary/CesiumMan.glb`,
             actor: {
                 transform: {
                     // rotation: Math3D.Quaternion.Euler(0, 180, 0)

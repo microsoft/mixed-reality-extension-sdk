@@ -39,15 +39,21 @@ export default class GltfConcurrencyTest extends Test {
         let gearbox: MRESDK.Actor;
         let bottleAsset: MRESDK.AssetGroup;
         try {
-            [runner, gearbox, bottleAsset] = await Promise.all([runnerPromise, gearboxPromise, bottlePromise]);
+            gearbox = await gearboxPromise;
+            gearbox.transform.position.set(16, 0, 0);
+            gearbox.transform.scale.set(.1, .1, .1);
+        } catch (e) {
+            console.log('Gearbox didn\'t load, as expected in Altspace');
+        }
+
+        try {
+            [runner, bottleAsset] = await Promise.all([runnerPromise, bottlePromise]);
         } catch (errs) {
             console.error(errs);
             return false;
         }
 
         runner.enableAnimation('animation:0');
-        gearbox.transform.position.set(16, 0, 0);
-        gearbox.transform.scale.set(.1, .1, .1);
         const bottle = await MRESDK.Actor.CreateFromPrefab(this.app.context, {
             prefabId: bottleAsset.prefabs.byIndex(0).id
         });
