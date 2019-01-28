@@ -3,20 +3,23 @@
  * Licensed under the MIT License.
  */
 
-import deepmerge from 'deepmerge';
 import { EventEmitter } from 'events';
 import UUID from 'uuid/v4';
-import { ClientExecution, ClientHandshake, ClientSync, Session } from '.';
-import * as MRESDK from '../..';
+import { ClientExecution, ClientHandshake, ClientSync, MissingRule, Rules, Session } from '.';
+import { Connection, Message } from '../..';
+import { log } from '../../log';
 import * as Protocols from '../../protocols';
 import * as Payloads from '../../types/network/payloads';
 import { ExportedPromise } from '../../utils/exportedPromise';
-import { log } from './../../log';
+import filterEmpty from '../../utils/filterEmpty';
 
-interface QueuedMessage {
-    message: MRESDK.Message;
+/**
+ * @hidden
+ */
+export type QueuedMessage = {
+    message: Message;
     promise?: ExportedPromise;
-}
+};
 
 /**
  * @hidden
@@ -30,9 +33,8 @@ export class Client extends EventEmitter {
     private _session: Session;
     private _protocol: Protocols.Protocol;
     private _order: number;
+    private _queuedMessages: QueuedMessage[] = [];
     // tslint:enable:variable-name
-
-    private queuedMessages: QueuedMessage[] = [];
 
     public get id() { return this._id; }
     public get order() { return this._order; }
@@ -43,6 +45,7 @@ export class Client extends EventEmitter {
         return (0 === this.session.clients.sort((a, b) => a.order - b.order)
             .findIndex(client => client.id === this.id));
     }
+    public get queuedMessages() { return this._queuedMessages; }
 
     public userId: string;
 
@@ -50,7 +53,7 @@ export class Client extends EventEmitter {
      * Creates a new Client instance
      */
     // tslint:disable-next-line:variable-name
-    constructor(private _conn: MRESDK.Connection) {
+    constructor(private _conn: Connection) {
         super();
         this._id = UUID();
         this._order = Client.orderSequence++;
@@ -84,12 +87,14 @@ export class Client extends EventEmitter {
     }
 
     public leave() {
-        this._protocol.stopListening();
+        if (this._protocol) {
+            this._protocol.stopListening();
+            this._protocol = undefined;
+        }
         this._conn.off('close', this.leave);
         this._conn.off('error', this.leave);
         this._conn.close();
         this._session = undefined;
-        this._protocol = undefined;
         this.emit('close');
     }
 
@@ -105,11 +110,12 @@ export class Client extends EventEmitter {
         });
     }
 
-    public send(message: MRESDK.Message, promise?: ExportedPromise) {
+    public send(message: Message, promise?: ExportedPromise) {
         if (this.protocol) {
             this.protocol.sendMessage(message, promise);
         } else {
-            log.error('network', `No protocol for message send: ${message.payload.type}`);
+            // tslint:disable-next-line:no-console
+            console.error(`[ERROR] No protocol for message send: ${message.payload.type}`);
         }
     }
 
@@ -117,48 +123,31 @@ export class Client extends EventEmitter {
         if (this.protocol) {
             this.protocol.sendPayload(payload, promise);
         } else {
-            log.error('network', `No protocol for payload send: ${payload.type}`);
+            // tslint:disable-next-line:no-console
+            console.error(`[ERROR] No protocol for payload send: ${payload.type}`);
         }
     }
 
-    public queueMessage(message: MRESDK.Message, promise?: ExportedPromise) {
-        if (message.payload.type === 'actor-update' || message.payload.type === 'actor-correction') {
-            const actorUpdate = message.payload as Partial<Payloads.ActorUpdate>;
-            const queuedMessage = this.queuedMessages
-                .filter(value =>
-                    (value.message.payload.type === 'actor-update' ||
-                    value.message.payload.type === 'actor-correction') &&
-                    (value.message.payload as Partial<Payloads.ActorUpdate>).actor.id === actorUpdate.actor.id).shift();
-            if (queuedMessage) {
-                // tslint:disable-next-line
-                // console.log("COALESCEING QUEUED ACTOR STATE: " + JSON.stringify(message));
-                const existingUpdate = queuedMessage.message.payload as Partial<Payloads.ActorUpdate>;
-                existingUpdate.actor = deepmerge(existingUpdate.actor, actorUpdate.actor);
-                return;
+    public queueMessage(message: Message, promise?: ExportedPromise) {
+        const rule = Rules[message.payload.type] || MissingRule;
+        const beforeQueueMessageForClient = rule.client.beforeQueueMessageForClient || (() => message);
+        message = beforeQueueMessageForClient(this.session, this, message, promise);
+        if (message) {
+            log.verbose('network', `Client ${this.id} queue`,
+                JSON.stringify(message, (key, value) => filterEmpty(value)));
+            this.queuedMessages.push({ message, promise });
+        }
+    }
+
+    public filterQueuedMessages(callbackfn: (value: QueuedMessage) => any) {
+        const filteredMessages: QueuedMessage[] = [];
+        this._queuedMessages = this._queuedMessages.filter((value) => {
+            const allow = callbackfn(value);
+            if (allow) {
+                filteredMessages.push(value);
             }
-        }
-        // tslint:disable-next-line
-        // console.log("QUEUING MESSAGE: " + JSON.stringify(message));
-        this.queuedMessages.push({ message, promise });
-    }
-
-    public async syncQueuedMessages() {
-        // tslint:disable-next-line
-        // console.log("BEGIN SYNCING QUEUED MESSAGES");
-        while (this.queuedMessages.length) {
-            const queuedMessages = this.queuedMessages.splice(0);
-            for (const queuedMessage of queuedMessages) {
-                this.send(queuedMessage.message, queuedMessage.promise);
-            }
-            await this.protocol.drainPromises();
-        }
-        // tslint:disable-next-line
-        // console.log("END SYNCING QUEUED MESSAGES");
-    }
-
-    public static ShouldIgnorePayloadWhileJoining(type: string): boolean {
-        // Ignore "create" payloads while joining, since all created things will be synchronized
-        // from the ClientSync protocol.
-        return type.startsWith('create-') || type === 'load-assets';
+            return !allow;
+        });
+        return filteredMessages;
     }
 }

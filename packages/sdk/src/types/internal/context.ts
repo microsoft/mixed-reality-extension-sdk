@@ -64,7 +64,6 @@ import {
     RigidBodyCommands,
     SetAnimationState,
     SetBehavior,
-    StateUpdate,
     UpdateCollisionEventSubscriptions,
     UpdateSubscriptions,
 } from '../network/payloads';
@@ -648,9 +647,6 @@ export class InternalContext {
 
         this.prevGeneration = this.generation;
 
-        // Build state diff payload array.
-        const payloads: any[] = [];
-
         const syncObjects = [
             ...Object.values(this.actorSet),
             ...Object.values(this.context.assetManager.assets)
@@ -663,29 +659,16 @@ export class InternalContext {
             }
 
             if (patchable instanceof Actor) {
-                payloads.push({
+                this.protocol.sendPayload({
                     type: 'actor-update',
                     actor: patch as ActorLike
                 } as ActorUpdate);
             } else if (patchable instanceof Asset) {
-                payloads.push({
+                this.protocol.sendPayload({
                     type: 'asset-update',
                     asset: patch as AssetLike
                 } as AssetUpdate);
             }
-        }
-
-        if (payloads.length) {
-            this.sendStateUpdate(payloads);
-        }
-    }
-
-    public sendStateUpdate(payloads: any[]) {
-        while (payloads.length) {
-            this.protocol.sendPayload({
-                type: 'state-update',
-                payloads: payloads.splice(0, 20)
-            } as StateUpdate);
         }
     }
 

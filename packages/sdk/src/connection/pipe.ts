@@ -7,6 +7,7 @@ import { Connection, EventedConnection } from '.';
 import { Message } from '..';
 
 /**
+ * @hidden
  * Class representing two connected endpoints, allowing them to send and receive to and from one another
  */
 export class Pipe {

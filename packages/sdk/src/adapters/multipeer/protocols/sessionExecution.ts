@@ -4,7 +4,7 @@
  */
 
 import { Session } from '..';
-import * as MRESDK from '../../../';
+import { Message } from '../../..';
 import * as Protocols from '../../../protocols';
 
 /**
@@ -22,7 +22,7 @@ export class SessionExecution extends Protocols.Protocol implements Protocols.Mi
     }
 
     /** @private */
-    public beforeRecv = (message: MRESDK.Message): MRESDK.Message => {
+    public beforeRecv = (message: Message): Message => {
         // Notify listeners we received a message from the application
         this.emit('recv', message);
         // Cancel the message

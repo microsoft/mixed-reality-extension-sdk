@@ -3,20 +3,43 @@
  * Licensed under the MIT License.
  */
 
-import { Client, SyncActor } from '..';
-import * as MRESDK from '../../..';
+import { Client, MissingRule, Rules, SyncActor } from '..';
+import { Message } from '../../..';
+import { log } from '../../../log';
 import * as Protocols from '../../../protocols';
 import * as Payloads from '../../../types/network/payloads';
 import { ExportedPromise } from '../../../utils/exportedPromise';
 
+// tslint:disable:object-literal-key-quotes no-console
+
 /**
  * @hidden
- * Synchronizes application state with a client
+ */
+export type SynchronizationStage =
+    'always' |
+    'load-assets' |
+    'create-actors' |
+    'create-animations' |
+    'sync-animations' |
+    'set-behaviors' |
+    'never';
+
+/**
+ * @hidden
+ * Synchronizes application state with a client.
  */
 export class ClientSync extends Protocols.Protocol {
+    private inProgressStages: SynchronizationStage[] = [];
+    private completedStages: SynchronizationStage[] = [];
 
-    private createActorsInvoked = false;
-    private syncAssetsInvoked = false;
+    // The order of synchronization stages.
+    private sequence: SynchronizationStage[] = [
+        'load-assets',
+        'create-actors',
+        'set-behaviors',
+        'create-animations',
+        'sync-animations',
+    ];
 
     /** @override */
     public get name(): string { return `${this.constructor.name} client ${this.client.id}`; }
@@ -25,109 +48,168 @@ export class ClientSync extends Protocols.Protocol {
         super(client.conn);
         // Behave like a server-side endpoint (send heartbeats, measure connection quality)
         this.use(new Protocols.ServerPreprocessing());
+        // Immediagely mark the 'always' stage as in progress.
+        this.beginStage('always');
     }
 
-    /** @override */
-    public sendMessage(message: MRESDK.Message, promise?: ExportedPromise) {
-        if (message.payload.type === 'heartbeat' ||
-            message.payload.type === 'sync-animations' ||
-            message.payload.type === 'interpolate-actor') {
-            // These messages are part of the synchronization process and so we always let them through.
-            super.sendMessage(message, promise);
-        } else if (this.syncAssetsInvoked && message.payload.type === 'load-assets') {
-            // These messages are load-asset messages. We want to queue these up because we've already
-            // passed the `syncAssets` phase of the synchronization process, so we'll need to send these
-            // later in the `syncQueuedMessages` phase.
-            this.client.queueMessage(message, promise);
-        } else if (this.createActorsInvoked && message.payload.type.startsWith('create-')) {
-            // These messages are actor creation messages. We want to queue these up because we've already
-            // passed the `createActors` phase of the synchronization process, so we'll need to send these
-            // later in the `syncQueuedMessages` phase.
-            this.client.queueMessage(message, promise);
-        } else if (!Client.ShouldIgnorePayloadWhileJoining(message.payload.type)) {
-            // A message we should queue for delivery in the `syncQueuedMessages` phase of synchronization.
-            this.client.queueMessage(message, promise);
+    /**
+     * @override
+     * Handle the outgoing message according to the synchronization rules specified for this payload.
+     */
+    public sendMessage(message: Message, promise?: ExportedPromise) {
+        const handling = this.handlingForMessage(message);
+        // tslint:disable-next-line:switch-default
+        switch (handling) {
+            case 'allow': {
+                super.sendMessage(message, promise);
+                break;
+            }
+            case 'queue': {
+                this.client.queueMessage(message, promise);
+                break;
+            }
+            case 'ignore': {
+                break;
+            }
+            case 'error': {
+                // tslint:disable-next-line: max-line-length
+                console.error(`[ERROR] ${this.name}: Invalid message for send during synchronization stage: ${message.payload.type}. In progress: ${this.inProgressStages.join(',')}. Complete: ${this.completedStages.join(',')}.`);
+            }
         }
     }
 
-    /** @private */
+    private handlingForMessage(message: Message) {
+        const rule = Rules[message.payload.type] || MissingRule;
+        let handling = rule.synchronization.before;
+        if (this.isStageComplete(rule.synchronization.stage)) {
+            handling = rule.synchronization.after;
+        } else if (this.isStageInProgress(rule.synchronization.stage)) {
+            handling = rule.synchronization.during;
+        }
+        return handling;
+    }
+
+    private isStageComplete(stage: SynchronizationStage) {
+        return this.completedStages.includes(stage);
+    }
+
+    private isStageInProgress(stage: SynchronizationStage) {
+        return this.inProgressStages.includes(stage);
+    }
+
+    private beginStage(stage: SynchronizationStage) {
+        log.debug('network', `${this.name} - begin stage '${stage}'`);
+        this.inProgressStages = [...this.inProgressStages, stage];
+    }
+
+    private completeStage(stage: SynchronizationStage) {
+        log.debug('network', `${this.name} - complete stage '${stage}'`);
+        this.inProgressStages = this.inProgressStages.filter(item => item !== stage);
+        this.completedStages = [...this.completedStages, stage];
+    }
+
+    private async executeStage(stage: SynchronizationStage) {
+        const handler = (this as any)[`stage:${stage}`];
+        if (handler) {
+            await handler();
+        } else {
+            console.error(`[ERROR] ${this.name}: No handler for stage ${stage}!`);
+        }
+    }
+
+    /**
+     * @hidden
+     * Start synchronizing once we receive the `sync-request` message from the client.
+     */
     public 'recv-sync-request' = async (payload: Payloads.SyncRequest) => {
         if (this.client.session.peerAuthoritative) {
             // Do a quick measurement of connection latency
             const heartbeat = new Protocols.Heartbeat(this);
             await heartbeat.runIterations(10);
-            // Sync all the assets
-            await this.syncAssets();
-            // Sync all the actors
-            await this.syncActors();
+            // Run all the synchronization stages.
+            for (const stage of this.sequence) {
+                this.beginStage(stage);
+                await this.executeStage(stage);
+                this.completeStage(stage);
+                await this.sendQueuedMessages();
+            }
         }
-        // Stop queuing messages
-        this.sendMessage = super.sendMessage;
-        // Send queued messages
-        await this.client.syncQueuedMessages();
-        // Notify sync complete
-        this.sendPayload({
-            type: 'sync-complete',
-        } as Payloads.SyncComplete);
+        this.completeStage('always');
+        // Notify the client we're done synchronizing.
+        this.sendPayload({ type: 'sync-complete' } as Payloads.SyncComplete);
+        // Send all remaining queued messages.
+        await this.sendQueuedMessages();
+        // Detach from the connection.
         this.stopListening();
+        // Let the next protocol know we're complete.
         this.emit('protocol.sync-complete');
     }
 
-    private async syncAssets(): Promise<void> {
-        this.syncAssetsInvoked = true;
+    /**
+     * @hidden
+     * Driver for the `load-assets` synchronization stage.
+     */
+    public 'stage:load-assets' = async () => {
+        // Send all cached load-assets messages.
         await Promise.all(
-            this.client.session.assetSet.map(
-                msg => this.sendAndExpectResponse(msg)));
+            this.client.session.assets.map(
+                message => this.sendAndExpectResponse(message)));
+        // Send all cached asset-update messages.
+        this.client.session.assetUpdates.map(
+            payload => this.sendMessage({ payload }));
     }
 
-    private async syncActors() {
-        await this.createActors();
-        await this.createAnimations();
-        this.createBehaviors();
-        await this.syncAnimations();
+    /**
+     * @hidden
+     * Driver for the `create-actors` synchronization stage.
+     */
+    public 'stage:create-actors' = async () => {
+        // Sync cached create-actor hierarchies, starting at roots.
+        await Promise.all(
+            this.client.session.rootActors.map(
+                syncActor => this.createActorRecursive(syncActor)));
     }
 
-    private createActors(): Promise<any> {
-        // Sync actor hierarchies, starting at roots
-        const promises = [];
-        for (const actor of this.client.session.rootActors) {
-            promises.push(this.createActorRecursive(actor));
-        }
-        // After sending the create* messages we must let future messages through when they're sent, even while this
-        // client is still in the process of joining.
-        this.createActorsInvoked = true;
-        // Wait for all actors to be created
-        return Promise.all(promises.filter(promise => !!promise));
+    /**
+     * @hidden
+     * Driver for the `set-behaviors` synchronization stage.
+     */
+    public 'stage:set-behaviors' = async () => {
+        // Send all cached set-behavior messages.
+        this.client.session.actors.map(syncActor => this.createActorBehavior(syncActor));
+        return Promise.resolve();
     }
 
-    private createAnimations(): Promise<any> {
-        const promises = [];
-        for (const actor of this.client.session.actors) {
-            this.createActorInterpolations(actor);
-            promises.push(this.createActorAnimations(actor));
-        }
-        return Promise.all(promises);
+    /**
+     * @hidden
+     * Driver for the `create-animations` synchronization stage.
+     */
+    public 'stage:create-animations' = async () => {
+        // Send all cached interpolate-actor and create-animation messages.
+        this.client.session.actors.map(syncActor => this.createActorInterpolations(syncActor));
+        await Promise.all([
+            this.client.session.actors.map(syncActor => this.createActorAnimations(syncActor))]);
     }
 
-    private createBehaviors(): void {
-        for (const actor of this.client.session.actors) {
-            this.createActorBehavior(actor);
-        }
-    }
-
-    private syncAnimations(): Promise<any> {
-        // Don't send the sync-animations message to ourselves
+    /**
+     * @hidden
+     * Driver for the `sync-animations` synchronization stage.
+     */
+    public 'stage:sync-animations' = async () => {
+        // Don't send the sync-animations message to ourselves.
         if (this.client.session.authoritativeClient.order === this.client.order) {
             return Promise.resolve();
         }
         return new Promise<void>((resolve, reject) => {
+            // Request the current state of all animations from the authoritative client.
+            // TODO: Improve this (don't rely on a peer).
             const authoritativeClient = this.client.session.authoritativeClient;
             authoritativeClient.sendPayload({
                 type: 'sync-animations',
             } as Payloads.SyncAnimations, {
                     resolve: (payload: Payloads.SyncAnimations) => {
                         // We've received the sync-animations payload from the authoritative
-                        // client, now pass it to the joining client
+                        // client, now pass it to the joining client.
                         for (const animationState of payload.animationStates) {
                             // Account for latency on the authoritative peer's connection.
                             animationState.animationTime += authoritativeClient.conn.quality.latencyMs.value / 2000;
@@ -174,11 +256,10 @@ export class ClientSync extends Protocols.Protocol {
     }
 
     private createActorAnimations(actor: Partial<SyncActor>): Promise<any> {
-        const promises = [];
-        for (const createAnimation of actor.createdAnimations || []) {
-            promises.push(this.sendAndExpectResponse(createAnimation.message));
-        }
-        return Promise.all(promises);
+        return Promise.all([
+            (actor.createdAnimations || [])
+                .map(createdAnimation => this.sendAndExpectResponse(createdAnimation.message))
+        ]);
     }
 
     private createActorInterpolations(actor: Partial<SyncActor>) {
@@ -192,10 +273,10 @@ export class ClientSync extends Protocols.Protocol {
         }
     }
 
-    private sendAndExpectResponse(message: MRESDK.Message) {
+    private sendAndExpectResponse(message: Message) {
         return new Promise<void>((resolve, reject) => {
             super.sendMessage(message, {
-                resolve: (replyPayload: any, replyMessage: MRESDK.Message) => {
+                resolve: (replyPayload: any, replyMessage: Message) => {
                     if (this.client.authoritative) {
                         // If this client is authoritative while synchonizing, then it is the only client joined.
                         // In this case we want to send the reply message back to the app since it is expecting it.
@@ -205,5 +286,25 @@ export class ClientSync extends Protocols.Protocol {
                 }, reject
             });
         });
+    }
+
+    public async sendQueuedMessages() {
+        // 1. Get the subset of queued messages that can be sent now.
+        // 2. Send the messages and wait for expected replies.
+        // 3. Repeat until no more messages to send.
+        do {
+            const queuedMessages = this.client.filterQueuedMessages((queuedMessage) => {
+                const message = queuedMessage.message;
+                const handling = this.handlingForMessage(message);
+                return handling === 'allow';
+            });
+            if (!queuedMessages.length) {
+                break;
+            }
+            for (const queuedMessage of queuedMessages) {
+                this.sendMessage(queuedMessage.message, queuedMessage.promise);
+            }
+            await this.drainPromises();
+        } while (true);
     }
 }

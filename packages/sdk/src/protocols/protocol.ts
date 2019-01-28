@@ -100,13 +100,14 @@ export class Protocol extends EventEmitter {
 
     public recvPayload(payload: Partial<Payload>) {
         if (payload && payload.type && payload.type.length) {
-            // tslint:disable-next-line:no-any
             const handler = (this as any)[`recv-${payload.type}`] || (() => {
-                log.error('network', `${this.name} has no handler for payload ${payload.type}!`);
+                // tslint:disable-next-line:no-console
+                console.error(`[ERROR] ${this.name} has no handler for payload ${payload.type}!`);
             });
             handler(payload);
         } else {
-            log.error('network', `${this.name} invalid message payload!`);
+            // tslint:disable-next-line:no-console
+            console.error(`[ERROR] ${this.name} invalid message payload!`);
         }
     }
 
@@ -124,7 +125,8 @@ export class Protocol extends EventEmitter {
     protected handleReplyMessage(message: Message) {
         const queuedPromise = this.promises[message.replyToId];
         if (!queuedPromise) {
-            log.error('network', `${this.name} received unexpected reply message! replyToId: ${message.replyToId}`);
+            // tslint:disable-next-line:no-console
+            console.error(`[ERROR] ${this.name} received unexpected reply message! replyToId: ${message.replyToId}`);
         } else {
             delete this.promises[message.replyToId];
             queuedPromise.promise.resolve(message.payload, message);

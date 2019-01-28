@@ -8,3 +8,4 @@ export * from './session';
 export * from './client';
 export * from './syncActor';
 export * from './protocols';
+export * from './rules';

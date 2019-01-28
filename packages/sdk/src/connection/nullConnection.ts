@@ -8,6 +8,7 @@ import { Connection, ConnectionQuality } from '.';
 import { Message } from '..';
 
 /**
+ * @hidden
  * A Connection that does performs nops for send and receive.
  */
 export class NullConnection extends EventEmitter implements Connection {
