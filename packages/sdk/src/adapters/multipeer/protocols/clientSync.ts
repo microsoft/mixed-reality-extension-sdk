@@ -185,7 +185,7 @@ export class ClientSync extends Protocols.Protocol {
      * Driver for the `create-animations` synchronization stage.
      */
     public 'stage:create-animations' = async () => {
-        // Send all cached interpolate-actor and creaet-animation messages.
+        // Send all cached interpolate-actor and create-animation messages.
         this.client.session.actors.map(syncActor => this.createActorInterpolations(syncActor));
         await Promise.all([
             this.client.session.actors.map(syncActor => this.createActorAnimations(syncActor))]);
