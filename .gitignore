@@ -332,3 +332,4 @@ built
 npm-debug.log
 lerna-debug.log
 .openode
+Dockerfile

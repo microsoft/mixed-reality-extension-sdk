@@ -20,6 +20,9 @@ export default class AltspaceVRVideoTest extends Test {
         super(app);
         this.videoPlayerManager = new VideoPlayerManager(app.context);
     }
+    public cleanup() {
+        this.videoPlayerManager.cleanup();
+    }
 
     public async run(): Promise<boolean> {
         let success = true;
