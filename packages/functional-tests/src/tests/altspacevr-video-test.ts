@@ -40,7 +40,7 @@ export default class AltspaceVRVideoTest extends Test {
                 name: 'label',
                 parentId: tester.value.id,
                 transform: {
-                    position: { x: 0, y: 2, z: 0 }
+                    position: { x: 0, y: 5.5, z: 0 }
                 },
                 text: {
                     anchor: MRESDK.TextAnchorLocation.MiddleCenter,
@@ -58,7 +58,7 @@ export default class AltspaceVRVideoTest extends Test {
                 parentId: tester.value.id,
                 name: 'label',
                 transform: {
-                    position: { x: 0, y: -1, z: 1 },
+                    position: { x: 0, y: 3, z: 0 },
                     scale: { x: 7, y: 7, z: 7 }
                 },
             }
@@ -83,7 +83,7 @@ export default class AltspaceVRVideoTest extends Test {
                 name: 'Button',
                 parentId: tester.value.id,
                 transform: {
-                    position: { x: -1, y: 1, z: 0 }
+                    position: { x: -3.5, y: 5, z: 0 }
                 }
             }
         });
