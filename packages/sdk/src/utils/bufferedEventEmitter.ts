@@ -15,6 +15,9 @@ export default class BufferedEventEmitter implements EventEmitterLike {
     private emitter = new events.EventEmitter();
     private queuedEvents: { [key: string]: QueuedEvent[] } = {};
 
+    public clearAll() {
+        this.emitter.removeAllListeners();
+    }
     public on(event: string | symbol, listener: (...args: any[]) => void): this {
         this.emitter.on(event, listener);
         process.nextTick(() => {
@@ -40,7 +43,7 @@ export default class BufferedEventEmitter implements EventEmitterLike {
     }
 
     public off(event: string | symbol, listener: (...args: any[]) => void): this {
-        this.emitter.off(event, listener);
+        this.emitter.removeListener(event, listener);
         return this;
     }
 

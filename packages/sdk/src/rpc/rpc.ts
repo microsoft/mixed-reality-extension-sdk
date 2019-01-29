@@ -65,6 +65,8 @@ export class UserRPC extends RPC {
         super(user.context);
         // this.user.internal.__rpc = this;
     }
+    public cleanup() {
+    }
 
     public join(channelName: string) {
         const contextrpc = this.user.context.internal.__rpc;
@@ -155,6 +157,9 @@ export class ContextRPC extends RPC {
         this.context.internal.__rpc = this;
         this._receive = this._receive.bind(this);
         this.context.onReceiveRPC(this._receive);
+    }
+    public cleanup() {
+        this.context.offReceiveRPC(this._receive);
     }
 
     public channel(channelName: string, create = true) {
