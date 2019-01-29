@@ -22,6 +22,8 @@ export class AssetManager {
     /** @hidden */
     public constructor(public context: Context) { }
 
+    public cleanup() {
+    }
     /** Fetch a group by name. */
     public get groups() { return Object.freeze({ ...this._groups }); }
 

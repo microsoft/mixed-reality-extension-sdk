@@ -103,7 +103,16 @@ export class Context {
     }
 
     /**
-     * The 'onUserLeft event is raised when the given user has left the Context. After the last user leaves, the Context
+     * Remove the onUserJoined event handler from the Context.
+     * @event
+     */
+    public offUserJoined(handler: (user: User) => void): this {
+        this.emitter.off('user-joined', handler);
+        return this;
+    }
+
+    /**
+     * The onUserLeft event is raised when the given user has left the Context. After the last user leaves, the Context
      * will be shutdown (and a 'stopped' event will soon follow).
      * @event
      */
@@ -113,10 +122,19 @@ export class Context {
     }
 
     /**
+     * Remove the onUserLeft event handler from the Context
+     * @event
+     */
+    public offUserLeft(handler: (user: User) => void): this {
+        this.emitter.off('user-left', handler);
+        return this;
+    }
+
+    /**
      * @hidden
      * (for now)
      */
-    public onActorCreated(handler: (user: User) => void): this {
+    public onActorCreated(handler: (actor: Actor) => void): this {
         this.emitter.on('actor-created', handler);
         return this;
     }
@@ -125,8 +143,26 @@ export class Context {
      * @hidden
      * (for now)
      */
-    public onActorDestroyed(handler: (user: User) => void): this {
+    public offActorCreated(handler: (actor: Actor) => void): this {
+        this.emitter.off('actor-created', handler);
+        return this;
+    }
+
+    /**
+     * @hidden
+     * (for now)
+     */
+    public onActorDestroyed(handler: (actor: Actor) => void): this {
         this.emitter.on('actor-destroyed', handler);
+        return this;
+    }
+
+    /**
+     * @hidden
+     * (for now)
+     */
+    public offActorDestroyed(handler: (actor: Actor) => void): this {
+        this.emitter.off('actor-destroyed', handler);
         return this;
     }
 
@@ -136,6 +172,15 @@ export class Context {
     // tslint:disable-next-line:max-line-length
     public onReceiveRPC(handler: (procName: string, channelName: string, args: any[]) => void): this {
         this.emitter.on('context.receive-rpc', handler);
+        return this;
+    }
+
+    /**
+     * @hidden
+     */
+    // tslint:disable-next-line:max-line-length
+    public offReceiveRPC(handler: (procName: string, channelName: string, args: any[]) => void): this {
+        this.emitter.off('context.receive-rpc', handler);
         return this;
     }
 }

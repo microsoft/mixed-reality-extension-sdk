@@ -11,4 +11,6 @@ export default abstract class Test {
     }
 
     public abstract run(): Promise<boolean>;
+    public cleanup() {
+    }
 }

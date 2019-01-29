@@ -31,7 +31,14 @@ export class VideoPlayerManager {
         }
 
         this._RPC = new ContextRPC(context);
-        this.context.onUserJoined(user => this.userJoined(user));
+
+        this.userJoined = this.userJoined.bind(this);
+        this.context.onUserJoined(this.userJoined);
+    }
+
+    public cleanup() {
+        this.context.offUserJoined(this.userJoined);
+        this._RPC.cleanup();
     }
 
     private userJoined(user: User) {

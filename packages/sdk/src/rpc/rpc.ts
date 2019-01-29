@@ -152,9 +152,17 @@ export class ContextRPC extends RPC {
      */
     constructor(context: Context) {
         super(context);
-        this.context.internal.__rpc = this;
+        if (this.context.internal.__rpc === undefined) {
+            this.context.internal.__rpc = this;
+        }
         this._receive = this._receive.bind(this);
         this.context.onReceiveRPC(this._receive);
+    }
+    public cleanup() {
+        if (this.context.internal.__rpc === this) {
+            this.context.internal.__rpc = undefined;
+        }
+        this.context.offReceiveRPC(this._receive);
     }
 
     public channel(channelName: string, create = true) {
