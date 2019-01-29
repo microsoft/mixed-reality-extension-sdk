@@ -54,7 +54,6 @@ export class VideoPlayerManager {
                         });
                 }
             }
-            userRPC.cleanup();
         }
         this.hasAnyUserJoined = true;
     }
