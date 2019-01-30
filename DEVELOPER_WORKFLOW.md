@@ -44,16 +44,16 @@ With this structure, I'd expect there to mostly be 1 or 2 active release version
 ### [Blue] When we decide to prepare a new MRE minor version release (criteria: usually ~1 day before Altspace code lock, or sooner if there are major changes)
 1. Merge sdk/green into sdk/red
 2. Merge samples/green into samples/red
-3. Make sure protocol version is incremented in red branches if needed:
-   1. MREUnityRuntimeLib\Constants.cs: ProtocolVersion
-   2. packages\sdk\src\utils\verifyClient.ts: CurrentProtocolVersion
-   3. **TODO: We should change to have both current and min protocol versions. Unity rejects if MRE currentprotocolversion is higher than unity.Current or older than unity.min, and MRE rejects only if Unity.current is older than min (because newer clients are compatible with  older MREs)**
-4. Test pass* for red branches
-5. Create new unity/sdk/sample branches named v0.[new_minor].n, matching the red (NOTE: if there was already a new SDK release created, but it wasn't "shipped", we can stomp that - i.e. if v0.[new_minor-1].n was never used in any host app, we can just reset hard, instead of creating v0.[new_minor].n)
-6. Build Unity DLLs* from unity/v0.[new_minor].n
-7. Publish NPM package* from sdk/v0.[new_minor].n tagged @next
+3. Update CurrentVersion to match major.minor in MREUnityRuntimeLib\Constants.cs and 
+4. Update CurrentVersion to match major.minor in packages\sdk\src\utils\verifyClient.ts and 
+5. If new features were added to SDK, increase MinimumSupportedClientVersion packages\sdk\src\utils\verifyClient.ts 
+6. If communication was changed in a non-backwards-compatible way, which is a HUGE DEAL, should never happen after exiting beta stage, and requires full team sign-off, increase the MinimumSupportedSDKVersion in MREUnityRuntimeLib\Constants.cs 
+7. Test pass* for red branches
+8. Create new unity/sdk/sample branches named v0.[new_minor].n, matching the red (NOTE: if there was already a new SDK release created, but it wasn't "shipped", we can stomp that - i.e. if v0.[new_minor-1].n was never used in any host app, we can just reset hard, instead of creating v0.[new_minor].n)
+9. Build Unity DLLs* from unity/v0.[new_minor].n
+10. Publish NPM package* from sdk/v0.[new_minor].n tagged @next
 
-### [Cyan] When we decide to integrate sdk/green into an existing minor release (criteria: whenever we think it's worth the effort)
+### [Cyan] When we decide to integrate sdk/green, to patch/hotfix a minor version (The targeted minor version is usually whatever master points to. Criteria: whenever we think it's worth the effort)
 1. Merge sdk/green into sdk/v0.[target].n 
 2. Merge samples/green into samples/v0.[ target].n 
 3. Test Pass* for v0.[ target].n branches
@@ -98,14 +98,14 @@ With this structure, I'd expect there to mostly be 1 or 2 active release version
 
 ### Develop Feature/Develop Hotfix
 1. Create Branch [username]/[featurename] (or feature/[featurename], bug/[bugname] or hotfix/[hotfixname] from a target branch, for all relevant repos (SDK/user/samples)
-2. go to [the MRE Github Issues page](https://github.com/Microsoft/mixed-reality-extension-sdk/projects/1) and move related issues to In Progress
+2. go to [the MRE Github Roadmap page](https://github.com/Microsoft/mixed-reality-extension-sdk/projects/1) and add any issues to the board, and mark as In Progress
 3. Write code, commit to branch, push up
 4. Ensure your feature has test coverage in the functional-test app, and add if necessary
 5. Test pass* for the branch
 6. Do PR towards target branch, with nice description.
 7. If failure or revisions, go to step 2
 8. When PR is approved for all relevant repos (SDK/User/Samples), do the PR squash merge for all repos simultaneously.
-9. go to [the MRE Github Issues page](https://github.com/Microsoft/mixed-reality-extension-sdk/projects/1) and move related issues to Fixed
+9. go to [the MRE Github Roadmap page](https://github.com/Microsoft/mixed-reality-extension-sdk/projects/1) and move related issues to Fixed
 
 ### Test Pass
 1. Main purpose of test pass is to look for regressions – not if new features work properly.
@@ -150,7 +150,7 @@ With this structure, I'd expect there to mostly be 1 or 2 active release version
 7. Slack: Make announcement to #announcements channel, share announcement on #general channel.
 8. Twitter: Announce new features
 9. Teams: announce on Altspace Community Support->SDK or General
-10. go to [the MRE Github Issues page](https://github.com/Microsoft/mixed-reality-extension-sdk/projects/1) and move released issues from Fixed to Released
+10. go to [the MRE Github Roadmap page](https://github.com/Microsoft/mixed-reality-extension-sdk/projects/1) and move released issues from Fixed to Released
 
 ### Build Unity DLLs
 1. It builds on server at every commit 
