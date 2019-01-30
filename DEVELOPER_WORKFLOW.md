@@ -151,7 +151,7 @@ With this structure, I'd expect there to mostly be 1 or 2 active release version
 10. go to [the MRE Github Roadmap page](https://github.com/Microsoft/mixed-reality-extension-sdk/projects/1) and move released issues from Fixed to Released
 
 ### Build Unity DLLs
-1. It builds on server at every commit 
+1. Manually queue a build on the build server
 2. **go to the build server and find build matching the commit ID**
 3. **Permanently store it with version number at?????**
 4. If minor version matches altspaceVR dev or RC branch’s current minor version, or if update is desired then updating AltspaceVR DLLs:
