@@ -31,13 +31,13 @@ With this structure, I'd expect there to mostly be 1 or 2 active release version
 
 ## Main workflows:
 ### [Orange] Integrate minor unity-only change
-1. [Develop feature] targeting unity/red
+1. [Develop feature](#Develop-feature) targeting unity/red
 
 ### [Green] integrate node-only change (or hotfix)
-1. [Develop feature] targeting sdk/green, samples/green
+1. [Develop feature](#Develop-feature) targeting sdk/green, samples/green
 
 ### [Red] integrate breaking unity+node change
-1. [Develop feature] targeting unity/red, sdk/red, samples/red
+1. [Develop feature](#Develop-feature) targeting unity/red, sdk/red, samples/red
 
 ### [Blue] When we decide to prepare a new MRE minor version release (criteria: usually ~1 day before Altspace code lock, or sooner if there are major changes)
 1. Merge sdk/green into sdk/red
@@ -46,38 +46,38 @@ With this structure, I'd expect there to mostly be 1 or 2 active release version
 4. Update CurrentVersion to match major.minor in packages\sdk\src\utils\verifyClient.ts and 
 5. If new features were added to SDK, increase MinimumSupportedClientVersion packages\sdk\src\utils\verifyClient.ts 
 6. If communication was changed in a non-backwards-compatible way, which is a HUGE DEAL, should never happen after exiting beta stage, and requires full team sign-off, increase the MinimumSupportedSDKVersion in MREUnityRuntimeLib\Constants.cs 
-7. [Test pass] for red branches
+7. [Test pass](#Test-pass) for red branches
 8. Create new unity/sdk/sample branches named v0.[new_minor].n, matching the red (NOTE: if there was already a new SDK release created, but it wasn't "shipped", we can stomp that - i.e. if v0.[new_minor-1].n was never used in any host app, we can just reset hard, instead of creating v0.[new_minor].n)
-9. [Build Unity DLLs] from unity/v0.[new_minor].n
-10. [Publish NPM packages] from sdk/v0.[new_minor].n tagged @next
+9. [Build Unity DLLs](#Build-Unity-DLLs) from unity/v0.[new_minor].n
+10. [Publish NPM packages](#Publish-NPM-packages) from sdk/v0.[new_minor].n tagged @next
 
 ### [Cyan] When we decide to integrate sdk/green, to patch/hotfix a minor version (The targeted minor version is usually whatever master points to. Criteria: whenever we think it's worth the effort)
 1. Merge sdk/green into sdk/v0.[target].n 
 2. Merge samples/green into samples/v0.[ target].n 
-3. [Test pass] for v0.[ target].n branches
+3. [Test pass](#Test-pass) for v0.[ target].n branches
 4. If target is current master version
-   1. [Publish NPM packages] from v0.[ target].n tagged @latest 
-   2. [Update Master branches] for sdk/samples
+   1. [Publish NPM packages](#Publish-NPM-packages) from v0.[ target].n tagged @latest 
+   2. [Update Master branches](#Update-Master-branches) for sdk/samples
 5. If target is not master version
-   1. [Publish NPM packages] from v0.[ target].n tagged @next
+   1. [Publish NPM packages](#Publish-NPM-packages) from v0.[ target].n tagged @next
 6. If branches for (target +1) exists
    1. Merge sdk/v0.[ target].n into sdk/v0.[ target +1].n 
    2. Merge samples/v0.[ target].n into samples/v0.[ target +1].n 
    3. Repeat steps 3-6 with target = target +1
 7. Merge sdk/green into sdk/red
 8. Merge samples/green into samples/red
-9. [Test pass] for red branches
+9. [Test pass](#Test-pass) for red branches
 
 ### [Purple] When we need to do a unity-side hotfix in any target release
-1. [Develop feature] targeting the unity/v0.[target].n branch. 
-2. [Build Unity DLLs] from unity/r0.[target].n
+1. [Develop feature](#Develop-feature) targeting the unity/v0.[target].n branch. 
+2. [Build Unity DLLs](#Build-Unity-DLLs) from unity/r0.[target].n
 3. If target is current master version
-   1. [Update Master branches] for Unity
+   1. [Update Master branches](#Update-Master-branches) for Unity
 4. If branches for (targetversion+1) exists
    1. Cherry pick hotfix from unity/r0.[target].n to unity/r0.[targetversion+1].n, 
    2. Repeat steps 2-3 with target=target+1
 5. Merge cherry pick hotfix to unity/red
-6. [Test pass] for red branches
+6. [Test pass](#Test-pass) for red branches
 
 ### [Black] When we update the minimum supported version (i.e. just after Altspace releases)
 
@@ -87,7 +87,7 @@ With this structure, I'd expect there to mostly be 1 or 2 active release version
 2. [Update Master branches] for all repositories
 3. Merge sdk/v0.[new_minor].n to sdk/green
 4. Merge samples/v0.[new_minor].n to samples/green
-5. [Test pass] for green branches
+5. [Test pass](#Test-pass) for green branches
 
 ### When Altspace creates RC
 1. Do nothing – MRE release cycle is decoupled from Altspace RC cycle.
@@ -99,7 +99,7 @@ With this structure, I'd expect there to mostly be 1 or 2 active release version
 2. go to [the MRE Github Roadmap page](https://github.com/Microsoft/mixed-reality-extension-sdk/projects/1) and add any issues to the board, and mark as In Progress
 3. Write code, commit to branch, push to orign
 4. Ensure your feature has test coverage in the functional-test app, and add if necessary
-5. [Test pass] for the branch
+5. [Test pass](#Test pass) for the branch
 6. Do PR towards target branch, with nice description.
 7. If failure or revisions, go to step 2
 8. When PR is approved for all relevant repos (SDK/User/Samples), do the PR squash merge for all repos simultaneously.
