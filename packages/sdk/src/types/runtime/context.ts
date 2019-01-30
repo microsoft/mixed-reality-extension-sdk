@@ -3,6 +3,7 @@
  * Licensed under the MIT License.
  */
 
+import events from 'events';
 import UUID from 'uuid/v4';
 import {
     Actor,
@@ -12,7 +13,6 @@ import {
 } from '../..';
 import { InternalContext } from '../../types/internal/context';
 import { AssetManager } from '../../types/runtime/assets';
-import BufferedEventEmitter from '../../utils/bufferedEventEmitter';
 
 /**
  * Settings used to configure a `Context` instance.
@@ -32,7 +32,7 @@ export class Context {
     /** @hidden */
     public get internal() { return this._internal; }
 
-    private _emitter = new BufferedEventEmitter();
+    private _emitter = new events.EventEmitter();
     /** @hidden */
     public get emitter() { return this._emitter; }
 
@@ -79,7 +79,7 @@ export class Context {
      * @event
      */
     public onStarted(handler: () => void): this {
-        this.emitter.on('started', handler);
+        this.emitter.addListener('started', handler);
         return this;
     }
 
@@ -89,7 +89,7 @@ export class Context {
      * @event
      */
     public onStopped(handler: () => void): this {
-        this.emitter.on('stopped', handler);
+        this.emitter.addListener('stopped', handler);
         return this;
     }
 
@@ -98,7 +98,7 @@ export class Context {
      * @event
      */
     public onUserJoined(handler: (user: User) => void): this {
-        this.emitter.on('user-joined', handler);
+        this.emitter.addListener('user-joined', handler);
         return this;
     }
 
@@ -107,7 +107,7 @@ export class Context {
      * @event
      */
     public offUserJoined(handler: (user: User) => void): this {
-        this.emitter.off('user-joined', handler);
+        this.emitter.removeListener('user-joined', handler);
         return this;
     }
 
@@ -117,7 +117,7 @@ export class Context {
      * @event
      */
     public onUserLeft(handler: (user: User) => void): this {
-        this.emitter.on('user-left', handler);
+        this.emitter.addListener('user-left', handler);
         return this;
     }
 
@@ -126,7 +126,7 @@ export class Context {
      * @event
      */
     public offUserLeft(handler: (user: User) => void): this {
-        this.emitter.off('user-left', handler);
+        this.emitter.removeListener('user-left', handler);
         return this;
     }
 
@@ -135,7 +135,7 @@ export class Context {
      * (for now)
      */
     public onActorCreated(handler: (actor: Actor) => void): this {
-        this.emitter.on('actor-created', handler);
+        this.emitter.addListener('actor-created', handler);
         return this;
     }
 
@@ -144,7 +144,7 @@ export class Context {
      * (for now)
      */
     public offActorCreated(handler: (actor: Actor) => void): this {
-        this.emitter.off('actor-created', handler);
+        this.emitter.removeListener('actor-created', handler);
         return this;
     }
 
@@ -153,7 +153,7 @@ export class Context {
      * (for now)
      */
     public onActorDestroyed(handler: (actor: Actor) => void): this {
-        this.emitter.on('actor-destroyed', handler);
+        this.emitter.addListener('actor-destroyed', handler);
         return this;
     }
 
@@ -162,7 +162,7 @@ export class Context {
      * (for now)
      */
     public offActorDestroyed(handler: (actor: Actor) => void): this {
-        this.emitter.off('actor-destroyed', handler);
+        this.emitter.removeListener('actor-destroyed', handler);
         return this;
     }
 
@@ -171,7 +171,7 @@ export class Context {
      */
     // tslint:disable-next-line:max-line-length
     public onReceiveRPC(handler: (procName: string, channelName: string, args: any[]) => void): this {
-        this.emitter.on('context.receive-rpc', handler);
+        this.emitter.addListener('context.receive-rpc', handler);
         return this;
     }
 
@@ -180,7 +180,7 @@ export class Context {
      */
     // tslint:disable-next-line:max-line-length
     public offReceiveRPC(handler: (procName: string, channelName: string, args: any[]) => void): this {
-        this.emitter.off('context.receive-rpc', handler);
+        this.emitter.removeListener('context.receive-rpc', handler);
         return this;
     }
 }

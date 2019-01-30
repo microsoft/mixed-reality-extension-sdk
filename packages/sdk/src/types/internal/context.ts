@@ -634,7 +634,7 @@ export class InternalContext {
         delete this.interval;
         this.protocol.stopListening();
         this.context.emitter.emit('stopped');
-        this.context.emitter.clearAll();
+        this.context.emitter.removeAllListeners();
     }
 
     public incrementGeneration() {

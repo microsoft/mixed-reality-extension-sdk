@@ -3,9 +3,9 @@
  * Licensed under the MIT License.
  */
 
+import events from 'events';
 import * as Restify from 'restify';
 import { Context, ParameterSet } from '..';
-import BufferedEventEmitter from '../utils/bufferedEventEmitter';
 
 /**
  * Adapter options
@@ -29,7 +29,7 @@ export type AdapterOptions = {
  * the 'connection' event is raised.
  */
 export abstract class Adapter {
-    protected emitter = new BufferedEventEmitter();
+    protected emitter = new events.EventEmitter();
 
     protected get options() { return this._options; }
 
@@ -55,7 +55,7 @@ export abstract class Adapter {
      * @event
      */
     public onConnection(handler: (context: Context, params: ParameterSet) => void): this {
-        this.emitter.on('connection', handler);
+        this.emitter.addListener('connection', handler);
         return this;
     }
 }
