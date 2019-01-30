@@ -8,5 +8,5 @@ import { ExportedPromise } from './exportedPromise';
 /** @hidden */
 export interface QueuedPromise {
     promise: ExportedPromise;
-    timestamp: number;
+    timeout: NodeJS.Timer;
 }

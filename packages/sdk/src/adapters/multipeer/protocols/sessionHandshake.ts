@@ -21,17 +21,12 @@ export class SessionHandshake extends Protocols.Protocol {
     /** @override */
     public startListening() {
         super.startListening();
-        this.sendPayload({
-            type: 'handshake'
-        } as Payloads.Handshake);
+        this.sendPayload({ type: 'handshake' } as Payloads.Handshake);
     }
 
     /** @private */
     public 'recv-handshake-reply' = (payload: Payloads.HandshakeReply) => {
-        this.stopListening();
-        this.sendPayload({
-            type: 'handshake-complete',
-        } as Payloads.HandshakeComplete);
-        this.emit('protocol.handshake-complete');
+        this.sendPayload({ type: 'handshake-complete' } as Payloads.HandshakeComplete);
+        this.resolve();
     }
 }

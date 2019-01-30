@@ -7,6 +7,7 @@ import deepmerge from 'deepmerge';
 import { EventEmitter } from 'events';
 import { Client, MissingRule, Rules, SessionExecution, SessionHandshake, SessionSync, SyncActor } from '.';
 import { Connection, Message, UserLike } from '../..';
+import { log } from '../../log';
 import * as Protocols from '../../protocols';
 import * as Payloads from '../../types/network/payloads';
 
@@ -68,50 +69,56 @@ export class Session extends EventEmitter {
     /**
      * Performs handshake and sync with the app
      */
-    public connect(): Promise<void> {
-        return new Promise<void>((resolve, reject) => {
-            // Start with Handshake protocol
+    public async connect() {
+        try {
             const handshake = this._protocol = new SessionHandshake(this);
-            handshake.on('protocol.handshake-complete', () => {
-                // Sync app state to session
-                const sync = this._protocol = new SessionSync(this);
-                sync.on('protocol.sync-complete', () => {
-                    // Switch to Execution protocol
-                    const execution = this._protocol = new SessionExecution(this);
-                    execution.on('recv', message => this.recvFromApp(message));
-                    execution.startListening();
-                    resolve();
-                });
-                sync.startListening();
-            });
-            handshake.startListening();
-        });
+            await handshake.run();
+
+            const sync = this._protocol = new SessionSync(this);
+            await sync.run();
+
+            const execution = this._protocol = new SessionExecution(this);
+            execution.on('recv', message => this.recvFromApp(message));
+            execution.startListening();
+        } catch (e) {
+            log.error('network', e);
+            this.disconnect();
+        }
     }
 
     public disconnect() {
-        this._conn.off('close', this.disconnect);
-        this._conn.off('error', this.disconnect);
-        this._conn.close();
-        this.emit('close');
+        try {
+            this._conn.off('close', this.disconnect);
+            this._conn.off('error', this.disconnect);
+            this._conn.close();
+            this.emit('close');
+        } catch { }
     }
 
     /**
      * Adds the client to the session
      */
-    public async join(client: Client): Promise<void> {
-        if (this.authoritativeClient) {
-            await this.authoritativeClient.joinedOrLeft();
-            // console.log("authoritative client finished joining (or died trying)");
-        }
-        this._clientSet[client.id] = client;
-        client.on('close', () => this.leave(client.id));
-        await client.join(this);
-        client.on('recv', (_: Client, message: Message) => this.recvFromClient(client, message));
-        if (this.authoritativeClient) {
-            this.authoritativeClient.sendPayload({
-                type: 'set-authoritative',
-                authoritative: this.peerAuthoritative,
-            } as Payloads.SetAuthoritative);
+    public async join(client: Client) {
+        try {
+            if (this.authoritativeClient) {
+                await this.authoritativeClient.joinedOrLeft();
+                // console.log("authoritative client finished joining (or died trying)");
+            }
+            this._clientSet[client.id] = client;
+            client.on('close', () => this.leave(client.id));
+            await client.join(this);
+            // Once the client is joined, further messages from the client will be processed by the session
+            // (as opposed to a protocol class).
+            client.on('recv', (_: Client, message: Message) => this.recvFromClient(client, message));
+            if (this.authoritativeClient) {
+                this.authoritativeClient.sendPayload({
+                    type: 'set-authoritative',
+                    authoritative: this.peerAuthoritative,
+                } as Payloads.SetAuthoritative);
+            }
+        } catch (e) {
+            log.error('network', e);
+            this.leave(client.id);
         }
     }
 
@@ -119,28 +126,30 @@ export class Session extends EventEmitter {
      * Removes the client from the session
      */
     public leave(clientId: string) {
-        const client = this._clientSet[clientId];
-        delete this._clientSet[clientId];
-        if (client) {
-            // If the client is associated with a userId, inform app the user is leaving
-            if (client.userId) {
-                this.protocol.sendPayload({
-                    type: 'user-left',
-                    userId: client.userId
-                } as Payloads.UserLeft);
+        try {
+            const client = this._clientSet[clientId];
+            delete this._clientSet[clientId];
+            if (client) {
+                // If the client is associated with a userId, inform app the user is leaving
+                if (client.userId) {
+                    this.protocol.sendPayload({
+                        type: 'user-left',
+                        userId: client.userId
+                    } as Payloads.UserLeft);
+                }
+                // Select another peer to be the authoritative peer
+                if (this.authoritativeClient) {
+                    this.authoritativeClient.sendPayload({
+                        type: 'set-authoritative',
+                        authoritative: this.peerAuthoritative
+                    } as Payloads.SetAuthoritative);
+                }
             }
-            // Select another peer to be the authoritative peer
-            if (this.authoritativeClient) {
-                this.authoritativeClient.sendPayload({
-                    type: 'set-authoritative',
-                    authoritative: this.peerAuthoritative
-                } as Payloads.SetAuthoritative);
+            // If this was the last client then shutdown the session
+            if (!this.clients.length) {
+                this._conn.close();
             }
-        }
-        // If this was the last client then shutdown the session
-        if (!this.clients.length) {
-            this._conn.close();
-        }
+        } catch { }
     }
 
     private recvFromClient = (client: Client, message: Message) => {

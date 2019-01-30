@@ -14,6 +14,9 @@ import * as Constants from '../../constants';
 import verifyClient from '../../utils/verifyClient';
 import { log } from './../../log';
 
+// tslint:disable-next-line:no-var-requires
+const forwarded = require('forwarded-for');
+
 /**
  * WebSocket Adapter options.
  */
@@ -39,7 +42,7 @@ export class WebSocketAdapter extends Adapter {
      * Start the adapter listening for new connections.
      * @param onNewConnection Handler for new connections.
      */
-    public listen(): Promise<Restify.Server> {
+    public listen() {
         if (!this.server) {
             // If necessary, create a new web server.
             return new Promise<Restify.Server>((resolve) => {
@@ -71,14 +74,22 @@ export class WebSocketAdapter extends Adapter {
             // Parse URL parameters.
             const params = QueryString.parseUrl(request.url).query;
 
-            // Wrap the new WebSocket in a MRESDK.WebSocket.
-            const connection = new WebSocket(ws, request.socket.remoteAddress);
+            // Get the client's IP address rather than the last proxy connecting to you.
+            const address = forwarded(request, request.headers);
 
+            // Create a WebSocket for the connection.
+            const connection = new WebSocket(ws, address.ip);
+
+            // Create a new context for the connection.
             const context = new Context({
                 sessionId,
                 connection
             });
-            context.internal.start();
+
+            // Startup the context.
+            context.internal.start().catch(() => connection.close());
+
+            // Pass the new context to the app
             this.emitter.emit('connection', context, params);
         });
     }

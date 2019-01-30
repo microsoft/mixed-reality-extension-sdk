@@ -31,7 +31,6 @@ export class Handshake extends Protocol {
 
     /** @private */
     public 'recv-handshake-complete' = (payload: Payloads.HandshakeComplete) => {
-        this.stopListening();
-        this.emit('protocol.handshake-complete');
+        this.resolve();
     }
 }

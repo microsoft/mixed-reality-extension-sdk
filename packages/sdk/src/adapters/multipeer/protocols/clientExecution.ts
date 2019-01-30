@@ -45,11 +45,16 @@ export class ClientExecution extends Protocols.Protocol implements Protocols.Mid
     private setHeartbeatTimer(): NodeJS.Timer {
         return setTimeout(async () => {
             if (this.heartbeatTimer) {
-                await this.heartbeat.send();
-                this.heartbeatTimer = this.setHeartbeatTimer();
+                try {
+                    await this.heartbeat.send();
+                    this.heartbeatTimer = this.setHeartbeatTimer();
+                } catch {
+                    this.client.leave();
+                    this.resolve();
+                }
             }
             // Irregular heartbeats are a good thing in this instance.
-        }, 1000 * (4 + 2 * Math.random()));
+        }, 1000 * (5 + 5 * Math.random()));
     }
 
     public beforeRecv = (message: Message): Message => {
@@ -57,6 +62,7 @@ export class ClientExecution extends Protocols.Protocol implements Protocols.Mid
             // If we have a queued promise for this message, let it through
             return message;
         } else {
+            // Notify listeners we received a message.
             this.emit('recv', message);
             // Cancel the message
             return undefined;

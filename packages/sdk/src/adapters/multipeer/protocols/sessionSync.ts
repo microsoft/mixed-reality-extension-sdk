@@ -21,14 +21,11 @@ export class SessionSync extends Protocols.Protocol {
     /** @override */
     public startListening() {
         super.startListening();
-        this.sendPayload({
-            type: 'sync-request',
-        } as Payloads.SyncRequest);
+        this.sendPayload({ type: 'sync-request' } as Payloads.SyncRequest);
     }
 
     /** @private */
     public 'recv-sync-complete' = (payload: Payloads.SyncComplete) => {
-        this.stopListening();
-        this.emit('protocol.sync-complete');
+        this.resolve();
     }
 }
