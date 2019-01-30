@@ -21,6 +21,7 @@ import RigidBodyTest from './tests/rigid-body-test';
 import Test from './tests/test';
 import TextTest from './tests/text-test';
 import UserTest from './tests/user-test';
+import delay from './utils/delay';
 import destroyActors from './utils/destroyActors';
 
 /**
@@ -78,7 +79,7 @@ export default class App {
             testName = this.params.test as string;
         }
         if (testName) {
-            await this.startTest(testName, user);
+            await this.runTest(testName, user);
             this.rpc.send('functional-test:close-connection');
         } else {
             if (!this.firstUser) {
@@ -91,31 +92,62 @@ export default class App {
         console.log(`user-left: ${user.name}, ${user.id}`);
         delete this._connectedUsers[user.id];
     }
-    private async startTest(testName: string, user: MRESDK.User) {
+    private async runTest(testName: string, user: MRESDK.User) {
         if (this.activeTests[testName]) {
             console.log(`Test already running: '${testName}'`);
         } else if (!this.testFactories[testName]) {
             console.log(`error: Unrecognized test: '${testName}'`);
         } else {
+            this.rpc.send('functional-test:test-starting', testName);
+            console.log(`Test starting: '${testName}'`);
             const test = this.activeTests[testName] = this.testFactories[testName](user);
             this.rpc.send('functional-test:test-started', testName);
             console.log(`Test started: '${testName}'`);
+
             let success: boolean;
             try {
                 success = await test.run();
+                if (!success) {
+                    await this.displayError("Test Failed: '${testName}'");
+                }
             } catch (e) {
                 console.log(e);
+                await this.displayError("Test Triggered Exception: " + e);
                 success = false;
             }
             console.log(`Test complete: '${testName}'. Success: ${success}`);
             this.rpc.send('functional-test:test-complete', testName, success);
 
+            test.cleanup();
+
             delete this.activeTests[testName];
+            // Delete all actors
+            destroyActors(this.context.rootActors);
+            this.context.assetManager.cleanup();
         }
     }
+
+    private async displayError(errorString: string) {
+        const errorLabel = await MRESDK.Actor.CreateEmpty(this.context, {
+            actor: {
+                name: 'label',
+                text: {
+                    contents: errorString,
+                    height: 0.5,
+                    anchor: MRESDK.TextAnchorLocation.MiddleCenter
+                },
+                transform: {
+                    position: { x: 0, y: 0, z: 0 }
+                }
+            }
+        });
+        await delay(2000);
+        destroyActors(errorLabel);
+    }
+
     private async displayFunctionalTestChoices(rootActor: MRESDK.ActorLike): Promise<string> {
         return new Promise<string>((resolve) => {
-            let y = 0;
+            let y = 0.3;
             for (const key in this.testFactories) {
                 if (this.testFactories.hasOwnProperty(key)) {
                     const button = MRESDK.Actor.CreatePrimitive(this.context, {
@@ -163,7 +195,7 @@ export default class App {
             const rootActor = MRESDK.Actor.CreateEmpty(this.context, {});
             const selectedTestName = await this.displayFunctionalTestChoices(rootActor.value);
             destroyActors(rootActor.value);
-            await this.startTest(selectedTestName, this.firstUser);
+            await this.runTest(selectedTestName, this.firstUser);
         }
     }
 }
