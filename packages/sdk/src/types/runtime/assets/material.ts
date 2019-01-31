@@ -4,7 +4,7 @@
  */
 
 import { Asset, AssetLike, AssetManager, Texture } from '.';
-import { Color3, Color4, Vector2Like, Vector2 } from '../../../math';
+import { Color3, Color4, Vector2, Vector2Like } from '../../../math';
 import observe from '../../../utils/observe';
 import readPath from '../../../utils/readPath';
 import { InternalAsset } from '../../internal/asset';
@@ -115,11 +115,19 @@ export class Material extends Asset implements MaterialLike, Patchable<AssetLike
         const wasObserving = this.internal.observing;
         this.internal.observing = false;
 
-        // tslint:disable:curly
         super.copy(from);
-        if (from.material && from.material.color)
-            this._color.copy(from.material.color);
-        // tslint:enable:curly
+        if (from.material) {
+            if (from.material.color) {
+                this._color.copy(from.material.color);
+            }
+            if (from.material.mainTextureOffset) {
+                this._mainTextureOffset.copy(from.material.mainTextureOffset);
+            }
+            if (from.material.mainTextureScale) {
+                this._mainTextureScale.copy(from.material.mainTextureScale);
+            }
+            this._mainTextureId = from.material.mainTextureId || null;
+        }
 
         this.internal.observing = wasObserving;
         return this;
@@ -130,7 +138,10 @@ export class Material extends Asset implements MaterialLike, Patchable<AssetLike
         return {
             ...super.toJSON(),
             material: {
-                color: this._color.toJSON()
+                color: this.color.toJSON(),
+                mainTextureId: this.mainTextureId,
+                mainTextureOffset: this.mainTextureOffset.toJSON(),
+                mainTextureScale: this.mainTextureScale.toJSON()
             }
         };
     }
