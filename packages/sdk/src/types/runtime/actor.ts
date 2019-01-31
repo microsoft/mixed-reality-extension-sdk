@@ -85,7 +85,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
     private _materialId?: string;
     // tslint:enable:variable-name
 
-    /**
+    /*
      * PUBLIC ACCESSORS
      */
 
@@ -113,6 +113,8 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
         this._parentId = value;
         this.actorChanged('parentId');
     }
+
+    /** @returns A shared reference to this actor's material, or null if this actor has no material */
     public get material() { return this._context.assetManager.assets[this._materialId] as Material; }
     public set material(value) {
         this.materialId = value && value.id || null;

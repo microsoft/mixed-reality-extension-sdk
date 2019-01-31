@@ -7,10 +7,15 @@ import { Epsilon, Matrix, Scalar, Vector3 } from '.';
 
 // tslint:disable:member-ordering variable-name one-variable-per-declaration trailing-comma no-bitwise curly max-line-length
 
+export interface Vector2Like {
+    x: number;
+    y: number;
+}
+
 /**
  * Class representing a vector containing 2 coordinates
  */
-export class Vector2 {
+export class Vector2 implements Vector2Like {
 
     // Statics
 
@@ -655,5 +660,16 @@ export class Vector2 {
      */
     public clone(): Vector2 {
         return new Vector2(this.x, this.y);
+    }
+
+    /**
+     * Updates the Vector2 from the sparsely populated value.
+     * @param from The sparsely populated value to read from.
+     */
+    public copy(from: Partial<Vector2Like>): this {
+        if (!from) { return this; }
+        if (from.x !== undefined) { this.x = from.x; }
+        if (from.y !== undefined) { this.y = from.y; }
+        return this;
     }
 }
