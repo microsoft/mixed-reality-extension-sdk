@@ -11,7 +11,7 @@ import * as WS from 'ws';
 import { Adapter, AdapterOptions } from '..';
 import { Context, ParameterSet, Pipe, WebSocket } from '../../';
 import * as Constants from '../../constants';
-import { verifyClient } from '../../utils/verifyClient';
+import verifyClient from '../../utils/verifyClient';
 import { log } from './../../log';
 import { Client } from './client';
 import { Session } from './session';
@@ -114,7 +114,7 @@ export class MultipeerAdapter extends Adapter {
             log.info('network', "New Multi-peer connection");
 
             // Read the sessionId header.
-            let sessionId = request.headers[Constants.SessionHeader] as string || UUID();
+            let sessionId = request.headers[Constants.HTTPHeaders.SessionID] as string || UUID();
             sessionId = decodeURIComponent(sessionId);
 
             // Parse URL parameters.
