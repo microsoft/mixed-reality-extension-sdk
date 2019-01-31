@@ -61,14 +61,14 @@ export default function verifyClient(
         if (!clientPass) {
             // tslint:disable-next-line:max-line-length
             const message = `Connection rejected due to out of date client. Client version: ${CurrentClientVersion.toString()}. Min supported version by SDK: ${MinimumSupportedClientVersion.toString()}`;
-            log.info('network', message);
+            log.info('app', message);
             return cb(false, 403, message);
         }
 
         if (!sdkPass) {
             // tslint:disable-next-line:max-line-length
             const message = `Connection rejected due to out of date SDK. Current SDK version: ${CurrentSDKVersion.toString()}. Min supported version by client: ${MinimumSupportedSDKVersion.toString()}`;
-            log.info('network', message);
+            log.info('app', message);
             // Log this line to the console. The developer should know about this.
             // tslint:disable-next-line:no-console
             console.info(message);
