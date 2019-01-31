@@ -3,6 +3,7 @@
  * Licensed under the MIT License.
  */
 
+import events from 'events';
 import {
     Collider,
     ColliderLike,
@@ -26,7 +27,6 @@ import {
     SetAnimationStateOptions
 } from '../..';
 import { log } from '../../log';
-import BufferedEventEmitter from '../../utils/bufferedEventEmitter';
 import observe from '../../utils/observe';
 import readPath from '../../utils/readPath';
 import { createForwardPromise, ForwardPromise } from '../forwardPromise';
@@ -69,7 +69,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
     /** @hidden */
     public get internal() { return this._internal; }
 
-    private _emitter: BufferedEventEmitter;
+    private _emitter: events.EventEmitter;
     /** @hidden */
     public get emitter() { return this._emitter; }
 
@@ -132,7 +132,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
     // tslint:disable-next-line:variable-name
     private constructor(private _context: Context, private _id: string) {
         this._internal = new InternalActor(this);
-        this._emitter = new BufferedEventEmitter();
+        this._emitter = new events.EventEmitter();
         this._transform = new Transform();
         // Actor patching: Observe the transform for changed values.
         observe(this._transform, 'transform', (...path: string[]) => this.actorChanged(...path));
@@ -528,7 +528,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
      */
     public onCollisionEnter(handler: (collisionData: CollisionData) => any): this {
         this.context.internal.updateCollisionEventSubscriptions(this._id, { adds: CollisionEventType.CollisionEnter });
-        this.emitter.on(CollisionEventType.CollisionEnter, handler);
+        this.emitter.addListener(CollisionEventType.CollisionEnter, handler);
         return this;
     }
 
@@ -538,7 +538,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
      */
     public onCollisionExit(handler: (collisionData: CollisionData) => any): this {
         this.context.internal.updateCollisionEventSubscriptions(this._id, { adds: CollisionEventType.CollisionExit });
-        this.emitter.on(CollisionEventType.CollisionExit, handler);
+        this.emitter.addListener(CollisionEventType.CollisionExit, handler);
         return this;
     }
 
@@ -548,7 +548,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
      */
     public onTriggerEnter(handler: (collisionData: CollisionData) => any): this {
         this.context.internal.updateCollisionEventSubscriptions(this._id, { adds: CollisionEventType.TriggerEnter });
-        this.emitter.on(CollisionEventType.TriggerEnter, handler);
+        this.emitter.addListener(CollisionEventType.TriggerEnter, handler);
         return this;
     }
 
@@ -558,7 +558,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
      */
     public onTriggerExit(handler: (collisionData: CollisionData) => any): this {
         this.context.internal.updateCollisionEventSubscriptions(this._id, { adds: CollisionEventType.TriggerExit });
-        this.emitter.on(CollisionEventType.TriggerExit, handler);
+        this.emitter.addListener(CollisionEventType.TriggerExit, handler);
         return this;
     }
 
@@ -567,7 +567,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
      * @param handler The handler to call when an animation reaches the end or is otherwise disabled.
      */
     public onAnimationDisabled(handler: (animationName: string) => any): this {
-        this.emitter.on('animation-disabled', handler);
+        this.emitter.addListener('animation-disabled', handler);
         return this;
     }
 
@@ -576,7 +576,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
      * @param handler The handler to call when an animation moves from the disabled to enabled state.
      */
     public onAnimationEnabled(handler: (animationName: string) => any): this {
-        this.emitter.on('animation-enabled', handler);
+        this.emitter.addListener('animation-enabled', handler);
         return this;
     }
 
