@@ -127,26 +127,24 @@ little if there are no changes)
 * Activate the Space Editor
 * Click Basics group
 * Click on SDKApp
-* For the URL field, please enter the URL (for example 
-`ws://localhost:3901?test=rigid-body-test` for a functional test)
-* Enter a session ID (This step will eventually be optional. For now, put 
-in any random value)
+* For the URL field, please enter the URL `ws://localhost:3901`
 * Click Confirm
-* If the app doesn't seem to load, click on the gear icon next the MRE object
-in to the present objects list, and make sure "Is Playing" is checked.
-* After the app has been placed, you will see the MRE Anchor (the white box with
-red/green/blue spikes on it), and you can use it to move the MRE around. To
-hide the anchor, uncheck "Edit Mode".
+* After the app has been placed, you will see the MRE Anchor (the white box 
+with red/green/blue spikes on it), and you can use it to move the MRE around, 
+and you can see the status of the MRE connection by looking at the icon on the
+anchor. To hide the anchor, uncheck "Edit Mode".
 
 You should now see a functional test load up inside AltspaceVR. 
 
 ## Pre-deployed MREs
-We have deployed the hello world and functional test MREs to servers in Azure. 
+We have deployed the hello world and functional test MREs to servers in the cloud. 
 The URLs are
-* `ws://mre-hello-world.azurewebsites.net`
-* `ws://mre-functional-tests.azurewebsites.net?test=testname` (replace testname 
-with gltf-animation-test, input-test, rigid-body-test, text-test, 
-primitives-test, look-at-test, or clock-sync-test)
+* ws://mre-helloworld.us.openode.io
+* ws://mre-solarsystem.us.openode.io
+* ws://mre-functional-test-master.us.openode.io
+* ws://mre-tic-tac-toe.us.openode.io
+* ws://mre-tic-tac-toe-3d.openode.io
+
 
 ## Using Visual Studio Code
 We recommend Visual Studio Code, a lightweight code editor, which is easy to
