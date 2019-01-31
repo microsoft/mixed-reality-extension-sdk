@@ -139,11 +139,11 @@ You should now see a functional test load up inside AltspaceVR.
 ## Pre-deployed MREs
 We have deployed the hello world and functional test MREs to servers in the cloud. 
 The URLs are
-ws://mre-helloworld.us.openode.io
-ws://mre-solarsystem.us.openode.io
-ws://mre-functional-test-master.us.openode.io
-ws://mre-tic-tac-toe.us.openode.io
-ws://mre-tic-tac-toe-3d.openode.io
+* ws://mre-helloworld.us.openode.io
+* ws://mre-solarsystem.us.openode.io
+* ws://mre-functional-test-master.us.openode.io
+* ws://mre-tic-tac-toe.us.openode.io
+* ws://mre-tic-tac-toe-3d.openode.io
 
 
 ## Using Visual Studio Code
