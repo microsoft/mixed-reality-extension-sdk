@@ -244,7 +244,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
     /**
      * Provides an awaitable object that resolves once the actor has been created on the host.
      */
-    public created(): Promise<void> {
+    public created() {
         if (this.internal.created) {
             return Promise.resolve();
         } else {
@@ -269,7 +269,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
             this._light.copy(light);
             // Actor patching: Observe the light component for changed values.
             observe(this._light, 'light', (...path: string[]) => this.actorChanged(...path));
-            return this.context.internal.enableLight(this.id, this._light);
+            return this.context.internal.enableLight(this.id, light);
         }
         return createForwardPromise(this._light, Promise.resolve(this._light));
     }
@@ -284,8 +284,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
             this._rigidBody.copy(rigidBody);
             // Actor patching: Observe the rigidBody component for changed values.
             observe(this._rigidBody, 'rigidBody', (...path: string[]) => this.actorChanged(...path));
-            this.subscribe('rigidbody');
-            return this.context.internal.enableRigidBody(this.id, this._rigidBody);
+            return this.context.internal.enableRigidBody(this.id, rigidBody);
         }
         return createForwardPromise(this._rigidBody, Promise.resolve(this._rigidBody));
     }
@@ -354,7 +353,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
             this._text.copy(text);
             // Actor patching: Observe the text component for changed values.
             observe(this._text, 'text', (...path: string[]) => this.actorChanged(...path));
-            return this.context.internal.enableText(this.id, this._text);
+            return this.context.internal.enableText(this.id, text);
         }
         return createForwardPromise(this._text, Promise.resolve(this._text));
     }

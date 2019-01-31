@@ -65,40 +65,37 @@ export class Client extends EventEmitter {
     /**
      * Syncs state with the client
      */
-    public join(session: Session): Promise<void> {
-        this._session = session;
-        return new Promise<void>((resolve, reject) => {
-            // Handshake with the client
-            const handshake = this._protocol = new ClientHandshake(this);
-            handshake.on('protocol.handshake-complete', () => {
-                // Sync state to the client
-                const sync = this._protocol = new ClientSync(this);
-                sync.on('protocol.sync-complete', () => {
-                    // Join the session as a user
-                    const execution = this._protocol = new ClientExecution(this);
-                    execution.on('recv', (message) => this.emit('recv', this, message));
-                    execution.startListening();
-                    resolve();
-                });
-                sync.startListening();
-            });
-            handshake.startListening();
-        });
+    public async join(session: Session) {
+        try {
+            this._session = session;
+            // Sync state to the client
+            const sync = this._protocol = new ClientSync(this);
+            await sync.run();
+            // Join the session as a user
+            const execution = this._protocol = new ClientExecution(this);
+            execution.on('recv', (message) => this.emit('recv', this, message));
+            execution.startListening();
+        } catch (e) {
+            log.error('network', e);
+            this.leave();
+        }
     }
 
     public leave() {
-        if (this._protocol) {
-            this._protocol.stopListening();
-            this._protocol = undefined;
-        }
-        this._conn.off('close', this.leave);
-        this._conn.off('error', this.leave);
-        this._conn.close();
-        this._session = undefined;
-        this.emit('close');
+        try {
+            if (this._protocol) {
+                this._protocol.stopListening();
+                this._protocol = undefined;
+            }
+            this._conn.off('close', this.leave);
+            this._conn.off('error', this.leave);
+            this._conn.close();
+            this._session = undefined;
+            this.emit('close');
+        } catch { }
     }
 
-    public joinedOrLeft(): Promise<void> {
+    public joinedOrLeft() {
         if (this.protocol && this.protocol.constructor.name === "ClientExecution") {
             return Promise.resolve();
         }

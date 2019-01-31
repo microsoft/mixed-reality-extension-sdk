@@ -23,11 +23,11 @@ export class Heartbeat {
      */
     public async runIterations(sampleCount: number) {
         for (let i = 0; i < sampleCount; ++i) {
-            await this.send();
+            await this.send(); // Allow exceptions to propagate out.
         }
     }
 
-    public send(): Promise<number> {
+    public send() {
         return new Promise<number>((resolve, reject) => {
             const start = Date.now();
             this.protocol.sendPayload({

@@ -104,10 +104,9 @@ export class Execution extends Protocol {
         this.stopListening();
 
         const sync = new Sync(this.conn);
-        sync.on('protocol.sync-complete', () => {
-            this.startListening();
-        });
-        sync.startListening();
+        await sync.run(); // Allow exception to propagate.
+
+        this.startListening();
     }
 
     /** @private */

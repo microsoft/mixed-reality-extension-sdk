@@ -39,16 +39,6 @@ export type MessageHandling =
  */
 export type Rule = {
     /**
-     * During handshake, apply this kind of handling to outgoing messages.
-     */
-    handshake: {
-        /**
-         * `during` - How to handle outgoing messages of this type while the handshake protocol is active.
-         */
-        during: MessageHandling;
-    },
-
-    /**
      * During synchronization, apply these rules to outgoing messages.
      */
     synchronization: {
@@ -118,9 +108,6 @@ export type Rule = {
  * The DefaultRule provides reasonable default rule settings, ensuring all fields are assigned.
  */
 export const DefaultRule: Rule = {
-    handshake: {
-        during: 'queue'
-    },
     synchronization: {
         stage: 'always',
         before: 'allow',
@@ -178,9 +165,6 @@ export const MissingRule: Rule = {
  */
 const ClientOnlyRule: Rule = {
     ...DefaultRule,
-    handshake: {
-        during: 'error'
-    },
     synchronization: {
         stage: 'always',
         before: 'error',
@@ -213,9 +197,6 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
     // ========================================================================
     'actor-correction': {
         ...DefaultRule,
-        handshake: {
-            during: 'ignore'
-        },
         synchronization: {
             stage: 'create-actors',
             before: 'ignore',
@@ -260,9 +241,6 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
     // ========================================================================
     'actor-update': {
         ...DefaultRule,
-        handshake: {
-            during: 'ignore'
-        },
         synchronization: {
             stage: 'create-actors',
             before: 'ignore',
@@ -316,13 +294,17 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
                         // Make a copy of the message so we can modify it.
                         const payloadForClients = deepmerge(message.payload, {});
 
-                        // If animating, don't sync transform changes with other clients. Animations are desynchronized.
+                        // If animating, don't sync transform changes with other clients (animations are desynchronized)
                         if (session.isAnimating(syncActor)) {
-                            payloadForClients.actor.transform = undefined;
+                            delete payloadForClients.actor.transform;
                         }
 
-                        // Sync the change to the other clients.
-                        session.sendPayloadToClients(payloadForClients, client.id);
+                        // Don't sync to other clients if the actor patch is empty.
+                        // (if keys.length === 1, it only contains the actor.id field)
+                        if (Object.keys(payloadForClients.actor).length > 1) {
+                            // Sync the change to the other clients.
+                            session.sendPayloadToClients(payloadForClients, client.id);
+                        }
 
                         // Determine whether to forward the message to the app based on subscriptions.
                         let shouldSendToApp = false;
@@ -332,10 +314,11 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
                             subscriptions.includes('transform')) {
                             shouldSendToApp = true;
                         } else if (message.payload.actor.rigidBody &&
-                            Object.keys(message.payload.actor.transform) &&
+                            Object.keys(message.payload.actor.rigidBody) &&
                             subscriptions.includes('rigidbody')) {
                             shouldSendToApp = true;
                         }
+
                         return shouldSendToApp ? message : undefined;
                     }
                 }
@@ -346,9 +329,6 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
     // ========================================================================
     'app2engine-rpc': {
         ...DefaultRule,
-        handshake: {
-            during: 'queue'
-        },
         synchronization: {
             stage: 'always',
             before: 'queue',
@@ -378,9 +358,6 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
     // ========================================================================
     'asset-update': {
         ...DefaultRule,
-        handshake: {
-            during: 'ignore'
-        },
         synchronization: {
             stage: 'load-assets',
             before: 'ignore',
@@ -401,15 +378,27 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 
     // ========================================================================
     'assets-loaded': {
-        ...ClientOnlyRule
+        ...ClientOnlyRule,
+        session: {
+            ...ClientOnlyRule.session,
+            beforeReceiveFromClient: (
+                session: Session,
+                client: Client,
+                message: Message<Payloads.AssetsLoaded>
+            ) => {
+                if (client.authoritative) {
+                    return message;
+                } else if (message.payload.failureMessage && message.payload.failureMessage.length) {
+                    // TODO: Propagate to app as a general failure message once
+                    // we have created the error event handler message path.
+                }
+            }
+        }
     },
 
     // ========================================================================
     'create-animation': {
         ...DefaultRule,
-        handshake: {
-            during: 'ignore'
-        },
         synchronization: {
             stage: 'create-animations',
             before: 'ignore',
@@ -436,9 +425,6 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
     // ========================================================================
     'create-empty': {
         ...DefaultRule,
-        handshake: {
-            during: 'ignore'
-        },
         synchronization: {
             stage: 'create-actors',
             before: 'ignore',
@@ -460,9 +446,6 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
     // ========================================================================
     'create-from-gltf': {
         ...DefaultRule,
-        handshake: {
-            during: 'ignore'
-        },
         synchronization: {
             stage: 'create-actors',
             before: 'ignore',
@@ -484,9 +467,6 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
     // ========================================================================
     'create-from-library': {
         ...DefaultRule,
-        handshake: {
-            during: 'ignore'
-        },
         synchronization: {
             stage: 'create-actors',
             before: 'ignore',
@@ -508,9 +488,6 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
     // ========================================================================
     'create-primitive': {
         ...DefaultRule,
-        handshake: {
-            during: 'ignore'
-        },
         synchronization: {
             stage: 'create-actors',
             before: 'ignore',
@@ -532,9 +509,6 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
     // ========================================================================
     'create-from-prefab': {
         ...DefaultRule,
-        handshake: {
-            during: 'ignore'
-        },
         synchronization: {
             stage: 'create-actors',
             before: 'ignore',
@@ -556,9 +530,6 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
     // ========================================================================
     'destroy-actors': {
         ...DefaultRule,
-        handshake: {
-            during: 'ignore'
-        },
         synchronization: {
             stage: 'create-actors',
             before: 'ignore',
@@ -582,9 +553,6 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
     // ========================================================================
     'enable-collider': {
         ...DefaultRule,
-        handshake: {
-            during: 'ignore'
-        },
         synchronization: {
             stage: 'create-actors',
             before: 'ignore',
@@ -611,9 +579,6 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
     // ========================================================================
     'enable-light': {
         ...DefaultRule,
-        handshake: {
-            during: 'ignore'
-        },
         synchronization: {
             stage: 'create-actors',
             before: 'ignore',
@@ -640,9 +605,6 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
     // ========================================================================
     'enable-rigidbody': {
         ...DefaultRule,
-        handshake: {
-            during: 'ignore'
-        },
         synchronization: {
             stage: 'create-actors',
             before: 'ignore',
@@ -669,9 +631,6 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
     // ========================================================================
     'enable-text': {
         ...DefaultRule,
-        handshake: {
-            during: 'ignore'
-        },
         synchronization: {
             stage: 'create-actors',
             before: 'ignore',
@@ -713,9 +672,6 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
     // ========================================================================
     'handshake-reply': {
         ...DefaultRule,
-        handshake: {
-            during: 'allow'
-        },
         synchronization: {
             stage: 'always',
             before: 'error',
@@ -727,9 +683,6 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
     // ========================================================================
     'heartbeat': {
         ...DefaultRule,
-        handshake: {
-            during: 'allow'
-        },
         synchronization: {
             stage: 'always',
             before: 'allow',
@@ -746,9 +699,6 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
     // ========================================================================
     'interpolate-actor': {
         ...DefaultRule,
-        handshake: {
-            during: 'ignore'
-        },
         synchronization: {
             stage: 'create-animations',
             before: 'ignore',
@@ -774,9 +724,6 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
     // ========================================================================
     'load-assets': {
         ...DefaultRule,
-        handshake: {
-            during: 'ignore'
-        },
         synchronization: {
             stage: 'load-assets',
             before: 'ignore',
@@ -798,9 +745,6 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
     // ========================================================================
     'look-at': {
         ...DefaultRule,
-        handshake: {
-            during: 'queue'
-        },
         synchronization: {
             stage: 'create-actors',
             before: 'queue',
@@ -875,9 +819,6 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
     // ========================================================================
     'rigidbody-add-force': {
         ...DefaultRule,
-        handshake: {
-            during: 'queue'
-        },
         synchronization: {
             stage: 'create-actors',
             before: 'queue',
@@ -889,9 +830,6 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
     // ========================================================================
     'rigidbody-add-force-at-position': {
         ...DefaultRule,
-        handshake: {
-            during: 'queue'
-        },
         synchronization: {
             stage: 'create-actors',
             before: 'queue',
@@ -903,9 +841,6 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
     // ========================================================================
     'rigidbody-add-relative-torque': {
         ...DefaultRule,
-        handshake: {
-            during: 'queue'
-        },
         synchronization: {
             stage: 'create-actors',
             before: 'queue',
@@ -917,9 +852,6 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
     // ========================================================================
     'rigidbody-add-torque': {
         ...DefaultRule,
-        handshake: {
-            during: 'queue'
-        },
         synchronization: {
             stage: 'create-actors',
             before: 'queue',
@@ -931,9 +863,6 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
     // ========================================================================
     'rigidbody-commands': {
         ...DefaultRule,
-        handshake: {
-            during: 'queue'
-        },
         synchronization: {
             stage: 'create-actors',
             before: 'queue',
@@ -945,9 +874,6 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
     // ========================================================================
     'rigidbody-move-position': {
         ...DefaultRule,
-        handshake: {
-            during: 'queue'
-        },
         synchronization: {
             stage: 'create-actors',
             before: 'queue',
@@ -959,9 +885,6 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
     // ========================================================================
     'rigidbody-move-rotation': {
         ...DefaultRule,
-        handshake: {
-            during: 'queue'
-        },
         synchronization: {
             stage: 'create-actors',
             before: 'queue',
@@ -973,9 +896,6 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
     // ========================================================================
     'set-animation-state': {
         ...DefaultRule,
-        handshake: {
-            during: 'ignore'
-        },
         synchronization: {
             stage: 'create-animations',
             before: 'ignore',
@@ -1036,9 +956,6 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
     // ========================================================================
     'set-authoritative': {
         ...DefaultRule,
-        handshake: {
-            during: 'error'
-        },
         synchronization: {
             stage: 'always',
             before: 'error',
@@ -1050,9 +967,6 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
     // ========================================================================
     'set-behavior': {
         ...DefaultRule,
-        handshake: {
-            during: 'ignore'
-        },
         synchronization: {
             stage: 'create-actors',
             before: 'ignore',
@@ -1077,9 +991,6 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
     // ========================================================================
     'sync-animations': {
         ...DefaultRule,
-        handshake: {
-            during: 'error'
-        },
         synchronization: {
             stage: 'sync-animations',
             before: 'error',
@@ -1091,9 +1002,6 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
     // ========================================================================
     'sync-complete': {
         ...DefaultRule,
-        handshake: {
-            during: 'error'
-        },
         synchronization: {
             stage: 'always',
             before: 'error',
@@ -1115,9 +1023,6 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
     // ========================================================================
     'update-subscriptions': {
         ...DefaultRule,
-        handshake: {
-            during: 'ignore'
-        },
         synchronization: {
             stage: 'create-actors',
             before: 'ignore',
@@ -1134,7 +1039,7 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
                     const syncActor = session.actorSet[message.payload.id];
                     if (syncActor) {
                         syncActor.created.message.payload.actor.subscriptions =
-                            syncActor.created.message.payload.actor.subscriptions.filter(
+                            (syncActor.created.message.payload.actor.subscriptions || []).filter(
                                 subscription => message.payload.removes.indexOf(subscription) < 0);
                         syncActor.created.message.payload.actor.subscriptions.push(
                             ...message.payload.adds);

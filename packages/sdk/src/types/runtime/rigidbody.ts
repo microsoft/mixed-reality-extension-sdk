@@ -4,7 +4,7 @@
  */
 
 import { Actor, CollisionDetectionMode } from '.';
-import { Quaternion, QuaternionLike, Vector3, Vector3Like } from '../..';
+import { QuaternionLike, Vector3, Vector3Like } from '../..';
 import {
     RigidBodyAddForce,
     RigidBodyAddForceAtPosition,
@@ -16,8 +16,6 @@ import {
 import { RigidBodyConstraints } from '../rigidBodyConstraints';
 
 export interface RigidBodyLike {
-    position: Partial<Vector3Like>;
-    rotation: Partial<QuaternionLike>;
     velocity: Partial<Vector3Like>;
     angularVelocity: Partial<Vector3Like>;
     mass: number;
@@ -29,8 +27,6 @@ export interface RigidBodyLike {
 
 export class RigidBody implements RigidBodyLike {
     // tslint:disable:variable-name
-    private _position: Vector3;
-    private _rotation: Quaternion;
     private _velocity: Vector3;
     private _angularVelocity: Vector3;
     private _constraints: RigidBodyConstraints[];
@@ -45,16 +41,6 @@ export class RigidBody implements RigidBodyLike {
      * PUBLIC ACCESSORS
      */
 
-    public get position() { return this._position || this.$owner.transform.position; }
-    public set position(value: Partial<Vector3>) {
-        this._position = this._position || this.$owner.transform.position.clone();
-        this._position.copy(value);
-    }
-    public get rotation() { return this._rotation || this.$owner.transform.rotation; }
-    public set rotation(value: Partial<Quaternion>) {
-        this._rotation = this._rotation || this.$owner.transform.rotation.clone();
-        this._rotation.copy(value);
-    }
     public get velocity() { return this._velocity; }
     public set velocity(value: Partial<Vector3>) { this._velocity.copy(value); }
     public get angularVelocity() { return this._angularVelocity; }
@@ -83,10 +69,8 @@ export class RigidBody implements RigidBodyLike {
 
     public copy(from: Partial<RigidBodyLike>): this {
         if (!from) return this;
-        if (from.position !== undefined) this.position = from.position;
-        if (from.rotation !== undefined) this.rotation = from.rotation;
-        if (from.velocity !== undefined) this.velocity = from.velocity;
-        if (from.angularVelocity !== undefined) this.angularVelocity = from.angularVelocity;
+        if (from.velocity !== undefined) this._velocity.copy(from.velocity);
+        if (from.angularVelocity !== undefined) this._angularVelocity.copy(from.angularVelocity);
         if (from.mass !== undefined) this.mass = from.mass;
         if (from.detectCollisions !== undefined) this.detectCollisions = from.detectCollisions;
         if (from.collisionDetectionMode !== undefined) this.collisionDetectionMode = from.collisionDetectionMode;
@@ -97,8 +81,6 @@ export class RigidBody implements RigidBodyLike {
 
     public toJSON() {
         return {
-            position: this.position.toJSON(),
-            rotation: this.rotation.toJSON(),
             velocity: this.velocity.toJSON(),
             angularVelocity: this.angularVelocity.toJSON(),
             mass: this.mass,

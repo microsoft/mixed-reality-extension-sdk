@@ -4,6 +4,7 @@
  */
 
 export * from './clientHandshake';
+export * from './clientStartup';
 export * from './clientExecution';
 export * from './clientSync';
 export * from './sessionHandshake';

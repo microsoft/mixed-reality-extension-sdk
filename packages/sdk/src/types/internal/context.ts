@@ -91,46 +91,9 @@ export class InternalContext {
     public __rpc: any;
 
     constructor(public context: Context) {
-
-        // Respond when connection is closed
+        // Handle connection close events.
         this.onClose = this.onClose.bind(this);
         this.context.conn.on('close', this.onClose);
-
-        // Startup the handshake protocol
-        this.protocol = new Handshake(this.context.conn, this.context.sessionId, OperatingModel.ServerAuthoritative);
-        this.onHandshakeComplete = this.onHandshakeComplete.bind(this);
-        this.protocol.on('protocol.handshake-complete', this.onHandshakeComplete);
-    }
-
-    public onHandshakeComplete = () => {
-        // Setup the execution protocol
-        this.protocol = new Execution(this.context);
-
-        this.updateActors = this.updateActors.bind(this);
-        this.localDestroyActors = this.localDestroyActors.bind(this);
-        this.userJoined = this.userJoined.bind(this);
-        this.userLeft = this.userLeft.bind(this);
-        this.updateUser = this.updateUser.bind(this);
-        this.performAction = this.performAction.bind(this);
-        this.receiveRPC = this.receiveRPC.bind(this);
-        this.collisionEventRaised = this.collisionEventRaised.bind(this);
-        this.setAnimationStateEventRaised = this.setAnimationStateEventRaised.bind(this);
-
-        this.protocol.on('protocol.update-actors', this.updateActors);
-        this.protocol.on('protocol.destroy-actors', this.localDestroyActors);
-        this.protocol.on('protocol.user-joined', this.userJoined);
-        this.protocol.on('protocol.user-left', this.userLeft);
-        this.protocol.on('protocol.update-user', this.updateUser);
-        this.protocol.on('protocol.perform-action', this.performAction);
-        this.protocol.on('protocol.receive-rpc', this.receiveRPC);
-        this.protocol.on('protocol.collision-event-raised', this.collisionEventRaised);
-        this.protocol.on('protocol.set-animation-state', this.setAnimationStateEventRaised);
-
-        // Startup the execution protocol
-        this.protocol.startListening();
-
-        // We're ready for the app to know about us
-        this.context.emitter.emit('started');
     }
 
     public CreateEmpty(options?: {
@@ -285,7 +248,7 @@ export class InternalContext {
         }));
     }
 
-    public createAnimation(actorId: string, animationName: string, options: CreateAnimationOptions): Promise<void> {
+    public createAnimation(actorId: string, animationName: string, options: CreateAnimationOptions) {
         const actor = this.actorSet[actorId];
         if (!actor) {
             return Promise.reject(`Failed to create animation. Actor ${actorId} not found`);
@@ -353,7 +316,7 @@ export class InternalContext {
         value: Partial<ActorLike>,
         duration: number,
         curve: number[],
-    ): Promise<void> {
+    ) {
         const actor = this.actorSet[actorId];
         if (!actor) {
             return Promise.reject(`Failed animateTo. Actor ${actorId} not found`);
@@ -621,19 +584,58 @@ export class InternalContext {
         }
     }
 
-    public start() {
-        this.protocol.startListening();
+    public async start() {
         if (!this.interval) {
-            this.interval = setInterval(() => this.update(), 0);
+            try {
+                // Startup the handshake protocol.
+                const handshake = this.protocol =
+                    new Handshake(this.context.conn, this.context.sessionId, OperatingModel.ServerAuthoritative);
+                await handshake.run();
+
+                // Switch to execution protocol.
+                const execution = this.protocol = new Execution(this.context);
+
+                this.updateActors = this.updateActors.bind(this);
+                this.localDestroyActors = this.localDestroyActors.bind(this);
+                this.userJoined = this.userJoined.bind(this);
+                this.userLeft = this.userLeft.bind(this);
+                this.updateUser = this.updateUser.bind(this);
+                this.performAction = this.performAction.bind(this);
+                this.receiveRPC = this.receiveRPC.bind(this);
+                this.collisionEventRaised = this.collisionEventRaised.bind(this);
+                this.setAnimationStateEventRaised = this.setAnimationStateEventRaised.bind(this);
+
+                execution.on('protocol.update-actors', this.updateActors);
+                execution.on('protocol.destroy-actors', this.localDestroyActors);
+                execution.on('protocol.user-joined', this.userJoined);
+                execution.on('protocol.user-left', this.userLeft);
+                execution.on('protocol.update-user', this.updateUser);
+                execution.on('protocol.perform-action', this.performAction);
+                execution.on('protocol.receive-rpc', this.receiveRPC);
+                execution.on('protocol.collision-event-raised', this.collisionEventRaised);
+                execution.on('protocol.set-animation-state', this.setAnimationStateEventRaised);
+
+                // Startup the execution protocol
+                execution.startListening();
+
+                this.interval = setInterval(() => this.update(), 0);
+                this.context.emitter.emit('started');
+            } catch (e) {
+                log.error('app', e);
+            }
         }
     }
 
     public stop() {
-        clearInterval(this.interval);
-        delete this.interval;
-        this.protocol.stopListening();
-        this.context.emitter.emit('stopped');
-        this.context.emitter.removeAllListeners();
+        try {
+            if (this.interval) {
+                this.protocol.stopListening();
+                clearInterval(this.interval);
+                this.interval = undefined;
+                this.context.emitter.emit('stopped');
+                this.context.emitter.removeAllListeners();
+            }
+        } catch { }
     }
 
     public incrementGeneration() {

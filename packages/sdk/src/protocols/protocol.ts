@@ -12,12 +12,24 @@ import { ExportedPromise } from '../utils/exportedPromise';
 import filterEmpty from '../utils/filterEmpty';
 import { Middleware } from './middleware';
 
+// tslint:disable:variable-name
+/**
+ * The amount of time to wait for a reply message before closing the connection.
+ * Set to zero to disable timeouts.
+ */
+export let ConnectionTimeoutSeconds = 30;
+// tslint:enable:variable-name
+
 /**
  * @hidden
  * Class to handle sending and receiving messages with a client.
  */
 export class Protocol extends EventEmitter {
     private middlewares: Middleware[] = [];
+
+    private promise: Promise<void>;
+    private promiseResolve: (value?: void | PromiseLike<void>) => void;
+    private promiseReject: (reason?: any) => void;
 
     public get conn() { return this._conn; }
     public get promises() { return this.conn.promises; }
@@ -27,6 +39,24 @@ export class Protocol extends EventEmitter {
     constructor(private _conn: Connection) {
         super();
         this.onReceive = this.onReceive.bind(this);
+        this.onClose = this.onClose.bind(this);
+        this.promise = new Promise<void>((resolve, reject) => {
+            this.promiseResolve = resolve;
+            this.promiseReject = reject;
+        });
+    }
+
+    public async run() {
+        try {
+            this.startListening();
+            await this.completed();
+        } catch (e) {
+            this.reject(e);
+        }
+    }
+
+    public async completed() {
+        return this.promise;
     }
 
     public use(middleware: Middleware) {
@@ -34,11 +64,15 @@ export class Protocol extends EventEmitter {
     }
 
     public startListening() {
+        log.verbose('network', `${this.name} started listening`);
         this.conn.on('recv', this.onReceive);
+        this.conn.on('close', this.onClose);
     }
 
     public stopListening() {
         this.conn.off('recv', this.onReceive);
+        this.conn.off('close', this.onClose);
+        log.verbose('network', `${this.name} stopped listening`);
     }
 
     public sendPayload(payload: Partial<Payload>, promise?: ExportedPromise) {
@@ -62,11 +96,23 @@ export class Protocol extends EventEmitter {
             }
         }
 
+        const setReplyTimeout = () => {
+            if (ConnectionTimeoutSeconds > 0) {
+                return setTimeout(() => {
+                    // TODO: Eventually convert this to a log.info('network', ...) call.
+                    // tslint:disable-next-line:no-console
+                    console.info(`[INFO] Timeout on message ${message.payload.type}, id:${message.id}.`);
+                    this.rejectPromiseForMessage(message.id);
+                    this.conn.close();
+                }, ConnectionTimeoutSeconds * 1000);
+            }
+        };
+
         // Save the reply callback
         if (promise) {
             this.promises[message.id] = {
                 promise,
-                timestamp: Date.now(),
+                timeout: setReplyTimeout()
             };
         }
 
@@ -122,6 +168,16 @@ export class Protocol extends EventEmitter {
         }
     }
 
+    protected resolve() {
+        this.stopListening();
+        this.promiseResolve();
+    }
+
+    protected reject(e?: any) {
+        this.stopListening();
+        this.promiseReject(e);
+    }
+
     protected handleReplyMessage(message: Message) {
         const queuedPromise = this.promises[message.replyToId];
         if (!queuedPromise) {
@@ -129,11 +185,27 @@ export class Protocol extends EventEmitter {
             console.error(`[ERROR] ${this.name} received unexpected reply message! replyToId: ${message.replyToId}`);
         } else {
             delete this.promises[message.replyToId];
+            clearTimeout(queuedPromise.timeout);
             queuedPromise.promise.resolve(message.payload, message);
+        }
+    }
+
+    private rejectPromiseForMessage(messageId: string, reason?: any) {
+        const queuedPromise = this.promises[messageId];
+        if (queuedPromise && queuedPromise.promise && queuedPromise.promise.reject) {
+            try { clearTimeout(queuedPromise.timeout); } catch { }
+            try { queuedPromise.promise.reject(reason); } catch { }
+            try { delete this.promises[messageId]; } catch { }
         }
     }
 
     private onReceive = (message: Message) => {
         this.recvMessage(message);
+    }
+
+    private onClose = () => {
+        Object.keys(this.promises).map(key => {
+            this.rejectPromiseForMessage(key);
+        });
     }
 }

@@ -21,9 +21,7 @@ export class Sync extends Protocol {
 
     /** @override */
     public startListening() {
-        super.sendPayload({
-            type: 'sync-complete',
-        } as Payloads.SyncComplete);
-        this.emit('protocol.sync-complete');
+        super.sendPayload({ type: 'sync-complete' } as Payloads.SyncComplete);
+        process.nextTick(() => { this.resolve(); });
     }
 }

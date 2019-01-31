@@ -8,7 +8,7 @@ import QueryString from 'query-string';
 import * as Restify from 'restify';
 import UUID from 'uuid/v4';
 import * as WS from 'ws';
-import { Adapter, AdapterOptions } from '..';
+import { Adapter, AdapterOptions, ClientHandshake, ClientStartup } from '..';
 import { Context, ParameterSet, Pipe, WebSocket } from '../../';
 import * as Constants from '../../constants';
 import verifyClient from '../../utils/verifyClient';
@@ -61,7 +61,7 @@ export class MultipeerAdapter extends Adapter {
     /**
      * Start the adapter listening for new incoming connections from engine clients
      */
-    public listen(): Promise<Restify.Server> {
+    public listen() {
         if (!this.server) {
             // If necessary, create a new web server
             return new Promise<Restify.Server>((resolve) => {
@@ -78,7 +78,7 @@ export class MultipeerAdapter extends Adapter {
         }
     }
 
-    private async getOrCreateSession(sessionId: string, params: ParameterSet): Promise<Session> {
+    private async getOrCreateSession(sessionId: string, params: ParameterSet) {
         let session = this.sessions[sessionId];
         if (!session) {
             // Create an in-memory "connection" (If the app were running remotely, we would connect
@@ -89,8 +89,8 @@ export class MultipeerAdapter extends Adapter {
                 sessionId,
                 connection: pipe.remote
             });
-            // Start the connection update loop (todo move this)
-            context.internal.start();
+            // Startup the context.
+            context.internal.start().catch(() => pipe.remote.close());
             // Instantiate a new session
             session = this.sessions[sessionId] = new Session(
                 pipe.local, sessionId, this.options.peerAuthoritative);
@@ -98,11 +98,11 @@ export class MultipeerAdapter extends Adapter {
             const $this = this;
             session.on('close', () => delete $this.sessions[sessionId]);
             // Connect the session to the context
-            await session.connect();
+            await session.connect(); // Allow exceptions to propagate.
             // Pass the new context to the app
             this.emitter.emit('connection', context, params);
         }
-        return Promise.resolve(session);
+        return session;
     }
 
     private startListening() {
@@ -111,28 +111,52 @@ export class MultipeerAdapter extends Adapter {
 
         // Handle WebSocket connection upgrades
         wss.on('connection', async (ws: WS, request: http.IncomingMessage) => {
-            log.info('network', "New Multi-peer connection");
+            try {
+                log.info('network', "New Multi-peer connection");
 
-            // Read the sessionId header.
-            let sessionId = request.headers[Constants.HTTPHeaders.SessionID] as string || UUID();
-            sessionId = decodeURIComponent(sessionId);
+                // Read the sessionId header.
+                let sessionId = request.headers[Constants.HTTPHeaders.SessionID] as string || UUID();
+                sessionId = decodeURIComponent(sessionId);
 
-            // Parse URL parameters.
-            const params = QueryString.parseUrl(request.url).query;
+                // Parse URL parameters.
+                const params = QueryString.parseUrl(request.url).query;
 
-            // Get the session for the sessionId
+                // Get the client's IP address rather than the last proxy connecting to you.
+                const address = forwarded(request, request.headers);
+
+                // Create a WebSocket for this connection.
+                const conn = new WebSocket(ws, address.ip);
+
+                // Instantiate a client for this connection.
+                const client = new Client(conn);
+
+                // Join the client to the session.
+                await this.joinClientToSession(client, sessionId, params);
+            } catch (e) {
+                log.error('network', e);
+                ws.close();
+            }
+        });
+    }
+
+    private async joinClientToSession(client: Client, sessionId: string, params: QueryString.OutputParams) {
+        try {
+            // Handshake with the client.
+            const handshake = new ClientHandshake(client, sessionId);
+            await handshake.run();
+
+            // Measure the connection quality and wait for sync-request message.
+            const startup = new ClientStartup(client);
+            await startup.run();
+
+            // Get the session for the sessionId.
             const session = await this.getOrCreateSession(sessionId, params);
 
-            // Get the client's IP address rather than the last proxy connecting to you
-            const address = forwarded(request, request.headers);
-
-            const conn = new WebSocket(ws, address.ip);
-
-            // Instantiate a client for this connection
-            const client = new Client(conn);
-
-            // Join the client to the session
+            // Join the client to the session.
             await session.join(client);
-        });
+        } catch (e) {
+            log.error('network', e);
+            client.conn.close();
+        }
     }
 }

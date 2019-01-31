@@ -48,8 +48,6 @@ export class ClientSync extends Protocols.Protocol {
         super(client.conn);
         // Behave like a server-side endpoint (send heartbeats, measure connection quality)
         this.use(new Protocols.ServerPreprocessing());
-        // Immediagely mark the 'always' stage as in progress.
-        this.beginStage('always');
     }
 
     /**
@@ -111,38 +109,37 @@ export class ClientSync extends Protocols.Protocol {
     private async executeStage(stage: SynchronizationStage) {
         const handler = (this as any)[`stage:${stage}`];
         if (handler) {
-            await handler();
+            await handler(); // Allow exception to propagate.
         } else {
             console.error(`[ERROR] ${this.name}: No handler for stage ${stage}!`);
         }
     }
 
     /**
-     * @hidden
-     * Start synchronizing once we receive the `sync-request` message from the client.
+     * @override
      */
-    public 'recv-sync-request' = async (payload: Payloads.SyncRequest) => {
-        if (this.client.session.peerAuthoritative) {
-            // Do a quick measurement of connection latency
-            const heartbeat = new Protocols.Heartbeat(this);
-            await heartbeat.runIterations(10);
-            // Run all the synchronization stages.
-            for (const stage of this.sequence) {
-                this.beginStage(stage);
-                await this.executeStage(stage);
-                this.completeStage(stage);
-                await this.sendQueuedMessages();
+    public async run() {
+        try {
+            this.startListening();
+            this.beginStage('always');
+            if (this.client.session.peerAuthoritative) {
+                // Run all the synchronization stages.
+                for (const stage of this.sequence) {
+                    this.beginStage(stage);
+                    await this.executeStage(stage);
+                    this.completeStage(stage);
+                    await this.sendQueuedMessages();
+                }
             }
+            this.completeStage('always');
+            // Notify the client we're done synchronizing.
+            this.sendPayload({ type: 'sync-complete' } as Payloads.SyncComplete);
+            // Send all remaining queued messages.
+            await this.sendQueuedMessages();
+            this.resolve();
+        } catch (e) {
+            this.reject(e);
         }
-        this.completeStage('always');
-        // Notify the client we're done synchronizing.
-        this.sendPayload({ type: 'sync-complete' } as Payloads.SyncComplete);
-        // Send all remaining queued messages.
-        await this.sendQueuedMessages();
-        // Detach from the connection.
-        this.stopListening();
-        // Let the next protocol know we're complete.
-        this.emit('protocol.sync-complete');
     }
 
     /**
@@ -223,10 +220,10 @@ export class ClientSync extends Protocols.Protocol {
         });
     }
 
-    private createActorRecursive(actor: Partial<SyncActor>): Promise<void> {
-        // Start creating this actor and its children
+    private createActorRecursive(actor: Partial<SyncActor>) {
+        // Start creating this actor and its children.
         return new Promise<void>(async (resolve, reject) => {
-            await this.createActor(actor);
+            await this.createActor(actor); // Allow exception to propagate.
             const children = this.client.session.childrenOf(actor.created.message.payload.actor.id);
             if (children.length) {
                 const promises: any[] = [];
@@ -255,7 +252,7 @@ export class ClientSync extends Protocols.Protocol {
         }
     }
 
-    private createActorAnimations(actor: Partial<SyncActor>): Promise<any> {
+    private createActorAnimations(actor: Partial<SyncActor>) {
         return Promise.all([
             (actor.createdAnimations || [])
                 .map(createdAnimation => this.sendAndExpectResponse(createdAnimation.message))
