@@ -36,13 +36,6 @@ export default function verifyClient(
     // Look for the request headers.
     const headers = req.headers || [];
 
-    // Temporary: Support old clients reporting the legacy protocol version.
-    // TODO: Remove this after a few releases.
-    const legacyProtocolVersion = decodeURIComponent(headers[Constants.HTTPHeaders.LegacyProtocolVersion]);
-    if (legacyProtocolVersion === '1') {
-        return cb(true);
-    }
-
     // Verify minimum supported versions are met (client and SDK).
 
     /*
@@ -59,27 +52,39 @@ export default function verifyClient(
     const MinimumSupportedSDKVersion
         = semver.coerce(decodeURIComponent(headers[Constants.HTTPHeaders.MinimumSupportedSDKVersion]));
 
-    // Test the current client version. Is it greater than or equal to the minimum client version?
-    const clientPass = semver.gte(CurrentClientVersion, MinimumSupportedClientVersion);
-    // Test the current SDK version. Is it greater than or equal to the minimum SDK version?
-    const sdkPass = semver.gte(CurrentSDKVersion, MinimumSupportedSDKVersion);
+    if (CurrentClientVersion && MinimumSupportedSDKVersion) {
+        // Test the current client version. Is it greater than or equal to the minimum client version?
+        const clientPass = semver.gte(CurrentClientVersion, MinimumSupportedClientVersion);
+        // Test the current SDK version. Is it greater than or equal to the minimum SDK version?
+        const sdkPass = semver.gte(CurrentSDKVersion, MinimumSupportedSDKVersion);
 
-    if (!clientPass) {
-        // tslint:disable-next-line:max-line-length
-        const message = `Connection rejected due to out of date client. Client version: ${CurrentClientVersion.toString()}. Min supported version by SDK: ${MinimumSupportedClientVersion.toString()}`;
-        log.info('network', message);
-        return cb(false, 403, message);
+        if (!clientPass) {
+            // tslint:disable-next-line:max-line-length
+            const message = `Connection rejected due to out of date client. Client version: ${CurrentClientVersion.toString()}. Min supported version by SDK: ${MinimumSupportedClientVersion.toString()}`;
+            log.info('network', message);
+            return cb(false, 403, message);
+        }
+
+        if (!sdkPass) {
+            // tslint:disable-next-line:max-line-length
+            const message = `Connection rejected due to out of date SDK. Current SDK version: ${CurrentSDKVersion.toString()}. Min supported version by client: ${MinimumSupportedSDKVersion.toString()}`;
+            log.info('network', message);
+            // Log this line to the console. The developer should know about this.
+            // tslint:disable-next-line:no-console
+            console.info(message);
+            return cb(false, 403, message);
+        }
+
+        // Client and SDK are compatible.
+        return cb(true);
     }
 
-    if (!sdkPass) {
-        // tslint:disable-next-line:max-line-length
-        const message = `Connection rejected due to out of date SDK. Current SDK version: ${CurrentSDKVersion.toString()}. Min supported version by client: ${MinimumSupportedSDKVersion.toString()}`;
-        log.info('network', message);
-        // Log this line to the console. The developer should know about this.
-        // tslint:disable-next-line:no-console
-        console.info(message);
-        return cb(false, 403, message);
+    // Temporary: Support old clients reporting the legacy protocol version.
+    // TODO: Remove this after a few releases.
+    const legacyProtocolVersion = decodeURIComponent(headers[Constants.HTTPHeaders.LegacyProtocolVersion]);
+    if (legacyProtocolVersion === '1') {
+        return cb(true);
     }
 
-    return cb(true);
+    return cb(false, 403, "Version headers missing.");
 }
