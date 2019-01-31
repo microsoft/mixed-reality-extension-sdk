@@ -115,7 +115,7 @@ export class MultipeerAdapter extends Adapter {
                 log.info('network', "New Multi-peer connection");
 
                 // Read the sessionId header.
-                let sessionId = request.headers[Constants.SessionHeader] as string || UUID();
+                let sessionId = request.headers[Constants.HTTPHeaders.SessionID] as string || UUID();
                 sessionId = decodeURIComponent(sessionId);
 
                 // Parse URL parameters.

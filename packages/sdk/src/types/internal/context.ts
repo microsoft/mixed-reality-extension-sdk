@@ -633,7 +633,7 @@ export class InternalContext {
                 clearInterval(this.interval);
                 this.interval = undefined;
                 this.context.emitter.emit('stopped');
-        	this.context.emitter.removeAllListeners();
+                this.context.emitter.removeAllListeners();
             }
         } catch { }
     }
