@@ -3,15 +3,24 @@
  * Licensed under the MIT License.
  */
 
+import semver from 'semver';
 import * as Constants from '../constants';
+import { log } from '../log';
 
 /*
- * Supported protocol version
- * **WARNING**: Incrementing this value will break older clients. Strive to be backward compatible. Change this value
- * only after discussing with the team and considering every alternative.
+ * Current SDK Version - Read from package.json.
+ */
+// tslint:disable-next-line:no-var-requires variable-name
+const CurrentSDKVersion = semver.coerce(require('../../package.json').version);
+
+/*
+ * Minimum Supported Client Library version
+ * As part of the manual SDK release procedures, this is reset to match CurrentSDKVersion Major.Minor if new functions
+ * have been added that don't work on older clients (i.e. pretty much every release). Since host apps are required to
+ * update client libraries regularly, this one is not a big deal to update.
  */
 // tslint:disable-next-line:variable-name
-const CurrentProtocolVersion = 1;
+const MinimumSupportedClientVersion = semver.coerce('0.5');
 
 /**
  * @hidden
@@ -19,7 +28,7 @@ const CurrentProtocolVersion = 1;
  * @param info 'ws' request information
  * @param cb 'ws' verification callback
  */
-export function verifyClient(
+export default function verifyClient(
     info: any, cb: (verified: boolean, code?: number, message?: string) => any): any {
     // Look for the upgrade request.
     const req = info.req || {};
@@ -27,37 +36,50 @@ export function verifyClient(
     // Look for the request headers.
     const headers = req.headers || [];
 
-    // Look for the protocol version header.
-    const protocolVersion = decodeURIComponent(headers[Constants.ProtocolVersionHeader]);
-
-    // Check protocol version.
-    if (!isSupportedProtocolVersion(protocolVersion)) {
-        // In a perfect world we would return a 403 (Forbidden) response, but due to a shortcoming in
-        // C# ClientWebSocket, we have no way to convey error details in the HTTP response:
-        //     "ClientWebSocket does not provide upgrade request error details"
-        //      https://github.com/dotnet/corefx/issues/29163
-        // As a workaround, we inject an unexpected subprotocol, resulting in an "unsupported protocol"
-        // error on the client.
-        req.headers['sec-websocket-protocol'] = 'ERR_UNSUPPORTED_PROTOCOL';
+    // Temporary: Support old clients reporting the legacy protocol version.
+    // TODO: Remove this after a few releases.
+    const legacyProtocolVersion = decodeURIComponent(headers[Constants.HTTPHeaders.LegacyProtocolVersion]);
+    if (legacyProtocolVersion === '1') {
+        return cb(true);
     }
 
-    // Client looks valid to connect.
+    // Verify minimum supported versions are met (client and SDK).
+
+    /*
+     * Due to a shortcoming in C# ClientWebSocket, we have no way to convey any error details in the HTTP response,
+     * including error code.
+     *    See: "ClientWebSocket does not provide upgrade request error details"
+     *    https://github.com/dotnet/corefx/issues/29163
+     */
+
+    // tslint:disable-next-line:variable-name
+    const CurrentClientVersion
+        = semver.coerce(decodeURIComponent(headers[Constants.HTTPHeaders.CurrentClientVersion]));
+    // tslint:disable-next-line:variable-name
+    const MinimumSupportedSDKVersion
+        = semver.coerce(decodeURIComponent(headers[Constants.HTTPHeaders.MinimumSupportedSDKVersion]));
+
+    // Test the current client version. Is it greater than or equal to the minimum client version?
+    const clientPass = semver.gte(CurrentClientVersion, MinimumSupportedClientVersion);
+    // Test the current SDK version. Is it greater than or equal to the minimum SDK version?
+    const sdkPass = semver.gte(CurrentSDKVersion, MinimumSupportedSDKVersion);
+
+    if (!clientPass) {
+        // tslint:disable-next-line:max-line-length
+        const message = `Connection rejected due to out of date client. Client version: ${CurrentClientVersion.toString()}. Min supported version by SDK: ${MinimumSupportedClientVersion.toString()}`;
+        log.info('network', message);
+        return cb(false, 403, message);
+    }
+
+    if (!sdkPass) {
+        // tslint:disable-next-line:max-line-length
+        const message = `Connection rejected due to out of date SDK. Current SDK version: ${CurrentSDKVersion.toString()}. Min supported version by client: ${MinimumSupportedSDKVersion.toString()}`;
+        log.info('network', message);
+        // Log this line to the console. The developer should know about this.
+        // tslint:disable-next-line:no-console
+        console.info(message);
+        return cb(false, 403, message);
+    }
+
     return cb(true);
-}
-
-/**
- * @hidden
- * Utility that checks the given protocol version against the supported version.
- * @param protocolVersion The protocol version to check.
- * @returns `true` if this is a supported protocol version. `false` otherwise.
- */
-export function isSupportedProtocolVersion(protocolVersion: number | string | null | undefined): boolean {
-    if (typeof protocolVersion === 'string') {
-        protocolVersion = Number.parseInt(protocolVersion, 10);
-    }
-    if (protocolVersion == null || Number.isNaN(protocolVersion)) {
-        return false;
-    }
-    // For now, just check for equality. This will become more nuanced over time.
-    return CurrentProtocolVersion === protocolVersion;
 }

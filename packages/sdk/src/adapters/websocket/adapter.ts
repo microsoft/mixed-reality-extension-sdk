@@ -11,7 +11,7 @@ import * as WS from 'ws';
 import { Adapter, AdapterOptions } from '..';
 import { Context, WebSocket } from '../..';
 import * as Constants from '../../constants';
-import { verifyClient } from '../../utils/verifyClient';
+import verifyClient from '../../utils/verifyClient';
 import { log } from './../../log';
 
 /**
@@ -65,7 +65,7 @@ export class WebSocketAdapter extends Adapter {
             log.info('network', "New WebSocket connection");
 
             // Read the sessionId header.
-            let sessionId = request.headers[Constants.SessionHeader] as string || UUID();
+            let sessionId = request.headers[Constants.HTTPHeaders.SessionID] as string || UUID();
             sessionId = decodeURIComponent(sessionId);
 
             // Parse URL parameters.
