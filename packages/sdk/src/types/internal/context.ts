@@ -584,45 +584,47 @@ export class InternalContext {
         }
     }
 
-    public async start() {
+    public async startListening() {
+        try {
+            // Startup the handshake protocol.
+            const handshake = this.protocol =
+                new Handshake(this.context.conn, this.context.sessionId, OperatingModel.ServerAuthoritative);
+            await handshake.run();
+
+            // Switch to execution protocol.
+            const execution = this.protocol = new Execution(this.context);
+
+            this.updateActors = this.updateActors.bind(this);
+            this.localDestroyActors = this.localDestroyActors.bind(this);
+            this.userJoined = this.userJoined.bind(this);
+            this.userLeft = this.userLeft.bind(this);
+            this.updateUser = this.updateUser.bind(this);
+            this.performAction = this.performAction.bind(this);
+            this.receiveRPC = this.receiveRPC.bind(this);
+            this.collisionEventRaised = this.collisionEventRaised.bind(this);
+            this.setAnimationStateEventRaised = this.setAnimationStateEventRaised.bind(this);
+
+            execution.on('protocol.update-actors', this.updateActors);
+            execution.on('protocol.destroy-actors', this.localDestroyActors);
+            execution.on('protocol.user-joined', this.userJoined);
+            execution.on('protocol.user-left', this.userLeft);
+            execution.on('protocol.update-user', this.updateUser);
+            execution.on('protocol.perform-action', this.performAction);
+            execution.on('protocol.receive-rpc', this.receiveRPC);
+            execution.on('protocol.collision-event-raised', this.collisionEventRaised);
+            execution.on('protocol.set-animation-state', this.setAnimationStateEventRaised);
+
+            // Startup the execution protocol
+            execution.startListening();
+        } catch (e) {
+            log.error('app', e);
+        }
+    }
+
+    public start() {
         if (!this.interval) {
-            try {
-                // Startup the handshake protocol.
-                const handshake = this.protocol =
-                    new Handshake(this.context.conn, this.context.sessionId, OperatingModel.ServerAuthoritative);
-                await handshake.run();
-
-                // Switch to execution protocol.
-                const execution = this.protocol = new Execution(this.context);
-
-                this.updateActors = this.updateActors.bind(this);
-                this.localDestroyActors = this.localDestroyActors.bind(this);
-                this.userJoined = this.userJoined.bind(this);
-                this.userLeft = this.userLeft.bind(this);
-                this.updateUser = this.updateUser.bind(this);
-                this.performAction = this.performAction.bind(this);
-                this.receiveRPC = this.receiveRPC.bind(this);
-                this.collisionEventRaised = this.collisionEventRaised.bind(this);
-                this.setAnimationStateEventRaised = this.setAnimationStateEventRaised.bind(this);
-
-                execution.on('protocol.update-actors', this.updateActors);
-                execution.on('protocol.destroy-actors', this.localDestroyActors);
-                execution.on('protocol.user-joined', this.userJoined);
-                execution.on('protocol.user-left', this.userLeft);
-                execution.on('protocol.update-user', this.updateUser);
-                execution.on('protocol.perform-action', this.performAction);
-                execution.on('protocol.receive-rpc', this.receiveRPC);
-                execution.on('protocol.collision-event-raised', this.collisionEventRaised);
-                execution.on('protocol.set-animation-state', this.setAnimationStateEventRaised);
-
-                // Startup the execution protocol
-                execution.startListening();
-
-                this.interval = setInterval(() => this.update(), 0);
-                this.context.emitter.emit('started');
-            } catch (e) {
-                log.error('app', e);
-            }
+            this.interval = setInterval(() => this.update(), 0);
+            this.context.emitter.emit('started');
         }
     }
 

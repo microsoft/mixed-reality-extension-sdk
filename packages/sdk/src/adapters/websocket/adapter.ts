@@ -86,11 +86,14 @@ export class WebSocketAdapter extends Adapter {
                 connection
             });
 
-            // Startup the context.
-            context.internal.start().catch(() => connection.close());
+            // Start the context listening to network traffic.
+            context.internal.startListening().catch(() => connection.close());
 
             // Pass the new context to the app
             this.emitter.emit('connection', context, params);
+
+            // Start context's update loop.
+            context.internal.start();
         });
     }
 }
