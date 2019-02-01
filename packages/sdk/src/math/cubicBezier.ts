@@ -47,7 +47,7 @@ export class CubicBezier {
         this.mX2 = x2;
         this.mY2 = y2;
 
-        // Precalculate some sample points.
+        // Precalculate some intervals.
         if (this.mX1 !== this.mY1 || this.mX2 !== this.mY2) {
             for (let i = 0; i < SPLINE_TABLE_SIZE; ++i) {
                 this.mSampleValues[i] = calcBezier(i * SAMPLE_STEP_SIZE, this.mX1, this.mX2);
@@ -75,7 +75,7 @@ export class CubicBezier {
     }
 
     private getTForX(aX: number): number {
-        // Find the interval where t lies to get us in the ballpark.
+        // Find the precalculated interval where t lies to get us in the ballpark.
         let intervalStart = 0.0;
         let currentSample = 1;
         const lastSample = SPLINE_TABLE_SIZE - 1;
@@ -101,6 +101,7 @@ export class CubicBezier {
         }
     }
 
+    // https://en.wikipedia.org/wiki/Newton%27s_method
     private newtonRaphsonIterate(aX: number, aGuessT: number) {
         for (let i = 0; i < NEWTON_ITERATIONS; ++i) {
             const currentSlope = getSlope(aGuessT, this.mX1, this.mX2);
@@ -113,6 +114,7 @@ export class CubicBezier {
         return aGuessT;
     }
 
+    // https://en.wikipedia.org/wiki/Dichotomic_search
     private binarySubdivide(aX: number, aA: number, aB: number) {
         let currentX;
         let currentT;

@@ -13,7 +13,7 @@ export * from './vector3';
 export * from './vector4';
 export * from './matrix';
 export * from './quaternion';
-export * from './bezierCurve';
+export * from './cubicBezier';
 export * from './curve3';
 export * from './orientation';
 export * from './frustum';
