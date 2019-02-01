@@ -3,7 +3,7 @@
  * Licensed under the MIT License.
  */
 
-import { MeshPrimitive, Vertex } from '..';
+import { Material, MeshPrimitive, Vertex } from '..';
 import { Vector2, Vector3 } from '@microsoft/mixed-reality-extension-sdk';
 
 /**
@@ -17,8 +17,8 @@ export class Sphere extends MeshPrimitive {
      * @param longLines The number of polar vertex rings
      * @param latLines The number of equatorial vertex rings (not counting poles)
      */
-    public constructor(radius: number, longLines = 12, latLines = 8) {
-        super();
+    public constructor(radius: number, longLines = 12, latLines = 8, material: Material = null) {
+        super({material});
 
         // generate north pole
         const north = new Vertex({

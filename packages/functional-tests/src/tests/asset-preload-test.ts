@@ -37,17 +37,24 @@ export default class AssetPreloadTest extends Test {
         await delay(1000);
 
         label.text.contents = 'Preloading assets';
-        const [prefabs, mats] = await Promise.all([
+        const [monkey, uvgrid] = await Promise.all([
             this.app.context.assetManager.loadGltf('monkey', this.baseUrl + '/monkey.glb'),
             this.app.context.assetManager.loadGltf('uvgrid', this.generateMaterial())
         ]);
-        label.text.contents = `Assets preloaded:
-${prefabs.prefabs.count + mats.prefabs.count} prefabs, ${prefabs.materials.count + mats.materials.count} materials`;
+        label.text.contents = "Assets preloaded:" +
+            `${monkey.prefabs.count + uvgrid.prefabs.count} prefabs, ` +
+            `${monkey.materials.count + uvgrid.materials.count} materials, ` +
+            `${monkey.textures.count + uvgrid.textures.count} textures`;
         await delay(1000);
+
+        const monkeyPrefab = monkey.prefabs.byIndex(0);
+        const monkeyMat = monkey.materials.byIndex(0);
+        const uvgridMat = uvgrid.materials.byIndex(0);
+        const uvgridTex = uvgrid.textures.byIndex(0);
 
         label.text.contents = 'Instantiating prefabs';
         const head = await MRESDK.Actor.CreateFromPrefab(this.app.context, {
-            prefabId: prefabs.prefabs.byIndex(0).id,
+            prefabId: monkeyPrefab.id,
             actor: {
                 transform: {
                     position: { x: -1, y: 1, z: 0 }
@@ -60,7 +67,7 @@ ${prefabs.prefabs.count + mats.prefabs.count} prefabs, ${prefabs.materials.count
                 radius: 1
             },
             actor: {
-                materialId: mats.materials.byIndex(0).id,
+                materialId: uvgridMat.id,
                 transform: {
                     position: { x: 1, y: 1, z: 0 }
                 }
@@ -75,9 +82,21 @@ ${prefabs.prefabs.count + mats.prefabs.count} prefabs, ${prefabs.materials.count
             actor.children.forEach(c => assignMat(c, mat));
         }
 
-        assignMat(head, mats.materials.byIndex(0));
-        assignMat(sphere, prefabs.materials.byIndex(0));
+        assignMat(head, uvgridMat);
+        assignMat(sphere, monkeyMat);
         label.text.contents = 'Materials swapped';
+
+        await delay(3000);
+
+        monkeyMat.mainTexture = uvgridTex;
+        uvgridMat.mainTexture = null;
+        label.text.contents = 'Textures swapped';
+
+        await delay(3000);
+
+        monkeyMat.mainTexture = null;
+        uvgridMat.mainTexture = null;
+        label.text.contents = 'Textures cleared';
 
         await delay(3000);
 

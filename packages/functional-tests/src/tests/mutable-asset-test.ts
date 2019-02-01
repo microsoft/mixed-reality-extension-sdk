@@ -3,8 +3,10 @@
  * Licensed under the MIT License.
  */
 
+import * as GltfGen from '@microsoft/gltf-gen';
 import * as MRESDK from '@microsoft/mixed-reality-extension-sdk';
 import App from '../app';
+import Server from '../server';
 import delay from '../utils/delay';
 import destroyActors from '../utils/destroyActors';
 import Test from './test';
@@ -18,46 +20,55 @@ export default class MutableAssetTest extends Test {
     public async run(): Promise<boolean> {
 
         const assets = await this.app.context.assetManager.loadGltf(
-            'assets', `${this.baseUrl}/monkey.glb`);
+            'assets', this.generateMaterial()
+        );
 
-        const monkey = MRESDK.Actor.CreateFromPrefab(this.app.context, {
-            prefabId: assets.prefabs.byIndex(0).id,
+        const mat = assets.materials.byIndex(0);
+        const box = await MRESDK.Actor.CreatePrimitive(this.app.context, {
+            definition: {
+                shape: MRESDK.PrimitiveShape.Box,
+                dimensions: {x: 1, y: 1, z: 1}
+            },
             actor: {
-                name: 'monkey',
+                name: 'box',
+                materialId: mat.id,
                 transform: {
                     position: { x: 0, y: 1, z: 0 }
                 }
             }
-        }).value;
+        });
 
-        const label = MRESDK.Actor.CreateEmpty(this.app.context, {
-            actor: {
-                name: 'label',
-                transform: {
-                    position: { x: 0, y: 2, z: 0 }
-                },
-                text: {
-                    contents: 'Original (pink)'
-                }
-            }
-        }).value;
-        label.lookAt(this.user, MRESDK.LookAtMode.TargetY);
+        for (let i = 0; i < 64; i++) {
+            mat.color.copyFrom( this.fromHSV(i / 32, 1, 1) );
+            mat.mainTextureOffset.set(i / 32, i / 32);
+            mat.mainTextureScale.set(1 - i / 32, 1 - i / 32);
 
-        await delay(3000);
+            await delay(100);
+        }
 
-        const material = assets.materials.byIndex(0);
-        const origColor = material.color.clone();
-        material.color.set(0, 1, 0, 1);
-        label.text.contents = 'Green';
-
-        await delay(3000);
-
-        material.color.copyFrom(origColor);
-        label.text.contents = 'Back to original';
-
-        await delay(3000);
-
-        destroyActors([monkey, label]);
+        destroyActors([box]);
         return true;
+    }
+
+    private generateMaterial(): string {
+        const material = new GltfGen.Material({
+            metallicFactor: 0,
+            baseColorTexture: new GltfGen.Texture({
+                source: new GltfGen.Image({
+                    uri: `${this.baseUrl}/uv-grid.png` // alternate form (don't embed)
+                })
+            })
+        });
+        const gltfFactory = new GltfGen.GltfFactory(null, null, [material]);
+
+        return Server.registerStaticBuffer('assets.glb', gltfFactory.generateGLTF());
+    }
+
+    private fromHSV(h: number, s: number, v: number): MRESDK.Color4 {
+        // from wikipedia: https://en.wikipedia.org/wiki/HSL_and_HSV#From_HSV
+        function f(n: number, k = (n + h * 6) % 6) {
+            return v - v * s * Math.max(Math.min(k, 4 - k, 1), 0);
+        }
+        return new MRESDK.Color4(f(5), f(3), f(1), 1);
     }
 }

@@ -5,6 +5,7 @@
 
 import { Asset, AssetLike, AssetManager, Texture } from '.';
 import { Color3, Color4, Vector2, Vector2Like } from '../../../math';
+import { ZeroGuid } from '../../../utils/deterministicGuids';
 import observe from '../../../utils/observe';
 import readPath from '../../../utils/readPath';
 import { InternalAsset } from '../../internal/asset';
@@ -47,7 +48,7 @@ export enum AlphaMode {
 export class Material extends Asset implements MaterialLike, Patchable<AssetLike> {
     // tslint:disable:variable-name
     private _color = Color4.FromColor3(Color3.White(), 1.0);
-    private _mainTextureId: string = null;
+    private _mainTextureId: string = ZeroGuid;
     private _mainTextureOffset = Vector2.Zero();
     private _mainTextureScale = Vector2.One();
     private _internal = new InternalAsset(this);
@@ -62,17 +63,17 @@ export class Material extends Asset implements MaterialLike, Patchable<AssetLike
     /** @returns A shared reference to this material's texture asset */
     public get mainTexture() { return this.manager.assets[this._mainTextureId] as Texture; }
     public set mainTexture(value) {
-        this.mainTextureId = value && value.id || null;
+        this.mainTextureId = value && value.id || ZeroGuid;
     }
 
     /** @inheritdoc */
     public get mainTextureId() { return this._mainTextureId; }
     public set mainTextureId(value) {
-        if (value && value.startsWith('0000')) {
-            value = null;
+        if (!value || value.startsWith('0000')) {
+            value = ZeroGuid;
         }
         if (!this.manager.assets[value]) {
-            value = null; // throw?
+            value = ZeroGuid; // throw?
         }
         this._mainTextureId = value;
         this.materialChanged('mainTextureId');
