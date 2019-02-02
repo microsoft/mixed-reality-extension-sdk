@@ -89,18 +89,20 @@ export class MultipeerAdapter extends Adapter {
                 sessionId,
                 connection: pipe.remote
             });
-            // Startup the context.
-            context.internal.start().catch(() => pipe.remote.close());
-            // Instantiate a new session
+            // Start the context listening to network traffic.
+            context.internal.startListening().catch(() => pipe.remote.close());
+            // Instantiate a new session.
             session = this.sessions[sessionId] = new Session(
                 pipe.local, sessionId, this.options.peerAuthoritative);
-            // Handle session close
+            // Handle session close.
             const $this = this;
             session.on('close', () => delete $this.sessions[sessionId]);
-            // Connect the session to the context
+            // Connect the session to the context.
             await session.connect(); // Allow exceptions to propagate.
-            // Pass the new context to the app
+            // Pass the new context to the app.
             this.emitter.emit('connection', context, params);
+            // Start context's update loop.
+            context.internal.start();
         }
         return session;
     }
