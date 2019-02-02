@@ -17,6 +17,7 @@ import InterpolationTest from './tests/interpolation-test';
 import LookAtTest from './tests/look-at-test';
 import MutableAssetTest from './tests/mutable-asset-test';
 import PrimitivesTest from './tests/primitives-test';
+import ReparentTest from './tests/reparent-test';
 import RigidBodyTest from './tests/rigid-body-test';
 import Test from './tests/test';
 import TextTest from './tests/text-test';
@@ -53,6 +54,7 @@ export default class App {
         'look-at-test': (user: MRESDK.User): Test => new LookAtTest(this, this.baseUrl, user),
         'mutable-asset-test': (user: MRESDK.User): Test => new MutableAssetTest(this, this.baseUrl, user),
         'primitives-test': (): Test => new PrimitivesTest(this, this.baseUrl),
+        'reparent-test': (): Test => new ReparentTest(this),
         'rigid-body-test': (): Test => new RigidBodyTest(this),
         'text-test': (): Test => new TextTest(this),
         'user-test': (user: MRESDK.User): Test => new UserTest(this, this.baseUrl, user),
@@ -148,44 +150,42 @@ export default class App {
     private async displayFunctionalTestChoices(rootActor: MRESDK.ActorLike): Promise<string> {
         return new Promise<string>((resolve) => {
             let y = 0.3;
-            for (const key in this.testFactories) {
-                if (this.testFactories.hasOwnProperty(key)) {
-                    const button = MRESDK.Actor.CreatePrimitive(this.context, {
-                        definition: {
-                            shape: MRESDK.PrimitiveShape.Box,
-                            dimensions: { x: 0.3, y: 0.3, z: 0.01 }
+            for (const key of Object.keys(this.testFactories).sort().reverse()) {
+                const button = MRESDK.Actor.CreatePrimitive(this.context, {
+                    definition: {
+                        shape: MRESDK.PrimitiveShape.Box,
+                        dimensions: { x: 0.3, y: 0.3, z: 0.01 }
+                    },
+                    addCollider: true,
+                    actor: {
+                        name: key,
+                        parentId: rootActor.id,
+                        transform: {
+                            position: { x: 0, y, z: 0 }
+                        }
+                    }
+                });
+
+                const buttonBehavior = button.value.setBehavior(MRESDK.ButtonBehavior);
+                buttonBehavior.onClick('released', (userId: string) => {
+                    resolve(button.value.name);
+                });
+
+                MRESDK.Actor.CreateEmpty(this.context, {
+                    actor: {
+                        name: 'label',
+                        parentId: rootActor.id,
+                        text: {
+                            contents: key,
+                            height: 0.5,
+                            anchor: MRESDK.TextAnchorLocation.MiddleLeft
                         },
-                        addCollider: true,
-                        actor: {
-                            name: key,
-                            parentId: rootActor.id,
-                            transform: {
-                                position: { x: 0, y, z: 0 }
-                            }
+                        transform: {
+                            position: { x: 0.5, y, z: 0 }
                         }
-                    });
-
-                    const buttonBehavior = button.value.setBehavior(MRESDK.ButtonBehavior);
-                    buttonBehavior.onClick('released', (userId: string) => {
-                        resolve(button.value.name);
-                    });
-
-                    MRESDK.Actor.CreateEmpty(this.context, {
-                        actor: {
-                            name: 'label',
-                            parentId: rootActor.id,
-                            text: {
-                                contents: key,
-                                height: 0.5,
-                                anchor: MRESDK.TextAnchorLocation.MiddleLeft
-                            },
-                            transform: {
-                                position: { x: 0.5, y, z: 0 }
-                            }
-                        }
-                    });
-                    y = y + 0.5;
-                }
+                    }
+                });
+                y = y + 0.5;
             }
         });
     }
