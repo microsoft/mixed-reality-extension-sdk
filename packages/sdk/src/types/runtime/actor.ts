@@ -26,6 +26,7 @@ import {
     PrimitiveDefinition,
     SetAnimationStateOptions
 } from '../..';
+import { ZeroGuid } from '../../constants';
 import { log } from '../../log';
 import observe from '../../utils/observe';
 import readPath from '../../utils/readPath';
@@ -82,10 +83,10 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
     private _rigidBody?: RigidBody;
     private _collider?: Collider;
     private _text?: Text;
-    private _materialId?: string;
+    private _materialId = ZeroGuid;
     // tslint:enable:variable-name
 
-    /**
+    /*
      * PUBLIC ACCESSORS
      */
 
@@ -113,17 +114,19 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
         this._parentId = value;
         this.actorChanged('parentId');
     }
+
+    /** @returns A shared reference to this actor's material, or null if this actor has no material */
     public get material() { return this._context.assetManager.assets[this._materialId] as Material; }
     public set material(value) {
-        this.materialId = value && value.id || null;
+        this.materialId = value && value.id || ZeroGuid;
     }
     public get materialId() { return this._materialId; }
     public set materialId(value) {
-        if (value && value.startsWith('0000')) {
-            value = null;
+        if (!value || value.startsWith('0000')) {
+            value = ZeroGuid;
         }
         if (!this.context.assetManager.assets[value]) {
-            value = null; // throw?
+            value = ZeroGuid; // throw?
         }
         this._materialId = value;
         this.actorChanged('materialId');

@@ -3,8 +3,9 @@
  * Licensed under the MIT License.
  */
 
-import { Asset, AssetLike, AssetManager } from '.';
-import { Color3, Color4 } from '../../../math';
+import { Asset, AssetLike, AssetManager, Texture } from '.';
+import { ZeroGuid } from '../../../constants';
+import { Color3, Color4, Vector2, Vector2Like } from '../../../math';
 import observe from '../../../utils/observe';
 import readPath from '../../../utils/readPath';
 import { InternalAsset } from '../../internal/asset';
@@ -16,6 +17,12 @@ import { Patchable } from '../../patchable';
 export interface MaterialLike {
     /** The base color of this material. */
     color: Partial<Color4>;
+    /** The main (albedo) texture asset ID */
+    mainTextureId: string;
+    /** The main texture's offset from default */
+    mainTextureOffset: Vector2Like;
+    /** The main texture's scale from default */
+    mainTextureScale: Vector2Like;
 }
 
 /**
@@ -41,6 +48,9 @@ export enum AlphaMode {
 export class Material extends Asset implements MaterialLike, Patchable<AssetLike> {
     // tslint:disable:variable-name
     private _color = Color4.FromColor3(Color3.White(), 1.0);
+    private _mainTextureId: string = ZeroGuid;
+    private _mainTextureOffset = Vector2.Zero();
+    private _mainTextureScale = Vector2.One();
     private _internal = new InternalAsset(this);
     // tslint:enable:variable-name
 
@@ -49,6 +59,32 @@ export class Material extends Asset implements MaterialLike, Patchable<AssetLike
 
     /** @inheritdoc */
     public get color() { return this._color; }
+    public set color(value) { value && this._color.copy(value); }
+
+    /** @returns A shared reference to this material's texture asset */
+    public get mainTexture() { return this.manager.assets[this._mainTextureId] as Texture; }
+    public set mainTexture(value) {
+        this.mainTextureId = value && value.id || ZeroGuid;
+    }
+
+    /** @inheritdoc */
+    public get mainTextureId() { return this._mainTextureId; }
+    public set mainTextureId(value) {
+        if (!value || value.startsWith('0000')) {
+            value = ZeroGuid;
+        }
+        if (!this.manager.assets[value]) {
+            value = ZeroGuid; // throw?
+        }
+        this._mainTextureId = value;
+        this.materialChanged('mainTextureId');
+    }
+
+    /** @inheritdoc */
+    public get mainTextureOffset() { return this._mainTextureOffset; }
+
+    /** @inheritdoc */
+    public get mainTextureScale() { return this._mainTextureScale; }
 
     /** @inheritdoc */
     public get material(): MaterialLike { return this; }
@@ -61,8 +97,15 @@ export class Material extends Asset implements MaterialLike, Patchable<AssetLike
         }
 
         this._color.copy(def.material.color);
-        // material patching: observe the color for changed values, and write them to a patch
-        observe(this._color, 'color', (...path: string[]) => this.materialChanged(path));
+        this._mainTextureId = def.material.mainTextureId;
+        this._mainTextureOffset.copy(def.material.mainTextureOffset);
+        this._mainTextureScale.copy(def.material.mainTextureScale);
+
+        // material patching: observe the nested material properties
+        // for changed values, and write them to a patch
+        observe(this._color, 'color', (...path: string[]) => this.materialChanged(...path));
+        observe(this._mainTextureOffset, 'mainTextureOffset', (...path: string[]) => this.materialChanged(...path));
+        observe(this._mainTextureScale, 'mainTextureScale', (...path: string[]) => this.materialChanged(...path));
     }
 
     public copy(from: Partial<AssetLike>): this {
@@ -74,11 +117,19 @@ export class Material extends Asset implements MaterialLike, Patchable<AssetLike
         const wasObserving = this.internal.observing;
         this.internal.observing = false;
 
-        // tslint:disable:curly
         super.copy(from);
-        if (from.material && from.material.color)
-            this._color.copy(from.material.color);
-        // tslint:enable:curly
+        if (from.material) {
+            if (from.material.color) {
+                this._color.copy(from.material.color);
+            }
+            if (from.material.mainTextureOffset) {
+                this._mainTextureOffset.copy(from.material.mainTextureOffset);
+            }
+            if (from.material.mainTextureScale) {
+                this._mainTextureScale.copy(from.material.mainTextureScale);
+            }
+            this._mainTextureId = from.material.mainTextureId || null;
+        }
 
         this.internal.observing = wasObserving;
         return this;
@@ -89,12 +140,15 @@ export class Material extends Asset implements MaterialLike, Patchable<AssetLike
         return {
             ...super.toJSON(),
             material: {
-                color: this._color.toJSON()
+                color: this.color.toJSON(),
+                mainTextureId: this.mainTextureId,
+                mainTextureOffset: this.mainTextureOffset.toJSON(),
+                mainTextureScale: this.mainTextureScale.toJSON()
             }
         };
     }
 
-    private materialChanged(path: string[]): void {
+    private materialChanged(...path: string[]): void {
         if (this.internal.observing) {
             this.manager.context.internal.incrementGeneration();
             this.internal.patch = this.internal.patch || { material: {} } as AssetLike;
