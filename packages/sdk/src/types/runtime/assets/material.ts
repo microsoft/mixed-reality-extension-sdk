@@ -59,7 +59,7 @@ export class Material extends Asset implements MaterialLike, Patchable<AssetLike
 
     /** @inheritdoc */
     public get color() { return this._color; }
-    public set color(value) { value && this._color.copy(value); }
+    public set color(value) { if (value) { this._color.copy(value); } }
 
     /** @returns A shared reference to this material's texture asset */
     public get mainTexture() { return this.manager.assets[this._mainTextureId] as Texture; }
@@ -82,11 +82,11 @@ export class Material extends Asset implements MaterialLike, Patchable<AssetLike
 
     /** @inheritdoc */
     public get mainTextureOffset() { return this._mainTextureOffset; }
-    public set mainTextureOffset(value) { value && this._mainTextureOffset.copy(value); }
+    public set mainTextureOffset(value) { if (value) { this._mainTextureOffset.copy(value); } }
 
     /** @inheritdoc */
     public get mainTextureScale() { return this._mainTextureScale; }
-    public set mainTextureScale(value) { value && this._mainTextureScale.copy(value); }
+    public set mainTextureScale(value) { if (value) { this._mainTextureScale.copy(value); } }
 
     /** @inheritdoc */
     public get material(): MaterialLike { return this; }
