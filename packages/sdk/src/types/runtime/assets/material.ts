@@ -91,6 +91,7 @@ export class Material extends Asset implements MaterialLike, Patchable<AssetLike
     /** @inheritdoc */
     public get material(): MaterialLike { return this; }
 
+    /** @hidden */
     public constructor(manager: AssetManager, def: AssetLike) {
         super(manager, def);
 
@@ -108,6 +109,10 @@ export class Material extends Asset implements MaterialLike, Patchable<AssetLike
         observe(this._color, 'color', (...path: string[]) => this.materialChanged(...path));
         observe(this._mainTextureOffset, 'mainTextureOffset', (...path: string[]) => this.materialChanged(...path));
         observe(this._mainTextureScale, 'mainTextureScale', (...path: string[]) => this.materialChanged(...path));
+    }
+
+    public static Create(manager: AssetManager, groupName: string, def: MaterialLike): Promise<Material> {
+        return manager.createMaterial(groupName, def);
     }
 
     public copy(from: Partial<AssetLike>): this {

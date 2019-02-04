@@ -26,6 +26,7 @@ export class Mesh extends Asset implements MeshLike {
     /** @inheritdoc */
     public get mesh(): MeshLike { return this; }
 
+    /** @hidden */
     public constructor(manager: AssetManager, def: AssetLike) {
         super(manager, def);
 

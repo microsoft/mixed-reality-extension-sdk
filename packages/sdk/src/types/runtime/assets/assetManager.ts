@@ -3,7 +3,7 @@
  * Licensed under the MIT License.
  */
 
-import { Asset, AssetGroup } from '.';
+import { Asset, AssetGroup, Material, MaterialLike, Texture, TextureLike } from '.';
 import { Context } from '..';
 import { AssetsLoaded, CreateColliderType, LoadAssets } from '../../network/payloads';
 
@@ -52,6 +52,14 @@ export class AssetManager {
                     .catch(e => decrementRefsAndTest(true));
             }
         });
+    }
+
+    public createMaterial(groupName: string, definition: Partial<MaterialLike>): Promise<Material> {
+
+    }
+
+    public createTexture(groupName: string, uri: string, definition?: Partial<TextureLike>): Promise<Texture> {
+
     }
 
     /**

@@ -51,6 +51,7 @@ export class Texture extends Asset implements TextureLike, Patchable<AssetLike> 
     /** @inheritdoc */
     public get texture(): TextureLike { return this; }
 
+    /** @hidden */
     public constructor(manager: AssetManager, def: AssetLike) {
         super(manager, def);
 
@@ -61,6 +62,10 @@ export class Texture extends Asset implements TextureLike, Patchable<AssetLike> 
         this._resolution = new Vector2(def.texture.resolution.x, def.texture.resolution.y);
         this._wrapU = def.texture.wrapU;
         this._wrapV = def.texture.wrapV;
+    }
+
+    public static Create(manager: AssetManager, groupName: string, uri: string, def?: Partial<TextureLike>): Promise<Texture> {
+        return manager.createTexture(groupName, uri, def);
     }
 
     public copy(from: Partial<AssetLike>): this {
