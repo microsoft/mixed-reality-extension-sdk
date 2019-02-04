@@ -59,6 +59,7 @@ export class Material extends Asset implements MaterialLike, Patchable<AssetLike
 
     /** @inheritdoc */
     public get color() { return this._color; }
+    public set color(value) { value && this._color.copy(value); }
 
     /** @returns A shared reference to this material's texture asset */
     public get mainTexture() { return this.manager.assets[this._mainTextureId] as Texture; }
