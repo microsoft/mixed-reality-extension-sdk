@@ -82,9 +82,11 @@ export class Material extends Asset implements MaterialLike, Patchable<AssetLike
 
     /** @inheritdoc */
     public get mainTextureOffset() { return this._mainTextureOffset; }
+    public set mainTextureOffset(value) { value && this._mainTextureOffset.copy(value); }
 
     /** @inheritdoc */
     public get mainTextureScale() { return this._mainTextureScale; }
+    public set mainTextureScale(value) { value && this._mainTextureScale.copy(value); }
 
     /** @inheritdoc */
     public get material(): MaterialLike { return this; }
