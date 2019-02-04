@@ -8,11 +8,17 @@
  * Installs "watchers" for leaf properties in the target object, and calls the supplied callback
  * when they change and passing the entire path to the leaf, e.g.: ["transform", "position", "z"]
  */
-export default function observe(target: any, targetName: string, notifyChanged: (...path: string[]) => void) {
-    observeLeafProperties(target, [targetName], notifyChanged);
+export default function observe(options: {
+    target: any,
+    targetName: string,
+    notifyChanged: (...path: string[]) => void,
+    triggerNotificationsNow?: boolean
+}) {
+    observeLeafProperties(options.target, [options.targetName], options.notifyChanged, options.triggerNotificationsNow);
 }
 
-function observeLeafProperties(target: any, path: string[], notifyChanged: (...path: string[]) => void) {
+function observeLeafProperties(
+    target: any, path: string[], notifyChanged: (...path: string[]) => void, triggerNotificationsNow: boolean) {
     const names = Object.getOwnPropertyNames(target);
     for (const name of names) {
         // Fields starting with a dollar sign are not observed.
@@ -49,8 +55,11 @@ function observeLeafProperties(target: any, path: string[], notifyChanged: (...p
                     }
                 },
             });
+            if (triggerNotificationsNow) {
+                notifyChanged(...path, publicName);
+            }
         } else if (type === 'object') {
-            observeLeafProperties(target[name], [...path, publicName], notifyChanged);
+            observeLeafProperties(target[name], [...path, publicName], notifyChanged, triggerNotificationsNow);
         }
     }
 }

@@ -21,18 +21,12 @@ import {
     CollisionLayer,
     Context,
     CreateAnimationOptions,
-    Light,
-    LightLike,
     LookAtMode,
     PrimitiveDefinition,
-    RigidBody,
-    RigidBodyLike,
     SetAnimationStateOptions,
     SphereColliderParams,
     SubscriptionOwnerType,
     SubscriptionType,
-    Text,
-    TextLike,
     User,
     UserLike,
     UserSet,
@@ -53,9 +47,6 @@ import {
     CreatePrimitive,
     DestroyActors,
     EnableCollider,
-    EnableLight,
-    EnableRigidBody,
-    EnableText,
     InterpolateActor,
     LookAt,
     ObjectSpawned,
@@ -360,37 +351,7 @@ export class InternalContext {
         }
     }
 
-    public enableRigidBody(actorId: string, rigidBody?: Partial<RigidBodyLike>): ForwardPromise<RigidBody> {
-        const actor = this.actorSet[actorId];
-        if (!actor) {
-            return Promise.reject(`Failed enable rigid body. Actor ${actorId} not found`);
-        } else {
-            // Resolve by-reference values now, ensuring they won't change in the
-            // time between now and when this message is actually sent.
-            rigidBody = resolveJsonValues(rigidBody);
-            return createForwardPromise(actor.rigidBody, new Promise((resolve, reject) => {
-                actor.created().then(() => {
-                    this.protocol.sendPayload({
-                        type: 'enable-rigidbody',
-                        actorId,
-                        rigidBody
-                    } as EnableRigidBody, {
-                            resolve: (payload: OperationResult) => {
-                                this.protocol.recvPayload(payload);
-                                if (payload.resultCode === 'error') {
-                                    reject(payload.message);
-                                } else {
-                                    resolve(actor.rigidBody);
-                                }
-                            },
-                            reject
-                        });
-                }).catch((reason: any) => {
-                    reject(`Failed enable rigid body on actor ${actor.id}. ${(reason || '').toString()}`.trim());
-                });
-            }));
-        }
-    }
+    /* TODO: Delete enable-collider payload and implement via patching mechanism.
 
     public enableCollider(
         actorId: string,
@@ -469,71 +430,7 @@ export class InternalContext {
             }));
         }
     }
-
-    public enableLight(actorId: string, light?: Partial<LightLike>): ForwardPromise<Light> {
-        const actor = this.actorSet[actorId];
-        if (!actor) {
-            return Promise.reject(`Failed to enable light. Actor ${actorId} not found`);
-        } else {
-            // Resolve by-reference values now, ensuring they won't change in the
-            // time between now and when this message is actually sent.
-            light = resolveJsonValues(light);
-            return createForwardPromise<Light>(actor.light, new Promise((resolve, reject) => {
-                actor.created().then(() => {
-                    this.protocol.sendPayload({
-                        type: 'enable-light',
-                        actorId,
-                        light,
-                    } as EnableLight, {
-                            resolve: (payload: OperationResult) => {
-                                this.protocol.recvPayload(payload);
-                                if (payload.resultCode === 'error') {
-                                    reject(payload.message);
-                                } else {
-                                    resolve(actor.light);
-                                }
-                            },
-                            reject
-                        });
-                }).catch((reason: any) => {
-                    reject(`Failed to enable light on ${actor.id}. ${(reason || '').toString()}`.trim());
-                });
-            }));
-        }
-    }
-
-    public enableText(actorId: string, text?: Partial<TextLike>): ForwardPromise<Text> {
-        const actor = this.actorSet[actorId];
-        if (!actor) {
-            return Promise.reject(`Failed to enable text. Actor ${actorId} not found`);
-        } else {
-            // Resolve by-reference values now, ensuring they won't change in the
-            // time between now and when this message is actually sent.
-            text = resolveJsonValues(text);
-            return createForwardPromise<Text>(actor.text, new Promise((resolve, reject) => {
-                actor.created().then(() => {
-                    this.protocol.sendPayload({
-                        type: 'enable-text',
-                        actorId,
-                        text
-                    } as EnableText, {
-                            resolve: (payload: OperationResult) => {
-                                this.protocol.recvPayload(payload);
-                                if (payload.resultCode === 'error') {
-                                    reject(payload.message);
-                                } else {
-                                    resolve(actor.text);
-                                }
-                            },
-                            reject
-                        });
-                }).catch((reason: any) => {
-                    reject(`Failed to enable text on ${actor.id}. ${(reason || '').toString()}`.trim());
-                });
-            }));
-        }
-    }
-
+    */
     public updateSubscriptions(
         actorId: string,
         ownerType: SubscriptionOwnerType,

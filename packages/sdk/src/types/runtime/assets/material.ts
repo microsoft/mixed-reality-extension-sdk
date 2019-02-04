@@ -105,9 +105,21 @@ export class Material extends Asset implements MaterialLike, Patchable<AssetLike
 
         // material patching: observe the nested material properties
         // for changed values, and write them to a patch
-        observe(this._color, 'color', (...path: string[]) => this.materialChanged(...path));
-        observe(this._mainTextureOffset, 'mainTextureOffset', (...path: string[]) => this.materialChanged(...path));
-        observe(this._mainTextureScale, 'mainTextureScale', (...path: string[]) => this.materialChanged(...path));
+        observe({
+            target: this._color,
+            targetName: 'color',
+            notifyChanged: (...path: string[]) => this.materialChanged(...path)
+        });
+        observe({
+            target: this._mainTextureOffset,
+            targetName: 'mainTextureOffset',
+            notifyChanged: (...path: string[]) => this.materialChanged(...path)
+        });
+        observe({
+            target: this._mainTextureScale,
+            targetName: 'mainTextureScale',
+            notifyChanged: (...path: string[]) => this.materialChanged(...path)
+        });
     }
 
     public copy(from: Partial<AssetLike>): this {

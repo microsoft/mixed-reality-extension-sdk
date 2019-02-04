@@ -138,7 +138,11 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
         this._emitter = new events.EventEmitter();
         this._transform = new Transform();
         // Actor patching: Observe the transform for changed values.
-        observe(this._transform, 'transform', (...path: string[]) => this.actorChanged(...path));
+        observe({
+            target: this._transform,
+            targetName: 'transform',
+            notifyChanged: (...path: string[]) => this.actorChanged(...path)
+        });
     }
 
     /**
@@ -266,30 +270,45 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
      * Adds a light component to the actor.
      * @param light Light characteristics.
      */
-    public enableLight(light?: Partial<LightLike>): ForwardPromise<Light> {
-        if (!this._light) {
+    public enableLight(light?: Partial<LightLike>) {
+        if (!light && this._light) {
+            this.light.enabled = false;
+        } else if (!this._light) {
             this._light = new Light();
-            this._light.copy(light);
             // Actor patching: Observe the light component for changed values.
-            observe(this._light, 'light', (...path: string[]) => this.actorChanged(...path));
-            return this.context.internal.enableLight(this.id, light);
+            observe({
+                target: this._light,
+                targetName: 'light',
+                notifyChanged: (...path: string[]) => this.actorChanged(...path),
+                // Trigger notifications for every observed leaf node to ensure we get all values in the initial patch.
+                triggerNotificationsNow: true
+            });
         }
-        return createForwardPromise(this._light, Promise.resolve(this._light));
+        // Copying the new values will trigger an actor update and enable/update the light component.
+        this._light.copy(light);
     }
 
     /**
      * Adds a rigid body component to the actor.
      * @param rigidBody Rigid body characteristics.
      */
-    public enableRigidBody(rigidBody?: Partial<RigidBodyLike>): ForwardPromise<RigidBody> {
-        if (!this._rigidBody) {
+    public enableRigidBody(rigidBody?: Partial<RigidBodyLike>) {
+        if (!rigidBody && this._rigidBody) {
+            // TODO: Add `enabled` field
+            // this.rigidBody.enabled = false;
+        } else if (!this._rigidBody) {
             this._rigidBody = new RigidBody(this);
-            this._rigidBody.copy(rigidBody);
-            // Actor patching: Observe the rigidBody component for changed values.
-            observe(this._rigidBody, 'rigidBody', (...path: string[]) => this.actorChanged(...path));
-            return this.context.internal.enableRigidBody(this.id, rigidBody);
+            // Actor patching: Observe the rigid body component for changed values.
+            observe({
+                target: this._rigidBody,
+                targetName: 'rigidBody',
+                notifyChanged: (...path: string[]) => this.actorChanged(...path),
+                // Trigger notifications for every observed leaf node to ensure we get all values in the initial patch.
+                triggerNotificationsNow: true
+            });
         }
-        return createForwardPromise(this._rigidBody, Promise.resolve(this._rigidBody));
+        // Copying the new values will trigger an actor update and enable/update the rigid body component.
+        this._rigidBody.copy(rigidBody);
     }
 
     // TODO @tombu: This will be enabled once the feature is ready for prime time.
@@ -350,15 +369,22 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
      * Adds a text component to the actor.
      * @param text Text characteristics
      */
-    public enableText(text?: Partial<TextLike>): ForwardPromise<Text> {
-        if (!this._text) {
+    public enableText(text?: Partial<TextLike>) {
+        if (!text && this._text) {
+            this.text.enabled = false;
+        } else if (!this._text) {
             this._text = new Text();
-            this._text.copy(text);
             // Actor patching: Observe the text component for changed values.
-            observe(this._text, 'text', (...path: string[]) => this.actorChanged(...path));
-            return this.context.internal.enableText(this.id, text);
+            observe({
+                target: this._text,
+                targetName: 'text',
+                notifyChanged: (...path: string[]) => this.actorChanged(...path),
+                // Trigger notifications for every observed leaf node to ensure we get all values in the initial patch.
+                triggerNotificationsNow: true
+            });
         }
-        return createForwardPromise(this._text, Promise.resolve(this._text));
+        // Copying the new values will trigger an actor update and enable/update the text component.
+        this._text.copy(text);
     }
 
     /**
@@ -587,7 +613,6 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
         const wasObserving = this.internal.observing;
         this.internal.observing = false;
 
-        // tslint:disable:curly
         if (!from) return this;
         if (from.id) this._id = from.id;
         if (from.parentId) this._parentId = from.parentId;
@@ -595,28 +620,13 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
         if (from.tag) this._tag = from.tag;
         if (from.transform) this._transform.copy(from.transform);
         if (from.materialId) this._materialId = from.materialId;
-        if (from.light) {
-            if (!this._light)
-                this.enableLight(from.light);
-            else
-                this.light.copy(from.light);
-        }
-        if (from.rigidBody) {
-            if (!this._rigidBody)
-                this.enableRigidBody(from.rigidBody);
-            else
-                this.rigidBody.copy(from.rigidBody);
-        }
+        if (from.light) this.enableLight(from.light);
+        if (from.rigidBody) this.enableRigidBody(from.rigidBody);
         // TODO @tombu:  Add in colliders here once feature is turned on.
-        if (from.text) {
-            if (!this._text)
-                this.enableText(from.text);
-            else
-                this.text.copy(from.text);
-        }
+        if (from.text) this.enableText(from.text);
+
         this.internal.observing = wasObserving;
         return this;
-        // tslint:enable:curly
     }
 
     public toJSON() {

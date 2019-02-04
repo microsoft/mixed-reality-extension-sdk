@@ -18,17 +18,20 @@ export default class ReparentTest extends Test {
     }
 
     public async run(): Promise<boolean> {
-        this.sceneRoot = MRESDK.Actor.CreateEmpty(this.app.context).value;
-        const runningTestPromise = this.runTest();
-        const timeout = setTimeout(() => this.running = false, 60000);
-        await runningTestPromise;
-        clearTimeout(timeout);
-        destroyActors(this.sceneRoot);
-        return true;
+        try {
+            this.sceneRoot = MRESDK.Actor.CreateEmpty(this.app.context).value;
+            const runningTestPromise = this.runTest();
+            const timeout = setTimeout(() => this.running = false, 60000);
+            await runningTestPromise;
+            clearTimeout(timeout);
+            return true;
+        } finally {
+            destroyActors(this.sceneRoot);
+        }
     }
 
     private async runTest() {
-        MRESDK.Actor.CreateEmpty(this.app.context, {
+        const label = MRESDK.Actor.CreateEmpty(this.app.context, {
             actor: {
                 parentId: this.sceneRoot.id,
                 transform: {
@@ -45,7 +48,9 @@ export default class ReparentTest extends Test {
                     color: MRESDK.Color3.Yellow()
                 }
             }
-        });
+        }).value;
+        label.setBehavior(MRESDK.ButtonBehavior).onClick('released', () => this.running = false);
+
         const leftParent = MRESDK.Actor.CreateEmpty(this.app.context, {
             actor: {
                 parentId: this.sceneRoot.id,
@@ -73,12 +78,10 @@ export default class ReparentTest extends Test {
                 parentId: leftParent.id
             }
         }).value;
+        sphere.setBehavior(MRESDK.ButtonBehavior).onClick('released', () => this.running = false);
 
         let currParent = 0;
         const parentIds = [leftParent.id, rightParent.id];
-
-        const buttonBehavior = sphere.setBehavior(MRESDK.ButtonBehavior);
-        buttonBehavior.onClick('released', () => this.running = false);
 
         while (this.running) {
             for (let i = 0; i < 10 && this.running; ++i) {
