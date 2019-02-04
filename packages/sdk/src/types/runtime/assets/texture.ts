@@ -11,6 +11,7 @@ import { InternalAsset } from '../../internal/asset';
 import { Patchable } from '../../patchable';
 
 export interface TextureLike {
+    uri?: string;
     resolution: Vector2Like;
     wrapU: TextureWrapMode;
     wrapV: TextureWrapMode;
@@ -28,6 +29,7 @@ export enum TextureWrapMode {
 
 export class Texture extends Asset implements TextureLike, Patchable<AssetLike> {
     // tslint:disable:variable-name
+    private _uri: string;
     private _resolution = Vector2.One();
     private _wrapU = TextureWrapMode.Repeat;
     private _wrapV = TextureWrapMode.Repeat;
@@ -36,6 +38,9 @@ export class Texture extends Asset implements TextureLike, Patchable<AssetLike> 
 
     /** @hidden */
     public get internal() { return this._internal; }
+
+    /** The URI, if any, this texture was loaded from */
+    public get uri() { return this._uri; }
 
     /** The pixel dimensions of the loaded texture */
     public get resolution() { return this._resolution; }
@@ -51,7 +56,7 @@ export class Texture extends Asset implements TextureLike, Patchable<AssetLike> 
     /** @inheritdoc */
     public get texture(): TextureLike { return this; }
 
-    /** @hidden */
+    /** INTERNAL USE ONLY. To load a new texture from scratch, use [[AssetManager.loadTexture]] */
     public constructor(manager: AssetManager, def: AssetLike) {
         super(manager, def);
 
@@ -62,10 +67,6 @@ export class Texture extends Asset implements TextureLike, Patchable<AssetLike> 
         this._resolution = new Vector2(def.texture.resolution.x, def.texture.resolution.y);
         this._wrapU = def.texture.wrapU;
         this._wrapV = def.texture.wrapV;
-    }
-
-    public static Create(manager: AssetManager, groupName: string, uri: string, def?: Partial<TextureLike>): Promise<Texture> {
-        return manager.createTexture(groupName, uri, def);
     }
 
     public copy(from: Partial<AssetLike>): this {

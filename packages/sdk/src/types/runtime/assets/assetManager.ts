@@ -3,91 +3,121 @@
  * Licensed under the MIT License.
  */
 
+import UUID from 'uuid/v4';
+
 import { Asset, AssetGroup, Material, MaterialLike, Texture, TextureLike } from '.';
 import { Context } from '..';
-import { AssetsLoaded, CreateColliderType, LoadAssets } from '../../network/payloads';
+import { createForwardPromise, ForwardPromise } from '../../forwardPromise';
+import { AssetsLoaded, CreateAsset, CreateColliderType, LoadAssets } from '../../network/payloads';
+
+// tslint:disable-next-line:variable-name
+const ManualId = '__manual__';
 
 /**
  * A per-context singleton that manages all of an app's assets. Create a new asset group
- * by calling a load method (e.g. [[loadGltf]]), view the group's assets via [[group]],
+ * by calling a load method (e.g. [[loadGltf]]), view the group's assets via [[groups]],
  * and use the assets by ID on actors (e.g. [[Actor.CreateFromPrefab]]).
  */
 export class AssetManager {
     // tslint:disable:variable-name
     private _assets: { [id: string]: Asset } = {};
     private _groups: { [k: string]: AssetGroup } = {};
+    private _ready = Promise.resolve();
     // tslint:enable:variable-name
-    private inFlightLoads: { [k: string]: Promise<AssetGroup> } = {};
 
     /** @hidden */
-    public constructor(public context: Context) { }
+    public constructor(public context: Context) {
+        this._groups[ManualId] = new AssetGroup(ManualId, null);
+    }
 
     public cleanup() {
     }
+
     /** Fetch a group by name. */
     public get groups() { return Object.freeze({ ...this._groups }); }
+
+    /** Get the group of individually-created assets */
+    public get manualGroup() { return this._groups[ManualId]; }
 
     /** Fetch an asset by id. */
     public get assets() { return Object.freeze({ ...this._assets }); }
 
     /**
      * @returns A promise that resolves when all pending asset load requests have been
-     * settled (success or failure).
+     * settled, successfully or otherwise. Listen to the individual load promises to
+     * catch failures.
      */
-    public ready(): Promise<void> {
-        return new Promise((resolve, reject) => {
+    public get ready() { return this._ready; }
 
-            let waiting = Object.keys(this.inFlightLoads).length;
-            let shouldReject = false;
-            function decrementRefsAndTest(rejected: boolean) {
-                shouldReject = shouldReject || rejected;
-                waiting--;
-                if (waiting <= 0) {
-                    shouldReject ? reject() : resolve();
+    /**
+     * Generate a new material
+     * @param name The new material's name
+     * @param definition The initial material properties
+     */
+    public createMaterial(name: string, definition: Partial<MaterialLike>): ForwardPromise<Material> {
+        return this.sendCreateAsset(new Material(this, {
+            id: UUID(),
+            name,
+            material: definition
+        }));
+    }
+
+    /**
+     * Generate a new texture
+     * @param name The new texture's name
+     * @param definition The initial texture properties. The `uri` property is required.
+     */
+    public createTexture(name: string, definition: Partial<TextureLike>): ForwardPromise<Texture> {
+        return this.sendCreateAsset(new Texture(this, {
+            id: UUID(),
+            name,
+            texture: definition
+        }));
+    }
+
+    private sendCreateAsset<T extends Asset>(asset: T): ForwardPromise<T> {
+        this.manualGroup.add(asset);
+
+        const promise = this.sendLoadAssetsPayload({
+            type: 'create-asset',
+            definition: asset
+        } as CreateAsset)
+            .then<T>(payload => {
+                if (payload.failureMessage || payload.assets.length !== 1) {
+                    return Promise.reject(`Creation of asset ${asset.name} failed: ${payload.failureMessage}`);
                 }
-            }
+                return asset.copy(payload.assets[0]);
+            });
+        this.registerLoadPromise(promise);
 
-            for (const [k, p] of Object.entries(this.inFlightLoads)) {
-                p.then(ag => decrementRefsAndTest(false))
-                    .catch(e => decrementRefsAndTest(true));
-            }
-        });
-    }
-
-    public createMaterial(groupName: string, definition: Partial<MaterialLike>): Promise<Material> {
-
-    }
-
-    public createTexture(groupName: string, uri: string, definition?: Partial<TextureLike>): Promise<Texture> {
-
+        return createForwardPromise(asset, promise);
     }
 
     /**
      * Load the assets in a glTF model by URL, and populate a new group with the result.
      * @param groupName The name of the group to create.
-     * @param url The URL to a glTF model.
+     * @param uri The URI to a glTF model.
      * @returns The promise of a new asset group.
      */
-    public loadGltf(groupName: string, url: string, colliderType: CreateColliderType = 'none'): Promise<AssetGroup> {
+    public loadGltf(groupName: string, uri: string, colliderType: CreateColliderType = 'none'): Promise<AssetGroup> {
+        const p = this.loadGltfHelper(groupName, uri, colliderType);
+        this.registerLoadPromise(p);
+        return p;
+    }
+
+    private async loadGltfHelper(
+        groupName: string, uri: string, colliderType: CreateColliderType): Promise<AssetGroup> {
+
         if (this.groups[groupName]) {
             throw new Error(
                 `Group name ${groupName} is already in use. Unload the old group, or choose a different name.`);
         }
 
-        const p = this.loadGltfHelper(groupName, url, colliderType);
-        this.inFlightLoads[groupName] = p.then(
-            (ag: AssetGroup) => { delete this.inFlightLoads[groupName]; return ag; },
-            (err) => { delete this.inFlightLoads[groupName]; return Promise.reject(err); });
-
-        return this.inFlightLoads[groupName];
-    }
-
-    private async loadGltfHelper(
-        groupName: string, url: string, colliderType: CreateColliderType): Promise<AssetGroup> {
         const group = new AssetGroup(groupName, {
             containerType: 'gltf',
-            uri: url
+            uri
         });
+        this._groups[groupName] = group;
 
         const payload = {
             type: 'load-assets',
@@ -107,11 +137,17 @@ export class AssetManager {
             this._assets[def.id] = asset;
         }
 
-        this._groups[groupName] = group;
         return group;
     }
 
-    private sendLoadAssetsPayload(payload: LoadAssets): Promise<AssetsLoaded> {
+    private registerLoadPromise<T>(promise: Promise<T>): void {
+        const ignoreFailure = promise
+            .then(() => Promise.resolve())
+            .catch(() => Promise.resolve());
+        this._ready = this._ready.then(() => ignoreFailure);
+    }
+
+    private sendLoadAssetsPayload(payload: LoadAssets | CreateAsset): Promise<AssetsLoaded> {
         return new Promise<AssetsLoaded>((resolve, reject) => {
             this.context.internal.protocol.sendPayload(
                 payload, { resolve, reject }
