@@ -5,10 +5,6 @@
 
 import * as crypto from 'crypto';
 
-// tslint:disable-next-line:variable-name
-const ZeroGuid = '00000000-0000-0000-0000-000000000000';
-export { ZeroGuid };
-
 /**
  * @hidden
  * Class for generating a sequence of deterministic GUID values.

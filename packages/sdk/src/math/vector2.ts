@@ -305,7 +305,7 @@ export class Vector2 implements Vector2Like {
         return {
             x: this.x,
             y: this.y,
-        };
+        } as Vector2Like;
     }
 
     /**

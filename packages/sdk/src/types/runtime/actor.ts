@@ -26,8 +26,8 @@ import {
     PrimitiveDefinition,
     SetAnimationStateOptions
 } from '../..';
+import { ZeroGuid } from '../../constants';
 import { log } from '../../log';
-import { ZeroGuid } from '../../utils/deterministicGuids';
 import observe from '../../utils/observe';
 import readPath from '../../utils/readPath';
 import { createForwardPromise, ForwardPromise } from '../forwardPromise';
