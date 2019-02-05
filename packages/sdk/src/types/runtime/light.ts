@@ -5,7 +5,7 @@
 
 import { Color3, Color3Like } from '../..';
 
-export type LightType = 'spot' | 'point' | 'directional';
+export type LightType = 'spot' | 'point';
 
 export interface LightLike {
     enabled: boolean;

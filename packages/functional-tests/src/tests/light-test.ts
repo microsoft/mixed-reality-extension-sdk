@@ -98,13 +98,6 @@ export default class LightTest extends Test {
                 range: 10,
             });
             await animateAround(5);
-            // Directional Light
-            updateLabel('Directional');
-            sphere.light.copy({
-                type: 'directional',
-                intensity: 1,
-            });
-            await animateAround(5);
         }
     }
 
