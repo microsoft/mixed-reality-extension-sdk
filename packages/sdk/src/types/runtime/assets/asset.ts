@@ -52,7 +52,7 @@ export interface AssetLike {
 }
 
 /** The base class for all asset types. */
-export class Asset implements AssetLike {
+export abstract class Asset implements AssetLike {
     // tslint:disable:variable-name
     private _id: string;
     private _name: string;
