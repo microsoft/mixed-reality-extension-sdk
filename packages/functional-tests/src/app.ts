@@ -14,6 +14,7 @@ import GltfConcurrencyTest from './tests/gltf-concurrency-test';
 import GltfGenTest from './tests/gltf-gen-test';
 import InputTest from './tests/input-test';
 import InterpolationTest from './tests/interpolation-test';
+import LightTest from './tests/light-test';
 import LookAtTest from './tests/look-at-test';
 import MutableAssetTest from './tests/mutable-asset-test';
 import PrimitivesTest from './tests/primitives-test';
@@ -40,6 +41,7 @@ export default class App {
 
     /**
      * Registry of functional tests. Add your test here.
+     * *** KEEP LIST SORTED ***
      */
     private testFactories: { [key: string]: (user: MRESDK.User) => Test } = {
         'altspacevr-library-test': (): Test => new AltspaceVRLibraryTest(this, this.baseUrl),
@@ -51,6 +53,7 @@ export default class App {
         'gltf-gen-test': (): Test => new GltfGenTest(this, this.baseUrl),
         'input-test': (): Test => new InputTest(this, this.baseUrl),
         'interpolation-test': (): Test => new InterpolationTest(this),
+        'light-test': (): Test => new LightTest(this, this.baseUrl),
         'look-at-test': (user: MRESDK.User): Test => new LookAtTest(this, this.baseUrl, user),
         'mutable-asset-test': (user: MRESDK.User): Test => new MutableAssetTest(this, this.baseUrl, user),
         'primitives-test': (): Test => new PrimitivesTest(this, this.baseUrl),
@@ -63,14 +66,11 @@ export default class App {
     constructor(private _context: MRESDK.Context, private params: MRESDK.ParameterSet, private baseUrl: string) {
         this._rpc = new MRERPC.ContextRPC(_context);
 
-        this.userJoined = this.userJoined.bind(this);
-        this.userLeft = this.userLeft.bind(this);
-
-        this.context.onUserJoined(this.userJoined);
-        this.context.onUserLeft(this.userLeft);
+        this.context.onUserJoined((user) => this.userJoined(user));
+        this.context.onUserLeft((user) => this.userLeft(user));
     }
 
-    private userJoined = async (user: MRESDK.User) => {
+    private async userJoined(user: MRESDK.User) {
         console.log(`user-joined: ${user.name}, ${user.id}, ${user.properties.remoteAddress}`);
         this._connectedUsers[user.id] = user;
 
@@ -90,10 +90,12 @@ export default class App {
             this.firstUser = user;
         }
     }
-    private userLeft = (user: MRESDK.User) => {
+
+    private userLeft(user: MRESDK.User) {
         console.log(`user-left: ${user.name}, ${user.id}`);
         delete this._connectedUsers[user.id];
     }
+
     private async runTest(testName: string, user: MRESDK.User) {
         if (this.activeTests[testName]) {
             console.log(`Test already running: '${testName}'`);

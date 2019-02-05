@@ -5,7 +5,6 @@
 
 import * as MRESDK from '@microsoft/mixed-reality-extension-sdk';
 import App from '../app';
-import destroyActors from '../utils/destroyActors';
 import Test from './test';
 
 export default class InterpolationTest extends Test {
@@ -22,26 +21,29 @@ export default class InterpolationTest extends Test {
         const timeout = setTimeout(() => this.running = false, 60000);
         await expressiveCubePromise;
         clearTimeout(timeout);
-        destroyActors(this.sceneRoot);
         return true;
     }
 
     private async spawnExpressiveCube() {
-        MRESDK.Actor.CreateEmpty(this.app.context, {
+        const label = MRESDK.Actor.CreateEmpty(this.app.context, {
             actor: {
                 parentId: this.sceneRoot.id,
                 transform: {
                     position: { y: 2.5 }
                 },
                 text: {
-                    contents: 'Lerping scale and rotation\nClick to exit (or wait a minute)',
+                    contents:
+                        'Lerping scale and rotation\n' +
+                        'Click to exit (or wait a minute)',
                     anchor: MRESDK.TextAnchorLocation.TopCenter,
                     justify: MRESDK.TextJustify.Center,
                     height: 0.4,
                     color: MRESDK.Color3.Yellow()
                 }
             }
-        });
+        }).value;
+        label.setBehavior(MRESDK.ButtonBehavior).onClick('released', () => this.running = false);
+
         const cube = MRESDK.Actor.CreatePrimitive(this.app.context, {
             definition: {
                 shape: MRESDK.PrimitiveShape.Box
@@ -51,9 +53,7 @@ export default class InterpolationTest extends Test {
                 parentId: this.sceneRoot.id,
             }
         }).value;
-
-        const buttonBehavior = cube.setBehavior(MRESDK.ButtonBehavior);
-        buttonBehavior.onClick('released', () => this.running = false);
+        cube.setBehavior(MRESDK.ButtonBehavior).onClick('released', () => this.running = false);
 
         while (this.running) {
             // Random point on unit sphere (pick random axis).

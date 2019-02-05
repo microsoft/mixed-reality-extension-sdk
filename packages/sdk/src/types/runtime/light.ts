@@ -5,7 +5,7 @@
 
 import { Color3, Color3Like } from '../..';
 
-export type LightType = 'spot' | 'point' | 'directional';
+export type LightType = 'spot' | 'point';
 
 export interface LightLike {
     enabled: boolean;
@@ -17,13 +17,13 @@ export interface LightLike {
 }
 
 export class Light implements LightLike {
-    public enabled: boolean;
-    public type: LightType;
-    public intensity: number;
+    public enabled = true;
+    public type: LightType = 'point';
+    public intensity = 1;
     // spot- and point-only:
-    public range: number;
+    public range = 1;
     // spot-only:
-    public spotAngle: number;
+    public spotAngle = Math.PI / 4;
 
     // tslint:disable:variable-name
     private _color: Color3;
@@ -44,7 +44,7 @@ export class Light implements LightLike {
         if (!from) return this;
         if (from.enabled !== undefined) this.enabled = from.enabled;
         if (from.type !== undefined) this.type = from.type;
-        if (from.color !== undefined) this.color = from.color;
+        if (from.color !== undefined) this.color.copy(from.color);
         if (from.range !== undefined) this.range = from.range;
         if (from.intensity !== undefined) this.intensity = from.intensity;
         if (from.spotAngle !== undefined) this.spotAngle = from.spotAngle;

@@ -463,6 +463,20 @@ export class Quaternion implements QuaternionLike {
     }
 
     /**
+     * Calculates a rotation to face the `to` point from the `from` point.
+     * @param from The location of the viewpoint.
+     * @param to The location to face toward.
+     * @param offset (Optional) Offset yaw, pitch, roll to add.
+     */
+    public static LookAt(from: Vector3, to: Vector3, offset = Vector3.Zero()) {
+        const direction = to.subtract(from);
+        const yaw = -Math.atan2(direction.z, direction.x) + Math.PI / 2;
+        const len = Math.sqrt(direction.x * direction.x + direction.z * direction.z);
+        const pitch = -Math.atan2(direction.y, len);
+        return Quaternion.RotationYawPitchRoll(yaw + offset.x, pitch + offset.y, + offset.z);
+    }
+
+    /**
      * Returns the dot product (float) between the quaternions "left" and "right"
      * @param left defines the left operand
      * @param right defines the right operand

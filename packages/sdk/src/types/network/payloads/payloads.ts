@@ -29,9 +29,6 @@ export type PayloadType
     | 'create-primitive'
     | 'destroy-actors'
     | 'enable-collider'
-    | 'enable-light'
-    | 'enable-rigidbody'
-    | 'enable-text'
     | 'engine2app-rpc'
     | 'handshake'
     | 'handshake-complete'
@@ -317,26 +314,6 @@ export type SetBehavior = Payload & {
     type: 'set-behavior';
     actorId: string;
     behaviorType: BehaviorType;
-};
-
-/**
- * @hidden
- * App to engine. Add a light to the actor.
- */
-export type EnableLight = Payload & {
-    type: 'enable-light';
-    actorId: string;
-    light: Partial<LightLike>;
-};
-
-/**
- * @hidden
- * App to engine. Enable text on this actor.
- */
-export type EnableText = Payload & {
-    type: 'enable-text';
-    actorId: string;
-    text: Partial<TextLike>;
 };
 
 /**

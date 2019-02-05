@@ -19,16 +19,6 @@ export enum CollisionEventType {
 
 /**
  * @hidden
- * App to engine. Enable the rigidbody on the actor.
- */
-export type EnableRigidBody = Payload & {
-    type: 'enable-rigidbody';
-    actorId: string;
-    rigidBody: Partial<RigidBodyLike>;
-};
-
-/**
- * @hidden
  * App to engine.  Send a rigidbody command
  */
 export type RigidBodyCommands = Payload & {
