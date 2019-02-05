@@ -5,7 +5,6 @@
 
 import * as MRESDK from '@microsoft/mixed-reality-extension-sdk';
 import App from '../app';
-import destroyActors from '../utils/destroyActors';
 import Test from './test';
 
 // tslint:disable:no-string-literal
@@ -19,16 +18,12 @@ export default class LightTest extends Test {
     }
 
     public async run() {
-        try {
-            this.sceneRoot = MRESDK.Actor.CreateEmpty(this.app.context).value;
-            const runningTestPromise = this.runTest();
-            const timeout = setTimeout(() => this.running = false, 60000);
-            await runningTestPromise;
-            clearTimeout(timeout);
-            return true;
-        } finally {
-            destroyActors(this.sceneRoot);
-        }
+        this.sceneRoot = MRESDK.Actor.CreateEmpty(this.app.context).value;
+        const runningTestPromise = this.runTest();
+        const timeout = setTimeout(() => this.running = false, 60000);
+        await runningTestPromise;
+        clearTimeout(timeout);
+        return true;
     }
 
     private async runTest() {

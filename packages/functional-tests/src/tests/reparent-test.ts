@@ -6,7 +6,6 @@
 import * as MRESDK from '@microsoft/mixed-reality-extension-sdk';
 import App from '../app';
 import delay from '../utils/delay';
-import destroyActors from '../utils/destroyActors';
 import Test from './test';
 
 export default class ReparentTest extends Test {
@@ -18,16 +17,12 @@ export default class ReparentTest extends Test {
     }
 
     public async run(): Promise<boolean> {
-        try {
-            this.sceneRoot = MRESDK.Actor.CreateEmpty(this.app.context).value;
-            const runningTestPromise = this.runTest();
-            const timeout = setTimeout(() => this.running = false, 60000);
-            await runningTestPromise;
-            clearTimeout(timeout);
-            return true;
-        } finally {
-            destroyActors(this.sceneRoot);
-        }
+        this.sceneRoot = MRESDK.Actor.CreateEmpty(this.app.context).value;
+        const runningTestPromise = this.runTest();
+        const timeout = setTimeout(() => this.running = false, 60000);
+        await runningTestPromise;
+        clearTimeout(timeout);
+        return true;
     }
 
     private async runTest() {

@@ -5,7 +5,6 @@
 
 import * as MRESDK from '@microsoft/mixed-reality-extension-sdk';
 import App from '../app';
-import destroyActors from '../utils/destroyActors';
 import Test from './test';
 
 export default class InterpolationTest extends Test {
@@ -17,16 +16,12 @@ export default class InterpolationTest extends Test {
     }
 
     public async run(): Promise<boolean> {
-        try {
-            this.sceneRoot = MRESDK.Actor.CreateEmpty(this.app.context).value;
-            const expressiveCubePromise = this.spawnExpressiveCube();
-            const timeout = setTimeout(() => this.running = false, 60000);
-            await expressiveCubePromise;
-            clearTimeout(timeout);
-            return true;
-        } finally {
-            destroyActors(this.sceneRoot);
-        }
+        this.sceneRoot = MRESDK.Actor.CreateEmpty(this.app.context).value;
+        const expressiveCubePromise = this.spawnExpressiveCube();
+        const timeout = setTimeout(() => this.running = false, 60000);
+        await expressiveCubePromise;
+        clearTimeout(timeout);
+        return true;
     }
 
     private async spawnExpressiveCube() {
