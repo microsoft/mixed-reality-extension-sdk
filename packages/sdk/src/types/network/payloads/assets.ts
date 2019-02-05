@@ -9,18 +9,20 @@ import { AssetLike, AssetSource } from '../../runtime/assets';
 
 export type CreateColliderType = ColliderType | 'none';
 
-/**
- * @hidden
- */
+/** @hidden */
 export type LoadAssets = Payload & {
     type: 'load-assets';
     source: AssetSource;
     colliderType: CreateColliderType;
 };
 
-/**
- * @hidden
- */
+/** @hidden */
+export type CreateAsset = Payload & {
+    type: 'create-asset';
+    definition: AssetLike;
+};
+
+/** @hidden */
 export type AssetsLoaded = Payload & {
     type: 'assets-loaded';
     assets: AssetLike[];
@@ -33,9 +35,7 @@ export type AssetUpdate = Payload & {
     asset: Partial<AssetLike>;
 };
 
-/**
- * @hidden
- */
+/** @hidden */
 export type CreateFromPrefab = CreateActorCommon & {
     type: 'create-from-prefab';
     prefabId: string;

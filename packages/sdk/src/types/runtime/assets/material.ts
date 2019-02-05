@@ -91,6 +91,7 @@ export class Material extends Asset implements MaterialLike, Patchable<AssetLike
     /** @inheritdoc */
     public get material(): MaterialLike { return this; }
 
+    /** INTERNAL USE ONLY. To create a new material from scratch, use [[AssetManager.createMaterial]]. */
     public constructor(manager: AssetManager, def: AssetLike) {
         super(manager, def);
 
@@ -98,10 +99,18 @@ export class Material extends Asset implements MaterialLike, Patchable<AssetLike
             throw new Error("Cannot construct material from non-material definition");
         }
 
-        this._color.copy(def.material.color);
-        this._mainTextureId = def.material.mainTextureId;
-        this._mainTextureOffset.copy(def.material.mainTextureOffset);
-        this._mainTextureScale.copy(def.material.mainTextureScale);
+        if (def.material.color) {
+            this._color.copy(def.material.color);
+        }
+        if (def.material.mainTextureId) {
+            this._mainTextureId = def.material.mainTextureId;
+        }
+        if (def.material.mainTextureOffset) {
+            this._mainTextureOffset.copy(def.material.mainTextureOffset);
+        }
+        if (def.material.mainTextureScale) {
+            this._mainTextureScale.copy(def.material.mainTextureScale);
+        }
 
         // material patching: observe the nested material properties
         // for changed values, and write them to a patch

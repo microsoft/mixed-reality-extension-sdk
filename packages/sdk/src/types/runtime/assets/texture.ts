@@ -11,6 +11,7 @@ import { InternalAsset } from '../../internal/asset';
 import { Patchable } from '../../patchable';
 
 export interface TextureLike {
+    uri?: string;
     resolution: Vector2Like;
     wrapU: TextureWrapMode;
     wrapV: TextureWrapMode;
@@ -28,6 +29,7 @@ export enum TextureWrapMode {
 
 export class Texture extends Asset implements TextureLike, Patchable<AssetLike> {
     // tslint:disable:variable-name
+    private _uri: string;
     private _resolution = Vector2.One();
     private _wrapU = TextureWrapMode.Repeat;
     private _wrapV = TextureWrapMode.Repeat;
@@ -36,6 +38,9 @@ export class Texture extends Asset implements TextureLike, Patchable<AssetLike> 
 
     /** @hidden */
     public get internal() { return this._internal; }
+
+    /** The URI, if any, this texture was loaded from */
+    public get uri() { return this._uri; }
 
     /** The pixel dimensions of the loaded texture */
     public get resolution() { return this._resolution; }
@@ -51,6 +56,7 @@ export class Texture extends Asset implements TextureLike, Patchable<AssetLike> 
     /** @inheritdoc */
     public get texture(): TextureLike { return this; }
 
+    /** INTERNAL USE ONLY. To load a new texture from scratch, use [[AssetManager.loadTexture]] */
     public constructor(manager: AssetManager, def: AssetLike) {
         super(manager, def);
 
@@ -58,9 +64,18 @@ export class Texture extends Asset implements TextureLike, Patchable<AssetLike> 
             throw new Error("Cannot construct texture from non-texture definition");
         }
 
-        this._resolution = new Vector2(def.texture.resolution.x, def.texture.resolution.y);
-        this._wrapU = def.texture.wrapU;
-        this._wrapV = def.texture.wrapV;
+        if (def.texture.uri) {
+            this._uri = def.texture.uri;
+        }
+        if (def.texture.resolution) {
+            this._resolution = new Vector2(def.texture.resolution.x, def.texture.resolution.y);
+        }
+        if (def.texture.wrapU) {
+            this._wrapU = def.texture.wrapU;
+        }
+        if (def.texture.wrapV) {
+            this._wrapV = def.texture.wrapV;
+        }
     }
 
     public copy(from: Partial<AssetLike>): this {
@@ -74,6 +89,8 @@ export class Texture extends Asset implements TextureLike, Patchable<AssetLike> 
 
         // tslint:disable:curly
         super.copy(from);
+        if (from.texture && from.texture.uri)
+            this._uri = from.texture.uri;
         if (from.texture && from.texture.resolution)
             this._resolution = new Vector2(from.texture.resolution.x, from.texture.resolution.y);
         if (from.texture && from.texture.wrapU)
@@ -91,6 +108,7 @@ export class Texture extends Asset implements TextureLike, Patchable<AssetLike> 
         return {
             ...super.toJSON(),
             texture: {
+                uri: this.uri,
                 resolution: this.resolution.toJSON(),
                 wrapU: this.wrapU,
                 wrapV: this.wrapV

@@ -27,6 +27,7 @@ export class Prefab extends Asset implements PrefabLike, Patchable<AssetLike> {
     /** @inheritdoc */
     public get prefab(): PrefabLike { return this; }
 
+    /** @hidden */
     public constructor(manager: AssetManager, def: AssetLike) {
         super(manager, def);
 

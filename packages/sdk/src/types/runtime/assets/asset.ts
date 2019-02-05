@@ -42,17 +42,17 @@ export interface AssetLike {
     source?: AssetSource;
 
     /** Only populated when this asset is a prefab. An asset will have only one of these types specified. */
-    prefab?: PrefabLike;
+    prefab?: Partial<PrefabLike>;
     /** Only populated when this asset is a mesh. An asset will have only one of these types specified. */
-    mesh?: MeshLike;
+    mesh?: Partial<MeshLike>;
     /** Only populated when this asset is a material. An asset will have only one of these types specified. */
-    material?: MaterialLike;
+    material?: Partial<MaterialLike>;
     /** Only populated when this asset is a texture. An asset will have only one of these types specified. */
-    texture?: TextureLike;
+    texture?: Partial<TextureLike>;
 }
 
 /** The base class for all asset types. */
-export class Asset implements AssetLike {
+export abstract class Asset implements AssetLike {
     // tslint:disable:variable-name
     private _id: string;
     private _name: string;
@@ -68,7 +68,7 @@ export class Asset implements AssetLike {
     /** @inheritdoc */
     public get source() { return this._source; }
 
-    protected constructor(public manager: AssetManager, def: AssetLike) {
+    protected constructor(public manager: AssetManager, def: Partial<AssetLike>) {
         this._id = def.id;
         this._name = def.name;
         this._source = def.source;
@@ -84,12 +84,14 @@ export class Asset implements AssetLike {
     }
 
     /** @hidden */
-    protected copy(from: Partial<AssetLike>): void {
+    public copy(from: Partial<AssetLike>): this {
         // tslint:disable:curly
         if (from.id) this._id = from.id;
         if (from.name) this._name = from.name;
         if (from.source) this._source = from.source;
         // tslint:enable:curly
+
+        return this;
     }
 
     /** @hidden */
