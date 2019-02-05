@@ -19,7 +19,7 @@ export class Session extends EventEmitter {
     // tslint:disable:variable-name
     private _clientSet: { [id: string]: Client } = {};
     private _actorSet: { [id: string]: Partial<SyncActor> } = {};
-    private _assets: Array<Message<Payloads.LoadAssets>> = [];
+    private _assets: Array<Message<Payloads.LoadAssets | Payloads.CreateAsset>> = [];
     private _assetUpdateSet: { [id: string]: Partial<Payloads.AssetUpdate> } = {};
     private _userSet: { [id: string]: Partial<UserLike> } = {};
     private _protocol: Protocols.Protocol;
@@ -242,7 +242,7 @@ export class Session extends EventEmitter {
         }
     }
 
-    public cacheLoadAssetsMessage(message: Message<Payloads.LoadAssets>) {
+    public cacheAssetCreationMessage(message: Message<Payloads.LoadAssets | Payloads.CreateAsset>) {
         // TODO: Is each load-asset unique? Can the same asset be loaded twice?
         this.assets.push({ ...message });
     }

@@ -22,6 +22,7 @@ export type PayloadType
     | 'asset-update'
     | 'assets-loaded'
     | 'create-animation'
+    | 'create-asset'
     | 'create-empty'
     | 'create-from-gltf'
     | 'create-from-library'

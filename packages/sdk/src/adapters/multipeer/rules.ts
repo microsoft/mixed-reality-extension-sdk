@@ -423,6 +423,27 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
     },
 
     // ========================================================================
+    'create-asset': {
+        ...DefaultRule,
+        synchronization: {
+            stage: 'load-assets',
+            before: 'ignore',
+            during: 'queue',
+            after: 'allow'
+        },
+        session: {
+            ...DefaultRule.session,
+            beforeReceiveFromApp: (
+                session: Session,
+                message: Message<Payloads.CreateAsset>
+            ) => {
+                session.cacheAssetCreationMessage(message);
+                return message;
+            }
+        }
+    },
+
+    // ========================================================================
     'create-empty': {
         ...DefaultRule,
         synchronization: {
@@ -736,7 +757,7 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
                 session: Session,
                 message: Message<Payloads.LoadAssets>
             ) => {
-                session.cacheLoadAssetsMessage(message);
+                session.cacheAssetCreationMessage(message);
                 return message;
             }
         }

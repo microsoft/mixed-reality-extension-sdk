@@ -64,9 +64,18 @@ export class Texture extends Asset implements TextureLike, Patchable<AssetLike> 
             throw new Error("Cannot construct texture from non-texture definition");
         }
 
-        this._resolution = new Vector2(def.texture.resolution.x, def.texture.resolution.y);
-        this._wrapU = def.texture.wrapU;
-        this._wrapV = def.texture.wrapV;
+        if (def.texture.uri) {
+            this._uri = def.texture.uri;
+        }
+        if (def.texture.resolution) {
+            this._resolution = new Vector2(def.texture.resolution.x, def.texture.resolution.y);
+        }
+        if (def.texture.wrapU) {
+            this._wrapU = def.texture.wrapU;
+        }
+        if (def.texture.wrapV) {
+            this._wrapV = def.texture.wrapV;
+        }
     }
 
     public copy(from: Partial<AssetLike>): this {
@@ -80,6 +89,8 @@ export class Texture extends Asset implements TextureLike, Patchable<AssetLike> 
 
         // tslint:disable:curly
         super.copy(from);
+        if (from.texture && from.texture.uri)
+            this._uri = from.texture.uri;
         if (from.texture && from.texture.resolution)
             this._resolution = new Vector2(from.texture.resolution.x, from.texture.resolution.y);
         if (from.texture && from.texture.wrapU)
@@ -97,6 +108,7 @@ export class Texture extends Asset implements TextureLike, Patchable<AssetLike> 
         return {
             ...super.toJSON(),
             texture: {
+                uri: this.uri,
                 resolution: this.resolution.toJSON(),
                 wrapU: this.wrapU,
                 wrapV: this.wrapV
