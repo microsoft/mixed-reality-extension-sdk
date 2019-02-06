@@ -114,6 +114,7 @@ enough to not require any server redeploys.
 From command prompt:
 * `git clone http://github.com/microsoft/mixed-reality-extension-sdk`
 * `cd mixed-reality-extension-sdk`
+* `npm install -g lerna`
 * `npm install` This will install all dependent packages. (and will do very
 little if there are no changes)
 * `npm run build` This should not report any errors.
