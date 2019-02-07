@@ -111,10 +111,9 @@ export class AssetManager {
         let group: AssetGroup;
         if (this.groups[groupName]) {
             group = this.groups[groupName];
-            if(group.source.containerType === 'gltf' && group.source.uri == uri) {
+            if (group.source.containerType === 'gltf' && group.source.uri === uri) {
                 return group;
-            }
-            else {
+            } else {
                 throw new Error(
                     `Group name ${groupName} is already in use. Unload the old group, or choose a different name.`);
             }
