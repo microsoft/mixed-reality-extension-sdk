@@ -356,7 +356,7 @@ export type SetAnimationState = Payload & {
  */
 export type SyncAnimations = Payload & {
     type: 'sync-animations';
-    animationStates: AnimationState[];
+    animationStates: SetAnimationState[];
 };
 
 /**
