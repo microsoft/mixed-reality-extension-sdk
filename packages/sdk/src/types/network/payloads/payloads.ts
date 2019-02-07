@@ -29,7 +29,6 @@ export type PayloadType
     | 'create-from-prefab'
     | 'create-primitive'
     | 'destroy-actors'
-    | 'enable-collider'
     | 'engine2app-rpc'
     | 'handshake'
     | 'handshake-complete'

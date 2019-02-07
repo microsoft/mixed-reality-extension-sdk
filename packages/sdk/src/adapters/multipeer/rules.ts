@@ -572,32 +572,6 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
     },
 
     // ========================================================================
-    'enable-collider': {
-        ...DefaultRule,
-        synchronization: {
-            stage: 'create-actors',
-            before: 'ignore',
-            during: 'queue',
-            after: 'allow'
-        },
-        session: {
-            ...DefaultRule.session,
-            beforeReceiveFromApp: (
-                session: Session,
-                message: Message<Payloads.EnableCollider>
-            ) => {
-                const syncActor = session.actorSet[message.payload.actorId];
-                if (syncActor) {
-                    // Merge the new component into the existing actor.
-                    syncActor.created.message.payload.actor.collider =
-                        deepmerge(syncActor.created.message.payload.actor.collider || {}, message.payload.collider);
-                }
-                return undefined;
-            }
-        }
-    },
-
-    // ========================================================================
     'engine2app-rpc': {
         ...ClientOnlyRule
     },

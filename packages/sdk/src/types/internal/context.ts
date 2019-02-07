@@ -46,7 +46,6 @@ import {
     CreateFromPrefab,
     CreatePrimitive,
     DestroyActors,
-    EnableCollider,
     InterpolateActor,
     LookAt,
     ObjectSpawned,
