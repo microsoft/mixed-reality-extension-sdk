@@ -108,12 +108,19 @@ export class AssetManager {
     private async loadGltfHelper(
         groupName: string, uri: string, colliderType: CreateColliderType): Promise<AssetGroup> {
 
+        let group: AssetGroup;
         if (this.groups[groupName]) {
-            throw new Error(
-                `Group name ${groupName} is already in use. Unload the old group, or choose a different name.`);
+            group = this.groups[groupName];
+            if(group.source.containerType === 'gltf' && group.source.uri == uri) {
+                return group;
+            }
+            else {
+                throw new Error(
+                    `Group name ${groupName} is already in use. Unload the old group, or choose a different name.`);
+            }
         }
 
-        const group = new AssetGroup(groupName, {
+        group = new AssetGroup(groupName, {
             containerType: 'gltf',
             uri
         });
