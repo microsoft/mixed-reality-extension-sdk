@@ -16,6 +16,8 @@ export default class GltfConcurrencyTest extends Test {
     }
 
     public async run(): Promise<boolean> {
+        const actors: MRESDK.Actor[] = [];
+
         const runnerPromise = MRESDK.Actor.CreateFromGltf(this.app.context, {
             // tslint:disable-next-line:max-line-length
             resourceUrl: `https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/CesiumMan/glTF-Binary/CesiumMan.glb`,
@@ -42,12 +44,14 @@ export default class GltfConcurrencyTest extends Test {
             gearbox = await gearboxPromise;
             gearbox.transform.position.set(16, 0, 0);
             gearbox.transform.scale.set(.1, .1, .1);
+            actors.push(gearbox);
         } catch (e) {
             console.log('Gearbox didn\'t load, as expected in Altspace');
         }
 
         try {
             [runner, bottleAsset] = await Promise.all([runnerPromise, bottlePromise]);
+            actors.push(runner);
         } catch (errs) {
             console.error(errs);
             return false;
@@ -57,9 +61,10 @@ export default class GltfConcurrencyTest extends Test {
         const bottle = await MRESDK.Actor.CreateFromPrefab(this.app.context, {
             prefabId: bottleAsset.prefabs.byIndex(0).id
         });
+        actors.push(bottle);
 
         await delay(10000);
-        destroyActors([runner, gearbox, bottle]);
+        destroyActors(actors);
 
         return true;
     }
