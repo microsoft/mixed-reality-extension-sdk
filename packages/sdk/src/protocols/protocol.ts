@@ -64,7 +64,7 @@ export class Protocol extends EventEmitter {
     }
 
     public startListening() {
-        log.verbose('network', `${this.name} started listening`);
+        log.debug('network', `${this.name} started listening`);
         this.conn.on('recv', this.onReceive);
         this.conn.on('close', this.onClose);
     }
@@ -72,7 +72,7 @@ export class Protocol extends EventEmitter {
     public stopListening() {
         this.conn.off('recv', this.onReceive);
         this.conn.off('close', this.onClose);
-        log.verbose('network', `${this.name} stopped listening`);
+        log.debug('network', `${this.name} stopped listening`);
     }
 
     public sendPayload(payload: Partial<Payload>, promise?: ExportedPromise) {
@@ -181,8 +181,8 @@ export class Protocol extends EventEmitter {
     protected handleReplyMessage(message: Message) {
         const queuedPromise = this.promises[message.replyToId];
         if (!queuedPromise) {
-            // tslint:disable-next-line:no-console
-            console.error(`[ERROR] ${this.name} received unexpected reply message! replyToId: ${message.replyToId}`);
+            // tslint:disable-next-line:no-console max-line-length
+            console.error(`[ERROR] ${this.name} received unexpected reply message! payload: ${message.payload.type}, replyToId: ${message.replyToId}`);
         } else {
             delete this.promises[message.replyToId];
             clearTimeout(queuedPromise.timeout);

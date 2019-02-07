@@ -209,9 +209,9 @@ export class ClientSync extends Protocols.Protocol {
                         // client, now pass it to the joining client.
                         for (const animationState of payload.animationStates) {
                             // Account for latency on the authoritative peer's connection.
-                            animationState.animationTime += authoritativeClient.conn.quality.latencyMs.value / 2000;
+                            animationState.state.time += authoritativeClient.conn.quality.latencyMs.value / 2000;
                             // Account for latency on the joining peer's connection.
-                            animationState.animationTime += this.conn.quality.latencyMs.value / 2000;
+                            animationState.state.time += this.conn.quality.latencyMs.value / 2000;
                         }
                         super.sendPayload(payload);
                         resolve();
