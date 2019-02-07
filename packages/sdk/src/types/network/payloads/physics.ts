@@ -84,16 +84,6 @@ export type RigidBodyAddRelativeTorque = Payload & {
 
 /**
  * @hidden
- * App to engine. Enable a collider with the given parameters on the actor.
- */
-export type EnableCollider = Payload & {
-    type: 'enable-collider';
-    actorId: string;
-    collider: Partial<ColliderLike>;
-};
-
-/**
- * @hidden
  * App to engine. Update the collision event subscriptions for the given actor.
  */
 export type UpdateCollisionEventSubscriptions = Payload & {
