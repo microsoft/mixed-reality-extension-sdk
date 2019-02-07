@@ -42,14 +42,13 @@ With this structure, I'd expect there to mostly be 1 or 2 active release version
 ### [Blue] When we decide to prepare a new MRE minor version release (criteria: usually ~1 day before Altspace code lock, or sooner if there are major changes)
 1. Merge sdk/green into sdk/red
 2. Merge samples/green into samples/red
-3. Update CurrentVersion to match major.minor in MREUnityRuntimeLib\Constants.cs and 
-4. Update CurrentVersion to match major.minor in packages\sdk\src\utils\verifyClient.ts and 
-5. If new features were added to SDK, increase MinimumSupportedClientVersion packages\sdk\src\utils\verifyClient.ts 
-6. If communication was changed in a non-backwards-compatible way, which is a HUGE DEAL, should never happen after exiting beta stage, and requires full team sign-off, increase the MinimumSupportedSDKVersion in MREUnityRuntimeLib\Constants.cs 
-7. [Test pass](#Test-pass) for red branches
-8. Create new unity+sdk+sample branches named v0.[new_minor].n, matching the red (NOTE: if there was already a new SDK release created, but it wasn't "shipped", we can stomp that - i.e. if v0.[new_minor-1].n was never used in any host app, we can just reset hard, instead of creating v0.[new_minor].n)
-9. [Build Unity DLLs](#Build-Unity-DLLs) from unity/v0.[new_minor].n
-10. [Publish NPM packages](#Publish-NPM-packages) from sdk/v0.[new_minor].n
+3. Update CurrentVersion to match major.minor in MREUnityRuntime\MREUnityRuntimeLib\Constants.cs and 
+4. If new features were added to SDK, increase MinimumSupportedClientVersion packages\sdk\src\utils\verifyClient.ts 
+5. If communication was changed in a non-backwards-compatible way, which is a HUGE DEAL, should never happen after exiting beta stage, and requires full team sign-off, increase the MinimumSupportedSDKVersion in MREUnityRuntimeLib\Constants.cs 
+6. [Test pass](#Test-pass) for red branches
+7. Create new unity+sdk+sample branches named v0.[new_minor].n, matching the red (NOTE: if there was already a new SDK release created, but it wasn't "shipped", we can stomp that - i.e. if v0.[new_minor-1].n was never used in any host app, we can just reset hard, instead of creating v0.[new_minor].n)
+8. [Build Unity DLLs](#Build-Unity-DLLs) from unity/v0.[new_minor].n
+9. [Publish NPM packages](#Publish-NPM-packages) from sdk/v0.[new_minor].n
 
 ### [Cyan] When we decide to integrate sdk/green, to patch/hotfix a minor version (The targeted minor version is usually whatever master points to. Criteria: whenever we think it's worth the effort)
 1. Merge sdk/green into v0.[target].n 
@@ -113,7 +112,7 @@ Main purpose of test pass is to look for regressions – not if new features wor
 5. If problems are found, fix and restart test pass
 
 ### Publish NPM Packages
-Note that we always publish all packages with each release, with version numbers in sync. There are scripts that automate all these steps except the package-lock.json version number updates.
+Note that we always publish all packages with each release, with version numbers in sync. There are scripts that automate all these steps.
 
 1. Check out sdk\v0.[minor].n 
 2. Git reset –hard
@@ -122,7 +121,7 @@ Note that we always publish all packages with each release, with version numbers
 5. npm run build
 6. lerna publish --npm-tag next --force-publish *
    1. when it asks for version number, use 0.[minor].[patch], where minor comes from branch, and patch version is 1+the last published NPM package for that minor version (to find last published version see [MRE version page on NPMJS](https://www.npmjs.com/package/@microsoft/mixed-reality-extension-sdk?activeTab=versions)
-7. For each updated package.json version number, notepad-update the version number in every corresponding package-lock.json in the sdk repo. Lerna doesn’t do this (but should).
+7. For each updated package.json version number, notepad-update the version number in every corresponding package-lock.json in the sdk repo. Lerna doesn’t do this (but should) - however, if you do git clean -fdx, git reset --hard, and npm install then this package-lock.json will be updated.
 8. Git commit all package-lock.json files to sdk\v0.[minor].n
 9. npm run build-docs (to regenerate documentation)
 10. commit documentation changes to sdk\v0.[minor].n
@@ -149,16 +148,19 @@ Note that we always publish all packages with each release, with version numbers
 10. go to [the MRE Github Roadmap page](https://github.com/Microsoft/mixed-reality-extension-sdk/projects/1) and move released issues from Fixed to Released
 
 ### Build Unity DLLs
-1. Manually queue a build on the build server
-2. **go to the build server and find build matching the commit ID**
-3. **TODO: Permanently store it with version number at?????**
-4. If minor version matches altspaceVR dev or RC branch’s current minor version, or if update is desired then updating AltspaceVR DLLs:
-   1. Copy all the following files from MRE build server’s artifacts to Altspace’s Assets\Plugins folder:
+
+1. Go to the build server and find build matching the commit ID for the v0.[minor].n branch, and
+   1. click ...->retain build
+   2. click the build's commit name->artifacts->drop->drop->...->download as zip, and save locally
+2. git tag release-v0.[minor].[patch version matching NPM version, or next] and push that tag
+3. If minor version matches altspaceVR dev or RC branch’s current minor version, or if update is desired then updating AltspaceVR DLLs:
+   1. From the downloaded zip, copy all XML/DLL files from MRE build server’s artifacts to Altspace’s Assets\Plugins folder - it should include these files:
       1. Newtonsoft.Json.xml
       2. Newtonsoft.Json.dll
       3. GLTFSerialization.dll
       4. UnityGLTF.dll
       5. MREUnityRuntimeLib.dll
+      6. MREUnityRuntimeLib.xml
    2. Update Altspace’s Assets\Plugins\AAA-References.md (info about newtonsoft and unitygltf can be found in the MRE build server’s artifacts’ libraries.md
    3. Run through all functional tests in 2 user mode **TODO: set up an SDK test space**
    4. Verify on android as one of the two users.
