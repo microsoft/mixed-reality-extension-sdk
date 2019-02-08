@@ -13,7 +13,7 @@ import destroyActors from '../utils/destroyActors';
 
 import Test from './test';
 
-export default class AssetEarlyAssignment extends Test {
+export default class AssetEarlyAssignmentTest extends Test {
 
     constructor(app: App, private baseUrl: string) {
         super(app);
@@ -40,7 +40,7 @@ export default class AssetEarlyAssignment extends Test {
         }).value;
 
         const mat = AM.createMaterial('blue', {
-            color: MRESDK.Color3.Blue().toJSON(),
+            color: MRESDK.Color3.Blue(),
             mainTextureId: tex.id
         }).value;
 

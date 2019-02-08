@@ -11,7 +11,7 @@ import delay from '../utils/delay';
 import destroyActors from '../utils/destroyActors';
 import Test from './test';
 
-export default class MutableAssetTest extends Test {
+export default class AssetMutabilityTest extends Test {
 
     constructor(app: App, private baseUrl: string, private user: MRESDK.User) {
         super(app);
@@ -27,7 +27,7 @@ export default class MutableAssetTest extends Test {
         const box = await MRESDK.Actor.CreatePrimitive(this.app.context, {
             definition: {
                 shape: MRESDK.PrimitiveShape.Box,
-                dimensions: {x: 1, y: 1, z: 1}
+                dimensions: { x: 1, y: 1, z: 1 }
             },
             actor: {
                 name: 'box',
@@ -39,7 +39,7 @@ export default class MutableAssetTest extends Test {
         });
 
         for (let i = 0; i < 64; i++) {
-            mat.color.copyFrom( this.fromHSV(i / 32, 1, 1) );
+            mat.color.copyFrom(this.fromHSV(i / 32, 1, 1));
             mat.mainTextureOffset.set(i / 32, i / 32);
             mat.mainTextureScale.set(1 - i / 32, 1 - i / 32);
 
