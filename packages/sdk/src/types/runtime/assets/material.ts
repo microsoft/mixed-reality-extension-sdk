@@ -23,6 +23,10 @@ export interface MaterialLike {
     mainTextureOffset: Vector2Like;
     /** The main texture's scale from default */
     mainTextureScale: Vector2Like;
+    /** How the color/texture's alpha channel should be handled */
+    alphaMode: AlphaMode;
+    /** Visibility threshold in masked alpha mode */
+    alphaCutoff: number;
 }
 
 /**
@@ -51,6 +55,8 @@ export class Material extends Asset implements MaterialLike, Patchable<AssetLike
     private _mainTextureId: string = ZeroGuid;
     private _mainTextureOffset = Vector2.Zero();
     private _mainTextureScale = Vector2.One();
+    private _alphaMode = AlphaMode.Opaque;
+    private _alphaCutoff = 0.5;
     private _internal = new InternalAsset(this);
     // tslint:enable:variable-name
 
@@ -89,6 +95,14 @@ export class Material extends Asset implements MaterialLike, Patchable<AssetLike
     public set mainTextureScale(value) { if (value) { this._mainTextureScale.copy(value); } }
 
     /** @inheritdoc */
+    public get alphaMode() { return this._alphaMode; }
+    public set alphaMode(value) { this._alphaMode = value; this.materialChanged('alphaMode'); }
+
+    /** @inheritdoc */
+    public get alphaCutoff() { return this._alphaCutoff; }
+    public set alphaCutoff(value) { this._alphaCutoff = value; this.materialChanged('alphaCutoff'); }
+
+    /** @inheritdoc */
     public get material(): MaterialLike { return this; }
 
     /** INTERNAL USE ONLY. To create a new material from scratch, use [[AssetManager.createMaterial]]. */
@@ -110,6 +124,12 @@ export class Material extends Asset implements MaterialLike, Patchable<AssetLike
         }
         if (def.material.mainTextureScale) {
             this._mainTextureScale.copy(def.material.mainTextureScale);
+        }
+        if (def.material.alphaMode) {
+            this._alphaMode = def.material.alphaMode;
+        }
+        if (def.material.alphaCutoff) {
+            this._alphaCutoff = def.material.alphaCutoff;
         }
 
         // material patching: observe the nested material properties
@@ -152,6 +172,8 @@ export class Material extends Asset implements MaterialLike, Patchable<AssetLike
                 this._mainTextureScale.copy(from.material.mainTextureScale);
             }
             this._mainTextureId = from.material.mainTextureId || null;
+            this._alphaMode = from.material.alphaMode || AlphaMode.Opaque;
+            this._alphaCutoff = from.material.alphaCutoff || 0.5;
         }
 
         this.internal.observing = wasObserving;
@@ -166,7 +188,9 @@ export class Material extends Asset implements MaterialLike, Patchable<AssetLike
                 color: this.color.toJSON(),
                 mainTextureId: this.mainTextureId,
                 mainTextureOffset: this.mainTextureOffset.toJSON(),
-                mainTextureScale: this.mainTextureScale.toJSON()
+                mainTextureScale: this.mainTextureScale.toJSON(),
+                alphaMode: this.alphaMode,
+                alphaCutoff: this.alphaCutoff
             }
         };
     }
