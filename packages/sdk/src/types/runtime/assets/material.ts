@@ -5,7 +5,7 @@
 
 import { Asset, AssetLike, AssetManager, Texture } from '.';
 import { ZeroGuid } from '../../../constants';
-import { Color3, Color4, Vector2, Vector2Like } from '../../../math';
+import { Color3, Color4, Color4Like, Vector2, Vector2Like } from '../../../math';
 import observe from '../../../utils/observe';
 import readPath from '../../../utils/readPath';
 import { InternalAsset } from '../../internal/asset';
@@ -16,7 +16,7 @@ import { Patchable } from '../../patchable';
  */
 export interface MaterialLike {
     /** The base color of this material. */
-    color: Partial<Color4>;
+    color: Partial<Color4Like>;
     /** The main (albedo) texture asset ID */
     mainTextureId: string;
     /** The main texture's offset from default */

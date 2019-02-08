@@ -20,7 +20,7 @@ export default class RigidBodyTest extends Test {
     public async run(): Promise<boolean> {
         let success = true;
         this.material = await this.app.context.assetManager.createMaterial('blue', {
-            color: MRESDK.Color3.Blue().toJSON()
+            color: MRESDK.Color3.Blue()
         });
 
         success = success && await this.runSphereTest();

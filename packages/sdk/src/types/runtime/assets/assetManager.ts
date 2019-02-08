@@ -7,6 +7,7 @@ import UUID from 'uuid/v4';
 
 import { Asset, AssetGroup, Material, MaterialLike, Texture, TextureLike } from '.';
 import { Context } from '..';
+import resolveJsonValues from '../../../utils/resolveJsonValues';
 import { createForwardPromise, ForwardPromise } from '../../forwardPromise';
 import { AssetsLoaded, CreateAsset, CreateColliderType, LoadAssets } from '../../network/payloads';
 
@@ -58,7 +59,7 @@ export class AssetManager {
         return this.sendCreateAsset(new Material(this, {
             id: UUID(),
             name,
-            material: definition
+            material: resolveJsonValues(definition)
         }));
     }
 
@@ -71,7 +72,7 @@ export class AssetManager {
         return this.sendCreateAsset(new Texture(this, {
             id: UUID(),
             name,
-            texture: definition
+            texture: resolveJsonValues(definition)
         }));
     }
 
