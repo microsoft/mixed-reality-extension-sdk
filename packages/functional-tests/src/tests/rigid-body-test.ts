@@ -11,12 +11,17 @@ import Test from './test';
 
 export default class RigidBodyTest extends Test {
 
+    private material: MRESDK.Material;
+
     constructor(app: App) {
         super(app);
     }
 
     public async run(): Promise<boolean> {
         let success = true;
+        this.material = await this.app.context.assetManager.createMaterial('blue', {
+            color: MRESDK.Color3.Blue().toJSON()
+        });
 
         success = success && await this.runSphereTest();
         success = success && await this.runStackedBoxTest();
@@ -38,6 +43,7 @@ export default class RigidBodyTest extends Test {
                 },
                 addCollider: true,
                 actor: {
+                    materialId: this.material.id,
                     transform: {
                         position: {
                             y: 1 + i * 0.51
@@ -180,6 +186,7 @@ export default class RigidBodyTest extends Test {
                 },
                 addCollider: true,
                 actor: {
+                    materialId: this.material.id,
                     transform: {
                         position: {
                             x: x + (size + spacing) * i,

@@ -7,7 +7,8 @@ import * as MRESDK from '@microsoft/mixed-reality-extension-sdk';
 import * as MRERPC from '@microsoft/mixed-reality-extension-sdk/built/rpc';
 import AltspaceVRLibraryTest from './tests/altspacevr-library-test';
 import AltspaceVRVideoTest from './tests/altspacevr-video-test';
-import AssetEarlyAssignment from './tests/asset-early-assignment';
+import AssetEarlyAssignment from './tests/asset-early-assignment-test';
+import AssetMutabilityTest from './tests/asset-mutability-test';
 import AssetPreloadTest from './tests/asset-preload-test';
 import ClockSyncTest from './tests/clock-sync-test';
 import GltfAnimationTest from './tests/gltf-animation-test';
@@ -17,7 +18,6 @@ import InputTest from './tests/input-test';
 import InterpolationTest from './tests/interpolation-test';
 import LightTest from './tests/light-test';
 import LookAtTest from './tests/look-at-test';
-import MutableAssetTest from './tests/mutable-asset-test';
 import PrimitivesTest from './tests/primitives-test';
 import ReparentTest from './tests/reparent-test';
 import RigidBodyTest from './tests/rigid-body-test';
@@ -47,7 +47,8 @@ export default class App {
     private testFactories: { [key: string]: (user: MRESDK.User) => Test } = {
         'altspacevr-library-test': (): Test => new AltspaceVRLibraryTest(this, this.baseUrl),
         'altspacevr-video-test': (): Test => new AltspaceVRVideoTest(this, this.baseUrl),
-        'asset-early-assignment': (): Test => new AssetEarlyAssignment(this, this.baseUrl),
+        'asset-early-assignment-test': (): Test => new AssetEarlyAssignment(this, this.baseUrl),
+        'asset-mutability-test': (user: MRESDK.User): Test => new AssetMutabilityTest(this, this.baseUrl, user),
         'asset-preload-test': (user: MRESDK.User): Test => new AssetPreloadTest(this, this.baseUrl, user),
         'clock-sync-test': (): Test => new ClockSyncTest(this, this.baseUrl),
         'gltf-animation-test': (): Test => new GltfAnimationTest(this, this.baseUrl),
@@ -57,7 +58,6 @@ export default class App {
         'interpolation-test': (): Test => new InterpolationTest(this),
         'light-test': (): Test => new LightTest(this, this.baseUrl),
         'look-at-test': (user: MRESDK.User): Test => new LookAtTest(this, this.baseUrl, user),
-        'mutable-asset-test': (user: MRESDK.User): Test => new MutableAssetTest(this, this.baseUrl, user),
         'primitives-test': (): Test => new PrimitivesTest(this, this.baseUrl),
         'reparent-test': (): Test => new ReparentTest(this),
         'rigid-body-test': (): Test => new RigidBodyTest(this),

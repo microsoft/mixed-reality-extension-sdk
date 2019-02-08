@@ -13,7 +13,7 @@ import destroyActors from '../utils/destroyActors';
 
 import Test from './test';
 
-export default class AssetEarlyAssignment extends Test {
+export default class AssetEarlyAssignmentTest extends Test {
 
     constructor(app: App, private baseUrl: string) {
         super(app);
