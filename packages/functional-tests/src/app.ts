@@ -7,7 +7,7 @@ import * as MRESDK from '@microsoft/mixed-reality-extension-sdk';
 import * as MRERPC from '@microsoft/mixed-reality-extension-sdk/built/rpc';
 import AltspaceVRLibraryTest from './tests/altspacevr-library-test';
 import AltspaceVRVideoTest from './tests/altspacevr-video-test';
-import AssetEarlyAssignment from './tests/asset-early-assignment-test';
+import AssetEarlyAssignmentTest from './tests/asset-early-assignment-test';
 import AssetMutabilityTest from './tests/asset-mutability-test';
 import AssetPreloadTest from './tests/asset-preload-test';
 import ClockSyncTest from './tests/clock-sync-test';
@@ -47,7 +47,7 @@ export default class App {
     private testFactories: { [key: string]: (user: MRESDK.User) => Test } = {
         'altspacevr-library-test': (): Test => new AltspaceVRLibraryTest(this, this.baseUrl),
         'altspacevr-video-test': (): Test => new AltspaceVRVideoTest(this, this.baseUrl),
-        'asset-early-assignment-test': (): Test => new AssetEarlyAssignment(this, this.baseUrl),
+        'asset-early-assignment-test': (): Test => new AssetEarlyAssignmentTest(this, this.baseUrl),
         'asset-mutability-test': (user: MRESDK.User): Test => new AssetMutabilityTest(this, this.baseUrl, user),
         'asset-preload-test': (user: MRESDK.User): Test => new AssetPreloadTest(this, this.baseUrl, user),
         'clock-sync-test': (): Test => new ClockSyncTest(this, this.baseUrl),
