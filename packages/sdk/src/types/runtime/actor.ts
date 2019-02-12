@@ -28,6 +28,7 @@ import {
 } from '../..';
 import { ZeroGuid } from '../../constants';
 import { log } from '../../log';
+import { LoadSoundOptions, SetSoundStateOptions } from '../../sound';
 import observe from '../../utils/observe';
 import readPath from '../../utils/readPath';
 import { createForwardPromise, ForwardPromise } from '../forwardPromise';
@@ -435,6 +436,32 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
         this.internal.behavior = null;
         this.context.internal.setBehavior(this.id, null);
         return null;
+    }
+
+    /**
+     * Starts playing a preloaded sound.
+     * @param soundAssetId Name of sound asset preloaded using AssetManager.
+     * @param options Adjustments to pitch and volume, and other characteristics.
+     * @param priority importance of this sound compared to other playing sounds.
+     *  Used to prioritize which sounds to remove
+     */
+    public playSound(soundAssetId: string, options: SetSoundStateOptions, priority: number): string {
+        return "SoundInstanceHandle";
+    }
+
+    /**
+     * Loads a sound file and starts playing.
+     * @param uri Path to a sound asset that needs to be loaded and played.
+     * @param options Adjustments to pitch and volume, and other characteristics.
+     * @param priority importance of this sound compared to other playing sounds.
+     *  Used to prioritize which sounds to remove
+     */
+    public loadAndPlaySound(uri: string, loadOptions: LoadSoundOptions,
+                            playOptions: SetSoundStateOptions,
+                            priority: number): Promise<string> {
+        return new Promise<string>((resolve, reject) => {
+            resolve("SoundInstanceHandle");
+        });
     }
 
     /**

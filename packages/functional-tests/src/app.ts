@@ -21,6 +21,7 @@ import LookAtTest from './tests/look-at-test';
 import PrimitivesTest from './tests/primitives-test';
 import ReparentTest from './tests/reparent-test';
 import RigidBodyTest from './tests/rigid-body-test';
+import SoundTest from './tests/sound-test';
 import Test from './tests/test';
 import TextTest from './tests/text-test';
 import UserTest from './tests/user-test';
@@ -61,6 +62,7 @@ export default class App {
         'primitives-test': (): Test => new PrimitivesTest(this, this.baseUrl),
         'reparent-test': (): Test => new ReparentTest(this),
         'rigid-body-test': (): Test => new RigidBodyTest(this),
+        'sound-test': (): Test => new SoundTest(this, this.baseUrl),
         'text-test': (): Test => new TextTest(this),
         'user-test': (user: MRESDK.User): Test => new UserTest(this, this.baseUrl, user),
     };

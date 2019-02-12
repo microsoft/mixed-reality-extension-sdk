@@ -7,6 +7,7 @@ import UUID from 'uuid/v4';
 
 import { Asset, AssetGroup, Material, MaterialLike, Texture, TextureLike } from '.';
 import { Context } from '..';
+import { LoadSoundOptions } from '../../../sound';
 import resolveJsonValues from '../../../utils/resolveJsonValues';
 import { createForwardPromise, ForwardPromise } from '../../forwardPromise';
 import { AssetsLoaded, CreateAsset, CreateColliderType, LoadAssets } from '../../network/payloads';
@@ -92,6 +93,12 @@ export class AssetManager {
         this.registerLoadPromise(promise);
 
         return createForwardPromise(asset, promise);
+    }
+
+    public loadSound(groupName: string, uri: string, options: LoadSoundOptions): Promise<string> {
+        return new Promise<string>((resolve, reject) => {
+            resolve("SomeHandle");
+        });
     }
 
     /**

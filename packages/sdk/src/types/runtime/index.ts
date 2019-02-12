@@ -11,6 +11,7 @@ export * from './user';
 // export * from './attachment';
 export * from './light';
 export * from './rigidbody';
+export * from './sound';
 export * from './text';
 export * from './collider';
 export * from './assets';
