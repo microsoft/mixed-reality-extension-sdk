@@ -303,7 +303,7 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
                         // (if keys.length === 1, it only contains the actor.id field)
                         if (Object.keys(payloadForClients.actor).length > 1) {
                             // Sync the change to the other clients.
-                            session.sendPayloadToClients(payloadForClients, client.id);
+                            session.sendPayloadToClients(payloadForClients, (value) => value.id !== client.id);
                         }
 
                         // Determine whether to forward the message to the app based on subscriptions.
@@ -855,7 +855,7 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
                             if (createdAnimation) {
                                 createdAnimation.enabled = message.payload.state.enabled;
                                 // Propagate to other clients.
-                                session.sendToClients(message, client.id);
+                                session.sendToClients(message, (value) => value.id !== client.id);
                             }
                             // Remove the completed interpolation.
                             syncActor.activeInterpolations =

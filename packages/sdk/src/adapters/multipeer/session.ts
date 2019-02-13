@@ -51,6 +51,10 @@ export class Session extends EventEmitter {
     public childrenOf = (parentId: string) => {
         return this.actors.filter(actor => actor.created.message.payload.actor.parentId === parentId);
     }
+    public creatableChildrenOf = (parentId: string) => {
+        return this.actors.filter(
+            actor => actor.created.message.payload.actor.parentId === parentId && !!actor.created.message.payload.type);
+    }
 
     /**
      * Creates a new Session instance
@@ -189,18 +193,66 @@ export class Session extends EventEmitter {
         this.protocol.sendMessage(message);
     }
 
-    public sendToClients(message: Message, excludeId?: string) {
-        const clients = this.clients.filter(client => client.id !== excludeId);
-        for (const client of clients) {
-            client.send({ ...message });
+    public sendToClients(message: Message, filterFn?: (value: Client, index: number) => any) {
+        const clients = this.clients.filter(filterFn || (() => true));
+        if (message.awaitingResponse) {
+            message.awaitingResponse = undefined;
+            // Send the message too all clients and await a response from each. Once all responses
+            // have been received, send the reply message back to the app.
+            const promise = new Promise<Message>((resolve, reject) => {
+                let awaitCount = clients.length;
+                let authoritativeReplyMessage: Message;
+                let fallbackReplyMessage: Message;
+                for (const client of clients) {
+                    client.send({ ...message }, {
+                        resolve: (payload: Payloads.Payload, response: Message) => {
+                            // Cache the response message.
+                            if (client.authoritative) {
+                                authoritativeReplyMessage = {...response };
+                            } else if (!fallbackReplyMessage) {
+                                fallbackReplyMessage = { ...response };
+                            }
+                            // Decrement the wait counter.
+                            awaitCount -= 1;
+                            // If this was the last response, send the reply message to the app and
+                            // resolve this promise.
+                            if (awaitCount === 0) {
+                                const replyMessage = authoritativeReplyMessage || fallbackReplyMessage;
+                                if (replyMessage) {
+                                    this.sendToApp(replyMessage);
+                                }
+                                resolve();
+                            }
+                        },
+                        reject: () => {
+                            // Something bad happened on this connection and we didn't get a response. That's fine.
+                            // Decrement the wait counter.
+                            awaitCount -= 1;
+                            // If this was the last response, send the reply message to the app and
+                            // resolve this promise.
+                            if (awaitCount === 0) {
+                                const replyMessage = authoritativeReplyMessage || fallbackReplyMessage;
+                                if (replyMessage) {
+                                    this.sendToApp(replyMessage);
+                                }
+                                resolve();
+                            }
+                        }
+                    });
+                }
+            });
+            // Run this in the background (do not await).
+            promise.then(() => { }).catch(() => { });
+
+        } else {
+            for (const client of clients) {
+                client.send({ ...message });
+            }
         }
     }
 
-    public sendPayloadToClients(payload: Partial<Payloads.Payload>, excludeId?: string) {
-        const clients = this.clients.filter(client => client.id !== excludeId);
-        for (const client of clients) {
-            client.sendPayload({ ...payload });
-        }
+    public sendPayloadToClients(payload: Partial<Payloads.Payload>, filterFn?: (value: Client, index: number) => any) {
+        this.sendToClients({ payload }, filterFn);
     }
 
     public findAnimation(syncActor: Partial<SyncActor>, animationName: string) {

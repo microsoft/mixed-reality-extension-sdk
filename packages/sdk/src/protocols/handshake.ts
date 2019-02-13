@@ -14,6 +14,8 @@ import { Protocol } from './protocol';
  * Class to manage the handshake process with a client.
  */
 export class Handshake extends Protocol {
+    public syncRequest: Payloads.SyncRequest;
+
     constructor(conn: Connection, private sessionId: string, private operatingModel: OperatingModel) {
         super(conn);
         // Behave like a server-side endpoint (send heartbeats, measure connection quality)
@@ -32,5 +34,12 @@ export class Handshake extends Protocol {
     /** @private */
     public 'recv-handshake-complete' = (payload: Payloads.HandshakeComplete) => {
         this.resolve();
+    }
+
+    /** @private */
+    public 'recv-sync-request' = (payload: Payloads.SyncRequest) => {
+        // The way the protocol works right now, this message can be sent unexpectedly early by the client.
+        // If we receive it, we'll cache it and pass it along to the next protocol.
+        this.syncRequest = payload;
     }
 }

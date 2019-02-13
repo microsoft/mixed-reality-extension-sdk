@@ -34,4 +34,9 @@ export type Message<PayloadT = Payload> = {
      * The message payload.
      */
     payload: Partial<PayloadT>;
+
+    /**
+     * Workaround for a piece of state missing in the multipeer adapter. Not sent to client.
+     */
+    awaitingResponse?: boolean;
 };

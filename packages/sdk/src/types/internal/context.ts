@@ -212,21 +212,29 @@ export class InternalContext {
                 this.protocol.sendPayload(
                     payload,
                     {
-                        resolve: (objectSpawned: ObjectSpawned) => {
-                            this.protocol.recvPayload(objectSpawned);
-                            const success = (objectSpawned.result.resultCode !== 'error');
+                        resolve: (replyPayload: ObjectSpawned | OperationResult) => {
+                            this.protocol.recvPayload(replyPayload);
+                            let success: boolean;
+                            let message: string;
+                            if (replyPayload.type === 'operation-result') {
+                                success = replyPayload.resultCode !== 'error';
+                                message = replyPayload.message;
+                            } else {
+                                success = replyPayload.result.resultCode !== 'error';
+                                message = replyPayload.result.message;
 
-                            for (const createdActorLike of objectSpawned.actors) {
-                                const createdActor = this.actorSet[createdActorLike.id];
-                                if (createdActor) {
-                                    createdActor.internal.notifyCreated(success, objectSpawned.result.message);
+                                for (const createdActorLike of replyPayload.actors) {
+                                    const createdActor = this.actorSet[createdActorLike.id];
+                                    if (createdActor) {
+                                        createdActor.internal.notifyCreated(success, replyPayload.result.message);
+                                    }
                                 }
                             }
 
                             if (success) {
                                 resolve(actor);
                             } else {
-                                reject(objectSpawned.result.message);
+                                reject(message);
                             }
                         },
                         reject
@@ -265,10 +273,16 @@ export class InternalContext {
                     animationName,
                     ...options
                 } as CreateAnimation, {
-                        resolve: (payload: ObjectSpawned) => {
-                            this.protocol.recvPayload(payload);
-                            actor.internal.notifyAnimationCreated(animationName, true);
-                            resolve();
+                        resolve: (replyPayload: OperationResult) => {
+                            this.protocol.recvPayload(replyPayload);
+                            const success = replyPayload.resultCode !== 'error';
+                            const message = replyPayload.message;
+                            actor.internal.notifyAnimationCreated(animationName, success, message);
+                            if (success) {
+                                resolve();
+                            } else {
+                                reject(message);
+                            }
                         },
                         reject: (reason?: any) => {
                             actor.internal.notifyAnimationCreated(animationName, false, reason);
@@ -288,14 +302,17 @@ export class InternalContext {
     ) {
         const actor = this.actorSet[actorId];
         if (actor) {
-            actor.internal.animationCreated(animationName)
-                .then(() => this.protocol.sendPayload({
-                    type: 'set-animation-state',
-                    actorId,
-                    animationName,
-                    state
-                } as SetAnimationState))
-                .catch((reason) => log.error('app', reason));
+            actor.created().then(() => {
+                actor.internal.animationCreated(animationName)
+                    .then(() => this.protocol.sendPayload({
+                        type: 'set-animation-state',
+                        actorId,
+                        animationName,
+                        state
+                    } as SetAnimationState))
+                    .catch((reason) => log.error('app', reason));
+            })
+            .catch((reason) => log.error('app', reason));
         } else {
             log.error('app', `Failed to set animation state on ${animationName}. Actor ${actorId} not found.`);
         }
