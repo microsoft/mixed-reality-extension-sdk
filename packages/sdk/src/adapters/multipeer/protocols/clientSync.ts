@@ -42,7 +42,7 @@ export class ClientSync extends Protocols.Protocol {
     ];
 
     /** @override */
-    public get name(): string { return `${this.constructor.name} client ${this.client.id}`; }
+    public get name(): string { return `${this.constructor.name} client ${this.client.id.substr(0, 8)}`; }
 
     constructor(private client: Client) {
         super(client.conn);
@@ -213,7 +213,12 @@ export class ClientSync extends Protocols.Protocol {
                             // Account for latency on the joining peer's connection.
                             animationState.state.time += this.conn.quality.latencyMs.value / 2000;
                         }
-                        super.sendPayload(payload);
+                        // Pass with an empty reply handler to account for an edge case that will go away once
+                        // animation synchronization is refactored.
+                        super.sendPayload(payload, {
+                            resolve: () => { },
+                            reject: () => { }
+                        });
                         resolve();
                     }, reject
                 });
@@ -221,10 +226,11 @@ export class ClientSync extends Protocols.Protocol {
     }
 
     private createActorRecursive(actor: Partial<SyncActor>) {
-        // Start creating this actor and its children.
+        // Start creating this actor and its creatable children.
         return new Promise<void>(async (resolve, reject) => {
             await this.createActor(actor); // Allow exception to propagate.
-            const children = this.client.session.childrenOf(actor.created.message.payload.actor.id);
+            // const children = this.client.session.childrenOf(actor.created.message.payload.actor.id);
+            const children = this.client.session.creatableChildrenOf(actor.created.message.payload.actor.id);
             if (children.length) {
                 const promises: any[] = [];
                 for (const child of children) {

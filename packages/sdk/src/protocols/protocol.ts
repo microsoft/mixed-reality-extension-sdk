@@ -17,7 +17,7 @@ import { Middleware } from './middleware';
  * The amount of time to wait for a reply message before closing the connection.
  * Set to zero to disable timeouts.
  */
-export let ConnectionTimeoutSeconds = 30;
+export let DefaultConnectionTimeoutSeconds = 30;
 // tslint:enable:variable-name
 
 /**
@@ -26,6 +26,8 @@ export let ConnectionTimeoutSeconds = 30;
  */
 export class Protocol extends EventEmitter {
     private middlewares: Middleware[] = [];
+    // tslint:disable-next-line:variable-name
+    private _timeoutSeconds = DefaultConnectionTimeoutSeconds;
 
     private promise: Promise<void>;
     private promiseResolve: (value?: void | PromiseLike<void>) => void;
@@ -34,6 +36,9 @@ export class Protocol extends EventEmitter {
     public get conn() { return this._conn; }
     public get promises() { return this.conn.promises; }
     public get name() { return this.constructor.name; }
+
+    public get timeoutSeconds() { return this._timeoutSeconds; }
+    public set timeoutSeconds(value) { this._timeoutSeconds = value; }
 
     // tslint:disable-next-line:variable-name
     constructor(private _conn: Connection) {
@@ -97,14 +102,12 @@ export class Protocol extends EventEmitter {
         }
 
         const setReplyTimeout = () => {
-            if (ConnectionTimeoutSeconds > 0) {
+            if (this.timeoutSeconds > 0) {
                 return setTimeout(() => {
-                    // TODO: Eventually convert this to a log.info('network', ...) call.
-                    // tslint:disable-next-line:no-console
-                    console.info(`[INFO] Timeout on message ${message.payload.type}, id:${message.id}.`);
-                    this.rejectPromiseForMessage(message.id);
+                    // tslint:disable-next-line:max-line-length
+                    this.rejectPromiseForMessage(message.id, `Timed out awaiting response for ${message.payload.type}, id:${message.id}.`);
                     this.conn.close();
-                }, ConnectionTimeoutSeconds * 1000);
+                }, this.timeoutSeconds * 1000);
             }
         };
 
@@ -116,15 +119,28 @@ export class Protocol extends EventEmitter {
             };
         }
 
-        log.verbose('network', `${this.name} send`,
-            JSON.stringify(message, (key, value) => filterEmpty(value)));
+        log.verbose('network', `${this.name} send id:${message.id.substr(0, 8)}, type:${message.payload.type}`);
+        log.verbose('network-content', JSON.stringify(message, (key, value) => filterEmpty(value)));
+
+        // Let the multipeer adapter know the SDK is awaiting a response to this message, so that it can in turn
+        // wait for all peer responses before forwarding the client's response back to the app. This is needed so
+        // that the app knows the operation completed on all peers before proceeding.
+        if (promise) {
+            message.awaitingResponse = true;
+        }
 
         this.conn.send(message);
     }
 
     public recvMessage(message: Message) {
-        log.verbose('network', `${this.name} recv`,
-            JSON.stringify(message, (key, value) => filterEmpty(value)));
+        if (message.replyToId) {
+            // tslint:disable-next-line:max-line-length
+            log.verbose('network', `${this.name} recv id:${message.id.substr(0, 8)}, replyTo:${message.replyToId.substr(0, 8)}, type:${message.payload.type}`);
+        } else {
+            // tslint:disable-next-line:max-line-length
+            log.verbose('network', `${this.name} recv id:${message.id.substr(0, 8)}, type:${message.payload.type}`);
+        }
+        log.verbose('network-content', JSON.stringify(message, (key, value) => filterEmpty(value)));
 
         // Run message through all the middlewares
         const middlewares = this.middlewares.slice();
@@ -194,8 +210,8 @@ export class Protocol extends EventEmitter {
         const queuedPromise = this.promises[messageId];
         if (queuedPromise && queuedPromise.promise && queuedPromise.promise.reject) {
             try { clearTimeout(queuedPromise.timeout); } catch { }
-            try { queuedPromise.promise.reject(reason); } catch { }
             try { delete this.promises[messageId]; } catch { }
+            try { queuedPromise.promise.reject(reason); } catch { }
         }
     }
 
@@ -205,7 +221,7 @@ export class Protocol extends EventEmitter {
 
     private onClose = () => {
         Object.keys(this.promises).map(key => {
-            this.rejectPromiseForMessage(key);
+            this.rejectPromiseForMessage(key, "Connection closed.");
         });
     }
 }

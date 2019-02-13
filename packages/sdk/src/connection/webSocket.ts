@@ -26,24 +26,40 @@ export class WebSocket extends EventedConnection {
         });
 
         this._ws.on('message', (json: WS.Data) => {
-            // Uncomment to introduce latency on incoming messages.
-            // setTimeout(() => {
-            const message: Message = JSON.parse(json as string);
-            super.recv(message);
-            // }, 250);
+            let message: Message = null;
+            try {
+                message = JSON.parse(json as string);
+            } catch (e) {
+                log.error('network', e);
+            }
+            if (message) {
+                // Uncomment to introduce latency on incoming messages.
+                // NOTE: This will sometimes change message ordering.
+                // setTimeout(() => {
+                try {
+                    super.recv(message);
+                } catch (e) {
+                    log.error('network', e);
+                }
+                // }, 250 * Math.random());
+            }
         });
 
         super.on('send', (message: Message) => {
+            const json = JSON.stringify(
+                message, (key, value) => {
+                    validateJsonFieldName(key);
+                    return filterEmpty(value);
+                });
+            // Uncomment to introduce latency on outgoing messages.
+            // NOTE: This will sometimes change message ordering.
+            // setTimeout(() => {
             try {
-                const json = JSON.stringify(
-                    message, (key, value) => {
-                        validateJsonFieldName(key);
-                        return filterEmpty(value);
-                    });
                 this._ws.send(json);
             } catch (e) {
                 log.error('network', e);
             }
+            // }, 1000 * Math.random());
         });
     }
 

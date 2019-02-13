@@ -148,7 +148,7 @@ export class MultipeerAdapter extends Adapter {
             await handshake.run();
 
             // Measure the connection quality and wait for sync-request message.
-            const startup = new ClientStartup(client);
+            const startup = new ClientStartup(client, handshake.syncRequest);
             await startup.run();
 
             // Get the session for the sessionId.
