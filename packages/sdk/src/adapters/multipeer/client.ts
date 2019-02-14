@@ -34,6 +34,7 @@ export class Client extends EventEmitter {
     private _protocol: Protocols.Protocol;
     private _order: number;
     private _queuedMessages: QueuedMessage[] = [];
+    private _authoritative = false;
     // tslint:enable:variable-name
 
     public get id() { return this._id; }
@@ -41,10 +42,7 @@ export class Client extends EventEmitter {
     public get protocol() { return this._protocol; }
     public get session() { return this._session; }
     public get conn() { return this._conn; }
-    public get authoritative() {
-        return (0 === this.session.clients.sort((a, b) => a.order - b.order)
-            .findIndex(client => client.id === this.id));
-    }
+    public get authoritative() { return this._authoritative; }
     public get queuedMessages() { return this._queuedMessages; }
 
     public userId: string;
@@ -60,6 +58,14 @@ export class Client extends EventEmitter {
         this.leave = this.leave.bind(this);
         this._conn.on('close', this.leave);
         this._conn.on('error', this.leave);
+    }
+
+    public setAuthoritative(value: boolean) {
+        this._authoritative = value;
+        this.protocol.sendPayload({
+            type: 'set-authoritative',
+            authoritative: value
+        } as Payloads.SetAuthoritative);
     }
 
     /**
@@ -95,16 +101,8 @@ export class Client extends EventEmitter {
         } catch { }
     }
 
-    public joinedOrLeft() {
-        if (this.protocol && this.protocol.constructor.name === "ClientExecution") {
-            return Promise.resolve();
-        }
-        return new Promise((resolve, reject) => {
-            const test = () =>
-                (!this.protocol || this.protocol.constructor.name === "ClientExecution") ? resolve() : set();
-            const set = () => setTimeout(test, 25);
-            set();
-        });
+    public isJoined() {
+        return this.protocol && this.protocol.constructor.name === "ClientExecution";
     }
 
     public send(message: Message, promise?: ExportedPromise) {

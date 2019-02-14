@@ -193,14 +193,13 @@ export class ClientSync extends Protocols.Protocol {
      * Driver for the `sync-animations` synchronization stage.
      */
     public 'stage:sync-animations' = async () => {
-        // Don't send the sync-animations message to ourselves.
-        if (this.client.session.authoritativeClient.order === this.client.order) {
+        const authoritativeClient = this.client.session.authoritativeClient;
+        if (!authoritativeClient) {
             return Promise.resolve();
         }
         return new Promise<void>((resolve, reject) => {
             // Request the current state of all animations from the authoritative client.
             // TODO: Improve this (don't rely on a peer).
-            const authoritativeClient = this.client.session.authoritativeClient;
             authoritativeClient.sendPayload({
                 type: 'sync-animations',
             } as Payloads.SyncAnimations, {
@@ -215,10 +214,7 @@ export class ClientSync extends Protocols.Protocol {
                         }
                         // Pass with an empty reply handler to account for an edge case that will go away once
                         // animation synchronization is refactored.
-                        super.sendPayload(payload, {
-                            resolve: () => { },
-                            reject: () => { }
-                        });
+                        super.sendPayload(payload);
                         resolve();
                     }, reject
                 });
