@@ -37,6 +37,7 @@ import { CollisionEventType, CreateColliderType } from '../network/payloads';
 import { SubscriptionType } from '../network/subscriptionType';
 import { Patchable } from '../patchable';
 import { Behavior } from './behaviors';
+import { SoundInstance } from './sound';
 
 /**
  * Describes the properties of an Actor.
@@ -442,26 +443,32 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
      * Starts playing a preloaded sound.
      * @param soundAssetId Name of sound asset preloaded using AssetManager.
      * @param options Adjustments to pitch and volume, and other characteristics.
-     * @param priority importance of this sound compared to other playing sounds.
-     *  Used to prioritize which sounds to remove
+     * @param startTimeOffset How many seconds to offset into the sound
      */
-    public playSound(soundAssetId: string, options: SetSoundStateOptions, priority: number): string {
-        return "SoundInstanceHandle";
+    public playSound(soundAssetId: string, options: SetSoundStateOptions,
+                     startTimeOffset?: number): ForwardPromise<SoundInstance> {
+        return createForwardPromise(new SoundInstance("SoundAssetHandle"),
+            new Promise<SoundInstance>((resolve, reject) => {
+                resolve();
+            })
+        );
+        return;
     }
 
     /**
      * Loads a sound file and starts playing.
      * @param uri Path to a sound asset that needs to be loaded and played.
      * @param options Adjustments to pitch and volume, and other characteristics.
-     * @param priority importance of this sound compared to other playing sounds.
-     *  Used to prioritize which sounds to remove
+     * @param startTimeOffset How many seconds to offset into the sound
      */
     public loadAndPlaySound(uri: string, loadOptions: LoadSoundOptions,
                             playOptions: SetSoundStateOptions,
-                            priority: number): Promise<string> {
-        return new Promise<string>((resolve, reject) => {
-            resolve("SoundInstanceHandle");
-        });
+                            startTimeOffset?: number): ForwardPromise<SoundInstance> {
+        return createForwardPromise(new SoundInstance("SoundAssetHandle"),
+            new Promise<SoundInstance>((resolve, reject) => {
+                resolve();
+            })
+        );
     }
 
     /**

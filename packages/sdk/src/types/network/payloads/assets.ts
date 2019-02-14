@@ -10,6 +10,12 @@ import { AssetLike, AssetSource } from '../../runtime/assets';
 export type CreateColliderType = ColliderType | 'none';
 
 /** @hidden */
+export type LoadSound = Payload & {
+    type: 'load-sound';
+    uri: string;
+};
+
+/** @hidden */
 export type LoadAssets = Payload & {
     type: 'load-assets';
     source: AssetSource;

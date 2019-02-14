@@ -10,7 +10,7 @@ import { Context } from '..';
 import { LoadSoundOptions } from '../../../sound';
 import resolveJsonValues from '../../../utils/resolveJsonValues';
 import { createForwardPromise, ForwardPromise } from '../../forwardPromise';
-import { AssetsLoaded, CreateAsset, CreateColliderType, LoadAssets } from '../../network/payloads';
+import { AssetsLoaded, CreateAsset, CreateColliderType, LoadAssets, LoadSound } from '../../network/payloads';
 
 // tslint:disable-next-line:variable-name
 const ManualId = '__manual__';
@@ -95,10 +95,23 @@ export class AssetManager {
         return createForwardPromise(asset, promise);
     }
 
-    public loadSound(groupName: string, uri: string, options: LoadSoundOptions): Promise<string> {
-        return new Promise<string>((resolve, reject) => {
-            resolve("SomeHandle");
-        });
+    public loadSoundAsset(groupName: string, uri: string, options: LoadSoundOptions): ForwardPromise<string> {
+        const promise = this.sendLoadAssetsPayload({
+            type: 'load-sound',
+            uri
+        } as LoadSound)
+            .then<string>(payload => {
+                if (payload.failureMessage || payload.assets.length !== 1) {
+                    return Promise.reject(`Loading sound asset ${uri} failed: ${payload.failureMessage}`);
+                }
+                return payload.assets[0].id;
+            });
+        this.registerLoadPromise(promise);
+
+        return createForwardPromise(soundAsset, promise);
+    }
+
+    public unloadSoundAsset(handle: string) {
     }
 
     /**
@@ -161,7 +174,7 @@ export class AssetManager {
         this._ready = this._ready.then(() => ignoreFailure);
     }
 
-    private sendLoadAssetsPayload(payload: LoadAssets | CreateAsset): Promise<AssetsLoaded> {
+    private sendLoadAssetsPayload(payload: LoadAssets | CreateAsset | LoadSound): Promise<AssetsLoaded> {
         return new Promise<AssetsLoaded>((resolve, reject) => {
             this.context.internal.protocol.sendPayload(
                 payload, { resolve, reject }

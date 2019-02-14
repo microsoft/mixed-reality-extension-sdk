@@ -37,6 +37,7 @@ export type PayloadType
     | 'heartbeat-reply'
     | 'interpolate-actor'
     | 'load-assets'
+    | 'load-sound'
     | 'look-at'
     | 'multi-operation-result'
     | 'object-spawned'

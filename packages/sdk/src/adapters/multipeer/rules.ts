@@ -660,6 +660,27 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
     },
 
     // ========================================================================
+    'load-sound': {
+        ...DefaultRule,
+        synchronization: {
+            stage: 'load-assets',
+            before: 'ignore',
+            during: 'queue',
+            after: 'allow'
+        },
+        session: {
+            ...DefaultRule.session,
+            beforeReceiveFromApp: (
+                session: Session,
+                message: Message<Payloads.LoadSound>
+            ) => {
+                session.cacheAssetCreationMessage(message);
+                return message;
+            }
+        }
+    },
+
+    // ========================================================================
     'look-at': {
         ...DefaultRule,
         synchronization: {

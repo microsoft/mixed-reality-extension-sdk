@@ -47,17 +47,17 @@ export default class SoundTest extends Test {
         await textPromise;
         text.text.contents = "Preloading Sound";
 
-        const soundId = this.app.context.assetManager.loadSound(
+        const soundAssetPromise = this.app.context.assetManager.loadSoundAsset(
             'sounds', `${this.baseUrl}/testsound.wav`,
             {
                 looping: true
             });
 
-        await soundId;
-        await delay(1 * 1000);
+        // await soundAssetPromise;
+        // await delay(1 * 1000);
 
         text.text.contents = "Starting Sound";
-        const instanceHandle = text.playSound(await soundId,
+        const soundInstance = text.playSound(soundAssetPromise.value,
             {
                 volume: 0.5
             },
@@ -65,36 +65,39 @@ export default class SoundTest extends Test {
         await delay(3 * 1000);
 
         text.text.contents = "Increasing Pitch by 12 semitones";
-        MRESDK.Sound.setSoundState(instanceHandle, {
+        soundInstance.value.setSoundState({
             pitch: 12.0,
         });
         await delay(3 * 1000);
 
         text.text.contents = "Raising Volume";
-        MRESDK.Sound.setSoundState(instanceHandle, {
+        soundInstance.value.setSoundState({
             volume: 1.0
         });
         await delay(3 * 1000);
 
         text.text.contents = "Pausing";
-        MRESDK.Sound.pause(instanceHandle);
+        soundInstance.value.pause();
         await delay(3 * 1000);
 
         text.text.contents = "Playing non-preloaded sound";
-        const sound2 = text.loadAndPlaySound(`${this.baseUrl}/testsound2.wav`,
+        const soundInstance2 = text.loadAndPlaySound(`${this.baseUrl}/testsound2.wav`,
             {},
             {
                 volume: 0.5
             },
             41);
         await delay(3 * 1000);
-
+        soundInstance2.value.stop();
+        await delay(1 * 1000);
         text.text.contents = "resuming";
-        MRESDK.Sound.resume(instanceHandle);
+        soundInstance.value.resume();
         await delay(3 * 1000);
 
         text.text.contents = "Stopping Sound";
-        MRESDK.Sound.stop(instanceHandle);
+        soundInstance.value.stop();
+        this.app.context.assetManager.unloadSoundAsset(soundAssetPromise.value);
+
         await delay(6 * 1000);
 
         return true;

@@ -26,17 +26,8 @@ The sound instance doesn't store any data on the server at all, it lets the clie
 Sound instance handle is used with the pause/resume/stop/setsoundstate api calls.
 
 
-We may want to add "3d-ness" to the sound state, too, but that's not super important now.
-
-
 ## I'd especially like feedback on:
 
 This API has been designed to follow conventions of other parts of the SDK (AssetManager for preloading,  Actor/Animation for starting/stopping/changing state). I'm very happy to change it where recommended
 
 Should I switch over to allocating a data structure on the node side for managing the state? I don't think that'll buy anything, which is why I went with the "here's a handle".
-
-I guess I need an unload preloaded sound command, right? 
-
-What's best terminology? SoundResource/SoundInstance? Unity uses "AudioSource" and "AudioClip", and they seem non-intuitive to me, as a source 
-
-This API lists "seek" as part of the sound state, but as I write this document, I am actually thinking to make it part of the PlaySound/loadAndPlaySound call, because seeking in a sound is not always supported, not always fast, and the main reason to have this is to be able to do join-in-progress.

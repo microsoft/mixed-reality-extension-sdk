@@ -18,12 +18,8 @@ export type SetSoundStateOptions = {
     pitch?: number,
 
     /**
-     * volume modifier, measured in DB (0=default,10=10x power, -10=1/10 power.
+     * volume multiplier, (0.0-1.0, where 0.0=no sound, 1.0=maximum)
      */
     volume?: number,
 
-    /**
-     * time in milliseconds
-     */
-    time?: number,
 };
