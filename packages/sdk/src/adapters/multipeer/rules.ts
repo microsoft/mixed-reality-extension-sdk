@@ -899,6 +899,8 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
                 const syncActor = session.actorSet[message.payload.actorId];
                 if (syncActor) {
                     syncActor.behavior = message.payload.behaviorType;
+                } else {
+                    console.log(`[ERROR] Sync: set-behavior on unknown actor ${message.payload.actorId}`);
                 }
                 return message;
             }

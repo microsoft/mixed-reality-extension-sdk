@@ -105,7 +105,9 @@ export class Protocol extends EventEmitter {
             if (this.timeoutSeconds > 0) {
                 return setTimeout(() => {
                     // tslint:disable-next-line:max-line-length
-                    this.rejectPromiseForMessage(message.id, `Timed out awaiting response for ${message.payload.type}, id:${message.id}.`);
+                    const reason = `Timed out awaiting response for ${message.payload.type}, id:${message.id}.`;
+                    log.error('network', reason);
+                    this.rejectPromiseForMessage(message.id, reason);
                     this.conn.close();
                 }, this.timeoutSeconds * 1000);
             }

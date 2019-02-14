@@ -28,7 +28,9 @@ export class Session extends EventEmitter {
     public get conn() { return this._conn; }
     public get sessionId() { return this._sessionId; }
     public get protocol() { return this._protocol; }
-    public get clients() { return Object.keys(this._clientSet).map(clientId => this._clientSet[clientId]); }
+    public get clients() {
+        return Object.keys(this._clientSet).map(clientId =>
+            this._clientSet[clientId]).sort((a, b) => a.order - b.order); }
     public get actors() { return Object.keys(this._actorSet).map(actorId => this._actorSet[actorId]); }
     public get assets() { return this._assets; }
     public get assetUpdates() {
@@ -39,7 +41,7 @@ export class Session extends EventEmitter {
             !this._actorSet[actorId].created.message.payload.actor.parentId).map(actorId => this._actorSet[actorId]);
     }
     public get users() { return Object.keys(this._userSet).map(userId => this._userSet[userId]); }
-    public get authoritativeClient() { return this.clients.sort((a, b) => a.order - b.order).shift(); }
+    public get authoritativeClient() { return this.clients.find(client => client.authoritative); }
     public get peerAuthoritative() { return this._peerAuthoritative; }
     public get actorSet() { return this._actorSet; }
     public get assetUpdateSet() { return this._assetUpdateSet; }
@@ -114,11 +116,9 @@ export class Session extends EventEmitter {
             // Once the client is joined, further messages from the client will be processed by the session
             // (as opposed to a protocol class).
             client.on('recv', (_: Client, message: Message) => this.recvFromClient(client, message));
-            if (this.authoritativeClient) {
-                this.authoritativeClient.sendPayload({
-                    type: 'set-authoritative',
-                    authoritative: this.peerAuthoritative,
-                } as Payloads.SetAuthoritative);
+            // If we don't have an authoritative client, make this client authoritative.
+            if (!this.authoritativeClient) {
+                this.setAuthoritativeClient(client.id);
             }
         } catch (e) {
             log.error('network', e);
@@ -141,12 +141,13 @@ export class Session extends EventEmitter {
                         userId: client.userId
                     } as Payloads.UserLeft);
                 }
-                // Select another peer to be the authoritative peer
-                if (this.authoritativeClient) {
-                    this.authoritativeClient.sendPayload({
-                        type: 'set-authoritative',
-                        authoritative: this.peerAuthoritative
-                    } as Payloads.SetAuthoritative);
+                // Select another client to be the authoritative peer.
+                // TODO: Make selection criteria more intelligent (look at latency, prefer non-mobile, ...)
+                if (client.authoritative) {
+                    const nextClient = this.clients[0];
+                    if (nextClient) {
+                        this.setAuthoritativeClient(nextClient.id);
+                    }
                 }
             }
             // If this was the last client then shutdown the session
@@ -154,6 +155,17 @@ export class Session extends EventEmitter {
                 this._conn.close();
             }
         } catch { }
+    }
+
+    private setAuthoritativeClient(clientId: string) {
+        if (!this._clientSet[clientId]) {
+            // tslint:disable-next-line:no-console
+            console.error(`[ERROR] setAuthoritativeClient: client ${clientId} does not exist.`);
+        }
+        this._clientSet[clientId].setAuthoritative(true);
+        this.clients
+            .filter(client => client.id !== clientId)
+            .forEach(client => client.setAuthoritative(false));
     }
 
     private recvFromClient = (client: Client, message: Message) => {
@@ -206,14 +218,18 @@ export class Session extends EventEmitter {
                 for (const client of clients) {
                     client.send({ ...message }, {
                         resolve: (payload: Payloads.Payload, response: Message) => {
-                            // Cache the response message.
-                            if (client.authoritative) {
-                                authoritativeReplyMessage = {...response };
-                            } else if (!fallbackReplyMessage) {
-                                fallbackReplyMessage = { ...response };
-                            }
                             // Decrement the wait counter.
                             awaitCount -= 1;
+                            // Preprocess the response message.
+                            response = this.preprocessFromClient(client, response);
+                            // Cache the response message.
+                            if (response) {
+                                if (client.authoritative) {
+                                    authoritativeReplyMessage = { ...response };
+                                } else if (!fallbackReplyMessage) {
+                                    fallbackReplyMessage = { ...response };
+                                }
+                            }
                             // If this was the last response, send the reply message to the app and
                             // resolve this promise.
                             if (awaitCount === 0) {
@@ -290,7 +306,6 @@ export class Session extends EventEmitter {
             // Merge the update into the existing actor.
             syncActor.created.message.payload.actor
                 = deepmerge(syncActor.created.message.payload.actor, message.payload.actor);
-            return true;
         }
     }
 
