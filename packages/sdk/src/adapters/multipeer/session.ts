@@ -106,12 +106,9 @@ export class Session extends EventEmitter {
      */
     public async join(client: Client) {
         try {
-            if (this.authoritativeClient) {
-                await this.authoritativeClient.joinedOrLeft();
-                // console.log("authoritative client finished joining (or died trying)");
-            }
             this._clientSet[client.id] = client;
             client.on('close', () => this.leave(client.id));
+            // Synchronize app state to the client.
             await client.join(this);
             // Once the client is joined, further messages from the client will be processed by the session
             // (as opposed to a protocol class).
@@ -144,7 +141,7 @@ export class Session extends EventEmitter {
                 // Select another client to be the authoritative peer.
                 // TODO: Make selection criteria more intelligent (look at latency, prefer non-mobile, ...)
                 if (client.authoritative) {
-                    const nextClient = this.clients[0];
+                    const nextClient = this.clients.find(c => c.isJoined());
                     if (nextClient) {
                         this.setAuthoritativeClient(nextClient.id);
                     }
@@ -164,7 +161,7 @@ export class Session extends EventEmitter {
         }
         this._clientSet[clientId].setAuthoritative(true);
         this.clients
-            .filter(client => client.id !== clientId)
+            .filter(client => client.id !== clientId && client.isJoined())
             .forEach(client => client.setAuthoritative(false));
     }
 

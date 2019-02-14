@@ -101,16 +101,8 @@ export class Client extends EventEmitter {
         } catch { }
     }
 
-    public joinedOrLeft() {
-        if (this.protocol && this.protocol.constructor.name === "ClientExecution") {
-            return Promise.resolve();
-        }
-        return new Promise((resolve, reject) => {
-            const test = () =>
-                (!this.protocol || this.protocol.constructor.name === "ClientExecution") ? resolve() : set();
-            const set = () => setTimeout(test, 25);
-            set();
-        });
+    public isJoined() {
+        return this.protocol && this.protocol.constructor.name === "ClientExecution";
     }
 
     public send(message: Message, promise?: ExportedPromise) {
