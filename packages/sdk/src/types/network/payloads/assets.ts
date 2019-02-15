@@ -12,6 +12,7 @@ export type CreateColliderType = ColliderType | 'none';
 /** @hidden */
 export type LoadSound = Payload & {
     type: 'load-sound';
+    id: string;
     uri: string;
 };
 

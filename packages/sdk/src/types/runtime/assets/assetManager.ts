@@ -7,7 +7,9 @@ import UUID from 'uuid/v4';
 
 import { Asset, AssetGroup, Material, MaterialLike, Texture, TextureLike } from '.';
 import { Context } from '..';
+import { log } from '../../../log';
 import { LoadSoundOptions } from '../../../sound';
+import { ExportedPromise } from '../../../utils/exportedPromise';
 import resolveJsonValues from '../../../utils/resolveJsonValues';
 import { createForwardPromise, ForwardPromise } from '../../forwardPromise';
 import { AssetsLoaded, CreateAsset, CreateColliderType, LoadAssets, LoadSound } from '../../network/payloads';
@@ -96,22 +98,68 @@ export class AssetManager {
     }
 
     public loadSoundAsset(groupName: string, uri: string, options: LoadSoundOptions): ForwardPromise<string> {
+
+        log.error('app', "STARTING LOADSOUNDASSET");
+        const soundAssetId = UUID();
+        this.enqueueLoadSoundPromise(
+            soundAssetId, {
+                resolve: () => { /* empty */ },
+                reject: () => { /* empty */ },
+            });
         const promise = this.sendLoadAssetsPayload({
             type: 'load-sound',
+            id: soundAssetId,
             uri
         } as LoadSound)
             .then<string>(payload => {
                 if (payload.failureMessage || payload.assets.length !== 1) {
+                    this.notifySoundLoaded(soundAssetId, false, payload.failureMessage);
                     return Promise.reject(`Loading sound asset ${uri} failed: ${payload.failureMessage}`);
                 }
-                return payload.assets[0].id;
+                // soundAssetId = payload.assets[0].id;
+                this.notifySoundLoaded(soundAssetId, true);
             });
         this.registerLoadPromise(promise);
 
-        return createForwardPromise(soundAsset, promise);
+        return createForwardPromise(soundAssetId, promise);
     }
 
     public unloadSoundAsset(handle: string) {
+    }
+
+    public loadSoundPromises: { [name: string]: ExportedPromise[] };
+
+    public notifySoundLoaded(soundAssetId: string, success: boolean, reason?: any): void {
+        if (!!this.loadSoundPromises && !!this.loadSoundPromises[soundAssetId]) {
+            const loadSoundPromises = this.loadSoundPromises[soundAssetId].splice(0);
+            delete this.loadSoundPromises[soundAssetId];
+            for (const promise of loadSoundPromises) {
+                if (success) {
+                    promise.resolve();
+                } else {
+                    promise.reject(reason);
+                }
+            }
+        }
+    }
+
+    public enqueueLoadSoundPromise(soundAssetId: string, promise: ExportedPromise): void {
+        if (!this.loadSoundPromises) {
+            this.loadSoundPromises = {};
+        }
+        if (!this.loadSoundPromises[soundAssetId]) {
+            this.loadSoundPromises[soundAssetId] = [];
+        }
+        this.loadSoundPromises[soundAssetId].push(promise);
+    }
+
+    public SoundLoaded(soundAssetId: string): Promise<void> {
+        if (!this.loadSoundPromises || !this.loadSoundPromises[soundAssetId]) {
+            return Promise.resolve();
+        } else {
+            return new Promise<void>((resolve, reject) =>
+                this.enqueueLoadSoundPromise(soundAssetId, { resolve, reject }));
+        }
     }
 
     /**

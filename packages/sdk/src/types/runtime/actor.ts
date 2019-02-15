@@ -445,11 +445,23 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
      * @param options Adjustments to pitch and volume, and other characteristics.
      * @param startTimeOffset How many seconds to offset into the sound
      */
-    public playSound(soundAssetId: string, options: SetSoundStateOptions,
-                     startTimeOffset?: number): ForwardPromise<SoundInstance> {
+    public playSound(
+        soundAssetId: string, options: SetSoundStateOptions,
+        startTimeOffset?: number): ForwardPromise<SoundInstance> {
+
         return createForwardPromise(new SoundInstance("SoundAssetHandle"),
             new Promise<SoundInstance>((resolve, reject) => {
-                resolve();
+                this.created().then(() => {
+                    this._context.assetManager.SoundLoaded(soundAssetId).then(() => {
+                        resolve();
+                    }).catch((reason: any) => {
+                        log.error('app', `Failed PlaySound on actor ${this.id}. ${(reason || '').toString()}`.trim());
+                        reject();
+                    });
+                }).catch((reason: any) => {
+                    log.error('app', `Failed PlaySound on actor ${this.id}. ${(reason || '').toString()}`.trim());
+                    reject();
+                });
             })
         );
         return;
@@ -461,9 +473,10 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
      * @param options Adjustments to pitch and volume, and other characteristics.
      * @param startTimeOffset How many seconds to offset into the sound
      */
-    public loadAndPlaySound(uri: string, loadOptions: LoadSoundOptions,
-                            playOptions: SetSoundStateOptions,
-                            startTimeOffset?: number): ForwardPromise<SoundInstance> {
+    public loadAndPlaySound(
+        uri: string, loadOptions: LoadSoundOptions,
+        playOptions: SetSoundStateOptions,
+        startTimeOffset?: number): ForwardPromise<SoundInstance> {
         return createForwardPromise(new SoundInstance("SoundAssetHandle"),
             new Promise<SoundInstance>((resolve, reject) => {
                 resolve();
