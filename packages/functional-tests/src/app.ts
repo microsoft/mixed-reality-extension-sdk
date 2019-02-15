@@ -20,6 +20,8 @@ export default class App {
     private firstUser: MRESDK.User;
     private _connectedUsers: { [id: string]: MRESDK.User } = {};
     private testNames = Object.keys(Factories).sort();
+    private activeTestName: string;
+    private activeTest: Test = null;
 
     public get context() { return this._context; }
     public get rpc() { return this._rpc; }
@@ -34,16 +36,7 @@ export default class App {
     }
 
     private async presentMenu() {
-        let testName = this.params.test as string;
-        if (testName) {
-            await this.runTest(testName, user);
-            this.rpc.send('functional-test:close-connection');
-        } else {
-            if (!this.firstUser) {
-                const promise = this.runFunctionalTestMenu();
-            }
-            this.firstUser = user;
-        }
+        this.activeTestName = this.params.test as string;
     }
 
     private async userJoined(user: MRESDK.User) {
@@ -73,14 +66,12 @@ export default class App {
     }
 
     private async runTest(testName: string, user: MRESDK.User) {
-        if (this.activeTests[testName]) {
-            console.log(`Test already running: '${testName}'`);
-        } else if (!Factories[testName]) {
+        if (!Factories[testName]) {
             console.log(`error: Unrecognized test: '${testName}'`);
         } else {
             this.rpc.send('functional-test:test-starting', testName);
             console.log(`Test starting: '${testName}'`);
-            const test = this.activeTests[testName] = Factories[testName](this, this.baseUrl, user);
+            const test = this.activeTest = Factories[testName](this, this.baseUrl, user);
             this.rpc.send('functional-test:test-started', testName);
             console.log(`Test started: '${testName}'`);
 
@@ -100,7 +91,6 @@ export default class App {
 
             test.cleanup();
 
-            delete this.activeTests[testName];
             // Delete all actors
             destroyActors(this.context.rootActors);
             this.context.assetManager.cleanup();
