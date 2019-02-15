@@ -11,7 +11,7 @@ import Server from '../server';
 import delay from '../utils/delay';
 import destroyActors from '../utils/destroyActors';
 
-import Test from './test';
+import Test from '../test';
 
 export default class AssetEarlyAssignmentTest extends Test {
 

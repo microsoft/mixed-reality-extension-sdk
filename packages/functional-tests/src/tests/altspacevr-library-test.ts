@@ -4,31 +4,18 @@
  */
 
 import * as MRESDK from '@microsoft/mixed-reality-extension-sdk';
-import { Actor } from '@microsoft/mixed-reality-extension-sdk';
-import App from '../app';
+import { Test } from '../test';
 import delay from '../utils/delay';
 import destroyActors from '../utils/destroyActors';
-import Test from './test';
 
 export default class AltspaceVRLibraryTest extends Test {
-
-    constructor(app: App, private baseUrl: string) {
-        super(app);
-    }
+    public expectedResultDescription = "Altspace kit objects + mouseover descriptions, teleporter to the Campfire";
 
     public async run(): Promise<boolean> {
-        let success = true;
-
-        success = success && await this.runAltspaceVRLibraryTest();
-
-        return success;
-    }
-
-    public async runAltspaceVRLibraryTest(): Promise<boolean> {
         // Make a root object.
         const tester = MRESDK.Actor.CreateEmpty(this.app.context, {});
 
-        const textPromise = Actor.CreateEmpty(this.app.context, {
+        const textPromise = MRESDK.Actor.CreateEmpty(this.app.context, {
             actor: {
                 name: 'label',
                 parentId: tester.value.id,

@@ -7,7 +7,7 @@ import * as MRESDK from '@microsoft/mixed-reality-extension-sdk';
 import App from '../app';
 import delay from '../utils/delay';
 import destroyActors from '../utils/destroyActors';
-import Test from './test';
+import Test from '../test';
 
 export default class LookAtTest extends Test {
 
