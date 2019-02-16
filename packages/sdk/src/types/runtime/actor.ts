@@ -363,7 +363,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
             });
 
             // Copy to the _collider
-            const colliderParams = this._generateColliderParams(colliderType, center, size);
+            const colliderParams = this.generateColliderParams(colliderType, center, size);
 
             if (colliderParams) {
                 this._collider.copy({
@@ -669,7 +669,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
         }
     }
 
-    private _generateColliderParams(
+    private generateColliderParams(
         colliderType: 'box' | 'sphere',
         center?: Vector3Like,
         size?: number | Vector3Like
