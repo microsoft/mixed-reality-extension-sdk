@@ -6,9 +6,9 @@
 import events from 'events';
 import {
     Collider,
-    CollisionLayer,
     ColliderLike,
     CollisionData,
+    CollisionLayer,
     Light,
     LightLike,
     Material,
@@ -343,7 +343,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
         isTrigger: boolean,
         center?: Vector3Like,
         size?: Vector3Like): void;
-    
+
     /** @ignore */
     public enableCollider(
         colliderType: 'box' | 'sphere',
@@ -371,7 +371,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
                     isTrigger,
                     collisionLayer,
                     colliderParams
-                } as ColliderLike)
+                } as ColliderLike);
             }
         }
     }
