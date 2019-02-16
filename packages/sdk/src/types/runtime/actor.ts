@@ -8,6 +8,7 @@ import {
     Collider,
     ColliderLike,
     CollisionData,
+    CollisionLayer,
     Light,
     LightLike,
     Material,
@@ -24,7 +25,8 @@ import {
     CreateAnimationOptions,
     LookAtMode,
     PrimitiveDefinition,
-    SetAnimationStateOptions
+    SetAnimationStateOptions,
+    Vector3Like
 } from '../..';
 import { ZeroGuid } from '../../constants';
 import { log } from '../../log';
@@ -36,6 +38,7 @@ import { CollisionEventType, CreateColliderType } from '../network/payloads';
 import { SubscriptionType } from '../network/subscriptionType';
 import { Patchable } from '../patchable';
 import { Behavior } from './behaviors';
+import { BoxColliderParams, ColliderParams, SphereColliderParams } from './physics';
 
 /**
  * Describes the properties of an Actor.
@@ -311,59 +314,67 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
         this._rigidBody.copy(rigidBody);
     }
 
-    // TODO @tombu: This will be enabled once the feature is ready for prime time.
-    // /**
-    //  * Adds a collider of the given type and parameters on the actor.
-    //  * @param colliderType Type of the collider to enable.
-    //  * @param collisionLayer The layer that the collider operates in.
-    //  * @param isTrigger Whether the collider is a trigger volume or not.
-    //  * @param center The center of the collider, or default of the object if none is provided.
-    //  * @param radius The radius of the collider, or default bounding if non is provided.
-    //  */
-    // public enableCollider(
-    //     colliderType: 'sphere',
-    //     collisionLayer: CollisionLayer,
-    //     isTrigger: boolean,
-    //     center?: Vector3Like,
-    //    radius?: number): ForwardPromise<Collider>;
+    /**
+     * Adds a collider of the given type and parameters on the actor.
+     * @param colliderType Type of the collider to enable.
+     * @param collisionLayer The layer that the collider operates in.
+     * @param isTrigger Whether the collider is a trigger volume or not.
+     * @param center The center of the collider, or default of the object if none is provided.
+     * @param radius The radius of the collider, or default bounding if non is provided.
+     */
+    public enableCollider(
+        colliderType: 'sphere',
+        collisionLayer: CollisionLayer,
+        isTrigger: boolean,
+        center?: Vector3Like,
+        radius?: number): void;
 
-    // /**
-    //  * Adds a collider of the given type and parameters on the actor.
-    //  * @param colliderType Type of the collider to enable.
-    //  * @param collisionLayer The layer that the collider operates in.
-    //  * @param isTrigger Whether the collider is a trigger volume or not.
-    //  * @param center The center of the collider, or default of the object if none is provided.
-    //  * @param size
-    //  */
-    // public enableCollider(
-    //     colliderType: 'box',
-    //     collisionLayer: CollisionLayer,
-    //     isTrigger: boolean,
-    //     center?: Vector3Like,
-    //     size?: Vector3Like): ForwardPromise<Collider>;
+    /**
+     * Adds a collider of the given type and parameters on the actor.
+     * @param colliderType Type of the collider to enable.
+     * @param collisionLayer The layer that the collider operates in.
+     * @param isTrigger Whether the collider is a trigger volume or not.
+     * @param center The center of the collider, or default of the object if none is provided.
+     * @param size
+     */
+    public enableCollider(
+        colliderType: 'box',
+        collisionLayer: CollisionLayer,
+        isTrigger: boolean,
+        center?: Vector3Like,
+        size?: Vector3Like): void;
 
-    // /** @ignore */
-    // public enableCollider(
-    //     colliderType: 'box' | 'sphere',
-    //     collisionLayer: CollisionLayer,
-    //     isTrigger: boolean,
-    //     center?: Vector3Like,
-    //     size?: number | Vector3Like
-    // ): ForwardPromise<Collider> {
-    //     if (!this._collider) {
-    //         this._collider = new Collider(this);
-    //         observe(this._collider, 'collider', (...path: string[]) => this.actorChanged(...path));
-    //         this.subscribe('collider');
-    //         return this.context.internal.enableCollider(
-    //             this.id,
-    //             colliderType,
-    //             collisionLayer,
-    //             isTrigger,
-    //             center,
-    //             size);
-    //     }
-    //     return ForwardPromise.Resolve(this._collider);
-    // }
+    /** @ignore */
+    public enableCollider(
+        colliderType: 'box' | 'sphere',
+        collisionLayer: CollisionLayer,
+        isTrigger: boolean,
+        center?: Vector3Like,
+        size?: number | Vector3Like
+    ): void {
+        if (!this._collider) {
+            this._collider = new Collider(this);
+            observe({
+                target: this._collider,
+                targetName: 'collider',
+                notifyChanged: (...path: string[]) => this.actorChanged(...path),
+                // Trigger notifications for every observed leaf node to ensure we get all values in the initial patch.
+                triggerNotificationsNow: true
+            });
+
+            // Copy to the _collider
+            const colliderParams = this.generateColliderParams(colliderType, center, size);
+
+            if (colliderParams) {
+                this._collider.copy({
+                    enabled: true,
+                    isTrigger,
+                    collisionLayer,
+                    colliderParams
+                } as ColliderLike);
+            }
+        }
+    }
 
     /**
      * Adds a text component to the actor.
@@ -655,6 +666,34 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
             this.created()
                 .then(() => this.context.internal.incrementGeneration())
                 .catch(reason => log.error('app', reason));
+        }
+    }
+
+    private generateColliderParams(
+        colliderType: 'box' | 'sphere',
+        center?: Vector3Like,
+        size?: number | Vector3Like
+    ): ColliderParams {
+        switch (colliderType) {
+            case 'box':
+                return {
+                    colliderType: 'box',
+                    center,
+                    size: size as Partial<Vector3Like>
+                } as BoxColliderParams;
+            case 'sphere':
+                return {
+                    colliderType: 'sphere',
+                    center,
+                    radius: size as number
+                } as SphereColliderParams;
+
+            default:
+                log.error(null,
+                    'Trying to enable a collider on the actor with an invalid collider type.' +
+                    `Type given is ${colliderType}`);
+
+                return undefined;
         }
     }
 }
