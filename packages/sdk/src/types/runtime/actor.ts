@@ -33,7 +33,7 @@ import observe from '../../utils/observe';
 import readPath from '../../utils/readPath';
 import { createForwardPromise, ForwardPromise } from '../forwardPromise';
 import { InternalActor } from '../internal/actor';
-import { CollisionEventType, CreateColliderType } from '../network/payloads';
+import { CollisionEventType, CreateColliderType, PlaySound } from '../network/payloads';
 import { SubscriptionType } from '../network/subscriptionType';
 import { Patchable } from '../patchable';
 import { Behavior } from './behaviors';
@@ -453,6 +453,14 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
             new Promise<SoundInstance>((resolve, reject) => {
                 this.created().then(() => {
                     this._context.assetManager.SoundLoaded(soundAssetId).then(() => {
+
+                        this.context.internal.protocol.sendPayload(
+                            {
+                                type: 'play-sound',
+                                actorId: this.id,
+                                soundAssetId,
+                                startTimeOffset
+                            } as PlaySound);
                         resolve();
                     }).catch((reason: any) => {
                         log.error('app', `Failed PlaySound on actor ${this.id}. ${(reason || '').toString()}`.trim());

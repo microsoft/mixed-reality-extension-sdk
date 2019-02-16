@@ -43,6 +43,7 @@ export type PayloadType
     | 'object-spawned'
     | 'operation-result'
     | 'perform-action'
+    | 'play-sound'
     | 'rigidbody-add-force'
     | 'rigidbody-add-force-at-position'
     | 'rigidbody-add-relative-torque'
@@ -357,6 +358,17 @@ export type SetAnimationState = Payload & {
 export type SyncAnimations = Payload & {
     type: 'sync-animations';
     animationStates: SetAnimationState[];
+};
+
+/**
+ * @hidden
+ * App to engine. Starts playing a sound.
+ */
+export type PlaySound = Payload & {
+    type: 'play-sound';
+    actorId: string;
+    soundAssetId: string;
+    startTimeOffset: number;
 };
 
 /**

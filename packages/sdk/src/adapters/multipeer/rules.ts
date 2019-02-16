@@ -755,6 +755,17 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
     },
 
     // ========================================================================
+    'play-sound': {
+        ...DefaultRule,
+        synchronization: {
+            stage: 'create-animations',
+            before: 'ignore',
+            during: 'queue',
+            after: 'allow'
+        }
+    },
+
+    // ========================================================================
     'rigidbody-add-force': {
         ...DefaultRule,
         synchronization: {

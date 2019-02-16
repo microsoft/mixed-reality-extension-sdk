@@ -48,7 +48,7 @@ export default class SoundTest extends Test {
         text.text.contents = "Preloading Sound";
 
         const soundAssetPromise = this.app.context.assetManager.loadSoundAsset(
-            'sounds', `${this.baseUrl}/testsound.wav`,
+            'sounds', `${this.baseUrl}/music.mod`,
             {
                 looping: true
             });
