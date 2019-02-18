@@ -7,14 +7,14 @@
  * Flags to constrain rigid body motion.
  */
 export enum RigidBodyConstraints {
-    None = 'None',
-    FreezePositionX = 'FreezePositionX',
-    FreezePositionY = 'FreezePositionY',
-    FreezePositionZ = 'FreezePositionZ',
-    FreezePosition = 'FreezePosition',
-    FreezeRotationX = 'FreezeRotationX',
-    FreezeRotationY = 'FreezeRotationY',
-    FreezeRotationZ = 'FreezeRotationZ',
-    FreezeRotation = 'FreezeRotation',
-    FreezeAll = 'FreezeAll',
+    None = 'none',
+    FreezePositionX = 'freeze-position-x',
+    FreezePositionY = 'freeze-position-y',
+    FreezePositionZ = 'freeze-position-z',
+    FreezePosition = 'freeze-position',
+    FreezeRotationX = 'freeze-rotation-x',
+    FreezeRotationY = 'freeze-rotation-y',
+    FreezeRotationZ = 'freeze-rotation-z',
+    FreezeRotation = 'freeze-rotation',
+    FreezeAll = 'freeze-all',
 }

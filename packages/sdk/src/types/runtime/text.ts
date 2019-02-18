@@ -6,26 +6,26 @@
 import { Color3, Color3Like } from '../..';
 
 export enum TextAnchorLocation {
-    TopLeft = 'TopLeft',
-    TopCenter = 'TopCenter',
-    TopRight = 'TopRight',
-    MiddleLeft = 'MiddleLeft',
-    MiddleCenter = 'MiddleCenter',
-    MiddleRight = 'MiddleRight',
-    BottomLeft = 'BottomLeft',
-    BottomCenter = 'BottomCenter',
-    BottomRight = 'BottomRight',
+    TopLeft = 'top-left',
+    TopCenter = 'top-center',
+    TopRight = 'top-right',
+    MiddleLeft = 'middle-left',
+    MiddleCenter = 'middle-center',
+    MiddleRight = 'middle-right',
+    BottomLeft = 'bottom-left',
+    BottomCenter = 'bottom-center',
+    BottomRight = 'bottom-right',
 }
 
 export enum TextJustify {
-    Left = 'Left',
-    Center = 'Center',
-    Right = 'Right',
+    Left = 'left',
+    Center = 'center',
+    Right = 'right',
 }
 
 export enum TextFontFamily {
-    Serif = 'Serif',
-    SansSerif = 'SansSerif',
+    Serif = 'serif',
+    SansSerif = 'sans-serif',
 }
 
 export interface TextLike {

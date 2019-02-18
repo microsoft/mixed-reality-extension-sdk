@@ -34,16 +34,16 @@ export interface MaterialLike {
  */
 export enum AlphaMode {
     /** The object is rendered opaque, and transparency info is discarded. */
-    Opaque = 'Opaque',
+    Opaque = 'opaque',
     /**
      * Any parts with alpha above a certain cutoff ([[Material.alphaCutoff]])
      * will be rendered solid. Everything else is fully transparent.
      */
-    Mask = 'Mask',
+    Mask = 'mask',
     /**
      * A pixel's transparency is directly proportional to its alpha value.
      */
-    Blend = 'Blend'
+    Blend = 'blend'
 }
 
 /**

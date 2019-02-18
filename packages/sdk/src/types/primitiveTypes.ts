@@ -49,14 +49,14 @@ export enum PrimitiveShape {
      * [[PrimitiveDefinition.uSegments]], and vertical segment count [[PrimitiveDefinition.vSegments]], with normals
      * pointed inward, centered at the origin.
      */
-    InnerSphere = 'innersphere'
+    InnerSphere = 'inner-sphere'
 }
 
 /**
  * The size, shape, and description of a primitive.
  */
 export interface PrimitiveDefinition {
-
+    // TODO: Make this a discriminated union type.
     /**
      * The general shape of the defined primitive.
      */
