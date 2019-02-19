@@ -9,7 +9,7 @@ import { PrimitiveDefinition } from '../../primitiveTypes';
 import { ActorLike, ColliderType, LightLike, TextLike, TransformLike, UserLike } from '../../runtime';
 import { ActionState, BehaviorType } from '../../runtime/behaviors';
 import { OperatingModel } from '../operatingModel';
-import { SubscriptionOwnerType, SubscriptionType } from '../subscriptionType';
+import { SubscriptionType } from '../subscriptionType';
 
 /**
  * @hidden
@@ -323,7 +323,6 @@ export type SetBehavior = Payload & {
 export type UpdateSubscriptions = Payload & {
     type: 'update-subscriptions';
     id: string;
-    ownerType: SubscriptionOwnerType;
     adds: SubscriptionType[];
     removes: SubscriptionType[];
 };

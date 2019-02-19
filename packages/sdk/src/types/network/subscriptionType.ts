@@ -8,8 +8,3 @@
  * receive updates when corresponding changes occur on the host.
  */
 export type SubscriptionType = 'transform' | 'rigidbody' | 'collider';
-
-/**
- * The kinds of objects that can specified when subscribing (obsolete now).
- */
-export type SubscriptionOwnerType = 'actor' | 'user';

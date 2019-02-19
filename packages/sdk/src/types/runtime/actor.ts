@@ -417,7 +417,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
         const removes = options.removes ? Array.isArray(options.removes) ? options.removes : [options.removes] : [];
         this._subscriptions = this._subscriptions.filter(subscription => removes.indexOf(subscription) < 0);
         this._subscriptions.push(...adds);
-        this.context.internal.updateSubscriptions(this.id, 'actor', options);
+        this.context.internal.updateSubscriptions(this.id, options);
     }
 
     /**

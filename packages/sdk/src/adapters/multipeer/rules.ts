@@ -954,17 +954,15 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
                 session: Session,
                 message: Message<Payloads.UpdateSubscriptions>
             ) => {
-                if (message.payload.ownerType === 'actor') {
-                    const syncActor = session.actorSet[message.payload.id];
-                    if (syncActor) {
-                        syncActor.created.message.payload.actor.subscriptions =
-                            (syncActor.created.message.payload.actor.subscriptions || []).filter(
-                                subscription => message.payload.removes.indexOf(subscription) < 0);
-                        syncActor.created.message.payload.actor.subscriptions.push(
-                            ...message.payload.adds);
-                    }
-                    return message;
+                const syncActor = session.actorSet[message.payload.id];
+                if (syncActor) {
+                    syncActor.created.message.payload.actor.subscriptions =
+                        (syncActor.created.message.payload.actor.subscriptions || []).filter(
+                            subscription => message.payload.removes.indexOf(subscription) < 0);
+                    syncActor.created.message.payload.actor.subscriptions.push(
+                        ...message.payload.adds);
                 }
+                return message;
             }
         }
     },
