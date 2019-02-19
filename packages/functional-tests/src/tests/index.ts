@@ -4,8 +4,9 @@
  */
 import { TestFactory } from '../test';
 
-import AltspaceVRLibraryTest from './altspacevr-library-test';
-/*import AltspaceVRVideoTest from './altspacevr-video-test';
+import GltfGenTest from './gltf-gen-test';
+/*import AltspaceVRLibraryTest from './altspacevr-library-test';
+import AltspaceVRVideoTest from './altspacevr-video-test';
 import AssetEarlyAssignmentTest from './asset-early-assignment-test';
 import AssetMutabilityTest from './asset-mutability-test';
 import AssetPreloadTest from './asset-preload-test';
@@ -28,8 +29,10 @@ import UserTest from './user-test';*/
  * *** KEEP LIST SORTED ***
  */
 export default {
-    'altspacevr-library-test': (...args) => new AltspaceVRLibraryTest(...args),
-    /*'altspacevr-video-test': (): Test => new AltspaceVRVideoTest(this, this.baseUrl),
+    'gltf-gen-test': (...args) => new GltfGenTest(...args),
+    'other-test': (...args) => new GltfGenTest(...args),
+    /*'altspacevr-library-test': (...args) => new AltspaceVRLibraryTest(...args),
+    'altspacevr-video-test': (): Test => new AltspaceVRVideoTest(this, this.baseUrl),
     'asset-early-assignment-test': (): Test => new AssetEarlyAssignmentTest(this, this.baseUrl),
     'asset-mutability-test': (user: MRESDK.User): Test => new AssetMutabilityTest(this, this.baseUrl, user),
     'asset-preload-test': (user: MRESDK.User): Test => new AssetPreloadTest(this, this.baseUrl, user),

@@ -3,7 +3,7 @@
  * Licensed under the MIT License.
  */
 
-import { User } from '@microsoft/mixed-reality-extension-sdk';
+import { Actor, User } from '@microsoft/mixed-reality-extension-sdk';
 
 import App from './app';
 
