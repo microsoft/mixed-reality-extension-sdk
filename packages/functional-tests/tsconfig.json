@@ -7,7 +7,7 @@
     "./src/utils/delay.ts",
     "./src/utils/destroyActors.ts",
     "./src/tests/index.ts",
-    "./src/tests/altspacevr-library-test.ts"
+    "./src/tests/gltf-gen-test.ts"
   ],
   /*"include": [
     "./src"
