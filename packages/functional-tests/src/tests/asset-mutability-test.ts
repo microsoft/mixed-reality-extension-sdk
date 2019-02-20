@@ -5,17 +5,13 @@
 
 import * as GltfGen from '@microsoft/gltf-gen';
 import * as MRESDK from '@microsoft/mixed-reality-extension-sdk';
-import App from '../app';
+
 import Server from '../server';
+import { Test } from '../test';
 import delay from '../utils/delay';
-import destroyActors from '../utils/destroyActors';
-import Test from '../test';
 
 export default class AssetMutabilityTest extends Test {
-
-    constructor(app: App, private baseUrl: string, private user: MRESDK.User) {
-        super(app);
-    }
+    public expectedResultDescription = "Animate a cube's color and texture";
 
     public async run(): Promise<boolean> {
 
@@ -38,15 +34,20 @@ export default class AssetMutabilityTest extends Test {
             }
         });
 
-        for (let i = 0; i < 64; i++) {
+        let direction = 1;
+        let i = 0;
+        while (!this.stopped) {
             mat.color.copyFrom(this.fromHSV(i / 32, 1, 1));
             mat.mainTextureOffset.set(i / 32, i / 32);
             mat.mainTextureScale.set(1 - i / 32, 1 - i / 32);
 
+            i += direction;
+            if (i === 0 || i === 64) {
+                direction *= -1;
+            }
             await delay(100);
         }
 
-        destroyActors([box]);
         return true;
     }
 

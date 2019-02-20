@@ -7,13 +7,9 @@ import * as MRESDK from '@microsoft/mixed-reality-extension-sdk';
 import App from '../app';
 import delay from '../utils/delay';
 import destroyActors from '../utils/destroyActors';
-import Test from '../test';
+import { Test } from '../test';
 
 export default class ClockSyncTest extends Test {
-
-    constructor(app: App, private baseUrl: string) {
-        super(app);
-    }
 
     public async run(): Promise<boolean> {
         let success = true;

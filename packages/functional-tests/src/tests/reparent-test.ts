@@ -6,15 +6,11 @@
 import * as MRESDK from '@microsoft/mixed-reality-extension-sdk';
 import App from '../app';
 import delay from '../utils/delay';
-import Test from '../test';
+import { Test } from '../test';
 
 export default class ReparentTest extends Test {
     private sceneRoot: MRESDK.Actor;
     private running = true;
-
-    constructor(app: App) {
-        super(app);
-    }
 
     public async run(): Promise<boolean> {
         this.sceneRoot = MRESDK.Actor.CreateEmpty(this.app.context).value;

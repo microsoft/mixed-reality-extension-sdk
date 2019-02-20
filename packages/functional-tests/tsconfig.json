@@ -1,18 +1,8 @@
 {
   "extends": "../tsconfig.packages.json",
-  "files": [
-    "./src/server.ts",
-    "./src/app.ts",
-    "./src/test.ts",
-    "./src/utils/delay.ts",
-    "./src/utils/destroyActors.ts",
-    "./src/tests/index.ts",
-    "./src/tests/gltf-gen-test.ts",
-    "./src/tests/failure-test.ts"
-  ],
-  /*"include": [
+  "include": [
     "./src"
-  ],*/
+  ],
   "compilerOptions": {
     "importHelpers": true,
     "declarationMap": false,

@@ -6,108 +6,118 @@
 import * as GltfGen from '@microsoft/gltf-gen';
 import * as MRESDK from '@microsoft/mixed-reality-extension-sdk';
 
-import App from '../app';
 import Server from '../server';
+import { Test } from '../test';
 import delay from '../utils/delay';
 import destroyActors from '../utils/destroyActors';
 
-import Test from '../test';
-
 export default class AssetPreloadTest extends Test {
+    public expectedResultDescription = "Two meshes juggle their materials and textures. Click to advance.";
+    private state = 0;
 
-    constructor(app: App, private baseUrl: string, private user: MRESDK.User) {
-        super(app);
+    private head: MRESDK.Actor;
+    private sphere: MRESDK.Actor;
+
+    private monkeyPrefab: MRESDK.Prefab;
+    private monkeyMat: MRESDK.Material;
+    private uvgridMat: MRESDK.Material;
+    private uvgridTex: MRESDK.Texture;
+
+    private static AssignMat(actor: MRESDK.Actor, mat: MRESDK.Material) {
+        actor.material = mat;
+        actor.children.forEach(c => this.AssignMat(c, mat));
     }
 
     public async run(): Promise<boolean> {
-        const label = await MRESDK.Actor.CreateEmpty(this.app.context, {
-            actor: {
-                transform: {
-                    position: { x: 0, y: 2, z: 0 }
-                },
-                text: {
-                    contents: 'Initialized',
-                    height: 0.3,
-                    anchor: MRESDK.TextAnchorLocation.BottomCenter
-                }
-            }
-        });
-        label.lookAt(this.user, MRESDK.LookAtMode.TargetXY);
 
-        await delay(1000);
-
-        label.text.contents = 'Preloading assets';
+        this.app.setOverrideText("Preloading assets");
         const [monkey, uvgrid] = await Promise.all([
             this.app.context.assetManager.loadGltf('monkey', this.baseUrl + '/monkey.glb'),
             this.app.context.assetManager.loadGltf('uvgrid', this.generateMaterial())
         ]);
-        label.text.contents = "Assets preloaded:" +
+        this.app.setOverrideText("Assets preloaded:" +
             `${monkey.prefabs.count + uvgrid.prefabs.count} prefabs, ` +
             `${monkey.materials.count + uvgrid.materials.count} materials, ` +
-            `${monkey.textures.count + uvgrid.textures.count} textures`;
+            `${monkey.textures.count + uvgrid.textures.count} textures`);
         await delay(1000);
 
-        const monkeyPrefab = monkey.prefabs.byIndex(0);
-        const monkeyMat = monkey.materials.byIndex(0);
-        const uvgridMat = uvgrid.materials.byIndex(0);
-        const uvgridTex = uvgrid.textures.byIndex(0);
+        this.monkeyPrefab = monkey.prefabs.byIndex(0);
+        this.monkeyMat = monkey.materials.byIndex(0);
+        this.uvgridMat = uvgrid.materials.byIndex(0);
+        this.uvgridTex = uvgrid.textures.byIndex(0);
 
-        label.text.contents = 'Instantiating prefabs';
-        const head = await MRESDK.Actor.CreateFromPrefab(this.app.context, {
-            prefabId: monkeyPrefab.id,
+        await this.cycleState();
+        await this.stoppedAsync();
+        return true;
+    }
+
+    private async cycleState() {
+        switch (this.state) {
+            case 0:
+                if (this.head) { this.head.destroy(); }
+                if (this.sphere) { this.sphere.destroy(); }
+                if (this.head || this.sphere) { await delay(1000); }
+
+                this.app.setOverrideText("Instantiating prefabs");
+                await this.setup();
+                this.app.setOverrideText("Prefab instantiated");
+                break;
+
+            case 1:
+                AssetPreloadTest.AssignMat(this.head, this.uvgridMat);
+                AssetPreloadTest.AssignMat(this.sphere, this.monkeyMat);
+                this.app.setOverrideText("Materials swapped");
+                break;
+
+            case 2:
+                this.monkeyMat.mainTexture = this.uvgridTex;
+                this.uvgridMat.mainTexture = null;
+                this.app.setOverrideText("Textures swapped");
+                break;
+
+            case 3:
+                this.monkeyMat.mainTexture = null;
+                this.uvgridMat.mainTexture = null;
+                this.app.setOverrideText("Textures cleared");
+                break;
+
+            case 4:
+                AssetPreloadTest.AssignMat(this.head, null);
+                AssetPreloadTest.AssignMat(this.sphere, null);
+                this.app.setOverrideText("Materials cleared");
+                break;
+            default:
+                throw new Error("How did we get here?");
+        }
+        this.state = (this.state + 1) % 5;
+    }
+
+    private async setup() {
+        this.head = await MRESDK.Actor.CreateFromPrefab(this.app.context, {
+            prefabId: this.monkeyPrefab.id,
             actor: {
                 transform: {
                     position: { x: -1, y: 1, z: 0 }
                 }
             }
         });
-        const sphere = await MRESDK.Actor.CreatePrimitive(this.app.context, {
+        this.sphere = await MRESDK.Actor.CreatePrimitive(this.app.context, {
             definition: {
                 shape: MRESDK.PrimitiveShape.Sphere,
                 radius: 1
             },
             actor: {
-                materialId: uvgridMat.id,
+                materialId: this.uvgridMat.id,
                 transform: {
                     position: { x: 1, y: 1, z: 0 }
                 }
             }
         });
-        label.text.contents = 'Prefab instantiated';
 
-        await delay(3000);
-
-        function assignMat(actor: MRESDK.Actor, mat: MRESDK.Material) {
-            actor.material = mat;
-            actor.children.forEach(c => assignMat(c, mat));
-        }
-
-        assignMat(head, uvgridMat);
-        assignMat(sphere, monkeyMat);
-        label.text.contents = 'Materials swapped';
-
-        await delay(3000);
-
-        monkeyMat.mainTexture = uvgridTex;
-        uvgridMat.mainTexture = null;
-        label.text.contents = 'Textures swapped';
-
-        await delay(3000);
-
-        monkeyMat.mainTexture = null;
-        uvgridMat.mainTexture = null;
-        label.text.contents = 'Textures cleared';
-
-        await delay(3000);
-
-        assignMat(head, null);
-        assignMat(sphere, null);
-        label.text.contents = 'Materials cleared';
-
-        await delay(3000);
-
-        destroyActors([head, sphere, label]);
-        return true;
+        this.head.setBehavior(MRESDK.ButtonBehavior)
+            .onClick("pressed", () => this.cycleState());
+        this.sphere.setBehavior(MRESDK.ButtonBehavior)
+            .onClick("pressed", () => this.cycleState());
     }
 
     private generateMaterial(): string {

@@ -43,7 +43,7 @@ export default class App {
             this._activeTestName = val;
             this.setOverrideText(null);
         } else {
-            this.stopTest().catch(() => {});
+            this.stopTest().catch(() => { });
         }
     }
 
@@ -72,7 +72,7 @@ export default class App {
         if (user === this.firstUser) {
             this.firstUser = this.context.users[0] || null;
             if (!this.firstUser) {
-                this.stopTest().catch(() => {});
+                this.stopTest().catch(() => { });
             }
         }
     }
@@ -80,16 +80,19 @@ export default class App {
     private runTest(user: MRE.User) {
         // finish setting up menu
         this.setupPromise
-        // halt the previous test if there is one
-        .then(() => this.activeTest !== null ? this.stopTest() : Promise.resolve())
-        // start the new test, and save the stop handle
-        .then(() => this.runPromise = this.runTestHelper(user))
-        // and log unexpected errors
-        .catch(err => console.log(err));
+            // halt the previous test if there is one
+            .then(() => this.activeTest !== null ? this.stopTest() : Promise.resolve())
+            // start the new test, and save the stop handle
+            .then(() => {
+                this.playPauseButton.material.color.set(1, 0, 0, 1);
+                return this.runPromise = this.runTestHelper(user);
+            })
+            .then(() => { this.playPauseButton.material.color.set(0, 1, 0, 1); })
+            // and log unexpected errors
+            .catch(err => console.log(err));
     }
 
     private async runTestHelper(user: MRE.User) {
-        this.playPauseButton.material.color.set(1, 0, 0, 1);
         this.rpc.send('functional-test:test-starting', this.activeTestName);
         console.log(`Test starting: '${this.activeTestName}'`);
 
@@ -126,7 +129,6 @@ export default class App {
     }
 
     private async stopTest() {
-        this.playPauseButton.material.color.set(0, 1, 0, 1);
         if (this.activeTest !== null) {
             this.activeTest.stop();
             await this.runPromise;
@@ -245,7 +247,7 @@ export default class App {
                 if (this.activeTest === null) {
                     this.runTest(this.context.user(userId));
                 } else {
-                    this.stopTest().catch(() => {});
+                    this.stopTest().catch(() => { });
                 }
             });
 

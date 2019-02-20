@@ -7,7 +7,7 @@ import * as MRESDK from '@microsoft/mixed-reality-extension-sdk';
 import App from '../app';
 import delay from '../utils/delay';
 import destroyActors from '../utils/destroyActors';
-import Test from '../test';
+import { Test } from '../test';
 
 const options = {
     enabled: [true, false],
@@ -33,10 +33,6 @@ export default class TextTest extends Test {
     private justify: MRESDK.Actor;
     private font: MRESDK.Actor;
     private color: MRESDK.Actor;
-
-    constructor(app: App) {
-        super(app);
-    }
 
     public async run(): Promise<boolean> {
         let actors: MRESDK.Actor[] = [];
