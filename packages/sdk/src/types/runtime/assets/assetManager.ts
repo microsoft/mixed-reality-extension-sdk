@@ -77,6 +77,7 @@ export class AssetManager {
 
     private sendCreateAsset<T extends Asset>(asset: T): ForwardPromise<T> {
         this.manualGroup.add(asset);
+        this._assets[asset.id] = asset;
 
         const promise = this.sendLoadAssetsPayload({
             type: 'create-asset',
