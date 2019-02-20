@@ -4,11 +4,11 @@
  */
 
 import * as MRESDK from '@microsoft/mixed-reality-extension-sdk';
-import App from '../app';
-import delay from '../utils/delay';
+
 import { Test } from '../test';
 
 export default class GltfConcurrencyTest extends Test {
+    public expectedResultDescription = "Cesium man, a bottle, and maybe a gearbox.";
 
     public async run(): Promise<boolean> {
         const runnerPromise = MRESDK.Actor.CreateFromGltf(this.app.context, {
@@ -51,8 +51,7 @@ export default class GltfConcurrencyTest extends Test {
             prefabId: bottleAsset.prefabs.byIndex(0).id
         });
 
-        await delay(10000);
-
+        await this.stoppedAsync();
         return true;
     }
 }

@@ -4,40 +4,14 @@
  */
 
 import * as MRESDK from '@microsoft/mixed-reality-extension-sdk';
-import App from '../app';
-import delay from '../utils/delay';
-import destroyActors from '../utils/destroyActors';
+
 import { Test } from '../test';
 
 export default class ClockSyncTest extends Test {
-
+    public expectedResultDescription = "Digital clock face from animating text strips. Click to stop."
     public async run(): Promise<boolean> {
-        let success = true;
-
-        success = success && await this.runClockSyncTest();
-
-        return success;
-    }
-
-    public async runClockSyncTest(): Promise<boolean> {
         // Make a root object.
         const tester = MRESDK.Actor.CreateEmpty(this.app.context, {});
-
-        const textPromise = MRESDK.Actor.CreateEmpty(this.app.context, {
-            actor: {
-                name: 'label',
-                parentId: tester.value.id,
-                transform: {
-                    position: { x: 0, y: 2.5, z: -0.5 }
-                },
-                text: {
-                    contents: "A clock driven by looping animations. Click to exit test",
-                    anchor: MRESDK.TextAnchorLocation.MiddleCenter,
-                    color: { r: 30 / 255, g: 206 / 255, b: 213 / 255 },
-                    height: 0.3
-                }
-            }
-        });
 
         const textScale = 0.15;
         const boxYPosition = 20;
@@ -51,7 +25,6 @@ export default class ClockSyncTest extends Test {
                 shape: MRESDK.PrimitiveShape.Box,
                 dimensions: { x: boxWidth, y: boxHeight, z: 0.2 }
             },
-            addCollider: true,
             actor: {
                 parentId: tester.value.id,
                 transform: {
@@ -64,7 +37,6 @@ export default class ClockSyncTest extends Test {
                 shape: MRESDK.PrimitiveShape.Box,
                 dimensions: { x: boxWidth, y: boxHeight, z: 0.2 }
             },
-            addCollider: true,
             actor: {
                 parentId: tester.value.id,
                 transform: {
@@ -87,6 +59,7 @@ export default class ClockSyncTest extends Test {
 
         // Make a handy array of all the digits.
         const actors = [
+            tester, topBox, bottomBox,
             meshHundredths, meshTenths, meshSeconds, mesh10Seconds, meshMinutes, mesh10Minutes, meshHours, mesh10Hours];
 
         // Build animations.
@@ -108,28 +81,10 @@ export default class ClockSyncTest extends Test {
         // Start the animations.
         actors.forEach(actor => actor.value.enableAnimation('anim'));
 
-        // Wait for some seconds.
-        await new Promise<void>((resolve) => {
-            const topBoxBehavior = topBox.value.setBehavior(MRESDK.ButtonBehavior);
-            // When clicked, do a 360 sideways.
-            topBoxBehavior.onClick('pressed', (userId: string) => {
-                resolve();
-            });
-            const bottomBoxBehavior = bottomBox.value.setBehavior(MRESDK.ButtonBehavior);
-            // When clicked, do a 360 sideways.
-            bottomBoxBehavior.onClick('pressed', (userId: string) => {
-                resolve();
-            });
-        });
+        await this.stoppedAsync();
 
         // Stop the animations.
         actors.forEach(actor => actor.value.disableAnimation('anim'));
-
-        // Wait a bit.
-        await delay(1 * 1000);
-
-        // Destroy the actors we created.
-        destroyActors(tester.value);
 
         return true;
     }
