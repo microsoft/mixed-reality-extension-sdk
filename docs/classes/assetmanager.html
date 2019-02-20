@@ -66,7 +66,7 @@
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
 						<p>A per-context singleton that manages all of an app&#39;s assets. Create a new asset group
-							by calling a load method (e.g. <a href="assetmanager.html#loadgltf">loadGltf</a>), view the group&#39;s assets via [[group]],
+							by calling a load method (e.g. <a href="assetmanager.html#loadgltf">loadGltf</a>), view the group&#39;s assets via <a href="assetmanager.html#groups">groups</a>,
 						and use the assets by ID on actors (e.g. <a href="actor.html#createfromprefab">Actor.CreateFromPrefab</a>).</p>
 					</div>
 				</div>
@@ -94,13 +94,17 @@
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="assetmanager.html#assets" class="tsd-kind-icon">assets</a></li>
 								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="assetmanager.html#groups" class="tsd-kind-icon">groups</a></li>
+								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="assetmanager.html#manualgroup" class="tsd-kind-icon">manual<wbr>Group</a></li>
+								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="assetmanager.html#ready" class="tsd-kind-icon">ready</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="assetmanager.html#cleanup" class="tsd-kind-icon">cleanup</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="assetmanager.html#creatematerial" class="tsd-kind-icon">create<wbr>Material</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="assetmanager.html#createtexture" class="tsd-kind-icon">create<wbr>Texture</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="assetmanager.html#loadgltf" class="tsd-kind-icon">load<wbr>Gltf</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="assetmanager.html#ready" class="tsd-kind-icon">ready</a></li>
 							</ul>
 						</section>
 					</div>
@@ -114,7 +118,7 @@
 					<div class="tsd-signature tsd-kind-icon">context<span class="tsd-signature-symbol">:</span> <a href="context.html" class="tsd-signature-type">Context</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/27da6fd/packages/sdk/src/types/runtime/assets/assetManager.ts#L23">types/runtime/assets/assetManager.ts:23</a></li>
+							<li>Defined in types/runtime/assets/assetManager.ts:29</li>
 						</ul>
 					</aside>
 				</section>
@@ -131,7 +135,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/27da6fd/packages/sdk/src/types/runtime/assets/assetManager.ts#L29">types/runtime/assets/assetManager.ts:29</a></li>
+									<li>Defined in types/runtime/assets/assetManager.ts:43</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -155,7 +159,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/27da6fd/packages/sdk/src/types/runtime/assets/assetManager.ts#L26">types/runtime/assets/assetManager.ts:26</a></li>
+									<li>Defined in types/runtime/assets/assetManager.ts:37</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -169,20 +173,155 @@
 						</li>
 					</ul>
 				</section>
-			</section>
-			<section class="tsd-panel-group tsd-member-group ">
-				<h2>Methods</h2>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="loadgltf" class="tsd-anchor"></a>
-					<h3>load<wbr>Gltf</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">load<wbr>Gltf<span class="tsd-signature-symbol">(</span>groupName<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, url<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, colliderType<span class="tsd-signature-symbol">?: </span><a href="../index.html#createcollidertype" class="tsd-signature-type">CreateColliderType</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="assetgroup.html" class="tsd-signature-type">AssetGroup</a><span class="tsd-signature-symbol">&gt;</span></li>
+				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
+					<a name="manualgroup" class="tsd-anchor"></a>
+					<h3>manual<wbr>Group</h3>
+					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> manualGroup<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="assetgroup.html" class="tsd-signature-type">AssetGroup</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/27da6fd/packages/sdk/src/types/runtime/assets/assetManager.ts#L61">types/runtime/assets/assetManager.ts:61</a></li>
+									<li>Defined in types/runtime/assets/assetManager.ts:40</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Get the group of individually-created assets</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <a href="assetgroup.html" class="tsd-signature-type">AssetGroup</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
+					<a name="ready" class="tsd-anchor"></a>
+					<h3>ready</h3>
+					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> ready<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in types/runtime/assets/assetManager.ts:50</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<p>A promise that resolves when all pending asset load requests have been
+								settled, successfully or otherwise. Listen to the individual load promises to
+							catch failures.</p>
+						</li>
+					</ul>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Methods</h2>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="cleanup" class="tsd-anchor"></a>
+					<h3>cleanup</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">cleanup<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in types/runtime/assets/assetManager.ts:33</li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="creatematerial" class="tsd-anchor"></a>
+					<h3>create<wbr>Material</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">create<wbr>Material<span class="tsd-signature-symbol">(</span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, definition<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/materiallike.html" class="tsd-signature-type">MaterialLike</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/forwardpromise.html" class="tsd-signature-type">ForwardPromise</a><span class="tsd-signature-symbol">&lt;</span><a href="material.html" class="tsd-signature-type">Material</a><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in types/runtime/assets/assetManager.ts:57</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Generate a new material</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>name: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The new material&#39;s name</p>
+									</div>
+								</li>
+								<li>
+									<h5>definition: <span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/materiallike.html" class="tsd-signature-type">MaterialLike</a><span class="tsd-signature-symbol">&gt;</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The initial material properties</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="../interfaces/forwardpromise.html" class="tsd-signature-type">ForwardPromise</a><span class="tsd-signature-symbol">&lt;</span><a href="material.html" class="tsd-signature-type">Material</a><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="createtexture" class="tsd-anchor"></a>
+					<h3>create<wbr>Texture</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">create<wbr>Texture<span class="tsd-signature-symbol">(</span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, definition<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/texturelike.html" class="tsd-signature-type">TextureLike</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/forwardpromise.html" class="tsd-signature-type">ForwardPromise</a><span class="tsd-signature-symbol">&lt;</span><a href="texture.html" class="tsd-signature-type">Texture</a><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in types/runtime/assets/assetManager.ts:70</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Generate a new texture</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>name: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The new texture&#39;s name</p>
+									</div>
+								</li>
+								<li>
+									<h5>definition: <span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/texturelike.html" class="tsd-signature-type">TextureLike</a><span class="tsd-signature-symbol">&gt;</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The initial texture properties. The <code>uri</code> property is required.</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="../interfaces/forwardpromise.html" class="tsd-signature-type">ForwardPromise</a><span class="tsd-signature-symbol">&lt;</span><a href="texture.html" class="tsd-signature-type">Texture</a><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="loadgltf" class="tsd-anchor"></a>
+					<h3>load<wbr>Gltf</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">load<wbr>Gltf<span class="tsd-signature-symbol">(</span>groupName<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, uri<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, colliderType<span class="tsd-signature-symbol">?: </span><a href="../index.html#createcollidertype" class="tsd-signature-type">CreateColliderType</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="assetgroup.html" class="tsd-signature-type">AssetGroup</a><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in types/runtime/assets/assetManager.ts:102</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -199,9 +338,9 @@
 									</div>
 								</li>
 								<li>
-									<h5>url: <span class="tsd-signature-type">string</span></h5>
+									<h5>uri: <span class="tsd-signature-type">string</span></h5>
 									<div class="tsd-comment tsd-typography">
-										<p>The URL to a glTF model.</p>
+										<p>The URI to a glTF model.</p>
 									</div>
 								</li>
 								<li>
@@ -210,27 +349,6 @@
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="assetgroup.html" class="tsd-signature-type">AssetGroup</a><span class="tsd-signature-symbol">&gt;</span></h4>
 							<p>The promise of a new asset group.</p>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="ready" class="tsd-anchor"></a>
-					<h3>ready</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">ready<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/27da6fd/packages/sdk/src/types/runtime/assets/assetManager.ts#L35">types/runtime/assets/assetManager.ts:35</a></li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-							</div>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
-							<p>A promise that resolves when all pending asset load requests have been
-							settled (success or failure).</p>
 						</li>
 					</ul>
 				</section>
@@ -260,11 +378,23 @@
 							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
 								<a href="assetmanager.html#groups" class="tsd-kind-icon">groups</a>
 							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="assetmanager.html#loadgltf" class="tsd-kind-icon">load<wbr>Gltf</a>
+							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
+								<a href="assetmanager.html#manualgroup" class="tsd-kind-icon">manual<wbr>Group</a>
+							</li>
+							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
+								<a href="assetmanager.html#ready" class="tsd-kind-icon">ready</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="assetmanager.html#ready" class="tsd-kind-icon">ready</a>
+								<a href="assetmanager.html#cleanup" class="tsd-kind-icon">cleanup</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="assetmanager.html#creatematerial" class="tsd-kind-icon">create<wbr>Material</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="assetmanager.html#createtexture" class="tsd-kind-icon">create<wbr>Texture</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="assetmanager.html#loadgltf" class="tsd-kind-icon">load<wbr>Gltf</a>
 							</li>
 						</ul>
 					</li>
