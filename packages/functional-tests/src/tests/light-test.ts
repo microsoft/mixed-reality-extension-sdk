@@ -5,17 +5,13 @@
 
 import * as MRESDK from '@microsoft/mixed-reality-extension-sdk';
 import App from '../app';
-import Test from '../test';
+import { Test } from '../test';
 
 // tslint:disable:no-string-literal
 
 export default class LightTest extends Test {
     private sceneRoot: MRESDK.Actor;
     private running = true;
-
-    constructor(app: App, private baseUrl: string) {
-        super(app);
-    }
 
     public async run() {
         this.sceneRoot = MRESDK.Actor.CreateEmpty(this.app.context).value;

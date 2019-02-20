@@ -6,13 +6,9 @@
 import * as MRESDK from '@microsoft/mixed-reality-extension-sdk';
 import App from '../app';
 import delay from '../utils/delay';
-import Test from '../test';
+import { Test } from '../test';
 
 export default class GltfConcurrencyTest extends Test {
-
-    constructor(app: App, private baseUrl: string) {
-        super(app);
-    }
 
     public async run(): Promise<boolean> {
         const runnerPromise = MRESDK.Actor.CreateFromGltf(this.app.context, {
@@ -25,8 +21,8 @@ export default class GltfConcurrencyTest extends Test {
             resourceUrl: 'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/GearboxAssy/glTF/GearboxAssy.gltf',
             actor: {
                 transform: {
-                    position: {x: 15, y: 0, z: 0},
-                    scale: {x: 0.1, y: 0.1, z: 0.1}
+                    position: { x: 15, y: 0, z: 0 },
+                    scale: { x: 0.1, y: 0.1, z: 0.1 }
                 }
             }
         });
