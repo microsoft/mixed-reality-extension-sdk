@@ -12,10 +12,13 @@ import destroyActors from './utils/destroyActors';
 
 const SuccessColor = MRE.Color3.Green();
 const FailureColor = MRE.Color3.Red();
-const NeutralColor = MRE.Color3.White();
+const NeutralColor = MRE.Color3.Yellow();
 
 /**
- * Functional Test Application.
+ * Functional Test Application. Takes query arguments to the websocket connection
+ * @param test - Initialize menu on a particular test
+ * @param autostart - Start the test immediately on user join
+ * @param nomenu - Do not spawn the controls
  */
 export default class App {
     private _rpc: MRERPC.ContextRPC;
@@ -60,7 +63,7 @@ export default class App {
         if (!this.firstUser) {
             this.firstUser = user;
             if (this.params.autorun !== undefined) {
-                this.runPromise = this.runTest(user);
+                this.runTest(user);
             }
         }
     }
@@ -68,9 +71,83 @@ export default class App {
     private userLeft(user: MRE.User) {
         if (user === this.firstUser) {
             this.firstUser = this.context.users[0] || null;
-            if (this.firstUser && this.params.autorun !== undefined) {
-                this.runPromise = this.runTest(user);
+            if (!this.firstUser) {
+                this.stopTest().catch(() => {});
             }
+        }
+    }
+
+    private runTest(user: MRE.User) {
+        // finish setting up menu
+        this.setupPromise
+        // halt the previous test if there is one
+        .then(() => this.activeTest !== null ? this.stopTest() : Promise.resolve())
+        // start the new test, and save the stop handle
+        .then(() => this.runPromise = this.runTestHelper(user))
+        // and log unexpected errors
+        .catch(err => console.log(err));
+    }
+
+    private async runTestHelper(user: MRE.User) {
+        this.playPauseButton.material.color.set(1, 0, 0, 1);
+        this.rpc.send('functional-test:test-starting', this.activeTestName);
+        console.log(`Test starting: '${this.activeTestName}'`);
+
+        const test = this.activeTest = Factories[this.activeTestName](this, this.baseUrl, user);
+        this.setOverrideText(test.expectedResultDescription);
+
+        this.rpc.send('functional-test:test-started', this.activeTestName);
+        console.log(`Test started: '${this.activeTestName}'`);
+
+        let success: boolean;
+        try {
+            success = await test.run();
+            if (!success) {
+                this.setOverrideText("Test Failed: '${testName}'", FailureColor);
+            }
+        } catch (e) {
+            console.log(e);
+            this.setOverrideText("Test Triggered Exception: " + e, FailureColor);
+            success = false;
+        }
+
+        console.log(`Test complete: '${this.activeTestName}'. Success: ${success}`);
+        this.rpc.send('functional-test:test-complete', this.activeTestName, success);
+        this.testResults[this.activeTestName] = success;
+        if (success) {
+            this.setOverrideText(null);
+        }
+
+        test.cleanup();
+
+        // Delete all actors
+        destroyActors(this.context.rootActors.filter(x => !this.menuActors.includes(x)));
+        this.context.assetManager.cleanup();
+    }
+
+    private async stopTest() {
+        this.playPauseButton.material.color.set(0, 1, 0, 1);
+        if (this.activeTest !== null) {
+            this.activeTest.stop();
+            await this.runPromise;
+            this.activeTest = null;
+            this.runPromise = null;
+        }
+    }
+
+    public setOverrideText(text: string, color: MRE.Color3 = NeutralColor): void {
+        if (text) {
+            this.contextLabel.text.color = color;
+            this.contextLabel.text.contents = text;
+        } else {
+            if (this.testResults[this.activeTestName] === true) {
+                this.contextLabel.text.color = SuccessColor;
+            } else if (this.testResults[this.activeTestName] === false) {
+                this.contextLabel.text.color = FailureColor;
+            } else {
+                this.contextLabel.text.color = NeutralColor;
+            }
+            this.contextLabel.text.contents = this.activeTestName;
         }
     }
 
@@ -85,7 +162,8 @@ export default class App {
                     contents: this.activeTestName,
                     height: 0.2,
                     anchor: MRE.TextAnchorLocation.MiddleCenter,
-                    justify: MRE.TextJustify.Center
+                    justify: MRE.TextJustify.Center,
+                    color: NeutralColor
                 },
                 transform: {
                     position: { y: 1 },
@@ -165,80 +243,12 @@ export default class App {
         this.playPauseButton.setBehavior(MRE.ButtonBehavior)
             .onClick("released", userId => {
                 if (this.activeTest === null) {
-                    this.runPromise = this.runTest(this.context.user(userId));
+                    this.runTest(this.context.user(userId));
                 } else {
                     this.stopTest().catch(() => {});
                 }
             });
 
         this.menuActors = [this.contextLabel, next, prev, this.playPauseButton];
-    }
-
-    private async runTest(user: MRE.User) {
-        await this.setupPromise;
-        if (this.activeTest !== null) {
-            await this.stopTest();
-        }
-
-        this.playPauseButton.material.color.set(1, 0, 0, 1);
-        this.rpc.send('functional-test:test-starting', this.activeTestName);
-        console.log(`Test starting: '${this.activeTestName}'`);
-
-        const test = this.activeTest = Factories[this.activeTestName](this, this.baseUrl, user);
-        this.setOverrideText(test.expectedResultDescription);
-
-        this.rpc.send('functional-test:test-started', this.activeTestName);
-        console.log(`Test started: '${this.activeTestName}'`);
-
-        let success: boolean;
-        try {
-            success = await test.run();
-            if (!success) {
-                this.setOverrideText("Test Failed: '${testName}'", FailureColor);
-            }
-        } catch (e) {
-            console.log(e);
-            this.setOverrideText("Test Triggered Exception: " + e, FailureColor);
-            success = false;
-        }
-
-        console.log(`Test complete: '${this.activeTestName}'. Success: ${success}`);
-        this.rpc.send('functional-test:test-complete', this.activeTestName, success);
-        this.testResults[this.activeTestName] = success;
-        if (success) {
-            this.setOverrideText(null);
-        }
-
-        test.cleanup();
-
-        // Delete all actors
-        destroyActors(this.context.rootActors.filter(x => !this.menuActors.includes(x)));
-        this.context.assetManager.cleanup();
-    }
-
-    private async stopTest() {
-        if (this.activeTest !== null) {
-            this.activeTest.stop();
-            await this.runPromise;
-            this.activeTest = null;
-            this.runPromise = null;
-        }
-        this.playPauseButton.material.color.set(0, 1, 0, 1);
-    }
-
-    private setOverrideText(text: string, color: MRE.Color3 = NeutralColor): void {
-        if (text) {
-            this.contextLabel.text.color = color;
-            this.contextLabel.text.contents = text;
-        } else {
-            if (this.testResults[this.activeTestName] === true) {
-                this.contextLabel.text.color = SuccessColor;
-            } else if (this.testResults[this.activeTestName] === false) {
-                this.contextLabel.text.color = FailureColor;
-            } else {
-                this.contextLabel.text.color = NeutralColor;
-            }
-            this.contextLabel.text.contents = this.activeTestName;
-        }
     }
 }
