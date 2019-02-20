@@ -107,7 +107,7 @@ export default class App {
             }
         } catch (e) {
             console.log(e);
-            this.setOverrideText("Test Triggered Exception: " + e, FailureColor);
+            this.setOverrideText("Test " + e, FailureColor);
             success = false;
         }
 

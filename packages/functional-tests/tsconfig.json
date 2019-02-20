@@ -7,7 +7,8 @@
     "./src/utils/delay.ts",
     "./src/utils/destroyActors.ts",
     "./src/tests/index.ts",
-    "./src/tests/gltf-gen-test.ts"
+    "./src/tests/gltf-gen-test.ts",
+    "./src/tests/failure-test.ts"
   ],
   /*"include": [
     "./src"
