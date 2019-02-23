@@ -151,6 +151,12 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
             targetName: 'transform',
             notifyChanged: (...path: string[]) => this.actorChanged(...path)
         });
+        // Actor patching: Observe the attachment for changed values.
+        observe({
+            target: this._attachment,
+            targetName: 'attachment',
+            notifyChanged: (...path: string[]) => this.actorChanged(...path)
+        });
     }
 
     /**
