@@ -8,7 +8,7 @@ export * from './behaviors';
 export * from './context';
 export * from './transform';
 export * from './user';
-// export * from './attachment';
+export * from './attachment';
 export * from './light';
 export * from './rigidbody';
 export * from './text';
