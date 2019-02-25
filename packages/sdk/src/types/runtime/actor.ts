@@ -5,6 +5,9 @@
 
 import events from 'events';
 import {
+    Attachment,
+    AttachmentLike,
+    AttachPoint,
     Collider,
     ColliderLike,
     CollisionData,
@@ -30,7 +33,7 @@ import { ZeroGuid } from '../../constants';
 import { log } from '../../log';
 import observe from '../../utils/observe';
 import readPath from '../../utils/readPath';
-import { createForwardPromise, ForwardPromise } from '../forwardPromise';
+import { ForwardPromise } from '../forwardPromise';
 import { InternalActor } from '../internal/actor';
 import { CollisionEventType, CreateColliderType } from '../network/payloads';
 import { SubscriptionType } from '../network/subscriptionType';
@@ -51,6 +54,7 @@ export interface ActorLike {
     rigidBody: Partial<RigidBodyLike>;
     collider: Partial<ColliderLike>;
     text: Partial<TextLike>;
+    attachment: Partial<AttachmentLike>;
     materialId: string;
 }
 
@@ -79,10 +83,11 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
     private _parentId: string;
     private _subscriptions: SubscriptionType[] = [];
     private _transform: Transform;
-    private _light?: Light;
-    private _rigidBody?: RigidBody;
-    private _collider?: Collider;
-    private _text?: Text;
+    private _light: Light;
+    private _rigidBody: RigidBody;
+    private _collider: Collider;
+    private _text: Text;
+    private _attachment: Attachment;
     private _materialId = ZeroGuid;
     // tslint:enable:variable-name
 
@@ -97,10 +102,12 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
     public set tag(value) { this._tag = value; this.actorChanged('tag'); }
     public get subscriptions() { return this._subscriptions; }
     public get transform() { return this._transform; }
+    public set transform(value) { this._transform.copy(value); }
     public get light() { return this._light; }
     public get rigidBody() { return this._rigidBody; }
     public get collider() { return this._collider; }
     public get text() { return this._text; }
+    public get attachment() { return this._attachment; }
     public get children() { return this.context.actors.filter(actor => actor.parentId === this.id); }
     public get parent() { return this._context.actor(this._parentId); }
     public get parentId() { return this._parentId; }
@@ -388,6 +395,34 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
     }
 
     /**
+     * Attach to the user at the given attach point.
+     * @param userOrUserId The User or id of user to attach to.
+     * @param attachPoint Where on the user to attach.
+     */
+    public attach(userOrUserId: User | string, attachPoint: AttachPoint) {
+        const userId = typeof userOrUserId === 'string' ? userOrUserId : userOrUserId.id;
+        if (!this._attachment) {
+            // Actor patching: Observe the attachment for changed values.
+            this._attachment = new Attachment();
+            observe({
+                target: this._attachment,
+                targetName: 'attachment',
+                notifyChanged: (...path: string[]) => this.actorChanged(...path)
+            });
+        }
+        this._attachment.userId = userId;
+        this._attachment.attachPoint = attachPoint;
+    }
+
+    /**
+     * If attached to a user, detach from it.
+     */
+    public detach() {
+        this._attachment.userId = ZeroGuid;
+        this._attachment.attachPoint = 'none';
+    }
+
+    /**
      * Subscribe to updates from this actor.
      * @param subscription The type of subscription to add.
      */
@@ -619,6 +654,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
         if (from.name) this._name = from.name;
         if (from.tag) this._tag = from.tag;
         if (from.transform) this._transform.copy(from.transform);
+        if (from.attachment) this.attach(from.attachment.userId, from.attachment.attachPoint);
         if (from.materialId) this._materialId = from.materialId;
         if (from.light) this.enableLight(from.light);
         if (from.rigidBody) this.enableRigidBody(from.rigidBody);
@@ -636,6 +672,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
             name: this._name,
             tag: this._tag,
             transform: this._transform.toJSON(),
+            attachment: this._attachment ? this._attachment.toJSON() : undefined,
             light: this._light ? this._light.toJSON() : undefined,
             rigidBody: this._rigidBody ? this._rigidBody.toJSON() : undefined,
             collider: this._collider ? this._collider.toJSON() : undefined,
