@@ -91,6 +91,8 @@
 						<section class="tsd-index-section ">
 							<h3>Events</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-event tsd-parent-kind-class"><a href="context.html#offuserjoined" class="tsd-kind-icon">off<wbr>User<wbr>Joined</a></li>
+								<li class="tsd-kind-event tsd-parent-kind-class"><a href="context.html#offuserleft" class="tsd-kind-icon">off<wbr>User<wbr>Left</a></li>
 								<li class="tsd-kind-event tsd-parent-kind-class"><a href="context.html#onstarted" class="tsd-kind-icon">on<wbr>Started</a></li>
 								<li class="tsd-kind-event tsd-parent-kind-class"><a href="context.html#onstopped" class="tsd-kind-icon">on<wbr>Stopped</a></li>
 								<li class="tsd-kind-event tsd-parent-kind-class"><a href="context.html#onuserjoined" class="tsd-kind-icon">on<wbr>User<wbr>Joined</a></li>
@@ -131,7 +133,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/27da6fd/packages/sdk/src/types/runtime/context.ts#L55">types/runtime/context.ts:55</a></li>
+									<li>Defined in types/runtime/context.ts:55</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -153,6 +155,98 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Events</h2>
 				<section class="tsd-panel tsd-member tsd-kind-event tsd-parent-kind-class">
+					<a name="offuserjoined" class="tsd-anchor"></a>
+					<h3>off<wbr>User<wbr>Joined</h3>
+					<ul class="tsd-signatures tsd-kind-event tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">off<wbr>User<wbr>Joined<span class="tsd-signature-symbol">(</span>handler<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">function</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in types/runtime/context.ts:109</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Remove the onUserJoined event handler from the Context.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>handler: <span class="tsd-signature-type">function</span></h5>
+									<ul class="tsd-parameters">
+										<li class="tsd-parameter-siganture">
+											<ul class="tsd-signatures tsd-kind-type-literal tsd-is-not-exported">
+												<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>user<span class="tsd-signature-symbol">: </span><a href="user.html" class="tsd-signature-type">User</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+											</ul>
+											<ul class="tsd-descriptions">
+												<li class="tsd-description">
+													<h4 class="tsd-parameters-title">Parameters</h4>
+													<ul class="tsd-parameters">
+														<li>
+															<h5>user: <a href="user.html" class="tsd-signature-type">User</a></h5>
+														</li>
+													</ul>
+													<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+												</li>
+											</ul>
+										</li>
+									</ul>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-event tsd-parent-kind-class">
+					<a name="offuserleft" class="tsd-anchor"></a>
+					<h3>off<wbr>User<wbr>Left</h3>
+					<ul class="tsd-signatures tsd-kind-event tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">off<wbr>User<wbr>Left<span class="tsd-signature-symbol">(</span>handler<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">function</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in types/runtime/context.ts:128</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Remove the onUserLeft event handler from the Context</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>handler: <span class="tsd-signature-type">function</span></h5>
+									<ul class="tsd-parameters">
+										<li class="tsd-parameter-siganture">
+											<ul class="tsd-signatures tsd-kind-type-literal tsd-is-not-exported">
+												<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>user<span class="tsd-signature-symbol">: </span><a href="user.html" class="tsd-signature-type">User</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+											</ul>
+											<ul class="tsd-descriptions">
+												<li class="tsd-description">
+													<h4 class="tsd-parameters-title">Parameters</h4>
+													<ul class="tsd-parameters">
+														<li>
+															<h5>user: <a href="user.html" class="tsd-signature-type">User</a></h5>
+														</li>
+													</ul>
+													<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+												</li>
+											</ul>
+										</li>
+									</ul>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-event tsd-parent-kind-class">
 					<a name="onstarted" class="tsd-anchor"></a>
 					<h3>on<wbr>Started</h3>
 					<ul class="tsd-signatures tsd-kind-event tsd-parent-kind-class">
@@ -162,7 +256,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/27da6fd/packages/sdk/src/types/runtime/context.ts#L81">types/runtime/context.ts:81</a></li>
+									<li>Defined in types/runtime/context.ts:81</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -203,7 +297,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/27da6fd/packages/sdk/src/types/runtime/context.ts#L91">types/runtime/context.ts:91</a></li>
+									<li>Defined in types/runtime/context.ts:91</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -244,7 +338,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/27da6fd/packages/sdk/src/types/runtime/context.ts#L100">types/runtime/context.ts:100</a></li>
+									<li>Defined in types/runtime/context.ts:100</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -290,12 +384,12 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/27da6fd/packages/sdk/src/types/runtime/context.ts#L110">types/runtime/context.ts:110</a></li>
+									<li>Defined in types/runtime/context.ts:119</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>The &#39;onUserLeft event is raised when the given user has left the Context. After the last user leaves, the Context
+									<p>The onUserLeft event is raised when the given user has left the Context. After the last user leaves, the Context
 									will be shutdown (and a &#39;stopped&#39; event will soon follow).</p>
 								</div>
 							</div>
@@ -340,7 +434,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/27da6fd/packages/sdk/src/types/runtime/context.ts#L47">types/runtime/context.ts:47</a></li>
+									<li>Defined in types/runtime/context.ts:47</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="actor.html" class="tsd-signature-type">Actor</a><span class="tsd-signature-symbol">[]</span></h4>
@@ -357,7 +451,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/27da6fd/packages/sdk/src/types/runtime/context.ts#L44">types/runtime/context.ts:44</a></li>
+									<li>Defined in types/runtime/context.ts:44</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="assetmanager.html" class="tsd-signature-type">AssetManager</a></h4>
@@ -374,7 +468,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/27da6fd/packages/sdk/src/types/runtime/context.ts#L46">types/runtime/context.ts:46</a></li>
+									<li>Defined in types/runtime/context.ts:46</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="../interfaces/connection.html" class="tsd-signature-type">Connection</a></h4>
@@ -391,7 +485,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/27da6fd/packages/sdk/src/types/runtime/context.ts#L48">types/runtime/context.ts:48</a></li>
+									<li>Defined in types/runtime/context.ts:48</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="actor.html" class="tsd-signature-type">Actor</a><span class="tsd-signature-symbol">[]</span></h4>
@@ -408,7 +502,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/27da6fd/packages/sdk/src/types/runtime/context.ts#L45">types/runtime/context.ts:45</a></li>
+									<li>Defined in types/runtime/context.ts:45</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
@@ -425,7 +519,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/27da6fd/packages/sdk/src/types/runtime/context.ts#L52">types/runtime/context.ts:52</a></li>
+									<li>Defined in types/runtime/context.ts:52</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="user.html" class="tsd-signature-type">User</a><span class="tsd-signature-symbol">[]</span></h4>
@@ -445,7 +539,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/27da6fd/packages/sdk/src/types/runtime/context.ts#L54">types/runtime/context.ts:54</a></li>
+									<li>Defined in types/runtime/context.ts:54</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -468,7 +562,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/27da6fd/packages/sdk/src/types/runtime/context.ts#L71">types/runtime/context.ts:71</a></li>
+									<li>Defined in types/runtime/context.ts:71</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -490,7 +584,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/27da6fd/packages/sdk/src/types/runtime/context.ts#L55">types/runtime/context.ts:55</a></li>
+									<li>Defined in types/runtime/context.ts:55</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -522,6 +616,12 @@
 						<ul>
 							<li class=" tsd-kind-constructor tsd-parent-kind-class">
 								<a href="context.html#constructor" class="tsd-kind-icon">constructor</a>
+							</li>
+							<li class=" tsd-kind-event tsd-parent-kind-class">
+								<a href="context.html#offuserjoined" class="tsd-kind-icon">off<wbr>User<wbr>Joined</a>
+							</li>
+							<li class=" tsd-kind-event tsd-parent-kind-class">
+								<a href="context.html#offuserleft" class="tsd-kind-icon">off<wbr>User<wbr>Left</a>
 							</li>
 							<li class=" tsd-kind-event tsd-parent-kind-class">
 								<a href="context.html#onstarted" class="tsd-kind-icon">on<wbr>Started</a>

@@ -20,7 +20,6 @@ import {
     LookAtMode,
     PrimitiveDefinition,
     SetAnimationStateOptions,
-    SubscriptionOwnerType,
     SubscriptionType,
     User,
     UserLike,
@@ -443,7 +442,6 @@ export class InternalContext {
     */
     public updateSubscriptions(
         actorId: string,
-        ownerType: SubscriptionOwnerType,
         options: {
             adds?: SubscriptionType | SubscriptionType[],
             removes?: SubscriptionType | SubscriptionType[]
@@ -455,7 +453,6 @@ export class InternalContext {
                 this.protocol.sendPayload({
                     type: 'update-subscriptions',
                     id: actorId,
-                    ownerType,
                     adds: options.adds,
                     removes: options.removes
                 } as UpdateSubscriptions);

@@ -8,6 +8,7 @@ export * from './animation';
 export * from './math';
 export * from './connection';
 export * from './webHost';
+export * from './log';
 export * from './types/runtime';
 export * from './types/network';
 export * from './types/rigidBodyConstraints';
