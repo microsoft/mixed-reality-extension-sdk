@@ -4,8 +4,7 @@
  */
 
 import { Payload } from '.';
-import { ColliderType, CollisionData, CollisionLayer, QuaternionLike, RigidBodyLike, Vector3Like } from '../../..';
-import { ColliderLike } from '../../runtime';
+import { CollisionData, QuaternionLike, Vector3Like } from '../../..';
 
 /**
  * @hidden

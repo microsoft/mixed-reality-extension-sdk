@@ -27,8 +27,8 @@ export interface CollisionData {
 /**
  * The layer that the collider should be assigned to.
  */
-export enum CollisionLayer {
-    Object = 'object',
-    Environment = 'environment',
-    Hologram = 'hologram'
-}
+// export enum CollisionLayer {
+//     Object = 'object',
+//     Environment = 'environment',
+//     Hologram = 'hologram'
+// }

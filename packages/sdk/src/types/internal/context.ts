@@ -14,23 +14,17 @@ import {
     Asset,
     AssetLike,
     BehaviorType,
-    BoxColliderParams,
-    Collider,
-    ColliderLike,
     CollisionEvent,
-    CollisionLayer,
     Context,
     CreateAnimationOptions,
     LookAtMode,
     PrimitiveDefinition,
     SetAnimationStateOptions,
-    SphereColliderParams,
     SubscriptionOwnerType,
     SubscriptionType,
     User,
     UserLike,
     UserSet,
-    Vector3Like,
 } from '../..';
 
 import {

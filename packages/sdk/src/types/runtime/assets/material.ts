@@ -6,7 +6,7 @@
 import { Asset, AssetLike, AssetManager, Texture } from '.';
 import { ZeroGuid } from '../../../constants';
 import { Color3, Color4, Color4Like, Vector2, Vector2Like } from '../../../math';
-import observe from '../../../utils/observe';
+import { observe } from '../../../utils/observe';
 import readPath from '../../../utils/readPath';
 import { InternalAsset } from '../../internal/asset';
 import { Patchable } from '../../patchable';

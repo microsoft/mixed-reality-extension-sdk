@@ -6,5 +6,5 @@
 export * from './collision';
 export * from './collisionDetectionMode';
 export * from './collisionEvent';
+export * from './colliderGeometry';
 export * from './colliderType';
-export * from './colliderParams';

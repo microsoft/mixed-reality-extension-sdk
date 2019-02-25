@@ -8,7 +8,6 @@ import {
     Collider,
     ColliderLike,
     CollisionData,
-    CollisionLayer,
     Light,
     LightLike,
     Material,
@@ -30,7 +29,7 @@ import {
 } from '../..';
 import { ZeroGuid } from '../../constants';
 import { log } from '../../log';
-import observe from '../../utils/observe';
+import { observe, unobserve } from '../../utils/observe';
 import readPath from '../../utils/readPath';
 import { createForwardPromise, ForwardPromise } from '../forwardPromise';
 import { InternalActor } from '../internal/actor';
@@ -38,7 +37,7 @@ import { CollisionEventType, CreateColliderType } from '../network/payloads';
 import { SubscriptionType } from '../network/subscriptionType';
 import { Patchable } from '../patchable';
 import { Behavior } from './behaviors';
-import { BoxColliderParams, ColliderParams, SphereColliderParams } from './physics';
+import { BoxColliderGeometry, ColliderGeometry, SphereColliderGeometry } from './physics';
 
 /**
  * Describes the properties of an Actor.
@@ -274,9 +273,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
      * @param light Light characteristics.
      */
     public enableLight(light?: Partial<LightLike>) {
-        if (!light && this._light) {
-            this.light.enabled = false;
-        } else if (!this._light) {
+        if (!this._light) {
             this._light = new Light();
             // Actor patching: Observe the light component for changed values.
             observe({
@@ -296,10 +293,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
      * @param rigidBody Rigid body characteristics.
      */
     public enableRigidBody(rigidBody?: Partial<RigidBodyLike>) {
-        if (!rigidBody && this._rigidBody) {
-            // TODO: Add `enabled` field
-            // this.rigidBody.enabled = false;
-        } else if (!this._rigidBody) {
+        if (!this._rigidBody) {
             this._rigidBody = new RigidBody(this);
             // Actor patching: Observe the rigid body component for changed values.
             observe({
@@ -317,14 +311,14 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
     /**
      * Adds a collider of the given type and parameters on the actor.
      * @param colliderType Type of the collider to enable.
-     * @param collisionLayer The layer that the collider operates in.
      * @param isTrigger Whether the collider is a trigger volume or not.
      * @param center The center of the collider, or default of the object if none is provided.
      * @param radius The radius of the collider, or default bounding if non is provided.
      */
-    public enableCollider(
+    // * @param collisionLayer The layer that the collider operates in.
+    public setCollider(
         colliderType: 'sphere',
-        collisionLayer: CollisionLayer,
+        // collisionLayer: CollisionLayer,
         isTrigger: boolean,
         center?: Vector3Like,
         radius?: number): void;
@@ -332,47 +326,34 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
     /**
      * Adds a collider of the given type and parameters on the actor.
      * @param colliderType Type of the collider to enable.
-     * @param collisionLayer The layer that the collider operates in.
      * @param isTrigger Whether the collider is a trigger volume or not.
      * @param center The center of the collider, or default of the object if none is provided.
      * @param size
      */
-    public enableCollider(
+    public setCollider(
         colliderType: 'box',
-        collisionLayer: CollisionLayer,
+        // collisionLayer: CollisionLayer,
         isTrigger: boolean,
         center?: Vector3Like,
         size?: Vector3Like): void;
 
     /** @ignore */
-    public enableCollider(
+    public setCollider(
         colliderType: 'box' | 'sphere',
-        collisionLayer: CollisionLayer,
+        // collisionLayer: CollisionLayer,
         isTrigger: boolean,
         center?: Vector3Like,
         size?: number | Vector3Like
     ): void {
-        if (!this._collider) {
-            this._collider = new Collider(this);
-            observe({
-                target: this._collider,
-                targetName: 'collider',
-                notifyChanged: (...path: string[]) => this.actorChanged(...path),
-                // Trigger notifications for every observed leaf node to ensure we get all values in the initial patch.
-                triggerNotificationsNow: true
-            });
+        const colliderGeometry = this.generateColliderGeometry(colliderType, center, size);
 
-            // Copy to the _collider
-            const colliderParams = this.generateColliderParams(colliderType, center, size);
-
-            if (colliderParams) {
-                this._collider.copy({
-                    enabled: true,
-                    isTrigger,
-                    collisionLayer,
-                    colliderParams
-                } as ColliderLike);
-            }
+        if (colliderGeometry) {
+            this._setCollider({
+                enabled: true,
+                isTrigger,
+                // collisionLayer,
+                colliderGeometry
+            } as ColliderLike);
         }
     }
 
@@ -381,9 +362,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
      * @param text Text characteristics
      */
     public enableText(text?: Partial<TextLike>) {
-        if (!text && this._text) {
-            this.text.enabled = false;
-        } else if (!this._text) {
+        if (!this._text) {
             this._text = new Text();
             // Actor patching: Observe the text component for changed values.
             observe({
@@ -633,7 +612,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
         if (from.materialId) this._materialId = from.materialId;
         if (from.light) this.enableLight(from.light);
         if (from.rigidBody) this.enableRigidBody(from.rigidBody);
-        // TODO @tombu:  Add in colliders here once feature is turned on.
+        if (from.collider) this._setCollider(from.collider);
         if (from.text) this.enableText(from.text);
 
         this.internal.observing = wasObserving;
@@ -669,31 +648,49 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
         }
     }
 
-    private generateColliderParams(
+    private generateColliderGeometry(
         colliderType: 'box' | 'sphere',
         center?: Vector3Like,
         size?: number | Vector3Like
-    ): ColliderParams {
+    ): ColliderGeometry {
         switch (colliderType) {
             case 'box':
                 return {
                     colliderType: 'box',
                     center,
                     size: size as Partial<Vector3Like>
-                } as BoxColliderParams;
+                } as BoxColliderGeometry;
             case 'sphere':
                 return {
                     colliderType: 'sphere',
                     center,
                     radius: size as number
-                } as SphereColliderParams;
+                } as SphereColliderGeometry;
 
             default:
                 log.error(null,
-                    'Trying to enable a collider on the actor with an invalid collider type.' +
+                    'Trying to enable a collider on the actor with an invalid collider geometry type.' +
                     `Type given is ${colliderType}`);
 
                 return undefined;
+        }
+    }
+
+    private _setCollider(collider: Partial<ColliderLike>) {
+        if (this._collider) {
+            unobserve(this._collider);
+            this._collider = undefined;
+        }
+
+        if (!this._collider) {
+            this._collider = new Collider(this, collider);
+            observe({
+                target: this._collider,
+                targetName: 'collider',
+                notifyChanged: (...path: string[]) => this.actorChanged(...path),
+                // Trigger notifications for every observed leaf node to ensure we get all values in the initial patch.
+                triggerNotificationsNow: true
+            });
         }
     }
 }

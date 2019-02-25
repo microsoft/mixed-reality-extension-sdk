@@ -16,6 +16,7 @@ import {
 import { RigidBodyConstraints } from '../rigidBodyConstraints';
 
 export interface RigidBodyLike {
+    enabled: boolean;
     velocity: Partial<Vector3Like>;
     angularVelocity: Partial<Vector3Like>;
     mass: number;
@@ -32,6 +33,7 @@ export class RigidBody implements RigidBodyLike {
     private _constraints: RigidBodyConstraints[];
     // tslint:enable:variable-name
 
+    public enabled = true;
     public mass = 1.0;
     public detectCollisions = true;
     public collisionDetectionMode = CollisionDetectionMode.Discrete;
@@ -69,6 +71,7 @@ export class RigidBody implements RigidBodyLike {
 
     public copy(from: Partial<RigidBodyLike>): this {
         if (!from) return this;
+        if (from.enabled !== undefined) this.enabled = from.enabled;
         if (from.velocity !== undefined) this._velocity.copy(from.velocity);
         if (from.angularVelocity !== undefined) this._angularVelocity.copy(from.angularVelocity);
         if (from.mass !== undefined) this.mass = from.mass;
@@ -81,6 +84,7 @@ export class RigidBody implements RigidBodyLike {
 
     public toJSON() {
         return {
+            enabled: this.enabled,
             velocity: this.velocity.toJSON(),
             angularVelocity: this.angularVelocity.toJSON(),
             mass: this.mass,
