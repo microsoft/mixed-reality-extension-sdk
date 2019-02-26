@@ -306,7 +306,9 @@ export class Session extends EventEmitter {
         }
     }
 
-    public cacheAssetCreationMessage(message: Message<Payloads.LoadAssets | Payloads.CreateAsset>) {
+    public cacheAssetCreationMessage(
+        message: Message<Payloads.LoadAssets | Payloads.CreateAsset>) {
+
         // TODO: Is each load-asset unique? Can the same asset be loaded twice?
         this.assets.push({ ...message });
     }

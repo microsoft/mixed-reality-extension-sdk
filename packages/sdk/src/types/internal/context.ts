@@ -53,6 +53,7 @@ import {
     RigidBodyCommands,
     SetAnimationState,
     SetBehavior,
+    SetSoundState,
     UpdateCollisionEventSubscriptions,
     UpdateSubscriptions,
 } from '../network/payloads';
@@ -61,10 +62,12 @@ import { log } from '../../log';
 import * as Protocols from '../../protocols';
 import { Execution } from '../../protocols/execution';
 import { Handshake } from '../../protocols/handshake';
+import { SetSoundStateOptions, SoundCommand } from '../../sound';
 import resolveJsonValues from '../../utils/resolveJsonValues';
 import { createForwardPromise, ForwardPromise } from '../forwardPromise';
 import { OperatingModel } from '../network/operatingModel';
 import { Patchable } from '../patchable';
+import { SoundInstance } from '../runtime/soundInstance';
 
 /**
  * @hidden
@@ -317,6 +320,26 @@ export class InternalContext {
         }
     }
 
+    public setSoundState(
+        soundInstance: SoundInstance,
+        options?: SetSoundStateOptions,
+        command?: SoundCommand,
+        soundAssetId?: string,
+        startTimeOffset?: number
+    ) {
+
+        this.context.internal.protocol.sendPayload(
+            {
+                type: 'set-sound-state',
+                id: soundInstance.id,
+                actorId: soundInstance.actor.id,
+                soundAssetId,
+                soundCommand: command,
+                options,
+                startTimeOffset
+            } as SetSoundState);
+        return;
+    }
     public animateTo(
         actorId: string,
         value: Partial<ActorLike>,

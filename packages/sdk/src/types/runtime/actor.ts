@@ -31,6 +31,7 @@ import {
 } from '../..';
 import { ZeroGuid } from '../../constants';
 import { log } from '../../log';
+import { SetSoundStateOptions } from '../../sound';
 import observe from '../../utils/observe';
 import readPath from '../../utils/readPath';
 import { ForwardPromise } from '../forwardPromise';
@@ -39,6 +40,7 @@ import { CollisionEventType, CreateColliderType } from '../network/payloads';
 import { SubscriptionType } from '../network/subscriptionType';
 import { Patchable } from '../patchable';
 import { Behavior } from './behaviors';
+import { SoundInstance } from './soundInstance';
 
 /**
  * Describes the properties of an Actor.
@@ -470,6 +472,18 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
         this.internal.behavior = null;
         this.context.internal.setBehavior(this.id, null);
         return null;
+    }
+
+    /**
+     * Starts playing a preloaded sound.
+     * @param soundAssetId Name of sound asset preloaded using AssetManager.
+     * @param options Adjustments to pitch and volume, and other characteristics.
+     * @param startTimeOffset How many seconds to offset into the sound
+     */
+    public startSound(
+        soundAssetId: string, options: SetSoundStateOptions,
+        startTimeOffset?: number): ForwardPromise<SoundInstance> {
+        return new SoundInstance(this, soundAssetId).start(options, startTimeOffset);
     }
 
     /**

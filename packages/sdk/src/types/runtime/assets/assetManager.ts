@@ -5,8 +5,10 @@
 
 import UUID from 'uuid/v4';
 
-import { Asset, AssetGroup, Material, MaterialLike, Texture, TextureLike } from '.';
+import { Asset, AssetGroup, Material, MaterialLike, Sound, SoundLike, Texture, TextureLike } from '.';
 import { Context } from '..';
+import { log } from '../../../log';
+import { ExportedPromise } from '../../../utils/exportedPromise';
 import resolveJsonValues from '../../../utils/resolveJsonValues';
 import { createForwardPromise, ForwardPromise } from '../../forwardPromise';
 import { AssetsLoaded, CreateAsset, CreateColliderType, LoadAssets } from '../../network/payloads';
@@ -24,6 +26,8 @@ export class AssetManager {
     private _assets: { [id: string]: Asset } = {};
     private _groups: { [k: string]: AssetGroup } = {};
     private _ready = Promise.resolve();
+    private _loadAssetPromises: { [name: string]: ExportedPromise[] } = {};
+
     // tslint:enable:variable-name
 
     /** @hidden */
@@ -64,7 +68,7 @@ export class AssetManager {
     }
 
     /**
-     * Generate a new texture
+     * Load an image file and generate a new texture asset
      * @param name The new texture's name
      * @param definition The initial texture properties. The `uri` property is required.
      */
@@ -76,23 +80,81 @@ export class AssetManager {
         }));
     }
 
+    /**
+     * Load an audio file and generate a new sound asset
+     * @param name The new texture's name
+     * @param definition The initial sound properties. The `uri` property is required.
+     */
+    public createSound(name: string, definition: Partial<SoundLike>): ForwardPromise<Sound> {
+
+        return this.sendCreateAsset(new Sound(this, {
+            id: UUID(),
+            name,
+            sound: resolveJsonValues(definition)
+        }));
+    }
+
     private sendCreateAsset<T extends Asset>(asset: T): ForwardPromise<T> {
         this.manualGroup.add(asset);
         this._assets[asset.id] = asset;
 
+        this.enqueueLoadAssetPromise(
+            asset.id, {
+                resolve: () => { /* empty */ },
+                reject: () => { /* empty */ },
+            });
         const promise = this.sendLoadAssetsPayload({
             type: 'create-asset',
             definition: asset
         } as CreateAsset)
             .then<T>(payload => {
                 if (payload.failureMessage || payload.assets.length !== 1) {
-                    return Promise.reject(`Creation of asset ${asset.name} failed: ${payload.failureMessage}`);
+                    this.notifyAssetLoaded(asset.id, false, payload.failureMessage);
+                    return Promise.reject(`Creation/Loading of asset ${asset.name} failed: ${payload.failureMessage}`);
                 }
+                this.notifyAssetLoaded(asset.id, true);
                 return asset.copy(payload.assets[0]);
             });
         this.registerLoadPromise(promise);
 
         return createForwardPromise(asset, promise);
+    }
+
+    public unloadAsset<T extends Asset>(asset: T) {
+    }
+
+    private notifyAssetLoaded(assetId: string, success: boolean, reason?: any): void {
+        if (!!this._loadAssetPromises && !!this._loadAssetPromises[assetId]) {
+            const loadAssetPromises = this._loadAssetPromises[assetId].splice(0);
+            delete this._loadAssetPromises[assetId];
+            for (const promise of loadAssetPromises) {
+                if (success) {
+                    promise.resolve();
+                } else {
+                    promise.reject(reason);
+                }
+            }
+        }
+    }
+
+    private enqueueLoadAssetPromise(assetId: string, promise: ExportedPromise): void {
+        if (!this._loadAssetPromises[assetId]) {
+            this._loadAssetPromises[assetId] = [];
+        }
+        this._loadAssetPromises[assetId].push(promise);
+    }
+
+    /**
+     * A promise that resolves when a specific asset has settled, successfully or otherwise
+     * @param assetId The asset's id
+     */
+    public assetLoaded(assetId: string): Promise<void> {
+        if (!this._loadAssetPromises || !this._loadAssetPromises[assetId]) {
+            return Promise.resolve();
+        } else {
+            return new Promise<void>((resolve, reject) =>
+                this.enqueueLoadAssetPromise(assetId, { resolve, reject }));
+        }
     }
 
     /**
@@ -103,12 +165,20 @@ export class AssetManager {
      */
     public loadGltf(groupName: string, uri: string, colliderType: CreateColliderType = 'none'): Promise<AssetGroup> {
         const p = this.loadGltfHelper(groupName, uri, colliderType);
+
         this.registerLoadPromise(p);
         return p;
     }
 
     private async loadGltfHelper(
         groupName: string, uri: string, colliderType: CreateColliderType): Promise<AssetGroup> {
+
+        const id = UUID();
+        this.enqueueLoadAssetPromise(
+            id, {
+                resolve: () => { /* empty */ },
+                reject: () => { /* empty */ },
+            });
 
         let group: AssetGroup;
         if (this.groups[groupName]) {
@@ -135,6 +205,7 @@ export class AssetManager {
 
         const response = await this.sendLoadAssetsPayload(payload);
         if (response.failureMessage) {
+            this.notifyAssetLoaded(id, false, response.failureMessage);
             throw new Error(response.failureMessage);
         }
 
@@ -144,7 +215,7 @@ export class AssetManager {
             group.add(asset);
             this._assets[def.id] = asset;
         }
-
+        this.notifyAssetLoaded(id, true);
         return group;
     }
 
