@@ -34,6 +34,7 @@ export class Collider implements ColliderLike {
     public get colliderGeometry() { return this._colliderGeometry; }
 
     /**
+     * @hidden
      * Creates a new Collider instance.
      * @param $owner The owning actor instance. Field name is prefixed with a dollar sign so that it is ignored by
      * @param initFrom The collider like to use to init from.
