@@ -7,7 +7,7 @@ import * as MRE from '@microsoft/mixed-reality-extension-sdk';
 import * as MRERPC from '@microsoft/mixed-reality-extension-sdk/built/rpc';
 
 import { Test } from './test';
-import Factories from './tests';
+import { Factories, Menu, TestNames } from './tests';
 import destroyActors from './utils/destroyActors';
 
 const SuccessColor = MRE.Color3.Green();
@@ -24,28 +24,18 @@ export default class App {
     private _rpc: MRERPC.ContextRPC;
     private firstUser: MRE.User;
     private _connectedUsers: { [id: string]: MRE.User } = {};
-    private testNames = Object.keys(Factories).sort();
     private testResults: { [name: string]: boolean } = {};
 
     private activeTest: Test = null;
 
     private contextLabel: MRE.Actor;
     private playPauseButton: MRE.Actor;
-    private menuActors: MRE.Actor[];
+    private playPauseText: MRE.Actor;
+    private runnerActors: MRE.Actor[];
 
-    private setupPromise: Promise<void>;
     private runPromise: Promise<void> = null;
 
-    private _activeTestName: string;
-    private get activeTestName() { return this._activeTestName; }
-    private set activeTestName(val) {
-        if (this.activeTest === null) {
-            this._activeTestName = val;
-            this.setOverrideText(null);
-        } else {
-            this.stopTest().catch(() => { });
-        }
-    }
+    private activeTestName: string;
 
     public get context() { return this._context; }
     public get rpc() { return this._rpc; }
@@ -54,7 +44,14 @@ export default class App {
     constructor(private _context: MRE.Context, private params: MRE.ParameterSet, private baseUrl: string) {
         this._rpc = new MRERPC.ContextRPC(_context);
 
-        this.context.onStarted(() => this.setupPromise = this.setupMenu());
+        this.context.onStarted(() => {
+            if (this.params.test === undefined) {
+                this.setupSearchMenu();
+            } else {
+                this.activeTestName = this.params.test as string;
+                this.setupRunner();
+            }
+        });
         this.context.onUserJoined((user) => this.userJoined(user));
         this.context.onUserLeft((user) => this.userLeft(user));
     }
@@ -78,16 +75,27 @@ export default class App {
     }
 
     private runTest(user: MRE.User) {
-        // finish setting up menu
-        this.setupPromise
-            // halt the previous test if there is one
-            .then(() => this.activeTest !== null ? this.stopTest() : Promise.resolve())
+        // finish setting up runner
+        if (this.contextLabel === null) {
+            this.setupRunner();
+        }
+
+        // halt the previous test if there is one
+        (this.activeTest !== null ? this.stopTest() : Promise.resolve())
             // start the new test, and save the stop handle
             .then(() => {
-                this.playPauseButton.material.color.set(1, 0, 0, 1);
+                if (this.playPauseButton) {
+                    this.playPauseButton.material.color.set(1, 0, 0, 1);
+                    this.playPauseText.text.contents = "Stop";
+                }
                 return this.runPromise = this.runTestHelper(user);
             })
-            .then(() => { this.playPauseButton.material.color.set(0, 1, 0, 1); })
+            .then(() => {
+                if (this.playPauseButton) {
+                    this.playPauseButton.material.color.set(0, 1, 0, 1);
+                    this.playPauseText.text.contents = "Start";
+                }
+            })
             // and log unexpected errors
             .catch(err => console.log(err));
     }
@@ -124,7 +132,7 @@ export default class App {
         test.cleanup();
 
         // Delete all actors
-        destroyActors(this.context.rootActors.filter(x => !this.menuActors.includes(x)));
+        destroyActors(this.context.rootActors.filter(x => !this.runnerActors.includes(x)));
         this.context.assetManager.cleanup();
     }
 
@@ -153,9 +161,7 @@ export default class App {
         }
     }
 
-    private async setupMenu() {
-        this._activeTestName = this.params.test as string || this.testNames[0];
-
+    private setupRunner() {
         // Main label at the top of the stage
         this.contextLabel = MRE.Actor.CreateEmpty(this.context, {
             actor: {
@@ -173,54 +179,6 @@ export default class App {
                 }
             }
         }).value;
-
-        if (this.params.nomenu) {
-            return;
-        }
-
-        // Back up to the previous test
-        const prev = MRE.Actor.CreatePrimitive(this.context, {
-            definition: {
-                shape: MRE.PrimitiveShape.Box,
-                dimensions: { x: 0.3, y: 0.7, z: 0.1 }
-            },
-            addCollider: true,
-            actor: {
-                name: 'prev',
-                transform: {
-                    position: { x: -1.5 }
-                }
-            }
-        }).value;
-
-        prev.setBehavior(MRE.ButtonBehavior)
-            .onClick("released", () => {
-                const oldIndex = this.testNames.indexOf(this.activeTestName);
-                const newIndex = (this.testNames.length + oldIndex - 1) % this.testNames.length;
-                this.activeTestName = this.testNames[newIndex];
-            });
-
-        // Advance to the next test
-        const next = MRE.Actor.CreatePrimitive(this.context, {
-            definition: {
-                shape: MRE.PrimitiveShape.Box,
-                dimensions: { x: 0.3, y: 0.7, z: 0.1 }
-            },
-            addCollider: true,
-            actor: {
-                name: 'next',
-                transform: {
-                    position: { x: 1.5 }
-                }
-            }
-        }).value;
-
-        next.setBehavior(MRE.ButtonBehavior)
-            .onClick("released", () => {
-                const oldIndex = this.testNames.indexOf(this.activeTestName);
-                const newIndex = (this.testNames.length + oldIndex + 1) % this.testNames.length;
-                this.activeTestName = this.testNames[newIndex];
-            });
 
         // start or stop the active test
         const ppMat = this.context.assetManager.createMaterial('pp', {
@@ -242,6 +200,23 @@ export default class App {
             }
         }).value;
 
+        this.playPauseText = MRE.Actor.CreateEmpty(this.context, {
+            actor: {
+                parentId: this.playPauseButton.id,
+                transform: {
+                    position: { z: 0.1 },
+                    rotation: { x: 0, y: 1, z: 0, w: 0 } // 180 turn
+                },
+                text: {
+                    contents: "Start",
+                    height: 0.15,
+                    anchor: MRE.TextAnchorLocation.MiddleCenter,
+                    justify: MRE.TextJustify.Center,
+                    color: NeutralColor
+                }
+            }
+        }).value;
+
         this.playPauseButton.setBehavior(MRE.ButtonBehavior)
             .onClick("released", userId => {
                 if (this.activeTest === null) {
@@ -251,6 +226,51 @@ export default class App {
                 }
             });
 
-        this.menuActors = [this.contextLabel, next, prev, this.playPauseButton];
+        const menuButton = MRE.Actor.CreatePrimitive(this.context, {
+            definition: {
+                shape: MRE.PrimitiveShape.Box,
+                dimensions: { x: 0.7, y: 0.3, z: 0.1 }
+            },
+            addCollider: true,
+            actor: {
+                name: 'menu',
+                transform: {
+                    position: { x: 1, y: -1 }
+                }
+            }
+        }).value;
+
+        const menuText = MRE.Actor.CreateEmpty(this.context, {
+            actor: {
+                parentId: menuButton.id,
+                transform: {
+                    position: { z: 0.1 },
+                    rotation: { x: 0, y: 1, z: 0, w: 0 } // 180 turn
+                },
+                text: {
+                    contents: "...",
+                    height: 0.15,
+                    anchor: MRE.TextAnchorLocation.MiddleCenter,
+                    justify: MRE.TextJustify.Center,
+                    color: MRE.Color3.Black()
+                }
+            }
+        }).value;
+
+        menuButton.setBehavior(MRE.ButtonBehavior)
+            .onClick("released", async userId => {
+                await this.stopTest();
+                [this.contextLabel, this.playPauseButton, this.playPauseText]
+                    = this.runnerActors
+                    = destroyActors(this.runnerActors);
+
+                this.setupSearchMenu();
+            });
+
+        this.runnerActors = [this.contextLabel, this.playPauseButton, this.playPauseText, menuButton, menuText];
+    }
+
+    private setupSearchMenu() {
+
     }
 }
