@@ -4,7 +4,7 @@
  */
 
 import * as MRESDK from '@microsoft/mixed-reality-extension-sdk';
-import App from '../app';
+
 import { Test } from '../test';
 
 export default class InterpolationTest extends Test {

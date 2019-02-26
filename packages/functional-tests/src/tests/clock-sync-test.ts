@@ -8,7 +8,7 @@ import * as MRESDK from '@microsoft/mixed-reality-extension-sdk';
 import { Test } from '../test';
 
 export default class ClockSyncTest extends Test {
-    public expectedResultDescription = "Digital clock face from animating text strips. Click to stop."
+    public expectedResultDescription = "Digital clock face from animating text strips. Click to stop.";
     public async run(): Promise<boolean> {
         // Make a root object.
         const tester = MRESDK.Actor.CreateEmpty(this.app.context, {});

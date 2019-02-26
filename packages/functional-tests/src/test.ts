@@ -3,9 +3,9 @@
  * Licensed under the MIT License.
  */
 
-import { Actor, User } from '@microsoft/mixed-reality-extension-sdk';
+import { User } from '@microsoft/mixed-reality-extension-sdk';
 
-import App from './app';
+import { App } from './app';
 
 export type TestFactory = (app: App, baseUrl: string, user: User) => Test;
 

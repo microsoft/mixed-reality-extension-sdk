@@ -5,10 +5,10 @@
 
 import * as MRESDK from '@microsoft/mixed-reality-extension-sdk';
 import { Actor } from '@microsoft/mixed-reality-extension-sdk';
-import App from '../app';
+
+import { Test } from '../test';
 import delay from '../utils/delay';
 import destroyActors from '../utils/destroyActors';
-import { Test } from '../test';
 
 export default class InputTest extends Test {
 

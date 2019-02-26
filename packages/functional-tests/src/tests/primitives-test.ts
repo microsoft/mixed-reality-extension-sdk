@@ -4,11 +4,9 @@
  */
 
 import * as MRESDK from '@microsoft/mixed-reality-extension-sdk';
-import { Actor } from '@microsoft/mixed-reality-extension-sdk';
-import App from '../app';
-import delay from '../utils/delay';
-import destroyActors from '../utils/destroyActors';
+
 import { Test } from '../test';
+import destroyActors from '../utils/destroyActors';
 
 export default class PrimitivesTest extends Test {
 
@@ -24,7 +22,7 @@ export default class PrimitivesTest extends Test {
         // Make a root object.
         const tester = MRESDK.Actor.CreateEmpty(this.app.context, {});
 
-        const textPromise = Actor.CreateEmpty(this.app.context, {
+        const textPromise = MRESDK.Actor.CreateEmpty(this.app.context, {
             actor: {
                 name: 'label',
                 parentId: tester.value.id,

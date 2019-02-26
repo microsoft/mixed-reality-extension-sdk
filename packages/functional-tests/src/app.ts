@@ -11,9 +11,9 @@ import { Test, TestFactory } from './test';
 import { Factories } from './tests';
 import destroyActors from './utils/destroyActors';
 
-const SuccessColor = MRE.Color3.Green();
-const FailureColor = MRE.Color3.Red();
-const NeutralColor = MRE.Color3.Yellow();
+export const SuccessColor = MRE.Color3.Green();
+export const FailureColor = MRE.Color3.Red();
+export const NeutralColor = MRE.Color3.Yellow();
 
 /**
  * Functional Test Application. Takes query arguments to the websocket connection
@@ -21,11 +21,11 @@ const NeutralColor = MRE.Color3.Yellow();
  * @param autostart - Start the test immediately on user join
  * @param nomenu - Do not spawn the controls
  */
-export default class App {
+export class App {
     private _rpc: MRERPC.ContextRPC;
     private firstUser: MRE.User;
     private _connectedUsers: { [id: string]: MRE.User } = {};
-    private testResults: { [name: string]: boolean } = {};
+    public testResults: { [name: string]: boolean } = {};
 
     private activeTestName: string;
     private activeTestFactory: TestFactory;
@@ -37,7 +37,7 @@ export default class App {
     private playPauseText: MRE.Actor;
     private runnerActors: MRE.Actor[];
 
-    private readonly menu = new Menu(this.context);
+    private readonly menu = new Menu(this);
 
     public get context() { return this._context; }
     public get rpc() { return this._rpc; }
