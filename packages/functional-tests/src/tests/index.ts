@@ -52,8 +52,6 @@ export const Factories = {
     'user-test': (...args) => new UserTest(...args),
 } as FactoryMap;
 
-export const TestNames = Object.keys(Factories).sort();
-
 export interface MenuItem {
     label: string;
     action: TestFactory | MenuItem[];

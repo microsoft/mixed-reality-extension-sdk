@@ -6,8 +6,8 @@
 import * as MRE from '@microsoft/mixed-reality-extension-sdk';
 import * as MRERPC from '@microsoft/mixed-reality-extension-sdk/built/rpc';
 
-import { Test } from './test';
-import { Factories, Menu, TestNames } from './tests';
+import { Test, TestFactory } from './test';
+import { Factories, Menu, MenuItem } from './tests';
 import destroyActors from './utils/destroyActors';
 
 const SuccessColor = MRE.Color3.Green();
@@ -26,16 +26,17 @@ export default class App {
     private _connectedUsers: { [id: string]: MRE.User } = {};
     private testResults: { [name: string]: boolean } = {};
 
+    private activeTestName: string;
+    private activeTestFactory: TestFactory;
     private activeTest: Test = null;
+    private runPromise: Promise<void> = null;
 
     private contextLabel: MRE.Actor;
     private playPauseButton: MRE.Actor;
     private playPauseText: MRE.Actor;
     private runnerActors: MRE.Actor[];
 
-    private runPromise: Promise<void> = null;
-
-    private activeTestName: string;
+    private breadcrumbs: number[] = [];
 
     public get context() { return this._context; }
     public get rpc() { return this._rpc; }
@@ -49,6 +50,7 @@ export default class App {
                 this.setupSearchMenu();
             } else {
                 this.activeTestName = this.params.test as string;
+                this.activeTestFactory = Factories[this.activeTestName];
                 this.setupRunner();
             }
         });
@@ -57,6 +59,7 @@ export default class App {
     }
 
     private userJoined(user: MRE.User) {
+        this.connectedUsers[user.id] = user;
         if (!this.firstUser) {
             this.firstUser = user;
             if (this.params.autorun !== undefined) {
@@ -66,6 +69,7 @@ export default class App {
     }
 
     private userLeft(user: MRE.User) {
+        delete this.connectedUsers[user.id];
         if (user === this.firstUser) {
             this.firstUser = this.context.users[0] || null;
             if (!this.firstUser) {
@@ -104,7 +108,7 @@ export default class App {
         this.rpc.send('functional-test:test-starting', this.activeTestName);
         console.log(`Test starting: '${this.activeTestName}'`);
 
-        const test = this.activeTest = Factories[this.activeTestName](this, this.baseUrl, user);
+        const test = this.activeTest = this.activeTestFactory(this, this.baseUrl, user);
         this.setOverrideText(test.expectedResultDescription);
 
         this.rpc.send('functional-test:test-started', this.activeTestName);
@@ -264,6 +268,7 @@ export default class App {
                     = this.runnerActors
                     = destroyActors(this.runnerActors);
 
+                this.breadcrumbs.pop();
                 this.setupSearchMenu();
             });
 
@@ -271,6 +276,8 @@ export default class App {
     }
 
     private setupSearchMenu() {
-
+        const menu = !this.breadcrumbs.length ?
+            Menu :
+            this.breadcrumbs.reduce((submenu, choice) => submenu[choice].action as MenuItem[], Menu);
     }
 }
