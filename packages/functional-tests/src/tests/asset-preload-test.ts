@@ -4,26 +4,25 @@
  */
 
 import * as GltfGen from '@microsoft/gltf-gen';
-import * as MRESDK from '@microsoft/mixed-reality-extension-sdk';
+import * as MRE from '@microsoft/mixed-reality-extension-sdk';
 
 import Server from '../server';
 import { Test } from '../test';
 import delay from '../utils/delay';
-import destroyActors from '../utils/destroyActors';
 
 export default class AssetPreloadTest extends Test {
     public expectedResultDescription = "Two meshes juggle their materials and textures. Click to advance.";
     private state = 0;
 
-    private head: MRESDK.Actor;
-    private sphere: MRESDK.Actor;
+    private head: MRE.Actor;
+    private sphere: MRE.Actor;
 
-    private monkeyPrefab: MRESDK.Prefab;
-    private monkeyMat: MRESDK.Material;
-    private uvgridMat: MRESDK.Material;
-    private uvgridTex: MRESDK.Texture;
+    private monkeyPrefab: MRE.Prefab;
+    private monkeyMat: MRE.Material;
+    private uvgridMat: MRE.Material;
+    private uvgridTex: MRE.Texture;
 
-    private static AssignMat(actor: MRESDK.Actor, mat: MRESDK.Material) {
+    private static AssignMat(actor: MRE.Actor, mat: MRE.Material) {
         actor.material = mat;
         actor.children.forEach(c => this.AssignMat(c, mat));
     }
@@ -32,7 +31,7 @@ export default class AssetPreloadTest extends Test {
 
         this.app.setOverrideText("Preloading assets");
         const [monkey, uvgrid] = await Promise.all([
-            this.app.context.assetManager.loadGltf('monkey', this.baseUrl + '/monkey.glb'),
+            this.app.context.assetManager.loadGltf('monkey', this.baseUrl + '/monkey.glb', 'box'),
             this.app.context.assetManager.loadGltf('uvgrid', this.generateMaterial())
         ]);
         this.app.setOverrideText("Assets preloaded:" +
@@ -93,30 +92,33 @@ export default class AssetPreloadTest extends Test {
     }
 
     private async setup() {
-        this.head = await MRESDK.Actor.CreateFromPrefab(this.app.context, {
+        this.uvgridMat.mainTexture = this.uvgridTex;
+        this.head = await MRE.Actor.CreateFromPrefab(this.app.context, {
             prefabId: this.monkeyPrefab.id,
             actor: {
                 transform: {
-                    position: { x: -1, y: 1, z: 0 }
+                    position: { x: -0.5, y: 0, z: 0 },
+                    scale: { x: 0.5, y: 0.5, z: 0.5 }
                 }
             }
         });
-        this.sphere = await MRESDK.Actor.CreatePrimitive(this.app.context, {
+        this.sphere = await MRE.Actor.CreatePrimitive(this.app.context, {
             definition: {
-                shape: MRESDK.PrimitiveShape.Sphere,
-                radius: 1
+                shape: MRE.PrimitiveShape.Sphere,
+                radius: 0.5
             },
+            addCollider: true,
             actor: {
                 materialId: this.uvgridMat.id,
                 transform: {
-                    position: { x: 1, y: 1, z: 0 }
+                    position: { x: 0.5, y: 0, z: 0 }
                 }
             }
         });
 
-        this.head.setBehavior(MRESDK.ButtonBehavior)
+        this.head.setBehavior(MRE.ButtonBehavior)
             .onClick("pressed", () => this.cycleState());
-        this.sphere.setBehavior(MRESDK.ButtonBehavior)
+        this.sphere.setBehavior(MRE.ButtonBehavior)
             .onClick("pressed", () => this.cycleState());
     }
 

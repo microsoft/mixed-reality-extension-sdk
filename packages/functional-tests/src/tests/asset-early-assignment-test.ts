@@ -2,7 +2,7 @@
  * Copyright (c) Microsoft Corporation. All rights reserved.
  * Licensed under the MIT License.
  */
-import * as MRESDK from '@microsoft/mixed-reality-extension-sdk';
+import * as MRE from '@microsoft/mixed-reality-extension-sdk';
 
 import { Test } from '../test';
 
@@ -18,22 +18,19 @@ export default class AssetEarlyAssignmentTest extends Test {
         }).value;
 
         const mat = AM.createMaterial('blue', {
-            color: MRESDK.Color3.Blue(),
+            color: MRE.Color3.Blue(),
             mainTextureId: tex.id
         }).value;
 
-        const sphere = MRESDK.Actor.CreatePrimitive(this.app.context, {
+        MRE.Actor.CreatePrimitive(this.app.context, {
             definition: {
-                shape: MRESDK.PrimitiveShape.Sphere,
-                radius: 1
+                shape: MRE.PrimitiveShape.Sphere,
+                radius: 0.5
             },
             actor: {
-                materialId: mat.id,
-                transform: {
-                    position: { x: 0, y: 1, z: 0 }
-                }
+                materialId: mat.id
             }
-        }).value;
+        });
 
         await this.stoppedAsync();
         return true;

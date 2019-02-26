@@ -3,7 +3,7 @@
  * Licensed under the MIT License.
  */
 
-import * as MRESDK from '@microsoft/mixed-reality-extension-sdk';
+import * as MRE from '@microsoft/mixed-reality-extension-sdk';
 import { App } from '../app';
 import { Test } from '../test';
 
@@ -16,7 +16,7 @@ export default class AltspaceVRVideoTest extends Test {
 
     private videoPlayerManager: VideoPlayerManager;
 
-    constructor(app: App, baseUrl: string, user: MRESDK.User) {
+    constructor(app: App, baseUrl: string, user: MRE.User) {
         super(app, baseUrl, user);
         this.videoPlayerManager = new VideoPlayerManager(app.context);
     }
@@ -34,9 +34,9 @@ export default class AltspaceVRVideoTest extends Test {
     public async runAltspaceVRVideoTest(): Promise<boolean> {
 
         // Make a root object.
-        const tester = MRESDK.Actor.CreateEmpty(this.app.context, {});
+        const tester = MRE.Actor.CreateEmpty(this.app.context, {});
 
-        const video = await MRESDK.Actor.CreateEmpty(this.app.context, {
+        const video = await MRE.Actor.CreateEmpty(this.app.context, {
             actor: {
                 parentId: tester.value.id,
                 name: 'video',
@@ -69,9 +69,9 @@ export default class AltspaceVRVideoTest extends Test {
         };
         cycleState();
 
-        const buttonPromise = MRESDK.Actor.CreatePrimitive(this.app.context, {
+        const buttonPromise = MRE.Actor.CreatePrimitive(this.app.context, {
             definition: {
-                shape: MRESDK.PrimitiveShape.Sphere,
+                shape: MRE.PrimitiveShape.Sphere,
                 radius: 0.4,
                 uSegments: 8,
                 vSegments: 4
@@ -87,7 +87,7 @@ export default class AltspaceVRVideoTest extends Test {
             }
         });
 
-        const buttonBehavior = buttonPromise.value.setBehavior(MRESDK.ButtonBehavior);
+        const buttonBehavior = buttonPromise.value.setBehavior(MRE.ButtonBehavior);
         buttonBehavior.onClick('pressed', cycleState);
 
         await this.stoppedAsync();

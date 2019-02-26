@@ -3,7 +3,7 @@
  * Licensed under the MIT License.
  */
 
-import * as MRESDK from '@microsoft/mixed-reality-extension-sdk';
+import * as MRE from '@microsoft/mixed-reality-extension-sdk';
 
 import { Test } from '../test';
 
@@ -11,20 +11,16 @@ export default class GltfConcurrencyTest extends Test {
     public expectedResultDescription = "Cesium man, a bottle, and maybe a gearbox.";
 
     public async run(): Promise<boolean> {
-        const runnerPromise = MRESDK.Actor.CreateFromGltf(this.app.context, {
+        const runnerPromise = MRE.Actor.CreateFromGltf(this.app.context, {
             // tslint:disable-next-line:max-line-length
-            resourceUrl: `https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/CesiumMan/glTF-Binary/CesiumMan.glb`
+            resourceUrl: `https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/CesiumMan/glTF-Binary/CesiumMan.glb`,
+            actor: { transform: { position: { x: 0.66, y: -0.72 } } }
         });
 
-        const gearboxPromise = MRESDK.Actor.CreateFromGltf(this.app.context, {
+        const gearboxPromise = MRE.Actor.CreateFromGltf(this.app.context, {
             // tslint:disable-next-line:max-line-length
             resourceUrl: 'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/GearboxAssy/glTF/GearboxAssy.gltf',
-            actor: {
-                transform: {
-                    position: { x: 15, y: 0, z: 0 },
-                    scale: { x: 0.1, y: 0.1, z: 0.1 }
-                }
-            }
+            actor: { transform: { position: { x: 16, y: -1.6, z: -1.2 }, scale: { x: 0.1, y: 0.1, z: 0.1 } } }
         });
 
         const bottlePromise = this.app.context.assetManager.loadGltf('bottle',
@@ -37,8 +33,8 @@ export default class GltfConcurrencyTest extends Test {
             console.log('Gearbox didn\'t load, as expected in Altspace');
         }
 
-        let runner: MRESDK.Actor;
-        let bottleAsset: MRESDK.AssetGroup;
+        let runner: MRE.Actor;
+        let bottleAsset: MRE.AssetGroup;
         try {
             [runner, bottleAsset] = await Promise.all([runnerPromise, bottlePromise]);
         } catch (errs) {
@@ -47,8 +43,9 @@ export default class GltfConcurrencyTest extends Test {
         }
 
         runner.enableAnimation('animation:0');
-        await MRESDK.Actor.CreateFromPrefab(this.app.context, {
-            prefabId: bottleAsset.prefabs.byIndex(0).id
+        await MRE.Actor.CreateFromPrefab(this.app.context, {
+            prefabId: bottleAsset.prefabs.byIndex(0).id,
+            actor: { transform: { position: { x: -.66 }, scale: { x: 4, y: 4, z: 4 } } }
         });
 
         await this.stoppedAsync();

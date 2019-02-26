@@ -3,15 +3,22 @@
  * Licensed under the MIT License.
  */
 
-import * as MRESDK from '@microsoft/mixed-reality-extension-sdk';
+import * as MRE from '@microsoft/mixed-reality-extension-sdk';
 
 import { Test } from '../test';
 
 export default class ClockSyncTest extends Test {
-    public expectedResultDescription = "Digital clock face from animating text strips. Click to stop.";
+    public expectedResultDescription = "Digital clock face from animating text strips";
     public async run(): Promise<boolean> {
         // Make a root object.
-        const tester = MRESDK.Actor.CreateEmpty(this.app.context, {});
+        const tester = MRE.Actor.CreateEmpty(this.app.context, {
+            actor: {
+                transform: {
+                    position: { y: -3, z: -0.3 },
+                    rotation: { x: 0, y: 1, z: 0, w: 0 }
+                }
+            }
+        });
 
         const textScale = 0.15;
         const boxYPosition = 20;
@@ -20,9 +27,9 @@ export default class ClockSyncTest extends Test {
         const boxGap = textScale * 0.6;
         const lineHeight = 1.20; // magic value based on default font
 
-        const topBox = MRESDK.Actor.CreatePrimitive(this.app.context, {
+        const topBox = MRE.Actor.CreatePrimitive(this.app.context, {
             definition: {
-                shape: MRESDK.PrimitiveShape.Box,
+                shape: MRE.PrimitiveShape.Box,
                 dimensions: { x: boxWidth, y: boxHeight, z: 0.2 }
             },
             actor: {
@@ -32,9 +39,9 @@ export default class ClockSyncTest extends Test {
                 }
             }
         });
-        const bottomBox = MRESDK.Actor.CreatePrimitive(this.app.context, {
+        const bottomBox = MRE.Actor.CreatePrimitive(this.app.context, {
             definition: {
-                shape: MRESDK.PrimitiveShape.Box,
+                shape: MRE.PrimitiveShape.Box,
                 dimensions: { x: boxWidth, y: boxHeight, z: 0.2 }
             },
             actor: {
@@ -89,21 +96,21 @@ export default class ClockSyncTest extends Test {
         return true;
     }
 
-    public createAnimatableDigit(name: string, digits: string, parentId: string): MRESDK.ForwardPromise<MRESDK.Actor> {
-        return MRESDK.Actor.CreateEmpty(this.app.context, {
+    public createAnimatableDigit(name: string, digits: string, parentId: string): MRE.ForwardPromise<MRE.Actor> {
+        return MRE.Actor.CreateEmpty(this.app.context, {
             actor: {
                 name,
                 parentId,
                 text: {
                     contents: digits,
-                    anchor: MRESDK.TextAnchorLocation.TopCenter
+                    anchor: MRE.TextAnchorLocation.TopCenter
                 }
             }
         });
     }
 
     public buildDigitAnimation(
-        mesh: MRESDK.Actor,
+        mesh: MRE.Actor,
         xOffset: number,
         yOffset: number,
         secondsPerStep: number,
@@ -112,7 +119,7 @@ export default class ClockSyncTest extends Test {
         lineHeight: number,
         scale: number): Promise<void> {
 
-        const keyframes: MRESDK.AnimationKeyframe[] = [];
+        const keyframes: MRE.AnimationKeyframe[] = [];
 
         // test: set to 0.01 to speed up 100x
         const timeScale = 1.0;
@@ -157,7 +164,7 @@ export default class ClockSyncTest extends Test {
 
         return mesh.createAnimation(
             'anim', {
-                wrapMode: MRESDK.AnimationWrapMode.Loop,
+                wrapMode: MRE.AnimationWrapMode.Loop,
                 keyframes
             });
     }
