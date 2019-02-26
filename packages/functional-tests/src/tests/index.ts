@@ -24,7 +24,7 @@ import RigidBodyTest from './rigid-body-test';
 import TextTest from './text-test';
 import UserTest from './user-test';
 
-type FactoryMap = { [key: string]: TestFactory };
+export type FactoryMap = { [key: string]: TestFactory };
 
 /**
  * Registry of functional tests. Add your test here.
@@ -51,34 +51,3 @@ export const Factories = {
     'text-test': (...args) => new TextTest(...args),
     'user-test': (...args) => new UserTest(...args),
 } as FactoryMap;
-
-export interface MenuItem {
-    label: string;
-    action: TestFactory | MenuItem[];
-}
-
-const branchFactor = 5;
-function paginate(tests: FactoryMap): MenuItem[] {
-    const names = Object.keys(tests).sort();
-    const count = names.length;
-    if (count <= branchFactor) {
-        return names.map(name => ({ label: name, action: tests[name] } as MenuItem));
-    } else {
-        const submenus: MenuItem[] = [];
-
-        while (names.length > 0) {
-            const pageNames = names.splice(0, Math.ceil(count / branchFactor));
-            submenus.push({
-                label: pageNames[0].slice(0, 3) + " - " + pageNames[pageNames.length - 1].slice(0, 3),
-                action: paginate(pageNames.reduce(
-                    (sum, val) => { sum[val] = tests[val]; return sum; },
-                    {} as FactoryMap
-                ))
-            });
-        }
-
-        return submenus;
-    }
-}
-
-export const Menu = paginate(Factories);

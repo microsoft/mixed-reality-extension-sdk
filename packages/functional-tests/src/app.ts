@@ -6,8 +6,9 @@
 import * as MRE from '@microsoft/mixed-reality-extension-sdk';
 import * as MRERPC from '@microsoft/mixed-reality-extension-sdk/built/rpc';
 
+import Menu from './menu';
 import { Test, TestFactory } from './test';
-import { Factories, Menu, MenuItem } from './tests';
+import { Factories } from './tests';
 import destroyActors from './utils/destroyActors';
 
 const SuccessColor = MRE.Color3.Green();
@@ -36,7 +37,7 @@ export default class App {
     private playPauseText: MRE.Actor;
     private runnerActors: MRE.Actor[];
 
-    private breadcrumbs: number[] = [];
+    private readonly menu = new Menu(this.context);
 
     public get context() { return this._context; }
     public get rpc() { return this._rpc; }
@@ -47,7 +48,7 @@ export default class App {
 
         this.context.onStarted(() => {
             if (this.params.test === undefined) {
-                this.setupSearchMenu();
+                this.menu.show();
             } else {
                 this.activeTestName = this.params.test as string;
                 this.activeTestFactory = Factories[this.activeTestName];
@@ -56,6 +57,13 @@ export default class App {
         });
         this.context.onUserJoined((user) => this.userJoined(user));
         this.context.onUserLeft((user) => this.userLeft(user));
+
+        this.menu.onSelection((name, factory, userId) => {
+            this.menu.hide();
+            this.activeTestName = name;
+            this.activeTestFactory = factory;
+            this.runTest(this.context.user(userId));
+        });
     }
 
     private userJoined(user: MRE.User) {
@@ -80,7 +88,7 @@ export default class App {
 
     private runTest(user: MRE.User) {
         // finish setting up runner
-        if (this.contextLabel === null) {
+        if (!this.contextLabel) {
             this.setupRunner();
         }
 
@@ -233,13 +241,13 @@ export default class App {
         const menuButton = MRE.Actor.CreatePrimitive(this.context, {
             definition: {
                 shape: MRE.PrimitiveShape.Box,
-                dimensions: { x: 0.7, y: 0.3, z: 0.1 }
+                dimensions: { x: 0.3, y: 0.3, z: 0.1 }
             },
             addCollider: true,
             actor: {
                 name: 'menu',
                 transform: {
-                    position: { x: 1, y: -1 }
+                    position: { x: 0.6, y: -1 }
                 }
             }
         }).value;
@@ -268,16 +276,9 @@ export default class App {
                     = this.runnerActors
                     = destroyActors(this.runnerActors);
 
-                this.breadcrumbs.pop();
-                this.setupSearchMenu();
+                this.menu.show();
             });
 
         this.runnerActors = [this.contextLabel, this.playPauseButton, this.playPauseText, menuButton, menuText];
-    }
-
-    private setupSearchMenu() {
-        const menu = !this.breadcrumbs.length ?
-            Menu :
-            this.breadcrumbs.reduce((submenu, choice) => submenu[choice].action as MenuItem[], Menu);
     }
 }
