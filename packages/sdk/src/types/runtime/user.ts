@@ -13,7 +13,7 @@ export interface UserLike {
     /**
      * A grab bag of miscellaneous, possibly host-dependent, properties.
      */
-    properties: { [name: string]: any };
+    properties: { [name: string]: string };
 }
 
 export interface UserSet {
@@ -27,7 +27,7 @@ export class User implements UserLike {
     public get internal() { return this._internal; }
 
     private _name: string;
-    private _properties: { [name: string]: any };
+    private _properties: { [name: string]: string };
     // tslint:enable:variable-name
 
     public get context() { return this._context; }
