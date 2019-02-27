@@ -13,6 +13,8 @@ import {
     CollisionData,
     Light,
     LightLike,
+    LookAt,
+    LookAtLike,
     Material,
     RigidBody,
     RigidBodyLike,
@@ -27,7 +29,8 @@ import {
     CreateAnimationOptions,
     LookAtMode,
     PrimitiveDefinition,
-    SetAnimationStateOptions
+    SetAnimationStateOptions,
+    Vector3Like
 } from '../..';
 import { ZeroGuid } from '../../constants';
 import { log } from '../../log';
@@ -55,6 +58,7 @@ export interface ActorLike {
     collider: Partial<ColliderLike>;
     text: Partial<TextLike>;
     attachment: Partial<AttachmentLike>;
+    lookAt: Partial<LookAtLike>;
     materialId: string;
 }
 
@@ -88,6 +92,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
     private _collider: Collider;
     private _text: Text;
     private _attachment: Attachment;
+    private _lookAt: LookAt;
     private _materialId = ZeroGuid;
     // tslint:enable:variable-name
 
@@ -108,6 +113,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
     public get collider() { return this._collider; }
     public get text() { return this._text; }
     public get attachment() { return this._attachment; }
+    public get lookAt() { return this._lookAt; }
     public get children() { return this.context.actors.filter(actor => actor.parentId === this.id); }
     public get parent() { return this._context.actor(this._parentId); }
     public get parentId() { return this._parentId; }
@@ -395,6 +401,43 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
     }
 
     /**
+     * Instruct the actor to face another object, or stop facing an object.
+     * @param actorOrActorId The Actor or id of the actor to face.
+     * @param lookAtMode (Optional) How to face the target. @see LookUpMode.
+     * @param rotation (Optional) The offset from facing direction to apply (Euler angles).
+     */
+    public enableLookAt(actorOrActorId: Actor | string, mode?: LookAtMode, rotation?: Vector3Like) {
+        // Resolve the actorId value.
+        let actorId = ZeroGuid;
+        if (typeof (actorOrActorId) === 'object' && actorOrActorId.id !== undefined) {
+            actorId = actorOrActorId.id;
+        } else if (typeof (actorOrActorId) === 'string') {
+            actorId = actorOrActorId;
+        }
+        // Allocate component if necessary.
+        if (!this._lookAt) {
+            this._lookAt = new LookAt();
+            // Set up observed properties in the next tick, giving us a chance to initialize the values first (below).
+            process.nextTick(() => {
+                // Actor patching: Observe the lookAt component for changed values.
+                observe({
+                    target: this._lookAt,
+                    targetName: 'lookAt',
+                    notifyChanged: (...path: string[]) => this.actorChanged(...path),
+                    // Trigger notifications for every observed leaf node to ensure we get all values in the
+                    // initial patch.
+                    triggerNotificationsNow: true
+                });
+            });
+        }
+        // Set component values.
+        this._lookAt.copy({
+            actorId,
+            mode
+        });
+    }
+
+    /**
      * Attach to the user at the given attach point.
      * @param userOrUserId The User or id of user to attach to.
      * @param attachPoint Where on the user to attach.
@@ -547,23 +590,6 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
     }
 
     /**
-     * Instruct the actor to face another object, or stop facing an object.
-     * @param targetOrId The actor, user, or id of the object to face.
-     * @param lookAtMode How to face the target. @see LookUpMode.
-     */
-    public lookAt(targetOrId: Actor | User | string, lookAtMode: LookAtMode) {
-        let targetId: string;
-        if (lookAtMode !== LookAtMode.None) {
-            if (typeof (targetOrId) === 'object' && targetOrId.id !== undefined) {
-                targetId = targetOrId.id;
-            } else if (typeof (targetOrId) === 'string') {
-                targetId = targetOrId;
-            }
-        }
-        this.context.internal.lookAt(this.id, targetId, lookAtMode);
-    }
-
-    /**
      * Finds child actors matching `name`.
      * @param name The name of the actors to find.
      * @param recurse Whether or not to search recursively.
@@ -660,6 +686,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
         if (from.rigidBody) this.enableRigidBody(from.rigidBody);
         // TODO @tombu:  Add in colliders here once feature is turned on.
         if (from.text) this.enableText(from.text);
+        if (from.lookAt) this.enableLookAt(from.lookAt.actorId, from.lookAt.mode);
 
         this.internal.observing = wasObserving;
         return this;
@@ -676,7 +703,8 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
             light: this._light ? this._light.toJSON() : undefined,
             rigidBody: this._rigidBody ? this._rigidBody.toJSON() : undefined,
             collider: this._collider ? this._collider.toJSON() : undefined,
-            text: this._text ? this._text.toJSON() : undefined
+            text: this._text ? this._text.toJSON() : undefined,
+            lookAt: this._lookAt ? this._lookAt.toJSON() : undefined
         } as ActorLike;
     }
 

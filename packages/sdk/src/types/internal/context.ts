@@ -46,7 +46,6 @@ import {
     CreatePrimitive,
     DestroyActors,
     InterpolateActor,
-    LookAt,
     ObjectSpawned,
     OperationResult,
     Payload,
@@ -345,24 +344,6 @@ export class InternalContext {
                     log.error('app', `Failed animateTo. Actor ${actor.id}. ${(reason || '').toString()}`.trim());
                 });
             });
-        }
-    }
-
-    public lookAt(actorId: string, targetId: string, lookAtMode: LookAtMode) {
-        const actor = this.actorSet[actorId];
-        if (actor) {
-            actor.created().then(() => {
-                this.protocol.sendPayload({
-                    type: 'look-at',
-                    actorId,
-                    targetId,
-                    lookAtMode
-                } as LookAt);
-            }).catch((reason: any) => {
-                log.error('app', `Failed lookAt. Actor ${actor.id}. ${(reason || '').toString()}`.trim());
-            });
-        } else {
-            log.error('app', `Failed lookAt. Actor ${actorId} not found.`);
         }
     }
 
