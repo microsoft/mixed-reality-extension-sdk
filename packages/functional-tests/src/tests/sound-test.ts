@@ -50,8 +50,8 @@ export default class SoundTest extends Test {
         const soundAssetPromise = this.app.context.assetManager.createSound(
             'meh',
             {
-                // uri: `${this.baseUrl}/music.mod`,
-                uri: `${this.baseUrl}/boo.wav`,
+                uri: `${this.baseUrl}/music.mod`,
+                // uri: `${this.baseUrl}/boo.wav`,
             });
 
         // await soundAssetPromise;
@@ -59,8 +59,10 @@ export default class SoundTest extends Test {
         text.text.contents = "Starting Sound";
         const soundInstance = text.startSound(soundAssetPromise.value.id,
             {
-                volume: 1.0,
-                looping: true
+                volume: 0.5,
+                looping: true,
+                doppler: 0.0,
+                multiChannelSpread: 0.2
             },
             0);
         await delay(3 * 1000);
@@ -80,9 +82,9 @@ export default class SoundTest extends Test {
         });
         await delay(1 * 1000);
 
-        text.text.contents = "Lowering Volume";
+        text.text.contents = "Raising Volume";
         soundInstance.value.setSoundState({
-            volume: 0.3
+            volume: 1.0
         });
         await delay(5 * 1000);
 
@@ -92,7 +94,7 @@ export default class SoundTest extends Test {
 
         text.text.contents = "resuming";
         soundInstance.value.resume();
-        await delay(3 * 1000);
+        await delay(300 * 1000);
 
         text.text.contents = "Stopping Sound";
         soundInstance.value.stop();
