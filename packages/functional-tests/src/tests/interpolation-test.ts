@@ -3,74 +3,43 @@
  * Licensed under the MIT License.
  */
 
-import * as MRESDK from '@microsoft/mixed-reality-extension-sdk';
+import * as MRE from '@microsoft/mixed-reality-extension-sdk';
 
 import { Test } from '../test';
 
 export default class InterpolationTest extends Test {
-    private sceneRoot: MRESDK.Actor;
-    private running = true;
-
+    public expectedResultDescription = "Lerping scale and rotation";
     public async run(): Promise<boolean> {
-        this.sceneRoot = MRESDK.Actor.CreateEmpty(this.app.context).value;
-        const expressiveCubePromise = this.spawnExpressiveCube();
-        const timeout = setTimeout(() => this.running = false, 60000);
-        await expressiveCubePromise;
-        clearTimeout(timeout);
-        return true;
-    }
-
-    private async spawnExpressiveCube() {
-        const label = MRESDK.Actor.CreateEmpty(this.app.context, {
-            actor: {
-                parentId: this.sceneRoot.id,
-                transform: {
-                    position: { y: 2.5 }
-                },
-                text: {
-                    contents:
-                        'Lerping scale and rotation\n' +
-                        'Click to exit (or wait a minute)',
-                    anchor: MRESDK.TextAnchorLocation.TopCenter,
-                    justify: MRESDK.TextJustify.Center,
-                    height: 0.4,
-                    color: MRESDK.Color3.Yellow()
-                }
-            }
-        }).value;
-        label.setBehavior(MRESDK.ButtonBehavior).onClick('released', () => this.running = false);
-
-        const cube = MRESDK.Actor.CreatePrimitive(this.app.context, {
+        const cube = MRE.Actor.CreatePrimitive(this.app.context, {
             definition: {
-                shape: MRESDK.PrimitiveShape.Box
+                shape: MRE.PrimitiveShape.Box,
+                dimensions: { x: 0.65, y: 0.65, z: 0.65 }
             },
-            addCollider: true,
-            actor: {
-                parentId: this.sceneRoot.id,
-            }
+            addCollider: true
         }).value;
-        cube.setBehavior(MRESDK.ButtonBehavior).onClick('released', () => this.running = false);
 
-        while (this.running) {
+        while (!this.stopped) {
             // Random point on unit sphere (pick random axis).
             const θ = Math.random() * 2 * Math.PI;
             const z = Math.cos(θ);
             const x = Math.sqrt(1 - z * z) * Math.cos(θ);
             const y = Math.sqrt(1 - z * z) * Math.sin(θ);
-            const axis = new MRESDK.Vector3(x, y, z);
+            const axis = new MRE.Vector3(x, y, z);
             // Random rotation around picked axis.
-            const rotation = MRESDK.Quaternion.RotationAxis(axis, Math.random() * 2 * Math.PI);
-            // Random scale in [1..2].
-            const scalar = 1 + 1 * Math.random();
-            const scale = new MRESDK.Vector3(scalar, scalar, scalar);
+            const rotation = MRE.Quaternion.RotationAxis(axis, Math.random() * 2 * Math.PI);
+            // Random scale in [0.5..1.5].
+            const scalar = 0.3 + 0.7 * Math.random();
+            const scale = new MRE.Vector3(scalar, scalar, scalar);
             // Random ease curve.
-            const easeCurveKeys = Object.keys(MRESDK.AnimationEaseCurves);
+            const easeCurveKeys = Object.keys(MRE.AnimationEaseCurves);
             const easeIndex = Math.floor(Math.random() * easeCurveKeys.length);
             const easeCurveKey = easeCurveKeys[easeIndex];
             // Interpolate object's rotation and scale.
             await cube.animateTo(
                 { transform: { rotation, scale } },
-                1.0, (MRESDK.AnimationEaseCurves as any)[easeCurveKey]);
+                1.0, (MRE.AnimationEaseCurves as any)[easeCurveKey]);
         }
+
+        return true;
     }
 }
