@@ -660,17 +660,6 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
     },
 
     // ========================================================================
-    'look-at': {
-        ...DefaultRule,
-        synchronization: {
-            stage: 'create-actors',
-            before: 'queue',
-            during: 'queue',
-            after: 'allow'
-        }
-    },
-
-    // ========================================================================
     'multi-operation-result': {
         ...ClientOnlyRule
     },

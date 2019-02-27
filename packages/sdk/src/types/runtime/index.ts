@@ -15,3 +15,4 @@ export * from './text';
 export * from './collider';
 export * from './assets';
 export * from './physics';
+export * from './lookAt';

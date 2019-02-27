@@ -4,9 +4,9 @@
  */
 
 import { OperationResultCode, Trace } from '..';
-import { AnimationState, CreateAnimationOptions, LookAtMode, SetAnimationStateOptions } from '../../..';
+import { CreateAnimationOptions, SetAnimationStateOptions } from '../../..';
 import { PrimitiveDefinition } from '../../primitiveTypes';
-import { ActorLike, ColliderType, LightLike, TextLike, TransformLike, UserLike } from '../../runtime';
+import { ActorLike, ColliderType, UserLike } from '../../runtime';
 import { ActionState, BehaviorType } from '../../runtime/behaviors';
 import { OperatingModel } from '../operatingModel';
 import { SubscriptionType } from '../subscriptionType';
@@ -37,7 +37,6 @@ export type PayloadType
     | 'heartbeat-reply'
     | 'interpolate-actor'
     | 'load-assets'
-    | 'look-at'
     | 'multi-operation-result'
     | 'object-spawned'
     | 'operation-result'
@@ -369,15 +368,4 @@ export type InterpolateActor = Payload & {
     duration: number;
     curve: number[];
     enabled: boolean;
-};
-
-/**
- * @hidden
- * App to engine. Instruct the actor to face another actor or user.
- */
-export type LookAt = Payload & {
-    type: 'look-at';
-    actorId: string;
-    targetId: string;
-    lookAtMode: LookAtMode;
 };
