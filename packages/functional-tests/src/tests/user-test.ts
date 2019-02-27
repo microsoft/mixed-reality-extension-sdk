@@ -6,11 +6,9 @@
 import * as MRESDK from '@microsoft/mixed-reality-extension-sdk';
 
 import { Test } from '../test';
-import delay from '../utils/delay';
-import destroyActors from '../utils/destroyActors';
 
 export default class UserTest extends Test {
-
+    public expectedResultDescription = "Lists user info";
     public async run(): Promise<boolean> {
         const connectedUserCount = Object.keys(this.app.connectedUsers).length;
         const labelText = 'Launched by User Named: ' + this.user.name +
@@ -18,21 +16,21 @@ export default class UserTest extends Test {
             "\nIP Address: " + this.user.properties.remoteAddress +
             "\nTotal Connected Users:" + connectedUserCount;
 
-        const label = await MRESDK.Actor.CreateEmpty(this.app.context, {
+        await MRESDK.Actor.CreateEmpty(this.app.context, {
             actor: {
                 transform: {
-                    position: { x: 0, y: 2, z: 0 }
+                    position: { x: 0, y: 0, z: 0 },
+                    rotation: { x: 0, y: 1, z: 0, w: 0 }
                 },
                 text: {
                     contents: labelText,
-                    height: 0.3,
-                    anchor: MRESDK.TextAnchorLocation.BottomCenter
+                    height: 0.1,
+                    anchor: MRESDK.TextAnchorLocation.MiddleCenter
                 }
             }
         });
-        await delay(3 * 1000);
 
-        destroyActors([label]);
+        await this.stoppedAsync();
         return true;
     }
 }

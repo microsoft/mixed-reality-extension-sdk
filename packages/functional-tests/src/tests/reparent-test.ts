@@ -3,83 +3,52 @@
  * Licensed under the MIT License.
  */
 
-import * as MRESDK from '@microsoft/mixed-reality-extension-sdk';
+import * as MRE from '@microsoft/mixed-reality-extension-sdk';
 
 import { Test } from '../test';
-import delay from '../utils/delay';
 
 export default class ReparentTest extends Test {
-    private sceneRoot: MRESDK.Actor;
-    private running = true;
+    public expectedResultDescription = "Sphere should be jumping left and right";
+    private interval: NodeJS.Timeout;
 
     public async run(): Promise<boolean> {
-        this.sceneRoot = MRESDK.Actor.CreateEmpty(this.app.context).value;
-        const runningTestPromise = this.runTest();
-        const timeout = setTimeout(() => this.running = false, 60000);
-        await runningTestPromise;
-        clearTimeout(timeout);
-        return true;
-    }
-
-    private async runTest() {
-        const label = MRESDK.Actor.CreateEmpty(this.app.context, {
+        const leftParent = MRE.Actor.CreateEmpty(this.app.context, {
             actor: {
-                parentId: this.sceneRoot.id,
                 transform: {
-                    position: { y: 3 }
-                },
-                text: {
-                    contents:
-                        'Reparenting Test\n' +
-                        'Sphere should be jumping left and right\n' +
-                        'Click to exit (or wait a minute)',
-                    anchor: MRESDK.TextAnchorLocation.TopCenter,
-                    justify: MRESDK.TextJustify.Center,
-                    height: 0.4,
-                    color: MRESDK.Color3.Yellow()
+                    position: { x: -1 }
                 }
             }
         }).value;
-        label.setBehavior(MRESDK.ButtonBehavior).onClick('released', () => this.running = false);
-
-        const leftParent = MRESDK.Actor.CreateEmpty(this.app.context, {
+        const rightParent = MRE.Actor.CreateEmpty(this.app.context, {
             actor: {
-                parentId: this.sceneRoot.id,
                 transform: {
-                    position: { x: -1, y: 1 }
-                }
-            }
-        }).value;
-        const rightParent = MRESDK.Actor.CreateEmpty(this.app.context, {
-            actor: {
-                parentId: this.sceneRoot.id,
-                transform: {
-                    position: { x: 1, y: 1 }
+                    position: { x: 1 }
                 }
             }
         }).value;
 
-        const sphere = MRESDK.Actor.CreatePrimitive(this.app.context, {
+        const sphere = MRE.Actor.CreatePrimitive(this.app.context, {
             definition: {
-                shape: MRESDK.PrimitiveShape.Sphere,
+                shape: MRE.PrimitiveShape.Sphere,
                 radius: 0.25
             },
-            addCollider: true,
             actor: {
                 parentId: leftParent.id
             }
         }).value;
-        sphere.setBehavior(MRESDK.ButtonBehavior).onClick('released', () => this.running = false);
 
         let currParent = 0;
         const parentIds = [leftParent.id, rightParent.id];
-
-        while (this.running) {
-            for (let i = 0; i < 10 && this.running; ++i) {
-                await delay(100);
-            }
+        this.interval = setInterval(() => {
             currParent = 1 - currParent;
             sphere.parentId = parentIds[currParent];
-        }
+        }, 1000);
+
+        await this.stoppedAsync();
+        return true;
+    }
+
+    public cleanup() {
+        clearInterval(this.interval);
     }
 }
