@@ -23,10 +23,15 @@ export interface BoxColliderGeometry {
     size?: Readonly<Vector3Like>;
 }
 
+export interface MeshColliderGeometry {
+    colliderType: 'mesh';
+}
+
 /**
  * All collider parameter types.
  */
 export type ColliderGeometry
     = SphereColliderGeometry
     | BoxColliderGeometry
+    | MeshColliderGeometry
     ;
