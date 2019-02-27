@@ -13,7 +13,7 @@ export default class UserTest extends Test {
         const connectedUserCount = Object.keys(this.app.connectedUsers).length;
         const labelText = 'Launched by User Named: ' + this.user.name +
             '\nUser ID: ' + this.user.id +
-            "\nIP Address: " + this.user.properties.remoteAddress +
+            "\nProperties: " + this.formatProperties(this.user.properties) +
             "\nTotal Connected Users:" + connectedUserCount;
 
         await MRESDK.Actor.CreateEmpty(this.app.context, {
@@ -32,5 +32,15 @@ export default class UserTest extends Test {
 
         await this.stoppedAsync();
         return true;
+    }
+
+    private formatProperties(props: { [key: string]: string }): string {
+        let output = "";
+        for (const k in props) {
+            if (props.hasOwnProperty(k)) {
+                output += `\n   ${k}: ${props[k]}`;
+            }
+        }
+        return output;
     }
 }

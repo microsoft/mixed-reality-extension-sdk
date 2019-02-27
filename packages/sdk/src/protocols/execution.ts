@@ -81,6 +81,9 @@ export class Execution extends Protocol {
     public 'recv-user-joined' = (payload: UserJoined) => {
 
         const props = payload.user.properties = payload.user.properties || {};
+        props.host = props.host || 'unspecified';
+        props.engine = props.engine || 'unspecified';
+
         if (this.conn instanceof WebSocket && !props.remoteAddress) {
             props.remoteAddress = this.conn.remoteAddress;
         }
