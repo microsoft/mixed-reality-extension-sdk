@@ -4,18 +4,14 @@
  */
 
 import * as GltfGen from '@microsoft/gltf-gen';
-import * as MRESDK from '@microsoft/mixed-reality-extension-sdk';
-import App from '../app';
+import * as MRE from '@microsoft/mixed-reality-extension-sdk';
+
 import Server from '../server';
+import { Test } from '../test';
 import delay from '../utils/delay';
-import destroyActors from '../utils/destroyActors';
-import Test from './test';
 
 export default class AssetMutabilityTest extends Test {
-
-    constructor(app: App, private baseUrl: string, private user: MRESDK.User) {
-        super(app);
-    }
+    public expectedResultDescription = "Animate a cube's color and texture";
 
     public async run(): Promise<boolean> {
 
@@ -24,29 +20,31 @@ export default class AssetMutabilityTest extends Test {
         );
 
         const mat = assets.materials.byIndex(0);
-        const box = await MRESDK.Actor.CreatePrimitive(this.app.context, {
+        const box = await MRE.Actor.CreatePrimitive(this.app.context, {
             definition: {
-                shape: MRESDK.PrimitiveShape.Box,
+                shape: MRE.PrimitiveShape.Box,
                 dimensions: { x: 1, y: 1, z: 1 }
             },
             actor: {
                 name: 'box',
-                materialId: mat.id,
-                transform: {
-                    position: { x: 0, y: 1, z: 0 }
-                }
+                materialId: mat.id
             }
         });
 
-        for (let i = 0; i < 64; i++) {
+        let direction = 1;
+        let i = 0;
+        while (!this.stopped) {
             mat.color.copyFrom(this.fromHSV(i / 32, 1, 1));
             mat.mainTextureOffset.set(i / 32, i / 32);
             mat.mainTextureScale.set(1 - i / 32, 1 - i / 32);
 
+            i += direction;
+            if (i === 0 || i === 64) {
+                direction *= -1;
+            }
             await delay(100);
         }
 
-        destroyActors([box]);
         return true;
     }
 
@@ -64,11 +62,11 @@ export default class AssetMutabilityTest extends Test {
         return Server.registerStaticBuffer('assets.glb', gltfFactory.generateGLTF());
     }
 
-    private fromHSV(h: number, s: number, v: number): MRESDK.Color4 {
+    private fromHSV(h: number, s: number, v: number): MRE.Color4 {
         // from wikipedia: https://en.wikipedia.org/wiki/HSL_and_HSV#From_HSV
         function f(n: number, k = (n + h * 6) % 6) {
             return v - v * s * Math.max(Math.min(k, 4 - k, 1), 0);
         }
-        return new MRESDK.Color4(f(5), f(3), f(1), 1);
+        return new MRE.Color4(f(5), f(3), f(1), 1);
     }
 }

@@ -8,17 +8,11 @@ import { resolve } from 'path';
 import * as GltfGen from '@microsoft/gltf-gen';
 import * as MRE from '@microsoft/mixed-reality-extension-sdk';
 
-import App from '../app';
 import Server from '../server';
-import delay from '../utils/delay';
-import destroyActors from '../utils/destroyActors';
-import Test from './test';
+import { Test } from '../test';
 
 export default class GltfGenTest extends Test {
-
-    constructor(app: App, private baseUrl: string) {
-        super(app);
-    }
+    public expectedResultDescription = "A textured sphere";
 
     public async run(): Promise<boolean> {
         const spherePrim = new GltfGen.Sphere(0.5);
@@ -38,13 +32,11 @@ export default class GltfGenTest extends Test {
             })]
         })]);
 
-        const sphere = await MRE.Actor.CreateFromGltf(this.app.context, {
+        await MRE.Actor.CreateFromGltf(this.app.context, {
             resourceUrl: Server.registerStaticBuffer('sphere.glb', gltfFactory.generateGLTF())
         });
 
-        await delay(5000);
-
-        destroyActors(sphere);
+        await this.stoppedAsync();
 
         return true;
     }

@@ -6,7 +6,7 @@
 import * as MRESDK from '@microsoft/mixed-reality-extension-sdk';
 import { log } from '@microsoft/mixed-reality-extension-sdk/built/log';
 import { resolve as resolvePath } from 'path';
-import App from './app';
+import { App } from './app';
 
 process.on('uncaughtException', (err) => console.log('uncaughtException', err));
 process.on('unhandledRejection', (reason) => console.log('unhandledRejection', reason));

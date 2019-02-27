@@ -3,93 +3,44 @@
  * Licensed under the MIT License.
  */
 
-import * as MRESDK from '@microsoft/mixed-reality-extension-sdk';
-import App from '../app';
-import delay from '../utils/delay';
-import destroyActors from '../utils/destroyActors';
-import Test from './test';
+import * as MRE from '@microsoft/mixed-reality-extension-sdk';
+
+import { Test } from '../test';
+
+const circleKeyframes = [
+    { time: 0, value: { transform: { position: { x: 0, y: -1, z: -0.5 } } } },
+    { time: 1, value: { transform: { position: { x: 1, y: 0, z: -0.5 } } } },
+    { time: 2, value: { transform: { position: { x: 0, y: 1, z: -0.5 } } } },
+    { time: 3, value: { transform: { position: { x: -1, y: 0, z: -0.5 } } } },
+    { time: 4, value: { transform: { position: { x: 0, y: -1, z: -0.5 } } } }
+] as MRE.AnimationKeyframe[];
 
 export default class LookAtTest extends Test {
-
-    constructor(app: App, private baseUrl: string, private user: MRESDK.User) {
-        super(app);
-    }
+    public expectedResultDescription = "No swivel, XY swivel, Y swivel";
+    public interval: NodeJS.Timeout;
+    public state = 0;
 
     public async run(): Promise<boolean> {
-        let success = true;
-
-        success = success && await this.runLookAtTest();
-
-        return success;
-    }
-
-    public async runLookAtTest(): Promise<boolean> {
-        const tester = await MRESDK.Actor.CreateFromGltf(this.app.context, {
-            resourceUrl: `${this.baseUrl}/monkey.glb`
+        const tester = await MRE.Actor.CreateFromGltf(this.app.context, {
+            resourceUrl: `${this.baseUrl}/monkey.glb`,
+            actor: { transform: { scale: { x: 0.5, y: 0.5, z: 0.5 } } }
         });
-        await tester.createAnimation(
-            'circle', {
-                wrapMode: MRESDK.AnimationWrapMode.Loop,
-                keyframes: [
-                    {
-                        time: 0, value: {
-                            transform: {
-                                position: { x: 0, y: 0, z: 0 }
-                            }
-                        }
-                    },
-                    {
-                        time: 1, value: {
-                            transform: {
-                                position: { x: 2, y: 2, z: 0 }
-                            }
-                        }
-                    },
-                    {
-                        time: 2, value: {
-                            transform: {
-                                position: { x: 0, y: 4, z: 0 }
-                            }
-                        }
-                    },
-                    {
-                        time: 3, value: {
-                            transform: {
-                                position: { x: -2, y: 2, z: 0 }
-                            }
-                        }
-                    },
-                    {
-                        time: 4, value: {
-                            transform: {
-                                position: { x: 0, y: 0, z: 0 }
-                            }
-                        }
-                    },
-                ]
-            });
-
+        await tester.createAnimation('circle', {
+            wrapMode: MRE.AnimationWrapMode.Loop,
+            keyframes: circleKeyframes
+        });
         tester.enableAnimation('circle');
 
-        this.app.rpc.send('functional-test:trace-message', 'look-at-test', "LookAtMode.None");
-        tester.lookAt(null, MRESDK.LookAtMode.None);
-        await delay(2000);
+        this.interval = setInterval(() => {
+            const modes = [MRE.LookAtMode.TargetXY, MRE.LookAtMode.TargetY, MRE.LookAtMode.None];
+            tester.lookAt(this.user, modes[this.state++ % 3]);
+        }, 2000);
 
-        this.app.rpc.send('functional-test:trace-message', 'look-at-test', "LookAtMode.TargetXY");
-        tester.lookAt(this.user, MRESDK.LookAtMode.TargetXY);
-        await delay(4000);
-
-        this.app.rpc.send('functional-test:trace-message', 'look-at-test', "LookAtMode.TargetY");
-        tester.lookAt(this.user, MRESDK.LookAtMode.TargetY);
-        await delay(4000);
-
-        this.app.rpc.send('functional-test:trace-message', 'look-at-test', "LookAtMode.None");
-        tester.lookAt(null, MRESDK.LookAtMode.None);
-        await delay(1000);
-
-        tester.disableAnimation('circle');
-        destroyActors(tester);
-
+        await this.stoppedAsync();
         return true;
+    }
+
+    public cleanup() {
+        clearInterval(this.interval);
     }
 }

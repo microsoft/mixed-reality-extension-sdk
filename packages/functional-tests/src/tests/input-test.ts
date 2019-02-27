@@ -3,54 +3,21 @@
  * Licensed under the MIT License.
  */
 
-import * as MRESDK from '@microsoft/mixed-reality-extension-sdk';
-import { Actor } from '@microsoft/mixed-reality-extension-sdk';
-import App from '../app';
+import * as MRE from '@microsoft/mixed-reality-extension-sdk';
+
+import { Test } from '../test';
 import delay from '../utils/delay';
-import destroyActors from '../utils/destroyActors';
-import Test from './test';
 
 export default class InputTest extends Test {
+    public expectedResultDescription = "Hover, click, and unhover";
 
-    constructor(app: App, private baseUrl: string) {
-        super(app);
-    }
+    private state = 0;
+    private spinCount = 0;
+    private model: MRE.Actor;
 
     public async run(): Promise<boolean> {
-        let success = true;
-
-        success = success && await this.runInputTest();
-
-        return success;
-    }
-
-    public async runInputTest(): Promise<boolean> {
-
-        const tester = MRESDK.Actor.CreateEmpty(this.app.context, {});
-
-        // Create a new actor with no mesh, but some text. This operation is asynchronous, so
-        // it returns a "forward" promise (a special promise, as we'll see later).
-        const textPromise = Actor.CreateEmpty(this.app.context, {
-            actor: {
-                name: 'label',
-                parentId: tester.value.id,
-                transform: {
-                    position: { x: 0, y: 0.5, z: 0 }
-                },
-                text: {
-                    anchor: MRESDK.TextAnchorLocation.MiddleCenter,
-                    color: { r: 30 / 255, g: 206 / 255, b: 213 / 255 },
-                    height: 0.3
-                }
-            }
-        });
-
-        const text = textPromise.value;
-        await textPromise;
-        text.text.contents = "Please Hover";
-
         // Load a glTF model
-        const modelPromise = Actor.CreateFromGltf(this.app.context, {
+        this.model = MRE.Actor.CreateFromGltf(this.app.context, {
             // at the given URL
             resourceUrl: `${this.baseUrl}/monkey.glb`,
             // and spawn box colliders around the meshes.
@@ -58,87 +25,97 @@ export default class InputTest extends Test {
             // Also apply the following generic actor properties.
             actor: {
                 name: 'clickable',
-                // Parent the glTF model to the text actor.
-                parentId: tester.value.id,
                 transform: {
-                    position: { x: 0, y: 1.3, z: 0 },
                     scale: { x: 0.4, y: 0.4, z: 0.4 }
                 }
             }
-        });
+        }).value;
 
-        const model = modelPromise.value;
         // Create some animations on the cube.
-        model.createAnimation(
+        this.model.createAnimation(
             'GrowIn', {
                 keyframes: this.growAnimationData
             }).catch(reason => console.log(`Failed to create grow animation: ${reason}`));
 
-        model.createAnimation(
+        this.model.createAnimation(
             'ShrinkOut', {
                 keyframes: this.shrinkAnimationData
             }).catch(reason => console.log(`Failed to create shrink animation: ${reason}`));
 
-        model.createAnimation(
-            'DoAFlip', {
-                keyframes: this.generateSpinKeyframes(0.5, MRESDK.Vector3.Up())
+        this.model.createAnimation(
+            'Spin1', {
+                keyframes: this.generateSpinKeyframes(0.5, MRE.Vector3.Up()),
+            }).catch(reason => console.log(`Failed to create flip animation: ${reason}`));
+
+        this.model.createAnimation(
+            'Spin2', {
+                keyframes: this.generateSpinKeyframes(0.5, MRE.Vector3.Up(), Math.PI),
             }).catch(reason => console.log(`Failed to create flip animation: ${reason}`));
 
         // Set up cursor interaction. We add the input behavior ButtonBehavior to the cube.
         // Button behaviors have two pairs of events: hover start/stop, and click start/stop.
-        const buttonBehavior = model.setBehavior(MRESDK.ButtonBehavior);
-
-        await new Promise<void>((resolve) => {
-            let stateCounter = 0;
-            // Trigger the grow/shrink animations on hover.
-            buttonBehavior.onHover('enter', (userId: string) => {
-                model.enableAnimation('GrowIn');
-                if (stateCounter === 0) {
-                    stateCounter++;
-                    text.text.contents = "Please Click";
-                }
-            });
-            // When clicked, do a 360 sideways.
-            buttonBehavior.onClick('pressed', (userId: string) => {
-                model.enableAnimation('DoAFlip');
-                if (stateCounter === 1) {
-                    stateCounter++;
-                    text.text.contents = "Please Unhover";
-                }
-            });
-
-            buttonBehavior.onHover('exit', (userId: string) => {
-                model.enableAnimation('ShrinkOut');
-                if (stateCounter === 2) {
-                    resolve();
-                } else {
-                    stateCounter = 0;
-                    text.text.contents = "Please Hover Again";
-                }
-            });
-
+        const behavior = this.model.setBehavior(MRE.ButtonBehavior);
+        behavior.onHover('enter', _ => {
+            this.state = 1;
+            this.cycleState();
+        });
+        behavior.onClick('pressed', _ => {
+            this.state = 2;
+            this.cycleState();
+        });
+        behavior.onHover('exit', _ => {
+            this.state = 0;
+            this.cycleState();
         });
 
-        await delay(0.3 * 1000);
-        text.text.contents = "Thank you for your cooperation";
-        await delay(1.2 * 1000);
+        this.cycleState();
+        await this.stoppedAsync();
 
-        destroyActors(tester.value);
+        this.model.setBehavior(null);
+        this.app.setOverrideText("Thank you for your cooperation");
+        await delay(1.2 * 1000);
 
         return true;
     }
 
-    private generateSpinKeyframes(duration: number, axis: MRESDK.Vector3): MRESDK.AnimationKeyframe[] {
+    private cycleState() {
+        switch (this.state) {
+            case 0:
+                this.model.enableAnimation('ShrinkOut');
+                this.app.setOverrideText("Please Hover");
+                break;
+            case 1:
+                this.model.enableAnimation('GrowIn');
+                this.app.setOverrideText("Please Click");
+                break;
+            case 2:
+                if (this.spinCount % 2 === 0) {
+                    this.model.enableAnimation('Spin1');
+                } else {
+                    this.model.enableAnimation('Spin2');
+                }
+                this.spinCount++;
+                this.app.setOverrideText("Please Unhover");
+                break;
+            default:
+                throw new Error("How did we get here?");
+        }
+    }
+
+    private generateSpinKeyframes(duration: number, axis: MRE.Vector3, start = 0): MRE.AnimationKeyframe[] {
         return [{
             time: 0 * duration,
-            value: { transform: { rotation: MRESDK.Quaternion.RotationAxis(axis, 0) } }
+            value: { transform: { rotation: MRE.Quaternion.RotationAxis(axis, start) } }
+        }, {
+            time: 0.5 * duration,
+            value: { transform: { rotation: MRE.Quaternion.RotationAxis(axis, start + Math.PI / 2) } }
         }, {
             time: 1 * duration,
-            value: { transform: { rotation: MRESDK.Quaternion.RotationAxis(axis, Math.PI) } }
+            value: { transform: { rotation: MRE.Quaternion.RotationAxis(axis, start + Math.PI) } }
         }];
     }
 
-    private growAnimationData: MRESDK.AnimationKeyframe[] = [{
+    private growAnimationData: MRE.AnimationKeyframe[] = [{
         time: 0,
         value: { transform: { scale: { x: 0.4, y: 0.4, z: 0.4 } } }
     }, {
@@ -146,7 +123,7 @@ export default class InputTest extends Test {
         value: { transform: { scale: { x: 0.5, y: 0.5, z: 0.5 } } }
     }];
 
-    private shrinkAnimationData: MRESDK.AnimationKeyframe[] = [{
+    private shrinkAnimationData: MRE.AnimationKeyframe[] = [{
         time: 0,
         value: { transform: { scale: { x: 0.5, y: 0.5, z: 0.5 } } }
     }, {

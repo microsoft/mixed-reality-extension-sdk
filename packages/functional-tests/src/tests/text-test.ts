@@ -4,16 +4,14 @@
  */
 
 import * as MRESDK from '@microsoft/mixed-reality-extension-sdk';
-import App from '../app';
-import delay from '../utils/delay';
-import destroyActors from '../utils/destroyActors';
-import Test from './test';
+
+import { Test } from '../test';
 
 const options = {
     enabled: [true, false],
     contents: ["changing", "content"],
     ppl: [10, 20, 50],
-    height: [.1, .5, 1],
+    height: [.075, 0.15, 0.3],
     anchor: Object.keys(MRESDK.TextAnchorLocation) as MRESDK.TextAnchorLocation[],
     justify: Object.keys(MRESDK.TextJustify) as MRESDK.TextJustify[],
     font: Object.keys(MRESDK.TextFontFamily) as MRESDK.TextFontFamily[],
@@ -24,6 +22,8 @@ const options = {
  * Test the text api functionality
  */
 export default class TextTest extends Test {
+    public expectedResultDescription = "Text cycling their options";
+    public interval: NodeJS.Timeout;
 
     private enabled: MRESDK.Actor;
     private contents: MRESDK.Actor;
@@ -34,51 +34,38 @@ export default class TextTest extends Test {
     private font: MRESDK.Actor;
     private color: MRESDK.Actor;
 
-    constructor(app: App) {
-        super(app);
-    }
-
     public async run(): Promise<boolean> {
-        let actors: MRESDK.Actor[] = [];
-
         const enabled = this.createTemplate("enabled");
         this.enabled = enabled.value;
-        this.enabled.transform.position.copy({ x: -3, y: 3, z: 0 });
-        actors.push(this.enabled);
+        this.enabled.transform.position.copy({ x: -1, y: 0.5, z: 0 });
 
         const contents = this.createTemplate('contents');
         this.contents = contents.value;
-        this.contents.transform.position.copy({ x: 3, y: 3, z: 0 });
-        actors.push(this.contents);
+        this.contents.transform.position.copy({ x: 0, y: 0.5, z: 0 });
 
         const ppl = this.createTemplate('pixelsPerLine');
         this.ppl = ppl.value;
-        this.ppl.transform.position.copy({ x: -3, y: 2, z: 0 });
-        actors.push(this.ppl);
+        this.ppl.transform.position.copy({ x: -1, y: 0, z: 0 });
 
         const height = this.createTemplate('height');
         this.height = height.value;
-        this.height.transform.position.copy({ x: 3, y: 2, z: 0 });
-        actors.push(this.height);
+        this.height.transform.position.copy({ x: 0, y: 0, z: 0 });
 
         const font = this.createTemplate('font');
         this.font = font.value;
-        this.font.transform.position.copy({ x: -3, y: 1, z: 0 });
-        actors.push(this.font);
+        this.font.transform.position.copy({ x: -1, y: -0.5, z: 0 });
 
         const color = this.createTemplate('color');
         this.color = color.value;
-        this.color.transform.position.copy({ x: 3, y: 1, z: 0 });
-        actors.push(this.color);
+        this.color.transform.position.copy({ x: 0, y: -0.5, z: 0 });
 
         const anchor = this.createTemplate('anchor');
         this.anchor = anchor.value;
-        this.anchor.transform.position.copy({ x: -10, y: 1, z: 0 });
-        actors.push(this.anchor);
+        this.anchor.transform.position.copy({ x: 1, y: 0.3, z: 0 });
         MRESDK.Actor.CreatePrimitive(this.app.context, {
             definition: {
                 shape: MRESDK.PrimitiveShape.Sphere,
-                radius: .1
+                radius: .05
             },
             actor: {
                 name: "anchorReference",
@@ -88,12 +75,11 @@ export default class TextTest extends Test {
 
         const justify = this.createTemplate('multiline\njustify');
         this.justify = justify.value;
-        this.justify.transform.position.copy({ x: 10, y: 1, z: 0 });
-        actors.push(this.justify);
+        this.justify.transform.position.copy({ x: 1, y: -0.3, z: 0 });
         MRESDK.Actor.CreatePrimitive(this.app.context, {
             definition: {
                 shape: MRESDK.PrimitiveShape.Sphere,
-                radius: .1
+                radius: .05
             },
             actor: {
                 name: "justifyReference",
@@ -102,17 +88,9 @@ export default class TextTest extends Test {
         });
 
         // Start cycling the elements.
-        const interval = setInterval(this.cycleOptions.bind(this), 1000);
+        this.interval = setInterval(() => this.cycleOptions(), 1000);
 
-        // Wait for some seconds.
-        await delay(10000);
-
-        // Stop cycling the elements.
-        clearInterval(interval);
-
-        // Destroy all the actors we created.
-        actors = destroyActors(actors);
-
+        await this.stoppedAsync();
         return true;
     }
 
@@ -156,7 +134,11 @@ export default class TextTest extends Test {
                 name: text.replace('\n', ' '),
                 text: {
                     contents: text,
+                    height: 0.15,
                     anchor: MRESDK.TextAnchorLocation.MiddleCenter
+                },
+                transform: {
+                    rotation: { x: 0, y: 1, z: 0, w: 0 }
                 }
             }
         });

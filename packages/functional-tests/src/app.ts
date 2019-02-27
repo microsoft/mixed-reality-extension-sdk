@@ -3,203 +3,282 @@
  * Licensed under the MIT License.
  */
 
-import * as MRESDK from '@microsoft/mixed-reality-extension-sdk';
+import * as MRE from '@microsoft/mixed-reality-extension-sdk';
 import * as MRERPC from '@microsoft/mixed-reality-extension-sdk/built/rpc';
-import AltspaceVRLibraryTest from './tests/altspacevr-library-test';
-import AltspaceVRVideoTest from './tests/altspacevr-video-test';
-import AssetEarlyAssignmentTest from './tests/asset-early-assignment-test';
-import AssetMutabilityTest from './tests/asset-mutability-test';
-import AssetPreloadTest from './tests/asset-preload-test';
-import ClockSyncTest from './tests/clock-sync-test';
-import GltfAnimationTest from './tests/gltf-animation-test';
-import GltfConcurrencyTest from './tests/gltf-concurrency-test';
-import GltfGenTest from './tests/gltf-gen-test';
-import InputTest from './tests/input-test';
-import InterpolationTest from './tests/interpolation-test';
-import LightTest from './tests/light-test';
-import LookAtTest from './tests/look-at-test';
-import PrimitivesTest from './tests/primitives-test';
-import ReparentTest from './tests/reparent-test';
-import RigidBodyTest from './tests/rigid-body-test';
-import Test from './tests/test';
-import TextTest from './tests/text-test';
-import UserTest from './tests/user-test';
-import delay from './utils/delay';
+
+import Menu from './menu';
+import { Test, TestFactory } from './test';
+import { Factories } from './tests';
 import destroyActors from './utils/destroyActors';
 
+export const SuccessColor = MRE.Color3.Green();
+export const FailureColor = MRE.Color3.Red();
+export const NeutralColor = MRE.Color3.Yellow();
+
 /**
- * Functional Test Application.
+ * Functional Test Application. Takes query arguments to the websocket connection
+ * @param test - Initialize menu on a particular test
+ * @param autostart - Start the test immediately on user join
+ * @param nomenu - Do not spawn the controls
  */
-export default class App {
-    private activeTests: { [id: string]: Test } = {};
+export class App {
     private _rpc: MRERPC.ContextRPC;
-    private firstUser: MRESDK.User;
-    private _connectedUsers: { [id: string]: MRESDK.User } = {};
+    private firstUser: MRE.User;
+    private _connectedUsers: { [id: string]: MRE.User } = {};
+    public testResults: { [name: string]: boolean } = {};
+
+    private activeTestName: string;
+    private activeTestFactory: TestFactory;
+    private activeTest: Test = null;
+    private runPromise: Promise<void> = null;
+
+    private contextLabel: MRE.Actor;
+    private playPauseButton: MRE.Actor;
+    private playPauseText: MRE.Actor;
+    private runnerActors: MRE.Actor[];
+
+    private readonly menu = new Menu(this);
 
     public get context() { return this._context; }
     public get rpc() { return this._rpc; }
     public get connectedUsers() { return this._connectedUsers; }
 
-    /**
-     * Registry of functional tests. Add your test here.
-     * *** KEEP LIST SORTED ***
-     */
-    private testFactories: { [key: string]: (user: MRESDK.User) => Test } = {
-        'altspacevr-library-test': (): Test => new AltspaceVRLibraryTest(this, this.baseUrl),
-        'altspacevr-video-test': (): Test => new AltspaceVRVideoTest(this, this.baseUrl),
-        'asset-early-assignment-test': (): Test => new AssetEarlyAssignmentTest(this, this.baseUrl),
-        'asset-mutability-test': (user: MRESDK.User): Test => new AssetMutabilityTest(this, this.baseUrl, user),
-        'asset-preload-test': (user: MRESDK.User): Test => new AssetPreloadTest(this, this.baseUrl, user),
-        'clock-sync-test': (): Test => new ClockSyncTest(this, this.baseUrl),
-        'gltf-animation-test': (): Test => new GltfAnimationTest(this, this.baseUrl),
-        'gltf-concurrency-test': (): Test => new GltfConcurrencyTest(this, this.baseUrl),
-        'gltf-gen-test': (): Test => new GltfGenTest(this, this.baseUrl),
-        'input-test': (): Test => new InputTest(this, this.baseUrl),
-        'interpolation-test': (): Test => new InterpolationTest(this),
-        'light-test': (): Test => new LightTest(this, this.baseUrl),
-        'look-at-test': (user: MRESDK.User): Test => new LookAtTest(this, this.baseUrl, user),
-        'primitives-test': (): Test => new PrimitivesTest(this, this.baseUrl),
-        'reparent-test': (): Test => new ReparentTest(this),
-        'rigid-body-test': (): Test => new RigidBodyTest(this),
-        'text-test': (): Test => new TextTest(this),
-        'user-test': (user: MRESDK.User): Test => new UserTest(this, this.baseUrl, user),
-    };
-
-    constructor(private _context: MRESDK.Context, private params: MRESDK.ParameterSet, private baseUrl: string) {
+    constructor(private _context: MRE.Context, private params: MRE.ParameterSet, private baseUrl: string) {
         this._rpc = new MRERPC.ContextRPC(_context);
 
+        this.context.onStarted(() => {
+            if (this.params.test === undefined) {
+                this.menu.show();
+            } else {
+                this.activeTestName = this.params.test as string;
+                this.activeTestFactory = Factories[this.activeTestName];
+                this.setupRunner();
+            }
+        });
         this.context.onUserJoined((user) => this.userJoined(user));
         this.context.onUserLeft((user) => this.userLeft(user));
+
+        this.menu.onSelection((name, factory, userId) => {
+            this.menu.hide();
+            this.activeTestName = name;
+            this.activeTestFactory = factory;
+            this.runTest(this.context.user(userId));
+        });
     }
 
-    private async userJoined(user: MRESDK.User) {
-        console.log(`user-joined: ${user.name}, ${user.id}, ${user.properties.remoteAddress}`);
-        this._connectedUsers[user.id] = user;
-
-        let testName: string;
-        if (Array.isArray(this.params.test) && this.params.test.length > 0) {
-            testName = this.params.test[0];
-        } else {
-            testName = this.params.test as string;
-        }
-        if (testName) {
-            await this.runTest(testName, user);
-            this.rpc.send('functional-test:close-connection');
-        } else {
-            if (!this.firstUser) {
-                const promise = this.runFunctionalTestMenu();
-            }
+    private userJoined(user: MRE.User) {
+        this.connectedUsers[user.id] = user;
+        if (!this.firstUser) {
             this.firstUser = user;
-        }
-    }
-
-    private userLeft(user: MRESDK.User) {
-        console.log(`user-left: ${user.name}, ${user.id}`);
-        delete this._connectedUsers[user.id];
-    }
-
-    private async runTest(testName: string, user: MRESDK.User) {
-        if (this.activeTests[testName]) {
-            console.log(`Test already running: '${testName}'`);
-        } else if (!this.testFactories[testName]) {
-            console.log(`error: Unrecognized test: '${testName}'`);
-        } else {
-            this.rpc.send('functional-test:test-starting', testName);
-            console.log(`Test starting: '${testName}'`);
-            const test = this.activeTests[testName] = this.testFactories[testName](user);
-            this.rpc.send('functional-test:test-started', testName);
-            console.log(`Test started: '${testName}'`);
-
-            let success: boolean;
-            try {
-                success = await test.run();
-                if (!success) {
-                    await this.displayError("Test Failed: '${testName}'");
-                }
-            } catch (e) {
-                console.log(e);
-                await this.displayError("Test Triggered Exception: " + e);
-                success = false;
+            if (this.params.autorun !== undefined) {
+                this.runTest(user);
             }
-            console.log(`Test complete: '${testName}'. Success: ${success}`);
-            this.rpc.send('functional-test:test-complete', testName, success);
-
-            test.cleanup();
-
-            delete this.activeTests[testName];
-            // Delete all actors
-            destroyActors(this.context.rootActors);
-            this.context.assetManager.cleanup();
         }
     }
 
-    private async displayError(errorString: string) {
-        const errorLabel = await MRESDK.Actor.CreateEmpty(this.context, {
+    private userLeft(user: MRE.User) {
+        delete this.connectedUsers[user.id];
+        if (user === this.firstUser) {
+            this.firstUser = this.context.users[0] || null;
+            if (!this.firstUser) {
+                this.stopTest().catch(() => { });
+            }
+        }
+    }
+
+    private runTest(user: MRE.User) {
+        // finish setting up runner
+        if (!this.contextLabel) {
+            this.setupRunner();
+        }
+
+        // halt the previous test if there is one
+        (this.activeTest !== null ? this.stopTest() : Promise.resolve())
+            // start the new test, and save the stop handle
+            .then(() => {
+                if (this.playPauseButton) {
+                    this.playPauseButton.material.color.set(1, 0, 0, 1);
+                    this.playPauseText.text.contents = "Stop";
+                }
+                return this.runPromise = this.runTestHelper(user);
+            })
+            .then(() => {
+                if (this.playPauseButton) {
+                    this.playPauseButton.material.color.set(0, 1, 0, 1);
+                    this.playPauseText.text.contents = "Start";
+                }
+            })
+            // and log unexpected errors
+            .catch(err => console.log(err));
+    }
+
+    private async runTestHelper(user: MRE.User) {
+        this.rpc.send('functional-test:test-starting', this.activeTestName);
+        console.log(`Test starting: '${this.activeTestName}'`);
+
+        const test = this.activeTest = this.activeTestFactory(this, this.baseUrl, user);
+        this.setOverrideText(test.expectedResultDescription);
+
+        this.rpc.send('functional-test:test-started', this.activeTestName);
+        console.log(`Test started: '${this.activeTestName}'`);
+
+        let success: boolean;
+        try {
+            success = await test.run();
+            if (!success) {
+                this.setOverrideText("Test Failed: '${testName}'", FailureColor);
+            }
+        } catch (e) {
+            console.log(e);
+            this.setOverrideText("Test " + e, FailureColor);
+            success = false;
+        }
+
+        console.log(`Test complete: '${this.activeTestName}'. Success: ${success}`);
+        this.rpc.send('functional-test:test-complete', this.activeTestName, success);
+        this.testResults[this.activeTestName] = success;
+        if (success) {
+            this.setOverrideText(null);
+        }
+
+        test.cleanup();
+
+        // Delete all actors
+        destroyActors(this.context.rootActors.filter(x => !this.runnerActors.includes(x)));
+        this.context.assetManager.cleanup();
+    }
+
+    private async stopTest() {
+        if (this.activeTest !== null) {
+            this.activeTest.stop();
+            await this.runPromise;
+            this.activeTest = null;
+            this.runPromise = null;
+        }
+    }
+
+    public setOverrideText(text: string, color: MRE.Color3 = NeutralColor): void {
+        if (text) {
+            this.contextLabel.text.color = color;
+            this.contextLabel.text.contents = text;
+        } else {
+            if (this.testResults[this.activeTestName] === true) {
+                this.contextLabel.text.color = SuccessColor;
+            } else if (this.testResults[this.activeTestName] === false) {
+                this.contextLabel.text.color = FailureColor;
+            } else {
+                this.contextLabel.text.color = NeutralColor;
+            }
+            this.contextLabel.text.contents = this.activeTestName;
+        }
+    }
+
+    private setupRunner() {
+        // Main label at the top of the stage
+        this.contextLabel = MRE.Actor.CreateEmpty(this.context, {
             actor: {
-                name: 'label',
+                name: 'contextLabel',
                 text: {
-                    contents: errorString,
-                    height: 0.5,
-                    anchor: MRESDK.TextAnchorLocation.MiddleCenter
+                    contents: this.activeTestName,
+                    height: 0.2,
+                    anchor: MRE.TextAnchorLocation.MiddleCenter,
+                    justify: MRE.TextJustify.Center,
+                    color: NeutralColor
                 },
                 transform: {
-                    position: { x: 0, y: 0, z: 0 }
+                    position: { y: 1 },
+                    rotation: { x: 0, y: 1, z: 0, w: 0 } // 180 turn
                 }
             }
-        });
-        await delay(2000);
-        destroyActors(errorLabel);
-    }
+        }).value;
 
-    private async displayFunctionalTestChoices(rootActor: MRESDK.ActorLike): Promise<string> {
-        return new Promise<string>((resolve) => {
-            let y = 0.3;
-            for (const key of Object.keys(this.testFactories).sort().reverse()) {
-                const button = MRESDK.Actor.CreatePrimitive(this.context, {
-                    definition: {
-                        shape: MRESDK.PrimitiveShape.Box,
-                        dimensions: { x: 0.3, y: 0.3, z: 0.01 }
-                    },
-                    addCollider: true,
-                    actor: {
-                        name: key,
-                        parentId: rootActor.id,
-                        transform: {
-                            position: { x: 0, y, z: 0 }
-                        }
-                    }
-                });
+        // start or stop the active test
+        const ppMat = this.context.assetManager.createMaterial('pp', {
+            color: MRE.Color3.Green().toJSON()
+        }).value;
 
-                const buttonBehavior = button.value.setBehavior(MRESDK.ButtonBehavior);
-                buttonBehavior.onClick('released', (userId: string) => {
-                    resolve(button.value.name);
-                });
-
-                MRESDK.Actor.CreateEmpty(this.context, {
-                    actor: {
-                        name: 'label',
-                        parentId: rootActor.id,
-                        text: {
-                            contents: key,
-                            height: 0.5,
-                            anchor: MRESDK.TextAnchorLocation.MiddleLeft
-                        },
-                        transform: {
-                            position: { x: 0.5, y, z: 0 }
-                        }
-                    }
-                });
-                y = y + 0.5;
+        this.playPauseButton = MRE.Actor.CreatePrimitive(this.context, {
+            definition: {
+                shape: MRE.PrimitiveShape.Box,
+                dimensions: { x: 0.7, y: 0.3, z: 0.1 }
+            },
+            addCollider: true,
+            actor: {
+                name: 'playpause',
+                materialId: ppMat.id,
+                transform: {
+                    position: { y: -1 }
+                }
             }
-        });
-    }
+        }).value;
 
-    private async runFunctionalTestMenu() {
-        while (true) {
-            const rootActor = MRESDK.Actor.CreateEmpty(this.context, {});
-            const selectedTestName = await this.displayFunctionalTestChoices(rootActor.value);
-            destroyActors(rootActor.value);
-            await this.runTest(selectedTestName, this.firstUser);
-        }
+        this.playPauseText = MRE.Actor.CreateEmpty(this.context, {
+            actor: {
+                parentId: this.playPauseButton.id,
+                transform: {
+                    position: { z: 0.1 },
+                    rotation: { x: 0, y: 1, z: 0, w: 0 } // 180 turn
+                },
+                text: {
+                    contents: "Start",
+                    height: 0.15,
+                    anchor: MRE.TextAnchorLocation.MiddleCenter,
+                    justify: MRE.TextJustify.Center,
+                    color: NeutralColor
+                }
+            }
+        }).value;
+
+        this.playPauseButton.setBehavior(MRE.ButtonBehavior)
+            .onClick("released", userId => {
+                if (this.activeTest === null) {
+                    this.runTest(this.context.user(userId));
+                } else {
+                    this.stopTest().catch(() => { });
+                }
+            });
+
+        const menuButton = MRE.Actor.CreatePrimitive(this.context, {
+            definition: {
+                shape: MRE.PrimitiveShape.Box,
+                dimensions: { x: 0.3, y: 0.3, z: 0.1 }
+            },
+            addCollider: true,
+            actor: {
+                name: 'menu',
+                transform: {
+                    position: { x: 0.6, y: -1 }
+                }
+            }
+        }).value;
+
+        const menuText = MRE.Actor.CreateEmpty(this.context, {
+            actor: {
+                parentId: menuButton.id,
+                transform: {
+                    position: { z: 0.1 },
+                    rotation: { x: 0, y: 1, z: 0, w: 0 } // 180 turn
+                },
+                text: {
+                    contents: "...",
+                    height: 0.15,
+                    anchor: MRE.TextAnchorLocation.MiddleCenter,
+                    justify: MRE.TextJustify.Center,
+                    color: MRE.Color3.Black()
+                }
+            }
+        }).value;
+
+        menuButton.setBehavior(MRE.ButtonBehavior)
+            .onClick("released", async userId => {
+                await this.stopTest();
+                [this.contextLabel, this.playPauseButton, this.playPauseText]
+                    = this.runnerActors
+                    = destroyActors(this.runnerActors);
+
+                this.menu.show();
+            });
+
+        this.runnerActors = [this.contextLabel, this.playPauseButton, this.playPauseText, menuButton, menuText];
     }
 }

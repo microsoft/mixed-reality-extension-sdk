@@ -3,21 +3,21 @@
  * Licensed under the MIT License.
  */
 
-import * as MRESDK from '@microsoft/mixed-reality-extension-sdk';
-import App from '../app';
-import delay from '../utils/delay';
-import destroyActors from '../utils/destroyActors';
-import Test from './test';
+import * as MRE from '@microsoft/mixed-reality-extension-sdk';
+import { App } from '../app';
+import { Test } from '../test';
 
 import {
     VideoPlayerManager
 } from '@microsoft/mixed-reality-extension-altspacevr-extras';
 
 export default class AltspaceVRVideoTest extends Test {
+    public expectedResultDescription = "Play a couple youtube videos. Click to cycle.";
+
     private videoPlayerManager: VideoPlayerManager;
 
-    constructor(app: App, private baseUrl: string) {
-        super(app);
+    constructor(app: App, baseUrl: string, user: MRE.User) {
+        super(app, baseUrl, user);
         this.videoPlayerManager = new VideoPlayerManager(app.context);
     }
     public cleanup() {
@@ -32,47 +32,46 @@ export default class AltspaceVRVideoTest extends Test {
     private _state = 0;
 
     public async runAltspaceVRVideoTest(): Promise<boolean> {
+
         // Make a root object.
-        const tester = MRESDK.Actor.CreateEmpty(this.app.context, {});
+        const tester = MRE.Actor.CreateEmpty(this.app.context, {});
 
-        const textPromise = MRESDK.Actor.CreateEmpty(this.app.context, {
-            actor: {
-                name: 'label',
-                parentId: tester.value.id,
-                transform: {
-                    position: { x: 0, y: 5.5, z: 0 }
-                },
-                text: {
-                    anchor: MRESDK.TextAnchorLocation.MiddleCenter,
-                    color: { r: 30 / 255, g: 206 / 255, b: 213 / 255 },
-                    height: 0.3
-                }
-            }
-        });
-
-        const text = textPromise.value;
-        text.text.contents = "Playing Movie!";
-
-        const videoPromise = MRESDK.Actor.CreateEmpty(this.app.context, {
+        const video = await MRE.Actor.CreateEmpty(this.app.context, {
             actor: {
                 parentId: tester.value.id,
-                name: 'label',
+                name: 'video',
                 transform: {
                     position: { x: 0, y: 3, z: 0 },
                     scale: { x: 7, y: 7, z: 7 }
                 },
             }
         });
-        await videoPromise;
 
-        this.videoPlayerManager.play(
-            videoPromise.value.id,
-            'https://www.youtube.com/watch?v=z1YNh9BQVRg',
-            0.0);
+        const cycleState = () => {
+            if (this._state === 0) {
+                this.app.setOverrideText("Playing Movie!");
+                this.videoPlayerManager.play(
+                    video.id,
+                    'https://www.youtube.com/watch?v=z1YNh9BQVRg',
+                    0.0);
+            } else if (this._state === 1) {
+                this.app.setOverrideText("Switched Movie!");
+                this.videoPlayerManager.play(
+                    video.id,
+                    'https://www.youtube.com/watch?v=UowkIRSDHfs',
+                    0.0);
+            } else if (this._state === 2) {
+                this.app.setOverrideText("Stopped Movie!");
+                this.videoPlayerManager.stop(video.id);
+            }
 
-        const buttonPromise = MRESDK.Actor.CreatePrimitive(this.app.context, {
+            this._state = (this._state + 1) % 3;
+        };
+        cycleState();
+
+        const buttonPromise = MRE.Actor.CreatePrimitive(this.app.context, {
             definition: {
-                shape: MRESDK.PrimitiveShape.Sphere,
+                shape: MRE.PrimitiveShape.Sphere,
                 radius: 0.4,
                 uSegments: 8,
                 vSegments: 4
@@ -87,30 +86,11 @@ export default class AltspaceVRVideoTest extends Test {
                 }
             }
         });
-        await new Promise<void>((resolve) => {
 
-            const buttonBehavior = buttonPromise.value.setBehavior(MRESDK.ButtonBehavior);
-            buttonBehavior.onClick('pressed', (userId: string) => {
-                this._state++;
-                if (this._state === 1) {
-                    text.text.contents = "Switched Movie!";
-                    this.videoPlayerManager.play(
-                        videoPromise.value.id,
-                        'https://www.youtube.com/watch?v=UowkIRSDHfs',
-                        0.0);
-                }
-                if (this._state === 2) {
-                    text.text.contents = "Stopped Movie!";
-                    this.videoPlayerManager.stop(videoPromise.value.id);
-                }
-                if (this._state === 3) {
-                    resolve();
-                }
-            });
-        });
-        // Destroy the actors we created.
-        destroyActors(tester.value);
+        const buttonBehavior = buttonPromise.value.setBehavior(MRE.ButtonBehavior);
+        buttonBehavior.onClick('pressed', cycleState);
 
+        await this.stoppedAsync();
         return true;
     }
 }
