@@ -27,7 +27,7 @@ export default class InterpolationTest extends Test {
             const axis = new MRE.Vector3(x, y, z);
             // Random rotation around picked axis.
             const rotation = MRE.Quaternion.RotationAxis(axis, Math.random() * 2 * Math.PI);
-            // Random scale in [0.5..1.5].
+            // Random scale in [0.3..1.0].
             const scalar = 0.3 + 0.7 * Math.random();
             const scale = new MRE.Vector3(scalar, scalar, scalar);
             // Random ease curve.
