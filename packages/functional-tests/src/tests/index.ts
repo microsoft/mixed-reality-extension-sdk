@@ -18,9 +18,10 @@ import InputTest from './input-test';
 import InterpolationTest from './interpolation-test';
 import LightTest from './light-test';
 import LookAtTest from './look-at-test';
+import PhysicsSimTest from './physics-sim-test';
 import PrimitivesTest from './primitives-test';
 import ReparentTest from './reparent-test';
-import RigidBodyTest from './rigid-body-test';
+// import RigidBodyTest from './rigid-body-test';
 import TextTest from './text-test';
 import UserTest from './user-test';
 
@@ -45,9 +46,10 @@ export const Factories = {
     'interpolation-test': (...args) => new InterpolationTest(...args),
     'light-test': (...args) => new LightTest(...args),
     'look-at-test': (...args) => new LookAtTest(...args),
+    'physics-sim-test': (...args) => new PhysicsSimTest(...args),
     'primitives-test': (...args) => new PrimitivesTest(...args),
     'reparent-test': (...args) => new ReparentTest(...args),
-    'rigid-body-test': (...args) => new RigidBodyTest(...args),
+    // 'rigid-body-test': (...args) => new RigidBodyTest(...args),
     'text-test': (...args) => new TextTest(...args),
     'user-test': (...args) => new UserTest(...args),
 } as FactoryMap;
