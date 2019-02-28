@@ -62,7 +62,8 @@ export default class SoundTest extends Test {
                 volume: 0.5,
                 looping: true,
                 doppler: 0.0,
-                multiChannelSpread: 0.2
+                multiChannelSpread: 0.2,
+                rolloffStartDistance: 1.0
             },
             0);
         await delay(3 * 1000);

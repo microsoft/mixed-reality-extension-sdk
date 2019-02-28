@@ -34,4 +34,10 @@ export type SetSoundStateOptions = {
      * Default to 0.5, which gives a feeling of direction, without collapsing all channels to sound like mono.
      */
     multiChannelSpread?: number;
+
+    /**
+     * Sounds will play at full volume until user is this many meters away, and then volume will decrease logarithmically
+     * Default to 1.0. For sound that needs to fill up a large space (like a concert), increase this number.
+     */
+    rolloffStartDistance?: number;
 };
