@@ -450,7 +450,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
      * @param behavior The type of behavior to set. Pass null to clear the behavior.
      */
     public setBehavior<BehaviorT extends Behavior>(behavior: { new(): BehaviorT }): BehaviorT {
-        if (!Collider) {
+        if (!this.collider) {
             log.warning('app', 'Behaviors will not function on Unity host apps without adding a collider to this actor '
                 + 'first. Recommend adding a primitive collider to this actor.');
         }
