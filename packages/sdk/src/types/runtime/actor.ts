@@ -393,9 +393,9 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
      * Instruct the actor to face another object, or stop facing an object.
      * @param actorOrActorId The Actor or id of the actor to face.
      * @param lookAtMode (Optional) How to face the target. @see LookUpMode.
-     * @param rotation (Optional) The offset from facing direction to apply (Euler angles).
+     * @param backward (Optional) If true, actor faces away from target rather than toward.
      */
-    public enableLookAt(actorOrActorId: Actor | string, mode?: LookAtMode, rotation?: Vector3Like) {
+    public enableLookAt(actorOrActorId: Actor | string, mode?: LookAtMode, backward?: boolean) {
         // Resolve the actorId value.
         let actorId = ZeroGuid;
         if (typeof (actorOrActorId) === 'object' && actorOrActorId.id !== undefined) {
@@ -422,7 +422,8 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
         // Set component values.
         this._lookAt.copy({
             actorId,
-            mode
+            mode,
+            backward
         });
     }
 
