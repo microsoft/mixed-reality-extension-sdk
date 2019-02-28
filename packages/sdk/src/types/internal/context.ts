@@ -328,7 +328,7 @@ export class InternalContext {
         startTimeOffset?: number
     ) {
 
-        this.context.internal.protocol.sendPayload(
+        this.protocol.sendPayload(
             {
                 type: 'set-sound-state',
                 id: soundInstance.id,
@@ -340,6 +340,7 @@ export class InternalContext {
             } as SetSoundState);
         return;
     }
+    
     public animateTo(
         actorId: string,
         value: Partial<ActorLike>,

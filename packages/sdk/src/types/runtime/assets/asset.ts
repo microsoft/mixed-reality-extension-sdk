@@ -118,6 +118,8 @@ export abstract class Asset implements AssetLike {
             return new Material(manager, def);
         } else if (def.texture) {
             return new Texture(manager, def);
+        } else if (def.sound) {
+            return new Sound(manager, def);
         } else {
             throw new Error(`Asset ${def.id} is not of a known type.`);
         }

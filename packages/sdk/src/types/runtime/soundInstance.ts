@@ -20,6 +20,7 @@ export class SoundInstance {
         this.actor = actor;
         this.soundAssetId = soundAssetId;
     }
+
     public start(options: SetSoundStateOptions, startTimeOffset?: number):
      ForwardPromise<SoundInstance> {
         return createForwardPromise(this,
