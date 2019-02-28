@@ -37,9 +37,9 @@ export class LookAt implements LookAtLike {
 
     public copy(from: Partial<LookAtLike>): this {
         if (!from) return this;
-        if (from.actorId !== undefined) this._actorId = from.actorId;
-        if (from.mode !== undefined) this._actorId = from.actorId;
-        if (from.backward !== undefined) this._backward = from.backward;
+        if (from.actorId !== undefined) this.actorId = from.actorId;
+        if (from.mode !== undefined) this.mode = from.mode;
+        if (from.backward !== undefined) this.backward = from.backward;
         return this;
     }
 }
