@@ -50,7 +50,8 @@ export default class SoundTest extends Test {
         const soundAssetPromise = this.app.context.assetManager.createSound(
             'meh',
             {
-                uri: `${this.baseUrl}/music.mod`,
+                uri: `https://api.modarchive.org/downloads.php?moduleid=42560#GSLINGER.MOD`
+                // uri: `${this.baseUrl}/music.mod`,
                 // uri: `${this.baseUrl}/boo.wav`,
             });
 
@@ -68,7 +69,6 @@ export default class SoundTest extends Test {
             1000.0);
         await delay(3 * 1000);
 
-        text.text.contents = `Sound duration: ${soundAssetPromise.value.duration} seconds`;
         if (true) {
             await delay(2 * 1000);
 
@@ -83,6 +83,8 @@ export default class SoundTest extends Test {
                 pitch: 0.0,
             });
             await delay(1 * 1000);
+            text.text.contents = `Sound duration: ${soundAssetPromise.value.duration} seconds`;
+            await delay(5 * 1000);
 
             text.text.contents = "Raising Volume";
             soundInstance.value.setSoundState({
