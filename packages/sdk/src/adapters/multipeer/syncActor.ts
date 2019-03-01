@@ -24,10 +24,19 @@ export type CreateAnimation = {
 /**
  * @hidden
  */
+export type ActiveSoundInstance = {
+    message: Message<Payloads.SetSoundState>;
+    basisTime: number
+};
+
+/**
+ * @hidden
+ */
 export type SyncActor = {
     actorId: string;
     created: CreateActor;
     createdAnimations: CreateAnimation[];
+    activeSoundInstances: ActiveSoundInstance[];
     activeInterpolations: Payloads.InterpolateActor[];
     behavior: BehaviorType;
 };

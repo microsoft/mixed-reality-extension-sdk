@@ -8,5 +8,6 @@ export * from './mesh';
 export * from './prefab';
 export * from './material';
 export * from './texture';
+export * from './sound';
 export * from './assetGroup';
 export * from './assetManager';

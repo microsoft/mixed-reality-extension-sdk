@@ -11,7 +11,7 @@ import { InternalAsset } from '../../internal/asset';
 import { Patchable } from '../../patchable';
 
 export interface TextureLike {
-    uri?: string;
+    uri: string;
     resolution: Vector2Like;
     wrapU: TextureWrapMode;
     wrapV: TextureWrapMode;
@@ -56,7 +56,7 @@ export class Texture extends Asset implements TextureLike, Patchable<AssetLike> 
     /** @inheritdoc */
     public get texture(): TextureLike { return this; }
 
-    /** INTERNAL USE ONLY. To load a new texture from scratch, use [[AssetManager.loadTexture]] */
+    /** INTERNAL USE ONLY. To load a new texture from scratch, use [[AssetManager.createTexture]] */
     public constructor(manager: AssetManager, def: AssetLike) {
         super(manager, def);
 

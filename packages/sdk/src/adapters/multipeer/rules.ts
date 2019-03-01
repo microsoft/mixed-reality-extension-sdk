@@ -6,6 +6,7 @@
 import deepmerge from 'deepmerge';
 import { Client, Session, SynchronizationStage } from '.';
 import { Message, WebSocket } from '../..';
+import { SoundCommand } from '../../sound';
 import * as Payloads from '../../types/network/payloads';
 import { ExportedPromise } from '../../utils/exportedPromise';
 
@@ -874,7 +875,7 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
     'set-behavior': {
         ...DefaultRule,
         synchronization: {
-            stage: 'create-actors',
+            stage: 'set-behaviors',
             before: 'ignore',
             during: 'queue',
             after: 'allow'
@@ -894,6 +895,75 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
                 return message;
             }
         }
+    },
+
+    // ========================================================================
+    'set-sound-state': {
+        ...DefaultRule,
+        synchronization: {
+            stage: 'active-sound-instances',
+            before: 'ignore',
+            during: 'queue',
+            after: 'allow'
+        },
+        session: {
+            ...DefaultRule.session,
+            beforeReceiveFromApp: (
+                session: Session,
+                message: Message<Payloads.SetSoundState>
+            ) => {
+                const syncActor = session.actorSet[message.payload.actorId];
+                if (syncActor) {
+                    syncActor.activeSoundInstances = syncActor.activeSoundInstances || [];
+
+                    const basisTime = Date.now() / 1000.0;
+                    if (message.payload.soundCommand === SoundCommand.Start) {
+                        syncActor.activeSoundInstances.push({ message, basisTime });
+                    } else {
+                        // find the existing message that needs to be updated
+                        const activeSoundInstance = syncActor.activeSoundInstances.filter(
+                            item => item.message.payload.id === message.payload.id).shift();
+
+                        // if sound expired then skip this message completely
+                        if (!activeSoundInstance) {
+                            return undefined;
+                        }
+                        // Remove the existing sound instance (we'll add an updated one below).
+                        syncActor.activeSoundInstances =
+                            syncActor.activeSoundInstances.filter(
+                                item => item.message.payload.id !== message.payload.id);
+
+                        // store the updated sound instance if sound isn't stopping
+                        if (message.payload.soundCommand !== SoundCommand.Stop) {
+
+                            // update startimeoffset and update basistime in oldmessage.
+                            const targetTime = Date.now() / 1000.0;
+                            if (activeSoundInstance.message.payload.options.paused !== true) {
+                                let timeOffset = (targetTime - activeSoundInstance.basisTime);
+                                if (activeSoundInstance.message.payload.options.pitch !== undefined) {
+                                    timeOffset *= Math.pow(2.0,
+                                        (activeSoundInstance.message.payload.options.pitch / 12.0));
+                                }
+                                if (activeSoundInstance.message.payload.startTimeOffset === undefined) {
+                                    activeSoundInstance.message.payload.startTimeOffset = 0.0;
+                                }
+                                activeSoundInstance.message.payload.startTimeOffset += timeOffset;
+                            }
+
+                            // merge existing message and new message
+                            activeSoundInstance.message.payload.options = {
+                                ...activeSoundInstance.message.payload.options,
+                                ...message.payload.options
+                            };
+                            syncActor.activeSoundInstances.push({ message: activeSoundInstance.message, basisTime });
+                        }
+                    }
+
+                }
+                return message;
+            }
+        }
+
     },
 
     // ========================================================================
