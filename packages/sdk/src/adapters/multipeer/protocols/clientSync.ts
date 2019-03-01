@@ -3,6 +3,7 @@
  * Licensed under the MIT License.
  */
 
+import UUID from 'uuid/v4';
 import { Client, MissingRule, Rules, SyncActor } from '..';
 import { Message } from '../../..';
 import { log } from '../../../log';
@@ -55,6 +56,7 @@ export class ClientSync extends Protocols.Protocol {
      * Handle the outgoing message according to the synchronization rules specified for this payload.
      */
     public sendMessage(message: Message, promise?: ExportedPromise) {
+        message.id = message.id || UUID();
         const handling = this.handlingForMessage(message);
         // tslint:disable-next-line:switch-default
         switch (handling) {
