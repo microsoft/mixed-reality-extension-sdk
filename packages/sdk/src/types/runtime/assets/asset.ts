@@ -3,7 +3,19 @@
  * Licensed under the MIT License.
  */
 
-import { AssetManager, Material, MaterialLike, Mesh, MeshLike, Prefab, PrefabLike, Texture, TextureLike } from '.';
+import {
+    AssetManager,
+    Material,
+    MaterialLike,
+    Mesh,
+    MeshLike,
+    Prefab,
+    PrefabLike,
+    Sound,
+    SoundLike,
+    Texture,
+    TextureLike
+} from '.';
 
 /**
  * Instructions for how to load an asset.
@@ -49,6 +61,8 @@ export interface AssetLike {
     material?: Partial<MaterialLike>;
     /** Only populated when this asset is a texture. An asset will have only one of these types specified. */
     texture?: Partial<TextureLike>;
+    /** Only populated when this asset is a sound. An asset will have only one of these types specified. */
+    sound?: Partial<SoundLike>;
 }
 
 /** The base class for all asset types. */
@@ -104,6 +118,8 @@ export abstract class Asset implements AssetLike {
             return new Material(manager, def);
         } else if (def.texture) {
             return new Texture(manager, def);
+        } else if (def.sound) {
+            return new Sound(manager, def);
         } else {
             throw new Error(`Asset ${def.id} is not of a known type.`);
         }

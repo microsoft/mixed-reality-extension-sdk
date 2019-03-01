@@ -46,6 +46,7 @@ import {
     RigidBodyCommands,
     SetAnimationState,
     SetBehavior,
+    SetSoundState,
     UpdateCollisionEventSubscriptions,
     UpdateSubscriptions,
 } from '../network/payloads';
@@ -54,10 +55,12 @@ import { log } from '../../log';
 import * as Protocols from '../../protocols';
 import { Execution } from '../../protocols/execution';
 import { Handshake } from '../../protocols/handshake';
+import { SetSoundStateOptions, SoundCommand } from '../../sound';
 import resolveJsonValues from '../../utils/resolveJsonValues';
 import { createForwardPromise, ForwardPromise } from '../forwardPromise';
 import { OperatingModel } from '../network/operatingModel';
 import { Patchable } from '../patchable';
+import { SoundInstance } from '../runtime/soundInstance';
 
 /**
  * @hidden
@@ -308,6 +311,27 @@ export class InternalContext {
         } else {
             log.error('app', `Failed to set animation state on ${animationName}. Actor ${actorId} not found.`);
         }
+    }
+
+    public setSoundState(
+        soundInstance: SoundInstance,
+        command: SoundCommand,
+        options?: SetSoundStateOptions,
+        soundAssetId?: string,
+        startTimeOffset?: number
+    ) {
+
+        this.protocol.sendPayload(
+            {
+                type: 'set-sound-state',
+                id: soundInstance.id,
+                actorId: soundInstance.actor.id,
+                soundAssetId,
+                soundCommand: command,
+                options,
+                startTimeOffset
+            } as SetSoundState);
+        return;
     }
 
     public animateTo(
