@@ -941,7 +941,7 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
                         }
                         // Remove the existing sound instance (we'll add an updated one below).
                         syncActor.activeSoundInstances =
-                            (syncActor.activeSoundInstances || []).filter(
+                            syncActor.activeSoundInstances.filter(
                                 item => item.message.payload.id !== message.payload.id);
 
                         // store the updated sound instance if sound isn't stopping
@@ -949,7 +949,7 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 
                             // update startimeoffset and update basistime in oldmessage.
                             const targetTime = Date.now() / 1000.0;
-                            if (activeSoundInstance.message.payload.options.paused !== false) {
+                            if (activeSoundInstance.message.payload.options.paused !== true) {
                                 let timeOffset = (targetTime - activeSoundInstance.basisTime);
                                 if (activeSoundInstance.message.payload.options.pitch !== undefined) {
                                     timeOffset *= Math.pow(2.0,
