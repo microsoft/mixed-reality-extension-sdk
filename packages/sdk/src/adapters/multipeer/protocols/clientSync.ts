@@ -7,6 +7,7 @@ import { Client, MissingRule, Rules, SyncActor } from '..';
 import { Message } from '../../..';
 import { log } from '../../../log';
 import * as Protocols from '../../../protocols';
+import { SetSoundStateOptions, SoundCommand } from '../../../sound';
 import * as Payloads from '../../../types/network/payloads';
 import { ExportedPromise } from '../../../utils/exportedPromise';
 
@@ -19,6 +20,7 @@ export type SynchronizationStage =
     'always' |
     'load-assets' |
     'create-actors' |
+    'active-sound-instances' |
     'create-animations' |
     'sync-animations' |
     'set-behaviors' |
@@ -36,6 +38,7 @@ export class ClientSync extends Protocols.Protocol {
     private sequence: SynchronizationStage[] = [
         'load-assets',
         'create-actors',
+        'active-sound-instances',
         'set-behaviors',
         'create-animations',
         'sync-animations',
@@ -179,6 +182,15 @@ export class ClientSync extends Protocols.Protocol {
 
     /**
      * @hidden
+     * Driver for the `active-sound-instances` synchronization stage.
+     */
+    public 'stage:active-sound-instances' = async () => {
+        // Send all cached set-behavior messages.
+        await Promise.all([
+            this.client.session.actors.map(syncActor => this.activeSoundInstances(syncActor))]);
+    }
+    /**
+     * @hidden
      * Driver for the `create-animations` synchronization stage.
      */
     public 'stage:create-animations' = async () => {
@@ -252,6 +264,28 @@ export class ClientSync extends Protocols.Protocol {
         if (actor.created && actor.created.message.payload.type) {
             return this.sendAndExpectResponse(actor.created.message);
         }
+    }
+
+    private activeSoundInstances(actor: Partial<SyncActor>) {
+        return Promise.all([
+            (actor.activeSoundInstances || [])
+                .map(activeSoundInstance => {
+                    // TODO This sound tweaking should ideally be done on the client, because then it can consider the
+                    // time it takes for packet to arrive. This is needed for optimal timing .
+                    const targetTime = Date.now() / 1000.0;
+                    if (activeSoundInstance.message.payload.soundCommand !== SoundCommand.Pause) {
+                        let timeOffset = (targetTime - activeSoundInstance.basisTime);
+                        if (activeSoundInstance.message.payload.options.pitch !== undefined) {
+                            timeOffset *= Math.pow(2.0, (activeSoundInstance.message.payload.options.pitch / 12.0));
+                        }
+                        if (activeSoundInstance.message.payload.startTimeOffset === undefined) {
+                            activeSoundInstance.message.payload.startTimeOffset = 0.0;
+                        }
+                        activeSoundInstance.message.payload.startTimeOffset += timeOffset;
+                    }
+                    return this.sendAndExpectResponse(activeSoundInstance.message);
+                })
+        ]);
     }
 
     private createActorAnimations(actor: Partial<SyncActor>) {

@@ -6,6 +6,7 @@
 import deepmerge from 'deepmerge';
 import { Client, Session, SynchronizationStage } from '.';
 import { Message, WebSocket } from '../..';
+import { SoundCommand } from '../../sound';
 import * as Payloads from '../../types/network/payloads';
 import { ExportedPromise } from '../../utils/exportedPromise';
 
@@ -885,7 +886,7 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
     'set-behavior': {
         ...DefaultRule,
         synchronization: {
-            stage: 'create-actors',
+            stage: 'set-behaviors',
             before: 'ignore',
             during: 'queue',
             after: 'allow'
@@ -911,11 +912,70 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
     'set-sound-state': {
         ...DefaultRule,
         synchronization: {
-            stage: 'create-animations',
+            stage: 'active-sound-instances',
             before: 'ignore',
             during: 'queue',
             after: 'allow'
+        },
+        session: {
+            ...DefaultRule.session,
+            beforeReceiveFromApp: (
+                session: Session,
+                message: Message<Payloads.SetSoundState>
+            ) => {
+                const syncActor = session.actorSet[message.payload.actorId];
+                if (syncActor) {
+                    syncActor.activeSoundInstances = syncActor.activeSoundInstances || [];
+
+                    const newMessage = message;
+                    const basisTime = Date.now() / 1000.0;
+                    if (message.payload.soundCommand !== SoundCommand.Start) {
+                        // find the existing message that needs to be updated
+                        const activeSoundInstance = (syncActor.activeSoundInstances || []).filter(
+                            item => item.message.payload.id === message.payload.id).shift();
+                        // if sound expired then skip this message completely
+                        if (!activeSoundInstance) {
+                            return undefined;
+                        }
+                        // Remove the existing sound instance (we'll add an updated one later if needed).
+                        syncActor.activeSoundInstances =
+                            (syncActor.activeSoundInstances || []).filter(
+                                item => item.message.payload.id !== message.payload.id);
+
+                        // update startimeoffset and update basistime in oldmessage.
+                        const targetTime = Date.now() / 1000.0;
+                        if (activeSoundInstance.message.payload.soundCommand !== SoundCommand.Pause) {
+                            let timeOffset = (targetTime - activeSoundInstance.basisTime);
+                            if (activeSoundInstance.message.payload.options.pitch !== undefined) {
+                                timeOffset *= Math.pow(2.0, (activeSoundInstance.message.payload.options.pitch / 12.0));
+                            }
+                            if (activeSoundInstance.message.payload.startTimeOffset === undefined) {
+                                activeSoundInstance.message.payload.startTimeOffset = 0.0;
+                            }
+                            activeSoundInstance.message.payload.startTimeOffset += timeOffset;
+                        }
+
+                        // merge existing message and new message
+                        newMessage.payload.options = {
+                            ...activeSoundInstance.message.payload.options,
+                            ...newMessage.payload.options
+                        };
+                        if (newMessage.payload.soundCommand !== undefined) {
+                            activeSoundInstance.message.payload.soundCommand = newMessage.payload.soundCommand;
+                        }
+                        newMessage.payload.startTimeOffset = activeSoundInstance.message.payload.startTimeOffset;
+
+                    }
+                    // TODO V2: Check if single-shot sound is past the end, and if so, skip this message
+
+                    if (message.payload.soundCommand !== SoundCommand.Stop) {
+                        syncActor.activeSoundInstances.push({ message: newMessage, basisTime });
+                    }
+                }
+                return message;
+            }
         }
+
     },
 
     // ========================================================================

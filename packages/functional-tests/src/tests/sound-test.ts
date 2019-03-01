@@ -65,18 +65,16 @@ export default class SoundTest extends Test {
                 multiChannelSpread: 0.2,
                 rolloffStartDistance: 1.0
             },
-            0);
+            1000.0);
         await delay(3 * 1000);
 
         text.text.contents = `Sound duration: ${soundAssetPromise.value.duration} seconds`;
         if (true) {
-            await delay(10000 * 1000);
-        } else {
             await delay(2 * 1000);
 
-            text.text.contents = "Increasing Pitch by 12 semitones";
+            text.text.contents = "Lower Pitch by 12 semitones";
             soundInstance.value.setSoundState({
-                pitch: 12.0,
+                pitch: -12.0,
             });
             await delay(3 * 1000);
 
@@ -100,6 +98,7 @@ export default class SoundTest extends Test {
             soundInstance.value.resume();
             await delay(300 * 1000);
         }
+        await delay(10000 * 1000);
 
         text.text.contents = "Stopping Sound";
         soundInstance.value.stop();
