@@ -406,17 +406,14 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
         // Allocate component if necessary.
         if (!this._lookAt) {
             this._lookAt = new LookAt();
-            // Set up observed properties in the next tick, giving us a chance to initialize the values first (below).
-            process.nextTick(() => {
-                // Actor patching: Observe the lookAt component for changed values.
-                observe({
-                    target: this._lookAt,
-                    targetName: 'lookAt',
-                    notifyChanged: (...path: string[]) => this.actorChanged(...path),
-                    // Trigger notifications for every observed leaf node to ensure we get all values in the
-                    // initial patch.
-                    triggerNotificationsNow: true
-                });
+            // Actor patching: Observe the lookAt component for changed values.
+            observe({
+                target: this._lookAt,
+                targetName: 'lookAt',
+                notifyChanged: (...path: string[]) => this.actorChanged(...path),
+                // Trigger notifications for every observed leaf node to ensure we get all values in the
+                // initial patch.
+                triggerNotificationsNow: true
             });
         }
         // Set component values.
