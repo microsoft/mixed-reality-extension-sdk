@@ -8,7 +8,6 @@
  */
 export enum SoundCommand {
     Start = 'start',
-    Stop = 'stop',
-    Pause = 'pause',
-    Resume = 'resume'
+    Update = 'update',
+    Stop = 'stop'
 }

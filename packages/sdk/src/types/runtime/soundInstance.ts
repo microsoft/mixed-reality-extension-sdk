@@ -22,13 +22,13 @@ export class SoundInstance {
     }
 
     public start(options: SetSoundStateOptions, startTimeOffset?: number):
-     ForwardPromise<SoundInstance> {
+        ForwardPromise<SoundInstance> {
         return createForwardPromise(this,
             new Promise<SoundInstance>((resolve, reject) => {
                 this.actor.created().then(() => {
                     this.actor.context.assetManager.assetLoaded(this.soundAssetId).then(() => {
                         this.actor.context.internal.setSoundState(
-                            this, options, SoundCommand.Start, this.soundAssetId, startTimeOffset);
+                            this, SoundCommand.Start, options, this.soundAssetId, startTimeOffset);
 
                         resolve();
                     }).catch((reason: any) => {
@@ -50,7 +50,10 @@ export class SoundInstance {
     public setSoundState(options: SetSoundStateOptions, soundCommand?: SoundCommand) {
         this.actor.created().then(() => {
             this.actor.context.assetManager.assetLoaded(this.soundAssetId).then(() => {
-                this.actor.context.internal.setSoundState(this, options, soundCommand);
+                if (soundCommand === undefined) {
+                    soundCommand = SoundCommand.Update;
+                }
+                this.actor.context.internal.setSoundState(this, soundCommand, options);
             }).catch((reason: any) => {
                 log.error('app', `SetSoundState failed ${this.actor.id}. ${(reason || '').toString()}`.trim());
             });
@@ -61,11 +64,11 @@ export class SoundInstance {
     }
 
     public pause() {
-        this.setSoundState({}, SoundCommand.Pause);
+        this.setSoundState({ paused: true });
     }
 
     public resume() {
-        this.setSoundState({}, SoundCommand.Resume);
+        this.setSoundState({ paused: false });
     }
 
     public stop() {

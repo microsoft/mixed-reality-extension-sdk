@@ -927,50 +927,49 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
                 if (syncActor) {
                     syncActor.activeSoundInstances = syncActor.activeSoundInstances || [];
 
-                    const newMessage = message;
                     const basisTime = Date.now() / 1000.0;
-                    if (message.payload.soundCommand !== SoundCommand.Start) {
+                    if (message.payload.soundCommand === SoundCommand.Start) {
+                        syncActor.activeSoundInstances.push({ message, basisTime });
+                    } else {
                         // find the existing message that needs to be updated
-                        const activeSoundInstance = (syncActor.activeSoundInstances || []).filter(
+                        const activeSoundInstance = syncActor.activeSoundInstances.filter(
                             item => item.message.payload.id === message.payload.id).shift();
+
                         // if sound expired then skip this message completely
                         if (!activeSoundInstance) {
                             return undefined;
                         }
-                        // Remove the existing sound instance (we'll add an updated one later if needed).
+                        // Remove the existing sound instance (we'll add an updated one below).
                         syncActor.activeSoundInstances =
                             (syncActor.activeSoundInstances || []).filter(
                                 item => item.message.payload.id !== message.payload.id);
 
-                        // update startimeoffset and update basistime in oldmessage.
-                        const targetTime = Date.now() / 1000.0;
-                        if (activeSoundInstance.message.payload.soundCommand !== SoundCommand.Pause) {
-                            let timeOffset = (targetTime - activeSoundInstance.basisTime);
-                            if (activeSoundInstance.message.payload.options.pitch !== undefined) {
-                                timeOffset *= Math.pow(2.0, (activeSoundInstance.message.payload.options.pitch / 12.0));
+                        // store the updated sound instance if sound isn't stopping
+                        if (message.payload.soundCommand !== SoundCommand.Stop) {
+
+                            // update startimeoffset and update basistime in oldmessage.
+                            const targetTime = Date.now() / 1000.0;
+                            if (activeSoundInstance.message.payload.options.paused !== false) {
+                                let timeOffset = (targetTime - activeSoundInstance.basisTime);
+                                if (activeSoundInstance.message.payload.options.pitch !== undefined) {
+                                    timeOffset *= Math.pow(2.0,
+                                        (activeSoundInstance.message.payload.options.pitch / 12.0));
+                                }
+                                if (activeSoundInstance.message.payload.startTimeOffset === undefined) {
+                                    activeSoundInstance.message.payload.startTimeOffset = 0.0;
+                                }
+                                activeSoundInstance.message.payload.startTimeOffset += timeOffset;
                             }
-                            if (activeSoundInstance.message.payload.startTimeOffset === undefined) {
-                                activeSoundInstance.message.payload.startTimeOffset = 0.0;
-                            }
-                            activeSoundInstance.message.payload.startTimeOffset += timeOffset;
+
+                            // merge existing message and new message
+                            activeSoundInstance.message.payload.options = {
+                                ...activeSoundInstance.message.payload.options,
+                                ...message.payload.options
+                            };
+                            syncActor.activeSoundInstances.push({ message: activeSoundInstance.message, basisTime });
                         }
-
-                        // merge existing message and new message
-                        newMessage.payload.options = {
-                            ...activeSoundInstance.message.payload.options,
-                            ...newMessage.payload.options
-                        };
-                        if (newMessage.payload.soundCommand !== undefined) {
-                            activeSoundInstance.message.payload.soundCommand = newMessage.payload.soundCommand;
-                        }
-                        newMessage.payload.startTimeOffset = activeSoundInstance.message.payload.startTimeOffset;
-
                     }
-                    // TODO V2: Check if single-shot sound is past the end, and if so, skip this message
 
-                    if (message.payload.soundCommand !== SoundCommand.Stop) {
-                        syncActor.activeSoundInstances.push({ message: newMessage, basisTime });
-                    }
                 }
                 return message;
             }

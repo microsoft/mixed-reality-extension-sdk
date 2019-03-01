@@ -273,7 +273,7 @@ export class ClientSync extends Protocols.Protocol {
                     // TODO This sound tweaking should ideally be done on the client, because then it can consider the
                     // time it takes for packet to arrive. This is needed for optimal timing .
                     const targetTime = Date.now() / 1000.0;
-                    if (activeSoundInstance.message.payload.soundCommand !== SoundCommand.Pause) {
+                    if (activeSoundInstance.message.payload.options.paused !== false) {
                         let timeOffset = (targetTime - activeSoundInstance.basisTime);
                         if (activeSoundInstance.message.payload.options.pitch !== undefined) {
                             timeOffset *= Math.pow(2.0, (activeSoundInstance.message.payload.options.pitch / 12.0));

@@ -322,8 +322,8 @@ export class InternalContext {
 
     public setSoundState(
         soundInstance: SoundInstance,
+        command: SoundCommand,
         options?: SetSoundStateOptions,
-        command?: SoundCommand,
         soundAssetId?: string,
         startTimeOffset?: number
     ) {
