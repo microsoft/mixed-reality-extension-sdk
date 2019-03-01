@@ -340,7 +340,7 @@ export class InternalContext {
             } as SetSoundState);
         return;
     }
-    
+
     public animateTo(
         actorId: string,
         value: Partial<ActorLike>,

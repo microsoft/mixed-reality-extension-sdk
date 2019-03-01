@@ -36,7 +36,8 @@ export type SetSoundStateOptions = {
     multiChannelSpread?: number;
 
     /**
-     * Sounds will play at full volume until user is this many meters away, and then volume will decrease logarithmically
+     * Sounds will play at full volume until user is this many meters away,
+     * and then volume will decrease logarithmically.
      * Default to 1.0. For sound that needs to fill up a large space (like a concert), increase this number.
      */
     rolloffStartDistance?: number;

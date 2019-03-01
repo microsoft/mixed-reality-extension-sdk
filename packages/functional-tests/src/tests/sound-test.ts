@@ -69,33 +69,37 @@ export default class SoundTest extends Test {
         await delay(3 * 1000);
 
         text.text.contents = `Sound duration: ${soundAssetPromise.value.duration} seconds`;
-        await delay(2 * 1000);
+        if (true) {
+            await delay(10000 * 1000);
+        } else {
+            await delay(2 * 1000);
 
-        text.text.contents = "Increasing Pitch by 12 semitones";
-        soundInstance.value.setSoundState({
-            pitch: 12.0,
-        });
-        await delay(3 * 1000);
+            text.text.contents = "Increasing Pitch by 12 semitones";
+            soundInstance.value.setSoundState({
+                pitch: 12.0,
+            });
+            await delay(3 * 1000);
 
-        text.text.contents = "Resetting Pitch";
-        soundInstance.value.setSoundState({
-            pitch: 0.0,
-        });
-        await delay(1 * 1000);
+            text.text.contents = "Resetting Pitch";
+            soundInstance.value.setSoundState({
+                pitch: 0.0,
+            });
+            await delay(1 * 1000);
 
-        text.text.contents = "Raising Volume";
-        soundInstance.value.setSoundState({
-            volume: 1.0
-        });
-        await delay(5 * 1000);
+            text.text.contents = "Raising Volume";
+            soundInstance.value.setSoundState({
+                volume: 1.0
+            });
+            await delay(5 * 1000);
 
-        text.text.contents = "Pausing";
-        soundInstance.value.pause();
-        await delay(2 * 1000);
+            text.text.contents = "Pausing";
+            soundInstance.value.pause();
+            await delay(2 * 1000);
 
-        text.text.contents = "resuming";
-        soundInstance.value.resume();
-        await delay(300 * 1000);
+            text.text.contents = "resuming";
+            soundInstance.value.resume();
+            await delay(300 * 1000);
+        }
 
         text.text.contents = "Stopping Sound";
         soundInstance.value.stop();
