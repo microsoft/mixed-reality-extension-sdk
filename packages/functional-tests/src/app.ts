@@ -169,7 +169,7 @@ export class App {
             } else {
                 this.contextLabel.text.color = NeutralColor;
             }
-            this.contextLabel.text.contents = this.activeTestName;
+            this.contextLabel.text.contents = this.activeTest.expectedResultDescription;
         }
     }
 
