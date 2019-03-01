@@ -21,20 +21,28 @@ export default class LookAtTest extends Test {
     public state = 0;
 
     public async run(): Promise<boolean> {
-        const tester = await MRE.Actor.CreateFromGltf(this.app.context, {
+        const tester = MRE.Actor.CreateFromGltf(this.app.context, {
             resourceUrl: `${this.baseUrl}/monkey.glb`,
             actor: { transform: { scale: { x: 0.5, y: 0.5, z: 0.5 } } }
-        });
-        await tester.createAnimation('circle', {
+        }).value;
+        const lookAtTarget = MRE.Actor.CreateEmpty(this.app.context, {
+            actor: {
+                attachment: {
+                    userId: this.user.id,
+                    attachPoint: 'head'
+                }
+            }
+        }).value;
+        tester.createAnimation('circle', {
             wrapMode: MRE.AnimationWrapMode.Loop,
             keyframes: circleKeyframes
-        });
+        }).catch(() => { });
         tester.enableAnimation('circle');
 
         this.interval = setInterval(() => {
             const modes = [MRE.LookAtMode.TargetXY, MRE.LookAtMode.TargetY, MRE.LookAtMode.None];
-            tester.lookAt(this.user, modes[this.state++ % 3]);
-        }, 2000);
+            tester.enableLookAt(lookAtTarget, modes[this.state++ % 3]);
+        }, 4000);
 
         await this.stoppedAsync();
         return true;
