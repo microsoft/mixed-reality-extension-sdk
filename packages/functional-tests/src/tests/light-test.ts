@@ -6,6 +6,7 @@
 import * as MRE from '@microsoft/mixed-reality-extension-sdk';
 
 import { Test } from '../test';
+import delay from '../utils/delay';
 
 // tslint:disable:no-string-literal
 
@@ -40,12 +41,13 @@ export default class LightTest extends Test {
                     props['monkey'].transform.position,
                     new MRE.Vector3(0, -Math.PI / 8, 0));
                 sphere.light.color = randomColor();
-                await sphere.animateTo({
+                sphere.animateTo({
                     transform: {
                         position,
                         rotation
                     }
                 }, time, MRE.AnimationEaseCurves.EaseInOutSine);
+                await delay(time * 1000);
             }
         };
 

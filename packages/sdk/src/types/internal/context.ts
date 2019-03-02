@@ -303,8 +303,7 @@ export class InternalContext {
                         state
                     } as SetAnimationState))
                     .catch((reason) => log.error('app', reason));
-            })
-            .catch((reason) => log.error('app', reason));
+            }).catch((reason) => log.error('app', reason));
         } else {
             log.error('app', `Failed to set animation state on ${animationName}. Actor ${actorId} not found.`);
         }
@@ -318,26 +317,22 @@ export class InternalContext {
     ) {
         const actor = this.actorSet[actorId];
         if (!actor) {
-            return Promise.reject(`Failed animateTo. Actor ${actorId} not found`);
+            log.error('app', `Failed animateTo. Actor ${actorId} not found.`);
         } else if (!Array.isArray(curve) || curve.length !== 4) {
-            return Promise.reject('`curve` parameter must be an array of four numbers. \
-            Try passing one of the predefined curves from `AnimationEaseCurves`');
+            // tslint:disable-next-line:max-line-length
+            log.error('app', '`curve` parameter must be an array of four numbers. Try passing one of the predefined curves from `AnimationEaseCurves`');
         } else {
-            return new Promise<void>((resolve, reject) => {
-                actor.created().then(() => {
-                    this.protocol.sendPayload({
-                        type: 'interpolate-actor',
-                        actorId,
-                        animationName: UUID(),
-                        value,
-                        duration,
-                        curve,
-                        enabled: true
-                    } as InterpolateActor, { resolve, reject });
-                }).catch((reason: any) => {
-                    log.error('app', `Failed animateTo. Actor ${actor.id}. ${(reason || '').toString()}`.trim());
-                });
-            });
+            actor.created().then(() => {
+                this.protocol.sendPayload({
+                    type: 'interpolate-actor',
+                    actorId,
+                    animationName: UUID(),
+                    value,
+                    duration,
+                    curve,
+                    enabled: true
+                } as InterpolateActor);
+            }).catch((reason) => log.error('app', reason));
         }
     }
 
