@@ -22,6 +22,7 @@ import PhysicsSimTest from './physics-sim-test';
 import PrimitivesTest from './primitives-test';
 import ReparentTest from './reparent-test';
 // import RigidBodyTest from './rigid-body-test';
+import SoundTest from './sound-test';
 import TextTest from './text-test';
 import UserTest from './user-test';
 
@@ -50,6 +51,7 @@ export const Factories = {
     'primitives-test': (...args) => new PrimitivesTest(...args),
     'reparent-test': (...args) => new ReparentTest(...args),
     // 'rigid-body-test': (...args) => new RigidBodyTest(...args),
+    'sound-test': (...args) => new SoundTest(...args),
     'text-test': (...args) => new TextTest(...args),
-    'user-test': (...args) => new UserTest(...args),
+    'user-test': (...args) => new UserTest(...args)
 } as FactoryMap;

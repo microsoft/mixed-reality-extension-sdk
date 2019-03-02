@@ -178,7 +178,7 @@ export default class Menu {
         }).value;
 
         backButton.setBehavior(MRE.ButtonBehavior)
-            .onClick('pressed', () => {
+            .onClick('released', () => {
                 this.back();
                 this.show();
             });
