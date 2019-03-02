@@ -64,6 +64,7 @@ export interface ActorLike {
     text: Partial<TextLike>;
     attachment: Partial<AttachmentLike>;
     lookAt: Partial<LookAtLike>;
+    grabbable: boolean;
 }
 
 /**
@@ -134,12 +135,12 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
             this.actorChanged('parentId');
         }
     }
-    
+
     public get grabbable() { return this._grabbable; }
     public set grabbable(value) {
         if (value !== this._grabbable) {
-            // Update the grabbability of this actor with the app context.
-            this.context.internal.setGrabbability(this._id, value);
+            this._grabbable = value;
+            this.actorChanged('grabbable');
         }
     }
 
@@ -691,6 +692,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
         if (from.collider) this._setCollider(from.collider);
         if (from.text) this.enableText(from.text);
         if (from.lookAt) this.enableLookAt(from.lookAt.actorId, from.lookAt.mode);
+        if (from.grabbable) this._grabbable = from.grabbable;
 
         this.internal.observing = wasObserving;
         return this;
@@ -709,7 +711,8 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
             rigidBody: this._rigidBody ? this._rigidBody.toJSON() : undefined,
             collider: this._collider ? this._collider.toJSON() : undefined,
             text: this._text ? this._text.toJSON() : undefined,
-            lookAt: this._lookAt ? this._lookAt.toJSON() : undefined
+            lookAt: this._lookAt ? this._lookAt.toJSON() : undefined,
+            grabbable: this._grabbable
         } as ActorLike;
     }
 

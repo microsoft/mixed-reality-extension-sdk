@@ -319,17 +319,6 @@ export type SetBehavior = Payload & {
 
 /**
  * @hidden
- * App to engine.  Update whether the actor is grabbable
- * or not.
- */
-export type UpdateGrabbable = Payload & {
-    type: 'update-grabbable';
-    actorId: string;
-    grabbable: boolean;
-};
-
-/**
- * @hidden
  * Update subscription flags on the actor
  */
 export type UpdateSubscriptions = Payload & {
