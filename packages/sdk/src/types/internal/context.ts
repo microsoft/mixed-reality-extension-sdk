@@ -48,6 +48,7 @@ import {
     SetBehavior,
     SetSoundState,
     UpdateCollisionEventSubscriptions,
+    UpdateGrabbable,
     UpdateSubscriptions,
 } from '../network/payloads';
 
@@ -599,6 +600,21 @@ export class InternalContext {
                 actorId,
                 behaviorType: newBehaviorType || 'none'
             } as SetBehavior);
+        }
+    }
+
+    public setGrabbability(actorId: string, grabbable: boolean) {
+        const actor = this.actorSet[actorId];
+        if (actor) {
+            actor.created().then(() => {
+                this.protocol.sendPayload({
+                    type: 'update-grabbable',
+                    actorId,
+                    grabbable
+                } as UpdateGrabbable);
+            }).catch((reason: any) => {
+                log.error('app', `Failed to update grabbability on actor ${actor.id}.`, reason);
+            });
         }
     }
 }

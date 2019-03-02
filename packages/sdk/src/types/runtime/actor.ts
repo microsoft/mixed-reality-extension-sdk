@@ -43,7 +43,7 @@ import { InternalActor } from '../internal/actor';
 import { CollisionEventType, CreateColliderType } from '../network/payloads';
 import { SubscriptionType } from '../network/subscriptionType';
 import { Patchable } from '../patchable';
-import { Behavior } from './behaviors';
+import { ActionHandler, ActionState, Behavior, DiscreteAction } from './behaviors';
 import { BoxColliderGeometry, ColliderGeometry, SphereColliderGeometry } from './physics';
 import { SoundInstance } from './soundInstance';
 
@@ -98,6 +98,8 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
     private _text: Text;
     private _attachment: Attachment;
     private _lookAt: LookAt;
+    private _grabbable = false;
+    private _grab = new DiscreteAction();
     // tslint:enable:variable-name
 
     /*
@@ -130,6 +132,14 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
         if (this._parentId !== value) {
             this._parentId = value;
             this.actorChanged('parentId');
+        }
+    }
+    
+    public get grabbable() { return this._grabbable; }
+    public set grabbable(value) {
+        if (value !== this._grabbable) {
+            // Update the grabbability of this actor with the app context.
+            this.context.internal.setGrabbability(this._id, value);
         }
     }
 
@@ -469,6 +479,16 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
         this._subscriptions = this._subscriptions.filter(subscription => removes.indexOf(subscription) < 0);
         this._subscriptions.push(...adds);
         this.context.internal.updateSubscriptions(this.id, options);
+    }
+
+    /**
+     * Add a grad handler to be called when the given action state has changed.
+     * @param grabState The grab state to fire the handler on.
+     * @param handler The handler to call when the grab state has changed.
+     */
+    public onGrab(grabState: 'begin' | 'end', handler: ActionHandler) {
+        const actionState: ActionState = (grabState === 'begin') ? 'started' : 'stopped';
+        this._grab.on(actionState, handler);
     }
 
     /**
