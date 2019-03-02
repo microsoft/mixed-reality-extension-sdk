@@ -278,11 +278,7 @@ export class ClientSync extends Protocols.Protocol {
         return new Promise<void>((resolve, reject) => {
             super.sendMessage(message, {
                 resolve: (replyPayload: any, replyMessage: Message) => {
-                    if (this.client.authoritative) {
-                        // If this client is authoritative while synchonizing, then it is the only client joined.
-                        // In this case we want to send the reply message back to the app since it is expecting it.
-                        this.client.session.conn.send(replyMessage);
-                    }
+                    this.client.session.conn.send(replyMessage);
                     resolve(replyPayload);
                 }, reject
             });
