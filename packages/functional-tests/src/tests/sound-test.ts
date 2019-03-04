@@ -6,9 +6,10 @@
 import * as MRE from '@microsoft/mixed-reality-extension-sdk';
 
 import { Test } from '../test';
+import delay from '../utils/delay';
 
 export default class SoundTest extends Test {
-    public expectedResultDescription = "Various Sounds";
+    public expectedResultDescription = "Sounds. Click buttons to toggle";
 
     private _musicState = 0;
     private _dopplerSoundState = 0;
@@ -55,6 +56,44 @@ export default class SoundTest extends Test {
         };
         musicButtonBehavior.onClick('released', cycleMusicState);
 
+
+        const notesButtonPromise = MRE.Actor.CreatePrimitive(this.app.context, {
+            definition: {
+                shape: MRE.PrimitiveShape.Sphere,
+                radius: 0.3,
+                uSegments: 8,
+                vSegments: 4
+
+            },
+            addCollider: true,
+            actor: {
+                name: 'Button',
+                transform: {
+                    position: { x: 0, y: 1.3, z: 1 }
+                }
+            }
+        });
+
+        const notesAssetPromise = this.app.context.assetManager.createSound(
+            'group1',
+            { uri: `${this.baseUrl}/note.wav` }
+        );
+        const notesButtonBehavior = notesButtonPromise.value.setBehavior(MRE.ButtonBehavior);
+        const playNotes = async () => {
+            notesButtonPromise.value.startSound(notesAssetPromise.value.id,
+                {
+                    doppler: 0.0,
+                    pitch: 0.0,
+                });
+            await delay(1000);
+            notesButtonPromise.value.startSound(notesAssetPromise.value.id,
+                {
+                    doppler: 0.0,
+                    pitch: 7.0,
+                });
+        };
+        musicButtonBehavior.onClick('released', playNotes);
+
         const dopplerButtonPromise = MRE.Actor.CreatePrimitive(this.app.context, {
             definition: {
                 shape: MRE.PrimitiveShape.Sphere,
@@ -100,7 +139,7 @@ export default class SoundTest extends Test {
         );
         const dopplerSoundInstance = dopplerMoverPromise.value.startSound(dopplerAssetPromise.value.id,
             {
-                volume: 1.0,
+                volume: 0.5,
                 looping: true,
                 doppler: 5.0,
                 multiChannelSpread: 0.0,
@@ -116,10 +155,9 @@ export default class SoundTest extends Test {
 
             } else if (this._dopplerSoundState === 1) {
                 dopplerButtonPromise.value.disableAnimation('flyaround');
-            } else if (this._dopplerSoundState === 2) {
                 dopplerSoundInstance.value.pause();
             }
-            this._dopplerSoundState = (this._dopplerSoundState + 1) % 3;
+            this._dopplerSoundState = (this._dopplerSoundState + 1) % 2;
         };
         dopplerButtonBehavior.onClick('released', cycleDopplerSoundState);
 
