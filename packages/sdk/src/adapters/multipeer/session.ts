@@ -30,7 +30,8 @@ export class Session extends EventEmitter {
     public get protocol() { return this._protocol; }
     public get clients() {
         return Object.keys(this._clientSet).map(clientId =>
-            this._clientSet[clientId]).sort((a, b) => a.order - b.order); }
+            this._clientSet[clientId]).sort((a, b) => a.order - b.order);
+    }
     public get actors() { return Object.keys(this._actorSet).map(actorId => this._actorSet[actorId]); }
     public get assets() { return this._assets; }
     public get assetUpdates() {
@@ -212,6 +213,7 @@ export class Session extends EventEmitter {
                 let awaitCount = clients.length;
                 let authoritativeReplyMessage: Message;
                 let fallbackReplyMessage: Message;
+                log.verbose('network-content', `awaitCount is ${awaitCount} for id:${message.id.substr(0, 8)}`);
                 for (const client of clients) {
                     client.send({ ...message }, {
                         resolve: (payload: Payloads.Payload, response: Message) => {
@@ -219,6 +221,8 @@ export class Session extends EventEmitter {
                             log.verbose('network-content', `"Received resolve response for id:${message.id.substr(0, 8)} from client:${client.id.substr(0, 8)}`);
                             // Decrement the wait counter.
                             awaitCount -= 1;
+                            // tslint:disable-next-line:max-line-length
+                            log.verbose('network-content', `awaitCount is now ${awaitCount} for id:${message.id.substr(0, 8)}`);
                             // Preprocess the response message.
                             response = this.preprocessFromClient(client, response);
                             // Cache the response message.
@@ -245,6 +249,8 @@ export class Session extends EventEmitter {
                             // Something bad happened on this connection and we didn't get a response. That's fine.
                             // Decrement the wait counter.
                             awaitCount -= 1;
+                            // tslint:disable-next-line:max-line-length
+                            log.verbose('network-content', `awaitCount is now ${awaitCount} for id:${message.id.substr(0, 8)}`);
                             // If this was the last response, send the reply message to the app and
                             // resolve this promise.
                             if (awaitCount === 0) {
