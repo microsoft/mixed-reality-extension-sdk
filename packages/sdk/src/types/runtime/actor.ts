@@ -589,10 +589,9 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
      * @param value The desired final state of the animation.
      * @param duration The length of the interpolation (in seconds).
      * @param curve The cubic-bezier curve parameters. @see AnimationEaseCurves for predefined values.
-     * @returns Returns a Promise that is resolves after the animation completes.
      */
-    public animateTo(value: Partial<ActorLike>, duration: number, curve: number[]): Promise<void> {
-        return this.context.internal.animateTo(this.id, value, duration, curve);
+    public animateTo(value: Partial<ActorLike>, duration: number, curve: number[]) {
+        this.context.internal.animateTo(this.id, value, duration, curve);
     }
 
     /**

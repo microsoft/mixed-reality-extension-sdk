@@ -21,7 +21,7 @@ export default function readPath(src: any, dst: any, ...path: string[]) {
             dst = dst[field];
         }
         if (typeof src[field] === 'undefined') {
-            throw new Error("readPath: Data structure mismatch.");
+            return;
         }
         src = src[field];
     }

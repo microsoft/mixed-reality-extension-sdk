@@ -215,6 +215,8 @@ export class Session extends EventEmitter {
                 for (const client of clients) {
                     client.send({ ...message }, {
                         resolve: (payload: Payloads.Payload, response: Message) => {
+                            // tslint:disable-next-line:max-line-length
+                            log.verbose('network-content', `"Received resolve response for id:${message.id.substr(0, 8)} from client:${client.id.substr(0, 8)}`);
                             // Decrement the wait counter.
                             awaitCount -= 1;
                             // Preprocess the response message.
@@ -238,6 +240,8 @@ export class Session extends EventEmitter {
                             }
                         },
                         reject: () => {
+                            // tslint:disable-next-line:max-line-length
+                            log.verbose('network-content', `"Received reject response for id:${message.id.substr(0, 8)} from client:${client.id.substr(0, 8)}`);
                             // Something bad happened on this connection and we didn't get a response. That's fine.
                             // Decrement the wait counter.
                             awaitCount -= 1;
