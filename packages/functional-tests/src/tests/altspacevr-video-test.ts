@@ -42,7 +42,8 @@ export default class AltspaceVRVideoTest extends Test {
                 name: 'video',
                 transform: {
                     position: { x: 0, y: 3, z: 0 },
-                    scale: { x: 7, y: 7, z: 7 }
+                    scale: { x: 7, y: 7, z: 7 },
+                    rotation: { x: 0, y: 1, z: 0, w: 0 } // 180 turn
                 },
             }
         });
@@ -88,7 +89,7 @@ export default class AltspaceVRVideoTest extends Test {
         });
 
         const buttonBehavior = buttonPromise.value.setBehavior(MRE.ButtonBehavior);
-        buttonBehavior.onClick('pressed', cycleState);
+        buttonBehavior.onClick('released', cycleState);
 
         await this.stoppedAsync();
         return true;

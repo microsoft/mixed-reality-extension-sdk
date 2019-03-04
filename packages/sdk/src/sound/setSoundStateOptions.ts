@@ -29,7 +29,7 @@ export type SetSoundStateOptions = {
 
     /**
      * the amount that sound pitch is modified when moving towards/away from sound source.
-     * For music and speech, set this to 0, but for regular objects set to 1.0 or higher. Default to 1.0
+     * For music and speech, set this to 0, but for regular objects set to 1.0 or higher (up to 5.0). Default to 1.0
      */
     doppler?: number;
 
