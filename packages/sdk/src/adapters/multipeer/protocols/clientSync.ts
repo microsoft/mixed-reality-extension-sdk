@@ -285,7 +285,7 @@ export class ClientSync extends Protocols.Protocol {
                         }
                         activeSoundInstance.message.payload.startTimeOffset += timeOffset;
                     }
-                    return this.sendAndExpectResponse(activeSoundInstance.message);
+                    return this.sendMessage(activeSoundInstance.message);
                 })
         ]);
     }
