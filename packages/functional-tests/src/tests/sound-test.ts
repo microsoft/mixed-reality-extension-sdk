@@ -17,7 +17,7 @@ export default class SoundTest extends Test {
         const musicButtonPromise = MRE.Actor.CreatePrimitive(this.app.context, {
             definition: {
                 shape: MRE.PrimitiveShape.Sphere,
-                radius: 0.4,
+                radius: 0.3,
                 uSegments: 8,
                 vSegments: 4
 
@@ -26,7 +26,7 @@ export default class SoundTest extends Test {
             actor: {
                 name: 'Button',
                 transform: {
-                    position: { x: -2, y: 2.0, z: 2 }
+                    position: { x: -1, y: 1.3, z: 1 }
                 }
             }
         });
@@ -55,32 +55,39 @@ export default class SoundTest extends Test {
         };
         musicButtonBehavior.onClick('released', cycleMusicState);
 
-        const dopplerButtonPromiseRoot = MRE.Actor.CreateEmpty(this.app.context, {
-            actor: {
-                name: 'Button',
-                transform: {
-                    position: { x: 2, y: 2.0, z: -5 }
-                }
-            }
-        });
         const dopplerButtonPromise = MRE.Actor.CreatePrimitive(this.app.context, {
             definition: {
                 shape: MRE.PrimitiveShape.Sphere,
-                radius: 0.4,
+                radius: 0.3,
                 uSegments: 8,
                 vSegments: 4
 
             },
             addCollider: true,
             actor: {
-                parentId: dopplerButtonPromiseRoot.value.id,
                 name: 'Button',
                 transform: {
-                    position: { x: 0, y: 0, z: 7 }
+                    position: { x: 1, y: 1.3, z: 1 }
                 }
             }
         });
-        dopplerButtonPromiseRoot.value.createAnimation(
+        const dopplerMoverPromise = MRE.Actor.CreatePrimitive(this.app.context, {
+            definition: {
+                shape: MRE.PrimitiveShape.Sphere,
+                radius: 0.15,
+                uSegments: 8,
+                vSegments: 4
+
+            },
+            actor: {
+                parentId: dopplerButtonPromise.value.id,
+                name: 'Button',
+                transform: {
+                    position: { x: 0, y: 0, z: 3 }
+                }
+            }
+        });
+        dopplerButtonPromise.value.createAnimation(
             'flyaround', {
                 keyframes: this.generateSpinKeyframes(2.0, MRE.Vector3.Up()),
                 wrapMode: MRE.AnimationWrapMode.Loop
@@ -91,11 +98,12 @@ export default class SoundTest extends Test {
             'group1',
             { uri: `${this.baseUrl}/UI-ButtonSelectSmall.wav` }
         );
-        const dopplerSoundInstance = dopplerButtonPromise.value.startSound(dopplerAssetPromise.value.id,
+        const dopplerSoundInstance = dopplerMoverPromise.value.startSound(dopplerAssetPromise.value.id,
             {
                 volume: 1.0,
                 looping: true,
                 doppler: 5.0,
+                multiChannelSpread: 0.0,
                 rolloffStartDistance: 9.3,
             },
             0.0);
@@ -104,10 +112,10 @@ export default class SoundTest extends Test {
         const cycleDopplerSoundState = () => {
             if (this._dopplerSoundState === 0) {
                 dopplerSoundInstance.value.resume();
-                dopplerButtonPromiseRoot.value.enableAnimation('flyaround');
+                dopplerButtonPromise.value.enableAnimation('flyaround');
 
             } else if (this._dopplerSoundState === 1) {
-                dopplerButtonPromiseRoot.value.disableAnimation('flyaround');
+                dopplerButtonPromise.value.disableAnimation('flyaround');
             } else if (this._dopplerSoundState === 2) {
                 dopplerSoundInstance.value.pause();
             }
