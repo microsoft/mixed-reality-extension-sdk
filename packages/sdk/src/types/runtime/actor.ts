@@ -15,7 +15,8 @@ import {
     LightLike,
     LookAt,
     LookAtLike,
-    Material,
+    Visuals,
+    VisualsLike,
     RigidBody,
     RigidBodyLike,
     Text,
@@ -56,13 +57,13 @@ export interface ActorLike {
     tag: string;
     subscriptions: SubscriptionType[];
     transform: Partial<TransformLike>;
+    visuals: Partial<VisualsLike>;
     light: Partial<LightLike>;
     rigidBody: Partial<RigidBodyLike>;
     collider: Partial<ColliderLike>;
     text: Partial<TextLike>;
     attachment: Partial<AttachmentLike>;
     lookAt: Partial<LookAtLike>;
-    materialId: string;
 }
 
 /**
@@ -90,13 +91,13 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
     private _parentId: string;
     private _subscriptions: SubscriptionType[] = [];
     private _transform: Transform;
+    private _visuals: Visuals;
     private _light: Light;
     private _rigidBody: RigidBody;
     private _collider: Collider;
     private _text: Text;
     private _attachment: Attachment;
     private _lookAt: LookAt;
-    private _materialId = ZeroGuid;
     // tslint:enable:variable-name
 
     /*
@@ -111,6 +112,8 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
     public get subscriptions() { return this._subscriptions; }
     public get transform() { return this._transform; }
     public set transform(value) { this._transform.copy(value); }
+    public get visuals() { return this._visuals; }
+    public set visuals(value) { this._visuals.copy(value); }
     public get light() { return this._light; }
     public get rigidBody() { return this._rigidBody; }
     public get collider() { return this._collider; }
@@ -131,33 +134,25 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
         this.actorChanged('parentId');
     }
 
-    /** @returns A shared reference to this actor's material, or null if this actor has no material */
-    public get material() { return this._context.assetManager.assets[this._materialId] as Material; }
-    public set material(value) {
-        this.materialId = value && value.id || ZeroGuid;
-    }
-    public get materialId() { return this._materialId; }
-    public set materialId(value) {
-        if (!value || value.startsWith('0000')) {
-            value = ZeroGuid;
-        }
-        if (!this.context.assetManager.assets[value]) {
-            value = ZeroGuid; // throw?
-        }
-        this._materialId = value;
-        this.actorChanged('materialId');
-    }
-
     // tslint:disable-next-line:variable-name
     private constructor(private _context: Context, private _id: string) {
         this._internal = new InternalActor(this);
         this._emitter = new events.EventEmitter();
-        this._transform = new Transform();
+
         // Actor patching: Observe the transform for changed values.
+        this._transform = new Transform();
         observe({
             target: this._transform,
             targetName: 'transform',
             notifyChanged: (...path: string[]) => this.actorChanged(...path)
+        });
+
+        // Observe changes to the looks of this actor
+        this._visuals = new Visuals(this);
+        observe({
+            target: this._visuals,
+            targetName: 'visuals',
+            notifyChanged: (...path: []) => this.actorChanged(...path)
         });
     }
 
@@ -670,7 +665,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
         if (from.tag) this._tag = from.tag;
         if (from.transform) this._transform.copy(from.transform);
         if (from.attachment) this.attach(from.attachment.userId, from.attachment.attachPoint);
-        if (from.materialId) this._materialId = from.materialId;
+        if (from.visuals) this._visuals.copy(from.visuals);
         if (from.light) this.enableLight(from.light);
         if (from.rigidBody) this.enableRigidBody(from.rigidBody);
         if (from.collider) this._setCollider(from.collider);
@@ -688,6 +683,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
             name: this._name,
             tag: this._tag,
             transform: this._transform.toJSON(),
+            visuals: this._visuals.toJSON(),
             attachment: this._attachment ? this._attachment.toJSON() : undefined,
             light: this._light ? this._light.toJSON() : undefined,
             rigidBody: this._rigidBody ? this._rigidBody.toJSON() : undefined,

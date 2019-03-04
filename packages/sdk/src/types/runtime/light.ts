@@ -27,7 +27,7 @@ export class Light implements LightLike {
 
     // tslint:disable:variable-name
     private _color: Color3;
-    // tslint:disable:variable-name
+    // tslint:enable:variable-name
 
     public get color() { return this._color; }
     public set color(value: Partial<Color3>) { this._color.copy(value); }

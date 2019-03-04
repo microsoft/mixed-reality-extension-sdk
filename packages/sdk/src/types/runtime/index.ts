@@ -17,3 +17,4 @@ export * from './collider';
 export * from './assets';
 export * from './physics';
 export * from './lookAt';
+export * from './renderer';
