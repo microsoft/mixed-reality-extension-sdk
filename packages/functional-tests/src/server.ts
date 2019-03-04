@@ -3,19 +3,20 @@
  * Licensed under the MIT License.
  */
 
-import * as MRESDK from '@microsoft/mixed-reality-extension-sdk';
-import { log } from '@microsoft/mixed-reality-extension-sdk/built/log';
+import * as MRE from '@microsoft/mixed-reality-extension-sdk';
 import { resolve as resolvePath } from 'path';
 import { App } from './app';
 
 process.on('uncaughtException', (err) => console.log('uncaughtException', err));
 process.on('unhandledRejection', (reason) => console.log('unhandledRejection', reason));
 
-log.enable('app');
-// log.enable('network');
+MRE.log.enable('app');
+// MRE.log.enable('network');
+// MRE.log.enable('network-content');
 
 // Start listening for connections, and serve static files
-const server = new MRESDK.WebHost({
+const server = new MRE.WebHost({
+    // baseUrl: 'http://<ngrok-id>.ngrok.io',
     baseDir: resolvePath(__dirname, '../public'),
 });
 

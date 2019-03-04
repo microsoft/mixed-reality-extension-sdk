@@ -619,8 +619,8 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
         ...DefaultRule,
         synchronization: {
             stage: 'create-animations',
-            before: 'ignore',
-            during: 'queue',
+            before: 'queue',
+            during: 'allow',
             after: 'allow'
         },
         session: {
@@ -704,17 +704,7 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
     'operation-result': {
         ...ClientOnlyRule,
         session: {
-            ...DefaultRule.session,
-            beforeReceiveFromClient: (
-                session: Session,
-                client: Client,
-                message: Message<Payloads.OperationResult>
-            ) => {
-                if (client.authoritative) {
-                    // Allow the message to propagate to the app.
-                    return message;
-                }
-            }
+            ...DefaultRule.session
         }
     },
 
