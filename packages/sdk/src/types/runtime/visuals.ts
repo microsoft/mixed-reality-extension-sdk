@@ -17,7 +17,9 @@ export class Visuals implements VisualsLike {
     private _materialId = ZeroGuid;
     // tslint:enable:variable-name
 
-    public get enabled() { return this._enabled; }
+    public get enabled(): boolean {
+        return (!this.actor.parent || this.actor.parent.visuals.enabled) && this._enabled;
+    }
     public set enabled(value) { this._enabled = value; }
 
     /** @returns A shared reference to this actor's material, or null if this actor has no material */

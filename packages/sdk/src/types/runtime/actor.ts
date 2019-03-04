@@ -15,15 +15,15 @@ import {
     LightLike,
     LookAt,
     LookAtLike,
-    Visuals,
-    VisualsLike,
     RigidBody,
     RigidBodyLike,
     Text,
     TextLike,
     Transform,
     TransformLike,
-    User
+    User,
+    Visuals,
+    VisualsLike
 } from '.';
 import {
     Context,
@@ -152,7 +152,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
         observe({
             target: this._visuals,
             targetName: 'visuals',
-            notifyChanged: (...path: []) => this.actorChanged(...path)
+            notifyChanged: (...path: string[]) => this.actorChanged(...path)
         });
     }
 
