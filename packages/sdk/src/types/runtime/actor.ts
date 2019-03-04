@@ -5,6 +5,8 @@
 
 import events from 'events';
 import {
+    Appearance,
+    AppearanceLike,
     Attachment,
     AttachmentLike,
     AttachPoint,
@@ -22,8 +24,6 @@ import {
     Transform,
     TransformLike,
     User,
-    Visuals,
-    VisualsLike
 } from '.';
 import {
     Context,
@@ -57,7 +57,7 @@ export interface ActorLike {
     tag: string;
     subscriptions: SubscriptionType[];
     transform: Partial<TransformLike>;
-    visuals: Partial<VisualsLike>;
+    appearance: Partial<AppearanceLike>;
     light: Partial<LightLike>;
     rigidBody: Partial<RigidBodyLike>;
     collider: Partial<ColliderLike>;
@@ -91,7 +91,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
     private _parentId: string;
     private _subscriptions: SubscriptionType[] = [];
     private _transform: Transform;
-    private _visuals: Visuals;
+    private _appearance: Appearance;
     private _light: Light;
     private _rigidBody: RigidBody;
     private _collider: Collider;
@@ -112,8 +112,8 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
     public get subscriptions() { return this._subscriptions; }
     public get transform() { return this._transform; }
     public set transform(value) { this._transform.copy(value); }
-    public get visuals() { return this._visuals; }
-    public set visuals(value) { this._visuals.copy(value); }
+    public get appearance() { return this._appearance; }
+    public set appearance(value) { this._appearance.copy(value); }
     public get light() { return this._light; }
     public get rigidBody() { return this._rigidBody; }
     public get collider() { return this._collider; }
@@ -148,9 +148,9 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
         });
 
         // Observe changes to the looks of this actor
-        this._visuals = new Visuals(this);
+        this._appearance = new Appearance(this);
         observe({
-            target: this._visuals,
+            target: this._appearance,
             targetName: 'visuals',
             notifyChanged: (...path: string[]) => this.actorChanged(...path)
         });
@@ -665,7 +665,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
         if (from.tag) this._tag = from.tag;
         if (from.transform) this._transform.copy(from.transform);
         if (from.attachment) this.attach(from.attachment.userId, from.attachment.attachPoint);
-        if (from.visuals) this._visuals.copy(from.visuals);
+        if (from.appearance) this._appearance.copy(from.appearance);
         if (from.light) this.enableLight(from.light);
         if (from.rigidBody) this.enableRigidBody(from.rigidBody);
         if (from.collider) this._setCollider(from.collider);
@@ -683,7 +683,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
             name: this._name,
             tag: this._tag,
             transform: this._transform.toJSON(),
-            visuals: this._visuals.toJSON(),
+            appearance: this._appearance.toJSON(),
             attachment: this._attachment ? this._attachment.toJSON() : undefined,
             light: this._light ? this._light.toJSON() : undefined,
             rigidBody: this._rigidBody ? this._rigidBody.toJSON() : undefined,

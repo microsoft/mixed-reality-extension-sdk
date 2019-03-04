@@ -6,19 +6,19 @@
 import { Actor, Material } from '.';
 import { ZeroGuid } from '../../constants';
 
-export interface VisualsLike {
+export interface AppearanceLike {
     enabled: boolean;
     materialId: string;
 }
 
-export class Visuals implements VisualsLike {
+export class Appearance implements AppearanceLike {
     // tslint:disable:variable-name
     private _enabled = true;
     private _materialId = ZeroGuid;
     // tslint:enable:variable-name
 
     public get enabled(): boolean {
-        return (!this.actor.parent || this.actor.parent.visuals.enabled) && this._enabled;
+        return (!this.actor.parent || this.actor.parent.appearance.enabled) && this._enabled;
     }
     public set enabled(value) { this._enabled = value; }
 
@@ -38,11 +38,11 @@ export class Visuals implements VisualsLike {
         this._materialId = value;
     }
 
-    constructor(private actor: Actor, from: Partial<VisualsLike> = null) {
+    constructor(private actor: Actor, from: Partial<AppearanceLike> = null) {
         this.copy(from);
     }
 
-    public copy(from: Partial<VisualsLike>): this {
+    public copy(from: Partial<AppearanceLike>): this {
         if (!from) return this;
         if (from.enabled !== undefined) this.enabled = from.enabled;
         if (from.materialId !== undefined) this.materialId = from.materialId;
@@ -53,6 +53,6 @@ export class Visuals implements VisualsLike {
         return {
             enabled: this.enabled,
             materialId: this.materialId
-        } as VisualsLike;
+        } as AppearanceLike;
     }
 }
