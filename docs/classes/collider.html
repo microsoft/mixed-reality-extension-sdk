@@ -88,15 +88,8 @@
 				<section class="tsd-panel tsd-index-panel">
 					<div class="tsd-index-content">
 						<section class="tsd-index-section ">
-							<h3>Constructors</h3>
-							<ul class="tsd-index-list">
-								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="collider.html#constructor" class="tsd-kind-icon">constructor</a></li>
-							</ul>
-						</section>
-						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-class"><a href="collider.html#collisionlayer" class="tsd-kind-icon">collision<wbr>Layer</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="collider.html#enabled" class="tsd-kind-icon">enabled</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="collider.html#istrigger" class="tsd-kind-icon">is<wbr>Trigger</a></li>
 							</ul>
@@ -104,73 +97,18 @@
 						<section class="tsd-index-section ">
 							<h3>Accessors</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="collider.html#colliderparams" class="tsd-kind-icon">collider<wbr>Params</a></li>
-							</ul>
-						</section>
-						<section class="tsd-index-section ">
-							<h3>Methods</h3>
-							<ul class="tsd-index-list">
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="collider.html#copy" class="tsd-kind-icon">copy</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="collider.html#tojson" class="tsd-kind-icon">toJSON</a></li>
+								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="collider.html#collidergeometry" class="tsd-kind-icon">collider<wbr>Geometry</a></li>
 							</ul>
 						</section>
 					</div>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
-				<h2>Constructors</h2>
-				<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class">
-					<a name="constructor" class="tsd-anchor"></a>
-					<h3>constructor</h3>
-					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Collider<span class="tsd-signature-symbol">(</span>$owner<span class="tsd-signature-symbol">: </span><a href="actor.html" class="tsd-signature-type">Actor</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="collider.html" class="tsd-signature-type">Collider</a></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in types/runtime/collider.ts:30</li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Creates a new Collider instance.</p>
-								</div>
-							</div>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>$owner: <a href="actor.html" class="tsd-signature-type">Actor</a></h5>
-									<div class="tsd-comment tsd-typography">
-										<div class="lead">
-											<p>The owning actor instance. Field name is prefixed with a dollar sign so that it is ignored by
-											the actor patch detection system.</p>
-										</div>
-									</div>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="collider.html" class="tsd-signature-type">Collider</a></h4>
-						</li>
-					</ul>
-				</section>
-			</section>
-			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
-					<a name="collisionlayer" class="tsd-anchor"></a>
-					<h3>collision<wbr>Layer</h3>
-					<div class="tsd-signature tsd-kind-icon">collision<wbr>Layer<span class="tsd-signature-symbol">:</span> <a href="../enums/collisionlayer.html" class="tsd-signature-type">CollisionLayer</a></div>
-					<aside class="tsd-sources">
-						<p>Implementation of <a href="../interfaces/colliderlike.html">ColliderLike</a>.<a href="../interfaces/colliderlike.html#collisionlayer">collisionLayer</a></p>
-						<ul>
-							<li>Defined in types/runtime/collider.ts:24</li>
-						</ul>
-					</aside>
-				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 					<a name="enabled" class="tsd-anchor"></a>
 					<h3>enabled</h3>
-					<div class="tsd-signature tsd-kind-icon">enabled<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Readonly</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">&gt;</span></div>
+					<div class="tsd-signature tsd-kind-icon">enabled<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> =&nbsp;true</span></div>
 					<aside class="tsd-sources">
 						<p>Implementation of <a href="../interfaces/colliderlike.html">ColliderLike</a>.<a href="../interfaces/colliderlike.html#enabled">enabled</a></p>
 						<ul>
@@ -181,7 +119,7 @@
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 					<a name="istrigger" class="tsd-anchor"></a>
 					<h3>is<wbr>Trigger</h3>
-					<div class="tsd-signature tsd-kind-icon">is<wbr>Trigger<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+					<div class="tsd-signature tsd-kind-icon">is<wbr>Trigger<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> =&nbsp;false</span></div>
 					<aside class="tsd-sources">
 						<p>Implementation of <a href="../interfaces/colliderlike.html">ColliderLike</a>.<a href="../interfaces/colliderlike.html#istrigger">isTrigger</a></p>
 						<ul>
@@ -193,65 +131,30 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Accessors</h2>
 				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
-					<a name="colliderparams" class="tsd-anchor"></a>
-					<h3>collider<wbr>Params</h3>
+					<a name="collidergeometry" class="tsd-anchor"></a>
+					<h3>collider<wbr>Geometry</h3>
 					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> colliderParams<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">object</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">object</span></li>
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> colliderGeometry<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">object</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">object</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">object</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in types/runtime/collider.ts:30</li>
+									<li>Defined in types/runtime/collider.ts:34</li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>The collider geometry that the collider was initialized with.  These are a
+									readonly structure and are not able to be updated after creation.</p>
+								</div>
+							</div>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">object</span>
 								<span class="tsd-signature-symbol"> | </span>
 								<span class="tsd-signature-type">object</span>
+								<span class="tsd-signature-symbol"> | </span>
+								<span class="tsd-signature-type">object</span>
 							</h4>
-						</li>
-					</ul>
-				</section>
-			</section>
-			<section class="tsd-panel-group tsd-member-group ">
-				<h2>Methods</h2>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="copy" class="tsd-anchor"></a>
-					<h3>copy</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">copy<span class="tsd-signature-symbol">(</span>from<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/colliderlike.html" class="tsd-signature-type">ColliderLike</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in types/runtime/collider.ts:39</li>
-								</ul>
-							</aside>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>from: <span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/colliderlike.html" class="tsd-signature-type">ColliderLike</a><span class="tsd-signature-symbol">&gt;</span></h5>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="tojson" class="tsd-anchor"></a>
-					<h3>toJSON</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">toJSON<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/colliderlike.html" class="tsd-signature-type">ColliderLike</a></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in types/runtime/collider.ts:48</li>
-								</ul>
-							</aside>
-							<h4 class="tsd-returns-title">Returns <a href="../interfaces/colliderlike.html" class="tsd-signature-type">ColliderLike</a></h4>
 						</li>
 					</ul>
 				</section>
@@ -272,12 +175,6 @@
 					<li class="current tsd-kind-class">
 						<a href="collider.html" class="tsd-kind-icon">Collider</a>
 						<ul>
-							<li class=" tsd-kind-constructor tsd-parent-kind-class">
-								<a href="collider.html#constructor" class="tsd-kind-icon">constructor</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class">
-								<a href="collider.html#collisionlayer" class="tsd-kind-icon">collision<wbr>Layer</a>
-							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
 								<a href="collider.html#enabled" class="tsd-kind-icon">enabled</a>
 							</li>
@@ -285,13 +182,7 @@
 								<a href="collider.html#istrigger" class="tsd-kind-icon">is<wbr>Trigger</a>
 							</li>
 							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
-								<a href="collider.html#colliderparams" class="tsd-kind-icon">collider<wbr>Params</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="collider.html#copy" class="tsd-kind-icon">copy</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="collider.html#tojson" class="tsd-kind-icon">toJSON</a>
+								<a href="collider.html#collidergeometry" class="tsd-kind-icon">collider<wbr>Geometry</a>
 							</li>
 						</ul>
 					</li>

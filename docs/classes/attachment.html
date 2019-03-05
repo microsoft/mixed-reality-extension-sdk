@@ -62,6 +62,13 @@
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Implementation of AttachmentLike. This class is observable.</p>
+					</div>
+				</div>
+			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
@@ -70,85 +77,194 @@
 					</li>
 				</ul>
 			</section>
+			<section class="tsd-panel">
+				<h3>Implements</h3>
+				<ul class="tsd-hierarchy">
+					<li><a href="../interfaces/attachmentlike.html" class="tsd-signature-type">AttachmentLike</a></li>
+				</ul>
+			</section>
 			<section class="tsd-panel-group tsd-index-group">
 				<h2>Index</h2>
 				<section class="tsd-panel tsd-index-panel">
 					<div class="tsd-index-content">
 						<section class="tsd-index-section ">
-							<h3>Constructors</h3>
+							<h3>Accessors</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="attachment.html#constructor" class="tsd-kind-icon">constructor</a></li>
+								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="attachment.html#attachpoint" class="tsd-kind-icon">attach<wbr>Point</a></li>
+								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="attachment.html#userid" class="tsd-kind-icon">user<wbr>Id</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
-							<h3>Accessors</h3>
+							<h3>Methods</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="attachment.html#actor" class="tsd-kind-icon">actor</a></li>
-								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="attachment.html#attachpoint" class="tsd-kind-icon">attach<wbr>Point</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="attachment.html#copy" class="tsd-kind-icon">copy</a></li>
 							</ul>
 						</section>
 					</div>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
-				<h2>Constructors</h2>
-				<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class">
-					<a name="constructor" class="tsd-anchor"></a>
-					<h3>constructor</h3>
-					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Attachment<span class="tsd-signature-symbol">(</span>user<span class="tsd-signature-symbol">: </span><a href="user.html" class="tsd-signature-type">User</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="attachment.html" class="tsd-signature-type">Attachment</a></li>
+				<h2>Accessors</h2>
+				<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class">
+					<a name="attachpoint" class="tsd-anchor"></a>
+					<h3>attach<wbr>Point</h3>
+					<ul class="tsd-signatures tsd-kind-accessor tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> attachPoint<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">"none"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"camera"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"head"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"neck"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"hips"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"center-eye"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"spine-top"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"spine-middle"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"spine-bottom"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"left-eye"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"left-upper-leg"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"left-lower-leg"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"left-foot"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"left-toes"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"left-shoulder"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"left-upper-arm"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"left-lower-arm"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"left-hand"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"left-thumb"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"left-index"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"left-middle"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"left-ring"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"left-pinky"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"right-eye"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"right-upper-leg"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"right-lower-leg"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"right-foot"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"right-toes"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"right-shoulder"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"right-upper-arm"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"right-lower-arm"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"right-hand"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"right-thumb"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"right-index"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"right-middle"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"right-ring"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"right-pinky"</span></li>
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">set</span> attachPoint<span class="tsd-signature-symbol">(</span>value<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">"none"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"camera"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"head"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"neck"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"hips"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"center-eye"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"spine-top"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"spine-middle"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"spine-bottom"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"left-eye"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"left-upper-leg"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"left-lower-leg"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"left-foot"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"left-toes"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"left-shoulder"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"left-upper-arm"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"left-lower-arm"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"left-hand"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"left-thumb"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"left-index"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"left-middle"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"left-ring"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"left-pinky"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"right-eye"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"right-upper-leg"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"right-lower-leg"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"right-foot"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"right-toes"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"right-shoulder"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"right-upper-arm"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"right-lower-arm"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"right-hand"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"right-thumb"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"right-index"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"right-middle"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"right-ring"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"right-pinky"</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in types/runtime/attachment.ts:20</li>
+									<li>Defined in types/runtime/attachment.ts:70</li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">"none"</span>
+								<span class="tsd-signature-symbol"> | </span>
+								<span class="tsd-signature-type">"camera"</span>
+								<span class="tsd-signature-symbol"> | </span>
+								<span class="tsd-signature-type">"head"</span>
+								<span class="tsd-signature-symbol"> | </span>
+								<span class="tsd-signature-type">"neck"</span>
+								<span class="tsd-signature-symbol"> | </span>
+								<span class="tsd-signature-type">"hips"</span>
+								<span class="tsd-signature-symbol"> | </span>
+								<span class="tsd-signature-type">"center-eye"</span>
+								<span class="tsd-signature-symbol"> | </span>
+								<span class="tsd-signature-type">"spine-top"</span>
+								<span class="tsd-signature-symbol"> | </span>
+								<span class="tsd-signature-type">"spine-middle"</span>
+								<span class="tsd-signature-symbol"> | </span>
+								<span class="tsd-signature-type">"spine-bottom"</span>
+								<span class="tsd-signature-symbol"> | </span>
+								<span class="tsd-signature-type">"left-eye"</span>
+								<span class="tsd-signature-symbol"> | </span>
+								<span class="tsd-signature-type">"left-upper-leg"</span>
+								<span class="tsd-signature-symbol"> | </span>
+								<span class="tsd-signature-type">"left-lower-leg"</span>
+								<span class="tsd-signature-symbol"> | </span>
+								<span class="tsd-signature-type">"left-foot"</span>
+								<span class="tsd-signature-symbol"> | </span>
+								<span class="tsd-signature-type">"left-toes"</span>
+								<span class="tsd-signature-symbol"> | </span>
+								<span class="tsd-signature-type">"left-shoulder"</span>
+								<span class="tsd-signature-symbol"> | </span>
+								<span class="tsd-signature-type">"left-upper-arm"</span>
+								<span class="tsd-signature-symbol"> | </span>
+								<span class="tsd-signature-type">"left-lower-arm"</span>
+								<span class="tsd-signature-symbol"> | </span>
+								<span class="tsd-signature-type">"left-hand"</span>
+								<span class="tsd-signature-symbol"> | </span>
+								<span class="tsd-signature-type">"left-thumb"</span>
+								<span class="tsd-signature-symbol"> | </span>
+								<span class="tsd-signature-type">"left-index"</span>
+								<span class="tsd-signature-symbol"> | </span>
+								<span class="tsd-signature-type">"left-middle"</span>
+								<span class="tsd-signature-symbol"> | </span>
+								<span class="tsd-signature-type">"left-ring"</span>
+								<span class="tsd-signature-symbol"> | </span>
+								<span class="tsd-signature-type">"left-pinky"</span>
+								<span class="tsd-signature-symbol"> | </span>
+								<span class="tsd-signature-type">"right-eye"</span>
+								<span class="tsd-signature-symbol"> | </span>
+								<span class="tsd-signature-type">"right-upper-leg"</span>
+								<span class="tsd-signature-symbol"> | </span>
+								<span class="tsd-signature-type">"right-lower-leg"</span>
+								<span class="tsd-signature-symbol"> | </span>
+								<span class="tsd-signature-type">"right-foot"</span>
+								<span class="tsd-signature-symbol"> | </span>
+								<span class="tsd-signature-type">"right-toes"</span>
+								<span class="tsd-signature-symbol"> | </span>
+								<span class="tsd-signature-type">"right-shoulder"</span>
+								<span class="tsd-signature-symbol"> | </span>
+								<span class="tsd-signature-type">"right-upper-arm"</span>
+								<span class="tsd-signature-symbol"> | </span>
+								<span class="tsd-signature-type">"right-lower-arm"</span>
+								<span class="tsd-signature-symbol"> | </span>
+								<span class="tsd-signature-type">"right-hand"</span>
+								<span class="tsd-signature-symbol"> | </span>
+								<span class="tsd-signature-type">"right-thumb"</span>
+								<span class="tsd-signature-symbol"> | </span>
+								<span class="tsd-signature-type">"right-index"</span>
+								<span class="tsd-signature-symbol"> | </span>
+								<span class="tsd-signature-type">"right-middle"</span>
+								<span class="tsd-signature-symbol"> | </span>
+								<span class="tsd-signature-type">"right-ring"</span>
+								<span class="tsd-signature-symbol"> | </span>
+								<span class="tsd-signature-type">"right-pinky"</span>
+							</h4>
+						</li>
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in types/runtime/attachment.ts:71</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>user: <a href="user.html" class="tsd-signature-type">User</a></h5>
+									<h5>value: <span class="tsd-signature-type">"none"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"camera"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"head"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"neck"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"hips"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"center-eye"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"spine-top"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"spine-middle"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"spine-bottom"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"left-eye"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"left-upper-leg"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"left-lower-leg"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"left-foot"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"left-toes"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"left-shoulder"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"left-upper-arm"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"left-lower-arm"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"left-hand"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"left-thumb"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"left-index"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"left-middle"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"left-ring"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"left-pinky"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"right-eye"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"right-upper-leg"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"right-lower-leg"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"right-foot"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"right-toes"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"right-shoulder"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"right-upper-arm"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"right-lower-arm"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"right-hand"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"right-thumb"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"right-index"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"right-middle"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"right-ring"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"right-pinky"</span></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="attachment.html" class="tsd-signature-type">Attachment</a></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class">
+					<a name="userid" class="tsd-anchor"></a>
+					<h3>user<wbr>Id</h3>
+					<ul class="tsd-signatures tsd-kind-accessor tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> userId<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">set</span> userId<span class="tsd-signature-symbol">(</span>value<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in types/runtime/attachment.ts:68</li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+						</li>
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in types/runtime/attachment.ts:69</li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>value: <span class="tsd-signature-type">string</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 						</li>
 					</ul>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
-				<h2>Accessors</h2>
-				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
-					<a name="actor" class="tsd-anchor"></a>
-					<h3>actor</h3>
-					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> actor<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="actor.html" class="tsd-signature-type">Actor</a></li>
+				<h2>Methods</h2>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="copy" class="tsd-anchor"></a>
+					<h3>copy</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">copy<span class="tsd-signature-symbol">(</span>from<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/attachmentlike.html" class="tsd-signature-type">AttachmentLike</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in types/runtime/attachment.ts:20</li>
+									<li>Defined in types/runtime/attachment.ts:81</li>
 								</ul>
 							</aside>
-							<h4 class="tsd-returns-title">Returns <a href="actor.html" class="tsd-signature-type">Actor</a></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
-					<a name="attachpoint" class="tsd-anchor"></a>
-					<h3>attach<wbr>Point</h3>
-					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> attachPoint<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in types/runtime/attachment.ts:19</li>
-								</ul>
-							</aside>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>from: <span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/attachmentlike.html" class="tsd-signature-type">AttachmentLike</a><span class="tsd-signature-symbol">&gt;</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -169,14 +285,14 @@
 					<li class="current tsd-kind-class">
 						<a href="attachment.html" class="tsd-kind-icon">Attachment</a>
 						<ul>
-							<li class=" tsd-kind-constructor tsd-parent-kind-class">
-								<a href="attachment.html#constructor" class="tsd-kind-icon">constructor</a>
-							</li>
-							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
-								<a href="attachment.html#actor" class="tsd-kind-icon">actor</a>
-							</li>
-							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
+							<li class=" tsd-kind-accessor tsd-parent-kind-class">
 								<a href="attachment.html#attachpoint" class="tsd-kind-icon">attach<wbr>Point</a>
+							</li>
+							<li class=" tsd-kind-accessor tsd-parent-kind-class">
+								<a href="attachment.html#userid" class="tsd-kind-icon">user<wbr>Id</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="attachment.html#copy" class="tsd-kind-icon">copy</a>
 							</li>
 						</ul>
 					</li>

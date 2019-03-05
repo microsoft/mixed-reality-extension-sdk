@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>SphereColliderParams | Mixed Reality Extension SDK</title>
+	<title>LookAtLike | Mixed Reality Extension SDK</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -52,29 +52,28 @@
 					<a href="../index.html">Globals</a>
 				</li>
 				<li>
-					<a href="spherecolliderparams.html">SphereColliderParams</a>
+					<a href="lookatlike.html">LookAtLike</a>
 				</li>
 			</ul>
-			<h1>Interface SphereColliderParams</h1>
+			<h1>Interface LookAtLike</h1>
 		</div>
 	</div>
 </header>
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
-			<section class="tsd-panel tsd-comment">
-				<div class="tsd-comment tsd-typography">
-					<div class="lead">
-						<p>Collider parameters specific to a sphere collider.</p>
-					</div>
-				</div>
-			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">SphereColliderParams</span>
+						<span class="target">LookAtLike</span>
 					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel">
+				<h3>Implemented by</h3>
+				<ul class="tsd-hierarchy">
+					<li><a href="../classes/lookat.html" class="tsd-signature-type">LookAt</a></li>
 				</ul>
 			</section>
 			<section class="tsd-panel-group tsd-index-group">
@@ -84,9 +83,9 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="spherecolliderparams.html#center" class="tsd-kind-icon">center</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="spherecolliderparams.html#collidertype" class="tsd-kind-icon">collider<wbr>Type</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="spherecolliderparams.html#radius" class="tsd-kind-icon">radius</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="lookatlike.html#actorid" class="tsd-kind-icon">actor<wbr>Id</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="lookatlike.html#backward" class="tsd-kind-icon">backward</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="lookatlike.html#mode" class="tsd-kind-icon">mode</a></li>
 							</ul>
 						</section>
 					</div>
@@ -95,32 +94,32 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="center" class="tsd-anchor"></a>
-					<h3>center</h3>
-					<div class="tsd-signature tsd-kind-icon">center<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Readonly</span><span class="tsd-signature-symbol">&lt;</span><a href="vector3like.html" class="tsd-signature-type">Vector3Like</a><span class="tsd-signature-symbol">&gt;</span></div>
+					<a name="actorid" class="tsd-anchor"></a>
+					<h3>actor<wbr>Id</h3>
+					<div class="tsd-signature tsd-kind-icon">actor<wbr>Id<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in types/runtime/physics/colliderParams.ts:13</li>
+							<li>Defined in types/runtime/lookAt.ts:10</li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="collidertype" class="tsd-anchor"></a>
-					<h3>collider<wbr>Type</h3>
-					<div class="tsd-signature tsd-kind-icon">collider<wbr>Type<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">"sphere"</span></div>
+					<a name="backward" class="tsd-anchor"></a>
+					<h3>backward</h3>
+					<div class="tsd-signature tsd-kind-icon">backward<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in types/runtime/physics/colliderParams.ts:12</li>
+							<li>Defined in types/runtime/lookAt.ts:12</li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="radius" class="tsd-anchor"></a>
-					<h3>radius</h3>
-					<div class="tsd-signature tsd-kind-icon">radius<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+					<a name="mode" class="tsd-anchor"></a>
+					<h3>mode</h3>
+					<div class="tsd-signature tsd-kind-icon">mode<span class="tsd-signature-symbol">:</span> <a href="../enums/lookatmode.html" class="tsd-signature-type">LookAtMode</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in types/runtime/physics/colliderParams.ts:14</li>
+							<li>Defined in types/runtime/lookAt.ts:11</li>
 						</ul>
 					</aside>
 				</section>
@@ -139,16 +138,16 @@
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-interface">
-						<a href="spherecolliderparams.html" class="tsd-kind-icon">Sphere<wbr>Collider<wbr>Params</a>
+						<a href="lookatlike.html" class="tsd-kind-icon">Look<wbr>AtLike</a>
 						<ul>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="spherecolliderparams.html#center" class="tsd-kind-icon">center</a>
+								<a href="lookatlike.html#actorid" class="tsd-kind-icon">actor<wbr>Id</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="spherecolliderparams.html#collidertype" class="tsd-kind-icon">collider<wbr>Type</a>
+								<a href="lookatlike.html#backward" class="tsd-kind-icon">backward</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="spherecolliderparams.html#radius" class="tsd-kind-icon">radius</a>
+								<a href="lookatlike.html#mode" class="tsd-kind-icon">mode</a>
 							</li>
 						</ul>
 					</li>

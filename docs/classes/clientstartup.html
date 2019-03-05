@@ -97,6 +97,7 @@
 								<li class="tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited"><a href="clientstartup.html#conn" class="tsd-kind-icon">conn</a></li>
 								<li class="tsd-kind-get-signature tsd-parent-kind-class tsd-is-overwrite"><a href="clientstartup.html#name" class="tsd-kind-icon">name</a></li>
 								<li class="tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited"><a href="clientstartup.html#promises" class="tsd-kind-icon">promises</a></li>
+								<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-inherited"><a href="clientstartup.html#timeoutseconds" class="tsd-kind-icon">timeout<wbr>Seconds</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section tsd-is-inherited">
@@ -139,7 +140,7 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Client<wbr>Startup<span class="tsd-signature-symbol">(</span>client<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Client</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="clientstartup.html" class="tsd-signature-type">ClientStartup</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Client<wbr>Startup<span class="tsd-signature-symbol">(</span>client<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Client</span>, syncRequest<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Payloads.SyncRequest</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="clientstartup.html" class="tsd-signature-type">ClientStartup</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
@@ -153,6 +154,9 @@
 							<ul class="tsd-parameters">
 								<li>
 									<h5>client: <span class="tsd-signature-type">Client</span></h5>
+								</li>
+								<li>
+									<h5>syncRequest: <span class="tsd-signature-type">Payloads.SyncRequest</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="clientstartup.html" class="tsd-signature-type">ClientStartup</a></h4>
@@ -187,7 +191,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from Protocol.conn</p>
 								<ul>
-									<li>Defined in protocols/protocol.ts:34</li>
+									<li>Defined in protocols/protocol.ts:36</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="../interfaces/connection.html" class="tsd-signature-type">Connection</a></h4>
@@ -229,7 +233,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from Protocol.promises</p>
 								<ul>
-									<li>Defined in protocols/protocol.ts:35</li>
+									<li>Defined in protocols/protocol.ts:37</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">object</span></h4>
@@ -238,6 +242,40 @@
 									<h5><span class="tsd-signature-symbol">[</span>id: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">]: </span><span class="tsd-signature-type">QueuedPromise</span></h5>
 								</li>
 							</ul>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class tsd-is-inherited">
+					<a name="timeoutseconds" class="tsd-anchor"></a>
+					<h3>timeout<wbr>Seconds</h3>
+					<ul class="tsd-signatures tsd-kind-accessor tsd-parent-kind-class tsd-is-inherited">
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> timeoutSeconds<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">set</span> timeoutSeconds<span class="tsd-signature-symbol">(</span>value<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from Protocol.timeoutSeconds</p>
+								<ul>
+									<li>Defined in protocols/protocol.ts:40</li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
+						</li>
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from Protocol.timeoutSeconds</p>
+								<ul>
+									<li>Defined in protocols/protocol.ts:41</li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>value: <span class="tsd-signature-type">number</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -301,7 +339,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from Protocol.completed</p>
 								<ul>
-									<li>Defined in protocols/protocol.ts:58</li>
+									<li>Defined in protocols/protocol.ts:63</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -319,7 +357,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from Protocol.drainPromises</p>
 								<ul>
-									<li>Defined in protocols/protocol.ts:160</li>
+									<li>Defined in protocols/protocol.ts:178</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -708,7 +746,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from Protocol.recvMessage</p>
 								<ul>
-									<li>Defined in protocols/protocol.ts:125</li>
+									<li>Defined in protocols/protocol.ts:137</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -732,7 +770,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from Protocol.recvPayload</p>
 								<ul>
-									<li>Defined in protocols/protocol.ts:147</li>
+									<li>Defined in protocols/protocol.ts:165</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -827,7 +865,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from Protocol.run</p>
 								<ul>
-									<li>Defined in protocols/protocol.ts:49</li>
+									<li>Defined in protocols/protocol.ts:54</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -845,7 +883,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from Protocol.sendMessage</p>
 								<ul>
-									<li>Defined in protocols/protocol.ts:82</li>
+									<li>Defined in protocols/protocol.ts:87</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -872,7 +910,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from Protocol.sendPayload</p>
 								<ul>
-									<li>Defined in protocols/protocol.ts:78</li>
+									<li>Defined in protocols/protocol.ts:83</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -924,7 +962,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from Protocol.startListening</p>
 								<ul>
-									<li>Defined in protocols/protocol.ts:66</li>
+									<li>Defined in protocols/protocol.ts:71</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -942,7 +980,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from Protocol.stopListening</p>
 								<ul>
-									<li>Defined in protocols/protocol.ts:72</li>
+									<li>Defined in protocols/protocol.ts:77</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -960,7 +998,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from Protocol.use</p>
 								<ul>
-									<li>Defined in protocols/protocol.ts:62</li>
+									<li>Defined in protocols/protocol.ts:67</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1038,6 +1076,9 @@
 							</li>
 							<li class=" tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited">
 								<a href="clientstartup.html#promises" class="tsd-kind-icon">promises</a>
+							</li>
+							<li class=" tsd-kind-accessor tsd-parent-kind-class tsd-is-inherited">
+								<a href="clientstartup.html#timeoutseconds" class="tsd-kind-icon">timeout<wbr>Seconds</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited">
 								<a href="clientstartup.html#addlistener" class="tsd-kind-icon">add<wbr>Listener</a>
