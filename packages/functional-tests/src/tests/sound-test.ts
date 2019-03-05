@@ -13,6 +13,41 @@ export default class SoundTest extends Test {
 
     private _musicState = 0;
     private _dopplerSoundState = 0;
+
+    // Chords for the first few seconds of The Entertainer
+    private chords: number[][] =
+        [
+            [2 + 12],
+            [4 + 12],
+            [0 + 12],
+            [-3 + 12],
+            [],
+            [-1 + 12],
+            [-5 + 12],
+            [],
+            [2],
+            [4],
+            [0],
+            [-3],
+            [],
+            [-1],
+            [-5],
+            [],
+            [2 - 12],
+            [4 - 12],
+            [0 - 12],
+            [-3 - 12],
+            [],
+            [-1 - 12],
+            [-3 - 12],
+            [-4 - 12],
+            [-5 - 12],
+            [],
+            [],
+            [],
+            [-1, 7]
+        ];
+
     public async run(): Promise<boolean> {
 
         const musicButtonPromise = MRE.Actor.CreatePrimitive(this.app.context, {
@@ -25,7 +60,7 @@ export default class SoundTest extends Test {
             },
             addCollider: true,
             actor: {
-                name: 'Button',
+                name: 'MusicButton',
                 transform: {
                     position: { x: -1, y: 1.3, z: 1 }
                 }
@@ -56,7 +91,6 @@ export default class SoundTest extends Test {
         };
         musicButtonBehavior.onClick('released', cycleMusicState);
 
-
         const notesButtonPromise = MRE.Actor.CreatePrimitive(this.app.context, {
             definition: {
                 shape: MRE.PrimitiveShape.Sphere,
@@ -67,7 +101,7 @@ export default class SoundTest extends Test {
             },
             addCollider: true,
             actor: {
-                name: 'Button',
+                name: 'NotesButton',
                 transform: {
                     position: { x: 0, y: 1.3, z: 1 }
                 }
@@ -78,21 +112,21 @@ export default class SoundTest extends Test {
             'group1',
             { uri: `${this.baseUrl}/note.wav` }
         );
+
         const notesButtonBehavior = notesButtonPromise.value.setBehavior(MRE.ButtonBehavior);
         const playNotes = async () => {
-            notesButtonPromise.value.startSound(notesAssetPromise.value.id,
-                {
-                    doppler: 0.0,
-                    pitch: 0.0,
-                });
-            await delay(1000);
-            notesButtonPromise.value.startSound(notesAssetPromise.value.id,
-                {
-                    doppler: 0.0,
-                    pitch: 7.0,
-                });
+            for (const chord of this.chords) {
+                for (const note of chord) {
+                    notesButtonPromise.value.startSound(notesAssetPromise.value.id,
+                        {
+                            doppler: 0.0,
+                            pitch: note,
+                        });
+                }
+                await delay(200);
+            }
         };
-        musicButtonBehavior.onClick('released', playNotes);
+        notesButtonBehavior.onClick('released', playNotes);
 
         const dopplerButtonPromise = MRE.Actor.CreatePrimitive(this.app.context, {
             definition: {
@@ -104,7 +138,7 @@ export default class SoundTest extends Test {
             },
             addCollider: true,
             actor: {
-                name: 'Button',
+                name: 'DopplerButton',
                 transform: {
                     position: { x: 1, y: 1.3, z: 1 }
                 }
@@ -120,7 +154,7 @@ export default class SoundTest extends Test {
             },
             actor: {
                 parentId: dopplerButtonPromise.value.id,
-                name: 'Button',
+                name: 'DopplerMover',
                 transform: {
                     position: { x: 0, y: 0, z: 3 }
                 }
