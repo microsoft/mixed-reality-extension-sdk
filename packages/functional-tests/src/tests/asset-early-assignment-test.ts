@@ -28,7 +28,7 @@ export default class AssetEarlyAssignmentTest extends Test {
                 radius: 0.5
             },
             actor: {
-                materialId: mat.id,
+                appearance: { materialId: mat.id },
                 transform: {
                     position: { y: 1, z: -1 }
                 }

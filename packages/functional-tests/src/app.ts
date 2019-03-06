@@ -103,14 +103,14 @@ export class App {
             // start the new test, and save the stop handle
             .then(() => {
                 if (this.playPauseButton) {
-                    this.playPauseButton.material.color.set(1, 0, 0, 1);
+                    this.playPauseButton.appearance.material.color.set(1, 0, 0, 1);
                     this.playPauseText.text.contents = "Stop";
                 }
                 return this.runPromise = this.runTestHelper(user);
             })
             .then(() => {
                 if (this.playPauseButton) {
-                    this.playPauseButton.material.color.set(0, 1, 0, 1);
+                    this.playPauseButton.appearance.material.color.set(0, 1, 0, 1);
                     this.playPauseText.text.contents = "Start";
                 }
             })
@@ -210,7 +210,7 @@ export class App {
             addCollider: true,
             actor: {
                 name: 'playpause',
-                materialId: ppMat.id,
+                appearance: { materialId: ppMat.id },
                 transform: {
                     position: { x: -0.65, y: 0.15, z: -1.95 }
                 }
@@ -295,7 +295,7 @@ export class App {
                 },
             }
         }).value;
-        floor.material = this.backgroundMaterial;
+        floor.appearance.material = this.backgroundMaterial;
 
         const wall = MRE.Actor.CreatePrimitive(this.context, {
             definition: {
@@ -310,7 +310,7 @@ export class App {
                 }
             }
         }).value;
-        wall.material = this.backgroundMaterial;
+        wall.appearance.material = this.backgroundMaterial;
 
         this.runnerActors =
             [this.contextLabel, this.playPauseButton, this.playPauseText, menuButton, menuText, wall, floor];

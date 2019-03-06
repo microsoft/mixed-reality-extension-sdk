@@ -151,7 +151,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
         this._appearance = new Appearance(this);
         observe({
             target: this._appearance,
-            targetName: 'visuals',
+            targetName: 'appearance',
             notifyChanged: (...path: string[]) => this.actorChanged(...path)
         });
     }
