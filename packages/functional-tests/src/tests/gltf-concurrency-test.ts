@@ -45,7 +45,7 @@ export default class GltfConcurrencyTest extends Test {
             return false;
         }
 
-        await MRE.Actor.CreateFromPrefab(this.app.context, {
+        MRE.Actor.CreateFromPrefab(this.app.context, {
             prefabId: bottleAsset.prefabs.byIndex(0).id,
             actor: { transform: { position: { x: -.66 }, scale: { x: 4, y: 4, z: 4 } } }
         });
