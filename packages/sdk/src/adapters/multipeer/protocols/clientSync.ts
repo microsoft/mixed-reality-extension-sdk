@@ -279,10 +279,8 @@ export class ClientSync extends Protocols.Protocol {
     }
 
     private createActorAnimations(actor: Partial<SyncActor>) {
-        return Promise.all([
-            (actor.createdAnimations || [])
-                .map(createdAnimation => this.sendMessage(createdAnimation.message))
-        ]);
+        (actor.createdAnimations || [])
+            .map(createdAnimation => this.sendMessage(createdAnimation.message));
     }
 
     private createActorInterpolations(actor: Partial<SyncActor>) {
