@@ -13,7 +13,7 @@ export interface AppearanceLike {
 
 export class Appearance implements AppearanceLike {
     /** @hidden */
-    public $DoNotObserve = ['actor', 'material'];
+    public $DoNotObserve = ['activeAndEnabled', 'actor', 'material'];
 
     // tslint:disable:variable-name
     private _materialId = ZeroGuid;
@@ -21,6 +21,10 @@ export class Appearance implements AppearanceLike {
 
     /** Whether the actor with this appearance should be visible */
     public enabled = true;
+
+    public get activeAndEnabled() {
+        return (!this.actor.parent || this.actor.parent.appearance.enabled) && this.enabled;
+    }
 
     /** @returns A shared reference to this actor's material, or null if this actor has no material */
     public get material() { return this.actor.context.assetManager.assets[this._materialId] as Material; }
