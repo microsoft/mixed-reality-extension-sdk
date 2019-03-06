@@ -17,7 +17,8 @@ export default class AltspaceVRLibraryTest extends Test {
             actor: {
                 name: 'Campfire Kit: Cabin',
                 transform: {
-                    position: { x: 0, y: 0, z: -0.05 },
+                    position: { x: 0, y: 0.0, z: -0.1 },
+                    rotation: MRE.Quaternion.RotationAxis(MRE.Vector3.Up(), -180.0 * MRE.DegreesToRadians),
                     scale: { x: 0.08, y: 0.08, z: 0.08 }
                 }
             }
@@ -27,7 +28,7 @@ export default class AltspaceVRLibraryTest extends Test {
             actor: {
                 name: 'Home Kit: Chair 2',
                 transform: {
-                    position: { x: -1, y: 0, z: 0 },
+                    position: { x: -1, y: 0.0, z: -1.5 },
                     rotation: MRE.Quaternion.RotationAxis(MRE.Vector3.Up(), -45.0 * MRE.DegreesToRadians),
                     scale: { x: 0.7, y: 0.7, z: 0.7 }
                 }
@@ -38,7 +39,8 @@ export default class AltspaceVRLibraryTest extends Test {
             actor: {
                 name: 'Halloween Kit: Pumpkin Happy',
                 transform: {
-                    position: { x: 1, y: 0, z: 0 },
+                    position: { x: 1, y: 0.0, z: -1.5 },
+                    scale: { x: 0.7, y: 0.7, z: 0.7 }
                 }
             }
         }));
@@ -47,8 +49,8 @@ export default class AltspaceVRLibraryTest extends Test {
             actor: {
                 name: 'Alien Planet Kit: Island 06',
                 transform: {
-                    position: { x: 0, y: -0.25, z: 0 },
-                    scale: { x: 0.1, y: 0.1, z: 0.1 }
+                    position: { x: 0, y: 0.0, z: -1.5 },
+                    scale: { x: 0.05, y: 0.05, z: 0.05 }
                 }
             }
         }));
@@ -57,7 +59,7 @@ export default class AltspaceVRLibraryTest extends Test {
             actor: {
                 name: 'Teleporter to Campfire',
                 transform: {
-                    position: { x: 1.8, y: -0.25, z: 0 }
+                    position: { x: 1.2, y: 0.0, z: -0.5 }
                 }
             }
         }));
@@ -66,7 +68,7 @@ export default class AltspaceVRLibraryTest extends Test {
             actor: {
                 name: 'Teleporter to Altstock',
                 transform: {
-                    position: { x: -1.8, y: -0.25, z: 0 }
+                    position: { x: -1.2, y: 0.0, z: -0.5     }
                 }
             }
         }));

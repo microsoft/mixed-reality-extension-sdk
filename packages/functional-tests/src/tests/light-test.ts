@@ -35,7 +35,7 @@ export default class LightTest extends Test {
         // rotating to face the center of the space.
         const animateSide = async (dirX: number, dirZ: number, time: number) => {
             if (!this.stopped) {
-                const position = new MRE.Vector3(dirX, -0.75 + 1.5 * Math.random(), dirZ);
+                const position = new MRE.Vector3(dirX, 0.5 + 1.5 * Math.random(), dirZ);
                 const rotation = MRE.Quaternion.LookAt(
                     position,
                     props['monkey'].transform.position,
@@ -53,10 +53,10 @@ export default class LightTest extends Test {
 
         // One loop of the sphere moving along each side of the scene.
         const animateAround = async (time: number) => {
-            await animateSide(1, 1, time / 4);
-            await animateSide(-1, 1, time / 4);
-            await animateSide(-1, -1, time / 4);
-            await animateSide(1, -1, time / 4);
+            await animateSide(1, 0, time / 4);
+            await animateSide(-1, 0, time / 4);
+            await animateSide(-1, -2, time / 4);
+            await animateSide(1, -2, time / 4);
         };
 
         while (!this.stopped) {
@@ -86,10 +86,13 @@ export default class LightTest extends Test {
             resourceUrl: `${this.baseUrl}/monkey.glb`,
             actor: {
                 transform: {
-                    scale: { x: 0.5, y: 0.5, z: 0.5 }
+                    scale: { x: 0.5, y: 0.5, z: 0.5 },
+                    position: { y: 1, z: -1 },
+                    rotation: {x: 0, y: 1, z: 0, w: 0}, // rotate 180 degrees
                 }
             }
         }).value;
+
         const propWidth = 0.33;
         const propHeight = 0.33;
         props['left-box'] = MRE.Actor.CreatePrimitive(this.app.context, {
@@ -99,9 +102,7 @@ export default class LightTest extends Test {
             },
             actor: {
                 transform: {
-                    position: {
-                        x: 0.5, y: -0.35
-                    }
+                    position: { x: 0.5, y: 0.65, z: -1 }
                 }
             }
         }).value;
@@ -112,9 +113,7 @@ export default class LightTest extends Test {
             },
             actor: {
                 transform: {
-                    position: {
-                        x: -0.5, y: -0.35
-                    }
+                    position: { x: -0.5, y: 0.65, z: -1 }
                 }
             }
         }).value;

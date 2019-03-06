@@ -19,8 +19,7 @@ export default class UserTest extends Test {
         await MRESDK.Actor.CreateEmpty(this.app.context, {
             actor: {
                 transform: {
-                    position: { x: 0, y: 0, z: 0 },
-                    rotation: { x: 0, y: 1, z: 0, w: 0 }
+                    position: { x: 0, y: 1, z: 0 }
                 },
                 text: {
                     contents: labelText,

@@ -11,10 +11,31 @@ import delay from '../utils/delay';
 export default class InterpolationTest extends Test {
     public expectedResultDescription = "Lerping scale and rotation";
     public async run(): Promise<boolean> {
+        MRE.Actor.CreateEmpty(this.app.context, {
+            actor: {
+                name: "Light",
+                light: {
+                    type: 'point',
+                    range: 5,
+                    intensity: 2,
+                    color: { r: 1, g: 0.5, b: 0.3 }
+                },
+                transform: {
+                    position: { x: -2, y: 2, z: -2 }
+                }
+            }
+        });
+
         const cube = MRE.Actor.CreatePrimitive(this.app.context, {
             definition: {
                 shape: MRE.PrimitiveShape.Box,
                 dimensions: { x: 0.65, y: 0.65, z: 0.65 }
+            },
+            actor: {
+                transform: {
+                    position: { y: 1.0, z: -1.0 }
+
+                }
             },
             addCollider: true
         }).value;

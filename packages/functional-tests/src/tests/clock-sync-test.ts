@@ -14,8 +14,7 @@ export default class ClockSyncTest extends Test {
         const tester = MRE.Actor.CreateEmpty(this.app.context, {
             actor: {
                 transform: {
-                    position: { y: -3, z: -0.3 },
-                    rotation: { x: 0, y: 1, z: 0, w: 0 }
+                    position: { y: -1.5, z: -0.5 }
                 }
             }
         });

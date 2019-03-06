@@ -16,6 +16,21 @@ export default class InputTest extends Test {
     private model: MRE.Actor;
 
     public async run(): Promise<boolean> {
+        MRE.Actor.CreateEmpty(this.app.context, {
+            actor: {
+                name: "Light",
+                light: {
+                    type: 'point',
+                    range: 5,
+                    intensity: 2,
+                    color: { r: 1, g: 0.5, b: 0.3 }
+                },
+                transform: {
+                    position: { x: -2, y: 2, z: -2 }
+                }
+            }
+        });
+
         // Load a glTF model
         this.model = MRE.Actor.CreateFromGltf(this.app.context, {
             // at the given URL
@@ -26,10 +41,12 @@ export default class InputTest extends Test {
             actor: {
                 name: 'clickable',
                 transform: {
-                    scale: { x: 0.4, y: 0.4, z: 0.4 }
+                    scale: { x: 0.4, y: 0.4, z: 0.4 },
+                    position: { x: 0, y: 1, z: -1 }
                 }
             }
         }).value;
+        await this.model;
 
         // Create some animations on the cube.
         this.model.createAnimation(
@@ -71,7 +88,7 @@ export default class InputTest extends Test {
         this.cycleState();
         await this.stoppedAsync();
 
-        this.model.setBehavior(null);
+//        this.model.setBehavior(null);
         this.app.setOverrideText("Thank you for your cooperation");
         await delay(1.2 * 1000);
 

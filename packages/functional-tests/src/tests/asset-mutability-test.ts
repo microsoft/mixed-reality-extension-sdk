@@ -27,7 +27,10 @@ export default class AssetMutabilityTest extends Test {
             },
             actor: {
                 name: 'box',
-                materialId: mat.id
+                materialId: mat.id,
+                transform: {
+                    position: { y: 1, z: -1 }
+                }
             }
         });
 

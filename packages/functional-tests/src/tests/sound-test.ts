@@ -53,7 +53,7 @@ export default class SoundTest extends Test {
         const musicButtonPromise = MRE.Actor.CreatePrimitive(this.app.context, {
             definition: {
                 shape: MRE.PrimitiveShape.Sphere,
-                radius: 0.3,
+                radius: 0.2,
                 uSegments: 8,
                 vSegments: 4
 
@@ -62,7 +62,7 @@ export default class SoundTest extends Test {
             actor: {
                 name: 'MusicButton',
                 transform: {
-                    position: { x: -1, y: 1.3, z: 1 }
+                    position: { x: -0.8, y: 1.3, z: -0.2 }
                 }
             }
         });
@@ -94,7 +94,7 @@ export default class SoundTest extends Test {
         const notesButtonPromise = MRE.Actor.CreatePrimitive(this.app.context, {
             definition: {
                 shape: MRE.PrimitiveShape.Sphere,
-                radius: 0.3,
+                radius: 0.2,
                 uSegments: 8,
                 vSegments: 4
 
@@ -103,7 +103,7 @@ export default class SoundTest extends Test {
             actor: {
                 name: 'NotesButton',
                 transform: {
-                    position: { x: 0, y: 1.3, z: 1 }
+                    position: { x: 0, y: 1.3, z: -0.2 }
                 }
             }
         });
@@ -131,7 +131,7 @@ export default class SoundTest extends Test {
         const dopplerButtonPromise = MRE.Actor.CreatePrimitive(this.app.context, {
             definition: {
                 shape: MRE.PrimitiveShape.Sphere,
-                radius: 0.3,
+                radius: 0.2,
                 uSegments: 8,
                 vSegments: 4
 
@@ -140,7 +140,7 @@ export default class SoundTest extends Test {
             actor: {
                 name: 'DopplerButton',
                 transform: {
-                    position: { x: 1, y: 1.3, z: 1 }
+                    position: { x: 0.8, y: 1.3, z: -0.2 }
                 }
             }
         });

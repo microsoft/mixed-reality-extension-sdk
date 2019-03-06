@@ -5,7 +5,7 @@
 
 import * as MRE from '@microsoft/mixed-reality-extension-sdk';
 
-import { App, FailureColor, NeutralColor, SuccessColor } from './app';
+import { App, BackgroundColor, FailureColor, NeutralColor, SuccessColor } from './app';
 import { TestFactory } from './test';
 import { Factories, FactoryMap } from './tests';
 import destroyActors from './utils/destroyActors';
@@ -28,9 +28,10 @@ export default class Menu {
     private successMat: MRE.Material;
     private failureMat: MRE.Material;
     private neutralMat: MRE.Material;
+    private backgroundMat: MRE.Material;
 
     private breadcrumbs: number[] = [];
-    private backActors: MRE.Actor[];
+    private otherActors: MRE.Actor[];
     private handler: SelectionHandler;
 
     private get context() { return this.app.context; }
@@ -100,6 +101,7 @@ export default class Menu {
             this.successMat = am.createMaterial('success', { color: SuccessColor }).value;
             this.failureMat = am.createMaterial('failure', { color: FailureColor }).value;
             this.neutralMat = am.createMaterial('neutral', { color: NeutralColor }).value;
+            this.backgroundMat = am.createMaterial('background', { color: BackgroundColor }).value;
         }
 
         if (this.buttons) {
@@ -110,19 +112,22 @@ export default class Menu {
         this.behaviors = [];
         this.labels = [];
 
-        const buttonSpacing = 2 / pageSize;
+        const buttonSpacing = 2 / (pageSize + 1);
+        const buttonWidth = 0.25;
+        const buttonHeight = buttonSpacing * 0.8;
 
         for (let i = 0; i < pageSize; i++) {
             const control = MRE.Actor.CreatePrimitive(this.context, {
                 definition: {
                     shape: MRE.PrimitiveShape.Box,
-                    dimensions: { x: 0.25, y: 0.25, z: 0.05 }
+                    dimensions: { x: buttonWidth, y: buttonHeight, z: 0.1 }
                 },
                 addCollider: true,
                 actor: {
                     name: 'Button' + i,
                     transform: {
-                        position: { x: 1, y: 1 - buttonSpacing * i }
+                        position:
+                        { x: -1 + buttonWidth / 2, y: buttonSpacing / 2 + buttonSpacing * (pageSize - i), z: -0.05 }
                     }
                 }
             }).value;
@@ -134,8 +139,7 @@ export default class Menu {
                     name: 'Label' + i,
                     parentId: control.id,
                     transform: {
-                        position: { x: -0.25 },
-                        rotation: { x: 0, y: 1, z: 0, w: 0 }
+                        position: { x: buttonWidth * 1.2, z: 0.05 },
                     },
                     text: {
                         contents: "Placeholder",
@@ -150,13 +154,13 @@ export default class Menu {
         const backButton = MRE.Actor.CreatePrimitive(this.context, {
             definition: {
                 shape: MRE.PrimitiveShape.Box,
-                dimensions: { x: 0.25, y: 0.25, z: 0.05 }
+                dimensions: { x: buttonWidth, y: buttonHeight, z: 0.1 }
             },
             addCollider: true,
             actor: {
                 name: 'BackButton',
                 transform: {
-                    position: { x: 1, y: -1 }
+                    position: { x: -1 + buttonWidth / 2, y: buttonSpacing / 2, z: -0.05 }
                 }
             }
         }).value;
@@ -166,8 +170,7 @@ export default class Menu {
                 name: 'BackLabel',
                 parentId: backButton.id,
                 transform: {
-                    position: { x: -0.25 },
-                    rotation: { x: 0, y: 1, z: 0, w: 0 }
+                    position: { x: buttonWidth * 1.2, z: 0.05 },
                 },
                 text: {
                     contents: "Back",
@@ -183,16 +186,45 @@ export default class Menu {
                 this.show();
             });
 
-        this.backActors = [backButton, backLabel];
+        const floor = MRE.Actor.CreatePrimitive(this.context, {
+            definition: {
+                shape: MRE.PrimitiveShape.Box,
+                dimensions: { x: 2, y: 0.1, z: 2.1 }
+            },
+            addCollider: true,
+            actor: {
+                name: 'floor',
+                transform: {
+                    position: { x: 0, y: -0.05, z: -1 }
+                },
+            }
+        }).value;
+        floor.material = this.backgroundMat;
+
+        const wall = MRE.Actor.CreatePrimitive(this.context, {
+            definition: {
+                shape: MRE.PrimitiveShape.Box,
+                dimensions: { x: 2, y: 2, z: 0.1 }
+            },
+            addCollider: true,
+            actor: {
+                name: 'floor',
+                transform: {
+                    position: { x: 0, y: 1, z: 0.1 }
+                }
+            }
+        }).value;
+        wall.material = this.backgroundMat;
+        this.otherActors = [backButton, backLabel, floor, wall];
     }
 
     private destroy() {
         destroyActors(this.buttons);
-        destroyActors(this.backActors);
+        destroyActors(this.otherActors);
         this.buttons = null;
         this.behaviors = null;
         this.labels = null;
-        this.backActors = null;
+        this.otherActors = null;
     }
 }
 

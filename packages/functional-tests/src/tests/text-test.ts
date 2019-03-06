@@ -37,31 +37,31 @@ export default class TextTest extends Test {
     public async run(): Promise<boolean> {
         const enabled = this.createTemplate("enabled");
         this.enabled = enabled.value;
-        this.enabled.transform.position.copy({ x: -1, y: 0.5, z: 0 });
+        this.enabled.transform.position.copy({ x: -1, y: 1.5, z: 0 });
 
         const contents = this.createTemplate('contents');
         this.contents = contents.value;
-        this.contents.transform.position.copy({ x: 0, y: 0.5, z: 0 });
+        this.contents.transform.position.copy({ x: 0, y: 1.5, z: 0 });
 
         const ppl = this.createTemplate('pixelsPerLine');
         this.ppl = ppl.value;
-        this.ppl.transform.position.copy({ x: -1, y: 0, z: 0 });
+        this.ppl.transform.position.copy({ x: -1, y: 1, z: 0 });
 
         const height = this.createTemplate('height');
         this.height = height.value;
-        this.height.transform.position.copy({ x: 0, y: 0, z: 0 });
+        this.height.transform.position.copy({ x: 0, y: 1, z: 0 });
 
         const font = this.createTemplate('font');
         this.font = font.value;
-        this.font.transform.position.copy({ x: -1, y: -0.5, z: 0 });
+        this.font.transform.position.copy({ x: -1, y: 0.5, z: 0 });
 
         const color = this.createTemplate('color');
         this.color = color.value;
-        this.color.transform.position.copy({ x: 0, y: -0.5, z: 0 });
+        this.color.transform.position.copy({ x: 0, y: 0.5, z: 0 });
 
         const anchor = this.createTemplate('anchor');
         this.anchor = anchor.value;
-        this.anchor.transform.position.copy({ x: 1, y: 0.3, z: 0 });
+        this.anchor.transform.position.copy({ x: 1, y: 1.3, z: 0 });
         MRESDK.Actor.CreatePrimitive(this.app.context, {
             definition: {
                 shape: MRESDK.PrimitiveShape.Sphere,
@@ -75,7 +75,7 @@ export default class TextTest extends Test {
 
         const justify = this.createTemplate('multiline\njustify');
         this.justify = justify.value;
-        this.justify.transform.position.copy({ x: 1, y: -0.3, z: 0 });
+        this.justify.transform.position.copy({ x: 1, y: 0.7, z: 0 });
         MRESDK.Actor.CreatePrimitive(this.app.context, {
             definition: {
                 shape: MRESDK.PrimitiveShape.Sphere,
@@ -137,9 +137,6 @@ export default class TextTest extends Test {
                     height: 0.15,
                     anchor: MRESDK.TextAnchorLocation.MiddleCenter
                 },
-                transform: {
-                    rotation: { x: 0, y: 1, z: 0, w: 0 }
-                }
             }
         });
     }
