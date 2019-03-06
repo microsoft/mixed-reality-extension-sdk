@@ -46,7 +46,6 @@ export default class InputTest extends Test {
                 }
             }
         }).value;
-        await this.model;
 
         // Create some animations on the cube.
         this.model.createAnimation(
@@ -88,6 +87,7 @@ export default class InputTest extends Test {
         this.cycleState();
         await this.stoppedAsync();
 
+        // TODO SOREN: Restore this for 0.8.
 //        this.model.setBehavior(null);
         this.app.setOverrideText("Thank you for your cooperation");
         await delay(1.2 * 1000);

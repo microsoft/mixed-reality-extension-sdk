@@ -195,6 +195,12 @@ export default class SoundTest extends Test {
         dopplerButtonBehavior.onClick('released', cycleDopplerSoundState);
 
         await this.stoppedAsync();
+
+        // TODO SOREN: remove these for 0.8 - in 0.7 there is an error
+        // if running sounds aren't removed before deleting actors
+        dopplerSoundInstance.value.stop();
+        musicSoundInstance.value.stop();
+
         return true;
     }
 
