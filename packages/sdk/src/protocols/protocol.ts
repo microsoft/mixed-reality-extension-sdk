@@ -124,13 +124,6 @@ export class Protocol extends EventEmitter {
         log.verbose('network', `${this.name} send id:${message.id.substr(0, 8)}, type:${message.payload.type}`);
         log.verbose('network-content', JSON.stringify(message, (key, value) => filterEmpty(value)));
 
-        // Let the multipeer adapter know the SDK is awaiting a response to this message, so that it can in turn
-        // wait for all peer responses before forwarding the client's response back to the app. This is needed so
-        // that the app knows the operation completed on all peers before proceeding.
-        if (promise) {
-            message.awaitingResponse = true;
-        }
-
         this.conn.send(message);
     }
 

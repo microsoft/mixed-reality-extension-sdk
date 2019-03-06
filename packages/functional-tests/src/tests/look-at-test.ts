@@ -36,7 +36,7 @@ export default class LookAtTest extends Test {
         tester.createAnimation('circle', {
             wrapMode: MRE.AnimationWrapMode.Loop,
             keyframes: circleKeyframes
-        }).catch(() => { });
+        });
         tester.enableAnimation('circle');
 
         this.interval = setInterval(() => {

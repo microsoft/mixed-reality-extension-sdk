@@ -25,18 +25,11 @@ export class SoundInstance {
         ForwardPromise<SoundInstance> {
         return createForwardPromise(this,
             new Promise<SoundInstance>((resolve, reject) => {
-                this.actor.created().then(() => {
-                    this.actor.context.assetManager.assetLoaded(this.soundAssetId).then(() => {
-                        this.actor.context.internal.setSoundState(
-                            this, SoundCommand.Start, options, this.soundAssetId, startTimeOffset);
+                this.actor.context.assetManager.assetLoaded(this.soundAssetId).then(() => {
+                    this.actor.context.internal.setSoundState(
+                        this, SoundCommand.Start, options, this.soundAssetId, startTimeOffset);
 
-                        resolve();
-                    }).catch((reason: any) => {
-                        log.error(
-                            'app',
-                            `Failed StartSound on actor ${this.actor.id}. ${(reason || '').toString()}`.trim());
-                        reject();
-                    });
+                    resolve();
                 }).catch((reason: any) => {
                     log.error(
                         'app',
@@ -48,19 +41,14 @@ export class SoundInstance {
     }
 
     public setSoundState(options: SetSoundStateOptions, soundCommand?: SoundCommand) {
-        this.actor.created().then(() => {
-            this.actor.context.assetManager.assetLoaded(this.soundAssetId).then(() => {
-                if (soundCommand === undefined) {
-                    soundCommand = SoundCommand.Update;
-                }
-                this.actor.context.internal.setSoundState(this, soundCommand, options);
-            }).catch((reason: any) => {
-                log.error('app', `SetSoundState failed ${this.actor.id}. ${(reason || '').toString()}`.trim());
-            });
+        this.actor.context.assetManager.assetLoaded(this.soundAssetId).then(() => {
+            if (soundCommand === undefined) {
+                soundCommand = SoundCommand.Update;
+            }
+            this.actor.context.internal.setSoundState(this, soundCommand, options);
         }).catch((reason: any) => {
             log.error('app', `SetSoundState failed ${this.actor.id}. ${(reason || '').toString()}`.trim());
         });
-
     }
 
     public pause() {

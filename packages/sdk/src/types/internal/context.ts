@@ -197,54 +197,47 @@ export class InternalContext {
         this.updateActors(payload.actor);
         // Get a reference to the new actor.
         const actor = this.context.actor(payload.actor.id);
-        const parent = actor.parent;
-        const wait = parent ? parent.created() : Promise.resolve();
 
         // If we have a parent, make sure it is done getting created first.
         return createForwardPromise<Actor>(actor, new Promise((resolve, reject) => {
-            wait.then(() => {
-                // Send a message to the engine to instantiate the object.
-                this.protocol.sendPayload(
-                    payload,
-                    {
-                        resolve: (replyPayload: ObjectSpawned | OperationResult) => {
-                            this.protocol.recvPayload(replyPayload);
-                            let success: boolean;
-                            let message: string;
-                            if (replyPayload.type === 'operation-result') {
-                                success = replyPayload.resultCode !== 'error';
-                                message = replyPayload.message;
-                            } else {
-                                success = replyPayload.result.resultCode !== 'error';
-                                message = replyPayload.result.message;
+            // Send a message to the engine to instantiate the object.
+            this.protocol.sendPayload(
+                payload,
+                {
+                    resolve: (replyPayload: ObjectSpawned | OperationResult) => {
+                        this.protocol.recvPayload(replyPayload);
+                        let success: boolean;
+                        let message: string;
+                        if (replyPayload.type === 'operation-result') {
+                            success = replyPayload.resultCode !== 'error';
+                            message = replyPayload.message;
+                        } else {
+                            success = replyPayload.result.resultCode !== 'error';
+                            message = replyPayload.result.message;
 
-                                for (const createdActorLike of replyPayload.actors) {
-                                    const createdActor = this.actorSet[createdActorLike.id];
-                                    if (createdActor) {
-                                        createdActor.internal.notifyCreated(success, replyPayload.result.message);
-                                    }
+                            for (const createdActorLike of replyPayload.actors) {
+                                const createdActor = this.actorSet[createdActorLike.id];
+                                if (createdActor) {
+                                    createdActor.internal.notifyCreated(success, replyPayload.result.message);
                                 }
                             }
+                        }
 
-                            if (success) {
-                                resolve(actor);
-                            } else {
-                                reject(message);
-                            }
-                        },
-                        reject
-                    });
-            }).catch((reason: any) => {
-                reject(`Failed to instantiate actor ${actor.id}. ${(reason || '').toString()}`.trim());
-                // TODO: Remove actor from context?
-            });
+                        if (success) {
+                            resolve(actor);
+                        } else {
+                            reject(message);
+                        }
+                    },
+                    reject
+                });
         }));
     }
 
     public createAnimation(actorId: string, animationName: string, options: CreateAnimationOptions) {
         const actor = this.actorSet[actorId];
         if (!actor) {
-            return Promise.reject(`Failed to create animation. Actor ${actorId} not found`);
+            log.error('app', `Failed to create animation on ${animationName}. Actor ${actorId} not found.`);
         }
         options = {
             wrapMode: AnimationWrapMode.Once,
@@ -253,41 +246,12 @@ export class InternalContext {
         // Resolve by-reference values now, ensuring they won't change in the
         // time between now and when this message is actually sent.
         options.keyframes = resolveJsonValues(options.keyframes);
-        // Enqueue a placeholder promise to indicate the operation is in progress.
-        actor.internal.enqueueCreateAnimationPromise(
-            animationName, {
-                resolve: () => { /* empty */ },
-                reject: () => { /* empty */ },
-            });
-        return new Promise<void>((resolve, reject) => {
-            actor.created().then(() => {
-                // TODO: Reject promise if send() fails
-                this.protocol.sendPayload({
-                    type: 'create-animation',
-                    actorId,
-                    animationName,
-                    ...options
-                } as CreateAnimation, {
-                        resolve: (replyPayload: OperationResult) => {
-                            this.protocol.recvPayload(replyPayload);
-                            const success = replyPayload.resultCode !== 'error';
-                            const message = replyPayload.message;
-                            actor.internal.notifyAnimationCreated(animationName, success, message);
-                            if (success) {
-                                resolve();
-                            } else {
-                                reject(message);
-                            }
-                        },
-                        reject: (reason?: any) => {
-                            actor.internal.notifyAnimationCreated(animationName, false, reason);
-                            reject(reason);
-                        }
-                    });
-            }).catch((reason) => {
-                reject(`Failed to create animation: ${(reason || '').toString()}`.trim());
-            });
-        });
+        this.protocol.sendPayload({
+            type: 'create-animation',
+            actorId,
+            animationName,
+            ...options
+        } as CreateAnimation);
     }
 
     public setAnimationState(
@@ -296,19 +260,15 @@ export class InternalContext {
         state: SetAnimationStateOptions
     ) {
         const actor = this.actorSet[actorId];
-        if (actor) {
-            actor.created().then(() => {
-                actor.internal.animationCreated(animationName)
-                    .then(() => this.protocol.sendPayload({
-                        type: 'set-animation-state',
-                        actorId,
-                        animationName,
-                        state
-                    } as SetAnimationState))
-                    .catch((reason) => log.error('app', reason));
-            }).catch((reason) => log.error('app', reason));
-        } else {
+        if (!actor) {
             log.error('app', `Failed to set animation state on ${animationName}. Actor ${actorId} not found.`);
+        } else {
+            this.protocol.sendPayload({
+                type: 'set-animation-state',
+                actorId,
+                animationName,
+                state
+            } as SetAnimationState);
         }
     }
 
@@ -319,18 +279,15 @@ export class InternalContext {
         soundAssetId?: string,
         startTimeOffset?: number
     ) {
-
-        this.protocol.sendPayload(
-            {
-                type: 'set-sound-state',
-                id: soundInstance.id,
-                actorId: soundInstance.actor.id,
-                soundAssetId,
-                soundCommand: command,
-                options,
-                startTimeOffset
-            } as SetSoundState);
-        return;
+        this.protocol.sendPayload({
+            type: 'set-sound-state',
+            id: soundInstance.id,
+            actorId: soundInstance.actor.id,
+            soundAssetId,
+            soundCommand: command,
+            options,
+            startTimeOffset
+        } as SetSoundState);
     }
 
     public animateTo(
@@ -346,100 +303,18 @@ export class InternalContext {
             // tslint:disable-next-line:max-line-length
             log.error('app', '`curve` parameter must be an array of four numbers. Try passing one of the predefined curves from `AnimationEaseCurves`');
         } else {
-            actor.created().then(() => {
-                this.protocol.sendPayload({
-                    type: 'interpolate-actor',
-                    actorId,
-                    animationName: UUID(),
-                    value,
-                    duration,
-                    curve,
-                    enabled: true
-                } as InterpolateActor);
-            }).catch((reason) => log.error('app', reason));
+            this.protocol.sendPayload({
+                type: 'interpolate-actor',
+                actorId,
+                animationName: UUID(),
+                value,
+                duration,
+                curve,
+                enabled: true
+            } as InterpolateActor);
         }
     }
 
-    /* TODO: Delete enable-collider payload and implement via patching mechanism.
-
-    public enableCollider(
-        actorId: string,
-        colliderType: 'box' | 'sphere',
-        collisionLayer: CollisionLayer,
-        isTrigger: boolean,
-        center: Vector3Like,
-        size: number | Vector3Like
-    ): ForwardPromise<Collider> {
-        const actor = this.actorSet[actorId];
-        if (!actor) {
-            return Promise.reject(`Failed enable collider. Actor ${actorId} not found`);
-        } else {
-            // Resolve by-reference values now, ensuring they won't change in the
-            // time between now and when this message is actually sent.
-            center = resolveJsonValues(center);
-            size = resolveJsonValues(size);
-            return createForwardPromise<Collider>(actor.collider, new Promise((resolve, reject) => {
-                actor.created().then(() => {
-                    let colliderPayload = {
-                        type: 'enable-collider',
-                        actorId,
-                    } as EnableCollider;
-
-                    switch (colliderType) {
-                        case 'box':
-                            colliderPayload = {
-                                ...colliderPayload,
-                                collider: {
-                                    enabled: true,
-                                    isTrigger,
-                                    collisionLayer,
-                                    colliderParams: {
-                                        colliderType: 'box',
-                                        center,
-                                        size: size as Partial<Vector3Like>
-                                    } as BoxColliderParams
-                                } as ColliderLike
-                            };
-                            break;
-                        case 'sphere':
-                            colliderPayload = {
-                                ...colliderPayload,
-                                collider: {
-                                    enabled: true,
-                                    isTrigger,
-                                    collisionLayer,
-                                    colliderParams: {
-                                        colliderType: 'sphere',
-                                        center,
-                                        radius: size as number
-                                    } as SphereColliderParams
-                                } as ColliderLike
-                            };
-                            break;
-                        default:
-                            reject(
-                                'Trying to enable a collider on the actor with an invalid collider type.' +
-                                `Type given is ${colliderType}`);
-                    }
-
-                    this.protocol.sendPayload(colliderPayload, {
-                        resolve: (payload: OperationResult) => {
-                            this.protocol.recvPayload(payload);
-                            if (payload.resultCode === 'error') {
-                                reject(payload.message);
-                            } else {
-                                resolve(actor.collider);
-                            }
-                        },
-                        reject
-                    });
-                }).catch((reason: any) => {
-                    reject(`Failed enable collider on actor ${actor.id}. ${(reason || '').toString()}`.trim());
-                });
-            }));
-        }
-    }
-    */
     public updateSubscriptions(
         actorId: string,
         options: {
@@ -449,16 +324,12 @@ export class InternalContext {
     ) {
         const actor = this.actorSet[actorId];
         if (actor) {
-            actor.created().then(() => {
-                this.protocol.sendPayload({
-                    type: 'update-subscriptions',
-                    id: actorId,
-                    adds: options.adds,
-                    removes: options.removes
-                } as UpdateSubscriptions);
-            }).catch((reason: any) => {
-                log.error('app', `Failed to update subscriptions on actor ${actor.id}.`, reason);
-            });
+            this.protocol.sendPayload({
+                type: 'update-subscriptions',
+                id: actorId,
+                adds: options.adds,
+                removes: options.removes
+            } as UpdateSubscriptions);
         } else {
             log.error('app', `Failed to update subscriptions. Actor ${actorId} not found.`);
         }
@@ -473,16 +344,12 @@ export class InternalContext {
     ) {
         const actor = this.actorSet[actorId];
         if (actor) {
-            actor.created().then(() => {
-                this.protocol.sendPayload({
-                    type: 'update-collision-event-subscriptions',
-                    actorId,
-                    adds: options.adds,
-                    removes: options.removes
-                } as UpdateCollisionEventSubscriptions);
-            }).catch((reason: any) => {
-                log.error('app', `Failed to update collision event subscriptions on actor ${actor.id}.`, reason);
-            });
+            this.protocol.sendPayload({
+                type: 'update-collision-event-subscriptions',
+                actorId,
+                adds: options.adds,
+                removes: options.removes
+            } as UpdateCollisionEventSubscriptions);
         } else {
             log.error('app', `Failed to update collision event subscriptions. Actor ${actorId} not found.`);
         }
@@ -722,15 +589,11 @@ export class InternalContext {
     public setBehavior(actorId: string, newBehaviorType: BehaviorType) {
         const actor = this.actorSet[actorId];
         if (actor) {
-            actor.created().then(() => {
-                this.protocol.sendPayload({
-                    type: 'set-behavior',
-                    actorId,
-                    behaviorType: newBehaviorType || 'none'
-                } as SetBehavior);
-            }).catch((reason: any) => {
-                log.error('app', `Failed to set behavior on actor ${actor.id}.`, reason);
-            });
+            this.protocol.sendPayload({
+                type: 'set-behavior',
+                actorId,
+                behaviorType: newBehaviorType || 'none'
+            } as SetBehavior);
         }
     }
 }

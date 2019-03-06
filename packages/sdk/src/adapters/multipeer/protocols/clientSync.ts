@@ -8,7 +8,6 @@ import { Client, MissingRule, Rules, SyncActor } from '..';
 import { Message } from '../../..';
 import { log } from '../../../log';
 import * as Protocols from '../../../protocols';
-import { SetSoundStateOptions, SoundCommand } from '../../../sound';
 import * as Payloads from '../../../types/network/payloads';
 import { ExportedPromise } from '../../../utils/exportedPromise';
 
@@ -165,41 +164,37 @@ export class ClientSync extends Protocols.Protocol {
      * @hidden
      * Driver for the `create-actors` synchronization stage.
      */
-    public 'stage:create-actors' = async () => {
+    public 'stage:create-actors' = () => {
         // Sync cached create-actor hierarchies, starting at roots.
-        await Promise.all(
-            this.client.session.rootActors.map(
-                syncActor => this.createActorRecursive(syncActor)));
+        this.client.session.rootActors.map(
+            syncActor => this.createActorRecursive(syncActor));
     }
 
     /**
      * @hidden
      * Driver for the `set-behaviors` synchronization stage.
      */
-    public 'stage:set-behaviors' = async () => {
+    public 'stage:set-behaviors' = () => {
         // Send all cached set-behavior messages.
         this.client.session.actors.map(syncActor => this.createActorBehavior(syncActor));
-        return Promise.resolve();
     }
 
     /**
      * @hidden
      * Driver for the `active-sound-instances` synchronization stage.
      */
-    public 'stage:active-sound-instances' = async () => {
+    public 'stage:active-sound-instances' = () => {
         // Send all cached set-behavior messages.
-        await Promise.all([
-            this.client.session.actors.map(syncActor => this.activeSoundInstances(syncActor))]);
+        this.client.session.actors.map(syncActor => this.activeSoundInstances(syncActor));
     }
     /**
      * @hidden
      * Driver for the `create-animations` synchronization stage.
      */
-    public 'stage:create-animations' = async () => {
+    public 'stage:create-animations' = () => {
         // Send all cached interpolate-actor and create-animation messages.
         this.client.session.actors.map(syncActor => this.createActorInterpolations(syncActor));
-        await Promise.all([
-            this.client.session.actors.map(syncActor => this.createActorAnimations(syncActor))]);
+        this.client.session.actors.map(syncActor => this.createActorAnimations(syncActor));
     }
 
     /**
@@ -237,19 +232,14 @@ export class ClientSync extends Protocols.Protocol {
 
     private createActorRecursive(actor: Partial<SyncActor>) {
         // Start creating this actor and its creatable children.
-        return new Promise<void>(async (resolve, reject) => {
-            await this.createActor(actor); // Allow exception to propagate.
-            // const children = this.client.session.childrenOf(actor.created.message.payload.actor.id);
-            const children = this.client.session.creatableChildrenOf(actor.created.message.payload.actor.id);
-            if (children.length) {
-                const promises: any[] = [];
-                for (const child of children) {
-                    promises.push(this.createActorRecursive(child));
-                }
-                await Promise.all(promises.filter(promise => !!promise));
+        this.createActor(actor); // Allow exception to propagate.
+        // const children = this.client.session.childrenOf(actor.created.message.payload.actor.id);
+        const children = this.client.session.creatableChildrenOf(actor.created.message.payload.actor.id);
+        if (children.length) {
+            for (const child of children) {
+                this.createActorRecursive(child);
             }
-            resolve();
-        });
+        }
     }
 
     private createActorBehavior(actor: Partial<SyncActor>) {
@@ -264,36 +254,34 @@ export class ClientSync extends Protocols.Protocol {
 
     private createActor(actor: Partial<SyncActor>) {
         if (actor.created && actor.created.message.payload.type) {
-            return this.sendAndExpectResponse(actor.created.message);
+            return this.sendMessage(actor.created.message);
         }
     }
 
     private activeSoundInstances(actor: Partial<SyncActor>) {
-        return Promise.all([
-            (actor.activeSoundInstances || [])
-                .map(activeSoundInstance => {
-                    // TODO This sound tweaking should ideally be done on the client, because then it can consider the
-                    // time it takes for packet to arrive. This is needed for optimal timing .
-                    const targetTime = Date.now() / 1000.0;
-                    if (activeSoundInstance.message.payload.options.paused !== true) {
-                        let timeOffset = (targetTime - activeSoundInstance.basisTime);
-                        if (activeSoundInstance.message.payload.options.pitch !== undefined) {
-                            timeOffset *= Math.pow(2.0, (activeSoundInstance.message.payload.options.pitch / 12.0));
-                        }
-                        if (activeSoundInstance.message.payload.startTimeOffset === undefined) {
-                            activeSoundInstance.message.payload.startTimeOffset = 0.0;
-                        }
-                        activeSoundInstance.message.payload.startTimeOffset += timeOffset;
+        (actor.activeSoundInstances || [])
+            .map(activeSoundInstance => {
+                // TODO This sound tweaking should ideally be done on the client, because then it can consider the
+                // time it takes for packet to arrive. This is needed for optimal timing .
+                const targetTime = Date.now() / 1000.0;
+                if (activeSoundInstance.message.payload.options.paused !== true) {
+                    let timeOffset = (targetTime - activeSoundInstance.basisTime);
+                    if (activeSoundInstance.message.payload.options.pitch !== undefined) {
+                        timeOffset *= Math.pow(2.0, (activeSoundInstance.message.payload.options.pitch / 12.0));
                     }
-                    return this.sendMessage(activeSoundInstance.message);
-                })
-        ]);
+                    if (activeSoundInstance.message.payload.startTimeOffset === undefined) {
+                        activeSoundInstance.message.payload.startTimeOffset = 0.0;
+                    }
+                    activeSoundInstance.message.payload.startTimeOffset += timeOffset;
+                }
+                return this.sendMessage(activeSoundInstance.message);
+            });
     }
 
     private createActorAnimations(actor: Partial<SyncActor>) {
         return Promise.all([
             (actor.createdAnimations || [])
-                .map(createdAnimation => this.sendAndExpectResponse(createdAnimation.message))
+                .map(createdAnimation => this.sendMessage(createdAnimation.message))
         ]);
     }
 

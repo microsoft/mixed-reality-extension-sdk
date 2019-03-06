@@ -16,6 +16,7 @@ export default class GltfConcurrencyTest extends Test {
             resourceUrl: `https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/CesiumMan/glTF-Binary/CesiumMan.glb`,
             actor: { transform: { position: { x: 0.66, y: -0.72 } } }
         });
+        const runner = runnerPromise.value;
 
         const gearboxPromise = MRE.Actor.CreateFromGltf(this.app.context, {
             // tslint:disable-next-line:max-line-length
@@ -27,22 +28,23 @@ export default class GltfConcurrencyTest extends Test {
             // tslint:disable-next-line:max-line-length
             'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/WaterBottle/glTF/WaterBottle.gltf');
 
+        runner.enableAnimation('animation:0');
+
         try {
             await gearboxPromise;
         } catch (e) {
             console.log('Gearbox didn\'t load, as expected in Altspace');
         }
 
-        let runner: MRE.Actor;
+        let runnerActor: MRE.Actor;
         let bottleAsset: MRE.AssetGroup;
         try {
-            [runner, bottleAsset] = await Promise.all([runnerPromise, bottlePromise]);
+            [runnerActor, bottleAsset] = await Promise.all([runnerPromise, bottlePromise]);
         } catch (errs) {
             console.error(errs);
             return false;
         }
 
-        runner.enableAnimation('animation:0');
         await MRE.Actor.CreateFromPrefab(this.app.context, {
             prefabId: bottleAsset.prefabs.byIndex(0).id,
             actor: { transform: { position: { x: -.66 }, scale: { x: 4, y: 4, z: 4 } } }

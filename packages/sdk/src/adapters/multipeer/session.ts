@@ -205,72 +205,8 @@ export class Session extends EventEmitter {
 
     public sendToClients(message: Message, filterFn?: (value: Client, index: number) => any) {
         const clients = this.clients.filter(filterFn || (() => true));
-        if (message.awaitingResponse) {
-            message.awaitingResponse = undefined;
-            // Send the message too all clients and await a response from each. Once all responses
-            // have been received, send the reply message back to the app.
-            const promise = new Promise<Message>((resolve, reject) => {
-                let awaitCount = clients.length;
-                let authoritativeReplyMessage: Message;
-                let fallbackReplyMessage: Message;
-                log.verbose('network-content', `awaitCount is ${awaitCount} for id:${message.id.substr(0, 8)}`);
-                for (const client of clients) {
-                    client.send({ ...message }, {
-                        resolve: (payload: Payloads.Payload, response: Message) => {
-                            // tslint:disable-next-line:max-line-length
-                            log.verbose('network-content', `"Received resolve response for id:${message.id.substr(0, 8)} from client:${client.id.substr(0, 8)}`);
-                            // Decrement the wait counter.
-                            awaitCount -= 1;
-                            // tslint:disable-next-line:max-line-length
-                            log.verbose('network-content', `awaitCount is now ${awaitCount} for id:${message.id.substr(0, 8)}`);
-                            // Preprocess the response message.
-                            response = this.preprocessFromClient(client, response);
-                            // Cache the response message.
-                            if (response) {
-                                if (client.authoritative) {
-                                    authoritativeReplyMessage = { ...response };
-                                } else if (!fallbackReplyMessage) {
-                                    fallbackReplyMessage = { ...response };
-                                }
-                            }
-                            // If this was the last response, send the reply message to the app and
-                            // resolve this promise.
-                            if (awaitCount === 0) {
-                                const replyMessage = authoritativeReplyMessage || fallbackReplyMessage;
-                                if (replyMessage) {
-                                    this.sendToApp(replyMessage);
-                                }
-                                resolve();
-                            }
-                        },
-                        reject: () => {
-                            // tslint:disable-next-line:max-line-length
-                            log.verbose('network-content', `"Received reject response for id:${message.id.substr(0, 8)} from client:${client.id.substr(0, 8)}`);
-                            // Something bad happened on this connection and we didn't get a response. That's fine.
-                            // Decrement the wait counter.
-                            awaitCount -= 1;
-                            // tslint:disable-next-line:max-line-length
-                            log.verbose('network-content', `awaitCount is now ${awaitCount} for id:${message.id.substr(0, 8)}`);
-                            // If this was the last response, send the reply message to the app and
-                            // resolve this promise.
-                            if (awaitCount === 0) {
-                                const replyMessage = authoritativeReplyMessage || fallbackReplyMessage;
-                                if (replyMessage) {
-                                    this.sendToApp(replyMessage);
-                                }
-                                resolve();
-                            }
-                        }
-                    });
-                }
-            });
-            // Run this in the background (do not await).
-            promise.then(() => { }).catch(() => { });
-
-        } else {
-            for (const client of clients) {
-                client.send({ ...message });
-            }
+        for (const client of clients) {
+            client.send({ ...message });
         }
     }
 
