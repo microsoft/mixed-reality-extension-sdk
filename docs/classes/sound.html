@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>Texture | Mixed Reality Extension SDK</title>
+	<title>Sound | Mixed Reality Extension SDK</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -52,10 +52,10 @@
 					<a href="../index.html">Globals</a>
 				</li>
 				<li>
-					<a href="texture.html">Texture</a>
+					<a href="sound.html">Sound</a>
 				</li>
 			</ul>
-			<h1>Class Texture</h1>
+			<h1>Class Sound</h1>
 		</div>
 	</div>
 </header>
@@ -69,7 +69,7 @@
 						<a href="asset.html" class="tsd-signature-type">Asset</a>
 						<ul class="tsd-hierarchy">
 							<li>
-								<span class="target">Texture</span>
+								<span class="target">Sound</span>
 							</li>
 						</ul>
 					</li>
@@ -79,7 +79,7 @@
 				<h3>Implements</h3>
 				<ul class="tsd-hierarchy">
 					<li><a href="../interfaces/assetlike.html" class="tsd-signature-type">AssetLike</a></li>
-					<li><a href="../interfaces/texturelike.html" class="tsd-signature-type">TextureLike</a></li>
+					<li><a href="../interfaces/soundlike.html" class="tsd-signature-type">SoundLike</a></li>
 					<li><span class="tsd-signature-type">Patchable</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/assetlike.html" class="tsd-signature-type">AssetLike</a><span class="tsd-signature-symbol">&gt;</span></li>
 				</ul>
 			</section>
@@ -88,69 +88,49 @@
 				<section class="tsd-panel tsd-index-panel">
 					<div class="tsd-index-content">
 						<section class="tsd-index-section ">
-							<h3>Constructors</h3>
-							<ul class="tsd-index-list">
-								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="texture.html#constructor" class="tsd-kind-icon">constructor</a></li>
-							</ul>
-						</section>
-						<section class="tsd-index-section ">
 							<h3>Accessors</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited"><a href="texture.html#id" class="tsd-kind-icon">id</a></li>
-								<li class="tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited"><a href="texture.html#name" class="tsd-kind-icon">name</a></li>
-								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="texture.html#resolution" class="tsd-kind-icon">resolution</a></li>
-								<li class="tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited"><a href="texture.html#source" class="tsd-kind-icon">source</a></li>
-								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="texture.html#texture-1" class="tsd-kind-icon">texture</a></li>
-								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="texture.html#uri" class="tsd-kind-icon">uri</a></li>
-								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="texture.html#wrapu" class="tsd-kind-icon">wrapU</a></li>
-								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="texture.html#wrapv" class="tsd-kind-icon">wrapV</a></li>
+								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="sound.html#duration" class="tsd-kind-icon">duration</a></li>
+								<li class="tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited"><a href="sound.html#id" class="tsd-kind-icon">id</a></li>
+								<li class="tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited"><a href="sound.html#name" class="tsd-kind-icon">name</a></li>
+								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="sound.html#sound-1" class="tsd-kind-icon">sound</a></li>
+								<li class="tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited"><a href="sound.html#source" class="tsd-kind-icon">source</a></li>
+								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="sound.html#uri" class="tsd-kind-icon">uri</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite"><a href="texture.html#copy" class="tsd-kind-icon">copy</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite"><a href="sound.html#copy" class="tsd-kind-icon">copy</a></li>
 							</ul>
 						</section>
 					</div>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
-				<h2>Constructors</h2>
-				<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class">
-					<a name="constructor" class="tsd-anchor"></a>
-					<h3>constructor</h3>
-					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Texture<span class="tsd-signature-symbol">(</span>manager<span class="tsd-signature-symbol">: </span><a href="assetmanager.html" class="tsd-signature-type">AssetManager</a>, def<span class="tsd-signature-symbol">: </span><a href="../interfaces/assetlike.html" class="tsd-signature-type">AssetLike</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="texture.html" class="tsd-signature-type">Texture</a></li>
+				<h2>Accessors</h2>
+				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
+					<a name="duration" class="tsd-anchor"></a>
+					<h3>duration</h3>
+					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> duration<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in types/runtime/assets/texture.ts:57</li>
+									<li>Defined in types/runtime/assets/sound.ts:30</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>INTERNAL USE ONLY. To load a new texture from scratch, use <a href="assetmanager.html#createtexture">AssetManager.createTexture</a></p>
+									<p>The length the loaded sound at default pitch</p>
 								</div>
 							</div>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>manager: <a href="assetmanager.html" class="tsd-signature-type">AssetManager</a></h5>
-								</li>
-								<li>
-									<h5>def: <a href="../interfaces/assetlike.html" class="tsd-signature-type">AssetLike</a></h5>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="texture.html" class="tsd-signature-type">Texture</a></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
 						</li>
 					</ul>
 				</section>
-			</section>
-			<section class="tsd-panel-group tsd-member-group ">
-				<h2>Accessors</h2>
 				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited">
 					<a name="id" class="tsd-anchor"></a>
 					<h3>id</h3>
@@ -207,24 +187,28 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
-					<a name="resolution" class="tsd-anchor"></a>
-					<h3>resolution</h3>
+					<a name="sound-1" class="tsd-anchor"></a>
+					<h3>sound</h3>
 					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> resolution<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="vector2.html" class="tsd-signature-type">Vector2</a></li>
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> sound<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/soundlike.html" class="tsd-signature-type">SoundLike</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in types/runtime/assets/texture.ts:46</li>
+									<li>Defined in types/runtime/assets/sound.ts:33</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>The pixel dimensions of the loaded texture</p>
+									<p>Only populated when this asset is a sound. An asset will have only one of these types specified.</p>
 								</div>
+								<dl class="tsd-comment-tags">
+									<dt>inheritdoc</dt>
+									<dd></dd>
+								</dl>
 							</div>
-							<h4 class="tsd-returns-title">Returns <a href="vector2.html" class="tsd-signature-type">Vector2</a></h4>
+							<h4 class="tsd-returns-title">Returns <a href="../interfaces/soundlike.html" class="tsd-signature-type">SoundLike</a></h4>
 						</li>
 					</ul>
 				</section>
@@ -256,32 +240,6 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
-					<a name="texture-1" class="tsd-anchor"></a>
-					<h3>texture</h3>
-					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> texture<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/texturelike.html" class="tsd-signature-type">TextureLike</a></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in types/runtime/assets/texture.ts:57</li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Only populated when this asset is a texture. An asset will have only one of these types specified.</p>
-								</div>
-								<dl class="tsd-comment-tags">
-									<dt>inheritdoc</dt>
-									<dd></dd>
-								</dl>
-							</div>
-							<h4 class="tsd-returns-title">Returns <a href="../interfaces/texturelike.html" class="tsd-signature-type">TextureLike</a></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
 					<a name="uri" class="tsd-anchor"></a>
 					<h3>uri</h3>
 					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class">
@@ -291,99 +249,15 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in types/runtime/assets/texture.ts:43</li>
+									<li>Defined in types/runtime/assets/sound.ts:27</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>The URI, if any, this texture was loaded from</p>
+									<p>The URI, if any, this sound was loaded from</p>
 								</div>
 							</div>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class">
-					<a name="wrapu" class="tsd-anchor"></a>
-					<h3>wrapU</h3>
-					<ul class="tsd-signatures tsd-kind-accessor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> wrapU<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../enums/texturewrapmode.html" class="tsd-signature-type">TextureWrapMode</a></li>
-						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">set</span> wrapU<span class="tsd-signature-symbol">(</span>val<span class="tsd-signature-symbol">: </span><a href="../enums/texturewrapmode.html" class="tsd-signature-type">TextureWrapMode</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in types/runtime/assets/texture.ts:49</li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>How overflowing UVs are handled horizontally.</p>
-								</div>
-							</div>
-							<h4 class="tsd-returns-title">Returns <a href="../enums/texturewrapmode.html" class="tsd-signature-type">TextureWrapMode</a></h4>
-						</li>
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in types/runtime/assets/texture.ts:50</li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>How overflowing UVs are handled horizontally.</p>
-								</div>
-							</div>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>val: <a href="../enums/texturewrapmode.html" class="tsd-signature-type">TextureWrapMode</a></h5>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class">
-					<a name="wrapv" class="tsd-anchor"></a>
-					<h3>wrapV</h3>
-					<ul class="tsd-signatures tsd-kind-accessor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> wrapV<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../enums/texturewrapmode.html" class="tsd-signature-type">TextureWrapMode</a></li>
-						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">set</span> wrapV<span class="tsd-signature-symbol">(</span>val<span class="tsd-signature-symbol">: </span><a href="../enums/texturewrapmode.html" class="tsd-signature-type">TextureWrapMode</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in types/runtime/assets/texture.ts:53</li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>How overflowing UVs are handled vertically.</p>
-								</div>
-							</div>
-							<h4 class="tsd-returns-title">Returns <a href="../enums/texturewrapmode.html" class="tsd-signature-type">TextureWrapMode</a></h4>
-						</li>
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in types/runtime/assets/texture.ts:54</li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>How overflowing UVs are handled vertically.</p>
-								</div>
-							</div>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>val: <a href="../enums/texturewrapmode.html" class="tsd-signature-type">TextureWrapMode</a></h5>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -401,7 +275,7 @@
 							<aside class="tsd-sources">
 								<p>Overrides Asset.copy</p>
 								<ul>
-									<li>Defined in types/runtime/assets/texture.ts:81</li>
+									<li>Defined in types/runtime/assets/sound.ts:51</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -429,37 +303,28 @@
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-class">
-						<a href="texture.html" class="tsd-kind-icon">Texture</a>
+						<a href="sound.html" class="tsd-kind-icon">Sound</a>
 						<ul>
-							<li class=" tsd-kind-constructor tsd-parent-kind-class">
-								<a href="texture.html#constructor" class="tsd-kind-icon">constructor</a>
+							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
+								<a href="sound.html#duration" class="tsd-kind-icon">duration</a>
 							</li>
 							<li class=" tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited">
-								<a href="texture.html#id" class="tsd-kind-icon">id</a>
+								<a href="sound.html#id" class="tsd-kind-icon">id</a>
 							</li>
 							<li class=" tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited">
-								<a href="texture.html#name" class="tsd-kind-icon">name</a>
+								<a href="sound.html#name" class="tsd-kind-icon">name</a>
 							</li>
 							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
-								<a href="texture.html#resolution" class="tsd-kind-icon">resolution</a>
+								<a href="sound.html#sound-1" class="tsd-kind-icon">sound</a>
 							</li>
 							<li class=" tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited">
-								<a href="texture.html#source" class="tsd-kind-icon">source</a>
+								<a href="sound.html#source" class="tsd-kind-icon">source</a>
 							</li>
 							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
-								<a href="texture.html#texture-1" class="tsd-kind-icon">texture</a>
-							</li>
-							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
-								<a href="texture.html#uri" class="tsd-kind-icon">uri</a>
-							</li>
-							<li class=" tsd-kind-accessor tsd-parent-kind-class">
-								<a href="texture.html#wrapu" class="tsd-kind-icon">wrapU</a>
-							</li>
-							<li class=" tsd-kind-accessor tsd-parent-kind-class">
-								<a href="texture.html#wrapv" class="tsd-kind-icon">wrapV</a>
+								<a href="sound.html#uri" class="tsd-kind-icon">uri</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
-								<a href="texture.html#copy" class="tsd-kind-icon">copy</a>
+								<a href="sound.html#copy" class="tsd-kind-icon">copy</a>
 							</li>
 						</ul>
 					</li>

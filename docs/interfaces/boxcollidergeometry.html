@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>TextureLike | Mixed Reality Extension SDK</title>
+	<title>BoxColliderGeometry | Mixed Reality Extension SDK</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -52,28 +52,29 @@
 					<a href="../index.html">Globals</a>
 				</li>
 				<li>
-					<a href="texturelike.html">TextureLike</a>
+					<a href="boxcollidergeometry.html">BoxColliderGeometry</a>
 				</li>
 			</ul>
-			<h1>Interface TextureLike</h1>
+			<h1>Interface BoxColliderGeometry</h1>
 		</div>
 	</div>
 </header>
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Collider parameters specific to a box collider</p>
+					</div>
+				</div>
+			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">TextureLike</span>
+						<span class="target">BoxColliderGeometry</span>
 					</li>
-				</ul>
-			</section>
-			<section class="tsd-panel">
-				<h3>Implemented by</h3>
-				<ul class="tsd-hierarchy">
-					<li><a href="../classes/texture.html" class="tsd-signature-type">Texture</a></li>
 				</ul>
 			</section>
 			<section class="tsd-panel-group tsd-index-group">
@@ -83,10 +84,9 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="texturelike.html#resolution" class="tsd-kind-icon">resolution</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="texturelike.html#uri" class="tsd-kind-icon">uri</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="texturelike.html#wrapu" class="tsd-kind-icon">wrapU</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="texturelike.html#wrapv" class="tsd-kind-icon">wrapV</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="boxcollidergeometry.html#center" class="tsd-kind-icon">center</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="boxcollidergeometry.html#collidertype" class="tsd-kind-icon">collider<wbr>Type</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="boxcollidergeometry.html#size" class="tsd-kind-icon">size</a></li>
 							</ul>
 						</section>
 					</div>
@@ -95,42 +95,32 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="resolution" class="tsd-anchor"></a>
-					<h3>resolution</h3>
-					<div class="tsd-signature tsd-kind-icon">resolution<span class="tsd-signature-symbol">:</span> <a href="vector2like.html" class="tsd-signature-type">Vector2Like</a></div>
+					<a name="center" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> center</h3>
+					<div class="tsd-signature tsd-kind-icon">center<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Readonly</span><span class="tsd-signature-symbol">&lt;</span><a href="vector3like.html" class="tsd-signature-type">Vector3Like</a><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in types/runtime/assets/texture.ts:15</li>
+							<li>Defined in types/runtime/physics/colliderGeometry.ts:22</li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="uri" class="tsd-anchor"></a>
-					<h3>uri</h3>
-					<div class="tsd-signature tsd-kind-icon">uri<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<a name="collidertype" class="tsd-anchor"></a>
+					<h3>collider<wbr>Type</h3>
+					<div class="tsd-signature tsd-kind-icon">collider<wbr>Type<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">"box"</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in types/runtime/assets/texture.ts:14</li>
+							<li>Defined in types/runtime/physics/colliderGeometry.ts:21</li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="wrapu" class="tsd-anchor"></a>
-					<h3>wrapU</h3>
-					<div class="tsd-signature tsd-kind-icon">wrapU<span class="tsd-signature-symbol">:</span> <a href="../enums/texturewrapmode.html" class="tsd-signature-type">TextureWrapMode</a></div>
+					<a name="size" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> size</h3>
+					<div class="tsd-signature tsd-kind-icon">size<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Readonly</span><span class="tsd-signature-symbol">&lt;</span><a href="vector3like.html" class="tsd-signature-type">Vector3Like</a><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in types/runtime/assets/texture.ts:16</li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="wrapv" class="tsd-anchor"></a>
-					<h3>wrapV</h3>
-					<div class="tsd-signature tsd-kind-icon">wrapV<span class="tsd-signature-symbol">:</span> <a href="../enums/texturewrapmode.html" class="tsd-signature-type">TextureWrapMode</a></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in types/runtime/assets/texture.ts:17</li>
+							<li>Defined in types/runtime/physics/colliderGeometry.ts:23</li>
 						</ul>
 					</aside>
 				</section>
@@ -149,19 +139,16 @@
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-interface">
-						<a href="texturelike.html" class="tsd-kind-icon">Texture<wbr>Like</a>
+						<a href="boxcollidergeometry.html" class="tsd-kind-icon">Box<wbr>Collider<wbr>Geometry</a>
 						<ul>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="texturelike.html#resolution" class="tsd-kind-icon">resolution</a>
+								<a href="boxcollidergeometry.html#center" class="tsd-kind-icon">center</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="texturelike.html#uri" class="tsd-kind-icon">uri</a>
+								<a href="boxcollidergeometry.html#collidertype" class="tsd-kind-icon">collider<wbr>Type</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="texturelike.html#wrapu" class="tsd-kind-icon">wrapU</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="texturelike.html#wrapv" class="tsd-kind-icon">wrapV</a>
+								<a href="boxcollidergeometry.html#size" class="tsd-kind-icon">size</a>
 							</li>
 						</ul>
 					</li>

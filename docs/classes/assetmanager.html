@@ -101,10 +101,13 @@
 						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="assetmanager.html#assetloaded" class="tsd-kind-icon">asset<wbr>Loaded</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="assetmanager.html#cleanup" class="tsd-kind-icon">cleanup</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="assetmanager.html#creatematerial" class="tsd-kind-icon">create<wbr>Material</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="assetmanager.html#createsound" class="tsd-kind-icon">create<wbr>Sound</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="assetmanager.html#createtexture" class="tsd-kind-icon">create<wbr>Texture</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="assetmanager.html#loadgltf" class="tsd-kind-icon">load<wbr>Gltf</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter"><a href="assetmanager.html#unloadasset" class="tsd-kind-icon">unload<wbr>Asset</a></li>
 							</ul>
 						</section>
 					</div>
@@ -118,7 +121,7 @@
 					<div class="tsd-signature tsd-kind-icon">context<span class="tsd-signature-symbol">:</span> <a href="context.html" class="tsd-signature-type">Context</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in types/runtime/assets/assetManager.ts:29</li>
+							<li>Defined in types/runtime/assets/assetManager.ts:34</li>
 						</ul>
 					</aside>
 				</section>
@@ -135,7 +138,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in types/runtime/assets/assetManager.ts:43</li>
+									<li>Defined in types/runtime/assets/assetManager.ts:48</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -159,7 +162,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in types/runtime/assets/assetManager.ts:37</li>
+									<li>Defined in types/runtime/assets/assetManager.ts:42</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -183,7 +186,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in types/runtime/assets/assetManager.ts:40</li>
+									<li>Defined in types/runtime/assets/assetManager.ts:45</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -205,7 +208,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in types/runtime/assets/assetManager.ts:50</li>
+									<li>Defined in types/runtime/assets/assetManager.ts:55</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -221,6 +224,37 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Methods</h2>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="assetloaded" class="tsd-anchor"></a>
+					<h3>asset<wbr>Loaded</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">asset<wbr>Loaded<span class="tsd-signature-symbol">(</span>assetId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in types/runtime/assets/assetManager.ts:151</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>A promise that resolves when a specific asset has settled, successfully or otherwise</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>assetId: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The asset&#39;s id</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
 					<a name="cleanup" class="tsd-anchor"></a>
 					<h3>cleanup</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -230,7 +264,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in types/runtime/assets/assetManager.ts:33</li>
+									<li>Defined in types/runtime/assets/assetManager.ts:38</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -247,7 +281,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in types/runtime/assets/assetManager.ts:57</li>
+									<li>Defined in types/runtime/assets/assetManager.ts:62</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -275,6 +309,43 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="createsound" class="tsd-anchor"></a>
+					<h3>create<wbr>Sound</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">create<wbr>Sound<span class="tsd-signature-symbol">(</span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, definition<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/soundlike.html" class="tsd-signature-type">SoundLike</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/forwardpromise.html" class="tsd-signature-type">ForwardPromise</a><span class="tsd-signature-symbol">&lt;</span><a href="sound.html" class="tsd-signature-type">Sound</a><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in types/runtime/assets/assetManager.ts:88</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Load an audio file and generate a new sound asset</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>name: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The new texture&#39;s name</p>
+									</div>
+								</li>
+								<li>
+									<h5>definition: <span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/soundlike.html" class="tsd-signature-type">SoundLike</a><span class="tsd-signature-symbol">&gt;</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The initial sound properties. The <code>uri</code> property is required.</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="../interfaces/forwardpromise.html" class="tsd-signature-type">ForwardPromise</a><span class="tsd-signature-symbol">&lt;</span><a href="sound.html" class="tsd-signature-type">Sound</a><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
 					<a name="createtexture" class="tsd-anchor"></a>
 					<h3>create<wbr>Texture</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -284,12 +355,12 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in types/runtime/assets/assetManager.ts:70</li>
+									<li>Defined in types/runtime/assets/assetManager.ts:75</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>Generate a new texture</p>
+									<p>Load an image file and generate a new texture asset</p>
 								</div>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -321,7 +392,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in types/runtime/assets/assetManager.ts:102</li>
+									<li>Defined in types/runtime/assets/assetManager.ts:166</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -349,6 +420,35 @@
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="assetgroup.html" class="tsd-signature-type">AssetGroup</a><span class="tsd-signature-symbol">&gt;</span></h4>
 							<p>The promise of a new asset group.</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter">
+					<a name="unloadasset" class="tsd-anchor"></a>
+					<h3>unload<wbr>Asset</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter">
+						<li class="tsd-signature tsd-kind-icon">unload<wbr>Asset&lt;T&gt;<span class="tsd-signature-symbol">(</span>asset<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in types/runtime/assets/assetManager.ts:123</li>
+								</ul>
+							</aside>
+							<h4 class="tsd-type-parameters-title">Type parameters</h4>
+							<ul class="tsd-type-parameters">
+								<li>
+									<h4>T<span class="tsd-signature-symbol">: </span><a href="asset.html" class="tsd-signature-type">Asset</a></h4>
+								</li>
+							</ul>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>asset: <span class="tsd-signature-type">T</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -385,16 +485,25 @@
 								<a href="assetmanager.html#ready" class="tsd-kind-icon">ready</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="assetmanager.html#assetloaded" class="tsd-kind-icon">asset<wbr>Loaded</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="assetmanager.html#cleanup" class="tsd-kind-icon">cleanup</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="assetmanager.html#creatematerial" class="tsd-kind-icon">create<wbr>Material</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="assetmanager.html#createsound" class="tsd-kind-icon">create<wbr>Sound</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="assetmanager.html#createtexture" class="tsd-kind-icon">create<wbr>Texture</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="assetmanager.html#loadgltf" class="tsd-kind-icon">load<wbr>Gltf</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter">
+								<a href="assetmanager.html#unloadasset" class="tsd-kind-icon">unload<wbr>Asset</a>
 							</li>
 						</ul>
 					</li>

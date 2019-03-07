@@ -77,6 +77,7 @@
 					<li><a href="../classes/material.html" class="tsd-signature-type">Material</a></li>
 					<li><a href="../classes/mesh.html" class="tsd-signature-type">Mesh</a></li>
 					<li><a href="../classes/prefab.html" class="tsd-signature-type">Prefab</a></li>
+					<li><a href="../classes/sound.html" class="tsd-signature-type">Sound</a></li>
 					<li><a href="../classes/texture.html" class="tsd-signature-type">Texture</a></li>
 				</ul>
 			</section>
@@ -92,6 +93,7 @@
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="assetlike.html#mesh" class="tsd-kind-icon">mesh</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="assetlike.html#name" class="tsd-kind-icon">name</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="assetlike.html#prefab" class="tsd-kind-icon">prefab</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="assetlike.html#sound" class="tsd-kind-icon">sound</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="assetlike.html#source" class="tsd-kind-icon">source</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="assetlike.html#texture" class="tsd-kind-icon">texture</a></li>
 							</ul>
@@ -107,7 +109,7 @@
 					<div class="tsd-signature tsd-kind-icon">id<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in types/runtime/assets/asset.ts:33</li>
+							<li>Defined in types/runtime/assets/asset.ts:45</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -122,7 +124,7 @@
 					<div class="tsd-signature tsd-kind-icon">material<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="materiallike.html" class="tsd-signature-type">MaterialLike</a><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in types/runtime/assets/asset.ts:49</li>
+							<li>Defined in types/runtime/assets/asset.ts:61</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -137,7 +139,7 @@
 					<div class="tsd-signature tsd-kind-icon">mesh<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="meshlike.html" class="tsd-signature-type">MeshLike</a><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in types/runtime/assets/asset.ts:47</li>
+							<li>Defined in types/runtime/assets/asset.ts:59</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -152,7 +154,7 @@
 					<div class="tsd-signature tsd-kind-icon">name<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in types/runtime/assets/asset.ts:38</li>
+							<li>Defined in types/runtime/assets/asset.ts:50</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -168,7 +170,7 @@
 					<div class="tsd-signature tsd-kind-icon">prefab<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="prefablike.html" class="tsd-signature-type">PrefabLike</a><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in types/runtime/assets/asset.ts:45</li>
+							<li>Defined in types/runtime/assets/asset.ts:57</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -178,12 +180,27 @@
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="sound" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> sound</h3>
+					<div class="tsd-signature tsd-kind-icon">sound<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="soundlike.html" class="tsd-signature-type">SoundLike</a><span class="tsd-signature-symbol">&gt;</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in types/runtime/assets/asset.ts:65</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Only populated when this asset is a sound. An asset will have only one of these types specified.</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="source" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagOptional">Optional</span> source</h3>
 					<div class="tsd-signature tsd-kind-icon">source<span class="tsd-signature-symbol">:</span> <a href="assetsource.html" class="tsd-signature-type">AssetSource</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in types/runtime/assets/asset.ts:42</li>
+							<li>Defined in types/runtime/assets/asset.ts:54</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -198,7 +215,7 @@
 					<div class="tsd-signature tsd-kind-icon">texture<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="texturelike.html" class="tsd-signature-type">TextureLike</a><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in types/runtime/assets/asset.ts:51</li>
+							<li>Defined in types/runtime/assets/asset.ts:63</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -238,6 +255,9 @@
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
 								<a href="assetlike.html#prefab" class="tsd-kind-icon">prefab</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="assetlike.html#sound" class="tsd-kind-icon">sound</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
 								<a href="assetlike.html#source" class="tsd-kind-icon">source</a>
