@@ -76,7 +76,7 @@ export default class SoundTest extends Test {
                 volume: 0.2,
                 looping: true,
                 doppler: 0.0,
-                multiChannelSpread: 0.7,
+                spread: 0.7,
                 rolloffStartDistance: 2.5
             },
             0.0);
@@ -175,7 +175,7 @@ export default class SoundTest extends Test {
                 volume: 0.5,
                 looping: true,
                 doppler: 5.0,
-                multiChannelSpread: 0.0,
+                spread: 0.0,
                 rolloffStartDistance: 9.3,
             },
             0.0);
@@ -195,11 +195,6 @@ export default class SoundTest extends Test {
         dopplerButtonBehavior.onClick('released', cycleDopplerSoundState);
 
         await this.stoppedAsync();
-
-        // TODO SOREN: remove these for 0.8 - in 0.7 there is an error
-        // if running sounds aren't removed before deleting actors
-        dopplerSoundInstance.value.stop();
-        musicSoundInstance.value.stop();
 
         return true;
     }

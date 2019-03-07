@@ -87,8 +87,7 @@ export default class InputTest extends Test {
         this.cycleState();
         await this.stoppedAsync();
 
-        // TODO SOREN: Restore this for 0.8.
-//        this.model.setBehavior(null);
+        this.model.setBehavior(null);
         this.app.setOverrideText("Thank you for your cooperation");
         await delay(1.2 * 1000);
 
