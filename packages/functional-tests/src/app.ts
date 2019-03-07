@@ -14,7 +14,7 @@ import destroyActors from './utils/destroyActors';
 export const SuccessColor = MRE.Color3.Green();
 export const FailureColor = MRE.Color3.Red();
 export const NeutralColor = MRE.Color3.Yellow();
-export const BackgroundColor = MRE.Color3.DarkGray();
+export const BackgroundColor = new MRE.Color3(0.25, 0.25, 0.25);
 
 /**
  * Functional Test Application. Takes query arguments to the websocket connection
