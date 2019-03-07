@@ -20,7 +20,7 @@ export default class AssetMutabilityTest extends Test {
         );
 
         const mat = assets.materials.byIndex(0);
-        const box = await MRE.Actor.CreatePrimitive(this.app.context, {
+        MRE.Actor.CreatePrimitive(this.app.context, {
             definition: {
                 shape: MRE.PrimitiveShape.Box,
                 dimensions: { x: 1, y: 1, z: 1 }

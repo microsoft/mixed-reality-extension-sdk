@@ -35,22 +35,22 @@ export default class InputTest extends Test {
         this.model.createAnimation(
             'GrowIn', {
                 keyframes: this.growAnimationData
-            }).catch(reason => console.log(`Failed to create grow animation: ${reason}`));
+            });
 
         this.model.createAnimation(
             'ShrinkOut', {
                 keyframes: this.shrinkAnimationData
-            }).catch(reason => console.log(`Failed to create shrink animation: ${reason}`));
+            });
 
         this.model.createAnimation(
             'Spin1', {
                 keyframes: this.generateSpinKeyframes(0.5, MRE.Vector3.Up()),
-            }).catch(reason => console.log(`Failed to create flip animation: ${reason}`));
+            });
 
         this.model.createAnimation(
             'Spin2', {
                 keyframes: this.generateSpinKeyframes(0.5, MRE.Vector3.Up(), Math.PI),
-            }).catch(reason => console.log(`Failed to create flip animation: ${reason}`));
+            });
 
         // Set up cursor interaction. We add the input behavior ButtonBehavior to the cube.
         // Button behaviors have two pairs of events: hover start/stop, and click start/stop.

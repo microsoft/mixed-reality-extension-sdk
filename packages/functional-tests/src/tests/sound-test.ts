@@ -164,8 +164,7 @@ export default class SoundTest extends Test {
             'flyaround', {
                 keyframes: this.generateSpinKeyframes(2.0, MRE.Vector3.Up()),
                 wrapMode: MRE.AnimationWrapMode.Loop
-
-            }).catch(reason => console.log(`Failed to create flip animation: ${reason}`));
+            });
 
         const dopplerAssetPromise = this.app.context.assetManager.createSound(
             'group1',

@@ -265,17 +265,6 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
     }
 
     /**
-     * Provides an awaitable object that resolves once the actor has been created on the host.
-     */
-    public created() {
-        if (this.internal.created) {
-            return Promise.resolve();
-        } else {
-            return new Promise<void>((resolve, reject) => this.internal.enqueueCreatedPromise({ resolve, reject }));
-        }
-    }
-
-    /**
      * Destroys the actor.
      */
     public destroy(): void {
@@ -521,8 +510,8 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
      * @param animationName The name of the animation.
      * @param options The animation keyframes, events, and other characteristics.
      */
-    public createAnimation(animationName: string, options: CreateAnimationOptions): Promise<void> {
-        return this.context.internal.createAnimation(this.id, animationName, options);
+    public createAnimation(animationName: string, options: CreateAnimationOptions) {
+        this.context.internal.createAnimation(this.id, animationName, options);
     }
 
     /**
@@ -716,10 +705,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
         if (this.internal.observing) {
             this.internal.patch = this.internal.patch || {} as ActorLike;
             readPath(this, this.internal.patch, ...path);
-            // Wait until the actor has been created before triggering a state update.
-            this.created()
-                .then(() => this.context.internal.incrementGeneration())
-                .catch(reason => log.error('app', reason));
+            this.context.internal.incrementGeneration();
         }
     }
 

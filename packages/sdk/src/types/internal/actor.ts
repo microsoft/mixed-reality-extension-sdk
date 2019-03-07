@@ -17,7 +17,6 @@ export class InternalActor implements InternalPatchable<ActorLike> {
     public behavior: Behavior;
     public createdPromises: ExportedPromise[];
     public created: boolean;
-    public createAnimationPromises: { [name: string]: ExportedPromise[] };
 
     constructor(public actor: Actor) {
     }
@@ -48,14 +47,12 @@ export class InternalActor implements InternalPatchable<ActorLike> {
     }
 
     public getPatchAndReset(): ActorLike {
-        if (this.created) {
-            const patch = this.patch;
-            if (patch) {
-                patch.id = this.actor.id;
-                delete this.patch;
-            }
-            return patch;
+        const patch = this.patch;
+        if (patch) {
+            patch.id = this.actor.id;
+            delete this.patch;
         }
+        return patch;
     }
 
     public notifyCreated(success: boolean, reason?: any): void {
@@ -78,38 +75,5 @@ export class InternalActor implements InternalPatchable<ActorLike> {
             this.createdPromises = [];
         }
         this.createdPromises.push(promise);
-    }
-
-    public notifyAnimationCreated(animationName: string, success: boolean, reason?: any): void {
-        if (!!this.createAnimationPromises && !!this.createAnimationPromises[animationName]) {
-            const createAnimationPromises = this.createAnimationPromises[animationName].splice(0);
-            delete this.createAnimationPromises[animationName];
-            for (const promise of createAnimationPromises) {
-                if (success) {
-                    promise.resolve();
-                } else {
-                    promise.reject(reason);
-                }
-            }
-        }
-    }
-
-    public enqueueCreateAnimationPromise(animationName: string, promise: ExportedPromise): void {
-        if (!this.createAnimationPromises) {
-            this.createAnimationPromises = {};
-        }
-        if (!this.createAnimationPromises[animationName]) {
-            this.createAnimationPromises[animationName] = [];
-        }
-        this.createAnimationPromises[animationName].push(promise);
-    }
-
-    public animationCreated(animationName: string): Promise<void> {
-        if (!this.createAnimationPromises || !this.createAnimationPromises[animationName]) {
-            return Promise.resolve();
-        } else {
-            return new Promise<void>((resolve, reject) =>
-                this.enqueueCreateAnimationPromise(animationName, { resolve, reject }));
-        }
     }
 }
