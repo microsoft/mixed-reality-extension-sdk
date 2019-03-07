@@ -77,7 +77,7 @@ With this structure, I'd expect there to mostly be 1 or 2 active release version
 6. [Test pass](#Test-pass) for red branches
 
 ### [Black] When we update the minimum supported version (i.e. just after Altspace releases)
-1. [Update Master branches] for all repositories
+1. [Update Master branches](#Update-Master-branches) for all repositories
 2. Merge sdk/v0.[new_minor].n to green
 3. Merge samples/v0.[new_minor].n to green
 4. [Test pass](#Test-pass) for green branches
@@ -112,7 +112,7 @@ Main purpose of test pass is to look for regressions – not if new features wor
 5. If problems are found, fix and restart test pass
 
 ### Publish NPM Packages
-Note that we always publish all packages with each release, with version numbers in sync. There are scripts that automate all these steps.
+Note that we always publish all packages with each release, with version numbers in sync. Step 1-10 by MREBuildAndDeployNPM script. Step 11 automated by MREBuildSamplesWithNewNPM script.
 
 1. Check out sdk\v0.[minor].n 
 2. Git reset –hard
@@ -134,21 +134,23 @@ Note that we always publish all packages with each release, with version numbers
     5. git commit package.json and package-lock.json changes to samples\v0.[minor].n
 
 ### Update Master Branches
+Step 2 is automated by MREOpenodeDeploy Script. Step 3-6 automated by MREUpdateMasterBranches script
 1. Gather the differences from each repo (useful for announcmenets): git log --no-merges --pretty=format:"%s" origin/master..origin/unity/v0.[minor].n
-2. Re-tag the latest NPM package from sdk/v0.[new_minor].n with @latest instead of @next
+2. redeploy samples and functional test MREs
+3. Re-tag the latest NPM package from sdk/v0.[new_minor].n with @latest instead of @next
    1. npm dist-tag add <pkg> @latest
    2. npm dist-tag rm <pkg> @next
-3. git reset hard sdk/master to v0.[minor].n
-4. git reset hard samples/master to v0.[minor].n
-5. git reset hard unity/master to v0.[minor].n
-6. redeploy samples and functional test MREs
-7. Slack: Make announcement to #announcements channel, share announcement on #general channel.
-8. Twitter: Announce new features
-9. Teams: announce on Altspace Community Support->SDK or General
-10. go to [the MRE Github Roadmap page](https://github.com/Microsoft/mixed-reality-extension-sdk/projects/1) and move released issues from Fixed to Released
+4. git reset hard sdk/master to v0.[minor].n
+5. git reset hard samples/master to v0.[minor].n
+6. git reset hard unity/master to v0.[minor].n
+7. In [the github releases page](https://github.com/Microsoft/mixed-reality-extension-sdk/releases), click the latest tag, edit tag, add patch notes.
+8. Slack: Make announcement to #announcements channel, share announcement on #general channel.
+9. Twitter: Announce new features
+10. Teams: announce on Altspace Community Support->SDK or General
+11. go to [the MRE Github Roadmap page](https://github.com/Microsoft/mixed-reality-extension-sdk/projects/1) and move released issues from Fixed to Released
 
 ### Build Unity DLLs
-
+Step 2 is automated by MRETagUnityVersion script. Step 3 is partially automated by MRECreateMREDevPRBranchForAltspaceVR script.
 1. Go to the build server and find build matching the commit ID for the v0.[minor].n branch, and
    1. click ...->retain build
    2. click the build's commit name->artifacts->drop->drop->...->download as zip, and save locally
