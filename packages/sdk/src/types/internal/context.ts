@@ -224,6 +224,11 @@ export class InternalContext {
                         }
 
                         if (success) {
+                            if (!actor.collider && actor.internal.behavior) {
+                                log.warning('app', 'Behaviors will not function on Unity host apps without adding a'
+                                    + ' collider to this actor first. Recommend adding a primitive collider'
+                                    + ' to this actor.');
+                            }
                             resolve(actor);
                         } else {
                             reject(message);
@@ -589,10 +594,6 @@ export class InternalContext {
     public setBehavior(actorId: string, newBehaviorType: BehaviorType) {
         const actor = this.actorSet[actorId];
         if (actor) {
-            if (!actor.collider) {
-                log.warning('app', 'Behaviors will not function on Unity host apps without adding a collider '
-                    + 'to this actor first. Recommend adding a primitive collider to this actor.');
-            }
             this.protocol.sendPayload({
                 type: 'set-behavior',
                 actorId,
