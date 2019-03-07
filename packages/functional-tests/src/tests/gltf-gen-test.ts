@@ -33,7 +33,12 @@ export default class GltfGenTest extends Test {
         })]);
 
         MRE.Actor.CreateFromGltf(this.app.context, {
-            resourceUrl: Server.registerStaticBuffer('sphere.glb', gltfFactory.generateGLTF())
+            resourceUrl: Server.registerStaticBuffer('sphere.glb', gltfFactory.generateGLTF()),
+            actor: {
+                transform: {
+                    position: { y: 1, z: -1 }
+                }
+            }
         });
 
         await this.stoppedAsync();

@@ -13,7 +13,21 @@ export default class PrimitivesTest extends Test {
     public async run(): Promise<boolean> {
         // Make a root object.
         const tester = MRE.Actor.CreateEmpty(this.app.context, {
-            actor: { transform: { position: { y: -0.5 }, scale: { x: 0.5, y: 0.5, z: 0.5 } } }
+            actor: { transform: { position: { y: 0.5, z: -0.5 }, scale: { x: 0.5, y: 0.5, z: 0.5 } } }
+        });
+        MRE.Actor.CreateEmpty(this.app.context, {
+            actor: {
+                name: "Light",
+                light: {
+                    type: 'point',
+                    range: 5,
+                    intensity: 2,
+                    color: { r: 1, g: 0.5, b: 0.3 }
+                },
+                transform: {
+                    position: { x: -2, y: 2, z: -2 }
+                }
+            }
         });
         const primitiveActors: Array<MRE.ForwardPromise<MRE.Actor>> = [];
 
@@ -30,7 +44,7 @@ export default class PrimitivesTest extends Test {
                             name: 'Box',
                             parentId: tester.value.id,
                             transform: {
-                                position: { x: x * 4 - 0.8, y: y * 4 + 0.3, z: z * 4 - 0.5 }
+                                position: { x: x * 4 - 0.8, y: y * 4 + 0., z: z * 4 - 0.5 }
                             }
                         }
                     }));
@@ -172,7 +186,7 @@ export default class PrimitivesTest extends Test {
                 name: 'Plane',
                 parentId: tester.value.id,
                 transform: {
-                    position: { x: -2, y: 0.5, z: 0 }
+                    position: { x: -2, y: 0.0, z: 0 }
                 }
             }
         }));

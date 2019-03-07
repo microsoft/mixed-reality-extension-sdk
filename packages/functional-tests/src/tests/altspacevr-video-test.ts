@@ -41,9 +41,8 @@ export default class AltspaceVRVideoTest extends Test {
                 parentId: tester.value.id,
                 name: 'video',
                 transform: {
-                    position: { x: 0, y: 3, z: 0 },
-                    scale: { x: 7, y: 7, z: 7 },
-                    rotation: { x: 0, y: 1, z: 0, w: 0 } // 180 turn
+                    position: { x: 0, y: 1, z: 0 },
+                    scale: { x: 2, y: 2, z: 2 }
                 },
             }
         });
@@ -73,7 +72,7 @@ export default class AltspaceVRVideoTest extends Test {
         const buttonPromise = MRE.Actor.CreatePrimitive(this.app.context, {
             definition: {
                 shape: MRE.PrimitiveShape.Sphere,
-                radius: 0.4,
+                radius: 0.2,
                 uSegments: 8,
                 vSegments: 4
 
@@ -83,7 +82,7 @@ export default class AltspaceVRVideoTest extends Test {
                 name: 'Button',
                 parentId: tester.value.id,
                 transform: {
-                    position: { x: -3.5, y: 5, z: 0 }
+                    position: { x: -0.8, y: 0.2, z: 0 }
                 }
             }
         });

@@ -495,6 +495,16 @@ export class Color3 implements Color3Like {
      */
     public static Gray(): Color3 { return new Color3(0.5, 0.5, 0.5); }
     /**
+     * Returns a Color3 value containing a light gray color
+     * @returns a new Color3 object
+     */
+    public static LightGray(): Color3 { return new Color3(0.75, 0.75, 0.75); }
+    /**
+     * Returns a Color3 value containing a dark gray color
+     * @returns a new Color3 object
+     */
+    public static DarkGray(): Color3 { return new Color3(0.25, 0.25, 0.25); }
+    /**
      * Returns a Color3 value containing a teal color
      * @returns a new Color3 object
      */

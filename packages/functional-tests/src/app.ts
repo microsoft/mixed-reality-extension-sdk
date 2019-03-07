@@ -14,6 +14,7 @@ import destroyActors from './utils/destroyActors';
 export const SuccessColor = MRE.Color3.Green();
 export const FailureColor = MRE.Color3.Red();
 export const NeutralColor = MRE.Color3.Yellow();
+export const BackgroundColor = new MRE.Color3(0.25, 0.25, 0.25);
 
 /**
  * Functional Test Application. Takes query arguments to the websocket connection
@@ -36,6 +37,7 @@ export class App {
     private playPauseButton: MRE.Actor;
     private playPauseText: MRE.Actor;
     private runnerActors: MRE.Actor[];
+    private backgroundMaterial: MRE.Material;
 
     private readonly menu = new Menu(this);
 
@@ -57,6 +59,10 @@ export class App {
         });
         this.context.onUserJoined((user) => this.userJoined(user));
         this.context.onUserLeft((user) => this.userLeft(user));
+        this.backgroundMaterial = this.context.assetManager.createMaterial('background',
+            {
+                color: BackgroundColor
+            }).value;
 
         this.menu.onSelection((name, factory, userId) => {
             this.menu.hide();
@@ -186,8 +192,7 @@ export class App {
                     color: NeutralColor
                 },
                 transform: {
-                    position: { y: 1 },
-                    rotation: { x: 0, y: 1, z: 0, w: 0 } // 180 turn
+                    position: { y: 1.8 }
                 }
             }
         }).value;
@@ -207,7 +212,7 @@ export class App {
                 name: 'playpause',
                 materialId: ppMat.id,
                 transform: {
-                    position: { y: -1 }
+                    position: { x: -0.65, y: 0.15, z: -1.95 }
                 }
             }
         }).value;
@@ -216,8 +221,7 @@ export class App {
             actor: {
                 parentId: this.playPauseButton.id,
                 transform: {
-                    position: { z: 0.1 },
-                    rotation: { x: 0, y: 1, z: 0, w: 0 } // 180 turn
+                    position: { z: -0.1 }
                 },
                 text: {
                     contents: "Start",
@@ -241,13 +245,13 @@ export class App {
         const menuButton = MRE.Actor.CreatePrimitive(this.context, {
             definition: {
                 shape: MRE.PrimitiveShape.Box,
-                dimensions: { x: 0.3, y: 0.3, z: 0.1 }
+                dimensions: { x: 0.7, y: 0.3, z: 0.1 }
             },
             addCollider: true,
             actor: {
                 name: 'menu',
                 transform: {
-                    position: { x: 0.6, y: -1 }
+                    position: { x: 0.65, y: 0.15, z: -1.95 }
                 }
             }
         }).value;
@@ -256,11 +260,10 @@ export class App {
             actor: {
                 parentId: menuButton.id,
                 transform: {
-                    position: { z: 0.1 },
-                    rotation: { x: 0, y: 1, z: 0, w: 0 } // 180 turn
+                    position: { z: -0.1 }
                 },
                 text: {
-                    contents: "...",
+                    contents: "Return",
                     height: 0.15,
                     anchor: MRE.TextAnchorLocation.MiddleCenter,
                     justify: MRE.TextJustify.Center,
@@ -279,6 +282,37 @@ export class App {
                 this.menu.show();
             });
 
-        this.runnerActors = [this.contextLabel, this.playPauseButton, this.playPauseText, menuButton, menuText];
+        const floor = MRE.Actor.CreatePrimitive(this.context, {
+            definition: {
+                shape: MRE.PrimitiveShape.Box,
+                dimensions: { x: 2, y: 0.1, z: 2.1 }
+            },
+            addCollider: true,
+            actor: {
+                name: 'floor',
+                transform: {
+                    position: { x: 0, y: -0.05, z: -1 }
+                },
+            }
+        }).value;
+        floor.material = this.backgroundMaterial;
+
+        const wall = MRE.Actor.CreatePrimitive(this.context, {
+            definition: {
+                shape: MRE.PrimitiveShape.Box,
+                dimensions: { x: 2, y: 2, z: 0.1 }
+            },
+            addCollider: true,
+            actor: {
+                name: 'floor',
+                transform: {
+                    position: { x: 0, y: 1, z: 0.1 }
+                }
+            }
+        }).value;
+        wall.material = this.backgroundMaterial;
+
+        this.runnerActors =
+            [this.contextLabel, this.playPauseButton, this.playPauseText, menuButton, menuText, wall, floor];
     }
 }
