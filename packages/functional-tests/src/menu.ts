@@ -89,7 +89,7 @@ export default class Menu {
                 buttonMat = null;
             }
 
-            this.buttons[i].material = buttonMat;
+            this.buttons[i].appearance.material = buttonMat;
             this.labels[i].text.contents = label;
             behavior.onClick('released', handler);
         });
@@ -127,7 +127,7 @@ export default class Menu {
                     name: 'Button' + i,
                     transform: {
                         position:
-                        { x: -1 + buttonWidth / 2, y: buttonSpacing / 2 + buttonSpacing * (pageSize - i), z: -0.05 }
+                            { x: -1 + buttonWidth / 2, y: buttonSpacing / 2 + buttonSpacing * (pageSize - i), z: -0.05 }
                     }
                 }
             }).value;
@@ -199,7 +199,7 @@ export default class Menu {
                 },
             }
         }).value;
-        floor.material = this.backgroundMat;
+        floor.appearance.material = this.backgroundMat;
 
         const wall = MRE.Actor.CreatePrimitive(this.context, {
             definition: {
@@ -214,7 +214,7 @@ export default class Menu {
                 }
             }
         }).value;
-        wall.material = this.backgroundMat;
+        wall.appearance.material = this.backgroundMat;
         this.otherActors = [backButton, backLabel, floor, wall];
     }
 
