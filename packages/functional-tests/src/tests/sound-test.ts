@@ -176,7 +176,7 @@ export default class SoundTest extends Test {
                 looping: true,
                 doppler: 5.0,
                 spread: 0.0,
-                rolloffStartDistance: 9.3,
+                rolloffStartDistance: 9.3
             },
             0.0);
         dopplerSoundInstance.value.pause();
