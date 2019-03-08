@@ -15,7 +15,7 @@ export default class VisibilityTest extends Test {
 
     public async run(): Promise<boolean> {
         const root = MRE.Actor.CreateEmpty(this.app.context, {
-            actor: { transform: { position: { x: 0.9 } } }
+            actor: { transform: { position: { x: -0.9, y: 1, z: -1 } } }
         }).value;
         let lastCol = root;
         for (let i = 0; i < 10; i++) {
@@ -47,7 +47,7 @@ export default class VisibilityTest extends Test {
             actor: {
                 name: `${colNum}-0`,
                 parentId: parent.id,
-                transform: { position: { x: -spacing } }
+                transform: { position: { x: spacing } }
             }
         }).value;
 
