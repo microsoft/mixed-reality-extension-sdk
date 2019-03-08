@@ -8,7 +8,7 @@ import * as MRE from '@microsoft/mixed-reality-extension-sdk';
 import { Test } from '../test';
 
 export default class ReparentTest extends Test {
-    public expectedResultDescription = "Sphere should be jumping left and right";
+    public expectedResultDescription = "Sphere should be jumping left, center, and right";
     private interval: NodeJS.Timeout;
 
     public async run(): Promise<boolean> {
@@ -37,11 +37,11 @@ export default class ReparentTest extends Test {
             }
         }).value;
 
-        let currParent = 0;
-        const parentIds = [leftParent.id, rightParent.id];
+        let nextParent = 1;
+        const parentIds = [leftParent.id, null, rightParent.id];
         this.interval = setInterval(() => {
-            currParent = 1 - currParent;
-            sphere.parentId = parentIds[currParent];
+            sphere.parentId = parentIds[nextParent];
+            nextParent = (nextParent + 1) % parentIds.length;
         }, 1000);
 
         await this.stoppedAsync();

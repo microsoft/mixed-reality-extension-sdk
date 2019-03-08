@@ -19,7 +19,7 @@ export default class VisibilityTest extends Test {
         }).value;
         let lastCol = root;
         for (let i = 0; i < 10; i++) {
-            lastCol = this.createColumn(lastCol);
+            lastCol = this.createColumn(lastCol, i);
             this.columns.push(lastCol);
         }
 
@@ -38,13 +38,14 @@ export default class VisibilityTest extends Test {
         clearInterval(this.interval);
     }
 
-    private createColumn(parent: MRE.Actor, spacing = 0.15, boxSize = 0.1): MRE.Actor {
+    private createColumn(parent: MRE.Actor, colNum: number, spacing = 0.15, boxSize = 0.1): MRE.Actor {
         const top = MRE.Actor.CreatePrimitive(this.app.context, {
             definition: {
                 shape: MRE.PrimitiveShape.Box,
                 dimensions: { x: boxSize, y: boxSize, z: boxSize }
             },
             actor: {
+                name: `${colNum}-0`,
                 parentId: parent.id,
                 transform: { position: { x: -spacing } }
             }
@@ -56,6 +57,7 @@ export default class VisibilityTest extends Test {
                 dimensions: { x: boxSize, y: boxSize, z: boxSize }
             },
             actor: {
+                name: `${colNum}-1`,
                 parentId: top.id,
                 transform: { position: { y: -spacing } }
             }

@@ -124,20 +124,20 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
     public get parent() { return this._context.actor(this._parentId); }
     public get parentId() { return this._parentId; }
     public set parentId(value) {
-        if (value && value.startsWith('0000')) {
-            value = null;
+        if (!value || value.startsWith('0000') || !this.context.actor(value)) {
+            value = ZeroGuid;
         }
-        if (!this.context.actor(value)) {
-            value = null; // throw?
+        if (this._parentId !== value) {
+            this._parentId = value;
+            this.actorChanged('parentId');
         }
-        this._parentId = value;
-        this.actorChanged('parentId');
     }
 
     // tslint:disable-next-line:variable-name
     private constructor(private _context: Context, private _id: string) {
         this._internal = new InternalActor(this);
         this._emitter = new events.EventEmitter();
+        this._parentId = ZeroGuid;
 
         // Actor patching: Observe the transform for changed values.
         this._transform = new Transform();
