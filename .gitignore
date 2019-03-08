@@ -335,5 +335,8 @@ lerna-debug.log
 Dockerfile
 docker-compose.yml
 
+# dotenv environment configuration files
+.env
+
 # Git merge files
 *.orig
