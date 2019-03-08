@@ -23,7 +23,7 @@ export default class AssetPreloadTest extends Test {
     private uvgridTex: MRE.Texture;
 
     private static AssignMat(actor: MRE.Actor, mat: MRE.Material) {
-        actor.material = mat;
+        actor.appearance.material = mat;
         actor.children.forEach(c => this.AssignMat(c, mat));
     }
 
@@ -109,7 +109,7 @@ export default class AssetPreloadTest extends Test {
             },
             addCollider: true,
             actor: {
-                materialId: this.uvgridMat.id,
+                appearance: { materialId: this.uvgridMat.id },
                 transform: {
                     position: { x: 0.5, y: 1, z: -1 }
                 }

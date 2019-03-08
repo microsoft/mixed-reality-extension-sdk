@@ -5,6 +5,8 @@
 
 import events from 'events';
 import {
+    Appearance,
+    AppearanceLike,
     Attachment,
     AttachmentLike,
     AttachPoint,
@@ -15,14 +17,13 @@ import {
     LightLike,
     LookAt,
     LookAtLike,
-    Material,
     RigidBody,
     RigidBodyLike,
     Text,
     TextLike,
     Transform,
     TransformLike,
-    User
+    User,
 } from '.';
 import {
     Context,
@@ -56,13 +57,13 @@ export interface ActorLike {
     tag: string;
     subscriptions: SubscriptionType[];
     transform: Partial<TransformLike>;
+    appearance: Partial<AppearanceLike>;
     light: Partial<LightLike>;
     rigidBody: Partial<RigidBodyLike>;
     collider: Partial<ColliderLike>;
     text: Partial<TextLike>;
     attachment: Partial<AttachmentLike>;
     lookAt: Partial<LookAtLike>;
-    materialId: string;
 }
 
 /**
@@ -90,13 +91,13 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
     private _parentId: string;
     private _subscriptions: SubscriptionType[] = [];
     private _transform: Transform;
+    private _appearance: Appearance;
     private _light: Light;
     private _rigidBody: RigidBody;
     private _collider: Collider;
     private _text: Text;
     private _attachment: Attachment;
     private _lookAt: LookAt;
-    private _materialId = ZeroGuid;
     // tslint:enable:variable-name
 
     /*
@@ -111,6 +112,8 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
     public get subscriptions() { return this._subscriptions; }
     public get transform() { return this._transform; }
     public set transform(value) { this._transform.copy(value); }
+    public get appearance() { return this._appearance; }
+    public set appearance(value) { this._appearance.copy(value); }
     public get light() { return this._light; }
     public get rigidBody() { return this._rigidBody; }
     public get collider() { return this._collider; }
@@ -121,42 +124,34 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
     public get parent() { return this._context.actor(this._parentId); }
     public get parentId() { return this._parentId; }
     public set parentId(value) {
-        if (value && value.startsWith('0000')) {
-            value = null;
-        }
-        if (!this.context.actor(value)) {
-            value = null; // throw?
-        }
-        this._parentId = value;
-        this.actorChanged('parentId');
-    }
-
-    /** @returns A shared reference to this actor's material, or null if this actor has no material */
-    public get material() { return this._context.assetManager.assets[this._materialId] as Material; }
-    public set material(value) {
-        this.materialId = value && value.id || ZeroGuid;
-    }
-    public get materialId() { return this._materialId; }
-    public set materialId(value) {
-        if (!value || value.startsWith('0000')) {
+        if (!value || value.startsWith('0000') || !this.context.actor(value)) {
             value = ZeroGuid;
         }
-        if (!this.context.assetManager.assets[value]) {
-            value = ZeroGuid; // throw?
+        if (this._parentId !== value) {
+            this._parentId = value;
+            this.actorChanged('parentId');
         }
-        this._materialId = value;
-        this.actorChanged('materialId');
     }
 
     // tslint:disable-next-line:variable-name
     private constructor(private _context: Context, private _id: string) {
         this._internal = new InternalActor(this);
         this._emitter = new events.EventEmitter();
-        this._transform = new Transform();
+        this._parentId = ZeroGuid;
+
         // Actor patching: Observe the transform for changed values.
+        this._transform = new Transform();
         observe({
             target: this._transform,
             targetName: 'transform',
+            notifyChanged: (...path: string[]) => this.actorChanged(...path)
+        });
+
+        // Observe changes to the looks of this actor
+        this._appearance = new Appearance(this);
+        observe({
+            target: this._appearance,
+            targetName: 'appearance',
             notifyChanged: (...path: string[]) => this.actorChanged(...path)
         });
     }
@@ -670,7 +665,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
         if (from.tag) this._tag = from.tag;
         if (from.transform) this._transform.copy(from.transform);
         if (from.attachment) this.attach(from.attachment.userId, from.attachment.attachPoint);
-        if (from.materialId) this._materialId = from.materialId;
+        if (from.appearance) this._appearance.copy(from.appearance);
         if (from.light) this.enableLight(from.light);
         if (from.rigidBody) this.enableRigidBody(from.rigidBody);
         if (from.collider) this._setCollider(from.collider);
@@ -688,6 +683,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
             name: this._name,
             tag: this._tag,
             transform: this._transform.toJSON(),
+            appearance: this._appearance.toJSON(),
             attachment: this._attachment ? this._attachment.toJSON() : undefined,
             light: this._light ? this._light.toJSON() : undefined,
             rigidBody: this._rigidBody ? this._rigidBody.toJSON() : undefined,

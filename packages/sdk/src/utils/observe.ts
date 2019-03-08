@@ -29,7 +29,8 @@ export function unobserve(target: any) {
 
 function observeLeafProperties(
     target: any, path: string[], notifyChanged: (...path: string[]) => void, triggerNotificationsNow: boolean) {
-    const names = Object.getOwnPropertyNames(target);
+    const names = Object.getOwnPropertyNames(target)
+        .filter(n => !target.$DoNotObserve || !target.$DoNotObserve.includes(n));
     for (const name of names) {
         // Fields starting with a dollar sign are not observed.
         if (name.startsWith('$')) {
@@ -75,7 +76,8 @@ function observeLeafProperties(
 }
 
 function unobserveLeafProperties(target: any) {
-    const names = Object.getOwnPropertyNames(target);
+    const names = Object.getOwnPropertyNames(target)
+        .filter(n => !target.$DoNotObserve || !target.$DoNotObserve.includes(n));
     for (const name of names) {
         // Fields starting with a dollar sign are not observed.
         // Fields that don't begin with '__observe_' are not hooked up for being observed.
