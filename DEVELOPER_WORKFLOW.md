@@ -49,6 +49,9 @@ With this structure, I'd expect there to mostly be 1 or 2 active release version
 7. Create new unity+sdk+sample branches named v0.[new_minor].n, matching the red (NOTE: if there was already a new SDK release created, but it wasn't "shipped", we can stomp that - i.e. if v0.[new_minor-1].n was never used in any host app, we can just reset hard, instead of creating v0.[new_minor].n)
 8. [Build Unity DLLs](#Build-Unity-DLLs) from unity/v0.[new_minor].n
 9. [Publish NPM packages](#Publish-NPM-packages) from sdk/v0.[new_minor].n
+10. Merge sdk/v0.[new_minor].n into sdk/red
+11. Merge samples/v0.[new_minor].n into samples/red
+
 
 ### [Cyan] When we decide to integrate sdk/green, to patch/hotfix a minor version (The targeted minor version is usually whatever master points to. Criteria: whenever we think it's worth the effort)
 1. Merge sdk/green into v0.[target].n 
