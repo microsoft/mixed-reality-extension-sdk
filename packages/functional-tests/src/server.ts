@@ -4,8 +4,12 @@
  */
 
 import * as MRE from '@microsoft/mixed-reality-extension-sdk';
+import dotenv from 'dotenv';
 import { resolve as resolvePath } from 'path';
 import { App } from './app';
+
+// Read .env if file exists
+dotenv.config();
 
 process.on('uncaughtException', (err) => console.log('uncaughtException', err));
 process.on('unhandledRejection', (reason) => console.log('unhandledRejection', reason));

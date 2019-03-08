@@ -334,3 +334,6 @@ lerna-debug.log
 .openode
 Dockerfile
 docker-compose.yml
+
+# dotenv
+.env

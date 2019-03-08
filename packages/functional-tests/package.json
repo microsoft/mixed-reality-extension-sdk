@@ -19,8 +19,6 @@
     "deploy": "@powershell ../../scripts/compress.ps1 -app 'functional-tests' && @powershell ../../scripts/deploy.ps1 -group 'mre-apps-linux' -name 'mre-functional-tests' -app 'functional-tests' && rm functional-tests.zip"
   },
   "devDependencies": {
-    "@types/node": "^10.3.1",
-    "@types/restify": "^7.2.0",
     "tslint": "5.11.0",
     "typescript": "3.0.3"
   },
@@ -28,6 +26,10 @@
     "@microsoft/gltf-gen": "^0.7.3",
     "@microsoft/mixed-reality-extension-altspacevr-extras": "^0.7.3",
     "@microsoft/mixed-reality-extension-sdk": "^0.7.3",
+    "@types/dotenv": "^6.1.0",
+    "@types/node": "^10.3.1",
+    "@types/restify": "^7.2.0",
+    "dotenv": "^6.2.0",
     "restify": "^7.2.0",
     "tslib": "1.9.3"
   }
