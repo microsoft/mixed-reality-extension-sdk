@@ -45,10 +45,10 @@ With this structure, I'd expect there to mostly be 1 or 2 active release version
 3. Update CurrentVersion to match major.minor in MREUnityRuntime\MREUnityRuntimeLib\Constants.cs and 
 4. If new features were added to SDK, increase MinimumSupportedClientVersion packages\sdk\src\utils\verifyClient.ts 
 5. If communication was changed in a non-backwards-compatible way, which is a HUGE DEAL, should never happen after exiting beta stage, and requires full team sign-off, increase the MinimumSupportedSDKVersion in MREUnityRuntimeLib\Constants.cs 
-6. [Test pass](#Test-pass) for red branches
-7. Create new unity+sdk+sample branches named v0.[new_minor].n, matching the red (NOTE: if there was already a new SDK release created, but it wasn't "shipped", we can stomp that - i.e. if v0.[new_minor-1].n was never used in any host app, we can just reset hard, instead of creating v0.[new_minor].n)
-8. [Build Unity DLLs](#Build-Unity-DLLs) from unity/v0.[new_minor].n
-9. [Publish NPM packages](#Publish-NPM-packages) from sdk/v0.[new_minor].n
+6. Create new unity+sdk+sample branches named v0.[new_minor].n, matching the red (NOTE: if there was already a new SDK release created, but it wasn't "shipped", we can stomp that - i.e. if v0.[new_minor-1].n was never used in any host app, we can just reset hard, instead of creating v0.[new_minor].n)
+7. [Build Unity DLLs](#Build-Unity-DLLs) from unity/v0.[new_minor].n
+8. [Publish NPM packages](#Publish-NPM-packages) from sdk/v0.[new_minor].n
+9. [Test pass](#Test-pass) for v0.[new_minor].n
 10. Merge sdk/v0.[new_minor].n into sdk/red
 11. Merge samples/v0.[new_minor].n into samples/red
 
@@ -56,8 +56,8 @@ With this structure, I'd expect there to mostly be 1 or 2 active release version
 ### [Cyan] When we decide to integrate sdk/green, to patch/hotfix a minor version (The targeted minor version is usually whatever master points to. Criteria: whenever we think it's worth the effort)
 1. Merge sdk/green into v0.[target].n 
 2. Merge samples/green into v0.[target].n 
-3. [Test pass](#Test-pass) for v0.[target].n branches
-4. [Publish NPM packages](#Publish-NPM-packages) from v0.[target].n
+3. [Publish NPM packages](#Publish-NPM-packages) from v0.[target].n
+4. [Test pass](#Test-pass) for v0.[target].n branches
 5. If target is current master version
    1. [Update Master branches](#Update-Master-branches) for sdk+samples
 6. If branches for (target+1) exists
@@ -115,7 +115,7 @@ Main purpose of test pass is to look for regressions – not if new features wor
 5. If problems are found, fix and restart test pass
 
 ### Publish NPM Packages
-Note that we always publish all packages with each release, with version numbers in sync. Step 1-10 by MREBuildAndDeployNPM script. Step 11 automated by MREBuildSamplesWithNewNPM script.
+Note that we always publish all packages with each release, with version numbers in sync. Step 1-10 by MREBuildAndDeployNPM script. Step 12 automated by MREBuildSamplesWithNewNPM script.
 
 1. Check out sdk\v0.[minor].n 
 2. Git reset –hard
@@ -128,7 +128,8 @@ Note that we always publish all packages with each release, with version numbers
 8. Git commit all package-lock.json files to sdk\v0.[minor].n
 9. npm run build-docs (to regenerate documentation)
 10. commit documentation changes to sdk\v0.[minor].n
-11. in samples\v0.[minor].n, for each of the samples update the patch version:
+11. deply functional tests to awaiting server
+12. in samples\v0.[minor].n, for each of the samples update the patch version:
     1. npm update @microsoft/mixed-reality-extension-sdk@0.[minor].[patch]
     2. npm install
     3. npm run build
