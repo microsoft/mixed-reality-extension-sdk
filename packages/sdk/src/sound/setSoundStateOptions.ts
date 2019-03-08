@@ -42,7 +42,7 @@ export type SetSoundStateOptions = {
      * will always sound like mono.
      * Default to 0.0. For music and ambient looping sounds, set this between 0.5 and 1.0.
      */
-    multiChannelSpread?: number;
+    spread?: number;
 
     /**
      * Sounds will play at full volume until user is this many meters away,
