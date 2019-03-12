@@ -76,7 +76,7 @@ export class App {
         this.connectedUsers[user.id] = user;
         if (!this.firstUser) {
             this.firstUser = user;
-            if (this.params.autorun !== undefined) {
+            if (this.params.autorun === 'true' || this.params.nomenu === 'true') {
                 this.runTest(user);
             }
         }
@@ -196,6 +196,11 @@ export class App {
                 }
             }
         }).value;
+
+        if (this.params.nomenu === 'true') {
+            this.runnerActors = [this.contextLabel];
+            return;
+        }
 
         // start or stop the active test
         const ppMat = this.context.assetManager.createMaterial('pp', {
