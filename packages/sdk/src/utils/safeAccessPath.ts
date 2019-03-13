@@ -4,11 +4,11 @@
  */
 
 export default function safeAccessPath(obj: any, ...path: any[]): any {
-    for (let i = 0; i < path.length; i++) {
-        if (!obj[path[i]]) {
+    for (const part of path) {
+        if (!obj[part]) {
             return undefined;
         } else {
-            obj = obj[path[i]];
+            obj = obj[part];
         }
     }
     return obj;

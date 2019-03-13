@@ -10,9 +10,11 @@ const readFile = promisify(readFileNodeAsync);
 
 import safeAccessPath from './safeAccessPath';
 
+// tslint:disable:no-console
+
 interface LogEvent {
     input: string;
-    timestamp: number;
+    timestamp: Date;
     client: string;
     direction?: 'to' | 'from';
     networkContents?: any;
@@ -20,8 +22,8 @@ interface LogEvent {
 
 async function main(filename: string) {
     const events = await parseFile(filename);
-    for (let e of events.filter(e => !/heartbeat/.test(e.networkContents.payloadType))) {
-        console.log(formatEvent(e));
+    for (const evt of events.filter(e => !/heartbeat/.test(safeAccessPath(e, 'networkContents', 'payload', 'type')))) {
+        console.log(formatEvent(evt));
     }
 }
 
@@ -47,13 +49,13 @@ async function parseFile(filename: string): Promise<LogEvent[]> {
 function parseEvent(network: string, contents: string): LogEvent {
     const e = {
         input: network + '\n' + contents,
-        timestamp: Date.parse(network.split(' ', 2)[0]),
+        timestamp: new Date(network.split(' ', 2)[0]),
         client: '',
-        networkContents: JSON.parse(contents.slice(contents.indexOf('{')));
+        networkContents: JSON.parse(contents.slice(contents.indexOf('{')))
     } as LogEvent;
 
-    let matches: string[];
-    if (matches = /\bclient ([0-9a-f]{8})\b/.exec(network)) {
+    const matches = /\bclient ([0-9a-f]{8})\b/.exec(network);
+    if (matches !== null) {
         e.client = matches[1];
     } else if (/\bSession/.test(network)) {
         e.client = 'session';
@@ -70,7 +72,7 @@ function parseEvent(network: string, contents: string): LogEvent {
     return e;
 }
 
-var columns = ['session'];
+const columns = ['session'];
 const colWidth = 30;
 function formatEvent(event: LogEvent): string {
     if (!columns.includes(event.client)) {
@@ -78,20 +80,23 @@ function formatEvent(event: LogEvent): string {
     }
 
     const props = {
-        messageId: event.networkContents.messageId.slice(0, 8),
-        replyToId: (event.networkContents.replyToId || '').slice(0, 8),
-        payloadType: event.networkContents.payloadType,
-        assetName: safeAccessPath(event.networkContents, 'payload', 'definition', 'name') as string
-    }
+        time: event.timestamp.toLocaleTimeString('en-US', { hour12: false }),
+        messageId: (safeAccessPath(event, 'networkContents', 'id') || '').slice(0, 6),
+        replyToId: (safeAccessPath(event, 'networkContents', 'replyToId') || '').slice(0, 6),
+        payloadType: safeAccessPath(event, 'networkContents', 'payload', 'type'),
+        name: safeAccessPath(event, 'networkContents', 'payload', 'definition', 'name') as string
+            || safeAccessPath(event, 'networkContents', 'payload', 'actor', 'name') as string
+            || ''
+    };
 
     if (event.client === 'session') {
         const dir = event.direction === 'to' ? '<=' : '=>';
-        return `(${props.messageId}) ${props.payloadType} ${props.assetName}${dir} ${props.replyToId}`;
+        return `${props.time} (${props.messageId}) ${props.payloadType} ${props.name}${dir} ${props.replyToId}`;
     } else {
         const replyTo = props.replyToId ? `(${props.replyToId}) ` : '';
         const indentation = ' '.repeat(-replyTo.length + colWidth * columns.indexOf(event.client));
         const dir = event.direction === 'from' ? '<=' : '=>';
-        return `${indentation}${replyTo}${dir} (${props.messageId}) ${props.payloadType} ${props.assetName}`;
+        return `${props.time} ${indentation}${replyTo}${dir} (${props.messageId}) ${props.payloadType} ${props.name}`;
     }
 }
 

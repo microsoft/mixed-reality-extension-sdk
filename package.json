@@ -29,7 +29,8 @@
     "lint": "tslint -p ./packages/tsconfig.lint.json",
     "lint-docs": "lerna run lint-docs",
     "publish": "lerna publish",
-    "start": "node ./packages/functional-tests/"
+    "start": "node ./packages/functional-tests/",
+    "parseLogs": "node ./packages/sdk/built/utils/parseNetworkLogs.js"
   },
   "devDependencies": {
     "lerna": "3.4.2",
