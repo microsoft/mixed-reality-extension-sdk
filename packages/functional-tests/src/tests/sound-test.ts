@@ -110,7 +110,7 @@ export default class SoundTest extends Test {
 
         const notesAssetPromise = this.app.context.assetManager.createSound(
             'group1',
-            { uri: `${this.baseUrl}/note.wav` }
+            { uri: `${this.baseUrl}/Piano_C4.wav` }
         );
 
         const notesButtonBehavior = notesButtonPromise.value.setBehavior(MRE.ButtonBehavior);
@@ -168,14 +168,14 @@ export default class SoundTest extends Test {
 
         const dopplerAssetPromise = this.app.context.assetManager.createSound(
             'group1',
-            { uri: `${this.baseUrl}/UI-ButtonSelectSmall.wav` }
+            { uri: `${this.baseUrl}/Car_Engine_Loop.wav` }
         );
         const dopplerSoundInstance = dopplerMoverPromise.value.startSound(dopplerAssetPromise.value.id,
             {
                 volume: 0.5,
                 looping: true,
                 doppler: 5.0,
-                spread: 0.0,
+                spread: 0.3,
                 rolloffStartDistance: 9.3
             },
             0.0);
