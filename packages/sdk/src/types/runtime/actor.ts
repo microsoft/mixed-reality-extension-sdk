@@ -100,8 +100,9 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
     private _attachment: Attachment;
     private _lookAt: LookAt;
     private _grabbable = false;
-    private _grab = new DiscreteAction();
     // tslint:enable:variable-name
+
+    private grab = new DiscreteAction();
 
     /*
      * PUBLIC ACCESSORS
@@ -489,7 +490,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
      */
     public onGrab(grabState: 'begin' | 'end', handler: ActionHandler) {
         const actionState: ActionState = (grabState === 'begin') ? 'started' : 'stopped';
-        this._grab.on(actionState, handler);
+        this.grab.on(actionState, handler);
     }
 
     /**

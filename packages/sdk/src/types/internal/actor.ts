@@ -3,7 +3,14 @@
  * Licensed under the MIT License.
  */
 
-import { ActionEvent, Actor, ActorLike, Behavior, CollisionData, SetAnimationStateOptions } from '../..';
+import {
+    ActionEvent,
+    Actor,
+    ActorLike,
+    Behavior,
+    CollisionData,
+    DiscreteAction,
+    SetAnimationStateOptions } from '../..';
 import { ExportedPromise } from '../../utils/exportedPromise';
 import { CollisionEventType } from '../network/payloads';
 import { InternalPatchable } from '../patchable';
@@ -23,8 +30,13 @@ export class InternalActor implements InternalPatchable<ActorLike> {
 
     public performAction(actionEvent: ActionEvent) {
         const behavior = (this.behavior.behaviorType === actionEvent.behaviorType) ? this.behavior : undefined;
-        if (behavior) {
+        if (behavior && behavior._supportsAction(actionEvent.actionName)) {
             behavior._performAction(actionEvent.actionName, actionEvent.actionState, actionEvent.userId);
+        } else {
+            const action = (this.actor as any)[actionEvent.actionName.toLowerCase()] as DiscreteAction;
+            if (action) {
+                action._setState(actionEvent.userId, actionEvent.actionState);
+            }
         }
     }
 
