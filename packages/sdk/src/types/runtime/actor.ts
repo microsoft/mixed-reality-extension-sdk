@@ -55,6 +55,12 @@ export interface ActorLike {
     parentId: string;
     name: string;
     tag: string;
+
+    /**
+     * Whether an object will ever be moved in world space. Static actors can be
+     * rendered more efficiently in many engines.
+     */
+    static: boolean;
     subscriptions: SubscriptionType[];
     transform: Partial<TransformLike>;
     appearance: Partial<AppearanceLike>;
@@ -88,6 +94,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 
     private _name: string;
     private _tag: string;
+    private _static: boolean;
     private _parentId: string;
     private _subscriptions: SubscriptionType[] = [];
     private _transform: Transform;
@@ -109,6 +116,10 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
     public get name() { return this._name; }
     public get tag() { return this._tag; }
     public set tag(value) { this._tag = value; this.actorChanged('tag'); }
+
+    /** @inheritdoc */
+    public get static() { return this._static; }
+
     public get subscriptions() { return this._subscriptions; }
     public get transform() { return this._transform; }
     public set transform(value) { this._transform.copy(value); }
@@ -663,6 +674,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
         if (from.parentId) this._parentId = from.parentId;
         if (from.name) this._name = from.name;
         if (from.tag) this._tag = from.tag;
+        if (from.static) this._static = from.static;
         if (from.transform) this._transform.copy(from.transform);
         if (from.attachment) this.attach(from.attachment.userId, from.attachment.attachPoint);
         if (from.appearance) this._appearance.copy(from.appearance);
@@ -682,6 +694,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
             parentId: this._parentId,
             name: this._name,
             tag: this._tag,
+            static: this._static,
             transform: this._transform.toJSON(),
             appearance: this._appearance.toJSON(),
             attachment: this._attachment ? this._attachment.toJSON() : undefined,
