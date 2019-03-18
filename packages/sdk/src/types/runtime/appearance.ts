@@ -4,10 +4,11 @@
  */
 
 import { Actor, Material } from '.';
+import UserGroup from '../userGroup';
 import { ZeroGuid } from '../../constants';
 
 export interface AppearanceLike {
-    enabled: boolean;
+    enabled: boolean | number;
     materialId: string;
 }
 
@@ -19,12 +20,21 @@ export class Appearance implements AppearanceLike {
     private _materialId = ZeroGuid;
     // tslint:enable:variable-name
 
-    /** Whether the actor with this appearance should be visible */
+    /**
+     * This actor's visibility preference, independent of its parent. See
+     * [[activeAndEnabled]] for the actual visibility state.
+     */
     public enabled = true;
 
+    /** Whether this actor is visible */
     public get activeAndEnabled() {
         return (!this.actor.parent || this.actor.parent.appearance.enabled) && this.enabled;
     }
+
+    /**
+     * Display this actor only for members of the contained groups.
+     */
+    public readonly enabledFor = new UserGroup();
 
     /** @returns A shared reference to this actor's material, or null if this actor has no material */
     public get material() { return this.actor.context.assetManager.assets[this._materialId] as Material; }
@@ -45,15 +55,27 @@ export class Appearance implements AppearanceLike {
     constructor(private actor: Actor) { }
 
     public copy(from: Partial<AppearanceLike>): this {
-        if (!from) return this;
-        if (from.enabled !== undefined) this.enabled = from.enabled;
-        if (from.materialId !== undefined) this.materialId = from.materialId;
+        if (!from) {
+            return this;
+        }
+        if (from.enabled !== undefined) {
+            if (typeof from.enabled === 'number') {
+                this.enabled = true;
+                this.enabledFor.clearAndUnpack(from.enabled);
+            } else {
+                this.enabled = from.enabled;
+                this.enabledFor.clear();
+            }
+        }
+        if (from.materialId !== undefined) {
+            this.materialId = from.materialId;
+        }
         return this;
     }
 
     public toJSON() {
         return {
-            enabled: this.enabled,
+            enabled: this.enabled && this.enabledFor.size > 0 ? this.enabledFor.packed() : this.enabled,
             materialId: this.materialId
         } as AppearanceLike;
     }
