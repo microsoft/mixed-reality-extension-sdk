@@ -5,10 +5,16 @@
 
 import { Context } from '../..';
 import { InternalUser } from '../internal/user';
+import UserGroup from '../userGroup';
 
 export interface UserLike {
     id: string;
     name: string;
+
+    /**
+     * A bit field containing this user's group memberships.
+     */
+    packedGroups: number;
 
     /**
      * A grab bag of miscellaneous, possibly host-dependent, properties.
@@ -30,11 +36,18 @@ export class User implements UserLike {
     private _properties: { [name: string]: string };
     // tslint:enable:variable-name
 
+    /**
+     * This user's group memberships.
+     */
+    public readonly groups = new UserGroup();
+
     public get context() { return this._context; }
     public get id() { return this._id; }
     public get name() { return this._name; }
     /** @inheritdoc */
     public get properties() { return Object.freeze({ ...this._properties }); }
+    /** @inheritdoc */
+    public get packedGroups() { return this.groups.packed(); }
 
     /**
      * PUBLIC METHODS
