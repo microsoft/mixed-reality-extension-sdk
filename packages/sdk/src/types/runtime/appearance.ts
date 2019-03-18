@@ -61,7 +61,8 @@ export class Appearance implements AppearanceLike {
         if (from.enabled !== undefined) {
             if (typeof from.enabled === 'number') {
                 this.enabled = true;
-                this.enabledFor.clearAndUnpack(from.enabled);
+                this.enabledFor.clear();
+                this.enabledFor.addPacked(from.enabled);
             } else {
                 this.enabled = from.enabled;
                 this.enabledFor.clear();

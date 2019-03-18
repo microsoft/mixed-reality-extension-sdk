@@ -37,8 +37,7 @@ export default class UserGroup extends Set<string> {
         return pack;
     }
 
-    public clearAndUnpack(value: number): this {
-        this.clear();
+    public addPacked(value: number): this {
         for (const group of Object.keys(groupIndex)) {
             if ((value & groupIndex[group]) !== 0) {
                 this.add(group);
