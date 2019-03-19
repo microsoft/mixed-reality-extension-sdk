@@ -5,10 +5,10 @@
 
 import { Actor, Material } from '.';
 import { ZeroGuid } from '../../constants';
-import UserGroup from './userGroup';
+import UserGroupCollection from './userGroupCollection';
 
 export interface AppearanceLike {
-    enabled: boolean | UserGroup;
+    enabled: boolean | UserGroupCollection;
     materialId: string;
 }
 
@@ -25,12 +25,12 @@ export class Appearance implements AppearanceLike {
      * the computed visibility state. If this property is a UserGroup object, this property will effectively
      * be `true` for users in at least one of the groups, and `false` for everyone else. See [[UserGroup]].
      */
-    public enabled: boolean | UserGroup = true;
+    public enabled: boolean | UserGroupCollection = true;
 
     /** Whether this actor is visible */
     public get activeAndEnabled(): boolean {
         return (!this.actor.parent || this.actor.parent.appearance.activeAndEnabled) &&
-            (this.enabled === true || (this.enabled as UserGroup).size > 0);
+            (this.enabled === true || (this.enabled as UserGroupCollection).size > 0);
     }
 
     /** @returns A shared reference to this actor's material, or null if this actor has no material */
@@ -56,7 +56,7 @@ export class Appearance implements AppearanceLike {
         if (from.materialId !== undefined) this.materialId = from.materialId;
         if (from.enabled !== undefined) {
             if (typeof from.enabled === 'number') {
-                this.enabled = UserGroup.FromPacked(this.actor.context, from.enabled);
+                this.enabled = UserGroupCollection.FromPacked(this.actor.context, from.enabled);
             } else {
                 this.enabled = from.enabled;
             }

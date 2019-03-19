@@ -22,6 +22,7 @@ import {
     SetAnimationStateOptions,
     SubscriptionType,
     User,
+    UserGroupCollection,
     UserLike,
     UserSet,
 } from '../..';
@@ -57,6 +58,7 @@ import { Execution } from '../../protocols/execution';
 import { Handshake } from '../../protocols/handshake';
 import { SetSoundStateOptions, SoundCommand } from '../../sound';
 import resolveJsonValues from '../../utils/resolveJsonValues';
+import safeGet from '../../utils/safeAccessPath';
 import { createForwardPromise, ForwardPromise } from '../forwardPromise';
 import { OperatingModel } from '../network/operatingModel';
 import { Patchable } from '../patchable';
@@ -191,6 +193,12 @@ export class InternalContext {
     }
 
     private createActorFromPayload(payload: CreateActorCommon): ForwardPromise<Actor> {
+        // bind all user group mappings before serialization
+        const ug = safeGet(payload, 'actor', 'appearance', 'enabled');
+        if (ug instanceof UserGroupCollection) {
+            ug.setContext(this.context);
+        }
+
         // Resolve by-reference values now, ensuring they won't change in the
         // time between now and when this message is actually sent.
         payload.actor = resolveJsonValues(payload.actor);

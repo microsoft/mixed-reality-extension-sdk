@@ -5,7 +5,7 @@
 
 import { Context } from '../..';
 import { InternalUser } from '../internal/user';
-import UserGroup from './userGroup';
+import UserGroupCollection from './userGroupCollection';
 
 export interface UserLike {
     id: string;
@@ -14,7 +14,7 @@ export interface UserLike {
     /**
      * A bit field containing this user's group memberships.
      */
-    groups: UserGroup;
+    groups: UserGroupCollection;
 
     /**
      * A grab bag of miscellaneous, possibly host-dependent, properties.
@@ -34,7 +34,7 @@ export class User implements UserLike {
 
     private _name: string;
     private _properties: { [name: string]: string };
-    private _groups: UserGroup;
+    private _groups: UserGroupCollection;
     // tslint:enable:variable-name
 
     public get context() { return this._context; }
@@ -45,8 +45,8 @@ export class User implements UserLike {
      * This user's group memberships. Some actors will behave differently depending on
      * if the user is in at least one of a set of groups. See [[UserGroup]].
      */
-    public get groups() { return this._groups = this._groups || new UserGroup(null, this._context); }
-    public set groups(val: UserGroup) {
+    public get groups() { return this._groups = this._groups || new UserGroupCollection(null, this._context); }
+    public set groups(val: UserGroupCollection) {
         val.setContext(this._context);
         this._groups = val;
     }
@@ -70,7 +70,7 @@ export class User implements UserLike {
         if (from.properties !== undefined) this._properties = from.properties;
         if (from.groups !== undefined) {
             if (typeof from.groups === 'number') {
-                this._groups = UserGroup.FromPacked(this._context, from.groups);
+                this._groups = UserGroupCollection.FromPacked(this._context, from.groups);
             } else {
                 this._groups = from.groups;
             }

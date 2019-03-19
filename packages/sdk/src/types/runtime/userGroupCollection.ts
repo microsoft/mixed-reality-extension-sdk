@@ -9,7 +9,7 @@ import { Context } from '.';
  * properties of actors based on the memberships of the viewing user. See [[User.groups]],
  * [[Appearance.enabled]].
  */
-export default class UserGroup extends Set<string> {
+export default class UserGroupCollection extends Set<string> {
     // tslint:disable:no-bitwise
 
     private context: Context;
@@ -28,15 +28,9 @@ export default class UserGroup extends Set<string> {
         }
     }
 
-    public add(item: string): this {
-        this.getOrAddMapping(item);
-        super.add(item);
-        return this;
-    }
-
-    public static FromPacked(context: Context, value: number): UserGroup {
+    public static FromPacked(context: Context, value: number): UserGroupCollection {
         const mapping = context.internal.userGroupMapping;
-        const group = new UserGroup(null, context);
+        const group = new UserGroupCollection(null, context);
         for (const name of Object.keys(mapping)) {
             if ((value & group.getOrAddMapping(name)) !== 0) {
                 group.add(name);
