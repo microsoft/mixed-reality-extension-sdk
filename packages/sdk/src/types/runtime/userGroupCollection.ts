@@ -20,11 +20,8 @@ export default class UserGroupCollection extends Set<string> {
         }
     }
 
-    public setContext(c: Context) {
-        this.context = c;
-        for (const group of this) {
-            this.getOrAddMapping(group);
-        }
+    public static All(context: Context) {
+        return this.FromPacked(context, Number.MAX_SAFE_INTEGER);
     }
 
     public static FromPacked(context: Context, value: number): UserGroupCollection {
@@ -36,6 +33,13 @@ export default class UserGroupCollection extends Set<string> {
             }
         }
         return group;
+    }
+
+    public setContext(c: Context) {
+        this.context = c;
+        for (const group of this) {
+            this.getOrAddMapping(group);
+        }
     }
 
     public toJSON(): number {

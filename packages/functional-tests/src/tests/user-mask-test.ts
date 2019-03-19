@@ -8,9 +8,10 @@ import * as MRE from '@microsoft/mixed-reality-extension-sdk';
 import { Test } from '../test';
 
 export default class UserMaskTest extends Test {
-    public expectedResultDescription = "Red team or blue team";
+    public expectedResultDescription = "Click to join a team";
     private redList: MRE.Actor;
     private blueList: MRE.Actor;
+    private interval: NodeJS.Timeout;
 
     public async run(): Promise<boolean> {
         // create colors
@@ -80,6 +81,17 @@ export default class UserMaskTest extends Test {
             }
         }).value;
 
+        // blink the icons for unaffiliated users
+        this.interval = setInterval(() => {
+            if (redIcon.appearance.enabledFor.has('default')) {
+                redIcon.appearance.enabledFor.delete('default');
+                blueIcon.appearance.enabledFor.delete('default');
+            } else {
+                redIcon.appearance.enabledFor.add('default');
+                blueIcon.appearance.enabledFor.add('default');
+            }
+        }, 750);
+
         // switch team on icon click
         redIcon.setBehavior(MRE.ButtonBehavior).onClick('pressed',
             id => this.switchTeams(this.app.context.user(id)));
@@ -117,5 +129,9 @@ export default class UserMaskTest extends Test {
 
         this.redList.text.contents = `Red team:\n${redList.join('\n')}`;
         this.blueList.text.contents = `Blue team:\n${blueList.join('\n')}`;
+    }
+
+    public cleanup() {
+        clearInterval(this.interval);
     }
 }

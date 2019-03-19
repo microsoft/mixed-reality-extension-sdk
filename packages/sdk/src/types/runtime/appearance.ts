@@ -8,6 +8,12 @@ import { ZeroGuid } from '../../constants';
 import UserGroupCollection from './userGroupCollection';
 
 export interface AppearanceLike {
+    /**
+     * This actor's visibility preference, independent of its parent. See [[Actor.activeAndEnabled]] for
+     * the computed visibility state. If this property is a UserGroupCollection object, this property will
+     * effectively be `true` for users in at least one of the groups, and `false` for everyone else.
+     * See [[UserGroup]].
+     */
     enabled: boolean | UserGroupCollection;
     materialId: string;
 }
@@ -20,13 +26,24 @@ export class Appearance implements AppearanceLike {
     private _materialId = ZeroGuid;
     // tslint:enable:variable-name
 
-    /**
-     * This actor's visibility preference, independent of its parent. See [[activeAndEnabled]] for
-     * the computed visibility state. If this property is a UserGroupCollection object, this property will
-     * effectively be `true` for users in at least one of the groups, and `false` for everyone else.
-     * See [[UserGroup]].
-     */
+    /** @inheritdoc */
     public enabled: boolean | UserGroupCollection = true;
+
+    /**
+     * [[enabled]], but forced to a [[UserGroupCollection]]. Using this property will convert this
+     * actor's `enabled` property to the UserGroupCollection equivalent of its current value.
+     */
+    public get enabledFor() {
+        if (this.enabled instanceof UserGroupCollection) {
+            return this.enabled as UserGroupCollection;
+        } else {
+            const mask = this.enabled ? UserGroupCollection.All(this.actor.context) : new UserGroupCollection();
+            return this.enabled = mask;
+        }
+    }
+    public set enabledFor(value) {
+        this.enabled = value;
+    }
 
     /** Whether this actor is visible */
     public get activeAndEnabled(): boolean {
