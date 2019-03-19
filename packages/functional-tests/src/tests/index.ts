@@ -24,6 +24,7 @@ import ReparentTest from './reparent-test';
 // import RigidBodyTest from './rigid-body-test';
 import SoundTest from './sound-test';
 import TextTest from './text-test';
+import TransformTest from './transform-test';
 import UserTest from './user-test';
 import VisibilityTest from './visibility-test';
 
@@ -54,6 +55,7 @@ export const Factories = {
     // 'rigid-body-test': (...args) => new RigidBodyTest(...args),
     'sound-test': (...args) => new SoundTest(...args),
     'text-test': (...args) => new TextTest(...args),
+    'transform-test': (...args) => new TransformTest(...args),
     'user-test': (...args) => new UserTest(...args),
     'visibility-test': (...args) => new VisibilityTest(...args),
 } as FactoryMap;
