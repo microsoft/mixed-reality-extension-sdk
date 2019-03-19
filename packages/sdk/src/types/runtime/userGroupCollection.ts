@@ -6,12 +6,11 @@ import { Context } from '.';
 
 /**
  * A set of user group IDs. User groups are used to selectively enable several different
- * properties of actors based on the memberships of the viewing user. See [[User.groups]],
- * [[Appearance.enabled]].
+ * properties of actors based on the memberships of the viewing user. All users not assigned
+ * a group are in the `default` group. See [[User.groups]], [[Appearance.enabled]].
  */
 export default class UserGroupCollection extends Set<string> {
     // tslint:disable:no-bitwise
-
     private context: Context;
 
     constructor(initialContents: Iterable<string> = null, context: Context = null) {

@@ -22,8 +22,9 @@ export class Appearance implements AppearanceLike {
 
     /**
      * This actor's visibility preference, independent of its parent. See [[activeAndEnabled]] for
-     * the computed visibility state. If this property is a UserGroup object, this property will effectively
-     * be `true` for users in at least one of the groups, and `false` for everyone else. See [[UserGroup]].
+     * the computed visibility state. If this property is a UserGroupCollection object, this property will
+     * effectively be `true` for users in at least one of the groups, and `false` for everyone else.
+     * See [[UserGroup]].
      */
     public enabled: boolean | UserGroupCollection = true;
 
