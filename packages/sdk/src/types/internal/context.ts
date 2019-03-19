@@ -68,6 +68,7 @@ import { SoundInstance } from '../runtime/soundInstance';
 export class InternalContext {
     public actorSet: ActorSet = {};
     public userSet: UserSet = {};
+    public userGroupMapping: { [id: string]: number } = {};
     public protocol: Protocols.Protocol;
     public interval: NodeJS.Timer;
     public generation = 0;
