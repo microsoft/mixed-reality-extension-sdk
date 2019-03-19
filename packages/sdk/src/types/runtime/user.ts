@@ -5,7 +5,7 @@
 
 import { Context } from '../..';
 import { InternalUser } from '../internal/user';
-import UserGroup from '../userGroup';
+import UserGroup from './userGroup';
 
 export interface UserLike {
     id: string;
@@ -14,7 +14,7 @@ export interface UserLike {
     /**
      * A bit field containing this user's group memberships.
      */
-    packedGroups: number;
+    groups: UserGroup;
 
     /**
      * A grab bag of miscellaneous, possibly host-dependent, properties.
@@ -34,20 +34,25 @@ export class User implements UserLike {
 
     private _name: string;
     private _properties: { [name: string]: string };
+    private _groups: UserGroup;
     // tslint:enable:variable-name
-
-    /**
-     * This user's group memberships.
-     */
-    public readonly groups = new UserGroup();
 
     public get context() { return this._context; }
     public get id() { return this._id; }
     public get name() { return this._name; }
+
+    /**
+     * This user's group memberships. Some actors will behave differently depending on
+     * if the user is in at least one of a set of groups. See [[UserGroup]].
+     */
+    public get groups() { return this._groups = this._groups || new UserGroup(null, this._context); }
+    public set groups(val: UserGroup) {
+        val.setContext(this._context);
+        this._groups = val;
+    }
+
     /** @inheritdoc */
     public get properties() { return Object.freeze({ ...this._properties }); }
-    /** @inheritdoc */
-    public get packedGroups() { return this.groups.packed(); }
 
     /**
      * PUBLIC METHODS
@@ -63,6 +68,13 @@ export class User implements UserLike {
         if (from.id !== undefined) this._id = from.id;
         if (from.name !== undefined) this._name = from.name;
         if (from.properties !== undefined) this._properties = from.properties;
+        if (from.groups !== undefined) {
+            if (typeof from.groups === 'number') {
+                this._groups = UserGroup.FromPacked(this._context, from.groups);
+            } else {
+                this._groups = from.groups;
+            }
+        }
         return this;
     }
 }

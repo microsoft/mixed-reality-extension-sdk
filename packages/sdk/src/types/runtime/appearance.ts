@@ -4,11 +4,11 @@
  */
 
 import { Actor, Material } from '.';
-import UserGroup from '../userGroup';
 import { ZeroGuid } from '../../constants';
+import UserGroup from './userGroup';
 
 export interface AppearanceLike {
-    enabled: boolean | number;
+    enabled: boolean | UserGroup;
     materialId: string;
 }
 
@@ -21,20 +21,17 @@ export class Appearance implements AppearanceLike {
     // tslint:enable:variable-name
 
     /**
-     * This actor's visibility preference, independent of its parent. See
-     * [[activeAndEnabled]] for the actual visibility state.
+     * This actor's visibility preference, independent of its parent. See [[activeAndEnabled]] for
+     * the computed visibility state. If this property is a UserGroup object, this property will effectively
+     * be `true` for users in at least one of the groups, and `false` for everyone else. See [[UserGroup]].
      */
-    public enabled = true;
+    public enabled: boolean | UserGroup = true;
 
     /** Whether this actor is visible */
-    public get activeAndEnabled() {
-        return (!this.actor.parent || this.actor.parent.appearance.enabled) && this.enabled;
+    public get activeAndEnabled(): boolean {
+        return (!this.actor.parent || this.actor.parent.appearance.activeAndEnabled) &&
+            (this.enabled === true || (this.enabled as UserGroup).size > 0);
     }
-
-    /**
-     * Display this actor only for members of the contained groups.
-     */
-    public readonly enabledFor = new UserGroup();
 
     /** @returns A shared reference to this actor's material, or null if this actor has no material */
     public get material() { return this.actor.context.assetManager.assets[this._materialId] as Material; }
@@ -55,28 +52,21 @@ export class Appearance implements AppearanceLike {
     constructor(private actor: Actor) { }
 
     public copy(from: Partial<AppearanceLike>): this {
-        if (!from) {
-            return this;
-        }
+        if (!from) return this;
+        if (from.materialId !== undefined) this.materialId = from.materialId;
         if (from.enabled !== undefined) {
             if (typeof from.enabled === 'number') {
-                this.enabled = true;
-                this.enabledFor.clear();
-                this.enabledFor.addPacked(from.enabled);
+                this.enabled = UserGroup.FromPacked(this.actor.context, from.enabled);
             } else {
                 this.enabled = from.enabled;
-                this.enabledFor.clear();
             }
-        }
-        if (from.materialId !== undefined) {
-            this.materialId = from.materialId;
         }
         return this;
     }
 
     public toJSON() {
         return {
-            enabled: this.enabled && this.enabledFor.size > 0 ? this.enabledFor.packed() : this.enabled,
+            enabled: this.enabled,
             materialId: this.materialId
         } as AppearanceLike;
     }
