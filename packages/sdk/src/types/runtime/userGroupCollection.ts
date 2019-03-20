@@ -62,8 +62,9 @@ export default class UserGroupCollection extends Set<string> {
         const mapping = this.context.internal.userGroupMapping;
         if (!mapping[name]) {
             const lastIndex = Object.keys(mapping).length;
-            // according to MDN, all bitwise operations are applied to 32-bit signed ints
-            if (lastIndex > 32) {
+            // all bitwise inputs are coerced to 32-bit signed ints
+            // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Bitwise_Operators
+            if (lastIndex >= 32) {
                 throw new Error(`User group count limit reached! Failed to add new user group "${name}"`);
             }
             mapping[name] = 1 << lastIndex;
