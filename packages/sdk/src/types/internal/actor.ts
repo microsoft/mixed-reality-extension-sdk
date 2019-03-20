@@ -29,7 +29,8 @@ export class InternalActor implements InternalPatchable<ActorLike> {
     }
 
     public performAction(actionEvent: ActionEvent) {
-        const behavior = (this.behavior.behaviorType === actionEvent.behaviorType) ? this.behavior : undefined;
+        const behavior = (this.behavior && this.behavior.behaviorType === actionEvent.behaviorType)
+            ? this.behavior : undefined;
         if (behavior && behavior._supportsAction(actionEvent.actionName)) {
             behavior._performAction(actionEvent.actionName, actionEvent.actionState, actionEvent.userId);
         } else {
