@@ -1047,6 +1047,15 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 
     // ========================================================================
     'user-update': {
-        ...ClientOnlyRule
+        ...DefaultRule,
+        client: {
+            beforeQueueMessageForClient: (
+                session: Session,
+                client: Client,
+                message: Message<Payloads.UserUpdate>
+            ) => {
+                return client.userId === message.payload.user.id ? message : null;
+            }
+        }
     }
 };

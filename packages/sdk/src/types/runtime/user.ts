@@ -4,19 +4,15 @@
  */
 
 import { Context } from '../..';
+import readPath from '../../utils/readPath';
 import { InternalUser } from '../internal/user';
+import { Patchable } from '../patchable';
 import UserGroupCollection from './userGroupCollection';
 
 export interface UserLike {
     id: string;
     name: string;
-
-    /** @hidden */
-    groupsPacked: number;
-
-    /**
-     * A grab bag of miscellaneous, possibly host-dependent, properties.
-     */
+    groups: number | UserGroupCollection;
     properties: { [name: string]: string };
 }
 
@@ -24,7 +20,7 @@ export interface UserSet {
     [id: string]: User;
 }
 
-export class User implements UserLike {
+export class User implements UserLike, Patchable<UserLike> {
     // tslint:disable:variable-name
     private _internal: InternalUser;
     /** @hidden */
@@ -43,20 +39,32 @@ export class User implements UserLike {
      * This user's group memberships. Some actors will behave differently depending on
      * if the user is in at least one of a set of groups. See [[UserGroup]].
      */
-    public get groups() { return this._groups = this._groups || new UserGroupCollection(null, this._context); }
-    public set groups(val: UserGroupCollection) {
-        val.setContext(this._context);
+    public get groups() {
+        if (!this._groups) {
+            this._groups = new UserGroupCollection(null, this._context);
+            this._groups.onChanged(() => this.userChanged('groups'));
+        }
+        return this._groups;
+    }
+    public set groups(val) {
         this._groups = val;
+        if (this._groups) {
+            this._groups.setContext(this._context);
+            this._groups.onChanged(() => this.userChanged('groups'));
+        }
+        this.userChanged('groups');
+    }
+
+    // Note: users cannot be explicitly added to the "default" group
+    // tslint:disable-next-line:no-bitwise
+    private get groupsPacked() { return this._groups ? this._groups.packed() & (~1) : 1; }
+    private set groupsPacked(value: number) {
+        this.groups.setPacked(value);
     }
 
     /**
-     * Users cannot be explicitly added to the "default" group
-     * @hidden
+     * A grab bag of miscellaneous, possibly host-dependent, properties.
      */
-    // tslint:disable-next-line:no-bitwise
-    public get groupsPacked() { return this._groups ? this._groups.packed() & (~1) : 1; }
-
-    /** @inheritdoc */
     public get properties() { return Object.freeze({ ...this._properties }); }
 
     /**
@@ -69,10 +77,40 @@ export class User implements UserLike {
     }
 
     public copy(from: Partial<UserLike>): this {
+        // Pause change detection while we copy the values into the actor.
+        const wasObserving = this.internal.observing;
+        this.internal.observing = false;
+
         if (!from) return this;
         if (from.id !== undefined) this._id = from.id;
         if (from.name !== undefined) this._name = from.name;
         if (from.properties !== undefined) this._properties = from.properties;
+        if (from.groups !== undefined) {
+            if (typeof from.groups === 'number') {
+                this.groupsPacked = from.groups;
+            } else {
+                this.groups = from.groups;
+            }
+        }
+
+        this.internal.observing = wasObserving;
         return this;
+    }
+
+    public toJSON() {
+        return {
+            id: this.id,
+            name: this.name,
+            groups: this.groupsPacked,
+            properties: this.properties,
+        } as UserLike;
+    }
+
+    private userChanged(...path: string[]) {
+        if (this.internal.observing) {
+            this.internal.patch = this.internal.patch || {} as UserLike;
+            readPath(this, this.internal.patch, ...path);
+            this.context.internal.incrementGeneration();
+        }
     }
 }

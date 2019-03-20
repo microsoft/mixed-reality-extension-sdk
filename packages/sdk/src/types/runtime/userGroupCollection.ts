@@ -126,9 +126,7 @@ export default class UserGroupCollection extends Set<string> {
         super.clear();
         const mapping = this.context.internal.userGroupMapping;
         for (const name of Object.keys(mapping)) {
-            const inSet = (value & this.getOrAddMapping(name));
-            console.log(`${value} & ${this.getOrAddMapping(name)} === ${inSet}`);
-            if (inSet !== 0) {
+            if ((value & this.getOrAddMapping(name)) !== 0) {
                 super.add(name);
             }
         }
