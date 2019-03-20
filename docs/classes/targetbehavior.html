@@ -77,6 +77,11 @@
 						<ul class="tsd-hierarchy">
 							<li>
 								<span class="target">TargetBehavior</span>
+								<ul class="tsd-hierarchy">
+									<li>
+										<a href="buttonbehavior.html" class="tsd-signature-type">ButtonBehavior</a>
+									</li>
+								</ul>
 							</li>
 						</ul>
 					</li>
@@ -96,6 +101,7 @@
 						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="targetbehavior.html#_supportsaction" class="tsd-kind-icon">_supports<wbr>Action</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="targetbehavior.html#istargeted" class="tsd-kind-icon">is<wbr>Targeted</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="targetbehavior.html#ontarget" class="tsd-kind-icon">on<wbr>Target</a></li>
 							</ul>
@@ -109,14 +115,14 @@
 					<a name="behaviortype" class="tsd-anchor"></a>
 					<h3>behavior<wbr>Type</h3>
 					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class tsd-is-overwrite">
-						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> behaviorType<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">"none"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"target"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"button"</span></li>
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> behaviorType<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../index.html#behaviortype" class="tsd-signature-type">BehaviorType</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Overrides <a href="behavior.html">Behavior</a>.<a href="behavior.html#behaviortype">behaviorType</a></p>
 								<ul>
-									<li>Defined in types/runtime/behaviors/targetBehavior.ts:18</li>
+									<li>Defined in types/runtime/behaviors/targetBehavior.ts:17</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -125,12 +131,7 @@
 									<dd></dd>
 								</dl>
 							</div>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">"none"</span>
-								<span class="tsd-signature-symbol"> | </span>
-								<span class="tsd-signature-type">"target"</span>
-								<span class="tsd-signature-symbol"> | </span>
-								<span class="tsd-signature-type">"button"</span>
-							</h4>
+							<h4 class="tsd-returns-title">Returns <a href="../index.html#behaviortype" class="tsd-signature-type">BehaviorType</a></h4>
 						</li>
 					</ul>
 				</section>
@@ -144,7 +145,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in types/runtime/behaviors/targetBehavior.ts:20</li>
+									<li>Defined in types/runtime/behaviors/targetBehavior.ts:19</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="discreteaction.html" class="tsd-signature-type">DiscreteAction</a></h4>
@@ -154,6 +155,35 @@
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Methods</h2>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+					<a name="_supportsaction" class="tsd-anchor"></a>
+					<h3>_supports<wbr>Action</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+						<li class="tsd-signature tsd-kind-icon">_supports<wbr>Action<span class="tsd-signature-symbol">(</span>actionName<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="behavior.html">Behavior</a>.<a href="behavior.html#_supportsaction">_supportsAction</a></p>
+								<ul>
+									<li>Defined in types/runtime/behaviors/behavior.ts:21</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>INTERNAL METHODS</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>actionName: <span class="tsd-signature-type">string</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+						</li>
+					</ul>
+				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
 					<a name="istargeted" class="tsd-anchor"></a>
 					<h3>is<wbr>Targeted</h3>
@@ -164,7 +194,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in types/runtime/behaviors/targetBehavior.ts:40</li>
+									<li>Defined in types/runtime/behaviors/targetBehavior.ts:39</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -197,7 +227,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in types/runtime/behaviors/targetBehavior.ts:28</li>
+									<li>Defined in types/runtime/behaviors/targetBehavior.ts:27</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -247,6 +277,9 @@
 							</li>
 							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
 								<a href="targetbehavior.html#target" class="tsd-kind-icon">target</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+								<a href="targetbehavior.html#_supportsaction" class="tsd-kind-icon">_supports<wbr>Action</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="targetbehavior.html#istargeted" class="tsd-kind-icon">is<wbr>Targeted</a>

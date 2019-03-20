@@ -73,7 +73,7 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<a href="behavior.html" class="tsd-signature-type">Behavior</a>
+						<a href="targetbehavior.html" class="tsd-signature-type">TargetBehavior</a>
 						<ul class="tsd-hierarchy">
 							<li>
 								<span class="target">ButtonBehavior</span>
@@ -92,15 +92,19 @@
 								<li class="tsd-kind-get-signature tsd-parent-kind-class tsd-is-overwrite"><a href="buttonbehavior.html#behaviortype" class="tsd-kind-icon">behavior<wbr>Type</a></li>
 								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="buttonbehavior.html#click" class="tsd-kind-icon">click</a></li>
 								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="buttonbehavior.html#hover" class="tsd-kind-icon">hover</a></li>
+								<li class="tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited"><a href="buttonbehavior.html#target" class="tsd-kind-icon">target</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="buttonbehavior.html#_supportsaction" class="tsd-kind-icon">_supports<wbr>Action</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="buttonbehavior.html#isclicked" class="tsd-kind-icon">is<wbr>Clicked</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="buttonbehavior.html#ishoveredover" class="tsd-kind-icon">is<wbr>Hovered<wbr>Over</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="buttonbehavior.html#istargeted" class="tsd-kind-icon">is<wbr>Targeted</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="buttonbehavior.html#onclick" class="tsd-kind-icon">on<wbr>Click</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="buttonbehavior.html#onhover" class="tsd-kind-icon">on<wbr>Hover</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="buttonbehavior.html#ontarget" class="tsd-kind-icon">on<wbr>Target</a></li>
 							</ul>
 						</section>
 					</div>
@@ -112,14 +116,14 @@
 					<a name="behaviortype" class="tsd-anchor"></a>
 					<h3>behavior<wbr>Type</h3>
 					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class tsd-is-overwrite">
-						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> behaviorType<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">"none"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"target"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"button"</span></li>
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> behaviorType<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../index.html#behaviortype" class="tsd-signature-type">BehaviorType</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Overrides <a href="behavior.html">Behavior</a>.<a href="behavior.html#behaviortype">behaviorType</a></p>
+								<p>Overrides <a href="targetbehavior.html">TargetBehavior</a>.<a href="targetbehavior.html#behaviortype">behaviorType</a></p>
 								<ul>
-									<li>Defined in types/runtime/behaviors/buttonBehavior.ts:19</li>
+									<li>Defined in types/runtime/behaviors/buttonBehavior.ts:18</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -128,12 +132,7 @@
 									<dd></dd>
 								</dl>
 							</div>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">"none"</span>
-								<span class="tsd-signature-symbol"> | </span>
-								<span class="tsd-signature-type">"target"</span>
-								<span class="tsd-signature-symbol"> | </span>
-								<span class="tsd-signature-type">"button"</span>
-							</h4>
+							<h4 class="tsd-returns-title">Returns <a href="../index.html#behaviortype" class="tsd-signature-type">BehaviorType</a></h4>
 						</li>
 					</ul>
 				</section>
@@ -147,7 +146,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in types/runtime/behaviors/buttonBehavior.ts:22</li>
+									<li>Defined in types/runtime/behaviors/buttonBehavior.ts:21</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="discreteaction.html" class="tsd-signature-type">DiscreteAction</a></h4>
@@ -164,7 +163,25 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in types/runtime/behaviors/buttonBehavior.ts:21</li>
+									<li>Defined in types/runtime/behaviors/buttonBehavior.ts:20</li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <a href="discreteaction.html" class="tsd-signature-type">DiscreteAction</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited">
+					<a name="target" class="tsd-anchor"></a>
+					<h3>target</h3>
+					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited">
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> target<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="discreteaction.html" class="tsd-signature-type">DiscreteAction</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="targetbehavior.html">TargetBehavior</a>.<a href="targetbehavior.html#target">target</a></p>
+								<ul>
+									<li>Defined in types/runtime/behaviors/targetBehavior.ts:19</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="discreteaction.html" class="tsd-signature-type">DiscreteAction</a></h4>
@@ -174,6 +191,35 @@
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Methods</h2>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+					<a name="_supportsaction" class="tsd-anchor"></a>
+					<h3>_supports<wbr>Action</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+						<li class="tsd-signature tsd-kind-icon">_supports<wbr>Action<span class="tsd-signature-symbol">(</span>actionName<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="behavior.html">Behavior</a>.<a href="behavior.html#_supportsaction">_supportsAction</a></p>
+								<ul>
+									<li>Defined in types/runtime/behaviors/behavior.ts:21</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>INTERNAL METHODS</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>actionName: <span class="tsd-signature-type">string</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+						</li>
+					</ul>
+				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
 					<a name="isclicked" class="tsd-anchor"></a>
 					<h3>is<wbr>Clicked</h3>
@@ -184,7 +230,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in types/runtime/behaviors/buttonBehavior.ts:64</li>
+									<li>Defined in types/runtime/behaviors/buttonBehavior.ts:63</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -217,7 +263,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in types/runtime/behaviors/buttonBehavior.ts:54</li>
+									<li>Defined in types/runtime/behaviors/buttonBehavior.ts:53</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -240,6 +286,40 @@
 						</li>
 					</ul>
 				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+					<a name="istargeted" class="tsd-anchor"></a>
+					<h3>is<wbr>Targeted</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+						<li class="tsd-signature tsd-kind-icon">is<wbr>Targeted<span class="tsd-signature-symbol">(</span>userId<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="targetbehavior.html">TargetBehavior</a>.<a href="targetbehavior.html#istargeted">isTargeted</a></p>
+								<ul>
+									<li>Defined in types/runtime/behaviors/targetBehavior.ts:39</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Gets whether the behavior is being targeted by the given user, or at all if no user id is given.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> userId: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The id of the user to check whether they are targeting this behavior.</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+							<p>True if the user is targeting this behavior, false if not.  In the case where no user id is given, this
+							returns true if any user is targeting this behavior, false if none are.</p>
+						</li>
+					</ul>
+				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
 					<a name="onclick" class="tsd-anchor"></a>
 					<h3>on<wbr>Click</h3>
@@ -250,7 +330,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in types/runtime/behaviors/buttonBehavior.ts:42</li>
+									<li>Defined in types/runtime/behaviors/buttonBehavior.ts:41</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -288,7 +368,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in types/runtime/behaviors/buttonBehavior.ts:30</li>
+									<li>Defined in types/runtime/behaviors/buttonBehavior.ts:29</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -313,6 +393,45 @@
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
 							<p>This button behavior.</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+					<a name="ontarget" class="tsd-anchor"></a>
+					<h3>on<wbr>Target</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+						<li class="tsd-signature tsd-kind-icon">on<wbr>Target<span class="tsd-signature-symbol">(</span>targetState<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">"enter"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"exit"</span>, handler<span class="tsd-signature-symbol">: </span><a href="../index.html#actionhandler" class="tsd-signature-type">ActionHandler</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="targetbehavior.html">TargetBehavior</a>.<a href="targetbehavior.html#ontarget">onTarget</a></p>
+								<ul>
+									<li>Defined in types/runtime/behaviors/targetBehavior.ts:27</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Add a target handler to be called when the given target state is triggered.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>targetState: <span class="tsd-signature-type">"enter"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"exit"</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The target state to fire the handler on.</p>
+									</div>
+								</li>
+								<li>
+									<h5>handler: <a href="../index.html#actionhandler" class="tsd-signature-type">ActionHandler</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The handler to call when the target state is triggered.</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
+							<p>This target behavior.</p>
 						</li>
 					</ul>
 				</section>
@@ -342,17 +461,29 @@
 							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
 								<a href="buttonbehavior.html#hover" class="tsd-kind-icon">hover</a>
 							</li>
+							<li class=" tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited">
+								<a href="buttonbehavior.html#target" class="tsd-kind-icon">target</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+								<a href="buttonbehavior.html#_supportsaction" class="tsd-kind-icon">_supports<wbr>Action</a>
+							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="buttonbehavior.html#isclicked" class="tsd-kind-icon">is<wbr>Clicked</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="buttonbehavior.html#ishoveredover" class="tsd-kind-icon">is<wbr>Hovered<wbr>Over</a>
 							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+								<a href="buttonbehavior.html#istargeted" class="tsd-kind-icon">is<wbr>Targeted</a>
+							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="buttonbehavior.html#onclick" class="tsd-kind-icon">on<wbr>Click</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="buttonbehavior.html#onhover" class="tsd-kind-icon">on<wbr>Hover</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+								<a href="buttonbehavior.html#ontarget" class="tsd-kind-icon">on<wbr>Target</a>
 							</li>
 						</ul>
 					</li>
