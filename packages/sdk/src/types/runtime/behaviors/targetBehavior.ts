@@ -10,12 +10,11 @@ import { ActionHandler, ActionState, Behavior, BehaviorType, DiscreteAction } fr
  */
 export class TargetBehavior extends Behavior {
     // tslint:disable:variable-name
-    private _behaviorType: BehaviorType = 'target';
     private _target: DiscreteAction = new DiscreteAction();
     // tslint:enable:variable-name
 
     /** @inheritdoc */
-    public get behaviorType() { return this._behaviorType; }
+    public get behaviorType(): BehaviorType { return 'target'; }
 
     public get target() { return this._target; }
 

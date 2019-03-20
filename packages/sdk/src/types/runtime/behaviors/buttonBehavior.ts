@@ -3,20 +3,19 @@
  * Licensed under the MIT License.
  */
 
-import { ActionHandler, ActionState, Behavior, BehaviorType, DiscreteAction } from '.';
+import { ActionHandler, ActionState, BehaviorType, DiscreteAction, TargetBehavior } from '.';
 
 /**
  * Button behavior class containing the target behavior actions.
  */
-export class ButtonBehavior extends Behavior {
-    private type: BehaviorType = 'button';
+export class ButtonBehavior extends TargetBehavior {
     // tslint:disable:variable-name
     private _hover: DiscreteAction = new DiscreteAction();
     private _click: DiscreteAction = new DiscreteAction();
     // tslint:enable:variable-name
 
     /** @inheritdoc */
-    public get behaviorType() { return this.type; }
+    public get behaviorType(): BehaviorType { return 'button'; }
 
     public get hover() { return this._hover; }
     public get click() { return this._click; }

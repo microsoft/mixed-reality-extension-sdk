@@ -43,7 +43,7 @@ import { InternalActor } from '../internal/actor';
 import { CollisionEventType, CreateColliderType } from '../network/payloads';
 import { SubscriptionType } from '../network/subscriptionType';
 import { Patchable } from '../patchable';
-import { Behavior } from './behaviors';
+import { ActionHandler, ActionState, Behavior, DiscreteAction } from './behaviors';
 import { BoxColliderGeometry, ColliderGeometry, SphereColliderGeometry } from './physics';
 import { SoundInstance } from './soundInstance';
 
@@ -64,6 +64,7 @@ export interface ActorLike {
     text: Partial<TextLike>;
     attachment: Partial<AttachmentLike>;
     lookAt: Partial<LookAtLike>;
+    grabbable: boolean;
 }
 
 /**
@@ -98,7 +99,11 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
     private _text: Text;
     private _attachment: Attachment;
     private _lookAt: LookAt;
+    private _grabbable = false;
+    private _grab: DiscreteAction;
     // tslint:enable:variable-name
+
+    private get grab() { this._grab = this._grab || new DiscreteAction(); return this._grab; }
 
     /*
      * PUBLIC ACCESSORS
@@ -130,6 +135,14 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
         if (this._parentId !== value) {
             this._parentId = value;
             this.actorChanged('parentId');
+        }
+    }
+
+    public get grabbable() { return this._grabbable; }
+    public set grabbable(value) {
+        if (value !== this._grabbable) {
+            this._grabbable = value;
+            this.actorChanged('grabbable');
         }
     }
 
@@ -472,6 +485,16 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
     }
 
     /**
+     * Add a grad handler to be called when the given action state has changed.
+     * @param grabState The grab state to fire the handler on.
+     * @param handler The handler to call when the grab state has changed.
+     */
+    public onGrab(grabState: 'begin' | 'end', handler: ActionHandler) {
+        const actionState: ActionState = (grabState === 'begin') ? 'started' : 'stopped';
+        this.grab.on(actionState, handler);
+    }
+
+    /**
      * Sets the behavior on this actor.
      * @param behavior The type of behavior to set. Pass null to clear the behavior.
      */
@@ -671,6 +694,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
         if (from.collider) this._setCollider(from.collider);
         if (from.text) this.enableText(from.text);
         if (from.lookAt) this.enableLookAt(from.lookAt.actorId, from.lookAt.mode);
+        if (from.grabbable) this._grabbable = from.grabbable;
 
         this.internal.observing = wasObserving;
         return this;
@@ -689,7 +713,8 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
             rigidBody: this._rigidBody ? this._rigidBody.toJSON() : undefined,
             collider: this._collider ? this._collider.toJSON() : undefined,
             text: this._text ? this._text.toJSON() : undefined,
-            lookAt: this._lookAt ? this._lookAt.toJSON() : undefined
+            lookAt: this._lookAt ? this._lookAt.toJSON() : undefined,
+            grabbable: this._grabbable
         } as ActorLike;
     }
 
