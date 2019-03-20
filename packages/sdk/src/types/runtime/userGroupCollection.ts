@@ -11,16 +11,15 @@ import { Context } from '.';
  * properties of actors based on the memberships of the viewing user. All users not assigned
  * a group are in the `default` group. See [[User.groups]], [[Appearance.enabled]].
  */
-export default class UserGroupCollection extends Set<string> {
+export class UserGroupCollection extends Set<string> {
     public static readonly ALL_PACKED = ~0;
     public static readonly NONE_PACKED = 0;
 
-    private context: Context;
-
-    constructor(initialContents: Iterable<string> = null, context: Context = null) {
-        super(initialContents);
-        if (context) {
-            this.setContext(context);
+    constructor(private context: Context, initialContents: Iterable<string> = null) {
+        super();
+        for (const group of initialContents) {
+            this.getOrAddMapping(group);
+            super.add(group);
         }
     }
 
@@ -29,17 +28,9 @@ export default class UserGroupCollection extends Set<string> {
     }
 
     public static FromPacked(context: Context, value: number): UserGroupCollection {
-        const group = new UserGroupCollection(null, context);
+        const group = new UserGroupCollection(context);
         group.setPacked(value);
         return group;
-    }
-
-    /** @hidden */
-    public setContext(c: Context) {
-        this.context = c;
-        for (const group of this) {
-            this.getOrAddMapping(group);
-        }
     }
 
     public packed() {
@@ -55,10 +46,6 @@ export default class UserGroupCollection extends Set<string> {
     }
 
     private getOrAddMapping(name: string): number {
-        if (!this.context) {
-            throw new Error("Cannot serialize a user group without associating it with a context first");
-        }
-
         const mapping = this.context.internal.userGroupMapping;
         if (!mapping[name]) {
             const lastIndex = Object.keys(mapping).length;

@@ -54,7 +54,7 @@ export default class UserMaskTest extends Test {
             actor: {
                 name: 'redIcon',
                 appearance: {
-                    enabled: new MRE.UserGroupCollection(['red', 'default']),
+                    enabled: new MRE.UserGroupCollection(this.app.context, ['red', 'default']),
                     materialId: red.id
                 },
                 transform: {
@@ -72,7 +72,7 @@ export default class UserMaskTest extends Test {
             actor: {
                 name: 'blueIcon',
                 appearance: {
-                    enabled: new MRE.UserGroupCollection(['blue', 'default']),
+                    enabled: new MRE.UserGroupCollection(this.app.context, ['blue', 'default']),
                     materialId: blue.id
                 },
                 transform: {

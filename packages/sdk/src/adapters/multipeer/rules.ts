@@ -1048,13 +1048,14 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
     // ========================================================================
     'user-update': {
         ...DefaultRule,
-        client: {
-            beforeQueueMessageForClient: (
-                session: Session,
-                client: Client,
-                message: Message<Payloads.UserUpdate>
-            ) => {
-                return client.userId === message.payload.user.id ? message : null;
+        session: {
+            ...DefaultRule.session,
+            beforeReceiveFromApp: (session, message: Message<Payloads.UserUpdate>) => {
+                const client = session.clients.find(c => c.userId === message.payload.user.id);
+                if (client) {
+                    client.send(message);
+                }
+                return null;
             }
         }
     }

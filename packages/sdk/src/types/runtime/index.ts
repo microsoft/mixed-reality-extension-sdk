@@ -18,4 +18,4 @@ export * from './assets';
 export * from './physics';
 export * from './lookAt';
 export * from './appearance';
-export { default as UserGroupCollection } from './userGroupCollection';
+export * from './userGroupCollection';

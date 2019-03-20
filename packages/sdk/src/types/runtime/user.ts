@@ -3,11 +3,10 @@
  * Licensed under the MIT License.
  */
 
-import { Context } from '../..';
+import { Context, UserGroupCollection } from '../..';
 import readPath from '../../utils/readPath';
 import { InternalUser } from '../internal/user';
 import { Patchable } from '../patchable';
-import UserGroupCollection from './userGroupCollection';
 
 export interface UserLike {
     id: string;
@@ -41,7 +40,7 @@ export class User implements UserLike, Patchable<UserLike> {
      */
     public get groups() {
         if (!this._groups) {
-            this._groups = new UserGroupCollection(null, this._context);
+            this._groups = new UserGroupCollection(this._context);
             this._groups.onChanged(() => this.userChanged('groups'));
         }
         return this._groups;
@@ -49,7 +48,6 @@ export class User implements UserLike, Patchable<UserLike> {
     public set groups(val) {
         this._groups = val;
         if (this._groups) {
-            this._groups.setContext(this._context);
             this._groups.onChanged(() => this.userChanged('groups'));
         }
         this.userChanged('groups');

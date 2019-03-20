@@ -3,9 +3,8 @@
  * Licensed under the MIT License.
  */
 
-import { Actor, Material } from '.';
+import { Actor, Material, UserGroupCollection } from '.';
 import { ZeroGuid } from '../../constants';
-import UserGroupCollection from './userGroupCollection';
 
 export interface AppearanceLike {
     /**
