@@ -25,8 +25,8 @@ export class Appearance implements AppearanceLike {
     public $DoNotObserve = ['actor', '_enabledFor'];
 
     // tslint:disable:variable-name
-    private _enabled = UserGroupCollection.ALL_PACKED;
-    private _enabledFor: UserGroupCollection;
+    private _enabled = UserGroupCollection.ALL_PACKED; // authoritative
+    private _enabledFor: UserGroupCollection; // cached object, synced with _enabled
     private _materialId = ZeroGuid;
     // tslint:enable:variable-name
 
