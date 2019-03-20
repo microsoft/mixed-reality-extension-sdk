@@ -29,16 +29,12 @@ export default class UserGroupCollection extends Set<string> {
     }
 
     public static FromPacked(context: Context, value: number): UserGroupCollection {
-        const mapping = context.internal.userGroupMapping;
         const group = new UserGroupCollection(null, context);
-        for (const name of Object.keys(mapping)) {
-            if ((value & group.getOrAddMapping(name)) !== 0) {
-                group.add(name);
-            }
-        }
+        group.setPacked(value);
         return group;
     }
 
+    /** @hidden */
     public setContext(c: Context) {
         this.context = c;
         for (const group of this) {
@@ -54,7 +50,7 @@ export default class UserGroupCollection extends Set<string> {
         return pack;
     }
 
-    public toJSON(): number {
+    public toJSON() {
         return this.packed();
     }
 
@@ -74,5 +70,69 @@ export default class UserGroupCollection extends Set<string> {
         }
 
         return mapping[name];
+    }
+
+    /*
+     * Observable considerations
+     */
+
+    private changedCallback: (coll: UserGroupCollection) => void;
+
+    /** @hidden */
+    public onChanged(callback: (ugc: UserGroupCollection) => void) {
+        this.changedCallback = callback;
+    }
+
+    public add(item: string) {
+        super.add(item);
+        if (this.changedCallback) {
+            this.changedCallback(this);
+        }
+        return this;
+    }
+
+    public addAll(items: Iterable<string>) {
+        for (const i of items) {
+            super.add(i);
+        }
+        if (this.changedCallback) {
+            this.changedCallback(this);
+        }
+        return this;
+    }
+
+    public delete(item: string) {
+        const ret = super.delete(item);
+        if (ret && this.changedCallback) {
+            this.changedCallback(this);
+        }
+        return ret;
+    }
+
+    public clear() {
+        super.clear();
+        if (this.changedCallback) {
+            this.changedCallback(this);
+        }
+    }
+
+    public set(items: Iterable<string>) {
+        super.clear();
+        this.addAll(items);
+    }
+
+    public setPacked(value: number) {
+        super.clear();
+        const mapping = this.context.internal.userGroupMapping;
+        for (const name of Object.keys(mapping)) {
+            const inSet = (value & this.getOrAddMapping(name));
+            console.log(`${value} & ${this.getOrAddMapping(name)} === ${inSet}`);
+            if (inSet !== 0) {
+                super.add(name);
+            }
+        }
+        if (this.changedCallback) {
+            this.changedCallback(this);
+        }
     }
 }

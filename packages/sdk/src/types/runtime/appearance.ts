@@ -13,9 +13,7 @@ export interface AppearanceLike {
      * UserGroupCollection object, this property will effectively be `true` for users in at least one
      * of the groups, and `false` for everyone else. See [[UserGroup]].
      */
-    enabled: boolean | UserGroupCollection;
-    /** @hidden */
-    enabledPacked: number;
+    enabled: boolean | number | UserGroupCollection;
     /**
      * The ID of a previously-created [[Material]] asset.
      */
@@ -24,9 +22,11 @@ export interface AppearanceLike {
 
 export class Appearance implements AppearanceLike {
     /** @hidden */
-    public $DoNotObserve = ['activeAndEnabled', 'actor', 'enabled', 'enabledFor', 'material'];
+    public $DoNotObserve = ['actor', '_enabledFor'];
 
     // tslint:disable:variable-name
+    private _enabled = UserGroupCollection.ALL_PACKED;
+    private _enabledFor: UserGroupCollection;
     private _materialId = ZeroGuid;
     // tslint:enable:variable-name
 
@@ -36,39 +36,55 @@ export class Appearance implements AppearanceLike {
      * effectively be `true` for users in at least one of the groups, and `false` for everyone else.
      * See [[UserGroup]].
      */
-    public enabled: boolean | UserGroupCollection = true;
+    public get enabled(): boolean | UserGroupCollection {
+        if (this.enabledPacked === UserGroupCollection.ALL_PACKED) {
+            return true;
+        } else if (this.enabledPacked === UserGroupCollection.NONE_PACKED) {
+            return false;
+        } else {
+            return this.enabledFor;
+        }
+    }
+    public set enabled(value: boolean | UserGroupCollection) {
+        if (value === true) {
+            this.enabledPacked = UserGroupCollection.ALL_PACKED;
+        } else if (value === false) {
+            this.enabledPacked = UserGroupCollection.NONE_PACKED;
+        } else {
+            this.enabledFor = value;
+        }
+    }
 
     /**
      * [[enabled]], but forced to a [[UserGroupCollection]]. Using this property will convert this
-     * actor's `enabled` property to the UserGroupCollection equivalent of its current value.
+     * actor's `enabled` property to the UserGroupCollection equivalent of its current value relative
+     * to the current set of used groups.
      */
     public get enabledFor() {
-        if (this.enabled instanceof UserGroupCollection) {
-            return this.enabled as UserGroupCollection;
-        } else {
-            const mask = this.enabled ? UserGroupCollection.All(this.actor.context) : new UserGroupCollection();
-            return this.enabled = mask;
+        if (!this._enabledFor) {
+            this._enabledFor = UserGroupCollection.FromPacked(this.actor.context, this._enabled);
+            this._enabledFor.onChanged(ugc => this._enabled = ugc.packed());
         }
+        return this._enabledFor;
     }
     public set enabledFor(value) {
-        this.enabled = value;
+        this.enabledPacked = value.packed();
+        this._enabledFor = value;
+        this._enabledFor.onChanged(ugc => this._enabled = ugc.packed());
     }
 
-    /** @hidden */
-    public get enabledPacked() {
-        if (this.enabled === true) {
-            return UserGroupCollection.ALL_PACKED;
-        } else if (this.enabled instanceof UserGroupCollection) {
-            return this.enabled.packed();
-        } else {
-            return UserGroupCollection.NONE_PACKED;
+    private get enabledPacked() { return this._enabled; }
+    private set enabledPacked(value: number) {
+        this._enabled = value;
+        if (this._enabledFor) {
+            this._enabledFor.setPacked(value);
         }
     }
 
     /** Whether this actor is visible */
     public get activeAndEnabled(): boolean {
-        return (!this.actor.parent || this.actor.parent.appearance.activeAndEnabled) &&
-            (this.enabled === true || (this.enabled as UserGroupCollection).size > 0);
+        return (!this.actor.parent || this.actor.parent.appearance.activeAndEnabled)
+            && this._enabled !== UserGroupCollection.NONE_PACKED;
     }
 
     /** @returns A shared reference to this actor's material, or null if this actor has no material */
@@ -94,23 +110,19 @@ export class Appearance implements AppearanceLike {
     public copy(from: Partial<AppearanceLike>): this {
         if (!from) return this;
         if (from.materialId !== undefined) this.materialId = from.materialId;
-        if (from.enabledPacked !== undefined) {
-            if (from.enabledPacked === UserGroupCollection.NONE_PACKED) {
-                this.enabled = false;
-            } else if (from.enabledPacked === UserGroupCollection.ALL_PACKED) {
-                this.enabled = true;
+        if (from.enabled !== undefined) {
+            if (typeof from.enabled === 'number') {
+                this.enabledPacked = from.enabled;
             } else {
-                this.enabled = UserGroupCollection.FromPacked(this.actor.context, from.enabledPacked);
+                this.enabled = from.enabled;
             }
-        } else if (from.enabled !== undefined) {
-            this.enabled = from.enabled;
         }
         return this;
     }
 
     public toJSON() {
         return {
-            enabledPacked: this.enabledPacked,
+            enabled: this.enabledPacked,
             materialId: this.materialId
         } as AppearanceLike;
     }

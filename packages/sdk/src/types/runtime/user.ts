@@ -54,7 +54,7 @@ export class User implements UserLike {
      * @hidden
      */
     // tslint:disable-next-line:no-bitwise
-    public get groupsPacked() { return this._groups ? this._groups.toJSON() & (~1) : 1; }
+    public get groupsPacked() { return this._groups ? this._groups.packed() & (~1) : 1; }
 
     /** @inheritdoc */
     public get properties() { return Object.freeze({ ...this._properties }); }
