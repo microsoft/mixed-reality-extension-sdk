@@ -724,6 +724,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 
     private actorChanged = (...path: string[]) => {
         if (this.internal.observing) {
+            console.log(path);
             this.internal.patch = this.internal.patch || {} as ActorLike;
             readPath(this, this.internal.patch, ...path);
             this.context.internal.incrementGeneration();

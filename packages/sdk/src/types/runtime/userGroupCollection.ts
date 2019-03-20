@@ -4,13 +4,17 @@
  */
 import { Context } from '.';
 
+// tslint:disable:no-bitwise
+
 /**
  * A set of user group IDs. User groups are used to selectively enable several different
  * properties of actors based on the memberships of the viewing user. All users not assigned
  * a group are in the `default` group. See [[User.groups]], [[Appearance.enabled]].
  */
 export default class UserGroupCollection extends Set<string> {
-    // tslint:disable:no-bitwise
+    public static readonly ALL_PACKED = ~0;
+    public static readonly NONE_PACKED = 0;
+
     private context: Context;
 
     constructor(initialContents: Iterable<string> = null, context: Context = null) {
@@ -21,7 +25,7 @@ export default class UserGroupCollection extends Set<string> {
     }
 
     public static All(context: Context) {
-        return this.FromPacked(context, Number.MAX_SAFE_INTEGER);
+        return this.FromPacked(context, this.ALL_PACKED);
     }
 
     public static FromPacked(context: Context, value: number): UserGroupCollection {
@@ -42,7 +46,7 @@ export default class UserGroupCollection extends Set<string> {
         }
     }
 
-    public toJSON(): number {
+    public packed() {
         let pack = 0;
         for (const group of this) {
             pack |= this.getOrAddMapping(group);
@@ -50,16 +54,20 @@ export default class UserGroupCollection extends Set<string> {
         return pack;
     }
 
+    public toJSON(): number {
+        return this.packed();
+    }
+
     private getOrAddMapping(name: string): number {
         if (!this.context) {
-            throw new Error("Cannot manipulate a user group without associating it with a context first");
+            throw new Error("Cannot serialize a user group without associating it with a context first");
         }
 
         const mapping = this.context.internal.userGroupMapping;
         if (!mapping[name]) {
             const lastIndex = Object.keys(mapping).length;
-            // according to MDN, 2^52 is the largest pow2 that can be stored in a number primitive
-            if (lastIndex > 52) {
+            // according to MDN, all bitwise operations are applied to 32-bit signed ints
+            if (lastIndex > 32) {
                 throw new Error(`User group count limit reached! Failed to add new user group "${name}"`);
             }
             mapping[name] = 1 << lastIndex;

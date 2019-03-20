@@ -11,10 +11,8 @@ export interface UserLike {
     id: string;
     name: string;
 
-    /**
-     * A bit field containing this user's group memberships.
-     */
-    groups: UserGroupCollection;
+    /** @hidden */
+    groupsPacked: number;
 
     /**
      * A grab bag of miscellaneous, possibly host-dependent, properties.
@@ -51,6 +49,13 @@ export class User implements UserLike {
         this._groups = val;
     }
 
+    /**
+     * Users cannot be explicitly added to the "default" group
+     * @hidden
+     */
+    // tslint:disable-next-line:no-bitwise
+    public get groupsPacked() { return this._groups ? this._groups.toJSON() & (~1) : 1; }
+
     /** @inheritdoc */
     public get properties() { return Object.freeze({ ...this._properties }); }
 
@@ -68,13 +73,6 @@ export class User implements UserLike {
         if (from.id !== undefined) this._id = from.id;
         if (from.name !== undefined) this._name = from.name;
         if (from.properties !== undefined) this._properties = from.properties;
-        if (from.groups !== undefined) {
-            if (typeof from.groups === 'number') {
-                this._groups = UserGroupCollection.FromPacked(this._context, from.groups);
-            } else {
-                this._groups = from.groups;
-            }
-        }
         return this;
     }
 }
