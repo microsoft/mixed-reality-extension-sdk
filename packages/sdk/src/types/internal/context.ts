@@ -49,6 +49,7 @@ import {
     SetSoundState,
     UpdateCollisionEventSubscriptions,
     UpdateSubscriptions,
+    UserUpdate,
 } from '../network/payloads';
 
 import { log } from '../../log';
@@ -68,6 +69,7 @@ import { SoundInstance } from '../runtime/soundInstance';
 export class InternalContext {
     public actorSet: ActorSet = {};
     public userSet: UserSet = {};
+    public userGroupMapping: { [id: string]: number } = { default: 1 };
     public protocol: Protocols.Protocol;
     public interval: NodeJS.Timer;
     public generation = 0;
@@ -430,7 +432,8 @@ export class InternalContext {
 
         const syncObjects = [
             ...Object.values(this.actorSet),
-            ...Object.values(this.context.assetManager.assets)
+            ...Object.values(this.context.assetManager.assets),
+            ...Object.values(this.userSet)
         ] as Array<Patchable<any>>;
 
         for (const patchable of syncObjects) {
@@ -449,6 +452,11 @@ export class InternalContext {
                     type: 'asset-update',
                     asset: patch as AssetLike
                 } as AssetUpdate);
+            } else if (patchable instanceof User) {
+                this.protocol.sendPayload({
+                    type: 'user-update',
+                    user: patch as UserLike
+                } as UserUpdate);
             }
         }
     }
