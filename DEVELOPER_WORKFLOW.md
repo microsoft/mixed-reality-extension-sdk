@@ -42,7 +42,7 @@ With this structure, I'd expect there to mostly be 1 or 2 active release version
 ### [Blue] When we decide to prepare a new MRE minor version release (criteria: usually ~1 day before Altspace code lock, or sooner if there are major changes)
 1. Merge sdk/green into sdk/red
 2. Merge samples/green into samples/red
-3. Update CurrentVersion to match major.minor in MREUnityRuntime\MREUnityRuntimeLib\Constants.cs and 
+3. Update CurrentClientVersion to match major.minor in MREUnityRuntime\MREUnityRuntimeLib\Constants.cs and 
 4. If new features were added to SDK, increase MinimumSupportedClientVersion packages\sdk\src\utils\verifyClient.ts 
 5. If communication was changed in a non-backwards-compatible way, which is a HUGE DEAL, should never happen after exiting beta stage, and requires full team sign-off, increase the MinimumSupportedSDKVersion in MREUnityRuntimeLib\Constants.cs 
 6. Create new unity+sdk+sample branches named v0.[new_minor].n, matching the red (NOTE: if there was already a new SDK release created, but it wasn't "shipped", we can stomp that - i.e. if v0.[new_minor-1].n was never used in any host app, we can just reset hard, instead of creating v0.[new_minor].n)
@@ -128,7 +128,7 @@ Note that we always publish all packages with each release, with version numbers
 8. Git commit all package-lock.json files to sdk\v0.[minor].n
 9. npm run build-docs (to regenerate documentation)
 10. commit documentation changes to sdk\v0.[minor].n
-11. deply functional tests to awaiting server
+11. deploy functional tests to awaiting server
 12. in samples\v0.[minor].n, for each of the samples update the patch version:
     1. npm update @microsoft/mixed-reality-extension-sdk@0.[minor].[patch]
     2. npm install
