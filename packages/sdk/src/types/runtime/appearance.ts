@@ -9,8 +9,8 @@ import { ZeroGuid } from '../../constants';
 export interface AppearanceLike {
     /**
      * This actor's visibility preference, independent of its parent. If this property is a
-     * UserGroupCollection object, this property will effectively be `true` for users in at least one
-     * of the groups, and `false` for everyone else. See [[UserGroup]].
+     * GroupMask object, this property will effectively be `true` for users in at least one
+     * of the groups, and `false` for everyone else. See [[GroupMask]].
      */
     enabled: boolean | number | GroupMask;
     /**
@@ -31,9 +31,9 @@ export class Appearance implements AppearanceLike {
 
     /**
      * This actor's visibility preference, independent of its parent. See [[Appearance.activeAndEnabled]] for
-     * the computed visibility state. If this property is a UserGroupCollection object, this property will
+     * the computed visibility state. If this property is a GroupMask object, this property will
      * effectively be `true` for users in at least one of the groups, and `false` for everyone else.
-     * See [[UserGroup]].
+     * See [[GroupMask]].
      */
     public get enabled(): boolean | GroupMask {
         if (this.enabledPacked === GroupMask.ALL_PACKED) {
@@ -55,21 +55,21 @@ export class Appearance implements AppearanceLike {
     }
 
     /**
-     * [[enabled]], but forced to a [[UserGroupCollection]]. Using this property will convert this
-     * actor's `enabled` property to the UserGroupCollection equivalent of its current value relative
+     * [[enabled]], but forced to a [[GroupMask]]. Using this property will convert this
+     * actor's `enabled` property to the GroupMask equivalent of its current value relative
      * to the current set of used groups.
      */
     public get enabledFor() {
         if (!this._enabledFor) {
             this._enabledFor = GroupMask.FromPacked(this.actor.context, this._enabled);
-            this._enabledFor.onChanged(ugc => this._enabled = ugc.packed());
+            this._enabledFor.onChanged(gm => this._enabled = gm.packed());
         }
         return this._enabledFor;
     }
     public set enabledFor(value) {
         this.enabledPacked = value.packed();
         this._enabledFor = value;
-        this._enabledFor.onChanged(ugc => this._enabled = ugc.packed());
+        this._enabledFor.onChanged(gm => this._enabled = gm.packed());
     }
 
     private get enabledPacked() { return this._enabled; }

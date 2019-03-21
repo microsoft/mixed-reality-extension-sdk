@@ -58,7 +58,6 @@ import { Execution } from '../../protocols/execution';
 import { Handshake } from '../../protocols/handshake';
 import { SetSoundStateOptions, SoundCommand } from '../../sound';
 import resolveJsonValues from '../../utils/resolveJsonValues';
-import safeGet from '../../utils/safeAccessPath';
 import { createForwardPromise, ForwardPromise } from '../forwardPromise';
 import { OperatingModel } from '../network/operatingModel';
 import { Patchable } from '../patchable';

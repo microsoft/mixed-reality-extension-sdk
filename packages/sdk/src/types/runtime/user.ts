@@ -36,7 +36,7 @@ export class User implements UserLike, Patchable<UserLike> {
 
     /**
      * This user's group memberships. Some actors will behave differently depending on
-     * if the user is in at least one of a set of groups. See [[UserGroup]].
+     * if the user is in at least one of a set of groups. See [[GroupMask]].
      */
     public get groups() {
         if (!this._groups) {
@@ -94,7 +94,7 @@ export class User implements UserLike, Patchable<UserLike> {
         return {
             id: this.id,
             name: this.name,
-            groups: this.groups.packed() || 1,
+            groups: this.groups.packed(),
             properties: this.properties,
         } as UserLike;
     }
