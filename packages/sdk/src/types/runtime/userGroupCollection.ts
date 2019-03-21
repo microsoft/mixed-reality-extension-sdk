@@ -11,15 +11,27 @@ import { Context } from '.';
  * properties of actors based on the memberships of the viewing user. All users not assigned
  * a group are in the `default` group. See [[User.groups]], [[Appearance.enabled]].
  */
-export class UserGroupCollection extends Set<string> {
+export class GroupMask extends Set<string> {
     public static readonly ALL_PACKED = ~0;
     public static readonly NONE_PACKED = 0;
 
+    // tslint:disable-next-line:variable-name
+    private _allowDefault = true;
+    public get allowDefault() { return this._allowDefault; }
+    public set allowDefault(val) {
+        this._allowDefault = val;
+        this.delete('default');
+    }
+
     constructor(private context: Context, initialContents: Iterable<string> = null) {
         super();
-        for (const group of initialContents) {
-            this.getOrAddMapping(group);
-            super.add(group);
+        if (initialContents) {
+            for (const group of initialContents) {
+                if (this.allowDefault || group !== 'default') {
+                    this.getOrAddMapping(group);
+                    super.add(group);
+                }
+            }
         }
     }
 
@@ -27,8 +39,8 @@ export class UserGroupCollection extends Set<string> {
         return this.FromPacked(context, this.ALL_PACKED);
     }
 
-    public static FromPacked(context: Context, value: number): UserGroupCollection {
-        const group = new UserGroupCollection(context);
+    public static FromPacked(context: Context, value: number): GroupMask {
+        const group = new GroupMask(context);
         group.setPacked(value);
         return group;
     }
@@ -37,6 +49,9 @@ export class UserGroupCollection extends Set<string> {
         let pack = 0;
         for (const group of this) {
             pack |= this.getOrAddMapping(group);
+        }
+        if (pack === 0 && !this.allowDefault) {
+            pack = this.getOrAddMapping('default');
         }
         return pack;
     }
@@ -64,24 +79,28 @@ export class UserGroupCollection extends Set<string> {
      * Observable considerations
      */
 
-    private changedCallback: (coll: UserGroupCollection) => void;
+    private changedCallback: (gm: GroupMask) => void;
 
     /** @hidden */
-    public onChanged(callback: (ugc: UserGroupCollection) => void) {
+    public onChanged(callback: (gm: GroupMask) => void) {
         this.changedCallback = callback;
     }
 
     public add(item: string) {
-        super.add(item);
-        if (this.changedCallback) {
-            this.changedCallback(this);
+        if (this.allowDefault || item !== 'default') {
+            super.add(item);
+            if (this.changedCallback) {
+                this.changedCallback(this);
+            }
         }
         return this;
     }
 
     public addAll(items: Iterable<string>) {
         for (const i of items) {
-            super.add(i);
+            if (this.allowDefault || i !== 'default') {
+                super.add(i);
+            }
         }
         if (this.changedCallback) {
             this.changedCallback(this);
@@ -112,6 +131,10 @@ export class UserGroupCollection extends Set<string> {
     public setPacked(value: number) {
         super.clear();
         const mapping = this.context.internal.userGroupMapping;
+
+        if (!this.allowDefault) {
+            value = value & ~this.getOrAddMapping('default');
+        }
         for (const name of Object.keys(mapping)) {
             if ((value & this.getOrAddMapping(name)) !== 0) {
                 super.add(name);

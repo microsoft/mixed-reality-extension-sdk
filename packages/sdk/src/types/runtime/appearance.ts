@@ -3,7 +3,7 @@
  * Licensed under the MIT License.
  */
 
-import { Actor, Material, UserGroupCollection } from '.';
+import { Actor, GroupMask, Material } from '.';
 import { ZeroGuid } from '../../constants';
 
 export interface AppearanceLike {
@@ -12,7 +12,7 @@ export interface AppearanceLike {
      * UserGroupCollection object, this property will effectively be `true` for users in at least one
      * of the groups, and `false` for everyone else. See [[UserGroup]].
      */
-    enabled: boolean | number | UserGroupCollection;
+    enabled: boolean | number | GroupMask;
     /**
      * The ID of a previously-created [[Material]] asset.
      */
@@ -24,8 +24,8 @@ export class Appearance implements AppearanceLike {
     public $DoNotObserve = ['actor', '_enabledFor'];
 
     // tslint:disable:variable-name
-    private _enabled = UserGroupCollection.ALL_PACKED; // authoritative
-    private _enabledFor: UserGroupCollection; // cached object, synced with _enabled
+    private _enabled = GroupMask.ALL_PACKED; // authoritative
+    private _enabledFor: GroupMask; // cached object, synced with _enabled
     private _materialId = ZeroGuid;
     // tslint:enable:variable-name
 
@@ -35,20 +35,20 @@ export class Appearance implements AppearanceLike {
      * effectively be `true` for users in at least one of the groups, and `false` for everyone else.
      * See [[UserGroup]].
      */
-    public get enabled(): boolean | UserGroupCollection {
-        if (this.enabledPacked === UserGroupCollection.ALL_PACKED) {
+    public get enabled(): boolean | GroupMask {
+        if (this.enabledPacked === GroupMask.ALL_PACKED) {
             return true;
-        } else if (this.enabledPacked === UserGroupCollection.NONE_PACKED) {
+        } else if (this.enabledPacked === GroupMask.NONE_PACKED) {
             return false;
         } else {
             return this.enabledFor;
         }
     }
-    public set enabled(value: boolean | UserGroupCollection) {
+    public set enabled(value: boolean | GroupMask) {
         if (value === true) {
-            this.enabledPacked = UserGroupCollection.ALL_PACKED;
+            this.enabledPacked = GroupMask.ALL_PACKED;
         } else if (value === false) {
-            this.enabledPacked = UserGroupCollection.NONE_PACKED;
+            this.enabledPacked = GroupMask.NONE_PACKED;
         } else {
             this.enabledFor = value;
         }
@@ -61,7 +61,7 @@ export class Appearance implements AppearanceLike {
      */
     public get enabledFor() {
         if (!this._enabledFor) {
-            this._enabledFor = UserGroupCollection.FromPacked(this.actor.context, this._enabled);
+            this._enabledFor = GroupMask.FromPacked(this.actor.context, this._enabled);
             this._enabledFor.onChanged(ugc => this._enabled = ugc.packed());
         }
         return this._enabledFor;
@@ -83,7 +83,7 @@ export class Appearance implements AppearanceLike {
     /** Whether this actor is visible */
     public get activeAndEnabled(): boolean {
         return (!this.actor.parent || this.actor.parent.appearance.activeAndEnabled)
-            && this._enabled !== UserGroupCollection.NONE_PACKED;
+            && this._enabled !== GroupMask.NONE_PACKED;
     }
 
     /** @returns A shared reference to this actor's material, or null if this actor has no material */

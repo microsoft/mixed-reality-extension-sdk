@@ -3,7 +3,7 @@
  * Licensed under the MIT License.
  */
 
-import { Context, UserGroupCollection } from '../..';
+import { Context, GroupMask } from '../..';
 import readPath from '../../utils/readPath';
 import { InternalUser } from '../internal/user';
 import { Patchable } from '../patchable';
@@ -11,7 +11,7 @@ import { Patchable } from '../patchable';
 export interface UserLike {
     id: string;
     name: string;
-    groups: number | UserGroupCollection;
+    groups: number | GroupMask;
     properties: { [name: string]: string };
 }
 
@@ -27,7 +27,7 @@ export class User implements UserLike, Patchable<UserLike> {
 
     private _name: string;
     private _properties: { [name: string]: string };
-    private _groups: UserGroupCollection;
+    private _groups: GroupMask;
     // tslint:enable:variable-name
 
     public get context() { return this._context; }
@@ -40,7 +40,8 @@ export class User implements UserLike, Patchable<UserLike> {
      */
     public get groups() {
         if (!this._groups) {
-            this._groups = new UserGroupCollection(this._context);
+            this._groups = new GroupMask(this._context);
+            this._groups.allowDefault = false;
             this._groups.onChanged(() => this.userChanged('groups'));
         }
         return this._groups;
@@ -48,16 +49,10 @@ export class User implements UserLike, Patchable<UserLike> {
     public set groups(val) {
         this._groups = val;
         if (this._groups) {
+            this._groups.allowDefault = false;
             this._groups.onChanged(() => this.userChanged('groups'));
         }
         this.userChanged('groups');
-    }
-
-    // Note: users cannot be explicitly added to the "default" group
-    // tslint:disable-next-line:no-bitwise
-    private get groupsPacked() { return this._groups ? this._groups.packed() & (~1) : 1; }
-    private set groupsPacked(value: number) {
-        this.groups.setPacked(value);
     }
 
     /**
@@ -85,7 +80,7 @@ export class User implements UserLike, Patchable<UserLike> {
         if (from.properties !== undefined) this._properties = from.properties;
         if (from.groups !== undefined) {
             if (typeof from.groups === 'number') {
-                this.groupsPacked = from.groups;
+                this.groups.setPacked(from.groups);
             } else {
                 this.groups = from.groups;
             }
@@ -99,7 +94,7 @@ export class User implements UserLike, Patchable<UserLike> {
         return {
             id: this.id,
             name: this.name,
-            groups: this.groupsPacked,
+            groups: this.groups.packed() || 1,
             properties: this.properties,
         } as UserLike;
     }

@@ -8,7 +8,7 @@ import * as MRE from '@microsoft/mixed-reality-extension-sdk';
 import { Test } from '../test';
 
 export default class UserMaskTest extends Test {
-    public expectedResultDescription = "Click to join a team";
+    public expectedResultDescription = "Click to change teams";
     private redList: MRE.Actor;
     private blueList: MRE.Actor;
     private interval: NodeJS.Timeout;
@@ -54,7 +54,7 @@ export default class UserMaskTest extends Test {
             actor: {
                 name: 'redIcon',
                 appearance: {
-                    enabled: new MRE.UserGroupCollection(this.app.context, ['red', 'default']),
+                    enabled: new MRE.GroupMask(this.app.context, ['red', 'default']),
                     materialId: red.id
                 },
                 transform: {
@@ -72,7 +72,7 @@ export default class UserMaskTest extends Test {
             actor: {
                 name: 'blueIcon',
                 appearance: {
-                    enabled: new MRE.UserGroupCollection(this.app.context, ['blue', 'default']),
+                    enabled: new MRE.GroupMask(this.app.context, ['blue', 'default']),
                     materialId: blue.id
                 },
                 transform: {

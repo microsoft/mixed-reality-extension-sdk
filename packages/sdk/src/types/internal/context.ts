@@ -22,7 +22,6 @@ import {
     SetAnimationStateOptions,
     SubscriptionType,
     User,
-    UserGroupCollection,
     UserLike,
     UserSet,
 } from '../..';
