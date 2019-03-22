@@ -116,6 +116,9 @@ export class Appearance implements AppearanceLike {
         if (from.materialId !== undefined) this.materialId = from.materialId;
         if (from.enabledPacked !== undefined) {
             this.enabledPacked = from.enabledPacked;
+        } else if (typeof from.enabled === 'number') {
+            // redirect masks that got into the enabled field
+            this.enabledPacked = from.enabled;
         } else if (from.enabled !== undefined) {
             this.enabled = from.enabled;
         }
