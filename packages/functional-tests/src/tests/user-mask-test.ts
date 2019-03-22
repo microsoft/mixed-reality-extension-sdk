@@ -32,6 +32,7 @@ export default class UserMaskTest extends Test {
             actor: {
                 name: 'redList',
                 transform: { position: { x: -1, y: 1.5 } },
+                appearance: { enabled: true },
                 text: textDef
             }
         }).value;
@@ -39,6 +40,7 @@ export default class UserMaskTest extends Test {
             actor: {
                 name: 'blueList',
                 transform: { position: { x: 1, y: 1.5 } },
+                appearance: { enabled: true },
                 text: textDef
             }
         }).value;
