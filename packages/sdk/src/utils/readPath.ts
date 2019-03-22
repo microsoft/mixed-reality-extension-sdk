@@ -25,5 +25,5 @@ export default function readPath(src: any, dst: any, ...path: string[]) {
         }
         src = src[field];
     }
-    dst[field] = (src && src.toJSON) ? src.toJSON() : src;
+    dst[field] = src;
 }

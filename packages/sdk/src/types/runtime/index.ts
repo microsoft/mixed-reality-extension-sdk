@@ -18,4 +18,3 @@ export * from './assets';
 export * from './physics';
 export * from './lookAt';
 export * from './appearance';
-export * from './groupMask';
