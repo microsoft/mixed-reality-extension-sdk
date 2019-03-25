@@ -3,13 +3,9 @@
  * Licensed under the MIT License.
  */
 
+import { EventEmitter } from 'events';
 import { Actor, ColliderGeometry } from '.';
 import { CollisionEventState, CollisionHandler } from './physics';
-
-interface CollisionHandlers {
-    'enter'?: CollisionHandler[];
-    'exit'?: CollisionHandler[];
-}
 
 /**
  * Describes the properties of a collider.
@@ -32,8 +28,7 @@ export class Collider implements ColliderLike {
     // Readonly params that are not patchable or observable.
     // tslint:disable:variable-name
     private _colliderGeometry: Readonly<ColliderGeometry>;
-    private _collisionHandlers: CollisionHandlers = {};
-    private _triggerHandlers: CollisionHandlers = {};
+    private _eventHandlers = new EventEmitter();
     // tslint:enable:variable-name
 
     /**
@@ -71,11 +66,7 @@ export class Collider implements ColliderLike {
      * collision event state is received.
      */
     public onCollision(state: CollisionEventState, handler: CollisionHandler) {
-        if (!!this._collisionHandlers[state]) {
-            this._collisionHandlers[state] = [];
-        }
-
-        this._collisionHandlers[state].push(handler);
+        this._eventHandlers.on(`collision-${state}`, handler);
     }
 
     /**
@@ -84,10 +75,7 @@ export class Collider implements ColliderLike {
      * @param handler The handler to remove.
      */
     public offCollision(state: CollisionEventState, handler: CollisionHandler) {
-        if (this._collisionHandlers[state]) {
-            this._collisionHandlers[state] =
-                this._collisionHandlers[state].filter(h => h !== handler);
-        }
+        this._eventHandlers.off(`collision-${state}`, handler);
     }
 
     /**
@@ -97,11 +85,7 @@ export class Collider implements ColliderLike {
      * collision event state is received.
      */
     public onTrigger(state: CollisionEventState, handler: CollisionHandler) {
-        if (!!this._triggerHandlers[state]) {
-            this._triggerHandlers[state] = [];
-        }
-
-        this._triggerHandlers[state].push(handler);
+        this._eventHandlers.on(`trigger-${state}`, handler);
     }
 
     /**
@@ -110,10 +94,7 @@ export class Collider implements ColliderLike {
      * @param handler The handler to remove.
      */
     public offTrigger(state: CollisionEventState, handler: CollisionHandler) {
-        if (this._triggerHandlers[state]) {
-            this._triggerHandlers[state] =
-                this._triggerHandlers[state].filter(h => h !== handler);
-        }
+        this._eventHandlers.off(`trigger-${state}`, handler);
     }
 
     /** @hidden */
