@@ -6,6 +6,24 @@
 import { Actor, Vector3 } from "../../..";
 
 /**
+ * The collision handler to be called when a collision event occurs.
+ * @param data The collision data associated with the collision.
+ */
+export type CollisionHandler = (data: CollisionData) => void;
+
+/**
+ * The trigger handler to be called whan an actor has entered or exited
+ * a trigger volume.
+ * @param otherActor The other actor that has entered the trigger volume.
+ */
+export type TriggerHandler = (otherActor: Actor) => void;
+
+/**
+ * The collision state for the collsion event.
+ */
+export type CollisionEventState = 'enter' | 'exit';
+
+/**
  * The point of contact for a collision.
  */
 export interface ContactPoint {

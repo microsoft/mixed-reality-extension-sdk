@@ -4,6 +4,12 @@
  */
 
 import { Actor, ColliderGeometry } from '.';
+import { CollisionEventState, CollisionHandler } from './physics';
+
+interface CollisionHandlers {
+    'enter'?: CollisionHandler[];
+    'exit'?: CollisionHandler[];
+}
 
 /**
  * Describes the properties of a collider.
@@ -24,8 +30,11 @@ export class Collider implements ColliderLike {
     // public collisionLayer = CollisionLayer.Object;
 
     // Readonly params that are not patchable or observable.
-    // tslint:disable-next-line:variable-name
+    // tslint:disable:variable-name
     private _colliderGeometry: Readonly<ColliderGeometry>;
+    private _collisionHandlers: CollisionHandlers = {};
+    private _triggerHandlers: CollisionHandlers = {};
+    // tslint:enable:variable-name
 
     /**
      * The collider geometry that the collider was initialized with.  These are a
@@ -52,6 +61,58 @@ export class Collider implements ColliderLike {
             // if (initFrom.collisionLayer !== undefined) this.collisionLayer = initFrom.collisionLayer;
         } else {
             throw new Error("Must provide a valid collider like to init from.");
+        }
+    }
+
+    /**
+     * Add a collision event handler for the given collision event state.
+     * @param state The state of the collision event.
+     * @param handler The handler to call when a collision event with the matching
+     * collision event state is received.
+     */
+    public onCollision(state: CollisionEventState, handler: CollisionHandler) {
+        if (!!this._collisionHandlers[state]) {
+            this._collisionHandlers[state] = [];
+        }
+
+        this._collisionHandlers[state].push(handler);
+    }
+
+    /**
+     * Remove the collision handler for the given collision event state.
+     * @param state The state of the collision event.
+     * @param handler The handler to remove.
+     */
+    public offCollision(state: CollisionEventState, handler: CollisionHandler) {
+        if (this._collisionHandlers[state]) {
+            this._collisionHandlers[state] =
+                this._collisionHandlers[state].filter(h => h !== handler);
+        }
+    }
+
+    /**
+     * Add a trigger event handler for the given collision event state.
+     * @param state The state of the trigger event.
+     * @param handler The handler to call when a trigger event with the matching
+     * collision event state is received.
+     */
+    public onTrigger(state: CollisionEventState, handler: CollisionHandler) {
+        if (!!this._triggerHandlers[state]) {
+            this._triggerHandlers[state] = [];
+        }
+
+        this._triggerHandlers[state].push(handler);
+    }
+
+    /**
+     * Remove the trigger handler for the given collision event state.
+     * @param state The state of the trigger event.
+     * @param handler The handler to remove.
+     */
+    public offTrigger(state: CollisionEventState, handler: CollisionHandler) {
+        if (this._triggerHandlers[state]) {
+            this._triggerHandlers[state] =
+                this._triggerHandlers[state].filter(h => h !== handler);
         }
     }
 
