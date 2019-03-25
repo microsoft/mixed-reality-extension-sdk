@@ -38,6 +38,7 @@ import { log } from '../../log';
 import { SetSoundStateOptions } from '../../sound';
 import { observe, unobserve } from '../../utils/observe';
 import readPath from '../../utils/readPath';
+import resolveJsonValues from '../../utils/resolveJsonValues';
 import { ForwardPromise } from '../forwardPromise';
 import { InternalActor } from '../internal/actor';
 import { CollisionEventType, CreateColliderType } from '../network/payloads';
@@ -55,7 +56,7 @@ export interface ActorLike {
     parentId: string;
     name: string;
     tag: string;
-    subscriptions: SubscriptionType[];
+    subscriptions?: SubscriptionType[];
     transform: Partial<TransformLike>;
     appearance: Partial<AppearanceLike>;
     light: Partial<LightLike>;
@@ -716,6 +717,20 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
             lookAt: this._lookAt ? this._lookAt.toJSON() : undefined,
             grabbable: this._grabbable
         } as ActorLike;
+    }
+
+    /**
+     * Prepare outgoing messages
+     * @hidden
+     */
+    public static sanitize(msg: ActorLike): ActorLike;
+    public static sanitize(msg: Partial<ActorLike>): Partial<ActorLike>;
+    public static sanitize(msg: ActorLike | Partial<ActorLike>): ActorLike | Partial<ActorLike> {
+        msg = resolveJsonValues(msg);
+        if (msg.appearance) {
+            msg.appearance = Appearance.sanitize(msg.appearance);
+        }
+        return msg;
     }
 
     /**

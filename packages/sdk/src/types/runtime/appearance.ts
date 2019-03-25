@@ -12,10 +12,7 @@ export interface AppearanceLike {
      * GroupMask object, this property will effectively be `true` for users in at least one
      * of the groups, and `false` for everyone else. See [[GroupMask]].
      */
-    enabled: boolean | GroupMask;
-
-    /** @hidden */
-    enabledPacked: number;
+    enabled: boolean | GroupMask | number;
 
     /**
      * The ID of a previously-created [[Material]] asset.
@@ -28,7 +25,7 @@ export class Appearance implements AppearanceLike {
     public $DoNotObserve = ['actor', '_enabledFor'];
 
     // tslint:disable:variable-name
-    private _enabledPacked = GroupMask.ALL_PACKED; // authoritative
+    private _enabled = GroupMask.ALL_PACKED; // authoritative
     private _enabledFor: GroupMask; // cached object, synced with _enabledPacked
     private _materialId = ZeroGuid;
     // tslint:enable:variable-name
@@ -53,6 +50,8 @@ export class Appearance implements AppearanceLike {
             this.enabledPacked = GroupMask.ALL_PACKED;
         } else if (value === false) {
             this.enabledPacked = GroupMask.NONE_PACKED;
+        } else if (typeof value === 'number') {
+            this.enabledPacked = value;
         } else {
             this.enabledFor = value;
         }
@@ -65,21 +64,20 @@ export class Appearance implements AppearanceLike {
      */
     public get enabledFor() {
         if (!this._enabledFor) {
-            this._enabledFor = GroupMask.FromPacked(this.actor.context, this._enabledPacked);
-            this._enabledFor.onChanged(gm => this._enabledPacked = gm.packed());
+            this._enabledFor = GroupMask.FromPacked(this.actor.context, this._enabled);
+            this._enabledFor.onChanged(gm => this._enabled = gm.packed());
         }
         return this._enabledFor;
     }
     public set enabledFor(value) {
         this.enabledPacked = value.packed();
         this._enabledFor = value;
-        this._enabledFor.onChanged(gm => this._enabledPacked = gm.packed());
+        this._enabledFor.onChanged(gm => this._enabled = gm.packed());
     }
 
-    /** @hidden */
-    public get enabledPacked() { return this._enabledPacked; }
-    public set enabledPacked(value: number) {
-        this._enabledPacked = value;
+    private get enabledPacked() { return this._enabled; }
+    private set enabledPacked(value: number) {
+        this._enabled = value;
         if (this._enabledFor) {
             this._enabledFor.setPacked(value);
         }
@@ -88,7 +86,7 @@ export class Appearance implements AppearanceLike {
     /** Whether this actor is visible */
     public get activeAndEnabled(): boolean {
         return (!this.actor.parent || this.actor.parent.appearance.activeAndEnabled)
-            && this._enabledPacked !== GroupMask.NONE_PACKED;
+            && this._enabled !== GroupMask.NONE_PACKED;
     }
 
     /** @returns A shared reference to this actor's material, or null if this actor has no material */
@@ -114,9 +112,7 @@ export class Appearance implements AppearanceLike {
     public copy(from: Partial<AppearanceLike>): this {
         if (!from) return this;
         if (from.materialId !== undefined) this.materialId = from.materialId;
-        if (from.enabledPacked !== undefined) {
-            this.enabledPacked = from.enabledPacked;
-        } else if (typeof from.enabled === 'number') {
+        if (typeof from.enabled === 'number') {
             // redirect masks that got into the enabled field
             this.enabledPacked = from.enabled;
         } else if (from.enabled !== undefined) {
@@ -127,8 +123,23 @@ export class Appearance implements AppearanceLike {
 
     public toJSON() {
         return {
-            enabledPacked: this.enabledPacked,
+            enabled: this.enabledPacked,
             materialId: this.materialId
         } as AppearanceLike;
+    }
+
+    /**
+     * Prepare outgoing messages
+     * @hidden
+     */
+    public static sanitize(msg: Partial<AppearanceLike>) {
+        // Need to reduce `boolean | GroupMask | number` to just `number`.
+        // GroupMask is already serialized to number, so just need to handle boolean case.
+        if (msg.enabled === true) {
+            msg.enabled = GroupMask.ALL_PACKED;
+        } else if (msg.enabled === false) {
+            msg.enabled = GroupMask.NONE_PACKED;
+        }
+        return msg;
     }
 }

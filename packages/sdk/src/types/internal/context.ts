@@ -194,7 +194,7 @@ export class InternalContext {
     private createActorFromPayload(payload: CreateActorCommon): ForwardPromise<Actor> {
         // Resolve by-reference values now, ensuring they won't change in the
         // time between now and when this message is actually sent.
-        payload.actor = resolveJsonValues(payload.actor);
+        payload.actor = Actor.sanitize(payload.actor);
         // Create the actor locally.
         this.updateActors(payload.actor);
         // Get a reference to the new actor.
