@@ -86,6 +86,11 @@ export class GroupMask extends Set<string> {
         this.changedCallback = callback;
     }
 
+    /** @hidden */
+    public getClean() {
+        return this.changedCallback === undefined ? this : new GroupMask(this.context, this);
+    }
+
     public add(item: string) {
         if (this.allowDefault || item !== 'default') {
             super.add(item);

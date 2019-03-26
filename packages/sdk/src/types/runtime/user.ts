@@ -47,11 +47,16 @@ export class User implements UserLike, Patchable<UserLike> {
         return this._groups;
     }
     public set groups(val) {
-        this._groups = val;
-        if (this._groups) {
-            this._groups.allowDefault = false;
-            this._groups.onChanged(() => this.userChanged('groups'));
+        if (!val) {
+            if (this._groups) {
+                this._groups.clear();
+            }
+            return;
         }
+
+        this._groups = val.getClean();
+        this._groups.allowDefault = false;
+        this._groups.onChanged(() => this.userChanged('groups'));
         this.userChanged('groups');
     }
 

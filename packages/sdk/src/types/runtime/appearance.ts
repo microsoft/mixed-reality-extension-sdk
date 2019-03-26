@@ -70,8 +70,12 @@ export class Appearance implements AppearanceLike {
         return this._enabledFor;
     }
     public set enabledFor(value) {
+        if (!value) {
+            this.enabled = false;
+            return;
+        }
         this.enabledPacked = value.packed();
-        this._enabledFor = value;
+        this._enabledFor = value.getClean();
         this._enabledFor.onChanged(gm => this._enabled = gm.packed());
     }
 
