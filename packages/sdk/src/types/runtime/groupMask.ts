@@ -11,18 +11,24 @@ import { Context } from '.';
  * properties of actors based on the memberships of the viewing user. All users not assigned
  * a group are in the `default` group. See [[User.groups]], [[Appearance.enabled]].
  */
-export class GroupMask extends Set<string> {
+export class GroupMask extends Set<string> implements Iterable<string> {
     public static readonly ALL_PACKED = ~0;
     public static readonly NONE_PACKED = 0;
 
     // tslint:disable-next-line:variable-name
     private _allowDefault = true;
+    /** @hidden */
     public get allowDefault() { return this._allowDefault; }
     public set allowDefault(val) {
         this._allowDefault = val;
         this.delete('default');
     }
 
+    /**
+     * Create a new mask containing the given groups.
+     * @param context An active MRE app context
+     * @param initialContents A list of group names to be added to this GroupMask
+     */
     constructor(private context: Context, initialContents: Iterable<string> = null) {
         super();
         if (initialContents) {
@@ -35,16 +41,22 @@ export class GroupMask extends Set<string> {
         }
     }
 
+    /**
+     * Generates a new mask containing every group currently defined.
+     * @param context An active MRE app context
+     */
     public static All(context: Context) {
         return this.FromPacked(context, this.ALL_PACKED);
     }
 
+    /** @hidden */
     public static FromPacked(context: Context, value: number): GroupMask {
         const group = new GroupMask(context);
         group.setPacked(value);
         return group;
     }
 
+    /** @hidden */
     public packed() {
         let pack = 0;
         for (const group of this) {
@@ -56,6 +68,7 @@ export class GroupMask extends Set<string> {
         return pack;
     }
 
+    /** @hidden */
     public toJSON() {
         return this.packed();
     }
@@ -91,6 +104,10 @@ export class GroupMask extends Set<string> {
         return this.changedCallback === undefined ? this : new GroupMask(this.context, this);
     }
 
+    /**
+     * Add a group to this mask
+     * @param item The group to add
+     */
     public add(item: string) {
         if (this.allowDefault || item !== 'default') {
             super.add(item);
@@ -101,6 +118,10 @@ export class GroupMask extends Set<string> {
         return this;
     }
 
+    /**
+     * Add multiple groups to this mask
+     * @param items The groups to add
+     */
     public addAll(items: Iterable<string>) {
         for (const i of items) {
             if (this.allowDefault || i !== 'default') {
@@ -113,6 +134,11 @@ export class GroupMask extends Set<string> {
         return this;
     }
 
+    /**
+     * Remove a group from this mask
+     * @param item The group to remove
+     * @returns Whether the group was removed from this mask
+     */
     public delete(item: string) {
         const ret = super.delete(item);
         if (ret && this.changedCallback) {
@@ -121,6 +147,9 @@ export class GroupMask extends Set<string> {
         return ret;
     }
 
+    /**
+     * Remove all groups from this mask
+     */
     public clear() {
         super.clear();
         if (this.changedCallback) {
@@ -128,11 +157,16 @@ export class GroupMask extends Set<string> {
         }
     }
 
+    /**
+     * Make this mask contain only the given groups
+     * @param items The items to add
+     */
     public set(items: Iterable<string>) {
         super.clear();
         this.addAll(items);
     }
 
+    /** @hidden */
     public setPacked(value: number) {
         super.clear();
         const mapping = this.context.internal.userGroupMapping;
@@ -148,5 +182,14 @@ export class GroupMask extends Set<string> {
         if (this.changedCallback) {
             this.changedCallback(this);
         }
+    }
+
+    /**
+     * Check if a group is in this mask
+     * @param item The group to check
+     * @returns Whether the group is in this mask
+     */
+    public has(item: string) {
+        return super.has(item);
     }
 }
