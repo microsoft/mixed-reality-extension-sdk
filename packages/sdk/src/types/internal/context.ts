@@ -17,7 +17,6 @@ import {
     CollisionEvent,
     Context,
     CreateAnimationOptions,
-    LookAtMode,
     PrimitiveDefinition,
     SetAnimationStateOptions,
     SubscriptionType,
@@ -25,11 +24,17 @@ import {
     UserLike,
     UserSet,
 } from '../..';
-
+import { log } from '../../log';
+import * as Protocols from '../../protocols';
+import { Execution } from '../../protocols/execution';
+import { Handshake } from '../../protocols/handshake';
+import { SetSoundStateOptions, SoundCommand } from '../../sound';
+import resolveJsonValues from '../../utils/resolveJsonValues';
+import { createForwardPromise, ForwardPromise } from '../forwardPromise';
+import { OperatingModel } from '../network/operatingModel';
 import {
     ActorUpdate,
     AssetUpdate,
-    CollisionEventType,
     CreateActorCommon,
     CreateAnimation,
     CreateColliderType,
@@ -47,7 +52,6 @@ import {
     SetAnimationState,
     SetBehavior,
     SetSoundState,
-    UpdateCollisionEventSubscriptions,
     UpdateSubscriptions,
     UserUpdate,
 } from '../network/payloads';
@@ -348,26 +352,6 @@ export class InternalContext {
             } as UpdateSubscriptions);
         } else {
             log.error('app', `Failed to update subscriptions. Actor ${actorId} not found.`);
-        }
-    }
-
-    public updateCollisionEventSubscriptions(
-        actorId: string,
-        options: {
-            adds?: CollisionEventType | CollisionEventType[],
-            removes?: CollisionEventType | CollisionEventType[]
-        }
-    ) {
-        const actor = this.actorSet[actorId];
-        if (actor) {
-            this.protocol.sendPayload({
-                type: 'update-collision-event-subscriptions',
-                actorId,
-                adds: options.adds,
-                removes: options.removes
-            } as UpdateCollisionEventSubscriptions);
-        } else {
-            log.error('app', `Failed to update collision event subscriptions. Actor ${actorId} not found.`);
         }
     }
 

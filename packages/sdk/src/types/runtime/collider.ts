@@ -3,9 +3,10 @@
  * Licensed under the MIT License.
  */
 
-import { EventEmitter } from 'events';
 import { Actor, ColliderGeometry } from '.';
-import { CollisionEventState, CollisionHandler } from './physics';
+import { InternalCollider } from '../internal/collider';
+import { CollisionHandler, TriggerHandler } from './physics';
+import { ColliderEventType, CollisionEventType, TriggerEventType } from './physics/collisionEventType';
 
 /**
  * Describes the properties of a collider.
@@ -15,21 +16,32 @@ export interface ColliderLike {
     isTrigger: boolean;
     // collisionLayer: CollisionLayer;
     colliderGeometry: ColliderGeometry;
+    eventSubscriptions: ColliderEventType[];
 }
 
 /**
  * A collider represents the abstraction of a physics collider object on the host.
  */
 export class Collider implements ColliderLike {
+    // Readonly params that are not patchable or observable.
+    // tslint:disable:variable-name
+    private _colliderGeometry: Readonly<ColliderGeometry>;
+    private _internal: InternalCollider;
+    // tslint:enable:variable-name
+
     public enabled = true;
     public isTrigger = false;
     // public collisionLayer = CollisionLayer.Object;
 
-    // Readonly params that are not patchable or observable.
-    // tslint:disable:variable-name
-    private _colliderGeometry: Readonly<ColliderGeometry>;
-    private _eventHandlers = new EventEmitter();
-    // tslint:enable:variable-name
+    /** @hidden */
+    public get internal() { return this._internal; }
+
+    /**
+     * The current event subscriptions that are active on this collider.
+     */
+    public get eventSubscriptions(): ColliderEventType[] {
+        return this.internal.eventSubscriptions;
+    }
 
     /**
      * The collider geometry that the collider was initialized with.  These are a
@@ -50,6 +62,8 @@ export class Collider implements ColliderLike {
                 throw new Error("Must provide valid collider params containing a valid collider type");
             }
 
+            this._internal = new InternalCollider(this, $owner);
+
             if (initFrom.colliderGeometry !== undefined) this._colliderGeometry = initFrom.colliderGeometry;
             if (initFrom.enabled !== undefined) this.enabled = initFrom.enabled;
             if (initFrom.isTrigger !== undefined) this.isTrigger = initFrom.isTrigger;
@@ -61,40 +75,40 @@ export class Collider implements ColliderLike {
 
     /**
      * Add a collision event handler for the given collision event state.
-     * @param state The state of the collision event.
+     * @param eventType The type of the collision event.
      * @param handler The handler to call when a collision event with the matching
      * collision event state is received.
      */
-    public onCollision(state: CollisionEventState, handler: CollisionHandler) {
-        this._eventHandlers.on(`collision-${state}`, handler);
+    public onCollision(eventType: CollisionEventType, handler: CollisionHandler) {
+        this.internal.on(eventType, handler);
     }
 
     /**
      * Remove the collision handler for the given collision event state.
-     * @param state The state of the collision event.
+     * @param eventType The type of the collision event.
      * @param handler The handler to remove.
      */
-    public offCollision(state: CollisionEventState, handler: CollisionHandler) {
-        this._eventHandlers.off(`collision-${state}`, handler);
+    public offCollision(eventType: CollisionEventType, handler: CollisionHandler) {
+        this.internal.off(eventType, handler);
     }
 
     /**
      * Add a trigger event handler for the given collision event state.
-     * @param state The state of the trigger event.
+     * @param eventType The type of the trigger event.
      * @param handler The handler to call when a trigger event with the matching
      * collision event state is received.
      */
-    public onTrigger(state: CollisionEventState, handler: CollisionHandler) {
-        this._eventHandlers.on(`trigger-${state}`, handler);
+    public onTrigger(eventType: TriggerEventType, handler: TriggerHandler) {
+        this.internal.on(eventType, handler);
     }
 
     /**
      * Remove the trigger handler for the given collision event state.
-     * @param state The state of the trigger event.
+     * @param eventType The type of the trigger event.
      * @param handler The handler to remove.
      */
-    public offTrigger(state: CollisionEventState, handler: CollisionHandler) {
-        this._eventHandlers.off(`trigger-${state}`, handler);
+    public offTrigger(eventType: TriggerEventType, handler: TriggerHandler) {
+        this.internal.off(eventType, handler);
     }
 
     /** @hidden */
