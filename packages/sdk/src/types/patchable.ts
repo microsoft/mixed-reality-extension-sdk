@@ -19,4 +19,5 @@ export interface Patchable<T> {
     internal: InternalPatchable<T>;
     toJSON(): T;
     copy(from: Partial<T>): this;
+    // static sanitize(arg: Partial<T>): any
 }

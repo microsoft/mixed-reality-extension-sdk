@@ -10,7 +10,8 @@ import {
     Behavior,
     CollisionData,
     DiscreteAction,
-    SetAnimationStateOptions } from '../..';
+    SetAnimationStateOptions
+} from '../..';
 import { ExportedPromise } from '../../utils/exportedPromise';
 import { CollisionEventType } from '../network/payloads';
 import { InternalPatchable } from '../patchable';
@@ -64,8 +65,8 @@ export class InternalActor implements InternalPatchable<ActorLike> {
         if (patch) {
             patch.id = this.actor.id;
             delete this.patch;
+            return Actor.sanitize(patch);
         }
-        return patch;
     }
 
     public notifyCreated(success: boolean, reason?: any): void {
