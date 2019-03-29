@@ -14,7 +14,7 @@ import FailureTest from './failure-test';
 import GltfAnimationTest from './gltf-animation-test';
 import GltfConcurrencyTest from './gltf-concurrency-test';
 import GltfGenTest from './gltf-gen-test';
-import GrabTest from './grab-test';
+// import GrabTest from './grab-test';
 import InputTest from './input-test';
 import InterpolationTest from './interpolation-test';
 import LightTest from './light-test';
@@ -47,7 +47,7 @@ export const Factories = {
     'gltf-animation-test': (...args) => new GltfAnimationTest(...args),
     'gltf-concurrency-test': (...args) => new GltfConcurrencyTest(...args),
     'gltf-gen-test': (...args) => new GltfGenTest(...args),
-    'grab-test': (...args) => new GrabTest(...args),
+    // 'grab-test': (...args) => new GrabTest(...args),
     'input-test': (...args) => new InputTest(...args),
     'interpolation-test': (...args) => new InterpolationTest(...args),
     'light-test': (...args) => new LightTest(...args),
