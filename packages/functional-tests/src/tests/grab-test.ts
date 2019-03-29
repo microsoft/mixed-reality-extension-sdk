@@ -64,15 +64,15 @@ export default class GrabTest extends Test {
         });
 
         // Make the actor grabbable and update state based on grab.
-        this.model.grabbable = true;
-        this.model.onGrab('begin', _ => {
-            this.state = 1;
-            this.cycleState();
-        });
-        this.model.onGrab('end', _ => {
-            this.state = 2;
-            this.cycleState();
-        });
+        // this.model.grabbable = true;
+        // this.model.onGrab('begin', _ => {
+        //     this.state = 1;
+        //     this.cycleState();
+        // });
+        // this.model.onGrab('end', _ => {
+        //     this.state = 2;
+        //     this.cycleState();
+        // });
 
         // Create two grabbable cubes that can be played with at will.  Position left
         // anr right of the monkey.
@@ -87,7 +87,7 @@ export default class GrabTest extends Test {
                     name: cube.name,
                     transform: { position: { x: cube.x, y: 1, z: -1 } }
                 }
-            }).value.grabbable = true;
+            }); // .value.grabbable = true;
         }
 
         this.cycleState();
@@ -114,11 +114,11 @@ export default class GrabTest extends Test {
             case 3:
                 if (this.clickCount % 2 === 0) {
                     this.model.enableAnimation('OnClick');
-                    this.model.grabbable = false;
+                    // this.model.grabbable = false;
                     this.app.setOverrideText("Click to make monkey grabbable again.");
                 } else {
                     this.model.enableAnimation('OnClick');
-                    this.model.grabbable = true;
+                    // this.model.grabbable = true;
                     this.state = 0;
                     this.cycleState();
                 }
