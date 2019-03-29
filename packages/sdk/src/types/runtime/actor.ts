@@ -65,7 +65,7 @@ export interface ActorLike {
     text: Partial<TextLike>;
     attachment: Partial<AttachmentLike>;
     lookAt: Partial<LookAtLike>;
-    // grabbable: boolean;
+    grabbable: boolean;
 }
 
 /**
@@ -139,13 +139,13 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
         }
     }
 
-    // public get grabbable() { return this._grabbable; }
-    // public set grabbable(value) {
-    //     if (value !== this._grabbable) {
-    //         this._grabbable = value;
-    //         this.actorChanged('grabbable');
-    //     }
-    // }
+    public get grabbable() { return this._grabbable; }
+    public set grabbable(value) {
+        if (value !== this._grabbable) {
+            this._grabbable = value;
+            this.actorChanged('grabbable');
+        }
+    }
 
     // tslint:disable-next-line:variable-name
     private constructor(private _context: Context, private _id: string) {
@@ -490,10 +490,10 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
      * @param grabState The grab state to fire the handler on.
      * @param handler The handler to call when the grab state has changed.
      */
-    // public onGrab(grabState: 'begin' | 'end', handler: ActionHandler) {
-    //     const actionState: ActionState = (grabState === 'begin') ? 'started' : 'stopped';
-    //     this.grab.on(actionState, handler);
-    // }
+    public onGrab(grabState: 'begin' | 'end', handler: ActionHandler) {
+        const actionState: ActionState = (grabState === 'begin') ? 'started' : 'stopped';
+        this.grab.on(actionState, handler);
+    }
 
     /**
      * Sets the behavior on this actor.
@@ -695,7 +695,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
         if (from.collider) this._setCollider(from.collider);
         if (from.text) this.enableText(from.text);
         if (from.lookAt) this.enableLookAt(from.lookAt.actorId, from.lookAt.mode);
-        // if (from.grabbable) this._grabbable = from.grabbable;
+        if (from.grabbable) this._grabbable = from.grabbable;
 
         this.internal.observing = wasObserving;
         return this;
