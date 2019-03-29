@@ -87,15 +87,11 @@
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
-							<h3>Properties</h3>
-							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-class"><a href="appearance.html#enabled" class="tsd-kind-icon">enabled</a></li>
-							</ul>
-						</section>
-						<section class="tsd-index-section ">
 							<h3>Accessors</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="appearance.html#activeandenabled" class="tsd-kind-icon">active<wbr>And<wbr>Enabled</a></li>
+								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="appearance.html#enabled" class="tsd-kind-icon">enabled</a></li>
+								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="appearance.html#enabledfor" class="tsd-kind-icon">enabled<wbr>For</a></li>
 								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="appearance.html#material" class="tsd-kind-icon">material</a></li>
 								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="appearance.html#materialid" class="tsd-kind-icon">material<wbr>Id</a></li>
 							</ul>
@@ -122,7 +118,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in types/runtime/appearance.ts:43</li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/4635a5e/packages/sdk/src/types/runtime/appearance.ts#L112">types/runtime/appearance.ts:112</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -137,25 +133,6 @@
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
-				<h2>Properties</h2>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
-					<a name="enabled" class="tsd-anchor"></a>
-					<h3>enabled</h3>
-					<div class="tsd-signature tsd-kind-icon">enabled<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> =&nbsp;true</span></div>
-					<aside class="tsd-sources">
-						<p>Implementation of <a href="../interfaces/appearancelike.html">AppearanceLike</a>.<a href="../interfaces/appearancelike.html#enabled">enabled</a></p>
-						<ul>
-							<li>Defined in types/runtime/appearance.ts:23</li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>Whether the actor with this appearance should be visible</p>
-						</div>
-					</div>
-				</section>
-			</section>
-			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Accessors</h2>
 				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
 					<a name="activeandenabled" class="tsd-anchor"></a>
@@ -167,10 +144,112 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in types/runtime/appearance.ts:25</li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/4635a5e/packages/sdk/src/types/runtime/appearance.ts#L91">types/runtime/appearance.ts:91</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Whether this actor is visible</p>
+								</div>
+							</div>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class">
+					<a name="enabled" class="tsd-anchor"></a>
+					<h3>enabled</h3>
+					<ul class="tsd-signatures tsd-kind-accessor tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> enabled<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> | </span><a href="groupmask.html" class="tsd-signature-type">GroupMask</a></li>
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">set</span> enabled<span class="tsd-signature-symbol">(</span>value<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> | </span><a href="groupmask.html" class="tsd-signature-type">GroupMask</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/4635a5e/packages/sdk/src/types/runtime/appearance.ts#L39">types/runtime/appearance.ts:39</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>This actor&#39;s visibility preference, independent of its parent. See <a href="appearance.html#activeandenabled">Appearance.activeAndEnabled</a> for
+										the computed visibility state. If this property is a GroupMask object, this property will
+										effectively be <code>true</code> for users in at least one of the groups, and <code>false</code> for everyone else.
+									See <a href="groupmask.html">GroupMask</a>.</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span>
+								<span class="tsd-signature-symbol"> | </span>
+								<a href="groupmask.html" class="tsd-signature-type">GroupMask</a>
+							</h4>
+						</li>
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/4635a5e/packages/sdk/src/types/runtime/appearance.ts#L48">types/runtime/appearance.ts:48</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>This actor&#39;s visibility preference, independent of its parent. See <a href="appearance.html#activeandenabled">Appearance.activeAndEnabled</a> for
+										the computed visibility state. If this property is a GroupMask object, this property will
+										effectively be <code>true</code> for users in at least one of the groups, and <code>false</code> for everyone else.
+									See <a href="groupmask.html">GroupMask</a>.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>value: <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> | </span><a href="groupmask.html" class="tsd-signature-type">GroupMask</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class">
+					<a name="enabledfor" class="tsd-anchor"></a>
+					<h3>enabled<wbr>For</h3>
+					<ul class="tsd-signatures tsd-kind-accessor tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> enabledFor<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="groupmask.html" class="tsd-signature-type">GroupMask</a></li>
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">set</span> enabledFor<span class="tsd-signature-symbol">(</span>value<span class="tsd-signature-symbol">: </span><a href="groupmask.html" class="tsd-signature-type">GroupMask</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/4635a5e/packages/sdk/src/types/runtime/appearance.ts#L65">types/runtime/appearance.ts:65</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p><a href="appearance.html#enabled">enabled</a>, but forced to a <a href="groupmask.html">GroupMask</a>. Using this property will convert this
+										actor&#39;s <code>enabled</code> property to the GroupMask equivalent of its current value relative
+									to the current set of used groups.</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <a href="groupmask.html" class="tsd-signature-type">GroupMask</a></h4>
+						</li>
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/4635a5e/packages/sdk/src/types/runtime/appearance.ts#L72">types/runtime/appearance.ts:72</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p><a href="appearance.html#enabled">enabled</a>, but forced to a <a href="groupmask.html">GroupMask</a>. Using this property will convert this
+										actor&#39;s <code>enabled</code> property to the GroupMask equivalent of its current value relative
+									to the current set of used groups.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>value: <a href="groupmask.html" class="tsd-signature-type">GroupMask</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -185,7 +264,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in types/runtime/appearance.ts:30</li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/4635a5e/packages/sdk/src/types/runtime/appearance.ts#L97">types/runtime/appearance.ts:97</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -196,7 +275,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in types/runtime/appearance.ts:31</li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/4635a5e/packages/sdk/src/types/runtime/appearance.ts#L98">types/runtime/appearance.ts:98</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -221,17 +300,31 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in types/runtime/appearance.ts:34</li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/4635a5e/packages/sdk/src/types/runtime/appearance.ts#L103">types/runtime/appearance.ts:103</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>The ID of a previously-created <a href="material.html">Material</a> asset.</p>
+								</div>
+								<dl class="tsd-comment-tags">
+									<dt>inheritdoc</dt>
+									<dd></dd>
+								</dl>
+							</div>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
 						</li>
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in types/runtime/appearance.ts:35</li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/4635a5e/packages/sdk/src/types/runtime/appearance.ts#L104">types/runtime/appearance.ts:104</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>The ID of a previously-created <a href="material.html">Material</a> asset.</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -255,7 +348,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in types/runtime/appearance.ts:47</li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/4635a5e/packages/sdk/src/types/runtime/appearance.ts#L116">types/runtime/appearance.ts:116</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -278,7 +371,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in types/runtime/appearance.ts:54</li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/4635a5e/packages/sdk/src/types/runtime/appearance.ts#L128">types/runtime/appearance.ts:128</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="../interfaces/appearancelike.html" class="tsd-signature-type">AppearanceLike</a></h4>
@@ -305,11 +398,14 @@
 							<li class=" tsd-kind-constructor tsd-parent-kind-class">
 								<a href="appearance.html#constructor" class="tsd-kind-icon">constructor</a>
 							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class">
-								<a href="appearance.html#enabled" class="tsd-kind-icon">enabled</a>
-							</li>
 							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
 								<a href="appearance.html#activeandenabled" class="tsd-kind-icon">active<wbr>And<wbr>Enabled</a>
+							</li>
+							<li class=" tsd-kind-accessor tsd-parent-kind-class">
+								<a href="appearance.html#enabled" class="tsd-kind-icon">enabled</a>
+							</li>
+							<li class=" tsd-kind-accessor tsd-parent-kind-class">
+								<a href="appearance.html#enabledfor" class="tsd-kind-icon">enabled<wbr>For</a>
 							</li>
 							<li class=" tsd-kind-accessor tsd-parent-kind-class">
 								<a href="appearance.html#material" class="tsd-kind-icon">material</a>
