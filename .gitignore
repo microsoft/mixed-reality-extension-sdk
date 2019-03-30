@@ -340,3 +340,6 @@ docker-compose.yml
 
 # Git merge files
 *.orig
+
+# ignore functional-tests logs folder
+packages/functional-tests/logs/
