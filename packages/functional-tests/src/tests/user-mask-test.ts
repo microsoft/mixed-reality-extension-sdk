@@ -31,7 +31,7 @@ export default class UserMaskTest extends Test {
         this.redList = MRE.Actor.CreateEmpty(this.app.context, {
             actor: {
                 name: 'redList',
-                transform: { position: { x: -1, y: 1.5 } },
+                transform: { app: { position: { x: -1, y: 1.5 } } },
                 appearance: { enabled: true },
                 text: textDef
             }
@@ -39,7 +39,7 @@ export default class UserMaskTest extends Test {
         this.blueList = MRE.Actor.CreateEmpty(this.app.context, {
             actor: {
                 name: 'blueList',
-                transform: { position: { x: 1, y: 1.5 } },
+                transform: { app: { position: { x: 1, y: 1.5 } } },
                 appearance: { enabled: true },
                 text: textDef
             }
@@ -60,7 +60,7 @@ export default class UserMaskTest extends Test {
                     materialId: red.id
                 },
                 transform: {
-                    position: { y: 1 }
+                    app: { position: { y: 1 } }
                 }
             }
         }).value;
@@ -78,7 +78,7 @@ export default class UserMaskTest extends Test {
                     materialId: blue.id
                 },
                 transform: {
-                    position: { y: 1 }
+                    app: { position: { y: 1 } }
                 }
             }
         }).value;
