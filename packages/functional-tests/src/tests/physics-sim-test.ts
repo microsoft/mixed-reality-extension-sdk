@@ -50,7 +50,7 @@ export default class PhysicsSimTest extends Test {
                 },
                 addCollider: true,
                 actor: {
-                    transform: { position },
+                    transform: { local: { position } },
                     appearance: { materialId: this.pegMat.id }
                 }
             });
@@ -75,7 +75,7 @@ export default class PhysicsSimTest extends Test {
             actor: {
                 appearance: { materialId: this.ballMat.id },
                 transform: {
-                    position: { x: -width / 2 + width * Math.random(), y: height, z: -0.2 }
+                    local: { position: { x: -width / 2 + width * Math.random(), y: height, z: -0.2 } }
                 },
                 rigidBody: {
                     mass: 3,

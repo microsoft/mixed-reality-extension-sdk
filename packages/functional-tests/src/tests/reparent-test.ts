@@ -15,14 +15,18 @@ export default class ReparentTest extends Test {
         const leftParent = MRE.Actor.CreateEmpty(this.app.context, {
             actor: {
                 transform: {
-                    position: { x: -0.7, y: 0.3, z: -0.3 }
+                    local: {
+                        position: { x: -0.7, y: 0.3, z: -0.3 }
+                    }
                 }
             }
         }).value;
         const rightParent = MRE.Actor.CreateEmpty(this.app.context, {
             actor: {
                 transform: {
-                    position: { x: 0.7, y: 0.3, z: -0.3 }
+                    local: {
+                        position: { x: 0.7, y: 0.3, z: -0.3 }
+                    }
                 }
             }
         }).value;

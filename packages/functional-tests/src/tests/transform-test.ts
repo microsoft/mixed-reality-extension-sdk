@@ -18,9 +18,11 @@ export default class TransformTest extends Test {
             actor: {
                 name: 'cube1',
                 transform: {
-                    position: { x: -0.75 * Math.SQRT2, y: 1 },
-                    rotation: deg45,
-                    scale: { x: 0.5, y: 0.5, z: 0.5 }
+                    local: {
+                        position: { x: -0.75 * Math.SQRT2, y: 1 },
+                        rotation: deg45,
+                        scale: { x: 0.5, y: 0.5, z: 0.5 }
+                    }
                 }
             }
         }).value;
@@ -29,9 +31,11 @@ export default class TransformTest extends Test {
             name: 'cube2',
             parentId: cube1.id,
             transform: {
-                position: { x: 1, y: 1 },
-                rotation: deg45,
-                scale: { x: 5, y: 5, z: 5 }
+                local: {
+                    position: { x: 1, y: 1 },
+                    rotation: deg45,
+                    scale: { x: 5, y: 5, z: 5 }
+                }
             }
         } as Partial<MRE.ActorLike>;
 
@@ -50,9 +54,11 @@ export default class TransformTest extends Test {
                 name: 'cube3',
                 parentId: cube2.id,
                 transform: {
-                    position: { x: 0, y: 0.2 * Math.SQRT2 },
-                    rotation: deg45,
-                    scale: { x: 0.05, y: 0.05, z: 0.05 }
+                    local: {
+                        position: { x: 0, y: 0.2 * Math.SQRT2 },
+                        rotation: deg45,
+                        scale: { x: 0.05, y: 0.05, z: 0.05 }
+                    }
                 }
             }
         }).value;
@@ -66,9 +72,11 @@ export default class TransformTest extends Test {
                 name: 'cube4',
                 parentId: cube3.id,
                 transform: {
-                    position: { x: -4, y: 4 },
-                    rotation: deg45,
-                    scale: { x: 0.5, y: 0.5, z: 0.5 }
+                    local: {
+                        position: { x: -4, y: 4 },
+                        rotation: deg45,
+                        scale: { x: 0.5, y: 0.5, z: 0.5 }
+                    }
                 }
             }
         }).value;

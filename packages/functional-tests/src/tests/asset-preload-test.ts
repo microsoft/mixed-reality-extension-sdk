@@ -97,8 +97,10 @@ export default class AssetPreloadTest extends Test {
             prefabId: this.monkeyPrefab.id,
             actor: {
                 transform: {
-                    position: { x: -0.5, y: 1, z: -1 },
-                    scale: { x: 0.5, y: 0.5, z: 0.5 }
+                    local: {
+                        position: { x: -0.5, y: 1, z: -1 },
+                        scale: { x: 0.5, y: 0.5, z: 0.5 }
+                    }
                 }
             }
         });
@@ -111,7 +113,9 @@ export default class AssetPreloadTest extends Test {
             actor: {
                 appearance: { materialId: this.uvgridMat.id },
                 transform: {
-                    position: { x: 0.5, y: 1, z: -1 }
+                    local: {
+                        position: { x: 0.5, y: 1, z: -1 }
+                    }
                 }
             }
         });

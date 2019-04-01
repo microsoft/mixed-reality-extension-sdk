@@ -29,7 +29,9 @@ export default class AssetMutabilityTest extends Test {
                 name: 'box',
                 appearance: { materialId: mat.id },
                 transform: {
-                    position: { y: 1, z: -1 }
+                    local: {
+                        position: { y: 1, z: -1 }
+                    }
                 }
             }
         });

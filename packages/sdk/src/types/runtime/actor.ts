@@ -5,6 +5,8 @@
 
 import events from 'events';
 import {
+    ActorTransform,
+    ActorTransformLike,
     Appearance,
     AppearanceLike,
     Attachment,
@@ -21,8 +23,6 @@ import {
     RigidBodyLike,
     Text,
     TextLike,
-    Transform,
-    TransformLike,
     User,
 } from '.';
 import {
@@ -57,7 +57,7 @@ export interface ActorLike {
     name: string;
     tag: string;
     subscriptions?: SubscriptionType[];
-    transform: Partial<TransformLike>;
+    transform: Partial<ActorTransformLike>;
     appearance: Partial<AppearanceLike>;
     light: Partial<LightLike>;
     rigidBody: Partial<RigidBodyLike>;
@@ -92,7 +92,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
     private _tag: string;
     private _parentId: string;
     private _subscriptions: SubscriptionType[] = [];
-    private _transform: Transform;
+    private _transform: ActorTransform;
     private _appearance: Appearance;
     private _light: Light;
     private _rigidBody: RigidBody;
@@ -154,7 +154,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
         this._parentId = ZeroGuid;
 
         // Actor patching: Observe the transform for changed values.
-        this._transform = new Transform();
+        this._transform = new ActorTransform();
         observe({
             target: this._transform,
             targetName: 'transform',

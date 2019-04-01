@@ -41,8 +41,10 @@ export default class AltspaceVRVideoTest extends Test {
                 parentId: tester.value.id,
                 name: 'video',
                 transform: {
-                    position: { x: 0, y: 1, z: 0 },
-                    scale: { x: 2, y: 2, z: 2 }
+                    local: {
+                        position: { x: 0, y: 1, z: 0 },
+                        scale: { x: 2, y: 2, z: 2 }
+                    }
                 },
             }
         });
@@ -82,7 +84,9 @@ export default class AltspaceVRVideoTest extends Test {
                 name: 'Button',
                 parentId: tester.value.id,
                 transform: {
-                    position: { x: -0.8, y: 0.2, z: 0 }
+                    local: {
+                        position: { x: -0.8, y: 0.2, z: 0 }
+                    }
                 }
             }
         });

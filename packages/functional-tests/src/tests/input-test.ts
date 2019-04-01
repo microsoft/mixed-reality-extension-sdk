@@ -26,7 +26,9 @@ export default class InputTest extends Test {
                     color: { r: 1, g: 0.5, b: 0.3 }
                 },
                 transform: {
-                    position: { x: -2, y: 2, z: -2 }
+                    local: {
+                        position: { x: -2, y: 2, z: -2 }
+                    }
                 }
             }
         });
@@ -41,8 +43,10 @@ export default class InputTest extends Test {
             actor: {
                 name: 'clickable',
                 transform: {
-                    scale: { x: 0.4, y: 0.4, z: 0.4 },
-                    position: { x: 0, y: 1, z: -1 }
+                    local: {
+                        scale: { x: 0.4, y: 0.4, z: 0.4 },
+                        position: { x: 0, y: 1, z: -1 }
+                    }
                 }
             }
         }).value;
@@ -121,30 +125,30 @@ export default class InputTest extends Test {
     private generateSpinKeyframes(duration: number, axis: MRE.Vector3, start = 0): MRE.AnimationKeyframe[] {
         return [{
             time: 0 * duration,
-            value: { transform: { rotation: MRE.Quaternion.RotationAxis(axis, start) } }
+            value: { transform: { local: { rotation: MRE.Quaternion.RotationAxis(axis, start) } } }
         }, {
             time: 0.5 * duration,
-            value: { transform: { rotation: MRE.Quaternion.RotationAxis(axis, start + Math.PI / 2) } }
+            value: { transform: { local: { rotation: MRE.Quaternion.RotationAxis(axis, start + Math.PI / 2) } } }
         }, {
             time: 1 * duration,
-            value: { transform: { rotation: MRE.Quaternion.RotationAxis(axis, start + Math.PI) } }
+            value: { transform: { local: { rotation: MRE.Quaternion.RotationAxis(axis, start + Math.PI) } } }
         }];
     }
 
     private growAnimationData: MRE.AnimationKeyframe[] = [{
         time: 0,
-        value: { transform: { scale: { x: 0.4, y: 0.4, z: 0.4 } } }
+        value: { transform: { local: { scale: { x: 0.4, y: 0.4, z: 0.4 } } } }
     }, {
         time: 0.3,
-        value: { transform: { scale: { x: 0.5, y: 0.5, z: 0.5 } } }
+        value: { transform: { local: { scale: { x: 0.5, y: 0.5, z: 0.5 } } } }
     }];
 
     private shrinkAnimationData: MRE.AnimationKeyframe[] = [{
         time: 0,
-        value: { transform: { scale: { x: 0.5, y: 0.5, z: 0.5 } } }
+        value: { transform: { local: { scale: { x: 0.5, y: 0.5, z: 0.5 } } } }
     }, {
         time: 0.3,
-        value: { transform: { scale: { x: 0.4, y: 0.4, z: 0.4 } } }
+        value: { transform: { local: { scale: { x: 0.4, y: 0.4, z: 0.4 } } } }
     }];
 
 }

@@ -192,7 +192,9 @@ export class App {
                     color: NeutralColor
                 },
                 transform: {
-                    position: { y: 1.8 }
+                    local: {
+                        position: { y: 1.8 }
+                    }
                 }
             }
         }).value;
@@ -217,7 +219,9 @@ export class App {
                 name: 'playpause',
                 appearance: { materialId: ppMat.id },
                 transform: {
-                    position: { x: -0.65, y: 0.15, z: -1.95 }
+                    local: {
+                        position: { x: -0.65, y: 0.15, z: -1.95 }
+                    }
                 }
             }
         }).value;
@@ -226,7 +230,9 @@ export class App {
             actor: {
                 parentId: this.playPauseButton.id,
                 transform: {
-                    position: { z: -0.1 }
+                    local: {
+                        position: { z: -0.1 }
+                    }
                 },
                 text: {
                     contents: "Start",
@@ -256,7 +262,9 @@ export class App {
             actor: {
                 name: 'menu',
                 transform: {
-                    position: { x: 0.65, y: 0.15, z: -1.95 }
+                    local: {
+                        position: { x: 0.65, y: 0.15, z: -1.95 }
+                    }
                 }
             }
         }).value;
@@ -265,7 +273,9 @@ export class App {
             actor: {
                 parentId: menuButton.id,
                 transform: {
-                    position: { z: -0.1 }
+                    local: {
+                        position: { z: -0.1 }
+                    }
                 },
                 text: {
                     contents: "Return",
@@ -296,7 +306,9 @@ export class App {
             actor: {
                 name: 'floor',
                 transform: {
-                    position: { x: 0, y: -0.05, z: -1 }
+                    local: {
+                        position: { x: 0, y: -0.05, z: -1 }
+                    }
                 },
             }
         }).value;
@@ -311,7 +323,9 @@ export class App {
             actor: {
                 name: 'floor',
                 transform: {
-                    position: { x: 0, y: 1, z: 0.1 }
+                    local: {
+                        position: { x: 0, y: 1, z: 0.1 }
+                    }
                 }
             }
         }).value;

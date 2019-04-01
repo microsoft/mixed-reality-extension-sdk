@@ -13,7 +13,7 @@ export default class PrimitivesTest extends Test {
     public async run(): Promise<boolean> {
         // Make a root object.
         const tester = MRE.Actor.CreateEmpty(this.app.context, {
-            actor: { transform: { position: { y: 0.5, z: -0.5 }, scale: { x: 0.5, y: 0.5, z: 0.5 } } }
+            actor: { transform: { local: { position: { y: 0.5, z: -0.5 }, scale: { x: 0.5, y: 0.5, z: 0.5 } } } }
         });
         MRE.Actor.CreateEmpty(this.app.context, {
             actor: {
@@ -25,7 +25,9 @@ export default class PrimitivesTest extends Test {
                     color: { r: 1, g: 0.5, b: 0.3 }
                 },
                 transform: {
-                    position: { x: -2, y: 2, z: -2 }
+                    local: {
+                        position: { x: -2, y: 2, z: -2 }
+                    }
                 }
             }
         });
@@ -44,7 +46,9 @@ export default class PrimitivesTest extends Test {
                             name: 'Box',
                             parentId: tester.value.id,
                             transform: {
-                                position: { x: x * 4 - 0.8, y: y * 4 + 0., z: z * 4 - 0.5 }
+                                local: {
+                                    position: { x: x * 4 - 0.8, y: y * 4 + 0., z: z * 4 - 0.5 }
+                                }
                             }
                         }
                     }));
@@ -63,7 +67,9 @@ export default class PrimitivesTest extends Test {
                 name: 'Sphere',
                 parentId: tester.value.id,
                 transform: {
-                    position: { x: -1, y: 1, z: 0 }
+                    local: {
+                        position: { x: -1, y: 1, z: 0 }
+                    }
                 }
             }
         }));
@@ -81,7 +87,9 @@ export default class PrimitivesTest extends Test {
                 name: 'Capsule',
                 parentId: tester.value.id,
                 transform: {
-                    position: { x: 1, y: 1, z: 0 }
+                    local: {
+                        position: { x: 1, y: 1, z: 0 }
+                    }
                 }
             }
         }));
@@ -99,7 +107,9 @@ export default class PrimitivesTest extends Test {
                 name: 'Capsule',
                 parentId: tester.value.id,
                 transform: {
-                    position: { x: 1, y: 2.0, z: 0 }
+                    local: {
+                        position: { x: 1, y: 2.0, z: 0 }
+                    }
                 }
             }
         }));
@@ -117,7 +127,9 @@ export default class PrimitivesTest extends Test {
                 name: 'Capsule',
                 parentId: tester.value.id,
                 transform: {
-                    position: { x: 1 }
+                    local: {
+                        position: { x: 1 }
+                    }
                 }
             }
         }));
@@ -134,7 +146,9 @@ export default class PrimitivesTest extends Test {
                 name: 'Cylinder',
                 parentId: tester.value.id,
                 transform: {
-                    position: { x: 2, y: 1, z: 0 }
+                    local: {
+                        position: { x: 2, y: 1, z: 0 }
+                    }
                 }
             }
         }));
@@ -151,7 +165,9 @@ export default class PrimitivesTest extends Test {
                 name: 'Cylinder',
                 parentId: tester.value.id,
                 transform: {
-                    position: { x: 2, y: 2.0, z: 0 }
+                    local: {
+                        position: { x: 2, y: 2.0, z: 0 }
+                    }
                 }
             }
         }));
@@ -168,7 +184,9 @@ export default class PrimitivesTest extends Test {
                 name: 'Cylinder',
                 parentId: tester.value.id,
                 transform: {
-                    position: { x: 2 }
+                    local: {
+                        position: { x: 2 }
+                    }
                 }
             }
         }));
@@ -186,7 +204,9 @@ export default class PrimitivesTest extends Test {
                 name: 'Plane',
                 parentId: tester.value.id,
                 transform: {
-                    position: { x: -2, y: 0.0, z: 0 }
+                    local: {
+                        position: { x: -2, y: 0.0, z: 0 }
+                    }
                 }
             }
         }));
@@ -203,7 +223,9 @@ export default class PrimitivesTest extends Test {
                 name: 'Inner Sphere',
                 parentId: tester.value.id,
                 transform: {
-                    position: { x: -1 }
+                    local: {
+                        position: { x: -1 }
+                    }
                 }
             }
         }));

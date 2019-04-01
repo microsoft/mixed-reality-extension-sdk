@@ -28,7 +28,9 @@ export default class GrabTest extends Test {
                     color: { r: 1, g: 0.5, b: 0.3 }
                 },
                 transform: {
-                    position: { x: -2, y: 2, z: -2 }
+                    local: {
+                        position: { x: -2, y: 2, z: -2 }
+                    }
                 }
             }
         });
@@ -43,8 +45,10 @@ export default class GrabTest extends Test {
             actor: {
                 name: 'clickable',
                 transform: {
-                    scale: { x: this.SCALE, y: this.SCALE, z: this.SCALE },
-                    position: { x: 0, y: 1, z: -1 }
+                    local: {
+                        scale: { x: this.SCALE, y: this.SCALE, z: this.SCALE },
+                        position: { x: 0, y: 1, z: -1 }
+                    }
                 }
             }
         }).value;
@@ -85,7 +89,7 @@ export default class GrabTest extends Test {
                 addCollider: true,
                 actor: {
                     name: cube.name,
-                    transform: { position: { x: cube.x, y: 1, z: -1 } }
+                    transform: { local: { position: { x: cube.x, y: 1, z: -1 } } }
                 }
             }).value.grabbable = true;
         }
@@ -131,13 +135,13 @@ export default class GrabTest extends Test {
 
     private clickAnimationData: MRE.AnimationKeyframe[] = [{
         time: 0,
-        value: { transform: { scale: { x: this.SCALE, y: this.SCALE, z: this.SCALE } } }
+        value: { transform: { local: { scale: { x: this.SCALE, y: this.SCALE, z: this.SCALE } } } }
     }, {
         time: 0.1,
-        value: { transform: { scale: { x: this.SCALE + 0.1, y: this.SCALE + 0.1, z: this.SCALE + 0.1 } } }
+        value: { transform: { local: { scale: { x: this.SCALE + 0.1, y: this.SCALE + 0.1, z: this.SCALE + 0.1 } } } }
     }, {
         time: 0.2,
-        value: { transform: { scale: { x: this.SCALE, y: this.SCALE, z: this.SCALE } } }
+        value: { transform: { local: { scale: { x: this.SCALE, y: this.SCALE, z: this.SCALE } } } }
     }];
 
 }
