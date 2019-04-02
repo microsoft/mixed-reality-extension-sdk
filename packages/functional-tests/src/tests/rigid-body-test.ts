@@ -35,8 +35,10 @@ export default class RigidBodyTest extends Test {
                 addCollider: true,
                 actor: {
                     transform: {
-                        position: {
-                            y: 1 + i * 0.51
+                        local: {
+                            position: {
+                                y: 1 + i * 0.51
+                            }
                         }
                     }
                 }
@@ -127,9 +129,11 @@ export default class RigidBodyTest extends Test {
             addCollider: true,
             actor: {
                 transform: {
-                    position: {
-                        y: 1.25,
-                        z: -5
+                    local: {
+                        position: {
+                            y: 1.25,
+                            z: -5
+                        }
                     }
                 }
             }
@@ -177,9 +181,11 @@ export default class RigidBodyTest extends Test {
                 addCollider: true,
                 actor: {
                     transform: {
-                        position: {
-                            x: x + (size + spacing) * i,
-                            y
+                        local: {
+                            position: {
+                                x: x + (size + spacing) * i,
+                                y
+                            }
                         }
                     }
                 }

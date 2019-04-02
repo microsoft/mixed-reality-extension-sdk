@@ -126,8 +126,13 @@ export default class Menu {
                 actor: {
                     name: 'Button' + i,
                     transform: {
-                        position:
-                            { x: -1 + buttonWidth / 2, y: buttonSpacing / 2 + buttonSpacing * (pageSize - i), z: -0.05 }
+                        local: {
+                            position: {
+                                x: -1 + buttonWidth / 2,
+                                y: buttonSpacing / 2 + buttonSpacing * (pageSize - i),
+                                z: -0.05
+                            }
+                        }
                     }
                 }
             }).value;
@@ -139,7 +144,9 @@ export default class Menu {
                     name: 'Label' + i,
                     parentId: control.id,
                     transform: {
-                        position: { x: buttonWidth * 1.2, z: 0.05 },
+                        local: {
+                            position: { x: buttonWidth * 1.2, z: 0.05 }
+                        },
                     },
                     text: {
                         contents: "Placeholder",
@@ -160,7 +167,9 @@ export default class Menu {
             actor: {
                 name: 'BackButton',
                 transform: {
-                    position: { x: -1 + buttonWidth / 2, y: buttonSpacing / 2, z: -0.05 }
+                    local: {
+                        position: { x: -1 + buttonWidth / 2, y: buttonSpacing / 2, z: -0.05 }
+                    }
                 }
             }
         }).value;
@@ -170,7 +179,9 @@ export default class Menu {
                 name: 'BackLabel',
                 parentId: backButton.id,
                 transform: {
-                    position: { x: buttonWidth * 1.2, z: 0.05 },
+                    local: {
+                        position: { x: buttonWidth * 1.2, z: 0.05 }
+                    },
                 },
                 text: {
                     contents: "Back",
@@ -195,7 +206,9 @@ export default class Menu {
             actor: {
                 name: 'floor',
                 transform: {
-                    position: { x: 0, y: -0.05, z: -1 }
+                    local: {
+                        position: { x: 0, y: -0.05, z: -1 }
+                    }
                 },
             }
         }).value;
@@ -210,7 +223,9 @@ export default class Menu {
             actor: {
                 name: 'floor',
                 transform: {
-                    position: { x: 0, y: 1, z: 0.1 }
+                    local: {
+                        position: { x: 0, y: 1, z: 0.1 }
+                    }
                 }
             }
         }).value;

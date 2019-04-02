@@ -16,7 +16,9 @@ export default class GltfAnimationTest extends Test {
             resourceUrl: `https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/CesiumMan/glTF-Binary/CesiumMan.glb`,
             actor: {
                 transform: {
-                    position: { y: 0.0, z: -1 }
+                    local: {
+                        position: { y: 0.0, z: -1 }
+                    }
                 }
             }
         }).value;

@@ -36,7 +36,9 @@ export default class GltfGenTest extends Test {
             resourceUrl: Server.registerStaticBuffer('sphere.glb', gltfFactory.generateGLTF()),
             actor: {
                 transform: {
-                    position: { y: 1, z: -1 }
+                    local: {
+                        position: { y: 1, z: -1 }
+                    }
                 }
             }
         });

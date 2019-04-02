@@ -14,7 +14,9 @@ export default class ClockSyncTest extends Test {
         const tester = MRE.Actor.CreateEmpty(this.app.context, {
             actor: {
                 transform: {
-                    position: { y: -1.5, z: -0.5 }
+                    local: {
+                        position: { y: -1.5, z: -0.5 }
+                    }
                 }
             }
         });
@@ -34,7 +36,9 @@ export default class ClockSyncTest extends Test {
             actor: {
                 parentId: tester.value.id,
                 transform: {
-                    position: { x: 0.0, y: boxYPosition * textScale + (boxHeight / 2 + boxGap), z: 0.05 }
+                    local: {
+                        position: { x: 0.0, y: boxYPosition * textScale + (boxHeight / 2 + boxGap), z: 0.05 }
+                    }
                 }
             }
         });
@@ -46,7 +50,9 @@ export default class ClockSyncTest extends Test {
             actor: {
                 parentId: tester.value.id,
                 transform: {
-                    position: { x: 0.0, y: boxYPosition * textScale - (boxHeight / 2 + boxGap), z: 0.05 }
+                    local: {
+                        position: { x: 0.0, y: boxYPosition * textScale - (boxHeight / 2 + boxGap), z: 0.05 }
+                    }
                 }
             }
         });
@@ -126,12 +132,14 @@ export default class ClockSyncTest extends Test {
         for (let i = 0; i <= digits; ++i) {
             const value = {
                 transform: {
-                    position: {
-                        x: (xOffset) * scale,
-                        y: (yOffset + i * lineHeight) * scale,
-                        z: 0,
-                    },
-                    scale: { x: scale, y: scale, z: scale }
+                    local: {
+                        position: {
+                            x: (xOffset) * scale,
+                            y: (yOffset + i * lineHeight) * scale,
+                            z: 0,
+                        },
+                        scale: { x: scale, y: scale, z: scale }
+                    }
                 }
             };
 

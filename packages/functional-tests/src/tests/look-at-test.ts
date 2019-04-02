@@ -8,11 +8,11 @@ import * as MRE from '@microsoft/mixed-reality-extension-sdk';
 import { Test } from '../test';
 
 const circleKeyframes = [
-    { time: 0, value: { transform: { position: { x: 0, y: 0, z: -0.5 } } } },
-    { time: 1, value: { transform: { position: { x: 1, y: 1, z: -0.5 } } } },
-    { time: 2, value: { transform: { position: { x: 0, y: 2, z: -0.5 } } } },
-    { time: 3, value: { transform: { position: { x: -1, y: 1, z: -0.5 } } } },
-    { time: 4, value: { transform: { position: { x: 0, y: 0, z: -0.5 } } } }
+    { time: 0, value: { transform: { app: {position: { x: 0, y: 0, z: -0.5 } } } } },
+    { time: 1, value: { transform: { app: {position: { x: 1, y: 1, z: -0.5 } } } } },
+    { time: 2, value: { transform: { app: {position: { x: 0, y: 2, z: -0.5 } } } } },
+    { time: 3, value: { transform: { app: {position: { x: -1, y: 1, z: -0.5 } } } } },
+    { time: 4, value: { transform: { app: {position: { x: 0, y: 0, z: -0.5 } } } } }
 ] as MRE.AnimationKeyframe[];
 
 export default class LookAtTest extends Test {
@@ -31,14 +31,16 @@ export default class LookAtTest extends Test {
                     color: { r: 1, g: 0.5, b: 0.3 }
                 },
                 transform: {
-                    position: { x: -2, y: 2, z: -2 }
+                    local: {
+                        position: { x: -2, y: 2, z: -2 }
+                    }
                 }
             }
         });
 
         const tester = MRE.Actor.CreateFromGltf(this.app.context, {
             resourceUrl: `${this.baseUrl}/monkey.glb`,
-            actor: { transform: { scale: { x: 0.5, y: 0.5, z: 0.5 } } }
+            actor: { transform: { local: { scale: { x: 0.5, y: 0.5, z: 0.5 } } } }
         }).value;
         const lookAtTarget = MRE.Actor.CreateEmpty(this.app.context, {
             actor: {

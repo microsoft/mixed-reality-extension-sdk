@@ -62,7 +62,9 @@ export default class SoundTest extends Test {
             actor: {
                 name: 'MusicButton',
                 transform: {
-                    position: { x: -0.8, y: 1.3, z: -0.2 }
+                    local: {
+                        position: { x: -0.8, y: 1.3, z: -0.2 }
+                    }
                 }
             }
         });
@@ -103,7 +105,9 @@ export default class SoundTest extends Test {
             actor: {
                 name: 'NotesButton',
                 transform: {
-                    position: { x: 0, y: 1.3, z: -0.2 }
+                    local: {
+                        position: { x: 0, y: 1.3, z: -0.2 }
+                    }
                 }
             }
         });
@@ -140,7 +144,9 @@ export default class SoundTest extends Test {
             actor: {
                 name: 'DopplerButton',
                 transform: {
-                    position: { x: 0.8, y: 1.3, z: -0.2 }
+                    local: {
+                        position: { x: 0.8, y: 1.3, z: -0.2 }
+                    }
                 }
             }
         });
@@ -156,7 +162,9 @@ export default class SoundTest extends Test {
                 parentId: dopplerButtonPromise.value.id,
                 name: 'DopplerMover',
                 transform: {
-                    position: { x: 0, y: 0, z: 3 }
+                    local: {
+                        position: { x: 0, y: 0, z: 3 }
+                    }
                 }
             }
         });
@@ -202,19 +210,19 @@ export default class SoundTest extends Test {
     private generateSpinKeyframes(duration: number, axis: MRE.Vector3, start = 0): MRE.AnimationKeyframe[] {
         return [{
             time: 0 * duration,
-            value: { transform: { rotation: MRE.Quaternion.RotationAxis(axis, start) } }
+            value: { transform: { local: { rotation: MRE.Quaternion.RotationAxis(axis, start) } } }
         }, {
             time: 0.25 * duration,
-            value: { transform: { rotation: MRE.Quaternion.RotationAxis(axis, start + Math.PI * 1 / 2) } }
+            value: { transform: { local: { rotation: MRE.Quaternion.RotationAxis(axis, start + Math.PI * 1 / 2) } } }
         }, {
             time: 0.5 * duration,
-            value: { transform: { rotation: MRE.Quaternion.RotationAxis(axis, start + Math.PI * 2 / 2) } }
+            value: { transform: { local: { rotation: MRE.Quaternion.RotationAxis(axis, start + Math.PI * 2 / 2) } } }
         }, {
             time: 0.75 * duration,
-            value: { transform: { rotation: MRE.Quaternion.RotationAxis(axis, start + Math.PI * 3 / 2) } }
+            value: { transform: { local: { rotation: MRE.Quaternion.RotationAxis(axis, start + Math.PI * 3 / 2) } } }
         }, {
             time: 1 * duration,
-            value: { transform: { rotation: MRE.Quaternion.RotationAxis(axis, start + Math.PI * 4 / 2) } }
+            value: { transform: { local: { rotation: MRE.Quaternion.RotationAxis(axis, start + Math.PI * 4 / 2) } } }
         }];
     }
 }

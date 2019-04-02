@@ -4,6 +4,7 @@
  */
 
 export * from './actor';
+export * from './actorTransform';
 export * from './behaviors';
 export * from './context';
 export * from './transform';

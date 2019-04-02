@@ -38,13 +38,15 @@ export default class LightTest extends Test {
                 const position = new MRE.Vector3(dirX, 0.5 + 1.5 * Math.random(), dirZ);
                 const rotation = MRE.Quaternion.LookAt(
                     position,
-                    props['monkey'].transform.position,
+                    props['monkey'].transform.app.position,
                     new MRE.Vector3(0, -Math.PI / 8, 0));
                 sphere.light.color = randomColor();
                 sphere.animateTo({
                     transform: {
-                        position,
-                        rotation
+                        local: {
+                            position,
+                            rotation
+                        }
                     }
                 }, time, MRE.AnimationEaseCurves.EaseInOutSine);
                 await delay(time * 1000);
@@ -86,9 +88,11 @@ export default class LightTest extends Test {
             resourceUrl: `${this.baseUrl}/monkey.glb`,
             actor: {
                 transform: {
-                    scale: { x: 0.5, y: 0.5, z: 0.5 },
-                    position: { y: 1, z: -1 },
-                    rotation: {x: 0, y: 1, z: 0, w: 0}, // rotate 180 degrees
+                    app: {
+                        position: { y: 1, z: -1 },
+                        rotation: {x: 0, y: 1, z: 0, w: 0}, // rotate 180 degrees
+                    },
+                    local: { scale: { x: 0.5, y: 0.5, z: 0.5 } }
                 }
             }
         }).value;
@@ -102,7 +106,9 @@ export default class LightTest extends Test {
             },
             actor: {
                 transform: {
-                    position: { x: 0.5, y: 0.65, z: -1 }
+                    app: {
+                        position: { x: 0.5, y: 0.65, z: -1 }
+                    }
                 }
             }
         }).value;
@@ -113,7 +119,9 @@ export default class LightTest extends Test {
             },
             actor: {
                 transform: {
-                    position: { x: -0.5, y: 0.65, z: -1 }
+                    app: {
+                        position: { x: -0.5, y: 0.65, z: -1 }
+                    }
                 }
             }
         }).value;

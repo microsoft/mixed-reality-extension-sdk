@@ -21,7 +21,9 @@ export default class InterpolationTest extends Test {
                     color: { r: 1, g: 0.5, b: 0.3 }
                 },
                 transform: {
-                    position: { x: -2, y: 2, z: -2 }
+                    local: {
+                        position: { x: -2, y: 2, z: -2 }
+                    }
                 }
             }
         });
@@ -33,8 +35,9 @@ export default class InterpolationTest extends Test {
             },
             actor: {
                 transform: {
-                    position: { y: 1.0, z: -1.0 }
-
+                    local: {
+                        position: { y: 1.0, z: -1.0 }
+                    }
                 }
             },
             addCollider: true
@@ -58,7 +61,7 @@ export default class InterpolationTest extends Test {
             const easeCurveKey = easeCurveKeys[easeIndex];
             // Interpolate object's rotation and scale.
             cube.animateTo(
-                { transform: { rotation, scale } },
+                { transform: { local: { rotation, scale } } },
                 1.0, (MRE.AnimationEaseCurves as any)[easeCurveKey]);
             await delay(1000);
         }
