@@ -33,12 +33,11 @@ export class InternalActor implements InternalPatchable<ActorLike> {
         const behavior = (this.behavior && this.behavior.behaviorType === actionEvent.behaviorType)
             ? this.behavior : undefined;
         if (behavior && behavior._supportsAction(actionEvent.actionName)) {
-            behavior._performAction(actionEvent.actionName, actionEvent.actionState,
-                this.actor.context.user(actionEvent.userId));
+            behavior._performAction(actionEvent.actionName, actionEvent.actionState, actionEvent.user);
         } else {
             const action = (this.actor as any)[actionEvent.actionName.toLowerCase()] as DiscreteAction;
             if (action) {
-                action._setState(this.actor.context.user(actionEvent.userId), actionEvent.actionState);
+                action._setState(actionEvent.user, actionEvent.actionState);
             }
         }
     }
