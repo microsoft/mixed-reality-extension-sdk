@@ -4,11 +4,12 @@
  */
 
 import { ActionState } from '.';
+import { User } from '..';
 
 /**
  * The action handler function type.
  */
-export type ActionHandler = (userId: string) => void;
+export type ActionHandler = (user: User) => void;
 
 interface ActionHandlers {
     'started'?: ActionHandler;
@@ -35,25 +36,25 @@ export class DiscreteAction {
 
     /**
      * Gets the current state of the action for the user with the given id.
-     * @param userId The id of the user to get the action state for.
+     * @param user The user to get the action state for.
      * @returns The current state of the action for the user.
      */
-    public getState(userId: string): ActionState {
-        return this.activeUserIds.find(id => id === userId) ?
+    public getState(user: User): ActionState {
+        return this.activeUserIds.find(id => id === user.id) ?
             'started' : 'stopped';
     }
 
     /**
      * Get whether the action is active for the user with the given id.
-     * @param userId - The id of the user to get whether the action is active for, or null
+     * @param user - The user to get whether the action is active for, or null
      * if active for any user is desired..
      * @returns - True if the action is active for the user, false if it is not.  In the case
      * that no user is given, the value is true if the action is active for any user, and false
      * if not.
      */
-    public isActive(userId?: string): boolean {
-        if (userId) {
-            return !!this.activeUserIds.find(id => id === userId);
+    public isActive(user?: User): boolean {
+        if (user) {
+            return !!this.activeUserIds.find(id => id === user.id);
         } else {
             return this.activeUserIds.length > 0;
         }
@@ -64,18 +65,18 @@ export class DiscreteAction {
      */
 
     /** @hidden */
-    public _setState(userId: string, actionState: ActionState): boolean {
-        const currentState = this.activeUserIds.find(id => id === userId) || 'stopped';
+    public _setState(user: User, actionState: ActionState): boolean {
+        const currentState = this.activeUserIds.find(id => id === user.id) || 'stopped';
         if (currentState !== actionState) {
             if (actionState === 'started') {
-                this.activeUserIds.push(userId);
+                this.activeUserIds.push(user.id);
             } else {
-                this.activeUserIds = this.activeUserIds.filter(id => id === userId);
+                this.activeUserIds = this.activeUserIds.filter(id => id === user.id);
             }
 
             const handler = this.handlers[actionState];
             if (handler) {
-                handler(userId);
+                handler(user);
             }
 
             return true;

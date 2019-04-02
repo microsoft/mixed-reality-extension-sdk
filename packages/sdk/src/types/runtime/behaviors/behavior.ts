@@ -4,6 +4,7 @@
  */
 
 import { ActionState, BehaviorType, DiscreteAction } from '.';
+import { User } from '..';
 
 /**
  * Abstract class that serves as the base class for all behaviors.
@@ -24,10 +25,10 @@ export abstract class Behavior {
     }
 
     /** @hidden */
-    public _performAction(actionName: string, actionState: ActionState, userId: string): void {
+    public _performAction(actionName: string, actionState: ActionState, user: User): void {
         const action = (this as any)[actionName.toLowerCase()] as DiscreteAction;
         if (action) {
-            action._setState(userId, actionState);
+            action._setState(user, actionState);
         }
     }
 }

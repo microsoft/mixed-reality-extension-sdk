@@ -90,10 +90,10 @@ export default class AltspaceVRLibraryTest extends Test {
             if (actor) {
                 const buttonBehavior = actor.value.setBehavior(MRE.ButtonBehavior);
                 // Trigger the grow/shrink animations on hover.
-                buttonBehavior.onHover('enter', (userId: string) => {
+                buttonBehavior.onHover('enter', () => {
                     this.app.setOverrideText(actor.value.name);
                 });
-                buttonBehavior.onHover('exit', (userId: string) => {
+                buttonBehavior.onHover('exit', () => {
                     this.app.setOverrideText(null);
                 });
             }

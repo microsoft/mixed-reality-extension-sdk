@@ -3,11 +3,11 @@
  * Licensed under the MIT License.
  */
 
-import { BehaviorType } from '.';
-import { ActionState } from '.';
+import { ActionState, BehaviorType } from '.';
+import { User } from '..';
 
 export interface ActionEvent {
-    userId: string;
+    user: User;
     targetId: string;
     behaviorType: BehaviorType;
     actionName: string;

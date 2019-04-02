@@ -115,7 +115,7 @@ export class Execution extends Protocol {
     /** @private */
     public 'recv-perform-action' = (payload: PerformAction) => {
         this.emit('protocol.perform-action', {
-            userId: payload.userId,
+            user: this.context.user(payload.userId),
             targetId: payload.targetId,
             behaviorType: payload.behaviorType,
             actionName: payload.actionName,
