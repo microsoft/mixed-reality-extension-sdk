@@ -64,11 +64,11 @@ export class App {
                 color: BackgroundColor
             }).value;
 
-        this.menu.onSelection((name, factory, userId) => {
+        this.menu.onSelection((name, factory, user) => {
             this.menu.hide();
             this.activeTestName = name;
             this.activeTestFactory = factory;
-            this.runTest(this.context.user(userId));
+            this.runTest(user);
         });
     }
 
@@ -245,9 +245,9 @@ export class App {
         }).value;
 
         this.playPauseButton.setBehavior(MRE.ButtonBehavior)
-            .onClick("released", userId => {
+            .onClick("released", user => {
                 if (this.activeTest === null) {
-                    this.runTest(this.context.user(userId));
+                    this.runTest(user);
                 } else {
                     this.stopTest().catch(() => { });
                 }

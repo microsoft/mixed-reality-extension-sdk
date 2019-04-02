@@ -10,7 +10,7 @@ import { TestFactory } from './test';
 import { Factories, FactoryMap } from './tests';
 import destroyActors from './utils/destroyActors';
 
-type SelectionHandler = (name: string, factory: TestFactory, userId: string) => void;
+type SelectionHandler = (name: string, factory: TestFactory, user: MRE.User) => void;
 
 interface MenuItem {
     label: string;
@@ -72,9 +72,9 @@ export default class Menu {
                 buttonMat = null;
             } else if (typeof menu[i].action === 'function') {
                 label = menu[i].label;
-                handler = userId => {
+                handler = user => {
                     if (this.handler) {
-                        this.handler(menu[i].label, menu[i].action as TestFactory, userId);
+                        this.handler(menu[i].label, menu[i].action as TestFactory, user);
                     }
                 };
                 buttonMat = this.app.testResults[label] === true ? this.successMat :
