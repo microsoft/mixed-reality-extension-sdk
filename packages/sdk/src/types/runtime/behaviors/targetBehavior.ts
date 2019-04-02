@@ -4,6 +4,7 @@
  */
 
 import { ActionHandler, ActionState, Behavior, BehaviorType, DiscreteAction } from '.';
+import { User } from '..';
 
 /**
  * Target behavior class containing the target behavior actions.
@@ -31,12 +32,12 @@ export class TargetBehavior extends Behavior {
     }
 
     /**
-     * Gets whether the behavior is being targeted by the given user, or at all if no user id is given.
-     * @param userId The id of the user to check whether they are targeting this behavior.
+     * Gets whether the behavior is being targeted by the given user, or at all if no user is given.
+     * @param user The user to check whether they are targeting this behavior.
      * @return True if the user is targeting this behavior, false if not.  In the case where no user id is given, this
      * returns true if any user is targeting this behavior, false if none are.
      */
-    public isTargeted(userId?: string): boolean {
-        return this._target.isActive(userId);
+    public isTargeted(user?: User): boolean {
+        return this._target.isActive(user);
     }
 }

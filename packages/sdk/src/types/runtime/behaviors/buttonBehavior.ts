@@ -4,6 +4,7 @@
  */
 
 import { ActionHandler, ActionState, BehaviorType, DiscreteAction, TargetBehavior } from '.';
+import { User } from '..';
 
 /**
  * Button behavior class containing the target behavior actions.
@@ -46,21 +47,21 @@ export class ButtonBehavior extends TargetBehavior {
 
     /**
      * Gets whether the button is being hovered over by the given user, or at all if no user id is given.
-     * @param userId The id of the user to check whether they are hovering over this button behavior.
+     * @param user The user to check whether they are hovering over this button behavior.
      * @return True if the user is hovering over, false if not.  In the case where no user id is given, this
      * returns true if any user is hovering over, false if none are.
      */
-    public isHoveredOver(userId?: string): boolean {
-        return this._hover.isActive(userId);
+    public isHoveredOver(user?: User): boolean {
+        return this._hover.isActive(user);
     }
 
     /**
      * Gets whether the button is being clicked by the given user, or at all if no user id is given.
-     * @param userId The id of the user to check whether they are clicking this button behavior.
+     * @param user The user to check whether they are clicking this button behavior.
      * @return True if the user is clicking, false if not.  In the case where no user id is given, this
      * returns true if any user is clicking, false if none are.
      */
-    public isClicked(userId?: string): boolean {
-        return this._click.isActive(userId);
+    public isClicked(user?: User): boolean {
+        return this._click.isActive(user);
     }
 }
