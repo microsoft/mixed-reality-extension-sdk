@@ -26,7 +26,7 @@ On connection:
     1. Run `ClientSync` to re-send session state messages
     2. Register new `ClientExecution` protocol and `startListening`
 
-On message expecting a reply:
+On message expecting a reply, when the client is synchronized:
 
 1. `InternalContext::createActorFromPayload` with a `CreateEmpty` payload or similar
 2. `Execution::sendPayload` calls `Execution::sendMessage`
