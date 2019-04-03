@@ -101,6 +101,14 @@ export type Rule = {
          */
         beforeReceiveFromClient: (
             session: Session, client: Client, message: any) => Message;
+        /**
+         * Determines whether a given message should go to a given client. Called after beforeReceiveFromApp.
+         * @param session The current session.
+         * @param client The client who should be tested.
+         * @param message The message itself (also contains the payload).
+         * @returns `true` if this message should be sent to this client, or `false` if not.
+         */
+        shouldSendToClient: (session: Session, client: Client, message: any) => boolean;
     }
 };
 
@@ -130,6 +138,7 @@ export const DefaultRule: Rule = {
             session: Session, client: Client, message: Message) => {
             return message;
         },
+        shouldSendToClient: () => true,
     }
 };
 
@@ -147,6 +156,7 @@ export const MissingRule: Rule = {
         }
     },
     session: {
+        ...DefaultRule.session,
         beforeReceiveFromApp: (
             session: Session, message: Message) => {
             console.error(`[ERROR] No rule defined for payload ${message.payload.type}! Add an entry in rules.ts.`);
@@ -217,6 +227,7 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
             }
         },
         session: {
+            ...DefaultRule.session,
             // Whenever we encounter an actor-correction, convert it to an actor-update
             // Eventually: Remove actor-correction payload type (requires DLL change).
             beforeReceiveFromApp: (
