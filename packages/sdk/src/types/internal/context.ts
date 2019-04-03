@@ -535,8 +535,7 @@ export class InternalContext {
     }
 
     public performAction(actionEvent: ActionEvent) {
-        const user = this.userSet[actionEvent.userId];
-        if (user) {
+        if (actionEvent.user) {
             const targetActor = this.actorSet[actionEvent.targetId];
             if (targetActor) {
                 targetActor.internal.performAction(actionEvent);
