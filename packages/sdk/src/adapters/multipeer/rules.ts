@@ -285,44 +285,40 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
                 client: Client,
                 message: Message<Payloads.ActorUpdate>
             ) => {
-                // Check that this is the authoritative client.
-                if (client.authoritative) {
-                    // Check that the actor exists.
-                    const syncActor = session.actorSet[message.payload.actor.id];
-                    if (syncActor) {
-                        // Merge the update into the existing actor.
-                        session.cacheActorUpdateMessage(message);
+                const syncActor = session.actorSet[message.payload.actor.id];
+                if (syncActor && (client.authoritative || syncActor.grabbedBy === client.id)) {
+                    // Merge the update into the existing actor.
+                    session.cacheActorUpdateMessage(message);
 
-                        // Make a copy of the message so we can modify it.
-                        const payloadForClients = deepmerge(message.payload, {});
+                    // Make a copy of the message so we can modify it.
+                    const payloadForClients = deepmerge(message.payload, {});
 
-                        // If animating, don't sync transform changes with other clients (animations are desynchronized)
-                        if (session.isAnimating(syncActor)) {
-                            delete payloadForClients.actor.transform;
-                        }
-
-                        // Don't sync to other clients if the actor patch is empty.
-                        // (if keys.length === 1, it only contains the actor.id field)
-                        if (Object.keys(payloadForClients.actor).length > 1) {
-                            // Sync the change to the other clients.
-                            session.sendPayloadToClients(payloadForClients, (value) => value.id !== client.id);
-                        }
-
-                        // Determine whether to forward the message to the app based on subscriptions.
-                        let shouldSendToApp = false;
-                        const subscriptions = syncActor.created.message.payload.actor.subscriptions || [];
-                        if (message.payload.actor.transform &&
-                            Object.keys(message.payload.actor.transform) &&
-                            subscriptions.includes('transform')) {
-                            shouldSendToApp = true;
-                        } else if (message.payload.actor.rigidBody &&
-                            Object.keys(message.payload.actor.rigidBody) &&
-                            subscriptions.includes('rigidbody')) {
-                            shouldSendToApp = true;
-                        }
-
-                        return shouldSendToApp ? message : undefined;
+                    // If animating, don't sync transform changes with other clients (animations are desynchronized)
+                    if (session.isAnimating(syncActor)) {
+                        delete payloadForClients.actor.transform;
                     }
+
+                    // Don't sync to other clients if the actor patch is empty.
+                    // (if keys.length === 1, it only contains the actor.id field)
+                    if (Object.keys(payloadForClients.actor).length > 1) {
+                        // Sync the change to the other clients.
+                        session.sendPayloadToClients(payloadForClients, (value) => value.id !== client.id);
+                    }
+
+                    // Determine whether to forward the message to the app based on subscriptions.
+                    let shouldSendToApp = false;
+                    const subscriptions = syncActor.created.message.payload.actor.subscriptions || [];
+                    if (message.payload.actor.transform &&
+                        Object.keys(message.payload.actor.transform) &&
+                        subscriptions.includes('transform')) {
+                        shouldSendToApp = true;
+                    } else if (message.payload.actor.rigidBody &&
+                        Object.keys(message.payload.actor.rigidBody) &&
+                        subscriptions.includes('rigidbody')) {
+                        shouldSendToApp = true;
+                    }
+
+                    return shouldSendToApp ? message : undefined;
                 }
             }
         }
@@ -711,7 +707,26 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 
     // ========================================================================
     'perform-action': {
-        ...ClientOnlyRule
+        ...ClientOnlyRule,
+        session: {
+            ...DefaultRule.session,
+            beforeReceiveFromClient: (
+                session: Session,
+                client: Client,
+                message: Message<Payloads.PerformAction>
+            ) => {
+                // Store the client id of the client that is performing the grab.
+                const payload = message.payload;
+                const syncActor = session.actorSet[payload.targetId];
+                if (syncActor && payload.actionName.toLowerCase() === 'grab' &&
+                    (syncActor.grabbedBy === client.id || syncActor.grabbedBy === undefined)
+                ) {
+                    syncActor.grabbedBy = payload.actionState === 'started' ? client.id : undefined;
+                }
+
+                return message;
+            }
+        }
     },
 
     // ========================================================================

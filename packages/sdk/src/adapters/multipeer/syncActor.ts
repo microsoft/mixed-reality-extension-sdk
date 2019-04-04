@@ -39,4 +39,5 @@ export type SyncActor = {
     activeSoundInstances: ActiveSoundInstance[];
     activeInterpolations: Payloads.InterpolateActor[];
     behavior: BehaviorType;
+    grabbedBy: string;
 };
