@@ -31,8 +31,8 @@ export class WebHost {
         options: { baseDir?: string, baseUrl?: string, port?: string | number } = {}
     ) {
         const pjson = require('../package.json');
-        log.logToApp(`Node: ${process.version}`);
-        log.logToApp(`${pjson.name}: v${pjson.version}`);
+        log.info('app', `Node: ${process.version}`);
+        log.info('app', `${pjson.name}: v${pjson.version}`);
 
         this._baseDir = options.baseDir || process.env.BASE_DIR;
         this._baseUrl = options.baseUrl || process.env.BASE_URL;
@@ -52,9 +52,9 @@ export class WebHost {
         this._adapter.listen()
             .then(server => {
                 this._baseUrl = this._baseUrl || server.url.replace(/\[::\]/, '127.0.0.1');
-                log.logToApp(`${server.name} listening on ${JSON.stringify(server.address())}`);
-                log.logToApp(`baseUrl: ${this.baseUrl}`);
-                log.logToApp(`baseDir: ${this.baseDir}`);
+                log.info('app', `${server.name} listening on ${JSON.stringify(server.address())}`);
+                log.info('app', `baseUrl: ${this.baseUrl}`);
+                log.info('app', `baseDir: ${this.baseDir}`);
                 if (!!this.baseDir) {
                     this.serveStaticFiles(server);
                 }

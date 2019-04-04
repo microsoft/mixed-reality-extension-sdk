@@ -110,7 +110,7 @@ export class Client extends EventEmitter {
             this.protocol.sendMessage(message, promise);
         } else {
             // tslint:disable-next-line:no-console
-            console.error(`[ERROR] No protocol for message send: ${message.payload.type}`);
+            log.error('network', `[ERROR] No protocol for message send: ${message.payload.type}`);
         }
     }
 
@@ -119,7 +119,7 @@ export class Client extends EventEmitter {
             this.protocol.sendPayload(payload, promise);
         } else {
             // tslint:disable-next-line:no-console
-            console.error(`[ERROR] No protocol for payload send: ${payload.type}`);
+            log.error('network', `[ERROR] No protocol for payload send: ${payload.type}`);
         }
     }
 
