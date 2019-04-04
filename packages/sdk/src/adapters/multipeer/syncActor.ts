@@ -34,6 +34,7 @@ export type ActiveSoundInstance = {
  */
 export type SyncActor = {
     actorId: string;
+    exclusiveToUser: string;
     created: CreateActor;
     createdAnimations: CreateAnimation[];
     activeSoundInstances: ActiveSoundInstance[];
