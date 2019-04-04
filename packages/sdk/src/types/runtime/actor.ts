@@ -131,10 +131,16 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
     public get lookAt() { return this._lookAt; }
     public get children() { return this.context.actors.filter(actor => actor.parentId === this.id); }
     public get parent() { return this._context.actor(this._parentId); }
+    public set parent(value) { this.parentId = value && value.id || ZeroGuid; }
     public get parentId() { return this._parentId; }
     public set parentId(value) {
-        if (!value || value.startsWith('0000') || !this.context.actor(value)) {
+        const parentActor = this.context.actor(value);
+        if (!value || value.startsWith('0000') || !parentActor) {
             value = ZeroGuid;
+        }
+        if (parentActor && parentActor.exclusiveToUser && parentActor.exclusiveToUser !== this.exclusiveToUser) {
+            throw new Error(`User-exclusive actor ${this.id} can only be parented to inclusive actors ` +
+                "and actors that are exclusive to the same user.");
         }
         if (this._parentId !== value) {
             this._parentId = value;
@@ -685,8 +691,8 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
         if (from.name) this._name = from.name;
         if (from.tag) this._tag = from.tag;
         if (from.exclusiveToUser) {
-            this._exclusiveToUser = typeof from.exclusiveToUser === 'string' ?
-                this.context.user(from.exclusiveToUser) : from.exclusiveToUser;
+            this._exclusiveToUser = this.context.user(typeof from.exclusiveToUser === 'string' ?
+                from.exclusiveToUser : from.exclusiveToUser.id);
         }
         if (from.transform) this._transform.copy(from.transform);
         if (from.attachment) this.attach(from.attachment.userId, from.attachment.attachPoint);
@@ -708,7 +714,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
             parentId: this._parentId,
             name: this._name,
             tag: this._tag,
-            exclusiveToUser: this._exclusiveToUser,
+            exclusiveToUser: this.exclusiveToUser && this.exclusiveToUser.id || undefined,
             transform: this._transform.toJSON(),
             appearance: this._appearance.toJSON(),
             attachment: this._attachment ? this._attachment.toJSON() : undefined,
