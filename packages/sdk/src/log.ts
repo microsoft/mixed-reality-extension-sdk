@@ -4,28 +4,13 @@
  */
 
 import debug from 'debug';
-// tslint:disable-next-line:no-var-requires
-const pjson = require('../package.json');
-
-const kApp = 'app';
 
 class Log {
 
     private loggers: { [area: string]: debug.IDebugger } = {};
 
     constructor() {
-        this.enableArea(kApp);
-    }
-
-    public get logToAppEnabled() {
-        return !!this.loggers[kApp];
-    }
-    public set logToAppEnabled(enable: boolean) {
-        if (enable) {
-            this.enableArea(kApp);
-        } else {
-            this.disableArea(kApp);
-        }
+        this.enableArea('app');
     }
 
     public enable(facility?: string, severity?: string) {
@@ -53,16 +38,10 @@ class Log {
 
     public warning(facility: string, formatter: any, ...args: any[]) {
         this.log(facility, 'warning', formatter, ...args);
-        if (!this.enabled(facility, 'warning')) {
-            this.logToApp(formatter, ...args);
-        }
     }
 
     public error(facility: string, formatter: any, ...args: any[]) {
         this.log(facility, 'error', formatter, ...args);
-        if (!this.enabled(facility, 'error')) {
-            this.logToApp(formatter, ...args);
-        }
     }
 
     public info(facility: string, formatter: any, ...args: any[]) {
@@ -74,6 +53,7 @@ class Log {
     }
 
     public log(facility: string, severity: string, formatter: any, ...args: any[]) {
+        this.checkInitialize();
         if (formatter) {
             facility = this.cleanupFacility(facility);
             severity = this.cleanupSeverity(severity);
@@ -84,19 +64,12 @@ class Log {
         }
     }
 
-    public logToApp(formatter: any, ...args: any[]) {
-        const logger = this.loggers[kApp];
-        if (logger) {
-            logger(formatter, ...args);
-        }
-    }
-
     private area(facility: string, severity: string): string {
         facility = this.cleanupFacility(facility);
         severity = this.cleanupSeverity(severity);
-        let area = pjson.name;
+        let area = '';
         if (facility) {
-            area = `${area}:${facility}`;
+            area = `${facility}`;
         }
         if (severity) {
             area = `${area}:${severity}`;
@@ -135,6 +108,23 @@ class Log {
             case '': return null;
             default: return severity;
         }
+    }
+
+    private checkInitialize = () => {
+        const logging = process.env.MRE_LOGGING || '';
+        const parts = logging.split(',').map(s => s.trim());
+        for (const part of parts) {
+            let [ facility, severity ] = part.split(':').map(s => s.trim());
+            const disable = facility.startsWith('-');
+            facility = facility.replace(/^-/, '');
+            severity = severity; // tslint
+            if (disable) {
+                this.disable(facility, severity);
+            } else {
+                this.enable(facility, severity);
+            }
+        }
+        this.checkInitialize = () => {};
     }
 }
 

@@ -159,12 +159,12 @@ export class Protocol extends EventEmitter {
         if (payload && payload.type && payload.type.length) {
             const handler = (this as any)[`recv-${payload.type}`] || (() => {
                 // tslint:disable-next-line:no-console
-                console.error(`[ERROR] ${this.name} has no handler for payload ${payload.type}!`);
+                log.error('network', `[ERROR] ${this.name} has no handler for payload ${payload.type}!`);
             });
             handler(payload);
         } else {
             // tslint:disable-next-line:no-console
-            console.error(`[ERROR] ${this.name} invalid message payload!`);
+            log.error('network', `[ERROR] ${this.name} invalid message payload!`);
         }
     }
 
@@ -211,7 +211,7 @@ export class Protocol extends EventEmitter {
 
     protected missingPromiseForReplyMessage(message: Message) {
         // tslint:disable-next-line:no-console max-line-length
-        console.error(`[ERROR] ${this.name} received unexpected reply message! payload: ${message.payload.type}, replyToId: ${message.replyToId}`);
+        log.error('network', `[ERROR] ${this.name} received unexpected reply message! payload: ${message.payload.type}, replyToId: ${message.replyToId}`);
     }
 
     private onReceive = (message: Message) => {

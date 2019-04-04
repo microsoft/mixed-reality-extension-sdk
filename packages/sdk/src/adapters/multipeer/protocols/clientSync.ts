@@ -75,7 +75,7 @@ export class ClientSync extends Protocols.Protocol {
             }
             case 'error': {
                 // tslint:disable-next-line: max-line-length
-                console.error(`[ERROR] ${this.name}: Invalid message for send during synchronization stage: ${message.payload.type}. In progress: ${this.inProgressStages.join(',')}. Complete: ${this.completedStages.join(',')}.`);
+                log.error('network', `[ERROR] ${this.name}: Invalid message for send during synchronization stage: ${message.payload.type}. In progress: ${this.inProgressStages.join(',')}. Complete: ${this.completedStages.join(',')}.`);
             }
         }
     }
@@ -121,7 +121,7 @@ export class ClientSync extends Protocols.Protocol {
         if (handler) {
             await handler(); // Allow exception to propagate.
         } else {
-            console.error(`[ERROR] ${this.name}: No handler for stage ${stage}!`);
+            log.error('network', `[ERROR] ${this.name}: No handler for stage ${stage}!`);
         }
     }
 

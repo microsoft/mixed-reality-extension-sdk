@@ -6,6 +6,7 @@
 import deepmerge from 'deepmerge';
 import { Client, Session, SynchronizationStage } from '.';
 import { Message, WebSocket } from '../..';
+import { log } from '../../log';
 import { SoundCommand } from '../../sound';
 import * as Payloads from '../../types/network/payloads';
 import { ExportedPromise } from '../../utils/exportedPromise';
@@ -142,19 +143,19 @@ export const MissingRule: Rule = {
     client: {
         beforeQueueMessageForClient: (
             session: Session, client: Client, message: any, promise: ExportedPromise) => {
-            console.error(`[ERROR] No rule defined for payload ${message.payload.type}! Add an entry in rules.ts.`);
+            log.error('app', `[ERROR] No rule defined for payload ${message.payload.type}! Add an entry in rules.ts.`);
             return message;
         }
     },
     session: {
         beforeReceiveFromApp: (
             session: Session, message: Message) => {
-            console.error(`[ERROR] No rule defined for payload ${message.payload.type}! Add an entry in rules.ts.`);
+            log.error('app', `[ERROR] No rule defined for payload ${message.payload.type}! Add an entry in rules.ts.`);
             return message;
         },
         beforeReceiveFromClient: (
             session: Session, client: Client, message: Message) => {
-            console.error(`[ERROR] No rule defined for payload ${message.payload.type}! Add an entry in rules.ts.`);
+            log.error('app', `[ERROR] No rule defined for payload ${message.payload.type}! Add an entry in rules.ts.`);
             return message;
         },
     }
@@ -175,14 +176,14 @@ const ClientOnlyRule: Rule = {
     client: {
         beforeQueueMessageForClient: (
             session: Session, client: Client, message: any, promise: ExportedPromise) => {
-            console.error(`[ERROR] session tried to queue a client-only message: ${message.payload.type}!`);
+            log.error('network', `[ERROR] session tried to queue a client-only message: ${message.payload.type}!`);
             return message;
         }
     },
     session: {
         ...DefaultRule.session,
         beforeReceiveFromApp: (session: Session, message: Message) => {
-            console.error(`[ERROR] app tried to send a client-only message: ${message.payload.type}!`);
+            log.error('network', `[ERROR] app tried to send a client-only message: ${message.payload.type}!`);
             return undefined;
         }
     }

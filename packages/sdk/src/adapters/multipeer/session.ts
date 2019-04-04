@@ -158,7 +158,7 @@ export class Session extends EventEmitter {
     private setAuthoritativeClient(clientId: string) {
         if (!this._clientSet[clientId]) {
             // tslint:disable-next-line:no-console
-            console.error(`[ERROR] setAuthoritativeClient: client ${clientId} does not exist.`);
+            log.error('network', `[ERROR] setAuthoritativeClient: client ${clientId} does not exist.`);
         }
         this._clientSet[clientId].setAuthoritative(true);
         this.clients
