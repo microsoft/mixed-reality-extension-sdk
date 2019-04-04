@@ -80,6 +80,12 @@ export class ClientSync extends Protocols.Protocol {
         }
     }
 
+    /** @override */
+    protected missingPromiseForReplyMessage(message: Message) {
+        // Ignore. Sync protocol receives reply messages for create-* messages, but doesn't queue
+        // completion promises for them because it doesn't care about when they complete.
+    }
+
     private handlingForMessage(message: Message) {
         const rule = Rules[message.payload.type] || MissingRule;
         let handling = rule.synchronization.before;
