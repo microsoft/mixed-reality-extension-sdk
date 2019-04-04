@@ -191,14 +191,8 @@ export class Protocol extends EventEmitter {
 
     protected handleReplyMessage(message: Message) {
         const queuedPromise = this.promises[message.replyToId];
-        // The way join-synchronization works, the app may recieve the occasional unexpected reply message.
-        // It is harmless; something we can live with for now. We do want to know if we reeive an unexpected reply
-        // elsewhere, as that could be a sign of a protocol design issue.
         if (!queuedPromise) {
-            if (this.name !== "Execution") {
-                // tslint:disable-next-line:no-console max-line-length
-                console.error(`[ERROR] ${this.name} received unexpected reply message! payload: ${message.payload.type}, replyToId: ${message.replyToId}`);
-            }
+            this.missingPromiseForReplyMessage(message);
         } else {
             delete this.promises[message.replyToId];
             clearTimeout(queuedPromise.timeout);
@@ -213,6 +207,11 @@ export class Protocol extends EventEmitter {
             try { delete this.promises[messageId]; } catch { }
             try { queuedPromise.promise.reject(reason); } catch { }
         }
+    }
+
+    protected missingPromiseForReplyMessage(message: Message) {
+        // tslint:disable-next-line:no-console max-line-length
+        console.error(`[ERROR] ${this.name} received unexpected reply message! payload: ${message.payload.type}, replyToId: ${message.replyToId}`);
     }
 
     private onReceive = (message: Message) => {

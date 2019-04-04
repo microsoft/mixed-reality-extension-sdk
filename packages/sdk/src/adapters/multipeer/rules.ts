@@ -217,8 +217,9 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
             }
         },
         session: {
-            // Whenever we encounter an actor-correction, convert it to an actor-update
-            // Eventually: Remove actor-correction payload type (requires DLL change).
+            // For now, whenever we encounter an actor-correction, convert it to an actor-update.
+            // Later this message type might be utilized to indicate that actor values should be
+            // interpolated rather than overwritten.
             beforeReceiveFromApp: (
                 session: Session,
                 message: Message<Payloads.ActorUpdate>
@@ -867,7 +868,7 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
         synchronization: {
             stage: 'set-behaviors',
             before: 'ignore',
-            during: 'queue',
+            during: 'allow',
             after: 'allow'
         },
         session: {

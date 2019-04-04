@@ -4,7 +4,7 @@
  */
 
 import { Protocol, ServerPreprocessing } from '.';
-import { ActionEvent, CollisionEvent, Context, WebSocket } from '..';
+import { ActionEvent, CollisionEvent, Context, Message, WebSocket } from '..';
 import {
     ActorUpdate,
     CollisionEventRaised,
@@ -33,6 +33,11 @@ export class Execution extends Protocol {
         super(context.conn);
         // Behave like a server-side endpoint (send heartbeats, measure connection quality)
         this.use(new ServerPreprocessing());
+    }
+
+    /** @override */
+    protected missingPromiseForReplyMessage(message: Message) {
+        // Ignore. App receives reply messages from all clients, but only processes the first one.
     }
 
     /** @private */
