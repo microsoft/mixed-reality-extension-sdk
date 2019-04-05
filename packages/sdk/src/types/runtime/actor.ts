@@ -56,7 +56,7 @@ export interface ActorLike {
     parentId: string;
     name: string;
     tag: string;
-    exclusiveToUser: string | User;
+    exclusiveToUser: string;
     subscriptions: SubscriptionType[];
     transform: Partial<ActorTransformLike>;
     appearance: Partial<AppearanceLike>;
@@ -91,7 +91,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 
     private _name: string;
     private _tag: string;
-    private _exclusiveToUser: User;
+    private _exclusiveToUser: string;
     private _parentId = ZeroGuid;
     private _subscriptions: SubscriptionType[] = [];
     private _transform = new ActorTransform();
@@ -117,7 +117,9 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
     public get name() { return this._name; }
     public get tag() { return this._tag; }
     public set tag(value) { this._tag = value; this.actorChanged('tag'); }
-    public get exclusiveToUser(): User { return this.parent && this.parent.exclusiveToUser || this._exclusiveToUser; }
+    public get exclusiveToUser(): string {
+        return this.parent && this.parent.exclusiveToUser || this._exclusiveToUser;
+    }
     public get subscriptions() { return this._subscriptions; }
     public get transform() { return this._transform; }
     public set transform(value) { this._transform.copy(value); }
@@ -690,10 +692,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
         if (from.parentId) this._parentId = from.parentId;
         if (from.name) this._name = from.name;
         if (from.tag) this._tag = from.tag;
-        if (from.exclusiveToUser) {
-            this._exclusiveToUser = this.context.user(typeof from.exclusiveToUser === 'string' ?
-                from.exclusiveToUser : from.exclusiveToUser.id);
-        }
+        if (from.exclusiveToUser) this._exclusiveToUser = from.exclusiveToUser;
         if (from.transform) this._transform.copy(from.transform);
         if (from.attachment) this.attach(from.attachment.userId, from.attachment.attachPoint);
         if (from.appearance) this._appearance.copy(from.appearance);
@@ -714,7 +713,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
             parentId: this._parentId,
             name: this._name,
             tag: this._tag,
-            exclusiveToUser: this.exclusiveToUser && this.exclusiveToUser.id || undefined,
+            exclusiveToUser: this._exclusiveToUser,
             transform: this._transform.toJSON(),
             appearance: this._appearance.toJSON(),
             attachment: this._attachment ? this._attachment.toJSON() : undefined,
@@ -735,9 +734,6 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
     public static sanitize(msg: Partial<ActorLike>): Partial<ActorLike>;
     public static sanitize(msg: ActorLike | Partial<ActorLike>): ActorLike | Partial<ActorLike> {
         msg = resolveJsonValues(msg);
-        if (msg.exclusiveToUser && typeof msg.exclusiveToUser !== 'string') {
-            msg.exclusiveToUser = msg.exclusiveToUser.id;
-        }
         if (msg.appearance) {
             msg.appearance = Appearance.sanitize(msg.appearance);
         }
