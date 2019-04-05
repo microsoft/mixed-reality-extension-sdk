@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>SoundInstance | Mixed Reality Extension SDK</title>
+	<title>ActorTransform | Mixed Reality Extension SDK</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -52,10 +52,10 @@
 					<a href="../index.html">Globals</a>
 				</li>
 				<li>
-					<a href="soundinstance.html">SoundInstance</a>
+					<a href="actortransform.html">ActorTransform</a>
 				</li>
 			</ul>
-			<h1>Class SoundInstance</h1>
+			<h1>Class ActorTransform</h1>
 		</div>
 	</div>
 </header>
@@ -66,8 +66,14 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">SoundInstance</span>
+						<span class="target">ActorTransform</span>
 					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel">
+				<h3>Implements</h3>
+				<ul class="tsd-hierarchy">
+					<li><a href="../interfaces/actortransformlike.html" class="tsd-signature-type">ActorTransformLike</a></li>
 				</ul>
 			</section>
 			<section class="tsd-panel-group tsd-index-group">
@@ -77,24 +83,21 @@
 						<section class="tsd-index-section ">
 							<h3>Constructors</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="soundinstance.html#constructor" class="tsd-kind-icon">constructor</a></li>
+								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="actortransform.html#constructor" class="tsd-kind-icon">constructor</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
-							<h3>Properties</h3>
+							<h3>Accessors</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-class"><a href="soundinstance.html#actor" class="tsd-kind-icon">actor</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class"><a href="soundinstance.html#id" class="tsd-kind-icon">id</a></li>
+								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="actortransform.html#app" class="tsd-kind-icon">app</a></li>
+								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="actortransform.html#local" class="tsd-kind-icon">local</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="soundinstance.html#pause" class="tsd-kind-icon">pause</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="soundinstance.html#resume" class="tsd-kind-icon">resume</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="soundinstance.html#setsoundstate" class="tsd-kind-icon">set<wbr>Sound<wbr>State</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="soundinstance.html#start" class="tsd-kind-icon">start</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="soundinstance.html#stop" class="tsd-kind-icon">stop</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="actortransform.html#copy" class="tsd-kind-icon">copy</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="actortransform.html#tojson" class="tsd-kind-icon">toJSON</a></li>
 							</ul>
 						</section>
 					</div>
@@ -106,154 +109,126 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Sound<wbr>Instance<span class="tsd-signature-symbol">(</span>actor<span class="tsd-signature-symbol">: </span><a href="actor.html" class="tsd-signature-type">Actor</a>, soundAssetId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="soundinstance.html" class="tsd-signature-type">SoundInstance</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Actor<wbr>Transform<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="actortransform.html" class="tsd-signature-type">ActorTransform</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/fe7f0b5/packages/sdk/src/types/runtime/soundInstance.ts#L16">types/runtime/soundInstance.ts:16</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/fe7f0b5/packages/sdk/src/types/runtime/actorTransform.ts#L22">types/runtime/actorTransform.ts:22</a></li>
 								</ul>
 							</aside>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>actor: <a href="actor.html" class="tsd-signature-type">Actor</a></h5>
-								</li>
-								<li>
-									<h5>soundAssetId: <span class="tsd-signature-type">string</span></h5>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="soundinstance.html" class="tsd-signature-type">SoundInstance</a></h4>
+							<h4 class="tsd-returns-title">Returns <a href="actortransform.html" class="tsd-signature-type">ActorTransform</a></h4>
 						</li>
 					</ul>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
-				<h2>Properties</h2>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
-					<a name="actor" class="tsd-anchor"></a>
-					<h3>actor</h3>
-					<div class="tsd-signature tsd-kind-icon">actor<span class="tsd-signature-symbol">:</span> <a href="actor.html" class="tsd-signature-type">Actor</a></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/fe7f0b5/packages/sdk/src/types/runtime/soundInstance.ts#L15">types/runtime/soundInstance.ts:15</a></li>
-						</ul>
-					</aside>
+				<h2>Accessors</h2>
+				<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class">
+					<a name="app" class="tsd-anchor"></a>
+					<h3>app</h3>
+					<ul class="tsd-signatures tsd-kind-accessor tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> app<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="transform.html" class="tsd-signature-type">Transform</a></li>
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">set</span> app<span class="tsd-signature-symbol">(</span>value<span class="tsd-signature-symbol">: </span><a href="transform.html" class="tsd-signature-type">Transform</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/fe7f0b5/packages/sdk/src/types/runtime/actorTransform.ts#L19">types/runtime/actorTransform.ts:19</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <a href="transform.html" class="tsd-signature-type">Transform</a></h4>
+						</li>
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/fe7f0b5/packages/sdk/src/types/runtime/actorTransform.ts#L20">types/runtime/actorTransform.ts:20</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>value: <a href="transform.html" class="tsd-signature-type">Transform</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
-					<a name="id" class="tsd-anchor"></a>
-					<h3>id</h3>
-					<div class="tsd-signature tsd-kind-icon">id<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/fe7f0b5/packages/sdk/src/types/runtime/soundInstance.ts#L14">types/runtime/soundInstance.ts:14</a></li>
-						</ul>
-					</aside>
+				<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class">
+					<a name="local" class="tsd-anchor"></a>
+					<h3>local</h3>
+					<ul class="tsd-signatures tsd-kind-accessor tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> local<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="scaledtransform.html" class="tsd-signature-type">ScaledTransform</a></li>
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">set</span> local<span class="tsd-signature-symbol">(</span>value<span class="tsd-signature-symbol">: </span><a href="scaledtransform.html" class="tsd-signature-type">ScaledTransform</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/fe7f0b5/packages/sdk/src/types/runtime/actorTransform.ts#L21">types/runtime/actorTransform.ts:21</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <a href="scaledtransform.html" class="tsd-signature-type">ScaledTransform</a></h4>
+						</li>
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/fe7f0b5/packages/sdk/src/types/runtime/actorTransform.ts#L22">types/runtime/actorTransform.ts:22</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>value: <a href="scaledtransform.html" class="tsd-signature-type">ScaledTransform</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Methods</h2>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="pause" class="tsd-anchor"></a>
-					<h3>pause</h3>
+					<a name="copy" class="tsd-anchor"></a>
+					<h3>copy</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">pause<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">copy<span class="tsd-signature-symbol">(</span>from<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/actortransformlike.html" class="tsd-signature-type">ActorTransformLike</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/fe7f0b5/packages/sdk/src/types/runtime/soundInstance.ts#L54">types/runtime/soundInstance.ts:54</a></li>
-								</ul>
-							</aside>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="resume" class="tsd-anchor"></a>
-					<h3>resume</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">resume<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/fe7f0b5/packages/sdk/src/types/runtime/soundInstance.ts#L58">types/runtime/soundInstance.ts:58</a></li>
-								</ul>
-							</aside>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="setsoundstate" class="tsd-anchor"></a>
-					<h3>set<wbr>Sound<wbr>State</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">set<wbr>Sound<wbr>State<span class="tsd-signature-symbol">(</span>options<span class="tsd-signature-symbol">: </span><a href="../index.html#setsoundstateoptions" class="tsd-signature-type">SetSoundStateOptions</a>, soundCommand<span class="tsd-signature-symbol">?: </span><a href="../enums/soundcommand.html" class="tsd-signature-type">SoundCommand</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/fe7f0b5/packages/sdk/src/types/runtime/soundInstance.ts#L43">types/runtime/soundInstance.ts:43</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/fe7f0b5/packages/sdk/src/types/runtime/actorTransform.ts#L29">types/runtime/actorTransform.ts:29</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>options: <a href="../index.html#setsoundstateoptions" class="tsd-signature-type">SetSoundStateOptions</a></h5>
-								</li>
-								<li>
-									<h5><span class="tsd-flag ts-flagOptional">Optional</span> soundCommand: <a href="../enums/soundcommand.html" class="tsd-signature-type">SoundCommand</a></h5>
+									<h5>from: <span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/actortransformlike.html" class="tsd-signature-type">ActorTransformLike</a><span class="tsd-signature-symbol">&gt;</span></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
 						</li>
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="start" class="tsd-anchor"></a>
-					<h3>start</h3>
+					<a name="tojson" class="tsd-anchor"></a>
+					<h3>toJSON</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">start<span class="tsd-signature-symbol">(</span>options<span class="tsd-signature-symbol">: </span><a href="../index.html#setsoundstateoptions" class="tsd-signature-type">SetSoundStateOptions</a>, startTimeOffset<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/forwardpromise.html" class="tsd-signature-type">ForwardPromise</a><span class="tsd-signature-symbol">&lt;</span><a href="soundinstance.html" class="tsd-signature-type">SoundInstance</a><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">toJSON<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/actortransformlike.html" class="tsd-signature-type">ActorTransformLike</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/fe7f0b5/packages/sdk/src/types/runtime/soundInstance.ts#L24">types/runtime/soundInstance.ts:24</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/fe7f0b5/packages/sdk/src/types/runtime/actorTransform.ts#L36">types/runtime/actorTransform.ts:36</a></li>
 								</ul>
 							</aside>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>options: <a href="../index.html#setsoundstateoptions" class="tsd-signature-type">SetSoundStateOptions</a></h5>
-								</li>
-								<li>
-									<h5><span class="tsd-flag ts-flagOptional">Optional</span> startTimeOffset: <span class="tsd-signature-type">number</span></h5>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="../interfaces/forwardpromise.html" class="tsd-signature-type">ForwardPromise</a><span class="tsd-signature-symbol">&lt;</span><a href="soundinstance.html" class="tsd-signature-type">SoundInstance</a><span class="tsd-signature-symbol">&gt;</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="stop" class="tsd-anchor"></a>
-					<h3>stop</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">stop<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/fe7f0b5/packages/sdk/src/types/runtime/soundInstance.ts#L62">types/runtime/soundInstance.ts:62</a></li>
-								</ul>
-							</aside>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+							<h4 class="tsd-returns-title">Returns <a href="../interfaces/actortransformlike.html" class="tsd-signature-type">ActorTransformLike</a></h4>
 						</li>
 					</ul>
 				</section>
@@ -272,31 +247,22 @@
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-class">
-						<a href="soundinstance.html" class="tsd-kind-icon">Sound<wbr>Instance</a>
+						<a href="actortransform.html" class="tsd-kind-icon">Actor<wbr>Transform</a>
 						<ul>
 							<li class=" tsd-kind-constructor tsd-parent-kind-class">
-								<a href="soundinstance.html#constructor" class="tsd-kind-icon">constructor</a>
+								<a href="actortransform.html#constructor" class="tsd-kind-icon">constructor</a>
 							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class">
-								<a href="soundinstance.html#actor" class="tsd-kind-icon">actor</a>
+							<li class=" tsd-kind-accessor tsd-parent-kind-class">
+								<a href="actortransform.html#app" class="tsd-kind-icon">app</a>
 							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class">
-								<a href="soundinstance.html#id" class="tsd-kind-icon">id</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="soundinstance.html#pause" class="tsd-kind-icon">pause</a>
+							<li class=" tsd-kind-accessor tsd-parent-kind-class">
+								<a href="actortransform.html#local" class="tsd-kind-icon">local</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="soundinstance.html#resume" class="tsd-kind-icon">resume</a>
+								<a href="actortransform.html#copy" class="tsd-kind-icon">copy</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="soundinstance.html#setsoundstate" class="tsd-kind-icon">set<wbr>Sound<wbr>State</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="soundinstance.html#start" class="tsd-kind-icon">start</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="soundinstance.html#stop" class="tsd-kind-icon">stop</a>
+								<a href="actortransform.html#tojson" class="tsd-kind-icon">toJSON</a>
 							</li>
 						</ul>
 					</li>
