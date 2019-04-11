@@ -3,7 +3,7 @@
  * Licensed under the MIT License.
  */
 
-import { Client } from '..';
+import { Client, ClientDesyncPreprocessor } from '..';
 import { Message } from '../../..';
 import * as Protocols from '../../../protocols';
 
@@ -28,6 +28,8 @@ export class ClientExecution extends Protocols.Protocol implements Protocols.Mid
         this.beforeRecv = this.beforeRecv.bind(this);
         // Behave like a server-side endpoint (send heartbeats, measure connection quality)
         this.use(new Protocols.ServerPreprocessing());
+        // Filter user-exclusive actors
+        this.use(new ClientDesyncPreprocessor(client));
         // Use middleware to pipe client messages to the session.
         this.use(this);
     }
