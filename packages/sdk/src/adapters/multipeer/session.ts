@@ -203,17 +203,14 @@ export class Session extends EventEmitter {
         this.protocol.sendMessage(message);
     }
 
-    public sendToClients(message: Message, filterFn?: (value: Client) => any) {
-        const rule = Rules[message.payload.type] || MissingRule;
-        const ruleFilter = rule.session.shouldSendToClient || (() => true);
-        const sendFilter = filterFn || (() => true);
-        const clients = this.clients.filter(c => ruleFilter(this, c, message) && sendFilter(c));
+    public sendToClients(message: Message, filterFn?: (value: Client, index: number) => any) {
+        const clients = this.clients.filter(filterFn || (() => true));
         for (const client of clients) {
             client.send({ ...message });
         }
     }
 
-    public sendPayloadToClients(payload: Partial<Payloads.Payload>, filterFn?: (value: Client) => any) {
+    public sendPayloadToClients(payload: Partial<Payloads.Payload>, filterFn?: (value: Client, index: number) => any) {
         this.sendToClients({ payload }, filterFn);
     }
 
