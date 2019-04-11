@@ -4,7 +4,7 @@
  */
 
 import UUID from 'uuid/v4';
-import { Client, MissingRule, Rules, SyncActor } from '..';
+import { Client, ClientDesyncPreprocessor, MissingRule, Rules, SyncActor } from '..';
 import { Message } from '../../..';
 import { log } from '../../../log';
 import * as Protocols from '../../../protocols';
@@ -51,6 +51,7 @@ export class ClientSync extends Protocols.Protocol {
         super(client.conn);
         // Behave like a server-side endpoint (send heartbeats, measure connection quality)
         this.use(new Protocols.ServerPreprocessing());
+        this.use(new ClientDesyncPreprocessor(client));
     }
 
     /**

@@ -34,6 +34,7 @@ export class Client extends EventEmitter {
     private _protocol: Protocols.Protocol;
     private _order: number;
     private _queuedMessages: QueuedMessage[] = [];
+    private _userExclusiveMessages: Message[] = [];
     private _authoritative = false;
     // tslint:enable:variable-name
 
@@ -44,6 +45,7 @@ export class Client extends EventEmitter {
     public get conn() { return this._conn; }
     public get authoritative() { return this._authoritative; }
     public get queuedMessages() { return this._queuedMessages; }
+    public get userExclusiveMessages() { return this._userExclusiveMessages; }
 
     public userId: string;
 
