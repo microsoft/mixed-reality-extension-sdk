@@ -77,6 +77,18 @@ export type Rule = {
          */
         beforeQueueMessageForClient: (
             session: Session, client: Client, message: any, promise: ExportedPromise) => Message;
+        /**
+         * Called twice before a message is sent: first to determine if a message is user-dependent
+         * (it is queued until user-join if so), and second to determine if the joined user is the
+         * correct user.
+         * @param message The message to be checked
+         * @param userId A GUID to a (possibly unjoined) user
+         * @param session The current session.
+         * @param client The client to send the message
+         * @returns `null` if the message does not depend on a user, `true` if it depends on the given
+         * user, and `false` if it depends on a different user.
+         */
+        shouldSendToUser: (message: any, userId: string, session: Session, client: Client) => boolean | null;
     },
 
     /**
@@ -102,14 +114,6 @@ export type Rule = {
          */
         beforeReceiveFromClient: (
             session: Session, client: Client, message: any) => Message;
-        /**
-         * Determines whether a given message should go to a given client. Called after beforeReceiveFromApp.
-         * @param session The current session.
-         * @param client The client who should be tested.
-         * @param message The message itself (also contains the payload).
-         * @returns `true` if this message should be sent to this client, or `false` if not.
-         */
-        shouldSendToClient: (session: Session, client: Client, message: any) => boolean;
     }
 };
 
@@ -128,7 +132,8 @@ export const DefaultRule: Rule = {
         beforeQueueMessageForClient: (
             session: Session, client: Client, message: any, promise: ExportedPromise) => {
             return message;
-        }
+        },
+        shouldSendToUser: () => null,
     },
     session: {
         beforeReceiveFromApp: (
@@ -138,8 +143,7 @@ export const DefaultRule: Rule = {
         beforeReceiveFromClient: (
             session: Session, client: Client, message: Message) => {
             return message;
-        },
-        shouldSendToClient: () => true,
+        }
     }
 };
 
@@ -150,6 +154,7 @@ export const DefaultRule: Rule = {
 export const MissingRule: Rule = {
     ...DefaultRule,
     client: {
+        ...DefaultRule.client,
         beforeQueueMessageForClient: (
             session: Session, client: Client, message: any, promise: ExportedPromise) => {
             log.error('app', `[ERROR] No rule defined for payload ${message.payload.type}! Add an entry in rules.ts.`);
@@ -184,6 +189,7 @@ const ClientOnlyRule: Rule = {
         after: 'error'
     },
     client: {
+        ...DefaultRule.client,
         beforeQueueMessageForClient: (
             session: Session, client: Client, message: any, promise: ExportedPromise) => {
             log.error('network', `[ERROR] session tried to queue a client-only message: ${message.payload.type}!`);
@@ -216,6 +222,7 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
             after: 'allow'
         },
         client: {
+            ...DefaultRule.client,
             beforeQueueMessageForClient: (
                 session: Session,
                 client: Client,
@@ -229,8 +236,9 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
         },
         session: {
             ...DefaultRule.session,
-            // Whenever we encounter an actor-correction, convert it to an actor-update
-            // Eventually: Remove actor-correction payload type (requires DLL change).
+            // For now, whenever we encounter an actor-correction, convert it to an actor-update.
+            // Later this message type might be utilized to indicate that actor values should be
+            // interpolated rather than overwritten.
             beforeReceiveFromApp: (
                 session: Session,
                 message: Message<Payloads.ActorUpdate>
@@ -261,6 +269,7 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
             after: 'allow'
         },
         client: {
+            ...DefaultRule.client,
             beforeQueueMessageForClient: (
                 session: Session,
                 client: Client,
