@@ -207,6 +207,37 @@ const ClientOnlyRule: Rule = {
 
 /**
  * @hidden
+ * Handling for actor creation messages
+ */
+const CreateActorRule: Rule = {
+    ...DefaultRule,
+    synchronization: {
+        stage: 'create-actors',
+        before: 'ignore',
+        during: 'queue',
+        after: 'allow'
+    },
+    client: {
+        ...DefaultRule.client,
+        shouldSendToUser: (message: Message<Payloads.CreateActorCommon>, userId, session, client) => {
+            const actorUser = session.actorSet[message.payload.actor.id].exclusiveToUser;
+            return actorUser ? actorUser === userId : null;
+        }
+    },
+    session: {
+        ...DefaultRule.session,
+        beforeReceiveFromApp: (
+            session: Session,
+            message: Message<Payloads.CreateEmpty>
+        ) => {
+            session.cacheCreateActorMessage(message);
+            return message;
+        }
+    }
+};
+
+/**
+ * @hidden
  * A global collection of message rules used by different parts of the multipeer adapter.
  * Getting a compiler error here? It is likely that `Rules` is missing a rule for the new payload type you added.
  * *** KEEP ENTRIES SORTED ***
@@ -462,109 +493,19 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
     },
 
     // ========================================================================
-    'create-empty': {
-        ...DefaultRule,
-        synchronization: {
-            stage: 'create-actors',
-            before: 'ignore',
-            during: 'queue',
-            after: 'allow'
-        },
-        session: {
-            ...DefaultRule.session,
-            beforeReceiveFromApp: (
-                session: Session,
-                message: Message<Payloads.CreateEmpty>
-            ) => {
-                session.cacheCreateActorMessage(message);
-                return message;
-            }
-        }
-    },
+    'create-empty': CreateActorRule,
 
     // ========================================================================
-    'create-from-gltf': {
-        ...DefaultRule,
-        synchronization: {
-            stage: 'create-actors',
-            before: 'ignore',
-            during: 'queue',
-            after: 'allow'
-        },
-        session: {
-            ...DefaultRule.session,
-            beforeReceiveFromApp: (
-                session: Session,
-                message: Message<Payloads.CreateFromGltf>
-            ) => {
-                session.cacheCreateActorMessage(message);
-                return message;
-            }
-        }
-    },
+    'create-from-gltf': CreateActorRule,
 
     // ========================================================================
-    'create-from-library': {
-        ...DefaultRule,
-        synchronization: {
-            stage: 'create-actors',
-            before: 'ignore',
-            during: 'queue',
-            after: 'allow'
-        },
-        session: {
-            ...DefaultRule.session,
-            beforeReceiveFromApp: (
-                session: Session,
-                message: Message<Payloads.CreateFromLibrary>
-            ) => {
-                session.cacheCreateActorMessage(message);
-                return message;
-            }
-        }
-    },
+    'create-from-library': CreateActorRule,
 
     // ========================================================================
-    'create-primitive': {
-        ...DefaultRule,
-        synchronization: {
-            stage: 'create-actors',
-            before: 'ignore',
-            during: 'queue',
-            after: 'allow'
-        },
-        session: {
-            ...DefaultRule.session,
-            beforeReceiveFromApp: (
-                session: Session,
-                message: Message<Payloads.CreatePrimitive>
-            ) => {
-                session.cacheCreateActorMessage(message);
-                return message;
-            }
-        }
-    },
+    'create-primitive': CreateActorRule,
 
     // ========================================================================
-    'create-from-prefab': {
-        ...DefaultRule,
-        synchronization: {
-            stage: 'create-actors',
-            before: 'ignore',
-            during: 'queue',
-            after: 'allow'
-        },
-        session: {
-            ...DefaultRule.session,
-            beforeReceiveFromApp: (
-                session: Session,
-                message: Message<Payloads.CreateFromPrefab>
-            ) => {
-                session.cacheCreateActorMessage(message);
-                return message;
-            }
-        }
-    },
+    'create-from-prefab': CreateActorRule,
 
     // ========================================================================
     'destroy-actors': {
@@ -590,19 +531,13 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
     },
 
     // ========================================================================
-    'engine2app-rpc': {
-        ...ClientOnlyRule
-    },
+    'engine2app-rpc': ClientOnlyRule,
 
     // ========================================================================
-    'handshake': {
-        ...ClientOnlyRule
-    },
+    'handshake': ClientOnlyRule,
 
     // ========================================================================
-    'handshake-complete': {
-        ...ClientOnlyRule
-    },
+    'handshake-complete': ClientOnlyRule,
 
     // ========================================================================
     'handshake-reply': {
@@ -627,9 +562,7 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
     },
 
     // ========================================================================
-    'heartbeat-reply': {
-        ...ClientOnlyRule
-    },
+    'heartbeat-reply': ClientOnlyRule,
 
     // ========================================================================
     'interpolate-actor': {
@@ -678,9 +611,7 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
     },
 
     // ========================================================================
-    'multi-operation-result': {
-        ...ClientOnlyRule
-    },
+    'multi-operation-result': ClientOnlyRule,
 
     // ========================================================================
     'object-spawned': {
@@ -1015,14 +946,10 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
     },
 
     // ========================================================================
-    'sync-request': {
-        ...ClientOnlyRule
-    },
+    'sync-request': ClientOnlyRule,
 
     // ========================================================================
-    'traces': {
-        ...ClientOnlyRule
-    },
+    'traces': ClientOnlyRule,
 
     // ========================================================================
     'update-subscriptions': {
@@ -1074,9 +1001,7 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
     },
 
     // ========================================================================
-    'user-left': {
-        ...ClientOnlyRule
-    },
+    'user-left': ClientOnlyRule,
 
     // ========================================================================
     'user-update': {
