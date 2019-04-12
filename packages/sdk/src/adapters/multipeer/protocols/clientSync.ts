@@ -51,6 +51,7 @@ export class ClientSync extends Protocols.Protocol {
         super(client.conn);
         // Behave like a server-side endpoint (send heartbeats, measure connection quality)
         this.use(new Protocols.ServerPreprocessing());
+        // Queue up user-exclusive messages until the user has joined
         this.use(new ClientDesyncPreprocessor(client));
     }
 
