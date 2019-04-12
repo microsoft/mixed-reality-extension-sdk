@@ -258,7 +258,7 @@ export class Session extends EventEmitter {
     }
 
     public cacheUpdateAssetMessage(message: Message<Payloads.AssetUpdate>) {
-        let existing = this.assetUpdateSet[message.payload.asset.id] =
+        const existing = this.assetUpdateSet[message.payload.asset.id] =
             this.assetUpdateSet[message.payload.asset.id] || { };
         deepmerge(existing, message.payload);
     }
