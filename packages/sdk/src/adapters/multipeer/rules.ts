@@ -683,9 +683,10 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
                                 created: {
                                     message: {
                                         payload: {
+                                            type: 'actor-update',
                                             actor: spawned
                                         }
-                                    } as Message<Payloads.CreateActorCommon>
+                                    } as Message<Payloads.ActorUpdate>
                                 }
                             };
                             syncActor.actorId = spawned.id;
