@@ -8,7 +8,7 @@ import * as MRE from '@microsoft/mixed-reality-extension-sdk';
 import { Test } from '../test';
 
 export default class GltfActorSyncTest extends Test {
-    public expectedResultDescription = "Cesium Man walking";
+    public expectedResultDescription = "Text should be visible";
 
     public async run(): Promise<boolean> {
         const actorRoot = await MRE.Actor.CreateFromGltf(this.app.context, {
