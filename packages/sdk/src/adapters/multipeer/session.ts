@@ -242,6 +242,8 @@ export class Session extends EventEmitter {
             const createActor = deepmerge({ message }, {});
             syncActor = this.actorSet[message.payload.actor.id] = { initialization: createActor };
             syncActor.actorId = message.payload.actor.id;
+            syncActor.exclusiveToUser = message.payload.actor.exclusiveToUser ||
+                this.actorSet[message.payload.actor.parentId].exclusiveToUser;
         }
     }
 

@@ -41,4 +41,5 @@ export type SyncActor = {
     activeInterpolations: Payloads.InterpolateActor[];
     behavior: BehaviorType;
     grabbedBy: string;
+    exclusiveToUser: string;
 };
