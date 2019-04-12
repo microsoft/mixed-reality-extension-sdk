@@ -16,7 +16,7 @@ export default class GltfActorSyncTest extends Test {
             actor: {
                 transform: {
                     local: {
-                        position: { y: 1, z: -1 },
+                        position: { y: 1.5, z: -1 },
                         scale: { x: 0.5, y: 0.5, z: 0.5 }
                     }
                 }
@@ -40,7 +40,7 @@ export default class GltfActorSyncTest extends Test {
             throw new Error('glTF node actor not found');
         }
         monkeyRoot.transform.local.position.y = -1;
-        monkeyRoot.transform.local.rotation = MRE.Quaternion.FromEulerAngles(0, 180, 0);
+        monkeyRoot.transform.local.rotation = MRE.Quaternion.FromEulerAngles(0, Math.PI, 0);
 
         await this.stoppedAsync();
         return true;
