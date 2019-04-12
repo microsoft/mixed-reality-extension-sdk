@@ -252,24 +252,14 @@ export class Session extends EventEmitter {
         }
     }
 
-    public cacheAssetCreationMessage(
-        message: Message<Payloads.LoadAssets | Payloads.CreateAsset>) {
-
+    public cacheCreateAssetMessage(message: Message<Payloads.LoadAssets | Payloads.CreateAsset>) {
         // TODO: Is each load-asset unique? Can the same asset be loaded twice?
-        this.assets.push({ ...message });
+        this.assets.push(message);
     }
 
-    public cacheAssetUpdateMessage(message: Message<Payloads.AssetUpdate>) {
-        let existing = this.assetUpdateSet[message.payload.asset.id];
-        if (!existing) {
-            existing = this.assetUpdateSet[message.payload.asset.id] = { ...message.payload };
-        } else {
-            // Merge with existing message.
-            // TODO: Is this correct? This is purely additive.
-            existing = {
-                ...existing,
-                ...message.payload
-            };
-        }
+    public cacheUpdateAssetMessage(message: Message<Payloads.AssetUpdate>) {
+        let existing = this.assetUpdateSet[message.payload.asset.id] =
+            this.assetUpdateSet[message.payload.asset.id] || { };
+        deepmerge(existing, message.payload);
     }
 }

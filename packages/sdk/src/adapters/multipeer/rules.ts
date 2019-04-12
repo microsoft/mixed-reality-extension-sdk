@@ -369,7 +369,7 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
                 session: Session,
                 message: Message<Payloads.AssetUpdate>
             ) => {
-                session.cacheAssetUpdateMessage(message);
+                session.cacheUpdateAssetMessage(message);
                 return message;
             }
         }
@@ -436,7 +436,7 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
                 session: Session,
                 message: Message<Payloads.CreateAsset>
             ) => {
-                session.cacheAssetCreationMessage(message);
+                session.cacheCreateAssetMessage(message);
                 return message;
             }
         }
@@ -652,7 +652,7 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
                 session: Session,
                 message: Message<Payloads.LoadAssets>
             ) => {
-                session.cacheAssetCreationMessage(message);
+                session.cacheCreateAssetMessage(message);
                 return message;
             }
         }
