@@ -158,7 +158,7 @@ Step 2 is automated by MRETagUnityVersion script. Step 3 is partially automated 
 1. Go to the build server and find build matching the commit ID for the v0.[minor].n branch, and
    1. click ...->retain build
    2. click the build's commit name->artifacts->drop->drop->...->download as zip, and save locally
-2. git tag release-v0.[minor].[patch version matching NPM version, or next] and push that tag
+2. Run `git tag release-v0.[minor].[patch version matching NPM version, or next]` and push that tag with `git push --tags`
 3. If minor version matches altspaceVR dev or RC branch’s current minor version, or if update is desired then updating AltspaceVR DLLs:
    1. From the downloaded zip, copy all XML/DLL files from MRE build server’s artifacts to Altspace’s Assets\Plugins folder - it should include these files:
       1. Newtonsoft.Json.xml
