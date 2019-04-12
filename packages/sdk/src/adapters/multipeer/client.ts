@@ -34,7 +34,7 @@ export class Client extends EventEmitter {
     private _protocol: Protocols.Protocol;
     private _order: number;
     private _queuedMessages: QueuedMessage[] = [];
-    private _userExclusiveMessages: Message[] = [];
+    private _userExclusiveMessages: QueuedMessage[] = [];
     private _authoritative = false;
     // tslint:enable:variable-name
 
