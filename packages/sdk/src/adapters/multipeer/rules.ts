@@ -1062,9 +1062,6 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
                 client: Client,
                 message: Message<Payloads.UserJoined>
             ) => {
-                // Associate the client connection with the user id.
-                client.userId = message.payload.user.id;
-
                 // Add remote ip address to the joining user.
                 const props = message.payload.user.properties = message.payload.user.properties || {};
                 if (client.conn instanceof WebSocket && !props.remoteAddress) {
