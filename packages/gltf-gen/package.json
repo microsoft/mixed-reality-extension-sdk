@@ -41,7 +41,7 @@
     "gltf-typescript-generator": "^0.0.3",
     "gltf-validator": "^2.0.0-dev.2.5",
     "tslint": "5.11.0",
-    "typedoc": "0.13.0",
+    "typedoc": "^0.14.2",
     "typescript": "3.0.3"
   },
   "dependencies": {
