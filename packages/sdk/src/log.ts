@@ -9,10 +9,6 @@ class Log {
 
     private loggers: { [area: string]: debug.IDebugger } = {};
 
-    constructor() {
-        this.enableArea('app');
-    }
-
     public enable(facility?: string, severity?: string) {
         const area = this.area(facility, severity);
         this.enableArea(area);
@@ -111,20 +107,23 @@ class Log {
     }
 
     private checkInitialize = () => {
+        this.enable('app');
         const logging = process.env.MRE_LOGGING || '';
-        const parts = logging.split(',').map(s => s.trim());
-        for (const part of parts) {
-            let [ facility, severity ] = part.split(':').map(s => s.trim());
-            const disable = facility.startsWith('-');
-            facility = facility.replace(/^-/, '');
-            severity = severity; // tslint
-            if (disable) {
-                this.disable(facility, severity);
-            } else {
-                this.enable(facility, severity);
+        if (logging && logging.length) {
+            const parts = logging.split(',').map(s => s.trim());
+            for (const part of parts) {
+                let [facility, severity] = part.split(':').map(s => s.trim());
+                const disable = facility.startsWith('-');
+                facility = facility.replace(/^-/, '');
+                severity = severity; // tslint
+                if (disable) {
+                    this.disable(facility, severity);
+                } else {
+                    this.enable(facility, severity);
+                }
             }
         }
-        this.checkInitialize = () => {};
+        this.checkInitialize = () => { };
     }
 }
 
