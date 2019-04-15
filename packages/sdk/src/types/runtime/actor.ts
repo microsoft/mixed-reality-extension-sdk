@@ -56,6 +56,12 @@ export interface ActorLike {
     parentId: string;
     name: string;
     tag: string;
+
+    /**
+     * When supplied, this actor will be unsynchronized, and only exist on the client
+     * of the User with the given ID. This value can only be set at actor creation.
+     * Any actors parented to this actor will also be exclusive to the given user.
+     */
     exclusiveToUser: string;
     subscriptions: SubscriptionType[];
     transform: Partial<ActorTransformLike>;
@@ -117,6 +123,8 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
     public get name() { return this._name; }
     public get tag() { return this._tag; }
     public set tag(value) { this._tag = value; this.actorChanged('tag'); }
+
+    /** @inheritdoc */
     public get exclusiveToUser(): string {
         return this.parent && this.parent.exclusiveToUser || this._exclusiveToUser;
     }
