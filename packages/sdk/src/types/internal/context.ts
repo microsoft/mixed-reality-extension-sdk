@@ -255,7 +255,7 @@ export class InternalContext {
         // Transform animations must be specified in local space
         for (const frame of options.keyframes) {
             if (frame.value.transform && !safeGet(frame.value, 'transform', 'local')) {
-                throw new Error(`Transform animations must be specified in local space`);
+                throw new Error("Transform animations must be specified in local space");
             }
         }
 
