@@ -58,6 +58,7 @@ import { Execution } from '../../protocols/execution';
 import { Handshake } from '../../protocols/handshake';
 import { SetSoundStateOptions, SoundCommand } from '../../sound';
 import resolveJsonValues from '../../utils/resolveJsonValues';
+import safeGet from '../../utils/safeAccessPath';
 import { createForwardPromise, ForwardPromise } from '../forwardPromise';
 import { OperatingModel } from '../network/operatingModel';
 import { Patchable } from '../patchable';
@@ -250,6 +251,14 @@ export class InternalContext {
             wrapMode: AnimationWrapMode.Once,
             ...options
         };
+
+        // Transform animations must be specified in local space
+        for (const frame of options.keyframes) {
+            if (frame.value.transform && !safeGet(frame.value, 'transform', 'local')) {
+                throw new Error("Transform animations must be specified in local space");
+            }
+        }
+
         // Resolve by-reference values now, ensuring they won't change in the
         // time between now and when this message is actually sent.
         options.keyframes = resolveJsonValues(options.keyframes);
