@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>BoxColliderGeometry | Mixed Reality Extension SDK</title>
+	<title>ScaledTransformLike | Mixed Reality Extension SDK</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -52,29 +52,33 @@
 					<a href="../index.html">Globals</a>
 				</li>
 				<li>
-					<a href="boxcollidergeometry.html">BoxColliderGeometry</a>
+					<a href="scaledtransformlike.html">ScaledTransformLike</a>
 				</li>
 			</ul>
-			<h1>Interface BoxColliderGeometry</h1>
+			<h1>Interface ScaledTransformLike</h1>
 		</div>
 	</div>
 </header>
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
-			<section class="tsd-panel tsd-comment">
-				<div class="tsd-comment tsd-typography">
-					<div class="lead">
-						<p>Collider parameters specific to a box collider</p>
-					</div>
-				</div>
-			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">BoxColliderGeometry</span>
+						<a href="transformlike.html" class="tsd-signature-type">TransformLike</a>
+						<ul class="tsd-hierarchy">
+							<li>
+								<span class="target">ScaledTransformLike</span>
+							</li>
+						</ul>
 					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel">
+				<h3>Implemented by</h3>
+				<ul class="tsd-hierarchy">
+					<li><a href="../classes/scaledtransform.html" class="tsd-signature-type">ScaledTransform</a></li>
 				</ul>
 			</section>
 			<section class="tsd-panel-group tsd-index-group">
@@ -84,9 +88,9 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="boxcollidergeometry.html#center" class="tsd-kind-icon">center</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="boxcollidergeometry.html#collidertype" class="tsd-kind-icon">collider<wbr>Type</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="boxcollidergeometry.html#size" class="tsd-kind-icon">size</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="scaledtransformlike.html#position" class="tsd-kind-icon">position</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="scaledtransformlike.html#rotation" class="tsd-kind-icon">rotation</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="scaledtransformlike.html#scale" class="tsd-kind-icon">scale</a></li>
 							</ul>
 						</section>
 					</div>
@@ -94,33 +98,35 @@
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="center" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> center</h3>
-					<div class="tsd-signature tsd-kind-icon">center<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Readonly</span><span class="tsd-signature-symbol">&lt;</span><a href="vector3like.html" class="tsd-signature-type">Vector3Like</a><span class="tsd-signature-symbol">&gt;</span></div>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+					<a name="position" class="tsd-anchor"></a>
+					<h3>position</h3>
+					<div class="tsd-signature tsd-kind-icon">position<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="vector3like.html" class="tsd-signature-type">Vector3Like</a><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
+						<p>Inherited from <a href="transformlike.html">TransformLike</a>.<a href="transformlike.html#position">position</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/fe7f0b5/packages/sdk/src/types/runtime/physics/colliderGeometry.ts#L22">types/runtime/physics/colliderGeometry.ts:22</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/fe7f0b5/packages/sdk/src/types/runtime/transform.ts#L9">types/runtime/transform.ts:9</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+					<a name="rotation" class="tsd-anchor"></a>
+					<h3>rotation</h3>
+					<div class="tsd-signature tsd-kind-icon">rotation<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="quaternionlike.html" class="tsd-signature-type">QuaternionLike</a><span class="tsd-signature-symbol">&gt;</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from <a href="transformlike.html">TransformLike</a>.<a href="transformlike.html#rotation">rotation</a></p>
+						<ul>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/fe7f0b5/packages/sdk/src/types/runtime/transform.ts#L10">types/runtime/transform.ts:10</a></li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="collidertype" class="tsd-anchor"></a>
-					<h3>collider<wbr>Type</h3>
-					<div class="tsd-signature tsd-kind-icon">collider<wbr>Type<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">"box"</span></div>
+					<a name="scale" class="tsd-anchor"></a>
+					<h3>scale</h3>
+					<div class="tsd-signature tsd-kind-icon">scale<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="vector3like.html" class="tsd-signature-type">Vector3Like</a><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/fe7f0b5/packages/sdk/src/types/runtime/physics/colliderGeometry.ts#L21">types/runtime/physics/colliderGeometry.ts:21</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="size" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> size</h3>
-					<div class="tsd-signature tsd-kind-icon">size<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Readonly</span><span class="tsd-signature-symbol">&lt;</span><a href="vector3like.html" class="tsd-signature-type">Vector3Like</a><span class="tsd-signature-symbol">&gt;</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/fe7f0b5/packages/sdk/src/types/runtime/physics/colliderGeometry.ts#L23">types/runtime/physics/colliderGeometry.ts:23</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/fe7f0b5/packages/sdk/src/types/runtime/transform.ts#L14">types/runtime/transform.ts:14</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -139,16 +145,16 @@
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-interface">
-						<a href="boxcollidergeometry.html" class="tsd-kind-icon">Box<wbr>Collider<wbr>Geometry</a>
+						<a href="scaledtransformlike.html" class="tsd-kind-icon">Scaled<wbr>Transform<wbr>Like</a>
 						<ul>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="boxcollidergeometry.html#center" class="tsd-kind-icon">center</a>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+								<a href="scaledtransformlike.html#position" class="tsd-kind-icon">position</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+								<a href="scaledtransformlike.html#rotation" class="tsd-kind-icon">rotation</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="boxcollidergeometry.html#collidertype" class="tsd-kind-icon">collider<wbr>Type</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="boxcollidergeometry.html#size" class="tsd-kind-icon">size</a>
+								<a href="scaledtransformlike.html#scale" class="tsd-kind-icon">scale</a>
 							</li>
 						</ul>
 					</li>
