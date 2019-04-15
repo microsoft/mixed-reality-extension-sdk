@@ -8,11 +8,11 @@ import * as MRE from '@microsoft/mixed-reality-extension-sdk';
 import { Test } from '../test';
 
 const circleKeyframes = [
-    { time: 0, value: { transform: { app: {position: { x: 0, y: 0, z: -0.5 } } } } },
-    { time: 1, value: { transform: { app: {position: { x: 1, y: 1, z: -0.5 } } } } },
-    { time: 2, value: { transform: { app: {position: { x: 0, y: 2, z: -0.5 } } } } },
-    { time: 3, value: { transform: { app: {position: { x: -1, y: 1, z: -0.5 } } } } },
-    { time: 4, value: { transform: { app: {position: { x: 0, y: 0, z: -0.5 } } } } }
+    { time: 0, value: { transform: { local: { position: { x: 0, y: 0, z: -0.5 } } } } },
+    { time: 1, value: { transform: { local: { position: { x: 1, y: 1, z: -0.5 } } } } },
+    { time: 2, value: { transform: { local: { position: { x: 0, y: 2, z: -0.5 } } } } },
+    { time: 3, value: { transform: { local: { position: { x: -1, y: 1, z: -0.5 } } } } },
+    { time: 4, value: { transform: { local: { position: { x: 0, y: 0, z: -0.5 } } } } }
 ] as MRE.AnimationKeyframe[];
 
 export default class LookAtTest extends Test {
