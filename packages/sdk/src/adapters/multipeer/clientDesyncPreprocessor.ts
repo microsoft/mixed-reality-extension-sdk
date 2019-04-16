@@ -3,7 +3,7 @@
  * Licensed under the MIT License.
  */
 
-import { Client, Rules } from '.';
+import { Client, MissingRule, Rules } from '.';
 import { Message } from '../..';
 import { Middleware } from '../../protocols';
 import { UserJoined } from '../../types/network/payloads';
@@ -18,13 +18,14 @@ export class ClientDesyncPreprocessor implements Middleware {
     /** @hidden */
     public beforeSend(message: Message, promise?: ExportedPromise): Message {
         const payloadType = message.payload.type;
-        const forUser = Rules[payloadType].client.shouldSendToUser(
+        const rule = Rules[payloadType] || MissingRule;
+        const forUser = rule.client.shouldSendToUser(
             message, this.client.userId, this.client.session, this.client);
         if (forUser !== null && !this.client.userId) {
             // this message is user-exclusive, and the client's user ID is not yet settled,
             // queue and cancel send for now
             this.client.userExclusiveMessages.push({ message, promise });
-        } else if (forUser !== false && this.client.userId) {
+        } else if (forUser === null || forUser === true && !!this.client.userId) {
             // this message is intended for this client's user, send now
             return message;
         }

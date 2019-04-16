@@ -5,7 +5,10 @@
 
 import deepmerge from 'deepmerge';
 import { EventEmitter } from 'events';
-import { Client, MissingRule, Rules, SessionExecution, SessionHandshake, SessionSync, SyncActor } from '.';
+import {
+    Client, InitializeActorMessage, MissingRule, Rules, SessionExecution,
+    SessionHandshake, SessionSync, SyncActor
+} from '.';
 import { Connection, Message, UserLike } from '../..';
 import { log } from '../../log';
 import * as Protocols from '../../protocols';
@@ -236,14 +239,15 @@ export class Session extends EventEmitter {
         return false;
     }
 
-    public cacheCreateActorMessage(message: Message<Payloads.CreateActorCommon>) {
-        let syncActor = this.actorSet[message.payload.actor.id];
-        if (!syncActor) {
-            const createActor = deepmerge({ message }, {});
-            syncActor = this.actorSet[message.payload.actor.id] = { initialization: createActor };
-            syncActor.actorId = message.payload.actor.id;
-            syncActor.exclusiveToUser = message.payload.actor.exclusiveToUser ||
-                this.actorSet[message.payload.actor.parentId].exclusiveToUser;
+    public cacheInitializeActorMessage(message: InitializeActorMessage) {
+        if (!this.actorSet[message.payload.actor.id]) {
+            const parent = this.actorSet[message.payload.actor.parentId];
+            this.actorSet[message.payload.actor.id] = {
+                actorId: message.payload.actor.id,
+                exclusiveToUser: parent && parent.exclusiveToUser
+                    || message.payload.actor.exclusiveToUser,
+                initialization: deepmerge({ message }, {})
+            };
         }
     }
 

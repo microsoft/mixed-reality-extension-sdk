@@ -230,7 +230,7 @@ const CreateActorRule: Rule = {
             session: Session,
             message: Message<Payloads.CreateEmpty>
         ) => {
-            session.cacheCreateActorMessage(message);
+            session.cacheInitializeActorMessage(message);
             return message;
         }
     }
@@ -320,6 +320,10 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
                     return undefined;
                 }
                 return message;
+            },
+            shouldSendToUser: (message: Message<Payloads.ActorUpdate>, userId, session, client) => {
+                const exclusiveUser = session.actorSet[message.payload.actor.id].exclusiveToUser;
+                return exclusiveUser ? exclusiveUser === userId : null;
             }
         },
         session: {
@@ -623,23 +627,17 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
                 client: Client,
                 message: Message<Payloads.ObjectSpawned>
             ) => {
-                // Check that this is the authoritative client.
-                if (client.authoritative) {
+                // Check that this is the authoritative client
+                const exclusiveUser = session.actorSet[message.payload.actors[0].id].exclusiveToUser;
+                if (client.authoritative || client.userId && client.userId === exclusiveUser) {
                     // Create local representations of the actors.
                     for (const spawned of message.payload.actors) {
-                        if (!session.actorSet[spawned.id]) {
-                            session.actorSet[spawned.id] = {
-                                actorId: spawned.id,
-                                initialization: {
-                                    message: {
-                                        payload: {
-                                            type: 'actor-update',
-                                            actor: spawned
-                                        }
-                                    } as Message<Payloads.ActorUpdate>
-                                }
-                            };
-                        }
+                        session.cacheInitializeActorMessage({
+                            payload: {
+                                type: 'actor-update',
+                                actor: spawned
+                            }
+                        });
                     }
                     // Allow the message to propagate to the app.
                     return message;
@@ -789,8 +787,9 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
                 client: Client,
                 message: Message<Payloads.SetAnimationState>
             ) => {
-                // Check that this is the authoritative client.
-                if (client.authoritative) {
+                // Check that this is the authoritative client
+                const exclusiveUser = session.actorSet[message.payload.actorId].exclusiveToUser;
+                if (client.authoritative || client.userId && client.userId === exclusiveUser) {
                     // Check that the actor exists.
                     const syncActor = session.actorSet[message.payload.actorId];
                     if (syncActor) {

@@ -6,11 +6,14 @@
 import { BehaviorType, Message } from '../..';
 import * as Payloads from '../../types/network/payloads';
 
+/** @hidden */
+export type InitializeActorMessage = Message<Payloads.CreateActorCommon | Payloads.ActorUpdate>;
+
 /**
  * @hidden
  */
 export type InitializeActor = {
-    message: Message<Payloads.CreateActorCommon | Payloads.ActorUpdate>;
+    message: InitializeActorMessage;
 };
 
 /**
