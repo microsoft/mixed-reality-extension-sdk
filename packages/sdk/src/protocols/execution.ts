@@ -4,7 +4,7 @@
  */
 
 import { Protocol, ServerPreprocessing } from '.';
-import { ActionEvent, CollisionEvent, Context, Message, WebSocket } from '..';
+import { ActionEvent, CollisionEvent, Context, Message, TriggerEvent, WebSocket } from '..';
 import {
     ActorUpdate,
     CollisionEventRaised,
@@ -17,9 +17,10 @@ import {
     SetAnimationState,
     SyncRequest,
     Traces,
+    TriggerEventRaised,
     UserJoined,
     UserLeft,
-    UserUpdate
+    UserUpdate,
 } from '../types/network/payloads';
 import { log } from './../log';
 import { Sync } from './sync';
@@ -132,9 +133,18 @@ export class Execution extends Protocol {
     public 'recv-collision-event-raised' = (payload: CollisionEventRaised) => {
         this.emit('protocol.collision-event-raised', {
             colliderOwnerId: payload.actorId,
-            collisionEventType: payload.collisionEventType,
+            eventType: payload.eventType,
             collisionData: payload.collisionData
         } as CollisionEvent);
+    }
+
+    /** @private */
+    public 'recv-trigger-event-raised' = (payload: TriggerEventRaised) => {
+        this.emit('protocol.trigger-event-raised', {
+            colliderOwnerId: payload.actorId,
+            eventType: payload.eventType,
+            otherColliderOwnerId: payload.otherActorId
+        } as TriggerEvent);
     }
 
     /** @private */

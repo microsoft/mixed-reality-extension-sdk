@@ -8,10 +8,11 @@ import {
     Actor,
     ActorLike,
     Behavior,
-    ColliderEventType,
     CollisionData,
+    CollisionEventType,
     DiscreteAction,
     SetAnimationStateOptions,
+    TriggerEventType
 } from '../..';
 import { ExportedPromise } from '../../utils/exportedPromise';
 import { InternalPatchable } from '../patchable';
@@ -47,9 +48,15 @@ export class InternalActor implements InternalPatchable<ActorLike> {
         }
     }
 
-    public collisionEventRaised(collisionEventType: ColliderEventType, collisionData: CollisionData) {
+    public collisionEventRaised(collisionEventType: CollisionEventType, collisionData: CollisionData) {
         if (this.collider) {
             this.collider.eventReceived(collisionEventType, collisionData);
+        }
+    }
+
+    public triggerEventRaised(triggerEventType: TriggerEventType, otherActor: Actor) {
+        if (this.collider) {
+            this.collider.eventReceived(triggerEventType, otherActor);
         }
     }
 

@@ -9,3 +9,4 @@ export * from './collisionEvent';
 export * from './collisionEventType';
 export * from './colliderGeometry';
 export * from './colliderType';
+export * from './triggerEvent';

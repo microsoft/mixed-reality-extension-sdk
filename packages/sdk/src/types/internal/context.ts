@@ -20,18 +20,11 @@ import {
     PrimitiveDefinition,
     SetAnimationStateOptions,
     SubscriptionType,
+    TriggerEvent,
     User,
     UserLike,
     UserSet,
 } from '../..';
-import { log } from '../../log';
-import * as Protocols from '../../protocols';
-import { Execution } from '../../protocols/execution';
-import { Handshake } from '../../protocols/handshake';
-import { SetSoundStateOptions, SoundCommand } from '../../sound';
-import resolveJsonValues from '../../utils/resolveJsonValues';
-import { createForwardPromise, ForwardPromise } from '../forwardPromise';
-import { OperatingModel } from '../network/operatingModel';
 import {
     ActorUpdate,
     AssetUpdate,
@@ -383,6 +376,7 @@ export class InternalContext {
             execution.on('protocol.perform-action', this.performAction);
             execution.on('protocol.receive-rpc', this.receiveRPC);
             execution.on('protocol.collision-event-raised', this.collisionEventRaised);
+            execution.on('protocol.trigger-event-raised', this.triggerEventRaised);
             execution.on('protocol.set-animation-state', this.setAnimationStateEventRaised);
 
             // Startup the execution protocol
@@ -538,10 +532,27 @@ export class InternalContext {
 
     public collisionEventRaised(collisionEvent: CollisionEvent) {
         const actor = this.actorSet[collisionEvent.colliderOwnerId];
-        if (actor) {
+        const otherActor = this.actorSet[(collisionEvent.collisionData.otherActorId)];
+        if (actor && otherActor) {
+            // Update the collision data to contain the actual other actor.
+            collisionEvent.collisionData = {
+                ...collisionEvent.collisionData,
+                otherActor
+            };
+
             actor.internal.collisionEventRaised(
-                collisionEvent.collisionEventType,
+                collisionEvent.eventType,
                 collisionEvent.collisionData);
+        }
+    }
+
+    public triggerEventRaised(triggerEvent: TriggerEvent) {
+        const actor = this.actorSet[triggerEvent.colliderOwnerId];
+        const otherActor = this.actorSet[triggerEvent.otherColliderOwnerId];
+        if (actor && otherActor) {
+            actor.internal.triggerEventRaised(
+                triggerEvent.eventType,
+                otherActor);
         }
     }
 

@@ -36,7 +36,8 @@ export interface ContactPoint {
  * The collision data collected when a collision occurs.
  */
 export interface CollisionData {
-    actorHit?: Actor;
+    otherActorId: string;
+    otherActor?: Actor;
     contacts: ContactPoint[];
     impulse: Vector3;
     relativeVelocity: Vector3;

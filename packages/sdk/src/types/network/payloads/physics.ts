@@ -4,7 +4,8 @@
  */
 
 import { Payload } from '.';
-import { ColliderEventType, CollisionData, QuaternionLike, Vector3Like } from '../../..';
+import { CollisionData, CollisionEventType, QuaternionLike, Vector3Like,  } from '../../..';
+import { TriggerEventType } from '../../runtime';
 
 /**
  * @hidden
@@ -78,6 +79,17 @@ export type RigidBodyAddRelativeTorque = Payload & {
 export type CollisionEventRaised = Payload & {
     type: 'collision-event-raised';
     actorId: string;
-    collisionEventType: ColliderEventType;
+    eventType: CollisionEventType;
     collisionData: CollisionData;
+};
+
+/**
+ * @hidden
+ * Engine to app.  Trigger event data from engine after a trigger event has occured.
+ */
+export type TriggerEventRaised = Payload & {
+    type: 'trigger-event-rasied';
+    actorId: string;
+    eventType: TriggerEventType;
+    otherActorId: string;
 };
