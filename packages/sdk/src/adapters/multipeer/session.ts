@@ -38,8 +38,9 @@ export class Session extends EventEmitter {
         return Object.keys(this._assetUpdateSet).map(assetId => this._assetUpdateSet[assetId]);
     }
     public get rootActors() {
-        return Object.keys(this._actorSet).filter(actorId =>
-            !this._actorSet[actorId].initialization.message.payload.actor.parentId).map(actorId => this._actorSet[actorId]);
+        return Object.keys(this._actorSet)
+            .filter(actorId => !this._actorSet[actorId].initialization.message.payload.actor.parentId)
+            .map(actorId => this._actorSet[actorId]);
     }
     public get users() { return Object.keys(this._userSet).map(userId => this._userSet[userId]); }
     public get authoritativeClient() { return this.clients.find(client => client.authoritative); }
@@ -55,8 +56,9 @@ export class Session extends EventEmitter {
         return this.actors.filter(actor => actor.initialization.message.payload.actor.parentId === parentId);
     }
     public creatableChildrenOf = (parentId: string) => {
-        return this.actors.filter(
-            actor => actor.initialization.message.payload.actor.parentId === parentId && !!actor.initialization.message.payload.type);
+        return this.actors.filter(actor =>
+            actor.initialization.message.payload.actor.parentId === parentId
+            && !!actor.initialization.message.payload.type);
     }
 
     /**
