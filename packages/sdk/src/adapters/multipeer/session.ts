@@ -38,8 +38,9 @@ export class Session extends EventEmitter {
         return Object.keys(this._assetUpdateSet).map(assetId => this._assetUpdateSet[assetId]);
     }
     public get rootActors() {
-        return Object.keys(this._actorSet).filter(actorId =>
-            !this._actorSet[actorId].created.message.payload.actor.parentId).map(actorId => this._actorSet[actorId]);
+        return Object.keys(this._actorSet)
+            .filter(actorId => !this._actorSet[actorId].initialization.message.payload.actor.parentId)
+            .map(actorId => this._actorSet[actorId]);
     }
     public get users() { return Object.keys(this._userSet).map(userId => this._userSet[userId]); }
     public get authoritativeClient() { return this.clients.find(client => client.authoritative); }
@@ -52,11 +53,12 @@ export class Session extends EventEmitter {
     public actor = (actorId: string) => this._actorSet[actorId];
     public user = (userId: string) => this._userSet[userId];
     public childrenOf = (parentId: string) => {
-        return this.actors.filter(actor => actor.created.message.payload.actor.parentId === parentId);
+        return this.actors.filter(actor => actor.initialization.message.payload.actor.parentId === parentId);
     }
     public creatableChildrenOf = (parentId: string) => {
-        return this.actors.filter(
-            actor => actor.created.message.payload.actor.parentId === parentId && !!actor.created.message.payload.type);
+        return this.actors.filter(actor =>
+            actor.initialization.message.payload.actor.parentId === parentId
+            && !!actor.initialization.message.payload.type);
     }
 
     /**
@@ -222,11 +224,11 @@ export class Session extends EventEmitter {
         if ((syncActor.createdAnimations || []).some(item => item.enabled)) {
             return true;
         }
-        if (syncActor.created &&
-            syncActor.created.message &&
-            syncActor.created.message.payload &&
-            syncActor.created.message.payload.actor) {
-            const parent = this._actorSet[syncActor.created.message.payload.actor.parentId];
+        if (syncActor.initialization &&
+            syncActor.initialization.message &&
+            syncActor.initialization.message.payload &&
+            syncActor.initialization.message.payload.actor) {
+            const parent = this._actorSet[syncActor.initialization.message.payload.actor.parentId];
             if (parent) {
                 return this.isAnimating(parent);
             }
@@ -238,7 +240,7 @@ export class Session extends EventEmitter {
         let syncActor = this.actorSet[message.payload.actor.id];
         if (!syncActor) {
             const createActor = deepmerge({ message }, {});
-            syncActor = this.actorSet[message.payload.actor.id] = { created: createActor };
+            syncActor = this.actorSet[message.payload.actor.id] = { initialization: createActor };
             syncActor.actorId = message.payload.actor.id;
         }
     }
@@ -247,29 +249,19 @@ export class Session extends EventEmitter {
         const syncActor = this.actorSet[message.payload.actor.id];
         if (syncActor) {
             // Merge the update into the existing actor.
-            syncActor.created.message.payload.actor
-                = deepmerge(syncActor.created.message.payload.actor, message.payload.actor);
+            syncActor.initialization.message.payload.actor
+                = deepmerge(syncActor.initialization.message.payload.actor, message.payload.actor);
         }
     }
 
-    public cacheAssetCreationMessage(
-        message: Message<Payloads.LoadAssets | Payloads.CreateAsset>) {
-
+    public cacheCreateAssetMessage(message: Message<Payloads.LoadAssets | Payloads.CreateAsset>) {
         // TODO: Is each load-asset unique? Can the same asset be loaded twice?
-        this.assets.push({ ...message });
+        this.assets.push(message);
     }
 
-    public cacheAssetUpdateMessage(message: Message<Payloads.AssetUpdate>) {
-        let existing = this.assetUpdateSet[message.payload.asset.id];
-        if (!existing) {
-            existing = this.assetUpdateSet[message.payload.asset.id] = { ...message.payload };
-        } else {
-            // Merge with existing message.
-            // TODO: Is this correct? This is purely additive.
-            existing = {
-                ...existing,
-                ...message.payload
-            };
-        }
+    public cacheUpdateAssetMessage(message: Message<Payloads.AssetUpdate>) {
+        const existing = this.assetUpdateSet[message.payload.asset.id] =
+            this.assetUpdateSet[message.payload.asset.id] || {};
+        deepmerge(existing, message.payload);
     }
 }

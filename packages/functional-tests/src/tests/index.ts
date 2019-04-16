@@ -11,6 +11,7 @@ import AssetMutabilityTest from './asset-mutability-test';
 import AssetPreloadTest from './asset-preload-test';
 import ClockSyncTest from './clock-sync-test';
 import FailureTest from './failure-test';
+import GltfActorSyncTest from './gltf-actor-sync-test';
 import GltfAnimationTest from './gltf-animation-test';
 import GltfConcurrencyTest from './gltf-concurrency-test';
 import GltfGenTest from './gltf-gen-test';
@@ -44,6 +45,7 @@ export const Factories = {
     'asset-preload-test': (...args) => new AssetPreloadTest(...args),
     'clock-sync-test': (...args) => new ClockSyncTest(...args),
     'failure-test': (...args) => new FailureTest(...args),
+    'gltf-actor-sync-test': (...args) => new GltfActorSyncTest(...args),
     'gltf-animation-test': (...args) => new GltfAnimationTest(...args),
     'gltf-concurrency-test': (...args) => new GltfConcurrencyTest(...args),
     'gltf-gen-test': (...args) => new GltfGenTest(...args),

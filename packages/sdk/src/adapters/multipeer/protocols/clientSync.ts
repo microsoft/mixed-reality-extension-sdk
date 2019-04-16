@@ -240,7 +240,7 @@ export class ClientSync extends Protocols.Protocol {
         // Start creating this actor and its creatable children.
         this.createActor(actor); // Allow exception to propagate.
         // const children = this.client.session.childrenOf(actor.created.message.payload.actor.id);
-        const children = this.client.session.creatableChildrenOf(actor.created.message.payload.actor.id);
+        const children = this.client.session.creatableChildrenOf(actor.initialization.message.payload.actor.id);
         if (children.length) {
             for (const child of children) {
                 this.createActorRecursive(child);
@@ -259,8 +259,8 @@ export class ClientSync extends Protocols.Protocol {
     }
 
     private createActor(actor: Partial<SyncActor>) {
-        if (actor.created && actor.created.message.payload.type) {
-            return this.sendMessage(actor.created.message);
+        if (actor.initialization && actor.initialization.message.payload.type) {
+            return this.sendMessage(actor.initialization.message);
         }
     }
 

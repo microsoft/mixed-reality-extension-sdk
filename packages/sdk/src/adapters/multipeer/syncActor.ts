@@ -9,8 +9,8 @@ import * as Payloads from '../../types/network/payloads';
 /**
  * @hidden
  */
-export type CreateActor = {
-    message: Message<Payloads.CreateActorCommon>;
+export type InitializeActor = {
+    message: Message<Payloads.CreateActorCommon | Payloads.ActorUpdate>;
 };
 
 /**
@@ -34,7 +34,7 @@ export type ActiveSoundInstance = {
  */
 export type SyncActor = {
     actorId: string;
-    created: CreateActor;
+    initialization: InitializeActor;
     createdAnimations: CreateAnimation[];
     activeSoundInstances: ActiveSoundInstance[];
     activeInterpolations: Payloads.InterpolateActor[];
