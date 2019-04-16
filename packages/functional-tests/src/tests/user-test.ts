@@ -3,7 +3,7 @@
  * Licensed under the MIT License.
  */
 
-import * as MRESDK from '@microsoft/mixed-reality-extension-sdk';
+import * as MRE from '@microsoft/mixed-reality-extension-sdk';
 
 import { Test } from '../test';
 
@@ -16,7 +16,7 @@ export default class UserTest extends Test {
             "\nProperties: " + this.formatProperties(this.user.properties) +
             "\nTotal Connected Users:" + connectedUserCount;
 
-        await MRESDK.Actor.CreateEmpty(this.app.context, {
+        await MRE.Actor.CreateEmpty(this.app.context, {
             actor: {
                 transform: {
                     local: {
@@ -26,7 +26,7 @@ export default class UserTest extends Test {
                 text: {
                     contents: labelText,
                     height: 0.1,
-                    anchor: MRESDK.TextAnchorLocation.MiddleCenter
+                    anchor: MRE.TextAnchorLocation.MiddleCenter
                 }
             }
         });
