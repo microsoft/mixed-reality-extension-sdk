@@ -308,7 +308,7 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 
                     // Determine whether to forward the message to the app based on subscriptions.
                     let shouldSendToApp = false;
-                    const subscriptions = syncActor.created.message.payload.actor.subscriptions || [];
+                    const subscriptions = syncActor.initialization.message.payload.actor.subscriptions || [];
                     if (message.payload.actor.transform &&
                         Object.keys(message.payload.actor.transform) &&
                         subscriptions.includes('transform')) {
@@ -677,10 +677,10 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
                 if (client.authoritative) {
                     // Create local representations of the actors.
                     for (const spawned of message.payload.actors) {
-                        let syncActor = session.actorSet[spawned.id];
-                        if (!syncActor) {
-                            syncActor = session.actorSet[spawned.id] = {
-                                created: {
+                        if (!session.actorSet[spawned.id]) {
+                            session.actorSet[spawned.id] = {
+                                actorId: spawned.id,
+                                initialization: {
                                     message: {
                                         payload: {
                                             type: 'actor-update',
@@ -689,7 +689,6 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
                                     } as Message<Payloads.ActorUpdate>
                                 }
                             };
-                            syncActor.actorId = spawned.id;
                         }
                     }
                     // Allow the message to propagate to the app.
@@ -1023,10 +1022,10 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
             ) => {
                 const syncActor = session.actorSet[message.payload.id];
                 if (syncActor) {
-                    syncActor.created.message.payload.actor.subscriptions =
-                        (syncActor.created.message.payload.actor.subscriptions || []).filter(
+                    syncActor.initialization.message.payload.actor.subscriptions =
+                        (syncActor.initialization.message.payload.actor.subscriptions || []).filter(
                             subscription => message.payload.removes.indexOf(subscription) < 0);
-                    syncActor.created.message.payload.actor.subscriptions.push(
+                    syncActor.initialization.message.payload.actor.subscriptions.push(
                         ...message.payload.adds);
                 }
                 return message;
