@@ -35,7 +35,6 @@ export type ActiveSoundInstance = {
 export type SyncActor = {
     actorId: string;
     initialization: InitializeActor;
-    exclusiveToUser: string;
     createdAnimations: CreateAnimation[];
     activeSoundInstances: ActiveSoundInstance[];
     activeInterpolations: Payloads.InterpolateActor[];
