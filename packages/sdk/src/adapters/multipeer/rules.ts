@@ -220,8 +220,8 @@ const CreateActorRule: Rule = {
     client: {
         ...DefaultRule.client,
         shouldSendToUser: (message: Message<Payloads.CreateActorCommon>, userId, session, client) => {
-            const actorUser = session.actorSet[message.payload.actor.id].exclusiveToUser;
-            return actorUser ? actorUser === userId : null;
+            const exclusiveUser = session.actorSet[message.payload.actor.id].exclusiveToUser;
+            return exclusiveUser ? exclusiveUser === userId : null;
         }
     },
     session: {
@@ -388,22 +388,11 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
             during: 'queue',
             after: 'allow'
         },
-        session: {
-            ...DefaultRule.session,
-            beforeReceiveFromApp: (
-                session: Session,
-                message: Message<Payloads.AppToEngineRPC>
-            ) => {
-                // Send the message only to the specified user.
-                if (message.payload.userId) {
-                    const client = session.clients.find(value => value.userId === message.payload.userId);
-                    if (client) {
-                        client.send(message);
-                    }
-                } else {
-                    // If no user specified then allow the message to be sent to all users.
-                    return message;
-                }
+        client: {
+            ...DefaultRule.client,
+            shouldSendToUser: (message: Message<Payloads.AppToEngineRPC>, userId, session, client) => {
+                const exclusiveUser = message.payload.userId;
+                return exclusiveUser ? exclusiveUser === userId : null;
             }
         }
     },
@@ -457,6 +446,13 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
             before: 'ignore',
             during: 'allow',
             after: 'allow'
+        },
+        client: {
+            ...DefaultRule.client,
+            shouldSendToUser: (message: Message<Payloads.CreateAnimation>, userId, session, client) => {
+                const exclusiveUser = session.actorSet[message.payload.actorId].exclusiveToUser;
+                return exclusiveUser ? exclusiveUser === userId : null;
+            }
         },
         session: {
             ...DefaultRule.session,
@@ -576,6 +572,13 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
             before: 'queue',
             during: 'allow',
             after: 'allow'
+        },
+        client: {
+            ...DefaultRule.client,
+            shouldSendToUser: (message: Message<Payloads.InterpolateActor>, userId, session, client) => {
+                const exclusiveUser = session.actorSet[message.payload.actorId].exclusiveToUser;
+                return exclusiveUser ? exclusiveUser === userId : null;
+            }
         },
         session: {
             ...DefaultRule.session,
@@ -730,6 +733,13 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
             before: 'queue',
             during: 'queue',
             after: 'allow'
+        },
+        client: {
+            ...DefaultRule.client,
+            shouldSendToUser: (message: Message<Payloads.RigidBodyCommands>, userId, session, client) => {
+                const exclusiveUser = session.actorSet[message.payload.actorId].exclusiveToUser;
+                return exclusiveUser ? exclusiveUser === userId : null;
+            }
         }
     },
 
@@ -763,6 +773,13 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
             before: 'ignore',
             during: 'queue',
             after: 'allow'
+        },
+        client: {
+            ...DefaultRule.client,
+            shouldSendToUser: (message: Message<Payloads.SetAnimationState>, userId, session, client) => {
+                const exclusiveUser = session.actorSet[message.payload.actorId].exclusiveToUser;
+                return exclusiveUser ? exclusiveUser === userId : null;
+            }
         },
         session: {
             ...DefaultRule.session,
@@ -836,6 +853,13 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
             during: 'allow',
             after: 'allow'
         },
+        client: {
+            ...DefaultRule.client,
+            shouldSendToUser: (message: Message<Payloads.SetBehavior>, userId, session, client) => {
+                const exclusiveUser = session.actorSet[message.payload.actorId].exclusiveToUser;
+                return exclusiveUser ? exclusiveUser === userId : null;
+            }
+        },
         session: {
             ...DefaultRule.session,
             beforeReceiveFromApp: (
@@ -861,6 +885,13 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
             before: 'ignore',
             during: 'queue',
             after: 'allow'
+        },
+        client: {
+            ...DefaultRule.client,
+            shouldSendToUser: (message: Message<Payloads.SetSoundState>, userId, session, client) => {
+                const exclusiveUser = session.actorSet[message.payload.actorId].exclusiveToUser;
+                return exclusiveUser ? exclusiveUser === userId : null;
+            }
         },
         session: {
             ...DefaultRule.session,
@@ -958,6 +989,13 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
             before: 'ignore',
             during: 'queue',
             after: 'allow'
+        },
+        client: {
+            ...DefaultRule.client,
+            shouldSendToUser: (message: Message<Payloads.UpdateSubscriptions>, userId, session, client) => {
+                const exclusiveUser = session.actorSet[message.payload.id].exclusiveToUser;
+                return exclusiveUser ? exclusiveUser === userId : null;
+            }
         },
         session: {
             ...DefaultRule.session,
