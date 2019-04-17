@@ -9,7 +9,7 @@ import { Test } from '../test';
 export default class AssetEarlyAssignmentTest extends Test {
     public expectedResultDescription = "Assign asset properties before initialization is finished";
 
-    public async run(): Promise<boolean> {
+    public async run(root: MRE.Actor): Promise<boolean> {
         const AM = this.app.context.assetManager;
         this.app.setOverrideText("Colored & textured sphere");
 
@@ -28,6 +28,8 @@ export default class AssetEarlyAssignmentTest extends Test {
                 radius: 0.5
             },
             actor: {
+                name: 'sphere',
+                parentId: root.id,
                 appearance: { materialId: mat.id },
                 transform: {
                     local: {

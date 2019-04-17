@@ -39,6 +39,9 @@ export class App {
     private runnerActors: MRE.Actor[];
     private backgroundMaterial: MRE.Material;
 
+    private testRoot: MRE.Actor;
+    private exclusiveUser: MRE.User;
+
     private readonly menu = new Menu(this);
 
     public get context() { return this._context; }
@@ -130,7 +133,7 @@ export class App {
 
         let success: boolean;
         try {
-            success = await test.run();
+            success = await test.run(this.testRoot);
             if (!success) {
                 this.setOverrideText("Test Failed: '${testName}'", FailureColor);
             }
@@ -196,6 +199,12 @@ export class App {
                         position: { y: 1.8 }
                     }
                 }
+            }
+        }).value;
+
+        this.testRoot = MRE.Actor.CreateEmpty(this.context, {
+            actor: {
+                name: 'testRoot'
             }
         }).value;
 

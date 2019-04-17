@@ -17,10 +17,11 @@ export default class GrabTest extends Test {
 
     private readonly SCALE = 0.2;
 
-    public async run(): Promise<boolean> {
+    public async run(root: MRE.Actor): Promise<boolean> {
         MRE.Actor.CreateEmpty(this.app.context, {
             actor: {
                 name: "Light",
+                parentId: root.id,
                 light: {
                     type: 'point',
                     range: 5,
@@ -44,6 +45,7 @@ export default class GrabTest extends Test {
             // Also apply the following generic actor properties.
             actor: {
                 name: 'clickable',
+                parentId: root.id,
                 transform: {
                     local: {
                         scale: { x: this.SCALE, y: this.SCALE, z: this.SCALE },
@@ -80,7 +82,7 @@ export default class GrabTest extends Test {
 
         // Create two grabbable cubes that can be played with at will.  Position left
         // anr right of the monkey.
-        for (const cube of [{ name: 'Cube1', x: -1}, { name: 'Cube2', x: 1}]) {
+        for (const cube of [{ name: 'Cube1', x: -1 }, { name: 'Cube2', x: 1 }]) {
             MRE.Actor.CreatePrimitive(this.app.context, {
                 definition: {
                     shape: MRE.PrimitiveShape.Box,
@@ -89,6 +91,7 @@ export default class GrabTest extends Test {
                 addCollider: true,
                 actor: {
                     name: cube.name,
+                    parentId: root.id,
                     transform: { local: { position: { x: cube.x, y: 1, z: -1 } } }
                 }
             }).value.grabbable = true;

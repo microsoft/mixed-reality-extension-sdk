@@ -15,10 +15,11 @@ export default class InputTest extends Test {
     private spinCount = 0;
     private model: MRE.Actor;
 
-    public async run(): Promise<boolean> {
+    public async run(root: MRE.Actor): Promise<boolean> {
         MRE.Actor.CreateEmpty(this.app.context, {
             actor: {
                 name: "Light",
+                parentId: root.id,
                 light: {
                     type: 'point',
                     range: 5,
@@ -42,6 +43,7 @@ export default class InputTest extends Test {
             // Also apply the following generic actor properties.
             actor: {
                 name: 'clickable',
+                parentId: root.id,
                 transform: {
                     local: {
                         scale: { x: 0.4, y: 0.4, z: 0.4 },

@@ -14,6 +14,7 @@ export default class AssetPreloadTest extends Test {
     public expectedResultDescription = "Two meshes juggle their materials and textures. Click to advance.";
     private state = 0;
 
+    private root: MRE.Actor;
     private head: MRE.Actor;
     private sphere: MRE.Actor;
 
@@ -27,8 +28,8 @@ export default class AssetPreloadTest extends Test {
         actor.children.forEach(c => this.AssignMat(c, mat));
     }
 
-    public async run(): Promise<boolean> {
-
+    public async run(root: MRE.Actor): Promise<boolean> {
+        this.root = root;
         this.app.setOverrideText("Preloading assets");
         const [monkey, uvgrid] = await Promise.all([
             this.app.context.assetManager.loadGltf('monkey', this.baseUrl + '/monkey.glb', 'box'),
@@ -96,6 +97,7 @@ export default class AssetPreloadTest extends Test {
         this.head = await MRE.Actor.CreateFromPrefab(this.app.context, {
             prefabId: this.monkeyPrefab.id,
             actor: {
+                parentId: this.root.id,
                 transform: {
                     local: {
                         position: { x: -0.5, y: 1, z: -1 },
@@ -111,6 +113,7 @@ export default class AssetPreloadTest extends Test {
             },
             addCollider: true,
             actor: {
+                parentId: this.root.id,
                 appearance: { materialId: this.uvgridMat.id },
                 transform: {
                     local: {

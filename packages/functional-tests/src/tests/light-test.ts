@@ -12,10 +12,10 @@ import delay from '../utils/delay';
 
 export default class LightTest extends Test {
     public expectedResultDescription = "Different types of lights";
-    public async run(): Promise<boolean> {
+    public async run(root: MRE.Actor): Promise<boolean> {
         // Create scene objects.
-        const props = this.createProps();
-        const sphere = this.createSphere();
+        const props = this.createProps(root);
+        const sphere = this.createSphere(root);
 
         // Updates the label for the test stage.
         const updateLabel = (lightType: string) => {
@@ -82,15 +82,16 @@ export default class LightTest extends Test {
         return true;
     }
 
-    private createProps() {
+    private createProps(root: MRE.Actor) {
         const props: { [id: string]: MRE.Actor } = {};
         props['monkey'] = MRE.Actor.CreateFromGltf(this.app.context, {
             resourceUrl: `${this.baseUrl}/monkey.glb`,
             actor: {
+                parentId: root.id,
                 transform: {
                     app: {
                         position: { y: 1, z: -1 },
-                        rotation: {x: 0, y: 1, z: 0, w: 0}, // rotate 180 degrees
+                        rotation: { x: 0, y: 1, z: 0, w: 0 }, // rotate 180 degrees
                     },
                     local: { scale: { x: 0.5, y: 0.5, z: 0.5 } }
                 }
@@ -105,6 +106,7 @@ export default class LightTest extends Test {
                 dimensions: { x: propWidth, z: propWidth, y: propHeight }
             },
             actor: {
+                parentId: root.id,
                 transform: {
                     app: {
                         position: { x: 0.5, y: 0.65, z: -1 }
@@ -118,6 +120,7 @@ export default class LightTest extends Test {
                 dimensions: { x: propWidth, z: propWidth, y: propHeight }
             },
             actor: {
+                parentId: root.id,
                 transform: {
                     app: {
                         position: { x: -0.5, y: 0.65, z: -1 }
@@ -128,7 +131,7 @@ export default class LightTest extends Test {
         return props;
     }
 
-    private createSphere() {
+    private createSphere(root: MRE.Actor) {
         return MRE.Actor.CreatePrimitive(this.app.context, {
             definition: {
                 shape: MRE.PrimitiveShape.Sphere,
@@ -136,6 +139,7 @@ export default class LightTest extends Test {
             },
             addCollider: true,
             actor: {
+                parentId: root.id,
                 light: { type: 'spot', intensity: 5 } // Add a light component.
             }
         }).value;

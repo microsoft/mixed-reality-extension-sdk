@@ -10,10 +10,11 @@ import delay from '../utils/delay';
 
 export default class InterpolationTest extends Test {
     public expectedResultDescription = "Lerping scale and rotation";
-    public async run(): Promise<boolean> {
+    public async run(root: MRE.Actor): Promise<boolean> {
         MRE.Actor.CreateEmpty(this.app.context, {
             actor: {
                 name: "Light",
+                parentId: root.id,
                 light: {
                     type: 'point',
                     range: 5,
@@ -34,6 +35,7 @@ export default class InterpolationTest extends Test {
                 dimensions: { x: 0.65, y: 0.65, z: 0.65 }
             },
             actor: {
+                parentId: root.id,
                 transform: {
                     local: {
                         position: { y: 1.0, z: -1.0 }

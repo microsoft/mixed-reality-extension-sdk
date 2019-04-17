@@ -14,7 +14,7 @@ import { Test } from '../test';
 export default class GltfGenTest extends Test {
     public expectedResultDescription = "A textured sphere";
 
-    public async run(): Promise<boolean> {
+    public async run(root: MRE.Actor): Promise<boolean> {
         const spherePrim = new GltfGen.Sphere(0.5);
         spherePrim.material = new GltfGen.Material({
             baseColorTexture: new GltfGen.Texture({
@@ -35,6 +35,7 @@ export default class GltfGenTest extends Test {
         MRE.Actor.CreateFromGltf(this.app.context, {
             resourceUrl: Server.registerStaticBuffer('sphere.glb', gltfFactory.generateGLTF()),
             actor: {
+                parentId: root.id,
                 transform: {
                     local: {
                         position: { y: 1, z: -1 }

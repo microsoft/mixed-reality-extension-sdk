@@ -27,7 +27,6 @@ import ReparentTest from './reparent-test';
 import SoundTest from './sound-test';
 import TextTest from './text-test';
 import TransformTest from './transform-test';
-import UserExclusiveActorTest from './user-exclusive-actor-test';
 import UserMaskTest from './user-mask-test';
 import UserTest from './user-test';
 import VisibilityTest from './visibility-test';
@@ -62,7 +61,6 @@ export const Factories = {
     'sound-test': (...args) => new SoundTest(...args),
     'text-test': (...args) => new TextTest(...args),
     'transform-test': (...args) => new TransformTest(...args),
-    'user-exclusive-actor-test': (...args) => new UserExclusiveActorTest(...args),
     'user-mask-test': (...args) => new UserMaskTest(...args),
     'user-test': (...args) => new UserTest(...args),
     'visibility-test': (...args) => new VisibilityTest(...args),

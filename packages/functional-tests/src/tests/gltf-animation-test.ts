@@ -10,11 +10,12 @@ import { Test } from '../test';
 export default class GltfAnimationTest extends Test {
     public expectedResultDescription = "Cesium Man walking";
 
-    public async run(): Promise<boolean> {
+    public async run(root: MRE.Actor): Promise<boolean> {
         const tester = MRE.Actor.CreateFromGltf(this.app.context, {
             // tslint:disable-next-line:max-line-length
             resourceUrl: `https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/CesiumMan/glTF-Binary/CesiumMan.glb`,
             actor: {
+                parentId: root.id,
                 transform: {
                     local: {
                         position: { y: 0.0, z: -1 }

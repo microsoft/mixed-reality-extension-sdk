@@ -13,7 +13,7 @@ export default class PhysicsSimTest extends Test {
     private pegMat: MRE.Material;
     private ballMat: MRE.Material;
 
-    public async run(): Promise<boolean> {
+    public async run(root: MRE.Actor): Promise<boolean> {
         this.pegMat = this.app.context.assetManager.createMaterial('peg', {
             color: MRE.Color3.FromInts(79, 36, 6)
         }).value;
@@ -21,8 +21,8 @@ export default class PhysicsSimTest extends Test {
             color: MRE.Color3.FromInts(220, 150, 150)
         }).value;
 
-        await this.createPegField(2, 2);
-        this.interval = setInterval(() => this.spawnBall(1.5, 1.3), 1000);
+        await this.createPegField(root, 2, 2);
+        this.interval = setInterval(() => this.spawnBall(root, 1.5, 1.3), 1000);
 
         await this.stoppedAsync();
         return true;
@@ -33,6 +33,7 @@ export default class PhysicsSimTest extends Test {
     }
 
     private async createPegField(
+        root: MRE.Actor,
         width: number, height: number,
         pegRadius = 0.02, spacing = 0.2, verticalDistort = 1.1
     ) {
@@ -50,6 +51,7 @@ export default class PhysicsSimTest extends Test {
                 },
                 addCollider: true,
                 actor: {
+                    parentId: root.id,
                     transform: { local: { position } },
                     appearance: { materialId: this.pegMat.id }
                 }
@@ -65,7 +67,7 @@ export default class PhysicsSimTest extends Test {
         }
     }
 
-    private spawnBall(width: number, height: number, ballRadius = 0.07, killTimeout = 5000) {
+    private spawnBall(root: MRE.Actor, width: number, height: number, ballRadius = 0.07, killTimeout = 5000) {
         const ball = MRE.Actor.CreatePrimitive(this.app.context, {
             definition: {
                 shape: MRE.PrimitiveShape.Sphere,
@@ -73,6 +75,7 @@ export default class PhysicsSimTest extends Test {
             },
             addCollider: true,
             actor: {
+                parentId: root.id,
                 appearance: { materialId: this.ballMat.id },
                 transform: {
                     local: { position: { x: -width / 2 + width * Math.random(), y: height, z: -0.2 } }

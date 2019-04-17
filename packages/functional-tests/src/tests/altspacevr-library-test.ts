@@ -9,13 +9,14 @@ import { Test } from '../test';
 export default class AltspaceVRLibraryTest extends Test {
     public expectedResultDescription = "Altspace kit objects, teleporter to the Campfire";
 
-    public async run(): Promise<boolean> {
+    public async run(root: MRE.Actor): Promise<boolean> {
         // AltspaceVR resource IDs from https://account.altvr.com/kits/
         const libraryActors: Array<MRE.ForwardPromise<MRE.Actor>> = [];
         libraryActors.push(MRE.Actor.CreateFromLibrary(this.app.context, {
             resourceId: "artifact:993646440251130011",
             actor: {
                 name: 'Campfire Kit: Cabin',
+                parentId: root.id,
                 transform: {
                     local: {
                         position: { x: 0, y: 0.0, z: -0.1 },
@@ -29,6 +30,7 @@ export default class AltspaceVRLibraryTest extends Test {
             resourceId: "artifact:1031602421559722256",
             actor: {
                 name: 'Home Kit: Chair 2',
+                parentId: root.id,
                 transform: {
                     local: {
                         position: { x: -1, y: 0.0, z: -1.5 },
@@ -42,6 +44,7 @@ export default class AltspaceVRLibraryTest extends Test {
             resourceId: "artifact:1049499012731764738",
             actor: {
                 name: 'Halloween Kit: Pumpkin Happy',
+                parentId: root.id,
                 transform: {
                     local: {
                         position: { x: 1, y: 0.0, z: -1.5 },
@@ -54,6 +57,7 @@ export default class AltspaceVRLibraryTest extends Test {
             resourceId: "artifact:995365722689372801",
             actor: {
                 name: 'Alien Planet Kit: Island 06',
+                parentId: root.id,
                 transform: {
                     local: {
                         position: { x: 0, y: 0.0, z: -1.5 },
@@ -66,6 +70,7 @@ export default class AltspaceVRLibraryTest extends Test {
             resourceId: "teleporter:space/613940881048732244?label=true",
             actor: {
                 name: 'Teleporter to Campfire',
+                parentId: root.id,
                 transform: {
                     local: {
                         position: { x: 1.2, y: 0.0, z: -0.5 }
@@ -77,6 +82,7 @@ export default class AltspaceVRLibraryTest extends Test {
             resourceId: "teleporter:event/1141596974185710470?label=true",
             actor: {
                 name: 'Teleporter to Altstock',
+                parentId: root.id,
                 transform: {
                     local: {
                         position: { x: -1.2, y: 0.0, z: -0.5 }

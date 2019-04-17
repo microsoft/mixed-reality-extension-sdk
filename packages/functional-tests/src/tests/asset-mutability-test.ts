@@ -13,7 +13,7 @@ import delay from '../utils/delay';
 export default class AssetMutabilityTest extends Test {
     public expectedResultDescription = "Animate a cube's color and texture";
 
-    public async run(): Promise<boolean> {
+    public async run(root: MRE.Actor): Promise<boolean> {
 
         const assets = await this.app.context.assetManager.loadGltf(
             'assets', this.generateMaterial()
@@ -27,6 +27,7 @@ export default class AssetMutabilityTest extends Test {
             },
             actor: {
                 name: 'box',
+                parentId: root.id,
                 appearance: { materialId: mat.id },
                 transform: {
                     local: {

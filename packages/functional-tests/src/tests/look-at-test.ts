@@ -20,10 +20,11 @@ export default class LookAtTest extends Test {
     public interval: NodeJS.Timeout;
     public state = 0;
 
-    public async run(): Promise<boolean> {
+    public async run(root: MRE.Actor): Promise<boolean> {
         MRE.Actor.CreateEmpty(this.app.context, {
             actor: {
                 name: "Light",
+                parentId: root.id,
                 light: {
                     type: 'point',
                     range: 5,
@@ -40,10 +41,14 @@ export default class LookAtTest extends Test {
 
         const tester = MRE.Actor.CreateFromGltf(this.app.context, {
             resourceUrl: `${this.baseUrl}/monkey.glb`,
-            actor: { transform: { local: { scale: { x: 0.5, y: 0.5, z: 0.5 } } } }
+            actor: {
+                parentId: root.id,
+                transform: { local: { scale: { x: 0.5, y: 0.5, z: 0.5 } } }
+            }
         }).value;
         const lookAtTarget = MRE.Actor.CreateEmpty(this.app.context, {
             actor: {
+                parentId: root.id,
                 attachment: {
                     userId: this.user.id,
                     attachPoint: 'head'

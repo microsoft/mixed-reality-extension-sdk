@@ -3,7 +3,7 @@
  * Licensed under the MIT License.
  */
 
-import { User } from '@microsoft/mixed-reality-extension-sdk';
+import { Actor, User } from '@microsoft/mixed-reality-extension-sdk';
 
 import { App } from './app';
 
@@ -29,7 +29,7 @@ export abstract class Test {
     /**
      * Main test entry point. This should run indefinitely until [[stop]] is called.
      */
-    public abstract run(): Promise<boolean>;
+    public abstract run(root: Actor): Promise<boolean>;
 
     /**
      * If the test requires anything other than actor cleanup, do it here.
