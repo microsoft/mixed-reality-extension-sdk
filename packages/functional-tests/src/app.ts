@@ -37,10 +37,13 @@ export class App {
     private playPauseButton: MRE.Actor;
     private playPauseText: MRE.Actor;
     private runnerActors: MRE.Actor[];
+    private sharedActors: MRE.Actor[];
     private backgroundMaterial: MRE.Material;
 
     private testRoot: MRE.Actor;
     private exclusiveUser: MRE.User;
+    private exclusiveUserToggle: MRE.Actor;
+    private exclusiveUserLabel: MRE.Text;
 
     private readonly menu = new Menu(this);
 
@@ -52,6 +55,7 @@ export class App {
         this._rpc = new MRERPC.ContextRPC(_context);
 
         this.context.onStarted(() => {
+            this.setupShared();
             if (this.params.test === undefined) {
                 this.menu.show();
             } else {
@@ -153,7 +157,8 @@ export class App {
         test.cleanup();
 
         // Delete all actors
-        destroyActors(this.context.rootActors.filter(x => !this.runnerActors.includes(x)));
+        destroyActors(this.context.rootActors.filter(x =>
+            !this.runnerActors.includes(x) && !this.sharedActors.includes(x)));
         this.context.assetManager.cleanup();
     }
 
@@ -182,6 +187,111 @@ export class App {
         }
     }
 
+    private async toggleExclusiveUser(user: MRE.User) {
+        if (this.exclusiveUser || !user) {
+            this.exclusiveUser = null;
+            this.exclusiveUserLabel.contents = "Inclusive";
+        } else {
+            this.exclusiveUser = user;
+            this.exclusiveUserLabel.contents = `Exclusive to:\n${user.name}`;
+        }
+
+        const wasRunning = !!this.activeTest;
+        await this.stopTest();
+
+        if (this.testRoot) {
+            this.testRoot.destroy();
+        }
+
+        this.testRoot = MRE.Actor.CreateEmpty(this.context, {
+            actor: {
+                name: 'testRoot',
+                exclusiveToUser: this.exclusiveUser && this.exclusiveUser.id || undefined
+            }
+        }).value;
+
+        if (wasRunning) {
+            this.runTest(user);
+        }
+    }
+
+    private setupShared() {
+        // change the exclusive user
+        if (this.params.exclusive) {
+            this.exclusiveUser = this.firstUser;
+        }
+
+        this.exclusiveUserToggle = MRE.Actor.CreatePrimitive(this.context, {
+            definition: {
+                shape: MRE.PrimitiveShape.Box,
+                dimensions: { x: 0.25, y: 0.25, z: 0.1 }
+            },
+            addCollider: true,
+            actor: {
+                transform: {
+                    local: {
+                        position: { x: -0.875, y: 2.3 }
+                    }
+                }
+            }
+        }).value;
+        const label = MRE.Actor.CreateEmpty(this.context, {
+            actor: {
+                parentId: this.exclusiveUserToggle.id,
+                transform: {
+                    local: {
+                        position: { x: 0.3 }
+                    }
+                },
+                text: {
+                    contents: this.exclusiveUser ? `Exclusive to:\n${this.exclusiveUser.name}` : "Inclusive",
+                    height: 0.2,
+                    anchor: MRE.TextAnchorLocation.MiddleLeft
+                }
+            }
+        }).value;
+        this.exclusiveUserLabel = label.text;
+
+        this.exclusiveUserToggle.setBehavior(MRE.ButtonBehavior)
+            .onClick('released', user => this.toggleExclusiveUser(user));
+
+        const floor = MRE.Actor.CreatePrimitive(this.context, {
+            definition: {
+                shape: MRE.PrimitiveShape.Box,
+                dimensions: { x: 2, y: 0.1, z: 2.1 }
+            },
+            addCollider: true,
+            actor: {
+                name: 'floor',
+                appearance: { materialId: this.backgroundMaterial.id },
+                transform: {
+                    local: {
+                        position: { x: 0, y: -0.05, z: -1 }
+                    }
+                },
+            }
+        }).value;
+
+        const wall = MRE.Actor.CreatePrimitive(this.context, {
+            definition: {
+                shape: MRE.PrimitiveShape.Box,
+                dimensions: { x: 2, y: 2, z: 0.1 }
+            },
+            addCollider: true,
+            actor: {
+                name: 'floor',
+                appearance: { materialId: this.backgroundMaterial.id },
+                transform: {
+                    local: {
+                        position: { x: 0, y: 1, z: 0.1 }
+                    }
+                }
+            }
+        }).value;
+
+        this.sharedActors = [this.exclusiveUserToggle, label, wall, floor];
+    }
+
     private setupRunner() {
         // Main label at the top of the stage
         this.contextLabel = MRE.Actor.CreateEmpty(this.context, {
@@ -204,7 +314,8 @@ export class App {
 
         this.testRoot = MRE.Actor.CreateEmpty(this.context, {
             actor: {
-                name: 'testRoot'
+                name: 'testRoot',
+                exclusiveToUser: this.exclusiveUser && this.exclusiveUser.id || undefined
             }
         }).value;
 
@@ -297,7 +408,7 @@ export class App {
         }).value;
 
         menuButton.setBehavior(MRE.ButtonBehavior)
-            .onClick("released", async userId => {
+            .onClick("released", async () => {
                 await this.stopTest();
                 [this.contextLabel, this.playPauseButton, this.playPauseText]
                     = this.runnerActors
@@ -306,41 +417,7 @@ export class App {
                 this.menu.show();
             });
 
-        const floor = MRE.Actor.CreatePrimitive(this.context, {
-            definition: {
-                shape: MRE.PrimitiveShape.Box,
-                dimensions: { x: 2, y: 0.1, z: 2.1 }
-            },
-            addCollider: true,
-            actor: {
-                name: 'floor',
-                transform: {
-                    local: {
-                        position: { x: 0, y: -0.05, z: -1 }
-                    }
-                },
-            }
-        }).value;
-        floor.appearance.material = this.backgroundMaterial;
-
-        const wall = MRE.Actor.CreatePrimitive(this.context, {
-            definition: {
-                shape: MRE.PrimitiveShape.Box,
-                dimensions: { x: 2, y: 2, z: 0.1 }
-            },
-            addCollider: true,
-            actor: {
-                name: 'floor',
-                transform: {
-                    local: {
-                        position: { x: 0, y: 1, z: 0.1 }
-                    }
-                }
-            }
-        }).value;
-        wall.appearance.material = this.backgroundMaterial;
-
-        this.runnerActors =
-            [this.contextLabel, this.playPauseButton, this.playPauseText, menuButton, menuText, wall, floor];
+        this.runnerActors = [this.contextLabel, this.testRoot, this.playPauseButton,
+        this.playPauseText, menuButton, menuText];
     }
 }

@@ -28,7 +28,6 @@ export default class Menu {
     private successMat: MRE.Material;
     private failureMat: MRE.Material;
     private neutralMat: MRE.Material;
-    private backgroundMat: MRE.Material;
 
     private breadcrumbs: number[] = [];
     private otherActors: MRE.Actor[];
@@ -101,7 +100,6 @@ export default class Menu {
             this.successMat = am.createMaterial('success', { color: SuccessColor }).value;
             this.failureMat = am.createMaterial('failure', { color: FailureColor }).value;
             this.neutralMat = am.createMaterial('neutral', { color: NeutralColor }).value;
-            this.backgroundMat = am.createMaterial('background', { color: BackgroundColor }).value;
         }
 
         if (this.buttons) {
@@ -197,40 +195,7 @@ export default class Menu {
                 this.show();
             });
 
-        const floor = MRE.Actor.CreatePrimitive(this.context, {
-            definition: {
-                shape: MRE.PrimitiveShape.Box,
-                dimensions: { x: 2, y: 0.1, z: 2.1 }
-            },
-            addCollider: true,
-            actor: {
-                name: 'floor',
-                transform: {
-                    local: {
-                        position: { x: 0, y: -0.05, z: -1 }
-                    }
-                },
-            }
-        }).value;
-        floor.appearance.material = this.backgroundMat;
-
-        const wall = MRE.Actor.CreatePrimitive(this.context, {
-            definition: {
-                shape: MRE.PrimitiveShape.Box,
-                dimensions: { x: 2, y: 2, z: 0.1 }
-            },
-            addCollider: true,
-            actor: {
-                name: 'floor',
-                transform: {
-                    local: {
-                        position: { x: 0, y: 1, z: 0.1 }
-                    }
-                }
-            }
-        }).value;
-        wall.appearance.material = this.backgroundMat;
-        this.otherActors = [backButton, backLabel, floor, wall];
+        this.otherActors = [backButton, backLabel];
     }
 
     private destroy() {
