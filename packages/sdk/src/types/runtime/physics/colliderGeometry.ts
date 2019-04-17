@@ -27,6 +27,10 @@ export interface MeshColliderGeometry {
     colliderType: 'mesh';
 }
 
+export interface CapsuleColliderGeometry {
+    colliderType: 'capsule';
+}
+
 /**
  * All collider parameter types.
  */

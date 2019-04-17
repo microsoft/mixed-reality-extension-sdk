@@ -366,6 +366,7 @@ export class InternalContext {
             this.performAction = this.performAction.bind(this);
             this.receiveRPC = this.receiveRPC.bind(this);
             this.collisionEventRaised = this.collisionEventRaised.bind(this);
+            this.triggerEventRaised = this.triggerEventRaised.bind(this);
             this.setAnimationStateEventRaised = this.setAnimationStateEventRaised.bind(this);
 
             execution.on('protocol.update-actors', this.updateActors);
