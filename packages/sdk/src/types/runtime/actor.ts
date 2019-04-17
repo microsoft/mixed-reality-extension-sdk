@@ -125,9 +125,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
     public set tag(value) { this._tag = value; this.actorChanged('tag'); }
 
     /** @inheritdoc */
-    public get exclusiveToUser(): string {
-        return this.parent && this.parent.exclusiveToUser || this._exclusiveToUser;
-    }
+    public get exclusiveToUser() { return this._exclusiveToUser; }
     public get subscriptions() { return this._subscriptions; }
     public get transform() { return this._transform; }
     public set transform(value) { this._transform.copy(value); }
@@ -700,7 +698,9 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
         if (from.parentId) this._parentId = from.parentId;
         if (from.name) this._name = from.name;
         if (from.tag) this._tag = from.tag;
-        if (from.exclusiveToUser) this._exclusiveToUser = from.exclusiveToUser;
+        if (from.exclusiveToUser || from.parentId) {
+            this._exclusiveToUser = this.parent && this.parent.exclusiveToUser || from.exclusiveToUser;
+        }
         if (from.transform) this._transform.copy(from.transform);
         if (from.attachment) this.attach(from.attachment.userId, from.attachment.attachPoint);
         if (from.appearance) this._appearance.copy(from.appearance);
