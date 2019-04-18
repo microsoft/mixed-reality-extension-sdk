@@ -3,14 +3,13 @@
  * Licensed under the MIT License.
  */
 
-import { CollisionEventType } from "../../network/payloads";
-import { CollisionData } from "./collision";
+import { CollisionData, CollisionEventType } from ".";
 
 /**
  * A collision event that has occured between physics objects.
  */
 export interface CollisionEvent {
     colliderOwnerId: string;
-    collisionEventType: CollisionEventType;
+    eventType: CollisionEventType;
     collisionData: CollisionData;
 }

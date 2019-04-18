@@ -41,7 +41,7 @@ import readPath from '../../utils/readPath';
 import resolveJsonValues from '../../utils/resolveJsonValues';
 import { ForwardPromise } from '../forwardPromise';
 import { InternalActor } from '../internal/actor';
-import { CollisionEventType, CreateColliderType } from '../network/payloads';
+import { CreateColliderType } from '../network/payloads';
 import { SubscriptionType } from '../network/subscriptionType';
 import { Patchable } from '../patchable';
 import { ActionHandler, ActionState, Behavior, DiscreteAction } from './behaviors';
@@ -631,46 +631,6 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
      */
 
     /**
-     * Add an event handler for the collision enter event.
-     * @param handler The handler to call when the collision event is raised.
-     */
-    public onCollisionEnter(handler: (collisionData: CollisionData) => any): this {
-        this.context.internal.updateCollisionEventSubscriptions(this._id, { adds: CollisionEventType.CollisionEnter });
-        this.emitter.addListener(CollisionEventType.CollisionEnter, handler);
-        return this;
-    }
-
-    /**
-     * Add an event handler for the collision exit event.
-     * @param handler The handler to call when the collision event is raised.
-     */
-    public onCollisionExit(handler: (collisionData: CollisionData) => any): this {
-        this.context.internal.updateCollisionEventSubscriptions(this._id, { adds: CollisionEventType.CollisionExit });
-        this.emitter.addListener(CollisionEventType.CollisionExit, handler);
-        return this;
-    }
-
-    /**
-     * Add an event handler for the trigger enter event.
-     * @param handler The handler to call when the collision event is raised.
-     */
-    public onTriggerEnter(handler: (collisionData: CollisionData) => any): this {
-        this.context.internal.updateCollisionEventSubscriptions(this._id, { adds: CollisionEventType.TriggerEnter });
-        this.emitter.addListener(CollisionEventType.TriggerEnter, handler);
-        return this;
-    }
-
-    /**
-     * Add an event handler for the trigger exit event.
-     * @param handler The handler to call when the collision event is raised.
-     */
-    public onTriggerExit(handler: (collisionData: CollisionData) => any): this {
-        this.context.internal.updateCollisionEventSubscriptions(this._id, { adds: CollisionEventType.TriggerExit });
-        this.emitter.addListener(CollisionEventType.TriggerExit, handler);
-        return this;
-    }
-
-    /**
      * Set an event handler for the animation-disabled event.
      * @param handler The handler to call when an animation reaches the end or is otherwise disabled.
      */
@@ -735,6 +695,10 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
     }
 
     /**
+     * INTERNAL METHODS
+     */
+
+    /**
      * Prepare outgoing messages
      * @hidden
      */
@@ -748,17 +712,18 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
         return msg;
     }
 
-    /**
-     * PRIVATE METHODS
-     */
-
-    private actorChanged = (...path: string[]) => {
+    /** @hidden */
+    public actorChanged = (...path: string[]) => {
         if (this.internal.observing) {
             this.internal.patch = this.internal.patch || {} as ActorLike;
             readPath(this, this.internal.patch, ...path);
             this.context.internal.incrementGeneration();
         }
     }
+
+    /**
+     * PRIVATE METHODS
+     */
 
     private generateColliderGeometry(
         colliderType: 'box' | 'sphere',

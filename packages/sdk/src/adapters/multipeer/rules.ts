@@ -439,6 +439,11 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
     },
 
     // ========================================================================
+    'collision-event-raised': {
+        ...ClientOnlyRule
+    },
+
+    // ========================================================================
     'create-animation': {
         ...DefaultRule,
         synchronization: {
@@ -980,6 +985,11 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 
     // ========================================================================
     'traces': ClientOnlyRule,
+
+    // ========================================================================
+    'trigger-event-raised': {
+        ...ClientOnlyRule
+    },
 
     // ========================================================================
     'update-subscriptions': {
