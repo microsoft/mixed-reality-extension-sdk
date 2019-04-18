@@ -710,10 +710,6 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
      * PRIVATE METHODS
      */
 
-    /**
-     * PRIVATE METHODS
-     */
-
     private generateColliderGeometry(
         colliderType: 'box' | 'sphere',
         center?: Vector3Like,
