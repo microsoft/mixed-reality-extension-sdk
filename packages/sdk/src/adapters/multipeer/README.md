@@ -26,7 +26,7 @@ On connection:
     1. Run `ClientSync` to re-send session state messages
     2. Register new `ClientExecution` protocol and `startListening`
 
-On message expecting a reply, when the client is synchronized:
+On message expecting a reply, after the client is synchronized. Everything is the same if not synchronized, except `ClientExecution` is `ClientSync`, and instead of 11.2 sending 
 
 1. `InternalContext::createActorFromPayload` with a `CreateEmpty` payload or similar
 2. `Execution::sendPayload` calls `Execution::sendMessage`
@@ -48,14 +48,14 @@ On message expecting a reply, when the client is synchronized:
     1. `Client::send` calls `ClientExecution::sendMessage`
     2. `ClientExecution::sendMessage` runs middlewares
         1. `ServerPreprocessing::beforeSend` adds `serverTimeMs` to messages if not present
-    4. `ClientExecution#conn::send` sends message over the websocket
-    5. The remote client does some work, and sends an `ObjectSpawned` message
-    6. `ClientExecution::onReceive` calls `ClientExecution::recvMessage`
-    7. `ClientExecution::recvMessage` runs middlewares
+    3. `ClientExecution#conn::send` sends message over the websocket
+    4. The remote client does some work, and sends an `ObjectSpawned` message
+    5. `ClientExecution::onReceive` calls `ClientExecution::recvMessage`
+    6. `ClientExecution::recvMessage` runs middlewares
         1. `ClientExecution::beforeRecv` continues standard protocol flow if there's a callback waiting for this message, which never happens when messages come from a session. In this case, flow goes to `ClientExecution::handleReplyMessage` if there is a reply ID indicated, or `ClientExecution::recvPayload` if not.
-    8. `ClientExecution::beforeRecv` emits `recv` event
-    9. `recv` picked up by `Session::recvFromClient`
-    10. `Session::preprocessFromClient`
+    7. `ClientExecution::beforeRecv` emits `recv` event
+    8. `recv` picked up by `Session::recvFromClient`
+    9. `Session::preprocessFromClient`
         1. Look up rule for payload type from `Rules`
         2. `Rule#session::beforeReceiveFromClient`
         3. For `ObjectSpawned` messages, if from authoritative peer, copy each returned actor description into the session state and continue to send message to app. Otherwise stop processing this message.

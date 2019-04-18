@@ -20,7 +20,7 @@ export default class PhysicsSimTest extends Test {
     private ballCount = 0;
     private counterPlane: MRE.Actor;
 
-    public async run(): Promise<boolean> {
+    public async run(root: MRE.Actor): Promise<boolean> {
         this.pegMat = this.app.context.assetManager.createMaterial('peg', {
             color: defaultPegColor
         }).value;
@@ -28,10 +28,10 @@ export default class PhysicsSimTest extends Test {
             color: defaultBallColor
         }).value;
 
-        await this.createCounterPlane(2, 1.25);
+        await this.createCounterPlane(root, 2, 1.25);
 
-        await this.createPegField(2, 1);
-        this.interval = setInterval(() => this.spawnBall(1.5, 1.5), 1000);
+        await this.createPegField(root, 2, 1);
+        this.interval = setInterval(() => this.spawnBall(root, 1.5, 1.5), 1000);
 
         await this.stoppedAsync();
         return true;
@@ -41,10 +41,11 @@ export default class PhysicsSimTest extends Test {
         clearInterval(this.interval);
     }
 
-    private async createCounterPlane(width: number, height: number) {
+    private async createCounterPlane(root: MRE.Actor, width: number, height: number) {
         // Create the ball count text objects
         this.counterPlane = MRE.Actor.CreateEmpty(this.app.context, {
             actor: {
+                parentId: root.id,
                 transform: {
                     app: { position: { x: -width / 2, y: height + 0.2, z: 0.1 } }
                 },
@@ -60,10 +61,11 @@ export default class PhysicsSimTest extends Test {
         MRE.Actor.CreatePrimitive(this.app.context, {
             definition: {
                 shape: MRE.PrimitiveShape.Plane,
-                dimensions: { x: width, y: 0, z: 2}
+                dimensions: { x: width, y: 0, z: 2 }
             },
             addCollider: true,
             actor: {
+                parentId: root.id,
                 transform: {
                     local: { position: { x: 0, y: height, z: 0 } }
                 },
@@ -79,6 +81,7 @@ export default class PhysicsSimTest extends Test {
     }
 
     private async createPegField(
+        root: MRE.Actor,
         width: number, height: number,
         pegRadius = 0.02, spacing = 0.2, verticalDistort = 1.1
     ) {
@@ -96,6 +99,7 @@ export default class PhysicsSimTest extends Test {
                 },
                 addCollider: true,
                 actor: {
+                    parentId: root.id,
                     transform: { local: { position } },
                     appearance: { materialId: this.pegMat.id }
                 }
@@ -135,7 +139,7 @@ export default class PhysicsSimTest extends Test {
         }
     }
 
-    private spawnBall(width: number, height: number, ballRadius = 0.07, killTimeout = 5000) {
+    private spawnBall(root: MRE.Actor, width: number, height: number, ballRadius = 0.07, killTimeout = 5000) {
         const ball = MRE.Actor.CreatePrimitive(this.app.context, {
             definition: {
                 shape: MRE.PrimitiveShape.Sphere,
@@ -143,6 +147,7 @@ export default class PhysicsSimTest extends Test {
             },
             addCollider: true,
             actor: {
+                parentId: root.id,
                 appearance: { materialId: this.ballMat.id },
                 transform: {
                     local: { position: { x: -width / 2 + width * Math.random(), y: height, z: -0.1 } }

@@ -56,7 +56,14 @@ export interface ActorLike {
     parentId: string;
     name: string;
     tag: string;
-    subscriptions?: SubscriptionType[];
+
+    /**
+     * When supplied, this actor will be unsynchronized, and only exist on the client
+     * of the User with the given ID. This value can only be set at actor creation.
+     * Any actors parented to this actor will also be exclusive to the given user.
+     */
+    exclusiveToUser: string;
+    subscriptions: SubscriptionType[];
     transform: Partial<ActorTransformLike>;
     appearance: Partial<AppearanceLike>;
     light: Partial<LightLike>;
@@ -80,20 +87,21 @@ export interface ActorSet {
  */
 export class Actor implements ActorLike, Patchable<ActorLike> {
     // tslint:disable:variable-name
-    private _internal: InternalActor;
+    private _internal = new InternalActor(this);
     /** @hidden */
     public get internal() { return this._internal; }
 
-    private _emitter: events.EventEmitter;
+    private _emitter = new events.EventEmitter();
     /** @hidden */
     public get emitter() { return this._emitter; }
 
     private _name: string;
     private _tag: string;
-    private _parentId: string;
+    private _exclusiveToUser: string;
+    private _parentId = ZeroGuid;
     private _subscriptions: SubscriptionType[] = [];
-    private _transform: ActorTransform;
-    private _appearance: Appearance;
+    private _transform = new ActorTransform();
+    private _appearance = new Appearance(this);
     private _light: Light;
     private _rigidBody: RigidBody;
     private _collider: Collider;
@@ -115,6 +123,9 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
     public get name() { return this._name; }
     public get tag() { return this._tag; }
     public set tag(value) { this._tag = value; this.actorChanged('tag'); }
+
+    /** @inheritdoc */
+    public get exclusiveToUser() { return this._exclusiveToUser; }
     public get subscriptions() { return this._subscriptions; }
     public get transform() { return this._transform; }
     public set transform(value) { this._transform.copy(value); }
@@ -128,10 +139,16 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
     public get lookAt() { return this._lookAt; }
     public get children() { return this.context.actors.filter(actor => actor.parentId === this.id); }
     public get parent() { return this._context.actor(this._parentId); }
+    public set parent(value) { this.parentId = value && value.id || ZeroGuid; }
     public get parentId() { return this._parentId; }
     public set parentId(value) {
-        if (!value || value.startsWith('0000') || !this.context.actor(value)) {
+        const parentActor = this.context.actor(value);
+        if (!value || value.startsWith('0000') || !parentActor) {
             value = ZeroGuid;
+        }
+        if (parentActor && parentActor.exclusiveToUser && parentActor.exclusiveToUser !== this.exclusiveToUser) {
+            throw new Error(`User-exclusive actor ${this.id} can only be parented to inclusive actors ` +
+                "and actors that are exclusive to the same user.");
         }
         if (this._parentId !== value) {
             this._parentId = value;
@@ -149,12 +166,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 
     // tslint:disable-next-line:variable-name
     private constructor(private _context: Context, private _id: string) {
-        this._internal = new InternalActor(this);
-        this._emitter = new events.EventEmitter();
-        this._parentId = ZeroGuid;
-
         // Actor patching: Observe the transform for changed values.
-        this._transform = new ActorTransform();
         observe({
             target: this._transform,
             targetName: 'transform',
@@ -162,7 +174,6 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
         });
 
         // Observe changes to the looks of this actor
-        this._appearance = new Appearance(this);
         observe({
             target: this._appearance,
             targetName: 'appearance',
@@ -647,6 +658,9 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
         if (from.parentId) this._parentId = from.parentId;
         if (from.name) this._name = from.name;
         if (from.tag) this._tag = from.tag;
+        if (from.exclusiveToUser || from.parentId) {
+            this._exclusiveToUser = this.parent && this.parent.exclusiveToUser || from.exclusiveToUser;
+        }
         if (from.transform) this._transform.copy(from.transform);
         if (from.attachment) this.attach(from.attachment.userId, from.attachment.attachPoint);
         if (from.appearance) this._appearance.copy(from.appearance);
@@ -667,6 +681,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
             parentId: this._parentId,
             name: this._name,
             tag: this._tag,
+            exclusiveToUser: this._exclusiveToUser,
             transform: this._transform.toJSON(),
             appearance: this._appearance.toJSON(),
             attachment: this._attachment ? this._attachment.toJSON() : undefined,

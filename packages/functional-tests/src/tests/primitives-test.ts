@@ -10,14 +10,18 @@ import destroyActors from '../utils/destroyActors';
 
 export default class PrimitivesTest extends Test {
 
-    public async run(): Promise<boolean> {
+    public async run(root: MRE.Actor): Promise<boolean> {
         // Make a root object.
         const tester = MRE.Actor.CreateEmpty(this.app.context, {
-            actor: { transform: { local: { position: { y: 0.5, z: -0.5 }, scale: { x: 0.5, y: 0.5, z: 0.5 } } } }
+            actor: {
+                parentId: root.id,
+                transform: { local: { position: { y: 0.5, z: -0.5 }, scale: { x: 0.5, y: 0.5, z: 0.5 } } }
+            }
         });
         MRE.Actor.CreateEmpty(this.app.context, {
             actor: {
                 name: "Light",
+                parentId: root.id,
                 light: {
                     type: 'point',
                     range: 5,

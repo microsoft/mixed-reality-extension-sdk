@@ -13,11 +13,14 @@ export default class VisibilityTest extends Test {
     private activeColumn = 0;
     private interval: NodeJS.Timeout;
 
-    public async run(): Promise<boolean> {
-        const root = MRE.Actor.CreateEmpty(this.app.context, {
-            actor: { transform: { local: { position: { x: -0.9, y: 1, z: -1 } } } }
+    public async run(root: MRE.Actor): Promise<boolean> {
+        const rowRoot = MRE.Actor.CreateEmpty(this.app.context, {
+            actor: {
+                parentId: root.id,
+                transform: { local: { position: { x: -0.9, y: 1, z: -1 } } }
+            }
         }).value;
-        let lastCol = root;
+        let lastCol = rowRoot;
         for (let i = 0; i < 10; i++) {
             lastCol = this.createColumn(lastCol, i);
             this.columns.push(lastCol);

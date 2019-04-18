@@ -3,7 +3,7 @@
  * Licensed under the MIT License.
  */
 
-import * as MRESDK from '@microsoft/mixed-reality-extension-sdk';
+import * as MRE from '@microsoft/mixed-reality-extension-sdk';
 
 import { Test } from '../test';
 
@@ -12,10 +12,10 @@ const options = {
     contents: ["changing", "content"],
     ppl: [10, 20, 50],
     height: [.075, 0.15, 0.3],
-    anchor: Object.keys(MRESDK.TextAnchorLocation) as MRESDK.TextAnchorLocation[],
-    justify: Object.keys(MRESDK.TextJustify) as MRESDK.TextJustify[],
-    font: Object.keys(MRESDK.TextFontFamily) as MRESDK.TextFontFamily[],
-    color: [MRESDK.Color3.Red(), MRESDK.Color3.Green(), MRESDK.Color3.Blue(), MRESDK.Color3.White()]
+    anchor: Object.keys(MRE.TextAnchorLocation) as MRE.TextAnchorLocation[],
+    justify: Object.keys(MRE.TextJustify) as MRE.TextJustify[],
+    font: Object.keys(MRE.TextFontFamily) as MRE.TextFontFamily[],
+    color: [MRE.Color3.Red(), MRE.Color3.Green(), MRE.Color3.Blue(), MRE.Color3.White()]
 };
 
 /**
@@ -25,46 +25,46 @@ export default class TextTest extends Test {
     public expectedResultDescription = "Text cycling their options";
     public interval: NodeJS.Timeout;
 
-    private enabled: MRESDK.Actor;
-    private contents: MRESDK.Actor;
-    private ppl: MRESDK.Actor;
-    private height: MRESDK.Actor;
-    private anchor: MRESDK.Actor;
-    private justify: MRESDK.Actor;
-    private font: MRESDK.Actor;
-    private color: MRESDK.Actor;
+    private enabled: MRE.Actor;
+    private contents: MRE.Actor;
+    private ppl: MRE.Actor;
+    private height: MRE.Actor;
+    private anchor: MRE.Actor;
+    private justify: MRE.Actor;
+    private font: MRE.Actor;
+    private color: MRE.Actor;
 
-    public async run(): Promise<boolean> {
-        const enabled = this.createTemplate("enabled");
+    public async run(root: MRE.Actor): Promise<boolean> {
+        const enabled = this.createTemplate(root, "enabled");
         this.enabled = enabled.value;
         this.enabled.transform.local.position.copy({ x: -1, y: 1.5, z: 0 });
 
-        const contents = this.createTemplate('contents');
+        const contents = this.createTemplate(root, 'contents');
         this.contents = contents.value;
         this.contents.transform.local.position.copy({ x: 0, y: 1.5, z: 0 });
 
-        const ppl = this.createTemplate('pixelsPerLine');
+        const ppl = this.createTemplate(root, 'pixelsPerLine');
         this.ppl = ppl.value;
         this.ppl.transform.local.position.copy({ x: -1, y: 1, z: 0 });
 
-        const height = this.createTemplate('height');
+        const height = this.createTemplate(root, 'height');
         this.height = height.value;
         this.height.transform.local.position.copy({ x: 0, y: 1, z: 0 });
 
-        const font = this.createTemplate('font');
+        const font = this.createTemplate(root, 'font');
         this.font = font.value;
         this.font.transform.local.position.copy({ x: -1, y: 0.5, z: 0 });
 
-        const color = this.createTemplate('color');
+        const color = this.createTemplate(root, 'color');
         this.color = color.value;
         this.color.transform.local.position.copy({ x: 0, y: 0.5, z: 0 });
 
-        const anchor = this.createTemplate('anchor');
+        const anchor = this.createTemplate(root, 'anchor');
         this.anchor = anchor.value;
         this.anchor.transform.local.position.copy({ x: 1, y: 1.3, z: 0 });
-        MRESDK.Actor.CreatePrimitive(this.app.context, {
+        MRE.Actor.CreatePrimitive(this.app.context, {
             definition: {
-                shape: MRESDK.PrimitiveShape.Sphere,
+                shape: MRE.PrimitiveShape.Sphere,
                 radius: .05
             },
             actor: {
@@ -73,12 +73,12 @@ export default class TextTest extends Test {
             }
         });
 
-        const justify = this.createTemplate('multiline\njustify');
+        const justify = this.createTemplate(root, 'multiline\njustify');
         this.justify = justify.value;
         this.justify.transform.local.position.copy({ x: 1, y: 0.7, z: 0 });
-        MRESDK.Actor.CreatePrimitive(this.app.context, {
+        MRE.Actor.CreatePrimitive(this.app.context, {
             definition: {
-                shape: MRESDK.PrimitiveShape.Sphere,
+                shape: MRE.PrimitiveShape.Sphere,
                 radius: .05
             },
             actor: {
@@ -128,14 +128,15 @@ export default class TextTest extends Test {
         ];
     }
 
-    private createTemplate(text: string): MRESDK.ForwardPromise<MRESDK.Actor> {
-        return MRESDK.Actor.CreateEmpty(this.app.context, {
+    private createTemplate(root: MRE.Actor, text: string): MRE.ForwardPromise<MRE.Actor> {
+        return MRE.Actor.CreateEmpty(this.app.context, {
             actor: {
                 name: text.replace('\n', ' '),
+                parentId: root.id,
                 text: {
                     contents: text,
                     height: 0.15,
-                    anchor: MRESDK.TextAnchorLocation.MiddleCenter
+                    anchor: MRE.TextAnchorLocation.MiddleCenter
                 },
             }
         });

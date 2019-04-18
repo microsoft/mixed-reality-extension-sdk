@@ -7,7 +7,7 @@ import { Test } from '../test';
 
 export default class TransformTest extends Test {
     public expectedResultDescription = "Four half-meter cubes in a row";
-    public async run(): Promise<boolean> {
+    public async run(root: MRE.Actor): Promise<boolean> {
         const deg45 = MRE.Quaternion.FromEulerAngles(0, 0, -Math.PI / 4);
 
         const cube1 = MRE.Actor.CreatePrimitive(this.app.context, {
@@ -17,6 +17,7 @@ export default class TransformTest extends Test {
             },
             actor: {
                 name: 'cube1',
+                parentId: root.id,
                 transform: {
                     local: {
                         position: { x: -0.75 * Math.SQRT2, y: 1 },

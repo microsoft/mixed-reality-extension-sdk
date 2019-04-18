@@ -13,7 +13,7 @@ export default class UserMaskTest extends Test {
     private blueList: MRE.Actor;
     private interval: NodeJS.Timeout;
 
-    public async run(): Promise<boolean> {
+    public async run(root: MRE.Actor): Promise<boolean> {
         // create colors
         const blue = this.app.context.assetManager.createMaterial('blueMat', {
             color: { r: .102, g: 0.169, b: 0.843 }
@@ -31,6 +31,7 @@ export default class UserMaskTest extends Test {
         this.redList = MRE.Actor.CreateEmpty(this.app.context, {
             actor: {
                 name: 'redList',
+                parentId: root.id,
                 transform: { app: { position: { x: -1, y: 1.5 } } },
                 appearance: { enabled: true },
                 text: textDef
@@ -39,12 +40,14 @@ export default class UserMaskTest extends Test {
         this.blueList = MRE.Actor.CreateEmpty(this.app.context, {
             actor: {
                 name: 'blueList',
+                parentId: root.id,
                 transform: { app: { position: { x: 1, y: 1.5 } } },
                 appearance: { enabled: true },
                 text: textDef
             }
         }).value;
         this.updateLabels();
+        this.app.context.onUserLeft(_ => this.updateLabels());
 
         // create icons
         const redIcon = MRE.Actor.CreatePrimitive(this.app.context, {
@@ -55,6 +58,7 @@ export default class UserMaskTest extends Test {
             addCollider: true,
             actor: {
                 name: 'redIcon',
+                parentId: root.id,
                 appearance: {
                     enabled: new MRE.GroupMask(this.app.context, ['red', 'default']),
                     materialId: red.id
@@ -73,6 +77,7 @@ export default class UserMaskTest extends Test {
             addCollider: true,
             actor: {
                 name: 'blueIcon',
+                parentId: root.id,
                 appearance: {
                     enabled: new MRE.GroupMask(this.app.context, ['blue', 'default']),
                     materialId: blue.id

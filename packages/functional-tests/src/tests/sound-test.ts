@@ -48,7 +48,7 @@ export default class SoundTest extends Test {
             [-1, 7]
         ];
 
-    public async run(): Promise<boolean> {
+    public async run(root: MRE.Actor): Promise<boolean> {
 
         const musicButtonPromise = MRE.Actor.CreatePrimitive(this.app.context, {
             definition: {
@@ -61,6 +61,7 @@ export default class SoundTest extends Test {
             addCollider: true,
             actor: {
                 name: 'MusicButton',
+                parentId: root.id,
                 transform: {
                     local: {
                         position: { x: -0.8, y: 1.3, z: -0.2 }
@@ -104,6 +105,7 @@ export default class SoundTest extends Test {
             addCollider: true,
             actor: {
                 name: 'NotesButton',
+                parentId: root.id,
                 transform: {
                     local: {
                         position: { x: 0, y: 1.3, z: -0.2 }
@@ -143,6 +145,7 @@ export default class SoundTest extends Test {
             addCollider: true,
             actor: {
                 name: 'DopplerButton',
+                parentId: root.id,
                 transform: {
                     local: {
                         position: { x: 0.8, y: 1.3, z: -0.2 }

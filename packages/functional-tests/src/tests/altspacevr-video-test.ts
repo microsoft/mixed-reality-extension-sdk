@@ -24,21 +24,12 @@ export default class AltspaceVRVideoTest extends Test {
         this.videoPlayerManager.cleanup();
     }
 
-    public async run(): Promise<boolean> {
-        let success = true;
-        success = success && await this.runAltspaceVRVideoTest();
-        return success;
-    }
     private _state = 0;
 
-    public async runAltspaceVRVideoTest(): Promise<boolean> {
-
-        // Make a root object.
-        const tester = MRE.Actor.CreateEmpty(this.app.context, {});
-
+    public async run(root: MRE.Actor): Promise<boolean> {
         const video = await MRE.Actor.CreateEmpty(this.app.context, {
             actor: {
-                parentId: tester.value.id,
+                parentId: root.id,
                 name: 'video',
                 transform: {
                     local: {
@@ -82,7 +73,7 @@ export default class AltspaceVRVideoTest extends Test {
             addCollider: true,
             actor: {
                 name: 'Button',
-                parentId: tester.value.id,
+                parentId: root.id,
                 transform: {
                     local: {
                         position: { x: -0.8, y: 0.2, z: 0 }

@@ -11,9 +11,10 @@ export default class ReparentTest extends Test {
     public expectedResultDescription = "Sphere should be jumping left, center, and right";
     private interval: NodeJS.Timeout;
 
-    public async run(): Promise<boolean> {
+    public async run(root: MRE.Actor): Promise<boolean> {
         const leftParent = MRE.Actor.CreateEmpty(this.app.context, {
             actor: {
+                parentId: root.id,
                 transform: {
                     local: {
                         position: { x: -0.7, y: 0.3, z: -0.3 }
@@ -23,6 +24,7 @@ export default class ReparentTest extends Test {
         }).value;
         const rightParent = MRE.Actor.CreateEmpty(this.app.context, {
             actor: {
+                parentId: root.id,
                 transform: {
                     local: {
                         position: { x: 0.7, y: 0.3, z: -0.3 }

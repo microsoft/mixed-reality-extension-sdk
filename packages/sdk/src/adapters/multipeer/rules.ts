@@ -77,6 +77,18 @@ export type Rule = {
          */
         beforeQueueMessageForClient: (
             session: Session, client: Client, message: any, promise: ExportedPromise) => Message;
+        /**
+         * Called twice before a message is sent: first to determine if a message is user-dependent
+         * (it is queued until user-join if so), and second to determine if the joined user is the
+         * correct user.
+         * @param message The message to be checked
+         * @param userId A GUID to a (possibly unjoined) user
+         * @param session The current session.
+         * @param client The client to send the message
+         * @returns `null` if the message does not depend on a user, `true` if it depends on the given
+         * user, and `false` if it depends on a different user.
+         */
+        shouldSendToUser: (message: any, userId: string, session: Session, client: Client) => boolean | null;
     },
 
     /**
@@ -120,7 +132,8 @@ export const DefaultRule: Rule = {
         beforeQueueMessageForClient: (
             session: Session, client: Client, message: any, promise: ExportedPromise) => {
             return message;
-        }
+        },
+        shouldSendToUser: () => null,
     },
     session: {
         beforeReceiveFromApp: (
@@ -130,7 +143,7 @@ export const DefaultRule: Rule = {
         beforeReceiveFromClient: (
             session: Session, client: Client, message: Message) => {
             return message;
-        },
+        }
     }
 };
 
@@ -141,6 +154,7 @@ export const DefaultRule: Rule = {
 export const MissingRule: Rule = {
     ...DefaultRule,
     client: {
+        ...DefaultRule.client,
         beforeQueueMessageForClient: (
             session: Session, client: Client, message: any, promise: ExportedPromise) => {
             log.error('app', `[ERROR] No rule defined for payload ${message.payload.type}! Add an entry in rules.ts.`);
@@ -148,6 +162,7 @@ export const MissingRule: Rule = {
         }
     },
     session: {
+        ...DefaultRule.session,
         beforeReceiveFromApp: (
             session: Session, message: Message) => {
             log.error('app', `[ERROR] No rule defined for payload ${message.payload.type}! Add an entry in rules.ts.`);
@@ -174,6 +189,7 @@ const ClientOnlyRule: Rule = {
         after: 'error'
     },
     client: {
+        ...DefaultRule.client,
         beforeQueueMessageForClient: (
             session: Session, client: Client, message: any, promise: ExportedPromise) => {
             log.error('network', `[ERROR] session tried to queue a client-only message: ${message.payload.type}!`);
@@ -185,6 +201,37 @@ const ClientOnlyRule: Rule = {
         beforeReceiveFromApp: (session: Session, message: Message) => {
             log.error('network', `[ERROR] app tried to send a client-only message: ${message.payload.type}!`);
             return undefined;
+        }
+    }
+};
+
+/**
+ * @hidden
+ * Handling for actor creation messages
+ */
+const CreateActorRule: Rule = {
+    ...DefaultRule,
+    synchronization: {
+        stage: 'create-actors',
+        before: 'ignore',
+        during: 'queue',
+        after: 'allow'
+    },
+    client: {
+        ...DefaultRule.client,
+        shouldSendToUser: (message: Message<Payloads.CreateActorCommon>, userId, session, client) => {
+            const exclusiveUser = session.actorSet[message.payload.actor.id].exclusiveToUser;
+            return exclusiveUser ? exclusiveUser === userId : null;
+        }
+    },
+    session: {
+        ...DefaultRule.session,
+        beforeReceiveFromApp: (
+            session: Session,
+            message: Message<Payloads.CreateEmpty>
+        ) => {
+            session.cacheInitializeActorMessage(message);
+            return message;
         }
     }
 };
@@ -206,6 +253,7 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
             after: 'allow'
         },
         client: {
+            ...DefaultRule.client,
             beforeQueueMessageForClient: (
                 session: Session,
                 client: Client,
@@ -218,6 +266,7 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
             }
         },
         session: {
+            ...DefaultRule.session,
             // For now, whenever we encounter an actor-correction, convert it to an actor-update.
             // Later this message type might be utilized to indicate that actor values should be
             // interpolated rather than overwritten.
@@ -251,6 +300,7 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
             after: 'allow'
         },
         client: {
+            ...DefaultRule.client,
             beforeQueueMessageForClient: (
                 session: Session,
                 client: Client,
@@ -270,6 +320,10 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
                     return undefined;
                 }
                 return message;
+            },
+            shouldSendToUser: (message: Message<Payloads.ActorUpdate>, userId, session, client) => {
+                const exclusiveUser = session.actorSet[message.payload.actor.id].exclusiveToUser;
+                return exclusiveUser ? exclusiveUser === userId : null;
             }
         },
         session: {
@@ -334,22 +388,11 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
             during: 'queue',
             after: 'allow'
         },
-        session: {
-            ...DefaultRule.session,
-            beforeReceiveFromApp: (
-                session: Session,
-                message: Message<Payloads.AppToEngineRPC>
-            ) => {
-                // Send the message only to the specified user.
-                if (message.payload.userId) {
-                    const client = session.clients.find(value => value.userId === message.payload.userId);
-                    if (client) {
-                        client.send(message);
-                    }
-                } else {
-                    // If no user specified then allow the message to be sent to all users.
-                    return message;
-                }
+        client: {
+            ...DefaultRule.client,
+            shouldSendToUser: (message: Message<Payloads.AppToEngineRPC>, userId, session, client) => {
+                const exclusiveUser = message.payload.userId;
+                return exclusiveUser ? exclusiveUser === userId : null;
             }
         }
     },
@@ -409,6 +452,13 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
             during: 'allow',
             after: 'allow'
         },
+        client: {
+            ...DefaultRule.client,
+            shouldSendToUser: (message: Message<Payloads.CreateAnimation>, userId, session, client) => {
+                const exclusiveUser = session.actorSet[message.payload.actorId].exclusiveToUser;
+                return exclusiveUser ? exclusiveUser === userId : null;
+            }
+        },
         session: {
             ...DefaultRule.session,
             beforeReceiveFromApp: (
@@ -448,109 +498,19 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
     },
 
     // ========================================================================
-    'create-empty': {
-        ...DefaultRule,
-        synchronization: {
-            stage: 'create-actors',
-            before: 'ignore',
-            during: 'queue',
-            after: 'allow'
-        },
-        session: {
-            ...DefaultRule.session,
-            beforeReceiveFromApp: (
-                session: Session,
-                message: Message<Payloads.CreateEmpty>
-            ) => {
-                session.cacheCreateActorMessage(message);
-                return message;
-            }
-        }
-    },
+    'create-empty': CreateActorRule,
 
     // ========================================================================
-    'create-from-gltf': {
-        ...DefaultRule,
-        synchronization: {
-            stage: 'create-actors',
-            before: 'ignore',
-            during: 'queue',
-            after: 'allow'
-        },
-        session: {
-            ...DefaultRule.session,
-            beforeReceiveFromApp: (
-                session: Session,
-                message: Message<Payloads.CreateFromGltf>
-            ) => {
-                session.cacheCreateActorMessage(message);
-                return message;
-            }
-        }
-    },
+    'create-from-gltf': CreateActorRule,
 
     // ========================================================================
-    'create-from-library': {
-        ...DefaultRule,
-        synchronization: {
-            stage: 'create-actors',
-            before: 'ignore',
-            during: 'queue',
-            after: 'allow'
-        },
-        session: {
-            ...DefaultRule.session,
-            beforeReceiveFromApp: (
-                session: Session,
-                message: Message<Payloads.CreateFromLibrary>
-            ) => {
-                session.cacheCreateActorMessage(message);
-                return message;
-            }
-        }
-    },
+    'create-from-library': CreateActorRule,
 
     // ========================================================================
-    'create-primitive': {
-        ...DefaultRule,
-        synchronization: {
-            stage: 'create-actors',
-            before: 'ignore',
-            during: 'queue',
-            after: 'allow'
-        },
-        session: {
-            ...DefaultRule.session,
-            beforeReceiveFromApp: (
-                session: Session,
-                message: Message<Payloads.CreatePrimitive>
-            ) => {
-                session.cacheCreateActorMessage(message);
-                return message;
-            }
-        }
-    },
+    'create-primitive': CreateActorRule,
 
     // ========================================================================
-    'create-from-prefab': {
-        ...DefaultRule,
-        synchronization: {
-            stage: 'create-actors',
-            before: 'ignore',
-            during: 'queue',
-            after: 'allow'
-        },
-        session: {
-            ...DefaultRule.session,
-            beforeReceiveFromApp: (
-                session: Session,
-                message: Message<Payloads.CreateFromPrefab>
-            ) => {
-                session.cacheCreateActorMessage(message);
-                return message;
-            }
-        }
-    },
+    'create-from-prefab': CreateActorRule,
 
     // ========================================================================
     'destroy-actors': {
@@ -576,19 +536,13 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
     },
 
     // ========================================================================
-    'engine2app-rpc': {
-        ...ClientOnlyRule
-    },
+    'engine2app-rpc': ClientOnlyRule,
 
     // ========================================================================
-    'handshake': {
-        ...ClientOnlyRule
-    },
+    'handshake': ClientOnlyRule,
 
     // ========================================================================
-    'handshake-complete': {
-        ...ClientOnlyRule
-    },
+    'handshake-complete': ClientOnlyRule,
 
     // ========================================================================
     'handshake-reply': {
@@ -613,9 +567,7 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
     },
 
     // ========================================================================
-    'heartbeat-reply': {
-        ...ClientOnlyRule
-    },
+    'heartbeat-reply': ClientOnlyRule,
 
     // ========================================================================
     'interpolate-actor': {
@@ -625,6 +577,13 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
             before: 'queue',
             during: 'allow',
             after: 'allow'
+        },
+        client: {
+            ...DefaultRule.client,
+            shouldSendToUser: (message: Message<Payloads.InterpolateActor>, userId, session, client) => {
+                const exclusiveUser = session.actorSet[message.payload.actorId].exclusiveToUser;
+                return exclusiveUser ? exclusiveUser === userId : null;
+            }
         },
         session: {
             ...DefaultRule.session,
@@ -664,9 +623,7 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
     },
 
     // ========================================================================
-    'multi-operation-result': {
-        ...ClientOnlyRule
-    },
+    'multi-operation-result': ClientOnlyRule,
 
     // ========================================================================
     'object-spawned': {
@@ -678,23 +635,17 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
                 client: Client,
                 message: Message<Payloads.ObjectSpawned>
             ) => {
-                // Check that this is the authoritative client.
-                if (client.authoritative) {
+                // Check that this is the authoritative client
+                const exclusiveUser = session.actorSet[message.payload.actors[0].id].exclusiveToUser;
+                if (client.authoritative || client.userId && client.userId === exclusiveUser) {
                     // Create local representations of the actors.
                     for (const spawned of message.payload.actors) {
-                        if (!session.actorSet[spawned.id]) {
-                            session.actorSet[spawned.id] = {
-                                actorId: spawned.id,
-                                initialization: {
-                                    message: {
-                                        payload: {
-                                            type: 'actor-update',
-                                            actor: spawned
-                                        }
-                                    } as Message<Payloads.ActorUpdate>
-                                }
-                            };
-                        }
+                        session.cacheInitializeActorMessage({
+                            payload: {
+                                type: 'actor-update',
+                                actor: spawned
+                            }
+                        });
                     }
                     // Allow the message to propagate to the app.
                     return message;
@@ -787,6 +738,13 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
             before: 'queue',
             during: 'queue',
             after: 'allow'
+        },
+        client: {
+            ...DefaultRule.client,
+            shouldSendToUser: (message: Message<Payloads.RigidBodyCommands>, userId, session, client) => {
+                const exclusiveUser = session.actorSet[message.payload.actorId].exclusiveToUser;
+                return exclusiveUser ? exclusiveUser === userId : null;
+            }
         }
     },
 
@@ -821,6 +779,13 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
             during: 'queue',
             after: 'allow'
         },
+        client: {
+            ...DefaultRule.client,
+            shouldSendToUser: (message: Message<Payloads.SetAnimationState>, userId, session, client) => {
+                const exclusiveUser = session.actorSet[message.payload.actorId].exclusiveToUser;
+                return exclusiveUser ? exclusiveUser === userId : null;
+            }
+        },
         session: {
             ...DefaultRule.session,
             beforeReceiveFromApp: (
@@ -844,8 +809,9 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
                 client: Client,
                 message: Message<Payloads.SetAnimationState>
             ) => {
-                // Check that this is the authoritative client.
-                if (client.authoritative) {
+                // Check that this is the authoritative client
+                const exclusiveUser = session.actorSet[message.payload.actorId].exclusiveToUser;
+                if (client.authoritative || client.userId && client.userId === exclusiveUser) {
                     // Check that the actor exists.
                     const syncActor = session.actorSet[message.payload.actorId];
                     if (syncActor) {
@@ -892,6 +858,13 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
             during: 'allow',
             after: 'allow'
         },
+        client: {
+            ...DefaultRule.client,
+            shouldSendToUser: (message: Message<Payloads.SetBehavior>, userId, session, client) => {
+                const exclusiveUser = session.actorSet[message.payload.actorId].exclusiveToUser;
+                return exclusiveUser ? exclusiveUser === userId : null;
+            }
+        },
         session: {
             ...DefaultRule.session,
             beforeReceiveFromApp: (
@@ -917,6 +890,13 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
             before: 'ignore',
             during: 'queue',
             after: 'allow'
+        },
+        client: {
+            ...DefaultRule.client,
+            shouldSendToUser: (message: Message<Payloads.SetSoundState>, userId, session, client) => {
+                const exclusiveUser = session.actorSet[message.payload.actorId].exclusiveToUser;
+                return exclusiveUser ? exclusiveUser === userId : null;
+            }
         },
         session: {
             ...DefaultRule.session,
@@ -1001,14 +981,10 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
     },
 
     // ========================================================================
-    'sync-request': {
-        ...ClientOnlyRule
-    },
+    'sync-request': ClientOnlyRule,
 
     // ========================================================================
-    'traces': {
-        ...ClientOnlyRule
-    },
+    'traces': ClientOnlyRule,
 
     // ========================================================================
     'trigger-event-raised': {
@@ -1023,6 +999,13 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
             before: 'ignore',
             during: 'queue',
             after: 'allow'
+        },
+        client: {
+            ...DefaultRule.client,
+            shouldSendToUser: (message: Message<Payloads.UpdateSubscriptions>, userId, session, client) => {
+                const exclusiveUser = session.actorSet[message.payload.id].exclusiveToUser;
+                return exclusiveUser ? exclusiveUser === userId : null;
+            }
         },
         session: {
             ...DefaultRule.session,
@@ -1053,9 +1036,6 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
                 client: Client,
                 message: Message<Payloads.UserJoined>
             ) => {
-                // Associate the client connection with the user id.
-                client.userId = message.payload.user.id;
-
                 // Add remote ip address to the joining user.
                 const props = message.payload.user.properties = message.payload.user.properties || {};
                 if (client.conn instanceof WebSocket && !props.remoteAddress) {
@@ -1068,9 +1048,7 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
     },
 
     // ========================================================================
-    'user-left': {
-        ...ClientOnlyRule
-    },
+    'user-left': ClientOnlyRule,
 
     // ========================================================================
     'user-update': {

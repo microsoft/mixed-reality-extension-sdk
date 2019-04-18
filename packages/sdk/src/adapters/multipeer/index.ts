@@ -9,3 +9,4 @@ export * from './client';
 export * from './syncActor';
 export * from './protocols';
 export * from './rules';
+export * from './clientDesyncPreprocessor';
