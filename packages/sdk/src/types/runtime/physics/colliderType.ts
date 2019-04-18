@@ -10,4 +10,5 @@ export type ColliderType
     = 'box'
     | 'sphere'
     | 'mesh'
+    | 'capsule'
     ;

@@ -17,19 +17,17 @@ import {
     CollisionEvent,
     Context,
     CreateAnimationOptions,
-    LookAtMode,
     PrimitiveDefinition,
     SetAnimationStateOptions,
     SubscriptionType,
+    TriggerEvent,
     User,
     UserLike,
     UserSet,
 } from '../..';
-
 import {
     ActorUpdate,
     AssetUpdate,
-    CollisionEventType,
     CreateActorCommon,
     CreateAnimation,
     CreateColliderType,
@@ -47,7 +45,6 @@ import {
     SetAnimationState,
     SetBehavior,
     SetSoundState,
-    UpdateCollisionEventSubscriptions,
     UpdateSubscriptions,
     UserUpdate,
 } from '../network/payloads';
@@ -351,26 +348,6 @@ export class InternalContext {
         }
     }
 
-    public updateCollisionEventSubscriptions(
-        actorId: string,
-        options: {
-            adds?: CollisionEventType | CollisionEventType[],
-            removes?: CollisionEventType | CollisionEventType[]
-        }
-    ) {
-        const actor = this.actorSet[actorId];
-        if (actor) {
-            this.protocol.sendPayload({
-                type: 'update-collision-event-subscriptions',
-                actorId,
-                adds: options.adds,
-                removes: options.removes
-            } as UpdateCollisionEventSubscriptions);
-        } else {
-            log.error('app', `Failed to update collision event subscriptions. Actor ${actorId} not found.`);
-        }
-    }
-
     public async startListening() {
         try {
             // Startup the handshake protocol.
@@ -389,6 +366,7 @@ export class InternalContext {
             this.performAction = this.performAction.bind(this);
             this.receiveRPC = this.receiveRPC.bind(this);
             this.collisionEventRaised = this.collisionEventRaised.bind(this);
+            this.triggerEventRaised = this.triggerEventRaised.bind(this);
             this.setAnimationStateEventRaised = this.setAnimationStateEventRaised.bind(this);
 
             execution.on('protocol.update-actors', this.updateActors);
@@ -399,6 +377,7 @@ export class InternalContext {
             execution.on('protocol.perform-action', this.performAction);
             execution.on('protocol.receive-rpc', this.receiveRPC);
             execution.on('protocol.collision-event-raised', this.collisionEventRaised);
+            execution.on('protocol.trigger-event-raised', this.triggerEventRaised);
             execution.on('protocol.set-animation-state', this.setAnimationStateEventRaised);
 
             // Startup the execution protocol
@@ -554,10 +533,27 @@ export class InternalContext {
 
     public collisionEventRaised(collisionEvent: CollisionEvent) {
         const actor = this.actorSet[collisionEvent.colliderOwnerId];
-        if (actor) {
+        const otherActor = this.actorSet[(collisionEvent.collisionData.otherActorId)];
+        if (actor && otherActor) {
+            // Update the collision data to contain the actual other actor.
+            collisionEvent.collisionData = {
+                ...collisionEvent.collisionData,
+                otherActor
+            };
+
             actor.internal.collisionEventRaised(
-                collisionEvent.collisionEventType,
+                collisionEvent.eventType,
                 collisionEvent.collisionData);
+        }
+    }
+
+    public triggerEventRaised(triggerEvent: TriggerEvent) {
+        const actor = this.actorSet[triggerEvent.colliderOwnerId];
+        const otherActor = this.actorSet[triggerEvent.otherColliderOwnerId];
+        if (actor && otherActor) {
+            actor.internal.triggerEventRaised(
+                triggerEvent.eventType,
+                otherActor);
         }
     }
 

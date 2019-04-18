@@ -4,17 +4,8 @@
  */
 
 import { Payload } from '.';
-import { CollisionData, QuaternionLike, Vector3Like } from '../../..';
-
-/**
- * @hidden
- */
-export enum CollisionEventType {
-    CollisionEnter = 'collision-enter',
-    CollisionExit = 'collision-exit',
-    TriggerEnter = 'trigger-enter',
-    TriggerExit = 'trigger-exit'
-}
+import { CollisionData, CollisionEventType, QuaternionLike, Vector3Like,  } from '../../..';
+import { TriggerEventType } from '../../runtime';
 
 /**
  * @hidden
@@ -83,22 +74,22 @@ export type RigidBodyAddRelativeTorque = Payload & {
 
 /**
  * @hidden
- * App to engine. Update the collision event subscriptions for the given actor.
- */
-export type UpdateCollisionEventSubscriptions = Payload & {
-    type: 'update-collision-event-subscriptions';
-    actorId: string;
-    adds: CollisionEventType[];
-    removes: CollisionEventType[];
-};
-
-/**
- * @hidden
  * Engine to app. Collision event data from engine after a collision has occured.
  */
 export type CollisionEventRaised = Payload & {
     type: 'collision-event-raised';
     actorId: string;
-    collisionEventType: CollisionEventType;
+    eventType: CollisionEventType;
     collisionData: CollisionData;
+};
+
+/**
+ * @hidden
+ * Engine to app.  Trigger event data from engine after a trigger event has occured.
+ */
+export type TriggerEventRaised = Payload & {
+    type: 'trigger-event-rasied';
+    actorId: string;
+    eventType: TriggerEventType;
+    otherActorId: string;
 };
