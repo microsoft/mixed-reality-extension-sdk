@@ -90,6 +90,7 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="collider.html#_donotobserve" class="tsd-kind-icon">$<wbr>DoNot<wbr>Observe</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="collider.html#enabled" class="tsd-kind-icon">enabled</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="collider.html#istrigger" class="tsd-kind-icon">is<wbr>Trigger</a></li>
 							</ul>
@@ -98,6 +99,16 @@
 							<h3>Accessors</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="collider.html#collidergeometry" class="tsd-kind-icon">collider<wbr>Geometry</a></li>
+								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="collider.html#eventsubscriptions" class="tsd-kind-icon">event<wbr>Subscriptions</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Methods</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="collider.html#offcollision" class="tsd-kind-icon">off<wbr>Collision</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="collider.html#offtrigger" class="tsd-kind-icon">off<wbr>Trigger</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="collider.html#oncollision" class="tsd-kind-icon">on<wbr>Collision</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="collider.html#ontrigger" class="tsd-kind-icon">on<wbr>Trigger</a></li>
 							</ul>
 						</section>
 					</div>
@@ -106,13 +117,23 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="_donotobserve" class="tsd-anchor"></a>
+					<h3>$<wbr>DoNot<wbr>Observe</h3>
+					<div class="tsd-signature tsd-kind-icon">$<wbr>DoNot<wbr>Observe<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> =&nbsp;[&#x27;_internal&#x27;]</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/59f4f66/packages/sdk/src/types/runtime/collider.ts#L26">types/runtime/collider.ts:26</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 					<a name="enabled" class="tsd-anchor"></a>
 					<h3>enabled</h3>
 					<div class="tsd-signature tsd-kind-icon">enabled<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> =&nbsp;true</span></div>
 					<aside class="tsd-sources">
 						<p>Implementation of <a href="../interfaces/colliderlike.html">ColliderLike</a>.<a href="../interfaces/colliderlike.html#enabled">enabled</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/8284198/packages/sdk/src/types/runtime/collider.ts#L22">types/runtime/collider.ts:22</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/59f4f66/packages/sdk/src/types/runtime/collider.ts#L34">types/runtime/collider.ts:34</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -123,7 +144,7 @@
 					<aside class="tsd-sources">
 						<p>Implementation of <a href="../interfaces/colliderlike.html">ColliderLike</a>.<a href="../interfaces/colliderlike.html#istrigger">isTrigger</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/8284198/packages/sdk/src/types/runtime/collider.ts#L23">types/runtime/collider.ts:23</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/59f4f66/packages/sdk/src/types/runtime/collider.ts#L35">types/runtime/collider.ts:35</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -140,7 +161,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/8284198/packages/sdk/src/types/runtime/collider.ts#L34">types/runtime/collider.ts:34</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/59f4f66/packages/sdk/src/types/runtime/collider.ts#L52">types/runtime/collider.ts:52</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -155,6 +176,181 @@
 								<span class="tsd-signature-symbol"> | </span>
 								<span class="tsd-signature-type">object</span>
 							</h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
+					<a name="eventsubscriptions" class="tsd-anchor"></a>
+					<h3>event<wbr>Subscriptions</h3>
+					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> eventSubscriptions<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">ColliderEventType</span><span class="tsd-signature-symbol">[]</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/59f4f66/packages/sdk/src/types/runtime/collider.ts#L44">types/runtime/collider.ts:44</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>The current event subscriptions that are active on this collider.</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">ColliderEventType</span><span class="tsd-signature-symbol">[]</span></h4>
+						</li>
+					</ul>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Methods</h2>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="offcollision" class="tsd-anchor"></a>
+					<h3>off<wbr>Collision</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">off<wbr>Collision<span class="tsd-signature-symbol">(</span>eventType<span class="tsd-signature-symbol">: </span><a href="../index.html#collisioneventtype" class="tsd-signature-type">CollisionEventType</a>, handler<span class="tsd-signature-symbol">: </span><a href="../index.html#collisionhandler" class="tsd-signature-type">CollisionHandler</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/59f4f66/packages/sdk/src/types/runtime/collider.ts#L93">types/runtime/collider.ts:93</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Remove the collision handler for the given collision event state.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>eventType: <a href="../index.html#collisioneventtype" class="tsd-signature-type">CollisionEventType</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The type of the collision event.</p>
+									</div>
+								</li>
+								<li>
+									<h5>handler: <a href="../index.html#collisionhandler" class="tsd-signature-type">CollisionHandler</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The handler to remove.</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="offtrigger" class="tsd-anchor"></a>
+					<h3>off<wbr>Trigger</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">off<wbr>Trigger<span class="tsd-signature-symbol">(</span>eventType<span class="tsd-signature-symbol">: </span><a href="../index.html#triggereventtype" class="tsd-signature-type">TriggerEventType</a>, handler<span class="tsd-signature-symbol">: </span><a href="../index.html#triggerhandler" class="tsd-signature-type">TriggerHandler</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/59f4f66/packages/sdk/src/types/runtime/collider.ts#L112">types/runtime/collider.ts:112</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Remove the trigger handler for the given collision event state.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>eventType: <a href="../index.html#triggereventtype" class="tsd-signature-type">TriggerEventType</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The type of the trigger event.</p>
+									</div>
+								</li>
+								<li>
+									<h5>handler: <a href="../index.html#triggerhandler" class="tsd-signature-type">TriggerHandler</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The handler to remove.</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="oncollision" class="tsd-anchor"></a>
+					<h3>on<wbr>Collision</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">on<wbr>Collision<span class="tsd-signature-symbol">(</span>eventType<span class="tsd-signature-symbol">: </span><a href="../index.html#collisioneventtype" class="tsd-signature-type">CollisionEventType</a>, handler<span class="tsd-signature-symbol">: </span><a href="../index.html#collisionhandler" class="tsd-signature-type">CollisionHandler</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/59f4f66/packages/sdk/src/types/runtime/collider.ts#L84">types/runtime/collider.ts:84</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Add a collision event handler for the given collision event state.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>eventType: <a href="../index.html#collisioneventtype" class="tsd-signature-type">CollisionEventType</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The type of the collision event.</p>
+									</div>
+								</li>
+								<li>
+									<h5>handler: <a href="../index.html#collisionhandler" class="tsd-signature-type">CollisionHandler</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The handler to call when a collision event with the matching
+										collision event state is received.</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="ontrigger" class="tsd-anchor"></a>
+					<h3>on<wbr>Trigger</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">on<wbr>Trigger<span class="tsd-signature-symbol">(</span>eventType<span class="tsd-signature-symbol">: </span><a href="../index.html#triggereventtype" class="tsd-signature-type">TriggerEventType</a>, handler<span class="tsd-signature-symbol">: </span><a href="../index.html#triggerhandler" class="tsd-signature-type">TriggerHandler</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/59f4f66/packages/sdk/src/types/runtime/collider.ts#L103">types/runtime/collider.ts:103</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Add a trigger event handler for the given collision event state.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>eventType: <a href="../index.html#triggereventtype" class="tsd-signature-type">TriggerEventType</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The type of the trigger event.</p>
+									</div>
+								</li>
+								<li>
+									<h5>handler: <a href="../index.html#triggerhandler" class="tsd-signature-type">TriggerHandler</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The handler to call when a trigger event with the matching
+										collision event state is received.</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -176,6 +372,9 @@
 						<a href="collider.html" class="tsd-kind-icon">Collider</a>
 						<ul>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="collider.html#_donotobserve" class="tsd-kind-icon">$<wbr>DoNot<wbr>Observe</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
 								<a href="collider.html#enabled" class="tsd-kind-icon">enabled</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
@@ -183,6 +382,21 @@
 							</li>
 							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
 								<a href="collider.html#collidergeometry" class="tsd-kind-icon">collider<wbr>Geometry</a>
+							</li>
+							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
+								<a href="collider.html#eventsubscriptions" class="tsd-kind-icon">event<wbr>Subscriptions</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="collider.html#offcollision" class="tsd-kind-icon">off<wbr>Collision</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="collider.html#offtrigger" class="tsd-kind-icon">off<wbr>Trigger</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="collider.html#oncollision" class="tsd-kind-icon">on<wbr>Collision</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="collider.html#ontrigger" class="tsd-kind-icon">on<wbr>Trigger</a>
 							</li>
 						</ul>
 					</li>
