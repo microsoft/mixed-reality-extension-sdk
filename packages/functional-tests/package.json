@@ -1,6 +1,6 @@
 {
   "name": "functional-tests",
-  "version": "0.10.1",
+  "version": "0.10.2",
   "private": true,
   "description": "",
   "main": "built/server.js",
@@ -23,9 +23,9 @@
     "typescript": "3.0.3"
   },
   "dependencies": {
-    "@microsoft/gltf-gen": "^0.10.1",
-    "@microsoft/mixed-reality-extension-altspacevr-extras": "^0.10.1",
-    "@microsoft/mixed-reality-extension-sdk": "^0.10.1",
+    "@microsoft/gltf-gen": "^0.10.2",
+    "@microsoft/mixed-reality-extension-altspacevr-extras": "^0.10.2",
+    "@microsoft/mixed-reality-extension-sdk": "^0.10.2",
     "@types/dotenv": "^6.1.0",
     "@types/node": "^10.3.1",
     "@types/restify": "^7.2.0",
