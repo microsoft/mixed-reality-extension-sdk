@@ -4,8 +4,7 @@
  */
 
 import * as MRE from '@microsoft/mixed-reality-extension-sdk';
-
-import { App, BackgroundColor, FailureColor, NeutralColor, SuccessColor } from './app';
+import { App, FailureColor, NeutralColor, SuccessColor } from './app';
 import { TestFactory } from './test';
 import { Factories, FactoryMap } from './tests';
 import destroyActors from './utils/destroyActors';
@@ -90,7 +89,7 @@ export default class Menu {
 
             this.buttons[i].appearance.material = buttonMat;
             this.labels[i].text.contents = label;
-            behavior.onClick('released', handler);
+            behavior.onButton('released', handler);
         });
     }
 
@@ -190,7 +189,7 @@ export default class Menu {
         }).value;
 
         backButton.setBehavior(MRE.ButtonBehavior)
-            .onClick('released', () => {
+            .onButton('released', () => {
                 this.back();
                 this.show();
             });

@@ -253,7 +253,7 @@ export class App {
         this.exclusiveUserLabel = label.text;
 
         this.exclusiveUserToggle.setBehavior(MRE.ButtonBehavior)
-            .onClick('released', user => this.toggleExclusiveUser(user));
+            .onButton('released', user => this.toggleExclusiveUser(user));
 
         const floor = MRE.Actor.CreatePrimitive(this.context, {
             definition: {
@@ -365,7 +365,7 @@ export class App {
         }).value;
 
         this.playPauseButton.setBehavior(MRE.ButtonBehavior)
-            .onClick("released", user => {
+            .onButton("released", user => {
                 if (this.activeTest === null) {
                     this.runTest(user);
                 } else {
@@ -408,7 +408,7 @@ export class App {
         }).value;
 
         menuButton.setBehavior(MRE.ButtonBehavior)
-            .onClick("released", async () => {
+            .onButton("released", async () => {
                 await this.stopTest();
                 [this.contextLabel, this.playPauseButton, this.playPauseText]
                     = this.runnerActors

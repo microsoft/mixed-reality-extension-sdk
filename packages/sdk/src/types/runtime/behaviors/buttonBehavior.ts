@@ -13,6 +13,7 @@ export class ButtonBehavior extends TargetBehavior {
     // tslint:disable:variable-name
     private _hover: DiscreteAction = new DiscreteAction();
     private _click: DiscreteAction = new DiscreteAction();
+    private _button: DiscreteAction = new DiscreteAction();
     // tslint:enable:variable-name
 
     /** @inheritdoc */
@@ -20,6 +21,7 @@ export class ButtonBehavior extends TargetBehavior {
 
     public get hover() { return this._hover; }
     public get click() { return this._click; }
+    public get button() { return this._button; }
 
     /**
      * Add a hover handler to be called when the given hover state is triggered.
@@ -35,13 +37,23 @@ export class ButtonBehavior extends TargetBehavior {
 
     /**
      * Add a click handler to be called when the given click state is triggered.
-     * @param clickState The click state to fire the handler on.
      * @param handler The handler to call when the click state is triggered.
      * @return This button behavior.
      */
-    public onClick(clickState: 'pressed' | 'released', handler: ActionHandler): this {
-        const actionState: ActionState = (clickState === 'pressed') ? 'started' : 'stopped';
-        this._click.on(actionState, handler);
+    public onClick(handler: ActionHandler): this {
+        this._click.on('started', handler);
+        return this;
+    }
+
+    /**
+     * Add a button handler to be called when a complete button click has occured.
+     * @param buttonState The button state to fire the handler on.
+     * @param handler The handler to call when the click state is triggered.
+     * @return This button behavior.
+     */
+    public onButton(buttonState: 'pressed' | 'released', handler: ActionHandler): this {
+        const actionState: ActionState = (buttonState === 'pressed') ? 'started' : 'stopped';
+        this._button.on(actionState, handler);
         return this;
     }
 
