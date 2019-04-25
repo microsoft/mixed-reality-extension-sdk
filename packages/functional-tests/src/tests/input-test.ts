@@ -81,7 +81,7 @@ export default class InputTest extends Test {
             this.state = 1;
             this.cycleState();
         });
-        behavior.onClick('pressed', _ => {
+        behavior.onButton('pressed', _ => {
             this.state = 2;
             this.cycleState();
         });

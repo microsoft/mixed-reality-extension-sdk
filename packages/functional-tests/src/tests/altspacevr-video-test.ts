@@ -83,7 +83,7 @@ export default class AltspaceVRVideoTest extends Test {
         });
 
         const buttonBehavior = buttonPromise.value.setBehavior(MRE.ButtonBehavior);
-        buttonBehavior.onClick('released', cycleState);
+        buttonBehavior.onButton('released', cycleState);
 
         await this.stoppedAsync();
         return true;

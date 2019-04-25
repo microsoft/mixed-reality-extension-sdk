@@ -124,9 +124,9 @@ export default class AssetPreloadTest extends Test {
         });
 
         this.head.setBehavior(MRE.ButtonBehavior)
-            .onClick("pressed", () => this.cycleState());
+            .onButton("pressed", () => this.cycleState());
         this.sphere.setBehavior(MRE.ButtonBehavior)
-            .onClick("pressed", () => this.cycleState());
+            .onButton("pressed", () => this.cycleState());
     }
 
     private generateMaterial(): string {

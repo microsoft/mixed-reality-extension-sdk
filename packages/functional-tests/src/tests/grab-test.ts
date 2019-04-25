@@ -64,7 +64,7 @@ export default class GrabTest extends Test {
         // Set up cursor interaction. We add the input behavior ButtonBehavior to the cube.
         // Button behaviors have two pairs of events: hover start/stop, and click start/stop.
         const behavior = this.model.setBehavior(MRE.ButtonBehavior);
-        behavior.onClick('released', _ => {
+        behavior.onClick(_ => {
             this.state = 3;
             this.cycleState();
         });

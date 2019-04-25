@@ -100,9 +100,9 @@ export default class UserMaskTest extends Test {
         }, 750);
 
         // switch team on icon click
-        redIcon.setBehavior(MRE.ButtonBehavior).onClick('pressed',
+        redIcon.setBehavior(MRE.ButtonBehavior).onButton('pressed',
             user => this.switchTeams(user));
-        blueIcon.setBehavior(MRE.ButtonBehavior).onClick('pressed',
+        blueIcon.setBehavior(MRE.ButtonBehavior).onButton('pressed',
             user => this.switchTeams(user));
 
         await this.stoppedAsync();

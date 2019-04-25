@@ -92,7 +92,7 @@ export default class SoundTest extends Test {
             }
             this._musicState = (this._musicState + 1) % 2;
         };
-        musicButtonBehavior.onClick('released', cycleMusicState);
+        musicButtonBehavior.onButton('released', cycleMusicState);
 
         const notesButtonPromise = MRE.Actor.CreatePrimitive(this.app.context, {
             definition: {
@@ -132,7 +132,7 @@ export default class SoundTest extends Test {
                 await delay(200);
             }
         };
-        notesButtonBehavior.onClick('released', playNotes);
+        notesButtonBehavior.onButton('released', playNotes);
 
         const dopplerButtonPromise = MRE.Actor.CreatePrimitive(this.app.context, {
             definition: {
@@ -203,7 +203,7 @@ export default class SoundTest extends Test {
             }
             this._dopplerSoundState = (this._dopplerSoundState + 1) % 2;
         };
-        dopplerButtonBehavior.onClick('released', cycleDopplerSoundState);
+        dopplerButtonBehavior.onButton('released', cycleDopplerSoundState);
 
         await this.stoppedAsync();
 
