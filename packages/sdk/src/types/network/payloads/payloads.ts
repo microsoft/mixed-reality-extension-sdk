@@ -166,7 +166,6 @@ export type EngineToAppRPC = Payload & {
  */
 export type CreateActorCommon = Payload & {
     actor: Partial<ActorLike>;
-    subscriptions: SubscriptionType[];
 };
 
 /**
@@ -210,7 +209,6 @@ export type CreatePrimitive = CreateActorCommon & {
     definition: PrimitiveDefinition;
     addCollider: boolean;
     actor: Partial<ActorLike>;
-    subscriptions: SubscriptionType[];
 };
 
 /**

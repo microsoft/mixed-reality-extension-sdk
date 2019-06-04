@@ -82,12 +82,10 @@ export class InternalContext {
     }
 
     public CreateEmpty(options?: {
-        actor?: Partial<ActorLike>,
-        subscriptions?: SubscriptionType[]
+        actor?: Partial<ActorLike>
     }): ForwardPromise<Actor> {
         options = { ...options };
         options = {
-            subscriptions: [],
             ...options,
             actor: {
                 ...options.actor,
@@ -105,12 +103,10 @@ export class InternalContext {
         resourceUrl: string,
         assetName?: string,
         colliderType?: CreateColliderType,
-        actor?: Partial<ActorLike>,
-        subscriptions?: SubscriptionType[]
+        actor?: Partial<ActorLike>
     }): ForwardPromise<Actor> {
         options = { ...options };
         options = {
-            subscriptions: [],
             colliderType: 'none',
             ...options,
             actor: {
@@ -127,12 +123,10 @@ export class InternalContext {
 
     public CreateFromLibrary(options: {
         resourceId: string,
-        actor?: Partial<ActorLike>,
-        subscriptions?: SubscriptionType[]
+        actor?: Partial<ActorLike>
     }): ForwardPromise<Actor> {
         options = { ...options };
         options = {
-            subscriptions: [],
             ...options,
             actor: {
                 ...options.actor,
@@ -149,12 +143,10 @@ export class InternalContext {
     public CreatePrimitive(options: {
         definition: PrimitiveDefinition,
         addCollider?: boolean,
-        actor?: Partial<ActorLike>,
-        subscriptions?: SubscriptionType[]
+        actor?: Partial<ActorLike>
     }): ForwardPromise<Actor> {
         options = { ...options };
         options = {
-            subscriptions: [],
             addCollider: false,
             ...options,
             actor: {
@@ -171,12 +163,10 @@ export class InternalContext {
 
     public CreateFromPrefab(options: {
         prefabId: string,
-        actor?: Partial<ActorLike>,
-        subscriptions?: SubscriptionType[]
+        actor?: Partial<ActorLike>
     }): ForwardPromise<Actor> {
         options = { ...options };
         options = {
-            subscriptions: [],
             ...options,
             actor: {
                 ...options.actor,
