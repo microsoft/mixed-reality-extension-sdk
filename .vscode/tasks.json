@@ -18,13 +18,18 @@
         {
             "type": "npm",
             "script": "build",
-            "problemMatcher": []
+            "problemMatcher": [],
+            "group": "build"
         },
         {
             "type": "npm",
             "script": "build",
             "path": "packages/altspacevr-extras/",
-            "problemMatcher": []
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
         },
         {
             "type": "npm",
