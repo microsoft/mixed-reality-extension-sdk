@@ -59,7 +59,6 @@ export type PayloadType
     | 'sync-request'
     | 'traces'
     | 'trigger-event-raised'
-    | 'update-subscriptions'
     | 'user-joined'
     | 'user-left'
     | 'user-update'
@@ -315,17 +314,6 @@ export type SetBehavior = Payload & {
     type: 'set-behavior';
     actorId: string;
     behaviorType: BehaviorType;
-};
-
-/**
- * @hidden
- * Update subscription flags on the actor
- */
-export type UpdateSubscriptions = Payload & {
-    type: 'update-subscriptions';
-    id: string;
-    adds: SubscriptionType[];
-    removes: SubscriptionType[];
 };
 
 /**

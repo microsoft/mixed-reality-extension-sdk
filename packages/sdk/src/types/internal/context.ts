@@ -45,7 +45,6 @@ import {
     SetAnimationState,
     SetBehavior,
     SetSoundState,
-    UpdateSubscriptions,
     UserUpdate,
 } from '../network/payloads';
 
@@ -315,26 +314,6 @@ export class InternalContext {
                 curve,
                 enabled: true
             } as InterpolateActor);
-        }
-    }
-
-    public updateSubscriptions(
-        actorId: string,
-        options: {
-            adds?: SubscriptionType | SubscriptionType[],
-            removes?: SubscriptionType | SubscriptionType[]
-        }
-    ) {
-        const actor = this.actorSet[actorId];
-        if (actor) {
-            this.protocol.sendPayload({
-                type: 'update-subscriptions',
-                id: actorId,
-                adds: options.adds,
-                removes: options.removes
-            } as UpdateSubscriptions);
-        } else {
-            log.error('app', `Failed to update subscriptions. Actor ${actorId} not found.`);
         }
     }
 
