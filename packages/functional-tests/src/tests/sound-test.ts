@@ -72,7 +72,7 @@ export default class SoundTest extends Test {
 
         const musicAssetPromise = this.app.context.assetManager.createSound(
             'group1',
-            { uri: `https://api.modarchive.org/downloads.php?moduleid=42560#GSLINGER.MOD` }
+            { uri: `${this.baseUrl}/FTUI_Music.ogg` }
         );
         const musicSoundInstance = musicButtonPromise.value.startSound(musicAssetPromise.value.id,
             {
@@ -83,12 +83,13 @@ export default class SoundTest extends Test {
                 rolloffStartDistance: 2.5
             },
             0.0);
+        musicSoundInstance.value.pause();
         const musicButtonBehavior = musicButtonPromise.value.setBehavior(MRE.ButtonBehavior);
         const cycleMusicState = () => {
             if (this._musicState === 0) {
-                musicSoundInstance.value.pause();
-            } else if (this._musicState === 1) {
                 musicSoundInstance.value.resume();
+            } else if (this._musicState === 1) {
+                musicSoundInstance.value.pause();
             }
             this._musicState = (this._musicState + 1) % 2;
         };
