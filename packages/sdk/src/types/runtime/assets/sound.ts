@@ -37,7 +37,7 @@ export class Sound extends Asset implements SoundLike, Patchable<AssetLike> {
 		super(manager, def);
 
 		if (!def.sound) {
-			throw new Error("Cannot construct sound from non-texture definition");
+			throw new Error("Cannot construct sound from non-sound definition");
 		}
 
 		if (def.sound.uri) {

@@ -44,7 +44,7 @@ import {
 	RigidBodyCommands,
 	SetAnimationState,
 	SetBehavior,
-	SetSoundState,
+	SetMediaState,
 	UserUpdate,
 } from '../network/payloads';
 
@@ -52,13 +52,13 @@ import { log } from '../../log';
 import * as Protocols from '../../protocols';
 import { Execution } from '../../protocols/execution';
 import { Handshake } from '../../protocols/handshake';
-import { SetSoundStateOptions, SoundCommand } from '../../sound';
+import { MediaCommand, SetMediaStateOptions } from '../../sound';
 import resolveJsonValues from '../../utils/resolveJsonValues';
 import safeGet from '../../utils/safeAccessPath';
 import { createForwardPromise, ForwardPromise } from '../forwardPromise';
 import { OperatingModel } from '../network/operatingModel';
 import { Patchable } from '../patchable';
-import { SoundInstance } from '../runtime/soundInstance';
+import { MediaInstance } from '../runtime/mediaInstance';
 
 /**
  * @hidden
@@ -274,22 +274,22 @@ export class InternalContext {
 		}
 	}
 
-	public setSoundState(
-		soundInstance: SoundInstance,
-		command: SoundCommand,
-		options?: SetSoundStateOptions,
+	public setMediaState(
+		mediaInstance: MediaInstance,
+		command: MediaCommand,
+		options?: SetMediaStateOptions,
 		soundAssetId?: string,
 		startTimeOffset?: number
 	) {
 		this.protocol.sendPayload({
-			type: 'set-sound-state',
-			id: soundInstance.id,
-			actorId: soundInstance.actor.id,
+			type: 'set-media-state',
+			id: mediaInstance.id,
+			actorId: mediaInstance.actor.id,
 			soundAssetId,
-			soundCommand: command,
+			mediaCommand: command,
 			options,
 			startTimeOffset
-		} as SetSoundState);
+		} as SetMediaState);
 	}
 
 	public animateTo(

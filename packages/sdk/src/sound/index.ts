@@ -3,5 +3,5 @@
  * Licensed under the MIT License.
  */
 
-export * from './setSoundStateOptions';
-export * from './soundCommand';
+export * from './mediaCommand';
+export * from './setMediaStateOptions';

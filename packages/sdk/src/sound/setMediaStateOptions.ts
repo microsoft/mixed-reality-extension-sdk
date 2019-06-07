@@ -4,9 +4,9 @@
  */
 
 /**
- * Parameters to the `Sound.setSoundState` and `Actor.startSound` calls.
+ * Parameters to the `MediaInstance.setState`, `Actor.startSound`, and `Actor.startVideoStream` calls.
  */
-export type SetSoundStateOptions = {
+export type SetMediaStateOptions = {
 	/**
 	 * pitch offset in halftones (0=default, 12=one octave higher, -12=one octave lower)
 	 */
@@ -29,7 +29,8 @@ export type SetSoundStateOptions = {
 
 	/**
 	 * the amount that sound pitch is modified when moving towards/away from sound source.
-	 * For music and speech, set this to 0, but for regular objects set to 1.0 or higher (up to 5.0). Default to 1.0
+	 * For music and speech, set this to 0, but for regular objects set to 1.0 or higher (up to 5.0). Default to 1.0.
+	 * Does not apply for video streams
 	 */
 	doppler?: number;
 
@@ -51,4 +52,15 @@ export type SetSoundStateOptions = {
 	 */
 	rolloffStartDistance?: number;
 
+	/**
+	 * The media should start at, or seek this many seconds into the media.
+	 * Time is in seconds relative to start of clip.
+	 */
+		Time?: number;
+
+	/**
+	 * Should the video stream be visible or invisible
+	 * Does not apply to sounds, only to video streams
+	 */
+	Visible?: boolean;
 };

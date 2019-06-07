@@ -5,7 +5,18 @@
 
 import UUID from 'uuid/v4';
 
-import { Asset, AssetGroup, Material, MaterialLike, Sound, SoundLike, Texture, TextureLike } from '.';
+import {
+	Asset,
+	AssetGroup,
+	Material,
+	MaterialLike,
+	Sound,
+	SoundLike,
+	Texture,
+	TextureLike,
+	VideoStream,
+	VideoStreamLike
+} from '.';
 import { Context } from '..';
 import { log } from '../../../log';
 import { ExportedPromise } from '../../../utils/exportedPromise';
@@ -91,6 +102,20 @@ export class AssetManager {
 			id: UUID(),
 			name,
 			sound: resolveJsonValues(definition)
+		}));
+	}
+
+	/**
+	 * preload a video stream and generate a new video stream asset
+	 * @param name The new stream's name
+	 * @param definition The initial video stream properties. The `uri` property is required.
+	 */
+	public createVideoStream(name: string, definition: Partial<VideoStreamLike>): ForwardPromise<VideoStream> {
+
+		return this.sendCreateAsset(new VideoStream(this, {
+			id: UUID(),
+			name,
+			videoStream: resolveJsonValues(definition)
 		}));
 	}
 

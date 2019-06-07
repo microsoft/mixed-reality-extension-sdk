@@ -33,9 +33,10 @@ import {
 	SetAnimationStateOptions,
 	Vector3Like
 } from '../..';
+
 import { ZeroGuid } from '../../constants';
 import { log } from '../../log';
-import { SetSoundStateOptions } from '../../sound';
+import { SetMediaStateOptions } from '../../sound';
 import { observe, unobserve } from '../../utils/observe';
 import readPath from '../../utils/readPath';
 import resolveJsonValues from '../../utils/resolveJsonValues';
@@ -45,8 +46,8 @@ import { CreateColliderType } from '../network/payloads';
 import { SubscriptionType } from '../network/subscriptionType';
 import { Patchable } from '../patchable';
 import { ActionHandler, ActionState, Behavior, DiscreteAction } from './behaviors';
+import { MediaInstance } from './mediaInstance';
 import { BoxColliderGeometry, ColliderGeometry, SphereColliderGeometry } from './physics';
-import { SoundInstance } from './soundInstance';
 
 /**
  * Describes the properties of an Actor.
@@ -509,9 +510,21 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	 * @param startTimeOffset How many seconds to offset into the sound
 	 */
 	public startSound(
-		soundAssetId: string, options: SetSoundStateOptions,
-		startTimeOffset?: number): ForwardPromise<SoundInstance> {
-		return new SoundInstance(this, soundAssetId).start(options, startTimeOffset);
+		soundAssetId: string, options: SetMediaStateOptions,
+		startTimeOffset?: number): ForwardPromise<MediaInstance> {
+		return new MediaInstance(this, soundAssetId).start(options, startTimeOffset);
+	}
+
+	/**
+	 * Starts playing a preloaded video stream.
+	 * @param videoStreamAssetId Name of video stream asset preloaded using AssetManager.
+	 * @param options Adjustments to pitch and volume, and other characteristics.
+	 * @param startTimeOffset How many seconds to offset into the sound
+	 */
+	public startVideoStream(
+		videoStreamAssetId: string, options: SetMediaStateOptions,
+		startTimeOffset?: number): ForwardPromise<MediaInstance> {
+		return new MediaInstance(this, videoStreamAssetId).start(options, startTimeOffset);
 	}
 
 	/**

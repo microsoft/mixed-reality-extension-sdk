@@ -17,7 +17,9 @@ type Video = { url: string; basisTime: number };
 type VideoList = { [actorId: string]: Video };
 
 /**
- * The main class of this app. All the logic goes here.
+ * @deprecated
+ * This VideoPlayerManager is deprecated and will be removed in the future
+ * Instead, please use AssetManager.createVideoStream() and Actor.startVideoStream()
  */
 
 export class VideoPlayerManager {

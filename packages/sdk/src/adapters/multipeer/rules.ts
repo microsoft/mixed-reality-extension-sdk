@@ -7,7 +7,7 @@ import deepmerge from 'deepmerge';
 import { Client, Session, SynchronizationStage } from '.';
 import { Message, WebSocket } from '../..';
 import { log } from '../../log';
-import { SoundCommand } from '../../sound';
+import { MediaCommand } from '../../sound';
 import * as Payloads from '../../types/network/payloads';
 import { ExportedPromise } from '../../utils/exportedPromise';
 
@@ -270,7 +270,7 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 						(value.message.payload as Payloads.ActorUpdate).actor.id === payload.actorId).shift();
 				if (queuedMessage) {
 					const existingPayload = queuedMessage.message.payload as Partial<Payloads.ActorUpdate>;
-					existingPayload.actor = deepmerge(existingPayload.actor,  {
+					existingPayload.actor = deepmerge(existingPayload.actor, {
 						payload: {
 							actor: {
 								transform: {
@@ -929,17 +929,17 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 	},
 
 	// ========================================================================
-	'set-sound-state': {
+	'set-media-state': {
 		...DefaultRule,
 		synchronization: {
-			stage: 'active-sound-instances',
+			stage: 'active-media-instances',
 			before: 'ignore',
 			during: 'queue',
 			after: 'allow'
 		},
 		client: {
 			...DefaultRule.client,
-			shouldSendToUser: (message: Message<Payloads.SetSoundState>, userId, session, client) => {
+			shouldSendToUser: (message: Message<Payloads.SetMediaState>, userId, session, client) => {
 				const exclusiveUser = session.actorSet[message.payload.actorId].exclusiveToUser;
 				return exclusiveUser ? exclusiveUser === userId : null;
 			}
@@ -948,52 +948,52 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 			...DefaultRule.session,
 			beforeReceiveFromApp: (
 				session: Session,
-				message: Message<Payloads.SetSoundState>
+				message: Message<Payloads.SetMediaState>
 			) => {
 				const syncActor = session.actorSet[message.payload.actorId];
 				if (syncActor) {
-					syncActor.activeSoundInstances = syncActor.activeSoundInstances || [];
+					syncActor.activeMediaInstances = syncActor.activeMediaInstances || [];
 
 					const basisTime = Date.now() / 1000.0;
-					if (message.payload.soundCommand === SoundCommand.Start) {
-						syncActor.activeSoundInstances.push({ message, basisTime });
+					if (message.payload.mediaCommand === MediaCommand.Start) {
+						syncActor.activeMediaInstances.push({ message, basisTime });
 					} else {
 						// find the existing message that needs to be updated
-						const activeSoundInstance = syncActor.activeSoundInstances.filter(
+						const activeMediaInstance = syncActor.activeMediaInstances.filter(
 							item => item.message.payload.id === message.payload.id).shift();
 
 						// if sound expired then skip this message completely
-						if (!activeSoundInstance) {
+						if (!activeMediaInstance) {
 							return undefined;
 						}
 						// Remove the existing sound instance (we'll add an updated one below).
-						syncActor.activeSoundInstances =
-							syncActor.activeSoundInstances.filter(
+						syncActor.activeMediaInstances =
+							syncActor.activeMediaInstances.filter(
 								item => item.message.payload.id !== message.payload.id);
 
 						// store the updated sound instance if sound isn't stopping
-						if (message.payload.soundCommand !== SoundCommand.Stop) {
+						if (message.payload.mediaCommand !== MediaCommand.Stop) {
 
 							// update startimeoffset and update basistime in oldmessage.
 							const targetTime = Date.now() / 1000.0;
-							if (activeSoundInstance.message.payload.options.paused !== true) {
-								let timeOffset = (targetTime - activeSoundInstance.basisTime);
-								if (activeSoundInstance.message.payload.options.pitch !== undefined) {
+							if (activeMediaInstance.message.payload.options.paused !== true) {
+								let timeOffset = (targetTime - activeMediaInstance.basisTime);
+								if (activeMediaInstance.message.payload.options.pitch !== undefined) {
 									timeOffset *= Math.pow(2.0,
-										(activeSoundInstance.message.payload.options.pitch / 12.0));
+										(activeMediaInstance.message.payload.options.pitch / 12.0));
 								}
-								if (activeSoundInstance.message.payload.startTimeOffset === undefined) {
-									activeSoundInstance.message.payload.startTimeOffset = 0.0;
+								if (activeMediaInstance.message.payload.startTimeOffset === undefined) {
+									activeMediaInstance.message.payload.startTimeOffset = 0.0;
 								}
-								activeSoundInstance.message.payload.startTimeOffset += timeOffset;
+								activeMediaInstance.message.payload.startTimeOffset += timeOffset;
 							}
 
 							// merge existing message and new message
-							activeSoundInstance.message.payload.options = {
-								...activeSoundInstance.message.payload.options,
+							activeMediaInstance.message.payload.options = {
+								...activeMediaInstance.message.payload.options,
 								...message.payload.options
 							};
-							syncActor.activeSoundInstances.push({ message: activeSoundInstance.message, basisTime });
+							syncActor.activeMediaInstances.push({ message: activeMediaInstance.message, basisTime });
 						}
 					}
 
