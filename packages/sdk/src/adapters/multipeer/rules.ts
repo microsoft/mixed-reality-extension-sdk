@@ -992,41 +992,6 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
     },
 
     // ========================================================================
-    'update-subscriptions': {
-        ...DefaultRule,
-        synchronization: {
-            stage: 'create-actors',
-            before: 'ignore',
-            during: 'queue',
-            after: 'allow'
-        },
-        client: {
-            ...DefaultRule.client,
-            shouldSendToUser: (message: Message<Payloads.UpdateSubscriptions>, userId, session, client) => {
-                const exclusiveUser = session.actorSet[message.payload.id].exclusiveToUser;
-                return exclusiveUser ? exclusiveUser === userId : null;
-            }
-        },
-        session: {
-            ...DefaultRule.session,
-            beforeReceiveFromApp: (
-                session: Session,
-                message: Message<Payloads.UpdateSubscriptions>
-            ) => {
-                const syncActor = session.actorSet[message.payload.id];
-                if (syncActor) {
-                    syncActor.initialization.message.payload.actor.subscriptions =
-                        (syncActor.initialization.message.payload.actor.subscriptions || []).filter(
-                            subscription => message.payload.removes.indexOf(subscription) < 0);
-                    syncActor.initialization.message.payload.actor.subscriptions.push(
-                        ...message.payload.adds);
-                }
-                return message;
-            }
-        }
-    },
-
-    // ========================================================================
     'user-joined': {
         ...ClientOnlyRule,
         session: {

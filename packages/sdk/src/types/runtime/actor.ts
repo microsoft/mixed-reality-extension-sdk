@@ -199,8 +199,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
      * @param options.actor The initial state of the actor.
      */
     public static CreateEmpty(context: Context, options?: {
-        actor?: Partial<ActorLike>,
-        subscriptions?: SubscriptionType[]
+        actor?: Partial<ActorLike>
     }): ForwardPromise<Actor> {
         return context.internal.CreateEmpty(options);
     }
@@ -218,8 +217,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
         resourceUrl: string,
         assetName?: string,
         colliderType?: CreateColliderType,
-        actor?: Partial<ActorLike>,
-        subscriptions?: SubscriptionType[]
+        actor?: Partial<ActorLike>
     }): ForwardPromise<Actor> {
         return context.internal.CreateFromGltf(options);
     }
@@ -232,8 +230,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
         resourceUrl: string,
         assetName?: string,
         colliderType?: CreateColliderType,
-        actor?: Partial<ActorLike>,
-        subscriptions?: SubscriptionType[]
+        actor?: Partial<ActorLike>
     }): ForwardPromise<Actor> {
         return context.internal.CreateFromGltf(options);
     }
@@ -247,8 +244,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
      */
     public static CreateFromLibrary(context: Context, options: {
         resourceId: string,
-        actor?: Partial<ActorLike>,
-        subscriptions?: SubscriptionType[]
+        actor?: Partial<ActorLike>
     }): ForwardPromise<Actor> {
         return context.internal.CreateFromLibrary(options);
     }
@@ -263,8 +259,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
     public static CreatePrimitive(context: Context, options: {
         definition: PrimitiveDefinition,
         addCollider?: boolean,
-        actor?: Partial<ActorLike>,
-        subscriptions?: SubscriptionType[]
+        actor?: Partial<ActorLike>
     }): ForwardPromise<Actor> {
         return context.internal.CreatePrimitive(options);
     }
@@ -278,8 +273,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
      */
     public static CreateFromPrefab(context: Context, options: {
         prefabId: string,
-        actor?: Partial<ActorLike>,
-        subscriptions?: SubscriptionType[]
+        actor?: Partial<ActorLike>
     }): ForwardPromise<Actor> {
         return context.internal.CreateFromPrefab(options);
     }
@@ -468,10 +462,8 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
      * @param subscription The type of subscription to add.
      */
     public subscribe(subscription: SubscriptionType) {
-        return this.updateSubscriptions({
-            adds: [subscription],
-            removes: []
-        });
+        this._subscriptions.push(subscription);
+        this.actorChanged('subscriptions');
     }
 
     /**
@@ -479,21 +471,8 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
      * @param subscription The type of subscription to remove.
      */
     public unsubscribe(subscription: SubscriptionType) {
-        return this.updateSubscriptions({
-            adds: [],
-            removes: [subscription]
-        });
-    }
-
-    private updateSubscriptions(options: {
-        adds?: SubscriptionType | SubscriptionType[],
-        removes?: SubscriptionType | SubscriptionType[]
-    }) {
-        const adds = options.adds ? Array.isArray(options.adds) ? options.adds : [options.adds] : [];
-        const removes = options.removes ? Array.isArray(options.removes) ? options.removes : [options.removes] : [];
-        this._subscriptions = this._subscriptions.filter(subscription => removes.indexOf(subscription) < 0);
-        this._subscriptions.push(...adds);
-        this.context.internal.updateSubscriptions(this.id, options);
+        this._subscriptions = this._subscriptions.filter(value => value !== subscription);
+        this.actorChanged('subscriptions');
     }
 
     /**

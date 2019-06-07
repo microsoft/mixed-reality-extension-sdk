@@ -45,7 +45,6 @@ import {
     SetAnimationState,
     SetBehavior,
     SetSoundState,
-    UpdateSubscriptions,
     UserUpdate,
 } from '../network/payloads';
 
@@ -82,12 +81,10 @@ export class InternalContext {
     }
 
     public CreateEmpty(options?: {
-        actor?: Partial<ActorLike>,
-        subscriptions?: SubscriptionType[]
+        actor?: Partial<ActorLike>
     }): ForwardPromise<Actor> {
         options = { ...options };
         options = {
-            subscriptions: [],
             ...options,
             actor: {
                 ...options.actor,
@@ -105,12 +102,10 @@ export class InternalContext {
         resourceUrl: string,
         assetName?: string,
         colliderType?: CreateColliderType,
-        actor?: Partial<ActorLike>,
-        subscriptions?: SubscriptionType[]
+        actor?: Partial<ActorLike>
     }): ForwardPromise<Actor> {
         options = { ...options };
         options = {
-            subscriptions: [],
             colliderType: 'none',
             ...options,
             actor: {
@@ -127,12 +122,10 @@ export class InternalContext {
 
     public CreateFromLibrary(options: {
         resourceId: string,
-        actor?: Partial<ActorLike>,
-        subscriptions?: SubscriptionType[]
+        actor?: Partial<ActorLike>
     }): ForwardPromise<Actor> {
         options = { ...options };
         options = {
-            subscriptions: [],
             ...options,
             actor: {
                 ...options.actor,
@@ -149,12 +142,10 @@ export class InternalContext {
     public CreatePrimitive(options: {
         definition: PrimitiveDefinition,
         addCollider?: boolean,
-        actor?: Partial<ActorLike>,
-        subscriptions?: SubscriptionType[]
+        actor?: Partial<ActorLike>
     }): ForwardPromise<Actor> {
         options = { ...options };
         options = {
-            subscriptions: [],
             addCollider: false,
             ...options,
             actor: {
@@ -171,12 +162,10 @@ export class InternalContext {
 
     public CreateFromPrefab(options: {
         prefabId: string,
-        actor?: Partial<ActorLike>,
-        subscriptions?: SubscriptionType[]
+        actor?: Partial<ActorLike>
     }): ForwardPromise<Actor> {
         options = { ...options };
         options = {
-            subscriptions: [],
             ...options,
             actor: {
                 ...options.actor,
@@ -325,26 +314,6 @@ export class InternalContext {
                 curve,
                 enabled: true
             } as InterpolateActor);
-        }
-    }
-
-    public updateSubscriptions(
-        actorId: string,
-        options: {
-            adds?: SubscriptionType | SubscriptionType[],
-            removes?: SubscriptionType | SubscriptionType[]
-        }
-    ) {
-        const actor = this.actorSet[actorId];
-        if (actor) {
-            this.protocol.sendPayload({
-                type: 'update-subscriptions',
-                id: actorId,
-                adds: options.adds,
-                removes: options.removes
-            } as UpdateSubscriptions);
-        } else {
-            log.error('app', `Failed to update subscriptions. Actor ${actorId} not found.`);
         }
     }
 
