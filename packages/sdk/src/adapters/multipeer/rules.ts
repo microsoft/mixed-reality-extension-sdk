@@ -257,35 +257,74 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
             beforeQueueMessageForClient: (
                 session: Session,
                 client: Client,
-                message: Message,
+                message: Message<Payloads.ActorCorrection>,
                 promise: ExportedPromise
             ) => {
-                message.payload.type = 'actor-update';
-                client.queueMessage(message, promise);
-                return undefined;
+                // Coalesce this update with the previously queued update if it exists, maintaining a single
+                // update for this actor rather than queuing a series of them.
+                const payload = message.payload;
+                const queuedMessage = client.queuedMessages
+                    .filter(value =>
+                        value.message.payload.type === 'actor-update' &&
+                        (value.message.payload as Payloads.ActorUpdate).actor.id === payload.actorId).shift();
+                if (queuedMessage) {
+                    const existingPayload = queuedMessage.message.payload as Partial<Payloads.ActorUpdate>;
+                    existingPayload.actor = deepmerge(existingPayload.actor,  {
+                        payload: {
+                            actor: {
+                                transform: {
+                                    app: message.payload.appTransform
+                                }
+                            }
+                        }
+                    });
+                    return undefined;
+                }
+                return message;
             }
         },
         session: {
             ...DefaultRule.session,
-            // For now, whenever we encounter an actor-correction, convert it to an actor-update.
-            // Later this message type might be utilized to indicate that actor values should be
-            // interpolated rather than overwritten.
-            beforeReceiveFromApp: (
-                session: Session,
-                message: Message<Payloads.ActorUpdate>
-            ) => {
-                message.payload.type = 'actor-update';
-                session.preprocessFromApp(message);
-                return undefined;
-            },
             beforeReceiveFromClient: (
                 session: Session,
                 client: Client,
-                message: Message<Payloads.ActorUpdate>
+                message: Message<Payloads.ActorCorrection>
             ) => {
-                message.payload.type = 'actor-update';
-                session.preprocessFromClient(client, message);
-                return undefined;
+                const syncActor = session.actorSet[message.payload.actorId];
+                if (syncActor && (client.authoritative || syncActor.grabbedBy === client.id)) {
+                    const correctionPayload = message.payload;
+
+                    // Synthesize an actor update message and add in the transform from the correction payload.
+                    // Send this to the cacheActorUpdateMessage call.
+                    const updateMessage: Message<Payloads.ActorUpdate> = {
+                        payload: {
+                            actor: {
+                                transform: {
+                                    app: correctionPayload.appTransform
+                                }
+                            }
+                        }
+                    };
+
+                    // Merge the update into the existing actor.
+                    session.cacheActorUpdateMessage(updateMessage);
+
+                    // Sync the change to the other clients.
+                    session.sendPayloadToClients(correctionPayload, (value) => value.id !== client.id);
+
+                    // Determine whether to forward the message to the app based on subscriptions.
+                    let shouldSendToApp = false;
+                    const subscriptions = syncActor.initialization.message.payload.actor.subscriptions || [];
+                    if (correctionPayload.appTransform &&
+                        Object.keys(correctionPayload.appTransform) &&
+                        subscriptions.includes('transform')) {
+                        shouldSendToApp = true;
+                    }
+
+                    // If we should sent to the app, then send the synthesized actor update instead, as correction
+                    // messages are just for clients.
+                    return shouldSendToApp ? updateMessage : undefined;
+                }
             }
         }
     },
