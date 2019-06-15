@@ -23,6 +23,7 @@ export interface RigidBodyLike {
     detectCollisions: boolean;
     collisionDetectionMode: CollisionDetectionMode;
     useGravity: boolean;
+    isKinematic: boolean;
     constraints: RigidBodyConstraints[];
 }
 
@@ -38,6 +39,7 @@ export class RigidBody implements RigidBodyLike {
     public detectCollisions = true;
     public collisionDetectionMode = CollisionDetectionMode.Discrete;
     public useGravity = true;
+    public isKinematic = false;
 
     /**
      * PUBLIC ACCESSORS
@@ -78,6 +80,7 @@ export class RigidBody implements RigidBodyLike {
         if (from.detectCollisions !== undefined) this.detectCollisions = from.detectCollisions;
         if (from.collisionDetectionMode !== undefined) this.collisionDetectionMode = from.collisionDetectionMode;
         if (from.useGravity !== undefined) this.useGravity = from.useGravity;
+        if (from.isKinematic !== undefined) this.isKinematic = from.isKinematic;
         if (from.constraints !== undefined) this.constraints = from.constraints;
         return this;
     }
@@ -91,6 +94,7 @@ export class RigidBody implements RigidBodyLike {
             detectCollisions: this.detectCollisions,
             collisionDetectionMode: this.collisionDetectionMode,
             useGravity: this.useGravity,
+            isKinematic: this.isKinematic,
             constraints: this.constraints,
         } as RigidBodyLike;
     }
