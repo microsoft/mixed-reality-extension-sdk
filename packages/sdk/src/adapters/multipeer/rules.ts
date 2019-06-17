@@ -260,8 +260,9 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
                 message: Message<Payloads.ActorCorrection>,
                 promise: ExportedPromise
             ) => {
-                // Coalesce this update with the previously queued update if it exists, maintaining a single
-                // update for this actor rather than queuing a series of them.
+                // Coalesce this actor correction with the previously queued update if it exists, maintaining a single
+                // update for this actor rather than queuing a series of them.  This is fine, as we do not need to lerp
+                // an actor correction on a late join user.  It can just be the updated actor values.
                 const payload = message.payload;
                 const queuedMessage = client.queuedMessages
                     .filter(value =>
