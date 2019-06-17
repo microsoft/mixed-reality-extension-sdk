@@ -15,8 +15,8 @@ process.on('uncaughtException', (err) => console.log('uncaughtException', err));
 process.on('unhandledRejection', (reason) => console.log('unhandledRejection', reason));
 
 MRE.log.enable('app');
-MRE.log.enable('network');
-MRE.log.enable('network-content');
+// MRE.log.enable('network');
+// MRE.log.enable('network-content');
 
 // Start listening for connections, and serve static files
 const server = new MRE.WebHost({
