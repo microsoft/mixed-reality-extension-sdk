@@ -279,6 +279,9 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
                             }
                         }
                     });
+
+                    // We have merged the actor correction in to an existing actor update.  We do not want to
+                    // propagate the correction message further.
                     return undefined;
                 }
                 return message;
@@ -357,6 +360,9 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
                 if (queuedMessage) {
                     const existingPayload = queuedMessage.message.payload as Partial<Payloads.ActorUpdate>;
                     existingPayload.actor = deepmerge(existingPayload.actor, payload.actor);
+
+                    // We have merged the actor update in to an existing actor update.  We do not want to
+                    // propagate the update message further.
                     return undefined;
                 }
                 return message;
