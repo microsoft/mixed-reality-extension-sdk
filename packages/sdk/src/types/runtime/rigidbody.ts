@@ -35,7 +35,7 @@ export interface RigidBodyLike {
     useGravity: boolean;
     /** 
      * Whether the rigid body is kinematic.  Note kinematic rigid bodies participate in collisions,
-     * but are not simulated by the rigid body.  This is usefull for objects that should collide with
+     * but are not simulated by the rigid body.  This is useful for objects that should collide with
      * other objects, but you want to control the position/rotation manually or animate them.
      */
     isKinematic: boolean;
@@ -96,7 +96,7 @@ export class RigidBody implements RigidBodyLike {
      */
 
     /**
-     * INTERNAL USE ONLY.
+     * @hidden
      * Creates a new RigidBody instance.
      * @param $owner The owning actor instance. Field name is prefixed with a dollar sign so that it is ignored by
      * the actor patch detection system.
