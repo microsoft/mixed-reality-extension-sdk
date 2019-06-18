@@ -17,12 +17,14 @@ export default class GltfGenTest extends Test {
     public async run(root: MRE.Actor): Promise<boolean> {
         const spherePrim = new GltfGen.Sphere(0.5);
         spherePrim.material = new GltfGen.Material({
+            baseColorFactor: new MRE.Color4(1, 1, 1, 0.7),
             baseColorTexture: new GltfGen.Texture({
                 source: new GltfGen.Image({
                     embeddedFilePath: resolve(__dirname, '../../public/uv-grid.png')
                     // uri: `${this.baseUrl}/uv-grid.png` // alternate form (don't embed)
                 })
-            })
+            }),
+            alphaMode: GltfGen.AlphaMode.Blend
         });
         const gltfFactory = new GltfGen.GltfFactory([new GltfGen.Scene({
             nodes: [new GltfGen.Node({
