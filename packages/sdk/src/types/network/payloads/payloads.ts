@@ -7,10 +7,9 @@ import { OperationResultCode, Trace } from '..';
 import { CreateAnimationOptions, SetAnimationStateOptions } from '../../..';
 import { SetSoundStateOptions, SoundCommand } from '../../../sound';
 import { PrimitiveDefinition } from '../../primitiveTypes';
-import { ActorLike, ColliderType, UserLike } from '../../runtime';
+import { ActorLike, ColliderType, TransformLike, UserLike } from '../../runtime';
 import { ActionState, BehaviorType } from '../../runtime/behaviors';
 import { OperatingModel } from '../operatingModel';
-import { SubscriptionType } from '../subscriptionType';
 
 /**
  * @hidden
@@ -222,11 +221,21 @@ export type ObjectSpawned = Payload & {
 
 /**
  * @hidden
- * Bi-directional. Changed properties of an actor object (sparely populated).
+ * Bi-directional. Changed properties of an actor object (sparsely populated).
  */
 export type ActorUpdate = Payload & {
-    type: 'actor-update' | 'actor-correction';
+    type: 'actor-update';
     actor: Partial<ActorLike>;
+};
+
+/**
+ * @hidden
+ * Engine to app.  Actor correction that should be lerped on the other clients.
+ */
+export type ActorCorrection = Payload & {
+    type: 'actor-correction';
+    actorId: string;
+    appTransform: TransformLike;
 };
 
 /**
