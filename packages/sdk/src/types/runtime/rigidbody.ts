@@ -33,7 +33,7 @@ export interface RigidBodyLike {
     collisionDetectionMode: CollisionDetectionMode;
     /** Whether the rigid body is affected by gravity. */
     useGravity: boolean;
-    /** 
+    /**
      * Whether the rigid body is kinematic.  Note kinematic rigid bodies participate in collisions,
      * but are not simulated by the rigid body.  This is useful for objects that should collide with
      * other objects, but you want to control the position/rotation manually or animate them.
