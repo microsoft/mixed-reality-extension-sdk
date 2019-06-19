@@ -82,7 +82,7 @@ export class AssetManager {
 
     /**
      * Load an audio file and generate a new sound asset
-     * @param name The new texture's name
+     * @param name The new sound's name
      * @param definition The initial sound properties. The `uri` property is required.
      */
     public createSound(name: string, definition: Partial<SoundLike>): ForwardPromise<Sound> {
