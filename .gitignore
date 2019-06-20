@@ -332,8 +332,6 @@ built
 npm-debug.log
 lerna-debug.log
 .openode
-Dockerfile
-docker-compose.yml
 
 # dotenv environment configuration files
 .env
