@@ -105,7 +105,7 @@ export class AssetManager {
             });
         const promise = this.sendLoadAssetsPayload({
             type: 'create-asset',
-            definition: asset
+            definition: resolveJsonValues(asset)
         } as CreateAsset)
             .then<T>(payload => {
                 if (payload.failureMessage || payload.assets.length !== 1) {
