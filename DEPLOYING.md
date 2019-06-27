@@ -37,6 +37,8 @@ On a command line
 * cd to the folder where you unzipped ngrok.exe
 * run the command `ngrok http 3901`
 
+Note the forwarding address from the nkgrok command above. In order to properly serve assets, you will need to update the WebHost's baseUrl (in server.ts in the sample code) to match this forwarding address.
+
 ## Deploy to a Free or Low-Cost Cloud Service
 
 There are many free or low-cost cloud hosting services available. We list but a
