@@ -20,7 +20,7 @@ const CurrentSDKVersion = semver.coerce(require('../../package.json').version);
  * update client libraries regularly, this one is not a big deal to update.
  */
 // tslint:disable-next-line:variable-name
-const MinimumSupportedClientVersion = semver.coerce('0.10');
+const MinimumSupportedClientVersion = semver.coerce('0.11');
 
 /**
  * @hidden
