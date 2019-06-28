@@ -257,6 +257,16 @@ export class Session extends EventEmitter {
             // Merge the update into the existing actor.
             syncActor.initialization.message.payload.actor
                 = deepmerge(syncActor.initialization.message.payload.actor, message.payload.actor);
+
+            // strip out transform data that wasn't updated
+            // so it doesn't desync from the updated one
+            const cacheTransform = syncActor.initialization.message.payload.actor.transform;
+            const patchTransform = message.payload.actor.transform;
+            if (patchTransform && !patchTransform.local) {
+                cacheTransform.local = undefined;
+            } else if (patchTransform && !patchTransform.app) {
+                cacheTransform.app = undefined;
+            }
         }
     }
 
