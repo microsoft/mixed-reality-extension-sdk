@@ -41,13 +41,22 @@ export default class TransformTest extends Test {
         } as Partial<MRE.ActorLike>;
 
         // note: the altspace kit cube is 20cm to a side, and the testbed cube matches
-        const cube2 = await MRE.Actor.CreateFromLibrary(this.app.context, {
-            resourceId: 'artifact:989569229617365197',
-            actor: cube2actor
-        }).catch(() => MRE.Actor.CreateFromLibrary(this.app.context, {
-            resourceId: 'cube_20cm',
-            actor: cube2actor
-        })).catch(() => cube1);
+        let cube2: MRE.Actor;
+        try {
+            cube2 = await MRE.Actor.CreateFromLibrary(this.app.context, {
+                resourceId: 'artifact:989569229617365197',
+                actor: cube2actor
+            });
+        } catch (_) {
+            try {
+                cube2 = await MRE.Actor.CreateFromLibrary(this.app.context, {
+                    resourceId: 'cube_20cm',
+                    actor: cube2actor
+                });
+            } catch (_) {
+                cube2 = cube1;
+            }
+        }
 
         const cube3 = MRE.Actor.CreateFromGltf(this.app.context, {
             resourceUrl: `${this.baseUrl}/cube_4m.glb`,
