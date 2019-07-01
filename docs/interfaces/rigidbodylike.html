@@ -62,6 +62,13 @@
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Describes the properties of a Rigid Body</p>
+					</div>
+				</div>
+			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
@@ -88,6 +95,7 @@
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="rigidbodylike.html#constraints" class="tsd-kind-icon">constraints</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="rigidbodylike.html#detectcollisions" class="tsd-kind-icon">detect<wbr>Collisions</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="rigidbodylike.html#enabled" class="tsd-kind-icon">enabled</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="rigidbodylike.html#iskinematic" class="tsd-kind-icon">is<wbr>Kinematic</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="rigidbodylike.html#mass" class="tsd-kind-icon">mass</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="rigidbodylike.html#usegravity" class="tsd-kind-icon">use<wbr>Gravity</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="rigidbodylike.html#velocity" class="tsd-kind-icon">velocity</a></li>
@@ -104,9 +112,14 @@
 					<div class="tsd-signature tsd-kind-icon">angular<wbr>Velocity<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="vector3like.html" class="tsd-signature-type">Vector3Like</a><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in types/runtime/rigidbody.ts:21</li>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/6147012/packages/sdk/src/types/runtime/rigidbody.ts#L27">types/runtime/rigidbody.ts:27</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The angular velocity of the rigid body.</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="collisiondetectionmode" class="tsd-anchor"></a>
@@ -114,9 +127,14 @@
 					<div class="tsd-signature tsd-kind-icon">collision<wbr>Detection<wbr>Mode<span class="tsd-signature-symbol">:</span> <a href="../enums/collisiondetectionmode.html" class="tsd-signature-type">CollisionDetectionMode</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in types/runtime/rigidbody.ts:24</li>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/6147012/packages/sdk/src/types/runtime/rigidbody.ts#L33">types/runtime/rigidbody.ts:33</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The collision detection mode to use with this rigid body.  @see CollisionDetectionMode for options.</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="constraints" class="tsd-anchor"></a>
@@ -124,9 +142,14 @@
 					<div class="tsd-signature tsd-kind-icon">constraints<span class="tsd-signature-symbol">:</span> <a href="../enums/rigidbodyconstraints.html" class="tsd-signature-type">RigidBodyConstraints</a><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in types/runtime/rigidbody.ts:26</li>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/6147012/packages/sdk/src/types/runtime/rigidbody.ts#L43">types/runtime/rigidbody.ts:43</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The constraints that the rigid body is bound by.  @see RigidBodyConstraints for options.</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="detectcollisions" class="tsd-anchor"></a>
@@ -134,9 +157,14 @@
 					<div class="tsd-signature tsd-kind-icon">detect<wbr>Collisions<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in types/runtime/rigidbody.ts:23</li>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/6147012/packages/sdk/src/types/runtime/rigidbody.ts#L31">types/runtime/rigidbody.ts:31</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Whether to detect collisions with this rigid body.</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="enabled" class="tsd-anchor"></a>
@@ -144,9 +172,31 @@
 					<div class="tsd-signature tsd-kind-icon">enabled<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in types/runtime/rigidbody.ts:19</li>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/6147012/packages/sdk/src/types/runtime/rigidbody.ts#L23">types/runtime/rigidbody.ts:23</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Whether the rigid body is enabled or not.</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="iskinematic" class="tsd-anchor"></a>
+					<h3>is<wbr>Kinematic</h3>
+					<div class="tsd-signature tsd-kind-icon">is<wbr>Kinematic<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/6147012/packages/sdk/src/types/runtime/rigidbody.ts#L41">types/runtime/rigidbody.ts:41</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Whether the rigid body is kinematic.  Note kinematic rigid bodies participate in collisions,
+								but are not simulated by the rigid body.  This is useful for objects that should collide with
+							other objects, but you want to control the position/rotation manually or animate them.</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="mass" class="tsd-anchor"></a>
@@ -154,9 +204,14 @@
 					<div class="tsd-signature tsd-kind-icon">mass<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in types/runtime/rigidbody.ts:22</li>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/6147012/packages/sdk/src/types/runtime/rigidbody.ts#L29">types/runtime/rigidbody.ts:29</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The mass of the rigid body.</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="usegravity" class="tsd-anchor"></a>
@@ -164,9 +219,14 @@
 					<div class="tsd-signature tsd-kind-icon">use<wbr>Gravity<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in types/runtime/rigidbody.ts:25</li>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/6147012/packages/sdk/src/types/runtime/rigidbody.ts#L35">types/runtime/rigidbody.ts:35</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Whether the rigid body is affected by gravity.</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="velocity" class="tsd-anchor"></a>
@@ -174,9 +234,14 @@
 					<div class="tsd-signature tsd-kind-icon">velocity<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="vector3like.html" class="tsd-signature-type">Vector3Like</a><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in types/runtime/rigidbody.ts:20</li>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/6147012/packages/sdk/src/types/runtime/rigidbody.ts#L25">types/runtime/rigidbody.ts:25</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The velocity of the rigid body.</p>
+						</div>
+					</div>
 				</section>
 			</section>
 		</div>
@@ -209,6 +274,9 @@
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
 								<a href="rigidbodylike.html#enabled" class="tsd-kind-icon">enabled</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="rigidbodylike.html#iskinematic" class="tsd-kind-icon">is<wbr>Kinematic</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
 								<a href="rigidbodylike.html#mass" class="tsd-kind-icon">mass</a>
