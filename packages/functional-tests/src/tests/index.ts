@@ -18,6 +18,7 @@ import GltfGenTest from './gltf-gen-test';
 import GrabTest from './grab-test';
 import InputTest from './input-test';
 import InterpolationTest from './interpolation-test';
+import LibraryFailTest from './library-fail-test';
 import LightTest from './light-test';
 import LookAtTest from './look-at-test';
 import PhysicsSimTest from './physics-sim-test';
@@ -52,6 +53,7 @@ export const Factories = {
     'grab-test': (...args) => new GrabTest(...args),
     'input-test': (...args) => new InputTest(...args),
     'interpolation-test': (...args) => new InterpolationTest(...args),
+    'library-fail-test': (...args) => new LibraryFailTest(...args),
     'light-test': (...args) => new LightTest(...args),
     'look-at-test': (...args) => new LookAtTest(...args),
     'physics-sim-test': (...args) => new PhysicsSimTest(...args),
