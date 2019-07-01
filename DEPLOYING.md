@@ -146,7 +146,31 @@ Have a hosting service recommendation? Please add it to this doc and submit a PR
 
 ### Microsoft Azure
 
-Coming Soon.
+#### Sign up
+Go to the [Azure website](https://azure.microsoft.com/en-us/free/)
+
+#### Create a new application and deploy with VSCode 
+1. Install and run [Visual Studio Code](https://code.visualstudio.com/)
+2. Install VSCode extension 'Azure App Service'  [ms-azuretools.vscode-azureappservice](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-azureappservice)
+3. Open MRE folder in VSCode 
+4. Pick a globally unique name for your web app and update baseUrl in server.ts with: 
+```js
+const server = new WebHost({
+    baseUrl: 'https://uniquewebappname.azurewebsites.net',
+    port: process.env.PORT, 
+});
+```
+5. Build your MRE application
+6. Open Azure tab in VSCode and sign in with your Azure account
+7. Click Deploy to WebApp..
+8. Create new WebApp if deploying for the first time or pick an existing app from the dropdown
+* enter your web app name (NOTE! This step creates resources on Azure)
+* pick Node.js 10.14 runtime for your new Linux app
+9. Use ws://uniquewebappname.azurewebsites.net in MRETestBed or AltspaceVR.
+10. You can manage the web app on [Azure portal](https://portal.azure.com)
+
+#### Advanced settings 
+To customize resource creation or choose an existing resource, go to Azure App Service extension settings and select 'Advanced creation'
 
 
 ---
