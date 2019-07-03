@@ -3,11 +3,11 @@
  * Licensed under the MIT License.
  */
 
- /**
-  * @hidden
-  * Recursively look for values with a `toJSON()` method. If found,
-  * call it and replace the value with the return value.
-  */
+/**
+ * @hidden
+ * Recursively look for values with a `toJSON()` method. If found,
+ * call it and replace the value with the return value.
+ */
 export default function resolveJsonValues(obj: any) {
 	if (typeof obj === 'object') {
 		if (typeof obj.toJSON === 'function') {
