@@ -159,7 +159,6 @@ export class App {
 		// Delete all actors
 		destroyActors(this.context.rootActors.filter(x =>
 			!this.runnerActors.includes(x) && !this.sharedActors.includes(x)));
-		this.context.assetManager.cleanup();
 	}
 
 	private async stopTest() {

@@ -276,6 +276,7 @@ export class Session extends EventEmitter {
 	}
 
 	public cacheUpdateAssetMessage(message: Message<Payloads.AssetUpdate>) {
+		// TODO: merge single-asset updates into creation message
 		const [updates, id] = [this.assetUpdateSet, message.payload.asset.id];
 		updates[id] = deepmerge(updates[id] || {}, message.payload);
 	}

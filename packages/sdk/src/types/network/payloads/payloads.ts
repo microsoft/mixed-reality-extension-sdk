@@ -3,6 +3,7 @@
  * Licensed under the MIT License.
  */
 
+import { AssetPayloadType } from './assets';
 import { OperationResultCode, Trace } from '..';
 import { CreateAnimationOptions, SetAnimationStateOptions } from '../../..';
 import { SetSoundStateOptions, SoundCommand } from '../../../sound';
@@ -16,18 +17,15 @@ import { OperatingModel } from '../operatingModel';
  * *** KEEP ENTRIES SORTED ***
  */
 export type PayloadType
-	= 'actor-correction'
+	= AssetPayloadType
+	| 'actor-correction'
 	| 'actor-update'
 	| 'app2engine-rpc'
-	| 'asset-update'
-	| 'assets-loaded'
 	| 'collision-event-raised'
 	| 'create-animation'
-	| 'create-asset'
 	| 'create-empty'
 	| 'create-from-gltf'
 	| 'create-from-library'
-	| 'create-from-prefab'
 	| 'create-primitive'
 	| 'destroy-actors'
 	| 'engine2app-rpc'
@@ -37,7 +35,6 @@ export type PayloadType
 	| 'heartbeat'
 	| 'heartbeat-reply'
 	| 'interpolate-actor'
-	| 'load-assets'
 	| 'multi-operation-result'
 	| 'object-spawned'
 	| 'operation-result'

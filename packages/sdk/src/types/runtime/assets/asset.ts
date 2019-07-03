@@ -16,6 +16,7 @@ import {
 	Texture,
 	TextureLike
 } from '.';
+import { Actor } from '..';
 
 /**
  * Instructions for how to load an asset.
@@ -82,10 +83,40 @@ export abstract class Asset implements AssetLike {
 	/** @inheritdoc */
 	public get source() { return this._source; }
 
+	/** Stores which actors/assets refer to this asset */
+	protected references = new Set<Actor | Asset>();
+
 	protected constructor(public manager: AssetManager, def: Partial<AssetLike>) {
 		this._id = def.id;
 		this._name = def.name;
 		this._source = def.source;
+	}
+
+	/** @returns A promise that resolves once this asset is loaded */
+	public loaded(): Promise<void> {
+		return this.manager.assetLoaded(this.id);
+	}
+
+	/** Unload this asset from client memory, and clear all references to this asset. */
+	public unload(): Promise<void> {
+		return this.manager.unloadAssets(this);
+	}
+
+	/** @hidden */
+	public addReference(ref: Actor | Asset) {
+		this.references.add(ref);
+	}
+
+	/** @hidden */
+	public clearReference(ref: Actor | Asset) {
+		this.references.delete(ref);
+	}
+
+	/** @hidden */
+	public clearAllReferences() {
+		for(const r of this.references) {
+			this.clearReference(r);
+		}
 	}
 
 	/** @hidden */

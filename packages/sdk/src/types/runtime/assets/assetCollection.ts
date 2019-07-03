@@ -3,10 +3,11 @@
  * Licensed under the MIT License.
  */
 
-import { Asset } from '.';
+import { Asset, AssetIterator } from '.';
 
-export default class AssetCollection<T extends Asset> {
+export class AssetCollection<T extends Asset> implements Iterable<T> {
 	private collection: { [k: string]: T } = {};
+
 	// tslint:disable-next-line:variable-name
 	private _count = 0;
 
@@ -26,4 +27,7 @@ export default class AssetCollection<T extends Asset> {
 		}
 		this.collection[this._count++] = asset;
 	}
+
+	/** @hidden */
+	[Symbol.iterator] = () => new AssetIterator<T>(Object.values(this.collection));
 }

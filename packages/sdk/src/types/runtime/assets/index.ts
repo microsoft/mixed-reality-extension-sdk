@@ -11,3 +11,5 @@ export * from './texture';
 export * from './sound';
 export * from './assetGroup';
 export * from './assetManager';
+export * from './assetIterator';
+export * from './assetCollection';

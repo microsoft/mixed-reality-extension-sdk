@@ -11,7 +11,7 @@ import { log } from '../../../log';
 import { ExportedPromise } from '../../../utils/exportedPromise';
 import resolveJsonValues from '../../../utils/resolveJsonValues';
 import { createForwardPromise, ForwardPromise } from '../../forwardPromise';
-import { AssetsLoaded, CreateAsset, CreateColliderType, LoadAssets } from '../../network/payloads';
+import * as Payloads from '../../network/payloads';
 
 // tslint:disable-next-line:variable-name
 const ManualId = '__manual__';
@@ -33,9 +33,6 @@ export class AssetManager {
 	/** @hidden */
 	public constructor(public context: Context) {
 		this._groups[ManualId] = new AssetGroup(ManualId, null);
-	}
-
-	public cleanup() {
 	}
 
 	/** Fetch a group by name. */
@@ -86,7 +83,6 @@ export class AssetManager {
 	 * @param definition The initial sound properties. The `uri` property is required.
 	 */
 	public createSound(name: string, definition: Partial<SoundLike>): ForwardPromise<Sound> {
-
 		return this.sendCreateAsset(new Sound(this, {
 			id: UUID(),
 			name,
@@ -103,10 +99,10 @@ export class AssetManager {
 				resolve: () => { /* empty */ },
 				reject: () => { /* empty */ },
 			});
-		const promise = this.sendLoadAssetsPayload({
+		const promise = this.sendPayload<Payloads.CreateAsset, Payloads.AssetsLoaded>({
 			type: 'create-asset',
 			definition: resolveJsonValues(asset)
-		} as CreateAsset)
+		})
 			.then<T>(payload => {
 				if (payload.failureMessage || payload.assets.length !== 1) {
 					this.notifyAssetLoaded(asset.id, false, payload.failureMessage);
@@ -120,7 +116,45 @@ export class AssetManager {
 		return createForwardPromise(asset, promise);
 	}
 
-	public unloadAsset<T extends Asset>(asset: T) {
+	/**
+	 * Unload these assets from client memory, and clear all references to them.
+	 * @param assets The assets to unload
+	 */
+	public async unloadAssets(...assets: Asset[]): Promise<void> {
+		// unassign assets
+		for(const a of assets) {
+			a.clearAllReferences();
+		}
+
+		// wait for those unassignments to be processed by clients
+		await this.context.internal.nextUpdate();
+
+		// send unload message
+		const resultsPayload = await this.sendPayload<Payloads.UnloadAssets, Payloads.MultiOperationResult>({
+			type: 'unload-assets',
+			assetIds: assets.map(a => a.id)
+		} as Payloads.UnloadAssets);
+
+		// check for unload failures
+		const results = resultsPayload.results.map((result, i) => ({
+			id: assets[i].id,
+			name: assets[i].name,
+			code: result.resultCode,
+			message: result.message }));
+		const errors = results.filter(result => result.code !== 'success');
+
+		// compose error message if any fail
+		if (errors.length > 0) {
+			let message = "The following assets could not be unloaded:";
+			for(const e of errors) {
+				message += `\n${e.id} (${e.name}) - ${e.code}: ${e.message}`;
+			}
+			throw new Error(message);
+		}
+	}
+
+	public unloadGroup(group: AssetGroup) {
+		return this.unloadAssets(...group);
 	}
 
 	private notifyAssetLoaded(assetId: string, success: boolean, reason?: any): void {
@@ -163,7 +197,7 @@ export class AssetManager {
 	 * @param uri The URI to a glTF model.
 	 * @returns The promise of a new asset group.
 	 */
-	public loadGltf(groupName: string, uri: string, colliderType: CreateColliderType = 'none'): Promise<AssetGroup> {
+	public loadGltf(groupName: string, uri: string, colliderType: Payloads.CreateColliderType = 'none'): Promise<AssetGroup> {
 		const p = this.loadGltfHelper(groupName, uri, colliderType);
 
 		this.registerLoadPromise(p);
@@ -171,7 +205,7 @@ export class AssetManager {
 	}
 
 	private async loadGltfHelper(
-		groupName: string, uri: string, colliderType: CreateColliderType): Promise<AssetGroup> {
+		groupName: string, uri: string, colliderType: Payloads.CreateColliderType): Promise<AssetGroup> {
 
 		const id = UUID();
 		this.enqueueLoadAssetPromise(
@@ -201,9 +235,9 @@ export class AssetManager {
 			type: 'load-assets',
 			source: group.source,
 			colliderType
-		} as LoadAssets;
+		} as Payloads.LoadAssets;
 
-		const response = await this.sendLoadAssetsPayload(payload);
+		const response = await this.sendPayload<Payloads.LoadAssets, Payloads.AssetsLoaded>(payload);
 		if (response.failureMessage) {
 			this.notifyAssetLoaded(id, false, response.failureMessage);
 			throw new Error(response.failureMessage);
@@ -226,8 +260,8 @@ export class AssetManager {
 		this._ready = this._ready.then(() => ignoreFailure);
 	}
 
-	private sendLoadAssetsPayload(payload: LoadAssets | CreateAsset): Promise<AssetsLoaded> {
-		return new Promise<AssetsLoaded>((resolve, reject) => {
+	private sendPayload<T extends Payloads.Payload, U extends Payloads.Payload>(payload: T): Promise<U> {
+		return new Promise<U>((resolve, reject) => {
 			this.context.internal.protocol.sendPayload(
 				payload, { resolve, reject }
 			);

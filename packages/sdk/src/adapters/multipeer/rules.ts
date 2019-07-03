@@ -1038,6 +1038,30 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 	},
 
 	// ========================================================================
+	'unload-assets': {
+		...DefaultRule,
+		synchronization: {
+			stage: 'load-assets',
+			before: 'ignore',
+			during: 'queue',
+			after: 'allow'
+		},
+		session: {
+			...DefaultRule.session,
+			beforeReceiveFromApp: (
+				session: Session,
+				message: Message<Payloads.UnloadAssets>
+			) => {
+				for (const assetId of message.payload.assetIds) {
+					delete session.assetUpdateSet[assetId];
+					// TODO: Delete creation message if unloading all its assets
+				}
+				return message;
+			}
+		}
+	},
+
+	// ========================================================================
 	'user-joined': {
 		...ClientOnlyRule,
 		session: {

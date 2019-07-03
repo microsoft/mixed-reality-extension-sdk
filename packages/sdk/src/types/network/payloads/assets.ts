@@ -9,6 +9,14 @@ import { AssetLike, AssetSource } from '../../runtime/assets';
 
 export type CreateColliderType = ColliderType | 'none';
 
+export type AssetPayloadType
+	= 'assets-loaded'
+	| 'asset-update'
+	| 'create-asset'
+	| 'create-from-prefab'
+	| 'load-assets'
+	| 'unload-assets';
+
 /** @hidden */
 export type LoadAssets = Payload & {
 	type: 'load-assets';
@@ -39,4 +47,10 @@ export type AssetUpdate = Payload & {
 export type CreateFromPrefab = CreateActorCommon & {
 	type: 'create-from-prefab';
 	prefabId: string;
+};
+
+/** @hidden */
+export type UnloadAssets = Payload & {
+	type: 'unload-assets';
+	assetIds: string[];
 };

@@ -416,6 +416,25 @@ export class InternalContext {
 				} as UserUpdate);
 			}
 		}
+
+		if (this.nextUpdatePromise) {
+			this.resolveNextUpdatePromise();
+			this.nextUpdatePromise = null;
+			this.resolveNextUpdatePromise = null;
+		}
+	}
+
+	private nextUpdatePromise: Promise<void>;
+	private resolveNextUpdatePromise: () => void;
+	/** @hidden */
+	public nextUpdate(): Promise<void> {
+		if (this.nextUpdatePromise) {
+			return this.nextUpdatePromise;
+		}
+
+		return this.nextUpdatePromise = new Promise(resolve => {
+			this.resolveNextUpdatePromise = resolve;
+		});
 	}
 
 	public sendDestroyActors(actorIds: string[]) {
