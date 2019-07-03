@@ -5,5 +5,5 @@
 
 /** @hidden */
 export function roundUpToNextMultipleOf4(x: number): number {
-    return Math.ceil(x / 4) * 4;
+	return Math.ceil(x / 4) * 4;
 }

@@ -7,7 +7,7 @@
  * The collision detection mode of a rigid body.
  */
 export enum CollisionDetectionMode {
-    Discrete = 'Discrete',
-    Continuous = 'Continuous',
-    ContinuousDynamic = 'ContinuousDynamic'
+	Discrete = 'Discrete',
+	Continuous = 'Continuous',
+	ContinuousDynamic = 'ContinuousDynamic'
 }

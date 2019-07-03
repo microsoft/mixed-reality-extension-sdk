@@ -14,56 +14,56 @@ export type TestFactory = (app: App, baseUrl: string, user: User) => Test;
  */
 export abstract class Test {
 
-    /**
-     * A human-readable description of what should be happening.
-     * Will be displayed as part of the app.
-     */
-    public expectedResultDescription: string;
+	/**
+	 * A human-readable description of what should be happening.
+	 * Will be displayed as part of the app.
+	 */
+	public expectedResultDescription: string;
 
-    private _stopped = false;
-    private stoppedPromise: Promise<void> = null;
-    private stoppedContinue: () => void = null;
+	private _stopped = false;
+	private stoppedPromise: Promise<void> = null;
+	private stoppedContinue: () => void = null;
 
-    constructor(protected app: App, protected baseUrl: string, protected user: User) { }
+	constructor(protected app: App, protected baseUrl: string, protected user: User) { }
 
-    /**
-     * Main test entry point. This should run indefinitely until [[stop]] is called.
-     */
-    public abstract run(root: Actor): Promise<boolean>;
+	/**
+	 * Main test entry point. This should run indefinitely until [[stop]] is called.
+	 */
+	public abstract run(root: Actor): Promise<boolean>;
 
-    /**
-     * If the test requires anything other than actor cleanup, do it here.
-     */
-    public cleanup(): void { }
+	/**
+	 * If the test requires anything other than actor cleanup, do it here.
+	 */
+	public cleanup(): void { }
 
-    /**
-     * Called by the test runner to end the test. Tests should not override this
-     * directly, but instead either check the stopped variable, or await stoppedAsync().
-     */
-    public stop(): void {
-        this._stopped = true;
-        if (this.stoppedContinue) {
-            this.stoppedContinue();
-            this.stoppedContinue = null;
-        }
-    }
+	/**
+	 * Called by the test runner to end the test. Tests should not override this
+	 * directly, but instead either check the stopped variable, or await stoppedAsync().
+	 */
+	public stop(): void {
+		this._stopped = true;
+		if (this.stoppedContinue) {
+			this.stoppedContinue();
+			this.stoppedContinue = null;
+		}
+	}
 
-    /**
-     * Synchronous test for when a test should stop
-     */
-    public get stopped() { return this._stopped; }
+	/**
+	 * Synchronous test for when a test should stop
+	 */
+	public get stopped() { return this._stopped; }
 
-    /**
-     * Asynchronous test for when a test should stop
-     */
-    public stoppedAsync() {
-        return this.stoppedPromise = this.stoppedPromise ||
-            new Promise<void>((resolve, reject) => {
-                if (this._stopped) {
-                    resolve();
-                } else {
-                    this.stoppedContinue = resolve;
-                }
-            });
-    }
+	/**
+	 * Asynchronous test for when a test should stop
+	 */
+	public stoppedAsync() {
+		return this.stoppedPromise = this.stoppedPromise ||
+			new Promise<void>((resolve, reject) => {
+				if (this._stopped) {
+					resolve();
+				} else {
+					this.stoppedContinue = resolve;
+				}
+			});
+	}
 }

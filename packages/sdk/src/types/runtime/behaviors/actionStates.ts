@@ -4,6 +4,6 @@
  */
 
 export type ActionState
-    = 'started'
-    | 'stopped'
-    ;
+	= 'started'
+	| 'stopped'
+	;

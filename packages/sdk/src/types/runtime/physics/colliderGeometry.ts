@@ -9,33 +9,33 @@ import { Vector3Like } from "../../..";
  * Collider parameters specific to a sphere collider.
  */
 export interface SphereColliderGeometry {
-    colliderType: 'sphere';
-    center?: Readonly<Vector3Like>;
-    radius?: number;
+	colliderType: 'sphere';
+	center?: Readonly<Vector3Like>;
+	radius?: number;
 }
 
 /**
  * Collider parameters specific to a box collider
  */
 export interface BoxColliderGeometry {
-    colliderType: 'box';
-    center?: Readonly<Vector3Like>;
-    size?: Readonly<Vector3Like>;
+	colliderType: 'box';
+	center?: Readonly<Vector3Like>;
+	size?: Readonly<Vector3Like>;
 }
 
 export interface MeshColliderGeometry {
-    colliderType: 'mesh';
+	colliderType: 'mesh';
 }
 
 export interface CapsuleColliderGeometry {
-    colliderType: 'capsule';
+	colliderType: 'capsule';
 }
 
 /**
  * All collider parameter types.
  */
 export type ColliderGeometry
-    = SphereColliderGeometry
-    | BoxColliderGeometry
-    | MeshColliderGeometry
-    ;
+	= SphereColliderGeometry
+	| BoxColliderGeometry
+	| MeshColliderGeometry
+	;

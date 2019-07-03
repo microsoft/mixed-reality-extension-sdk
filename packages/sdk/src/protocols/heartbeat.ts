@@ -11,35 +11,35 @@ import * as Payloads from '../types/network/payloads';
  * Periodically measures performance characteristics of the connection (latency).
  */
 export class Heartbeat {
-    /**
-     * Creates a new Heartbeat instance.
-     * @param protocol The parent protocol object.
-     */
-    constructor(private protocol: Protocol) {
-    }
+	/**
+	 * Creates a new Heartbeat instance.
+	 * @param protocol The parent protocol object.
+	 */
+	constructor(private protocol: Protocol) {
+	}
 
-    /**
-     * Polls connection quality the specified number of times.
-     */
-    public async runIterations(sampleCount: number) {
-        for (let i = 0; i < sampleCount; ++i) {
-            await this.send(); // Allow exceptions to propagate out.
-        }
-    }
+	/**
+	 * Polls connection quality the specified number of times.
+	 */
+	public async runIterations(sampleCount: number) {
+		for (let i = 0; i < sampleCount; ++i) {
+			await this.send(); // Allow exceptions to propagate out.
+		}
+	}
 
-    public send() {
-        return new Promise<number>((resolve, reject) => {
-            const start = Date.now();
-            this.protocol.sendPayload({
-                type: 'heartbeat',
-            } as Payloads.Heartbeat, {
-                    resolve: () => {
-                        const latency = (Date.now() - start);
-                        this.protocol.conn.quality.latencyMs.update(latency);
-                        resolve(latency);
-                    },
-                    reject
-                });
-        });
-    }
+	public send() {
+		return new Promise<number>((resolve, reject) => {
+			const start = Date.now();
+			this.protocol.sendPayload({
+				type: 'heartbeat',
+			} as Payloads.Heartbeat, {
+					resolve: () => {
+						const latency = (Date.now() - start);
+						this.protocol.conn.quality.latencyMs.update(latency);
+						resolve(latency);
+					},
+					reject
+				});
+		});
+	}
 }

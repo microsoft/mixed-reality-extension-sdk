@@ -7,6 +7,6 @@ import { ExportedPromise } from './exportedPromise';
 
 /** @hidden */
 export interface QueuedPromise {
-    promise: ExportedPromise;
-    timeout: NodeJS.Timer;
+	promise: ExportedPromise;
+	timeout: NodeJS.Timer;
 }

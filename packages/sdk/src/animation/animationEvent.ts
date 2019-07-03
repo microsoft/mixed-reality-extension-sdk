@@ -4,7 +4,7 @@
  */
 
 export interface AnimationEvent {
-    name: string;
-    value: string;
-    time: number;
+	name: string;
+	value: string;
+	time: number;
 }

@@ -7,5 +7,5 @@
  * Container for a set of parameters.
  */
 export interface ParameterSet {
-    [key: string]: string | string[] | undefined;
+	[key: string]: string | string[] | undefined;
 }

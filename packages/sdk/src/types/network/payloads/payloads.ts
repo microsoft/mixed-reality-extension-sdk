@@ -16,60 +16,60 @@ import { OperatingModel } from '../operatingModel';
  * *** KEEP ENTRIES SORTED ***
  */
 export type PayloadType
-    = 'actor-correction'
-    | 'actor-update'
-    | 'app2engine-rpc'
-    | 'asset-update'
-    | 'assets-loaded'
-    | 'collision-event-raised'
-    | 'create-animation'
-    | 'create-asset'
-    | 'create-empty'
-    | 'create-from-gltf'
-    | 'create-from-library'
-    | 'create-from-prefab'
-    | 'create-primitive'
-    | 'destroy-actors'
-    | 'engine2app-rpc'
-    | 'handshake'
-    | 'handshake-complete'
-    | 'handshake-reply'
-    | 'heartbeat'
-    | 'heartbeat-reply'
-    | 'interpolate-actor'
-    | 'load-assets'
-    | 'multi-operation-result'
-    | 'object-spawned'
-    | 'operation-result'
-    | 'perform-action'
-    | 'rigidbody-add-force'
-    | 'rigidbody-add-force-at-position'
-    | 'rigidbody-add-relative-torque'
-    | 'rigidbody-add-torque'
-    | 'rigidbody-commands'
-    | 'rigidbody-move-position'
-    | 'rigidbody-move-rotation'
-    | 'set-animation-state'
-    | 'set-authoritative'
-    | 'set-behavior'
-    | 'set-sound-state'
-    | 'sync-animations'
-    | 'sync-complete'
-    | 'sync-request'
-    | 'traces'
-    | 'trigger-event-raised'
-    | 'user-joined'
-    | 'user-left'
-    | 'user-update'
-    ;
+	= 'actor-correction'
+	| 'actor-update'
+	| 'app2engine-rpc'
+	| 'asset-update'
+	| 'assets-loaded'
+	| 'collision-event-raised'
+	| 'create-animation'
+	| 'create-asset'
+	| 'create-empty'
+	| 'create-from-gltf'
+	| 'create-from-library'
+	| 'create-from-prefab'
+	| 'create-primitive'
+	| 'destroy-actors'
+	| 'engine2app-rpc'
+	| 'handshake'
+	| 'handshake-complete'
+	| 'handshake-reply'
+	| 'heartbeat'
+	| 'heartbeat-reply'
+	| 'interpolate-actor'
+	| 'load-assets'
+	| 'multi-operation-result'
+	| 'object-spawned'
+	| 'operation-result'
+	| 'perform-action'
+	| 'rigidbody-add-force'
+	| 'rigidbody-add-force-at-position'
+	| 'rigidbody-add-relative-torque'
+	| 'rigidbody-add-torque'
+	| 'rigidbody-commands'
+	| 'rigidbody-move-position'
+	| 'rigidbody-move-rotation'
+	| 'set-animation-state'
+	| 'set-authoritative'
+	| 'set-behavior'
+	| 'set-sound-state'
+	| 'sync-animations'
+	| 'sync-complete'
+	| 'sync-request'
+	| 'traces'
+	| 'trigger-event-raised'
+	| 'user-joined'
+	| 'user-left'
+	| 'user-update'
+	;
 
 /**
  * @hidden
  * Base interface for Payloads.
  */
 export type Payload = {
-    type: PayloadType;
-    traces?: Trace[];
+	type: PayloadType;
+	traces?: Trace[];
 };
 
 /**
@@ -77,7 +77,7 @@ export type Payload = {
  * Engine to app. Contains a set of trace messages.
  */
 export type Traces = Payload & {
-    type: 'traces';
+	type: 'traces';
 };
 
 /**
@@ -85,9 +85,9 @@ export type Traces = Payload & {
  * Engine to app. The result of an operation.
  */
 export type OperationResult = Payload & {
-    type: 'operation-result';
-    resultCode: OperationResultCode;
-    message: string;
+	type: 'operation-result';
+	resultCode: OperationResultCode;
+	message: string;
 };
 
 /**
@@ -95,8 +95,8 @@ export type OperationResult = Payload & {
  * Engine to app. The result of multiple operations.
  */
 export type MultiOperationResult = Payload & {
-    type: 'multi-operation-result';
-    results: OperationResult[];
+	type: 'multi-operation-result';
+	results: OperationResult[];
 };
 
 /**
@@ -104,7 +104,7 @@ export type MultiOperationResult = Payload & {
  * Engine to app. Handshake initiation.
  */
 export type Handshake = Payload & {
-    type: 'handshake';
+	type: 'handshake';
 };
 
 /**
@@ -112,9 +112,9 @@ export type Handshake = Payload & {
  * App to engine. Response to Handshake.
  */
 export type HandshakeReply = Payload & {
-    type: 'handshake-reply';
-    sessionId: string;
-    operatingModel: OperatingModel;
+	type: 'handshake-reply';
+	sessionId: string;
+	operatingModel: OperatingModel;
 };
 
 /**
@@ -122,48 +122,48 @@ export type HandshakeReply = Payload & {
  * Engine to app. Handshake process is complete.
  */
 export type HandshakeComplete = Payload & {
-    type: 'handshake-complete';
+	type: 'handshake-complete';
 };
 
 /**
  * @hidden
  */
 export type Heartbeat = Payload & {
-    type: 'heartbeat';
+	type: 'heartbeat';
 };
 
 /**
  * @hidden
  */
 export type HeartbeatReply = Payload & {
-    type: 'heartbeat-reply';
+	type: 'heartbeat-reply';
 };
 
 /**
  * @hidden
  */
 export type AppToEngineRPC = Payload & {
-    type: 'app2engine-rpc';
-    userId?: string;
-    procName: string;
-    args: any[];
+	type: 'app2engine-rpc';
+	userId?: string;
+	procName: string;
+	args: any[];
 };
 
 /**
  * @hidden
  */
 export type EngineToAppRPC = Payload & {
-    type: 'engine2app-rpc';
-    channelName?: string;
-    procName: string;
-    args: any[];
+	type: 'engine2app-rpc';
+	channelName?: string;
+	procName: string;
+	args: any[];
 };
 
 /**
  * @hidden
  */
 export type CreateActorCommon = Payload & {
-    actor: Partial<ActorLike>;
+	actor: Partial<ActorLike>;
 };
 
 /**
@@ -172,8 +172,8 @@ export type CreateActorCommon = Payload & {
  * Response is an ObjectSpawned payload.
  */
 export type CreateFromLibrary = CreateActorCommon & {
-    type: 'create-from-library';
-    resourceId: string;
+	type: 'create-from-library';
+	resourceId: string;
 };
 
 /**
@@ -182,10 +182,10 @@ export type CreateFromLibrary = CreateActorCommon & {
  * Response is an ObjectSpawned payload.
  */
 export type CreateFromGltf = CreateActorCommon & {
-    type: 'create-from-gltf';
-    resourceUrl: string;
-    assetName: string;
-    colliderType: ColliderType;
+	type: 'create-from-gltf';
+	resourceUrl: string;
+	assetName: string;
+	colliderType: ColliderType;
 };
 
 /**
@@ -194,7 +194,7 @@ export type CreateFromGltf = CreateActorCommon & {
  * Response is an ObjectSpawned payload.
  */
 export type CreateEmpty = CreateActorCommon & {
-    type: 'create-empty';
+	type: 'create-empty';
 };
 
 /**
@@ -203,10 +203,10 @@ export type CreateEmpty = CreateActorCommon & {
  * Response is an ObjectSpawned payload.
  */
 export type CreatePrimitive = CreateActorCommon & {
-    type: 'create-primitive';
-    definition: PrimitiveDefinition;
-    addCollider: boolean;
-    actor: Partial<ActorLike>;
+	type: 'create-primitive';
+	definition: PrimitiveDefinition;
+	addCollider: boolean;
+	actor: Partial<ActorLike>;
 };
 
 /**
@@ -214,9 +214,9 @@ export type CreatePrimitive = CreateActorCommon & {
  * Engine to app. Response from LoadFromAssetBundle (and similar).
  */
 export type ObjectSpawned = Payload & {
-    type: 'object-spawned';
-    actors: Array<Partial<ActorLike>>;
-    result: OperationResult;
+	type: 'object-spawned';
+	actors: Array<Partial<ActorLike>>;
+	result: OperationResult;
 };
 
 /**
@@ -224,8 +224,8 @@ export type ObjectSpawned = Payload & {
  * Bi-directional. Changed properties of an actor object (sparsely populated).
  */
 export type ActorUpdate = Payload & {
-    type: 'actor-update';
-    actor: Partial<ActorLike>;
+	type: 'actor-update';
+	actor: Partial<ActorLike>;
 };
 
 /**
@@ -233,9 +233,9 @@ export type ActorUpdate = Payload & {
  * Engine to app.  Actor correction that should be lerped on the other clients.
  */
 export type ActorCorrection = Payload & {
-    type: 'actor-correction';
-    actorId: string;
-    appTransform: TransformLike;
+	type: 'actor-correction';
+	actorId: string;
+	appTransform: TransformLike;
 };
 
 /**
@@ -243,8 +243,8 @@ export type ActorCorrection = Payload & {
  * Bi-directional. Command to destroy an actor (and its children).
  */
 export type DestroyActors = Payload & {
-    type: 'destroy-actors';
-    actorIds: string[];
+	type: 'destroy-actors';
+	actorIds: string[];
 };
 
 /**
@@ -252,7 +252,7 @@ export type DestroyActors = Payload & {
  * Engine to app. Engine wants all the application state.
  */
 export type SyncRequest = Payload & {
-    type: 'sync-request';
+	type: 'sync-request';
 };
 
 /**
@@ -260,7 +260,7 @@ export type SyncRequest = Payload & {
  * App to engine. Done sending engine the application state.
  */
 export type SyncComplete = Payload & {
-    type: 'sync-complete';
+	type: 'sync-complete';
 };
 
 /**
@@ -269,8 +269,8 @@ export type SyncComplete = Payload & {
  * sends additional updates back to the app such as rigid body updates and animation events.
  */
 export type SetAuthoritative = Payload & {
-    type: 'set-authoritative';
-    authoritative: boolean;
+	type: 'set-authoritative';
+	authoritative: boolean;
 };
 
 /**
@@ -278,8 +278,8 @@ export type SetAuthoritative = Payload & {
  * App to engine. The user has joined the app.
  */
 export type UserJoined = Payload & {
-    type: 'user-joined';
-    user: Partial<UserLike>;
+	type: 'user-joined';
+	user: Partial<UserLike>;
 };
 
 /**
@@ -287,8 +287,8 @@ export type UserJoined = Payload & {
  * Engine to app. The user has left the app.
  */
 export type UserLeft = Payload & {
-    type: 'user-left';
-    userId: string;
+	type: 'user-left';
+	userId: string;
 };
 
 /**
@@ -297,8 +297,8 @@ export type UserLeft = Payload & {
  * Only received for users who have joined the app.
  */
 export type UserUpdate = Payload & {
-    type: 'user-update';
-    user: Partial<UserLike>;
+	type: 'user-update';
+	user: Partial<UserLike>;
 };
 
 /**
@@ -306,12 +306,12 @@ export type UserUpdate = Payload & {
  * Engine to app. The user is performing an action for a behavior.
  */
 export type PerformAction = Payload & {
-    type: 'perform-action';
-    userId: string;
-    targetId: string;
-    behaviorType: BehaviorType;
-    actionName: string;
-    actionState: ActionState;
+	type: 'perform-action';
+	userId: string;
+	targetId: string;
+	behaviorType: BehaviorType;
+	actionName: string;
+	actionState: ActionState;
 };
 
 /**
@@ -320,9 +320,9 @@ export type PerformAction = Payload & {
  * the given actor id.
  */
 export type SetBehavior = Payload & {
-    type: 'set-behavior';
-    actorId: string;
-    behaviorType: BehaviorType;
+	type: 'set-behavior';
+	actorId: string;
+	behaviorType: BehaviorType;
 };
 
 /**
@@ -330,9 +330,9 @@ export type SetBehavior = Payload & {
  * App to engine. Create an animation and associate it with an actor.
  */
 export type CreateAnimation = Payload & CreateAnimationOptions & {
-    type: 'create-animation';
-    actorId: string;
-    animationName: string;
+	type: 'create-animation';
+	actorId: string;
+	animationName: string;
 };
 
 /**
@@ -340,10 +340,10 @@ export type CreateAnimation = Payload & CreateAnimationOptions & {
  * App to engine. Sets animation state.
  */
 export type SetAnimationState = Payload & {
-    type: 'set-animation-state';
-    actorId: string;
-    animationName: string;
-    state: SetAnimationStateOptions;
+	type: 'set-animation-state';
+	actorId: string;
+	animationName: string;
+	state: SetAnimationStateOptions;
 };
 
 /**
@@ -351,8 +351,8 @@ export type SetAnimationState = Payload & {
  * Bidirectional. Sync animation state.
  */
 export type SyncAnimations = Payload & {
-    type: 'sync-animations';
-    animationStates: SetAnimationState[];
+	type: 'sync-animations';
+	animationStates: SetAnimationState[];
 };
 
 /**
@@ -360,13 +360,13 @@ export type SyncAnimations = Payload & {
  * App to engine. Starts playing a sound.
  */
 export type SetSoundState = Payload & {
-    type: 'set-sound-state';
-    id: string;
-    actorId: string;
-    soundAssetId: string;
-    soundCommand: SoundCommand,
-    options: SetSoundStateOptions,
-    startTimeOffset: number;
+	type: 'set-sound-state';
+	id: string;
+	actorId: string;
+	soundAssetId: string;
+	soundCommand: SoundCommand,
+	options: SetSoundStateOptions,
+	startTimeOffset: number;
 };
 
 /**
@@ -374,11 +374,11 @@ export type SetSoundState = Payload & {
  * App to engine. Interpolate the actor's transform.
  */
 export type InterpolateActor = Payload & {
-    type: 'interpolate-actor';
-    actorId: string;
-    animationName: string;
-    value: Partial<ActorLike>;
-    duration: number;
-    curve: number[];
-    enabled: boolean;
+	type: 'interpolate-actor';
+	actorId: string;
+	animationName: string;
+	value: Partial<ActorLike>;
+	duration: number;
+	curve: number[];
+	enabled: boolean;
 };

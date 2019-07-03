@@ -9,13 +9,13 @@
  * https://en.wikipedia.org/wiki/Moving_average#Exponential_moving_average
  */
 export class ExponentialMovingAverage {
-    public alpha = 0.75;
-    public value = 0;
+	public alpha = 0.75;
+	public value = 0;
 
-    /** Computes the latest value given a new sample */
-    public update(v: number): void {
-        if (typeof v === 'number') {
-            this.value = this.alpha * v + (1 - this.alpha) * this.value;
-        }
-    }
+	/** Computes the latest value given a new sample */
+	public update(v: number): void {
+		if (typeof v === 'number') {
+			this.value = this.alpha * v + (1 - this.alpha) * this.value;
+		}
+	}
 }

@@ -7,9 +7,9 @@ import { ActionState, BehaviorType } from '.';
 import { User } from '..';
 
 export interface ActionEvent {
-    user: User;
-    targetId: string;
-    behaviorType: BehaviorType;
-    actionName: string;
-    actionState: ActionState;
+	user: User;
+	targetId: string;
+	behaviorType: BehaviorType;
+	actionName: string;
+	actionState: ActionState;
 }

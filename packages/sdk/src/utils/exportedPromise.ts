@@ -5,6 +5,6 @@
 
 /** @hidden */
 export interface ExportedPromise {
-    resolve: (...args: any[]) => void;
-    reject: (reason?: any) => void;
+	resolve: (...args: any[]) => void;
+	reject: (reason?: any) => void;
 }

@@ -6,6 +6,6 @@
 import { ActorLike } from '..';
 
 export interface AnimationKeyframe {
-    value: Partial<ActorLike>;
-    time: number;
+	value: Partial<ActorLike>;
+	time: number;
 }

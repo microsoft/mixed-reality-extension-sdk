@@ -10,17 +10,17 @@ import { InternalPatchable } from '../patchable';
  * @hidden
  */
 export class InternalAsset implements InternalPatchable<AssetLike> {
-    public observing = true;
-    public patch: AssetLike;
+	public observing = true;
+	public patch: AssetLike;
 
-    public constructor(public asset: Asset) { }
+	public constructor(public asset: Asset) { }
 
-    public getPatchAndReset(): AssetLike {
-        const patch = this.patch;
-        if (patch) {
-            patch.id = this.asset.id;
-            delete this.patch;
-        }
-        return patch;
-    }
+	public getPatchAndReset(): AssetLike {
+		const patch = this.patch;
+		if (patch) {
+			patch.id = this.asset.id;
+			delete this.patch;
+		}
+		return patch;
+	}
 }

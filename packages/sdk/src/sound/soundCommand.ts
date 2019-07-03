@@ -7,7 +7,7 @@
  * The sound commands used to control the sound instance.
  */
 export enum SoundCommand {
-    Start = 'start',
-    Update = 'update',
-    Stop = 'stop'
+	Start = 'start',
+	Update = 'update',
+	Stop = 'stop'
 }

@@ -12,234 +12,234 @@ import destroyActors from './utils/destroyActors';
 type SelectionHandler = (name: string, factory: TestFactory, user: MRE.User) => void;
 
 interface MenuItem {
-    label: string;
-    action: TestFactory | MenuItem[];
+	label: string;
+	action: TestFactory | MenuItem[];
 }
 
 const pageSize = 6;
 const MenuItems = paginate(Factories);
 
 export default class Menu {
-    private buttons: MRE.Actor[];
-    private behaviors: MRE.ButtonBehavior[];
-    private labels: MRE.Actor[];
+	private buttons: MRE.Actor[];
+	private behaviors: MRE.ButtonBehavior[];
+	private labels: MRE.Actor[];
 
-    private successMat: MRE.Material;
-    private failureMat: MRE.Material;
-    private neutralMat: MRE.Material;
+	private successMat: MRE.Material;
+	private failureMat: MRE.Material;
+	private neutralMat: MRE.Material;
 
-    private breadcrumbs: number[] = [];
-    private otherActors: MRE.Actor[];
-    private handler: SelectionHandler;
+	private breadcrumbs: number[] = [];
+	private otherActors: MRE.Actor[];
+	private handler: SelectionHandler;
 
-    private get context() { return this.app.context; }
+	private get context() { return this.app.context; }
 
-    constructor(private app: App) {
+	constructor(private app: App) {
 
-    }
+	}
 
-    public onSelection(handler: SelectionHandler) {
-        this.handler = handler;
-    }
+	public onSelection(handler: SelectionHandler) {
+		this.handler = handler;
+	}
 
-    public hide() {
-        this.destroy();
-    }
+	public hide() {
+		this.destroy();
+	}
 
-    public back() {
-        this.breadcrumbs.pop();
-    }
+	public back() {
+		this.breadcrumbs.pop();
+	}
 
-    public show(root = false) {
-        if (!this.buttons) {
-            this.setup();
-        }
+	public show(root = false) {
+		if (!this.buttons) {
+			this.setup();
+		}
 
-        const menu = root || !this.breadcrumbs.length ?
-            MenuItems :
-            this.breadcrumbs.reduce((submenu, choice) => submenu[choice].action as MenuItem[], MenuItems);
+		const menu = root || !this.breadcrumbs.length ?
+			MenuItems :
+			this.breadcrumbs.reduce((submenu, choice) => submenu[choice].action as MenuItem[], MenuItems);
 
-        this.behaviors.forEach((behavior, i) => {
-            let handler: MRE.ActionHandler;
-            let label: string;
-            let buttonMat: MRE.Material;
+		this.behaviors.forEach((behavior, i) => {
+			let handler: MRE.ActionHandler;
+			let label: string;
+			let buttonMat: MRE.Material;
 
-            if (!menu[i]) {
-                label = "";
-                handler = null;
-                buttonMat = null;
-            } else if (typeof menu[i].action === 'function') {
-                label = menu[i].label;
-                handler = user => {
-                    if (this.handler) {
-                        this.handler(menu[i].label, menu[i].action as TestFactory, user);
-                    }
-                };
-                buttonMat = this.app.testResults[label] === true ? this.successMat :
-                    this.app.testResults[label] === false ? this.failureMat : this.neutralMat;
+			if (!menu[i]) {
+				label = "";
+				handler = null;
+				buttonMat = null;
+			} else if (typeof menu[i].action === 'function') {
+				label = menu[i].label;
+				handler = user => {
+					if (this.handler) {
+						this.handler(menu[i].label, menu[i].action as TestFactory, user);
+					}
+				};
+				buttonMat = this.app.testResults[label] === true ? this.successMat :
+					this.app.testResults[label] === false ? this.failureMat : this.neutralMat;
 
-            } else {
-                label = menu[i].label;
-                handler = _ => {
-                    this.breadcrumbs.push(i);
-                    this.show();
-                };
-                buttonMat = null;
-            }
+			} else {
+				label = menu[i].label;
+				handler = _ => {
+					this.breadcrumbs.push(i);
+					this.show();
+				};
+				buttonMat = null;
+			}
 
-            this.buttons[i].appearance.material = buttonMat;
-            this.labels[i].text.contents = label;
-            behavior.onButton('released', handler);
-        });
-    }
+			this.buttons[i].appearance.material = buttonMat;
+			this.labels[i].text.contents = label;
+			behavior.onButton('released', handler);
+		});
+	}
 
-    private setup() {
-        if (!this.successMat) {
-            const am = this.context.assetManager;
-            this.successMat = am.createMaterial('success', { color: SuccessColor }).value;
-            this.failureMat = am.createMaterial('failure', { color: FailureColor }).value;
-            this.neutralMat = am.createMaterial('neutral', { color: NeutralColor }).value;
-        }
+	private setup() {
+		if (!this.successMat) {
+			const am = this.context.assetManager;
+			this.successMat = am.createMaterial('success', { color: SuccessColor }).value;
+			this.failureMat = am.createMaterial('failure', { color: FailureColor }).value;
+			this.neutralMat = am.createMaterial('neutral', { color: NeutralColor }).value;
+		}
 
-        if (this.buttons) {
-            this.destroy();
-        }
+		if (this.buttons) {
+			this.destroy();
+		}
 
-        this.buttons = [];
-        this.behaviors = [];
-        this.labels = [];
+		this.buttons = [];
+		this.behaviors = [];
+		this.labels = [];
 
-        const buttonSpacing = 2 / (pageSize + 1);
-        const buttonWidth = 0.25;
-        const buttonHeight = buttonSpacing * 0.8;
+		const buttonSpacing = 2 / (pageSize + 1);
+		const buttonWidth = 0.25;
+		const buttonHeight = buttonSpacing * 0.8;
 
-        for (let i = 0; i < pageSize; i++) {
-            const control = MRE.Actor.CreatePrimitive(this.context, {
-                definition: {
-                    shape: MRE.PrimitiveShape.Box,
-                    dimensions: { x: buttonWidth, y: buttonHeight, z: 0.1 }
-                },
-                addCollider: true,
-                actor: {
-                    name: 'Button' + i,
-                    transform: {
-                        local: {
-                            position: {
-                                x: -1 + buttonWidth / 2,
-                                y: buttonSpacing / 2 + buttonSpacing * (pageSize - i),
-                                z: -0.05
-                            }
-                        }
-                    }
-                }
-            }).value;
-            this.behaviors.push(control.setBehavior(MRE.ButtonBehavior));
-            this.buttons.push(control);
+		for (let i = 0; i < pageSize; i++) {
+			const control = MRE.Actor.CreatePrimitive(this.context, {
+				definition: {
+					shape: MRE.PrimitiveShape.Box,
+					dimensions: { x: buttonWidth, y: buttonHeight, z: 0.1 }
+				},
+				addCollider: true,
+				actor: {
+					name: 'Button' + i,
+					transform: {
+						local: {
+							position: {
+								x: -1 + buttonWidth / 2,
+								y: buttonSpacing / 2 + buttonSpacing * (pageSize - i),
+								z: -0.05
+							}
+						}
+					}
+				}
+			}).value;
+			this.behaviors.push(control.setBehavior(MRE.ButtonBehavior));
+			this.buttons.push(control);
 
-            const label = MRE.Actor.CreateEmpty(this.context, {
-                actor: {
-                    name: 'Label' + i,
-                    parentId: control.id,
-                    transform: {
-                        local: {
-                            position: { x: buttonWidth * 1.2, z: 0.05 }
-                        },
-                    },
-                    text: {
-                        contents: "Placeholder",
-                        height: 0.2,
-                        anchor: MRE.TextAnchorLocation.MiddleLeft
-                    }
-                }
-            }).value;
-            this.labels.push(label);
-        }
+			const label = MRE.Actor.CreateEmpty(this.context, {
+				actor: {
+					name: 'Label' + i,
+					parentId: control.id,
+					transform: {
+						local: {
+							position: { x: buttonWidth * 1.2, z: 0.05 }
+						},
+					},
+					text: {
+						contents: "Placeholder",
+						height: 0.2,
+						anchor: MRE.TextAnchorLocation.MiddleLeft
+					}
+				}
+			}).value;
+			this.labels.push(label);
+		}
 
-        const backButton = MRE.Actor.CreatePrimitive(this.context, {
-            definition: {
-                shape: MRE.PrimitiveShape.Box,
-                dimensions: { x: buttonWidth, y: buttonHeight, z: 0.1 }
-            },
-            addCollider: true,
-            actor: {
-                name: 'BackButton',
-                transform: {
-                    local: {
-                        position: { x: -1 + buttonWidth / 2, y: buttonSpacing / 2, z: -0.05 }
-                    }
-                }
-            }
-        }).value;
+		const backButton = MRE.Actor.CreatePrimitive(this.context, {
+			definition: {
+				shape: MRE.PrimitiveShape.Box,
+				dimensions: { x: buttonWidth, y: buttonHeight, z: 0.1 }
+			},
+			addCollider: true,
+			actor: {
+				name: 'BackButton',
+				transform: {
+					local: {
+						position: { x: -1 + buttonWidth / 2, y: buttonSpacing / 2, z: -0.05 }
+					}
+				}
+			}
+		}).value;
 
-        const backLabel = MRE.Actor.CreateEmpty(this.context, {
-            actor: {
-                name: 'BackLabel',
-                parentId: backButton.id,
-                transform: {
-                    local: {
-                        position: { x: buttonWidth * 1.2, z: 0.05 }
-                    },
-                },
-                text: {
-                    contents: "Back",
-                    height: 0.2,
-                    anchor: MRE.TextAnchorLocation.MiddleLeft
-                }
-            }
-        }).value;
+		const backLabel = MRE.Actor.CreateEmpty(this.context, {
+			actor: {
+				name: 'BackLabel',
+				parentId: backButton.id,
+				transform: {
+					local: {
+						position: { x: buttonWidth * 1.2, z: 0.05 }
+					},
+				},
+				text: {
+					contents: "Back",
+					height: 0.2,
+					anchor: MRE.TextAnchorLocation.MiddleLeft
+				}
+			}
+		}).value;
 
-        backButton.setBehavior(MRE.ButtonBehavior)
-            .onButton('released', () => {
-                this.back();
-                this.show();
-            });
+		backButton.setBehavior(MRE.ButtonBehavior)
+			.onButton('released', () => {
+				this.back();
+				this.show();
+			});
 
-        this.otherActors = [backButton, backLabel];
-    }
+		this.otherActors = [backButton, backLabel];
+	}
 
-    private destroy() {
-        destroyActors(this.buttons);
-        destroyActors(this.otherActors);
-        this.buttons = null;
-        this.behaviors = null;
-        this.labels = null;
-        this.otherActors = null;
-    }
+	private destroy() {
+		destroyActors(this.buttons);
+		destroyActors(this.otherActors);
+		this.buttons = null;
+		this.behaviors = null;
+		this.labels = null;
+		this.otherActors = null;
+	}
 }
 
 function paginate(tests: FactoryMap): MenuItem[] {
-    const names = Object.keys(tests).sort();
-    const count = names.length;
-    if (count <= pageSize) {
-        return names.map(name => ({ label: name, action: tests[name] } as MenuItem));
-    } else {
-        const submenus: MenuItem[] = [];
-        let lastName = '';
+	const names = Object.keys(tests).sort();
+	const count = names.length;
+	if (count <= pageSize) {
+		return names.map(name => ({ label: name, action: tests[name] } as MenuItem));
+	} else {
+		const submenus: MenuItem[] = [];
+		let lastName = '';
 
-        while (names.length > 0) {
-            const pageNames = names.splice(0, Math.max(pageSize, Math.floor(count / (pageSize - 1))));
-            const lastPageName = pageNames[pageNames.length - 1];
-            submenus.push({
-                label: uniquePrefix(pageNames[0], lastName) + " - " + uniquePrefix(lastPageName, names[0] || ''),
-                action: paginate(pageNames.reduce(
-                    (sum, val) => { sum[val] = tests[val]; return sum; },
-                    {} as FactoryMap
-                ))
-            });
+		while (names.length > 0) {
+			const pageNames = names.splice(0, Math.max(pageSize, Math.floor(count / (pageSize - 1))));
+			const lastPageName = pageNames[pageNames.length - 1];
+			submenus.push({
+				label: uniquePrefix(pageNames[0], lastName) + " - " + uniquePrefix(lastPageName, names[0] || ''),
+				action: paginate(pageNames.reduce(
+					(sum, val) => { sum[val] = tests[val]; return sum; },
+					{} as FactoryMap
+				))
+			});
 
-            lastName = lastPageName;
-        }
+			lastName = lastPageName;
+		}
 
-        return submenus;
-    }
+		return submenus;
+	}
 }
 
 function uniquePrefix(of: string, against: string) {
-    let prefixEnd = 0;
+	let prefixEnd = 0;
 
-    while (of.charAt(prefixEnd) === against.charAt(prefixEnd)) {
-        prefixEnd++;
-    }
+	while (of.charAt(prefixEnd) === against.charAt(prefixEnd)) {
+		prefixEnd++;
+	}
 
-    return of.slice(0, prefixEnd + 1);
+	return of.slice(0, prefixEnd + 1);
 }

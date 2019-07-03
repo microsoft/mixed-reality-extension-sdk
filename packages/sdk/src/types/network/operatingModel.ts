@@ -7,6 +7,6 @@
  * @hidden
  */
 export enum OperatingModel {
-    ServerAuthoritative = 'server-authoritative',
-    PeerAuthoritative = 'peer-authoritative'
+	ServerAuthoritative = 'server-authoritative',
+	PeerAuthoritative = 'peer-authoritative'
 }

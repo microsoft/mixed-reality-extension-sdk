@@ -9,7 +9,7 @@
  * promise if you need to know when the resource has been fully created on the host.
  */
 export interface ForwardPromise<T> extends Promise<T> {
-    value?: T;
+	value?: T;
 }
 
 /**
@@ -18,10 +18,10 @@ export interface ForwardPromise<T> extends Promise<T> {
  * @param promise The promise to be converted.
  */
 export function createForwardPromise<T>(
-    value: T,
-    promise: Promise<T>
+	value: T,
+	promise: Promise<T>
 ): ForwardPromise<T> {
-    const fp = promise as ForwardPromise<T>;
-    fp.value = value;
-    return fp;
+	const fp = promise as ForwardPromise<T>;
+	fp.value = value;
+	return fp;
 }

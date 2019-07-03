@@ -6,9 +6,9 @@
 import { Test } from '../test';
 
 export default class FailureTest extends Test {
-    public expectedResultDescription = "Fails";
+	public expectedResultDescription = "Fails";
 
-    public async run(): Promise<boolean> {
-        throw new Error("Throwing an exception");
-    }
+	public async run(): Promise<boolean> {
+		throw new Error("Throwing an exception");
+	}
 }
