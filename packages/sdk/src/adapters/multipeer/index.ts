@@ -7,6 +7,7 @@ export * from './adapter';
 export * from './session';
 export * from './client';
 export * from './syncActor';
+export * from './syncAsset';
 export * from './protocols';
 export * from './rules';
 export * from './clientDesyncPreprocessor';

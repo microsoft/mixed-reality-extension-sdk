@@ -7,7 +7,7 @@ import deepmerge from 'deepmerge';
 import { EventEmitter } from 'events';
 import {
 	Client, InitializeActorMessage, MissingRule, Rules, SessionExecution,
-	SessionHandshake, SessionSync, SyncActor
+	SessionHandshake, SessionSync, SyncActor, SyncAsset
 } from '.';
 import { Connection, Message, UserLike } from '../..';
 import { log } from '../../log';
@@ -22,8 +22,7 @@ export class Session extends EventEmitter {
 	// tslint:disable:variable-name
 	private _clientSet: { [id: string]: Client } = {};
 	private _actorSet: { [id: string]: Partial<SyncActor> } = {};
-	private _assets: Array<Message<Payloads.LoadAssets | Payloads.CreateAsset>> = [];
-	private _assetUpdateSet: { [id: string]: Partial<Payloads.AssetUpdate> } = {};
+	private _assetSet: { [id: string]: Partial<SyncAsset> } = {};
 	private _userSet: { [id: string]: Partial<UserLike> } = {};
 	private _protocol: Protocols.Protocol;
 	// tslint:enable:variable-name
@@ -36,10 +35,7 @@ export class Session extends EventEmitter {
 			this._clientSet[clientId]).sort((a, b) => a.order - b.order);
 	}
 	public get actors() { return Object.keys(this._actorSet).map(actorId => this._actorSet[actorId]); }
-	public get assets() { return this._assets; }
-	public get assetUpdates() {
-		return Object.keys(this._assetUpdateSet).map(assetId => this._assetUpdateSet[assetId]);
-	}
+	public get assets() { return Object.keys(this._assetSet).map(id => this._assetSet[id]); }
 	public get rootActors() {
 		return Object.keys(this._actorSet)
 			.filter(actorId => !this._actorSet[actorId].initialization.message.payload.actor.parentId)
@@ -49,7 +45,7 @@ export class Session extends EventEmitter {
 	public get authoritativeClient() { return this.clients.find(client => client.authoritative); }
 	public get peerAuthoritative() { return this._peerAuthoritative; }
 	public get actorSet() { return this._actorSet; }
-	public get assetUpdateSet() { return this._assetUpdateSet; }
+	public get assetSet() { return this._assetSet; }
 	public get userSet() { return this._userSet; }
 
 	public client = (clientId: string) => this._clientSet[clientId];
@@ -270,14 +266,50 @@ export class Session extends EventEmitter {
 		}
 	}
 
-	public cacheCreateAssetMessage(message: Message<Payloads.LoadAssets | Payloads.CreateAsset>) {
-		// TODO: Is each load-asset unique? Can the same asset be loaded twice?
-		this.assets.push(message);
+	public cacheAssetCreation(
+		assetId: string,
+		creator: Message<Payloads.LoadAssets | Payloads.CreateAsset>
+	) {
+		const syncAsset = this.assetSet[assetId] = { id: assetId } as Partial<SyncAsset>;
+
+		if (creator.payload.type === 'create-asset') {
+			syncAsset.creationSimple = creator as Message<Payloads.CreateAsset>;
+
+			// Updates are cached on send, creates are cached on receive,
+			// so it's possible something was updated while it was loading.
+			// Merge those updates into creation once the create comes back.
+			if (syncAsset.update) {
+				syncAsset.creationSimple.payload.definition = deepmerge(
+					syncAsset.creationSimple.payload.definition,
+					syncAsset.update.payload.asset
+				);
+				syncAsset.update = undefined;
+			}
+		} else {
+			syncAsset.creationBatch = creator as Message<Payloads.LoadAssets>;
+		}
 	}
 
-	public cacheUpdateAssetMessage(message: Message<Payloads.AssetUpdate>) {
-		// TODO: merge single-asset updates into creation message
-		const [updates, id] = [this.assetUpdateSet, message.payload.asset.id];
-		updates[id] = deepmerge(updates[id] || {}, message.payload);
+	public cacheAssetUpdate(update: Message<Payloads.AssetUpdate>) {
+		const syncAsset = this.assetSet[update.payload.asset.id] =
+			this.assetSet[update.payload.asset.id] || { id: update.payload.asset.id };
+
+		if (syncAsset.creationSimple) {
+			syncAsset.creationSimple.payload.definition = deepmerge(
+				syncAsset.creationSimple.payload.definition,
+				update.payload.asset);
+		} else if (syncAsset.update) {
+			syncAsset.update.payload.asset = deepmerge(
+				syncAsset.update.payload.asset,
+				update.payload.asset);
+		} else {
+			syncAsset.update = update;
+		}
+	}
+
+	public cacheAssetUnload(...assetIds: string[]) {
+		for (const id of assetIds) {
+			delete this.assetSet[id];
+		}
 	}
 }

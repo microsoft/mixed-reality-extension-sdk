@@ -475,6 +475,10 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 				message: Message<Payloads.AssetsLoaded>
 			) => {
 				if (client.authoritative) {
+					for (const asset of message.payload.assets) {
+						session.cacheAssetCreation(asset.id, )
+					}
+
 					return message;
 				} else if (message.payload.failureMessage && message.payload.failureMessage.length) {
 					// TODO: Propagate to app as a general failure message once
@@ -655,16 +659,6 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 			before: 'ignore',
 			during: 'queue',
 			after: 'allow'
-		},
-		session: {
-			...DefaultRule.session,
-			beforeReceiveFromApp: (
-				session: Session,
-				message: Message<Payloads.LoadAssets>
-			) => {
-				session.cacheCreateAssetMessage(message);
-				return message;
-			}
 		}
 	},
 
@@ -1052,10 +1046,7 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 				session: Session,
 				message: Message<Payloads.UnloadAssets>
 			) => {
-				for (const assetId of message.payload.assetIds) {
-					delete session.assetUpdateSet[assetId];
-					// TODO: Delete creation message if unloading all its assets
-				}
+				session.cacheAssetUnload(...message.payload.assetIds);
 				return message;
 			}
 		}
