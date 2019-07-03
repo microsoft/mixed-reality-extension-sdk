@@ -10,20 +10,20 @@ import validateJsonFieldName from "./validateJsonFieldName";
  * Reads the value at the path in the src object and writes it to the dst object.
  */
 export default function readPath(src: any, dst: any, ...path: string[]) {
-    let field;
-    while (path.length) {
-        field = path.shift();
-        validateJsonFieldName(field);
-        if (path.length) {
-            if (!dst.hasOwnProperty(field)) {
-                dst[field] = {};
-            }
-            dst = dst[field];
-        }
-        if (typeof src[field] === 'undefined') {
-            return;
-        }
-        src = src[field];
-    }
-    dst[field] = (src && src.toJSON) ? src.toJSON() : src;
+	let field;
+	while (path.length) {
+		field = path.shift();
+		validateJsonFieldName(field);
+		if (path.length) {
+			if (!dst.hasOwnProperty(field)) {
+				dst[field] = {};
+			}
+			dst = dst[field];
+		}
+		if (typeof src[field] === 'undefined') {
+			return;
+		}
+		src = src[field];
+	}
+	dst[field] = (src && src.toJSON) ? src.toJSON() : src;
 }

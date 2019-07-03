@@ -8,20 +8,20 @@ import { Test } from './index';
 
 /** @hidden */
 export default class Triangle implements Test {
-    public name = 'Triangle';
-    public shouldPrintJson = true;
-    public shouldPrintBuffer = true;
+	public name = 'Triangle';
+	public shouldPrintJson = true;
+	public shouldPrintBuffer = true;
 
-    public async run(): Promise<Buffer> {
-        const prim = new GltfGen.MeshPrimitive({
-            vertices: [
-                new GltfGen.Vertex({ position: [0, 0, 0], texCoord0: [0, 0] }),
-                new GltfGen.Vertex({ position: [1, 0, 0], texCoord0: [1, 0] }),
-                new GltfGen.Vertex({ position: [0, 1, 0], texCoord0: [0, 1] })
-            ],
-            triangles: [0, 1, 2]
-        });
+	public async run(): Promise<Buffer> {
+		const prim = new GltfGen.MeshPrimitive({
+			vertices: [
+				new GltfGen.Vertex({ position: [0, 0, 0], texCoord0: [0, 0] }),
+				new GltfGen.Vertex({ position: [1, 0, 0], texCoord0: [1, 0] }),
+				new GltfGen.Vertex({ position: [0, 1, 0], texCoord0: [0, 1] })
+			],
+			triangles: [0, 1, 2]
+		});
 
-        return await GltfGen.GltfFactory.FromSinglePrimitive(prim).generateGLTF();
-    }
+		return await GltfGen.GltfFactory.FromSinglePrimitive(prim).generateGLTF();
+	}
 }

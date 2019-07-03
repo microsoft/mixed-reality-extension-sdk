@@ -8,84 +8,84 @@ import { App } from '../app';
 import { Test } from '../test';
 
 import {
-    VideoPlayerManager
+	VideoPlayerManager
 } from '@microsoft/mixed-reality-extension-altspacevr-extras';
 
 export default class AltspaceVRVideoTest extends Test {
-    public expectedResultDescription = "Play a couple youtube videos. Click to cycle.";
+	public expectedResultDescription = "Play a couple youtube videos. Click to cycle.";
 
-    private videoPlayerManager: VideoPlayerManager;
+	private videoPlayerManager: VideoPlayerManager;
 
-    constructor(app: App, baseUrl: string, user: MRE.User) {
-        super(app, baseUrl, user);
-        this.videoPlayerManager = new VideoPlayerManager(app.context);
-    }
-    public cleanup() {
-        this.videoPlayerManager.cleanup();
-    }
+	constructor(app: App, baseUrl: string, user: MRE.User) {
+		super(app, baseUrl, user);
+		this.videoPlayerManager = new VideoPlayerManager(app.context);
+	}
+	public cleanup() {
+		this.videoPlayerManager.cleanup();
+	}
 
-    private _state = 0;
+	private _state = 0;
 
-    public async run(root: MRE.Actor): Promise<boolean> {
-        const video = await MRE.Actor.CreateEmpty(this.app.context, {
-            actor: {
-                parentId: root.id,
-                name: 'video',
-                transform: {
-                    local: {
-                        position: { x: 0, y: 1, z: 0 },
-                        scale: { x: 2, y: 2, z: 2 }
-                    }
-                },
-            }
-        });
+	public async run(root: MRE.Actor): Promise<boolean> {
+		const video = await MRE.Actor.CreateEmpty(this.app.context, {
+			actor: {
+				parentId: root.id,
+				name: 'video',
+				transform: {
+					local: {
+						position: { x: 0, y: 1, z: 0 },
+						scale: { x: 2, y: 2, z: 2 }
+					}
+				},
+			}
+		});
 
-        const cycleState = () => {
-            if (this._state === 0) {
-                this.app.setOverrideText("Playing Movie!");
-                this.videoPlayerManager.play(
-                    video.id,
-                    'https://www.youtube.com/watch?v=z1YNh9BQVRg',
-                    0.0);
-            } else if (this._state === 1) {
-                this.app.setOverrideText("Switched Movie!");
-                this.videoPlayerManager.play(
-                    video.id,
-                    'https://www.youtube.com/watch?v=UowkIRSDHfs',
-                    0.0);
-            } else if (this._state === 2) {
-                this.app.setOverrideText("Stopped Movie!");
-                this.videoPlayerManager.stop(video.id);
-            }
+		const cycleState = () => {
+			if (this._state === 0) {
+				this.app.setOverrideText("Playing Movie!");
+				this.videoPlayerManager.play(
+					video.id,
+					'https://www.youtube.com/watch?v=z1YNh9BQVRg',
+					0.0);
+			} else if (this._state === 1) {
+				this.app.setOverrideText("Switched Movie!");
+				this.videoPlayerManager.play(
+					video.id,
+					'https://www.youtube.com/watch?v=UowkIRSDHfs',
+					0.0);
+			} else if (this._state === 2) {
+				this.app.setOverrideText("Stopped Movie!");
+				this.videoPlayerManager.stop(video.id);
+			}
 
-            this._state = (this._state + 1) % 3;
-        };
-        cycleState();
+			this._state = (this._state + 1) % 3;
+		};
+		cycleState();
 
-        const buttonPromise = MRE.Actor.CreatePrimitive(this.app.context, {
-            definition: {
-                shape: MRE.PrimitiveShape.Sphere,
-                radius: 0.2,
-                uSegments: 8,
-                vSegments: 4
+		const buttonPromise = MRE.Actor.CreatePrimitive(this.app.context, {
+			definition: {
+				shape: MRE.PrimitiveShape.Sphere,
+				radius: 0.2,
+				uSegments: 8,
+				vSegments: 4
 
-            },
-            addCollider: true,
-            actor: {
-                name: 'Button',
-                parentId: root.id,
-                transform: {
-                    local: {
-                        position: { x: -0.8, y: 0.2, z: 0 }
-                    }
-                }
-            }
-        });
+			},
+			addCollider: true,
+			actor: {
+				name: 'Button',
+				parentId: root.id,
+				transform: {
+					local: {
+						position: { x: -0.8, y: 0.2, z: 0 }
+					}
+				}
+			}
+		});
 
-        const buttonBehavior = buttonPromise.value.setBehavior(MRE.ButtonBehavior);
-        buttonBehavior.onButton('released', cycleState);
+		const buttonBehavior = buttonPromise.value.setBehavior(MRE.ButtonBehavior);
+		buttonBehavior.onButton('released', cycleState);
 
-        await this.stoppedAsync();
-        return true;
-    }
+		await this.stoppedAsync();
+		return true;
+	}
 }

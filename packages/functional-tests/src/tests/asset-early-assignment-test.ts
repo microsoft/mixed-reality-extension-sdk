@@ -7,39 +7,39 @@ import * as MRE from '@microsoft/mixed-reality-extension-sdk';
 import { Test } from '../test';
 
 export default class AssetEarlyAssignmentTest extends Test {
-    public expectedResultDescription = "Assign asset properties before initialization is finished";
+	public expectedResultDescription = "Assign asset properties before initialization is finished";
 
-    public async run(root: MRE.Actor): Promise<boolean> {
-        const AM = this.app.context.assetManager;
-        this.app.setOverrideText("Colored & textured sphere");
+	public async run(root: MRE.Actor): Promise<boolean> {
+		const AM = this.app.context.assetManager;
+		this.app.setOverrideText("Colored & textured sphere");
 
-        const tex = AM.createTexture('uvgrid', {
-            uri: `${this.baseUrl}/uv-grid.png`
-        }).value;
+		const tex = AM.createTexture('uvgrid', {
+			uri: `${this.baseUrl}/uv-grid.png`
+		}).value;
 
-        const mat = AM.createMaterial('blue', {
-            color: MRE.Color3.Blue(),
-            mainTextureId: tex.id
-        }).value;
+		const mat = AM.createMaterial('blue', {
+			color: MRE.Color3.Blue(),
+			mainTextureId: tex.id
+		}).value;
 
-        MRE.Actor.CreatePrimitive(this.app.context, {
-            definition: {
-                shape: MRE.PrimitiveShape.Sphere,
-                radius: 0.5
-            },
-            actor: {
-                name: 'sphere',
-                parentId: root.id,
-                appearance: { materialId: mat.id },
-                transform: {
-                    local: {
-                        position: { y: 1, z: -1 }
-                    }
-                }
-            }
-        });
+		MRE.Actor.CreatePrimitive(this.app.context, {
+			definition: {
+				shape: MRE.PrimitiveShape.Sphere,
+				radius: 0.5
+			},
+			actor: {
+				name: 'sphere',
+				parentId: root.id,
+				appearance: { materialId: mat.id },
+				transform: {
+					local: {
+						position: { y: 1, z: -1 }
+					}
+				}
+			}
+		});
 
-        await this.stoppedAsync();
-        return true;
-    }
+		await this.stoppedAsync();
+		return true;
+	}
 }

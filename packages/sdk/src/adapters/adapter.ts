@@ -11,16 +11,16 @@ import { Context, ParameterSet } from '..';
  * Adapter options
  */
 export type AdapterOptions = {
-    /**
-     * @member {http.Server} server Provide an existing web server to use. Will create one otherwise
-     */
-    server?: Restify.Server;
-    /**
-     * @member {string | number} port Optional. When options.server is not supplied and an internal web server is to be
-     * created, this is the port number it should listen on. If this value is not given, it will attempt to read the
-     * PORT environment variable, then default to 3901
-     */
-    port?: string | number;
+	/**
+	 * @member {http.Server} server Provide an existing web server to use. Will create one otherwise
+	 */
+	server?: Restify.Server;
+	/**
+	 * @member {string | number} port Optional. When options.server is not supplied and an internal web server is to be
+	 * created, this is the port number it should listen on. If this value is not given, it will attempt to read the
+	 * PORT environment variable, then default to 3901
+	 */
+	port?: string | number;
 };
 
 /**
@@ -29,33 +29,33 @@ export type AdapterOptions = {
  * the 'connection' event is raised.
  */
 export abstract class Adapter {
-    protected emitter = new events.EventEmitter();
+	protected emitter = new events.EventEmitter();
 
-    protected get options() { return this._options; }
+	protected get options() { return this._options; }
 
-    public get server() { return this._options.server; }
-    public set server(value: Restify.Server) { this._options.server = value; }
-    public get port() { return this._options.port; }
+	public get server() { return this._options.server; }
+	public set server(value: Restify.Server) { this._options.server = value; }
+	public get port() { return this._options.port; }
 
-    // tslint:disable-next-line:variable-name
-    constructor(protected _options: AdapterOptions) {
-        this._options = { ..._options };
-        this._options.port =
-            this._options.port ||
-            process.env.port ||
-            process.env.PORT ||
-            3901;
-    }
+	// tslint:disable-next-line:variable-name
+	constructor(protected _options: AdapterOptions) {
+		this._options = { ..._options };
+		this._options.port =
+			this._options.port ||
+			process.env.port ||
+			process.env.PORT ||
+			3901;
+	}
 
-    public abstract listen(): Promise<Restify.Server>;
+	public abstract listen(): Promise<Restify.Server>;
 
-    /**
-     * The onConnection event is raised when a new Context is created for an application session. This happens when the
-     * first client connects to your application.
-     * @event
-     */
-    public onConnection(handler: (context: Context, params: ParameterSet) => void): this {
-        this.emitter.addListener('connection', handler);
-        return this;
-    }
+	/**
+	 * The onConnection event is raised when a new Context is created for an application session. This happens when the
+	 * first client connects to your application.
+	 * @event
+	 */
+	public onConnection(handler: (context: Context, params: ParameterSet) => void): this {
+		this.emitter.addListener('connection', handler);
+		return this;
+	}
 }

@@ -31,69 +31,69 @@ export type WebSocketAdapterOptions = AdapterOptions;
  *  - Server-based multiuser topologies
  */
 export class WebSocketAdapter extends Adapter {
-    /**
-     * Creates a new instance of the WebSocket Adapter.
-     */
-    constructor(options?: WebSocketAdapterOptions) {
-        super(options);
-    }
+	/**
+	 * Creates a new instance of the WebSocket Adapter.
+	 */
+	constructor(options?: WebSocketAdapterOptions) {
+		super(options);
+	}
 
-    /**
-     * Start the adapter listening for new connections.
-     * @param onNewConnection Handler for new connections.
-     */
-    public listen() {
-        if (!this.server) {
-            // If necessary, create a new web server.
-            return new Promise<Restify.Server>((resolve) => {
-                const server = this.server = Restify.createServer({ name: "WebSocket Adapter" });
-                this.server.listen(this.port, () => {
-                    this.startListening();
-                    resolve(server);
-                });
-            });
-        } else {
-            // Already have a server, so just start listening.
-            this.startListening();
-            return Promise.resolve(this.server);
-        }
-    }
+	/**
+	 * Start the adapter listening for new connections.
+	 * @param onNewConnection Handler for new connections.
+	 */
+	public listen() {
+		if (!this.server) {
+			// If necessary, create a new web server.
+			return new Promise<Restify.Server>((resolve) => {
+				const server = this.server = Restify.createServer({ name: "WebSocket Adapter" });
+				this.server.listen(this.port, () => {
+					this.startListening();
+					resolve(server);
+				});
+			});
+		} else {
+			// Already have a server, so just start listening.
+			this.startListening();
+			return Promise.resolve(this.server);
+		}
+	}
 
-    private startListening() {
-        // Create a server for upgrading HTTP connections to WebSockets.
-        const wss = new WS.Server({ server: this.server, verifyClient });
+	private startListening() {
+		// Create a server for upgrading HTTP connections to WebSockets.
+		const wss = new WS.Server({ server: this.server, verifyClient });
 
-        // Handle connection upgrades
-        wss.on('connection', (ws: WS, request: http.IncomingMessage) => {
-            log.info('network', "New WebSocket connection");
+		// Handle connection upgrades
+		wss.on('connection', (ws: WS, request: http.IncomingMessage) => {
+			log.info('network', "New WebSocket connection");
 
-            // Read the sessionId header.
-            let sessionId = request.headers[Constants.HTTPHeaders.SessionID] as string || UUID();
-            sessionId = decodeURIComponent(sessionId);
+			// Read the sessionId header.
+			let sessionId = request.headers[Constants.HTTPHeaders.SessionID] as string || UUID();
+			sessionId = decodeURIComponent(sessionId);
 
-            // Parse URL parameters.
-            const params = QueryString.parseUrl(request.url).query;
+			// Parse URL parameters.
+			const params = QueryString.parseUrl(request.url).query;
 
-            // Get the client's IP address rather than the last proxy connecting to you.
-            const address = forwarded(request, request.headers);
+			// Get the client's IP address rather than the last proxy connecting to you.
+			const address = forwarded(request, request.headers);
 
-            // Create a WebSocket for the connection.
-            const connection = new WebSocket(ws, address.ip);
+			// Create a WebSocket for the connection.
+			const connection = new WebSocket(ws, address.ip);
 
-            // Create a new context for the connection.
-            const context = new Context({
-                sessionId,
-                connection
-            });
+			// Create a new context for the connection.
+			const context = new Context({
+				sessionId,
+				connection
+			});
 
-            // Start the context listening to network traffic.
-            context.internal.startListening().catch(() => connection.close());
+			// Start the context listening to network traffic.
+			context.internal.startListening().catch(() => connection.close());
 
-            // Pass the new context to the app
-            this.emitter.emit('connection', context, params);
+			// Pass the new context to the app
+			this.emitter.emit('connection', context, params);
 
-            // Start context's update loop.
-            context.internal.start();
-        });
-    }
+			// Start context's update loop.
+			context.internal.start();
+		});
+	}
 }

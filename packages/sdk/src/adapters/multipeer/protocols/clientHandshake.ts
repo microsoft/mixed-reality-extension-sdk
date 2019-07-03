@@ -11,10 +11,10 @@ import { OperatingModel } from '../../../types/network/operatingModel';
  * @hidden
  */
 export class ClientHandshake extends Handshake {
-    /** @override */
-    public get name(): string { return `${this.constructor.name} client ${this.client.id.substr(0, 8)}`; }
+	/** @override */
+	public get name(): string { return `${this.constructor.name} client ${this.client.id.substr(0, 8)}`; }
 
-    constructor(private client: Client, sessionId: string) {
-        super(client.conn, sessionId, OperatingModel.PeerAuthoritative);
-    }
+	constructor(private client: Client, sessionId: string) {
+		super(client.conn, sessionId, OperatingModel.PeerAuthoritative);
+	}
 }

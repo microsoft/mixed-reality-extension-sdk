@@ -8,12 +8,12 @@ import * as GltfGen from '..';
 
 /** @hidden */
 export default class EmptyTest implements Test {
-    public name = 'Empty glTF';
-    public shouldPrintJson = false;
-    public shouldPrintBuffer = false;
+	public name = 'Empty glTF';
+	public shouldPrintJson = false;
+	public shouldPrintBuffer = false;
 
-    public async run(): Promise<Buffer> {
-        const factory = new GltfGen.GltfFactory();
-        return await factory.generateGLTF();
-    }
+	public async run(): Promise<Buffer> {
+		const factory = new GltfGen.GltfFactory();
+		return await factory.generateGLTF();
+	}
 }

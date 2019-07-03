@@ -12,20 +12,20 @@ import * as Payloads from '../../../types/network/payloads';
  * Class to manage the synchronization phase when connecting to the app. There should be no state to synchronize
  */
 export class SessionSync extends Protocols.Protocol {
-    constructor(session: Session) {
-        super(session.conn);
-        // Behave like a client-side endpoint (record latency, respond to heartbeats).
-        this.use(new Protocols.ClientPreprocessing(this));
-    }
+	constructor(session: Session) {
+		super(session.conn);
+		// Behave like a client-side endpoint (record latency, respond to heartbeats).
+		this.use(new Protocols.ClientPreprocessing(this));
+	}
 
-    /** @override */
-    public startListening() {
-        super.startListening();
-        this.sendPayload({ type: 'sync-request' } as Payloads.SyncRequest);
-    }
+	/** @override */
+	public startListening() {
+		super.startListening();
+		this.sendPayload({ type: 'sync-request' } as Payloads.SyncRequest);
+	}
 
-    /** @private */
-    public 'recv-sync-complete' = (payload: Payloads.SyncComplete) => {
-        this.resolve();
-    }
+	/** @private */
+	public 'recv-sync-complete' = (payload: Payloads.SyncComplete) => {
+		this.resolve();
+	}
 }

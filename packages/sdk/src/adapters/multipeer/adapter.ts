@@ -23,12 +23,12 @@ const forwarded = require('forwarded-for');
  * Multi-peer adapter options
  */
 export type MultipeerAdapterOptions = AdapterOptions & {
-    /**
-     * @member peerAuthoritative (Optional. Default: true) Whether or not to run in the `peer-authoritative`
-     * operating model. When true, one peer is picked to synchonize actor changes, animation states, etc.
-     * When false, no state is synchronized between peers.
-     */
-    peerAuthoritative?: boolean;
+	/**
+	 * @member peerAuthoritative (Optional. Default: true) Whether or not to run in the `peer-authoritative`
+	 * operating model. When true, one peer is picked to synchonize actor changes, animation states, etc.
+	 * When false, no state is synchronized between peers.
+	 */
+	peerAuthoritative?: boolean;
 };
 
 /**
@@ -44,121 +44,121 @@ export type MultipeerAdapterOptions = AdapterOptions & {
  */
 export class MultipeerAdapter extends Adapter {
 
-    // FUTURE: Make these child processes?
-    private sessions: { [id: string]: Session } = {};
+	// FUTURE: Make these child processes?
+	private sessions: { [id: string]: Session } = {};
 
-    /** @override */
-    protected get options(): MultipeerAdapterOptions { return this._options; }
+	/** @override */
+	protected get options(): MultipeerAdapterOptions { return this._options; }
 
-    /**
-     * Creates a new instance of the Multi-peer Adapter
-     */
-    constructor(options?: MultipeerAdapterOptions) {
-        super(options);
-        this._options = { peerAuthoritative: true, ...this._options } as AdapterOptions;
-    }
+	/**
+	 * Creates a new instance of the Multi-peer Adapter
+	 */
+	constructor(options?: MultipeerAdapterOptions) {
+		super(options);
+		this._options = { peerAuthoritative: true, ...this._options } as AdapterOptions;
+	}
 
-    /**
-     * Start the adapter listening for new incoming connections from engine clients
-     */
-    public listen() {
-        if (!this.server) {
-            // If necessary, create a new web server
-            return new Promise<Restify.Server>((resolve) => {
-                const server = this.server = Restify.createServer({ name: "Multi-peer Adapter" });
-                this.server.listen(this.port, () => {
-                    this.startListening();
-                    resolve(server);
-                });
-            });
-        } else {
-            // Already have a server, so just start listening
-            this.startListening();
-            return Promise.resolve(this.server);
-        }
-    }
+	/**
+	 * Start the adapter listening for new incoming connections from engine clients
+	 */
+	public listen() {
+		if (!this.server) {
+			// If necessary, create a new web server
+			return new Promise<Restify.Server>((resolve) => {
+				const server = this.server = Restify.createServer({ name: "Multi-peer Adapter" });
+				this.server.listen(this.port, () => {
+					this.startListening();
+					resolve(server);
+				});
+			});
+		} else {
+			// Already have a server, so just start listening
+			this.startListening();
+			return Promise.resolve(this.server);
+		}
+	}
 
-    private async getOrCreateSession(sessionId: string, params: ParameterSet) {
-        let session = this.sessions[sessionId];
-        if (!session) {
-            // Create an in-memory "connection" (If the app were running remotely, we would connect
-            // to it via WebSocket here instead)
-            const pipe = new Pipe();
-            // Create a new context for the connection, passing it the remote side of the pipe.
-            const context = new Context({
-                sessionId,
-                connection: pipe.remote
-            });
-            // Start the context listening to network traffic.
-            context.internal.startListening().catch(() => pipe.remote.close());
-            // Instantiate a new session.
-            session = this.sessions[sessionId] = new Session(
-                pipe.local, sessionId, this.options.peerAuthoritative);
-            // Handle session close.
-            const $this = this;
-            session.on('close', () => delete $this.sessions[sessionId]);
-            // Connect the session to the context.
-            await session.connect(); // Allow exceptions to propagate.
-            // Pass the new context to the app.
-            this.emitter.emit('connection', context, params);
-            // Start context's update loop.
-            context.internal.start();
-        }
-        return session;
-    }
+	private async getOrCreateSession(sessionId: string, params: ParameterSet) {
+		let session = this.sessions[sessionId];
+		if (!session) {
+			// Create an in-memory "connection" (If the app were running remotely, we would connect
+			// to it via WebSocket here instead)
+			const pipe = new Pipe();
+			// Create a new context for the connection, passing it the remote side of the pipe.
+			const context = new Context({
+				sessionId,
+				connection: pipe.remote
+			});
+			// Start the context listening to network traffic.
+			context.internal.startListening().catch(() => pipe.remote.close());
+			// Instantiate a new session.
+			session = this.sessions[sessionId] = new Session(
+				pipe.local, sessionId, this.options.peerAuthoritative);
+			// Handle session close.
+			const $this = this;
+			session.on('close', () => delete $this.sessions[sessionId]);
+			// Connect the session to the context.
+			await session.connect(); // Allow exceptions to propagate.
+			// Pass the new context to the app.
+			this.emitter.emit('connection', context, params);
+			// Start context's update loop.
+			context.internal.start();
+		}
+		return session;
+	}
 
-    private startListening() {
-        // Create a server for upgrading HTTP connections to WebSockets
-        const wss = new WS.Server({ server: this.server, verifyClient });
+	private startListening() {
+		// Create a server for upgrading HTTP connections to WebSockets
+		const wss = new WS.Server({ server: this.server, verifyClient });
 
-        // Handle WebSocket connection upgrades
-        wss.on('connection', async (ws: WS, request: http.IncomingMessage) => {
-            try {
-                log.info('network', "New Multi-peer connection");
+		// Handle WebSocket connection upgrades
+		wss.on('connection', async (ws: WS, request: http.IncomingMessage) => {
+			try {
+				log.info('network', "New Multi-peer connection");
 
-                // Read the sessionId header.
-                let sessionId = request.headers[Constants.HTTPHeaders.SessionID] as string || UUID();
-                sessionId = decodeURIComponent(sessionId);
+				// Read the sessionId header.
+				let sessionId = request.headers[Constants.HTTPHeaders.SessionID] as string || UUID();
+				sessionId = decodeURIComponent(sessionId);
 
-                // Parse URL parameters.
-                const params = QueryString.parseUrl(request.url).query;
+				// Parse URL parameters.
+				const params = QueryString.parseUrl(request.url).query;
 
-                // Get the client's IP address rather than the last proxy connecting to you.
-                const address = forwarded(request, request.headers);
+				// Get the client's IP address rather than the last proxy connecting to you.
+				const address = forwarded(request, request.headers);
 
-                // Create a WebSocket for this connection.
-                const conn = new WebSocket(ws, address.ip);
+				// Create a WebSocket for this connection.
+				const conn = new WebSocket(ws, address.ip);
 
-                // Instantiate a client for this connection.
-                const client = new Client(conn);
+				// Instantiate a client for this connection.
+				const client = new Client(conn);
 
-                // Join the client to the session.
-                await this.joinClientToSession(client, sessionId, params);
-            } catch (e) {
-                log.error('network', e);
-                ws.close();
-            }
-        });
-    }
+				// Join the client to the session.
+				await this.joinClientToSession(client, sessionId, params);
+			} catch (e) {
+				log.error('network', e);
+				ws.close();
+			}
+		});
+	}
 
-    private async joinClientToSession(client: Client, sessionId: string, params: QueryString.OutputParams) {
-        try {
-            // Handshake with the client.
-            const handshake = new ClientHandshake(client, sessionId);
-            await handshake.run();
+	private async joinClientToSession(client: Client, sessionId: string, params: QueryString.OutputParams) {
+		try {
+			// Handshake with the client.
+			const handshake = new ClientHandshake(client, sessionId);
+			await handshake.run();
 
-            // Measure the connection quality and wait for sync-request message.
-            const startup = new ClientStartup(client, handshake.syncRequest);
-            await startup.run();
+			// Measure the connection quality and wait for sync-request message.
+			const startup = new ClientStartup(client, handshake.syncRequest);
+			await startup.run();
 
-            // Get the session for the sessionId.
-            const session = await this.getOrCreateSession(sessionId, params);
+			// Get the session for the sessionId.
+			const session = await this.getOrCreateSession(sessionId, params);
 
-            // Join the client to the session.
-            await session.join(client);
-        } catch (e) {
-            log.error('network', e);
-            client.conn.close();
-        }
-    }
+			// Join the client to the session.
+			await session.join(client);
+		} catch (e) {
+			log.error('network', e);
+			client.conn.close();
+		}
+	}
 }

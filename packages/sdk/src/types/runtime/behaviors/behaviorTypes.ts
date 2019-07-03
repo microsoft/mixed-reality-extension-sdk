@@ -8,7 +8,7 @@
  */
 
 export type BehaviorType
-    = 'none'
-    | 'target'
-    | 'button'
-    ;
+	= 'none'
+	| 'target'
+	| 'button'
+	;

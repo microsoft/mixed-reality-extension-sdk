@@ -13,10 +13,10 @@ import { prettyPrintBuffer } from './util';
 
 /** @hidden */
 export interface Test {
-    name: string;
-    shouldPrintJson: boolean;
-    shouldPrintBuffer: boolean;
-    run(): Promise<Buffer>;
+	name: string;
+	shouldPrintJson: boolean;
+	shouldPrintBuffer: boolean;
+	run(): Promise<Buffer>;
 }
 
 // the whole point of this file is to output the test results to the console
@@ -26,39 +26,39 @@ export interface Test {
 // tslint:disable-next-line:no-floating-promises
 (async () => {
 
-    const tests: Test[] = [new Empty(), new Triangle(), new PrimDupe(), new Material()];
+	const tests: Test[] = [new Empty(), new Triangle(), new PrimDupe(), new Material()];
 
-    for (const test of tests) {
-        console.log(
-            `+==========================================+
+	for (const test of tests) {
+		console.log(
+			`+==========================================+
 | ${test.name.padEnd(40, ' ')} |
 +==========================================+`);
 
-        let time = process.hrtime();
-        let result: Buffer;
-        try {
-            result = await test.run();
-        } catch (ex) {
-            console.log('Test failed', ex);
-            continue;
-        }
-        time = process.hrtime(time);
-        console.log(`Test completed in ${time[0] * 1000 + time[1] / 1000} ms\n`);
+		let time = process.hrtime();
+		let result: Buffer;
+		try {
+			result = await test.run();
+		} catch (ex) {
+			console.log('Test failed', ex);
+			continue;
+		}
+		time = process.hrtime(time);
+		console.log(`Test completed in ${time[0] * 1000 + time[1] / 1000} ms\n`);
 
-        const jsonStart = 20;
-        const jsonLength = result.readInt32LE(12);
-        if (test.shouldPrintJson) {
-            console.log('Output JSON:');
-            console.log('-' + result.toString('utf8', jsonStart, jsonStart + jsonLength) + '-\n');
-        }
+		const jsonStart = 20;
+		const jsonLength = result.readInt32LE(12);
+		if (test.shouldPrintJson) {
+			console.log('Output JSON:');
+			console.log('-' + result.toString('utf8', jsonStart, jsonStart + jsonLength) + '-\n');
+		}
 
-        if (test.shouldPrintBuffer) {
-            console.log('Output Data:');
-            prettyPrintBuffer(result, jsonStart + jsonLength + 8);
-        }
+		if (test.shouldPrintBuffer) {
+			console.log('Output Data:');
+			prettyPrintBuffer(result, jsonStart + jsonLength + 8);
+		}
 
-        const validationResult = await validator.validateBytes(new Uint8Array(result));
-        console.log('Validation issues:', JSON.stringify(validationResult.issues.messages, null, '  '), '\n');
-    }
+		const validationResult = await validator.validateBytes(new Uint8Array(result));
+		console.log('Validation issues:', JSON.stringify(validationResult.issues.messages, null, '  '), '\n');
+	}
 
 })();

@@ -11,13 +11,13 @@ import { ExportedPromise } from '../utils/exportedPromise';
  * @hidden
  */
 export class ServerPreprocessing implements Middleware {
-    constructor() {
-        this.beforeSend = this.beforeSend.bind(this);
-    }
+	constructor() {
+		this.beforeSend = this.beforeSend.bind(this);
+	}
 
-    /** @private */
-    public beforeSend = (message: Message, promise?: ExportedPromise): Message => {
-        message.serverTimeMs = message.serverTimeMs || Date.now();
-        return message;
-    }
+	/** @private */
+	public beforeSend = (message: Message, promise?: ExportedPromise): Message => {
+		message.serverTimeMs = message.serverTimeMs || Date.now();
+		return message;
+	}
 }

@@ -13,8 +13,8 @@ import { ExportedPromise } from '../utils/exportedPromise';
  * function (restify style)
  */
 export interface Middleware {
-    /** @optional */
-    beforeSend?(message: Message, promise?: ExportedPromise): Message;
-    /** @optional */
-    beforeRecv?(message: Message): Message;
+	/** @optional */
+	beforeSend?(message: Message, promise?: ExportedPromise): Message;
+	/** @optional */
+	beforeRecv?(message: Message): Message;
 }

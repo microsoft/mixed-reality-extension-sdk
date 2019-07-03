@@ -12,6 +12,6 @@ export type TraceSeverity = 'debug' | 'info' | 'warning' | 'error';
  * @hidden
  */
 export interface Trace {
-    severity: TraceSeverity;
-    message: string;
+	severity: TraceSeverity;
+	message: string;
 }

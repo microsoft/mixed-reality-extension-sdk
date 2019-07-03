@@ -27,20 +27,20 @@ export type CollisionEventState = 'enter' | 'exit';
  * The point of contact for a collision.
  */
 export interface ContactPoint {
-    normal: Vector3;
-    point: Vector3;
-    separation: number;
+	normal: Vector3;
+	point: Vector3;
+	separation: number;
 }
 
 /**
  * The collision data collected when a collision occurs.
  */
 export interface CollisionData {
-    otherActorId: string;
-    otherActor?: Actor;
-    contacts: ContactPoint[];
-    impulse: Vector3;
-    relativeVelocity: Vector3;
+	otherActorId: string;
+	otherActor?: Actor;
+	contacts: ContactPoint[];
+	impulse: Vector3;
+	relativeVelocity: Vector3;
 }
 
 /**

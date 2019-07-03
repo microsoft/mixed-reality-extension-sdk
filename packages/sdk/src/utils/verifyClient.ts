@@ -29,62 +29,62 @@ const MinimumSupportedClientVersion = semver.coerce('0.11');
  * @param cb 'ws' verification callback
  */
 export default function verifyClient(
-    info: any, cb: (verified: boolean, code?: number, message?: string) => any): any {
-    // Look for the upgrade request.
-    const req = info.req || {};
+	info: any, cb: (verified: boolean, code?: number, message?: string) => any): any {
+	// Look for the upgrade request.
+	const req = info.req || {};
 
-    // Look for the request headers.
-    const headers = req.headers || [];
+	// Look for the request headers.
+	const headers = req.headers || [];
 
-    // Verify minimum supported versions are met (client and SDK).
+	// Verify minimum supported versions are met (client and SDK).
 
-    /*
-     * Due to a shortcoming in C# ClientWebSocket, we have no way to convey any error details in the HTTP response,
-     * including error code.
-     *    See: "ClientWebSocket does not provide upgrade request error details"
-     *    https://github.com/dotnet/corefx/issues/29163
-     */
+	/*
+	 * Due to a shortcoming in C# ClientWebSocket, we have no way to convey any error details in the HTTP response,
+	 * including error code.
+	 *    See: "ClientWebSocket does not provide upgrade request error details"
+	 *    https://github.com/dotnet/corefx/issues/29163
+	 */
 
-    // tslint:disable-next-line:variable-name
-    const CurrentClientVersion
-        = semver.coerce(decodeURIComponent(headers[Constants.HTTPHeaders.CurrentClientVersion]));
-    // tslint:disable-next-line:variable-name
-    const MinimumSupportedSDKVersion
-        = semver.coerce(decodeURIComponent(headers[Constants.HTTPHeaders.MinimumSupportedSDKVersion]));
+	// tslint:disable-next-line:variable-name
+	const CurrentClientVersion
+		= semver.coerce(decodeURIComponent(headers[Constants.HTTPHeaders.CurrentClientVersion]));
+	// tslint:disable-next-line:variable-name
+	const MinimumSupportedSDKVersion
+		= semver.coerce(decodeURIComponent(headers[Constants.HTTPHeaders.MinimumSupportedSDKVersion]));
 
-    if (CurrentClientVersion && MinimumSupportedSDKVersion) {
-        // Test the current client version. Is it greater than or equal to the minimum client version?
-        const clientPass = semver.gte(CurrentClientVersion, MinimumSupportedClientVersion);
-        // Test the current SDK version. Is it greater than or equal to the minimum SDK version?
-        const sdkPass = semver.gte(CurrentSDKVersion, MinimumSupportedSDKVersion);
+	if (CurrentClientVersion && MinimumSupportedSDKVersion) {
+		// Test the current client version. Is it greater than or equal to the minimum client version?
+		const clientPass = semver.gte(CurrentClientVersion, MinimumSupportedClientVersion);
+		// Test the current SDK version. Is it greater than or equal to the minimum SDK version?
+		const sdkPass = semver.gte(CurrentSDKVersion, MinimumSupportedSDKVersion);
 
-        if (!clientPass) {
-            // tslint:disable-next-line:max-line-length
-            const message = `Connection rejected due to out of date client. Client version: ${CurrentClientVersion.toString()}. Min supported version by SDK: ${MinimumSupportedClientVersion.toString()}`;
-            log.info('app', message);
-            return cb(false, 403, message);
-        }
+		if (!clientPass) {
+			// tslint:disable-next-line:max-line-length
+			const message = `Connection rejected due to out of date client. Client version: ${CurrentClientVersion.toString()}. Min supported version by SDK: ${MinimumSupportedClientVersion.toString()}`;
+			log.info('app', message);
+			return cb(false, 403, message);
+		}
 
-        if (!sdkPass) {
-            // tslint:disable-next-line:max-line-length
-            const message = `Connection rejected due to out of date SDK. Current SDK version: ${CurrentSDKVersion.toString()}. Min supported version by client: ${MinimumSupportedSDKVersion.toString()}`;
-            log.info('app', message);
-            // Log this line to the console. The developer should know about this.
-            // tslint:disable-next-line:no-console
-            console.info(message);
-            return cb(false, 403, message);
-        }
+		if (!sdkPass) {
+			// tslint:disable-next-line:max-line-length
+			const message = `Connection rejected due to out of date SDK. Current SDK version: ${CurrentSDKVersion.toString()}. Min supported version by client: ${MinimumSupportedSDKVersion.toString()}`;
+			log.info('app', message);
+			// Log this line to the console. The developer should know about this.
+			// tslint:disable-next-line:no-console
+			console.info(message);
+			return cb(false, 403, message);
+		}
 
-        // Client and SDK are compatible.
-        return cb(true);
-    }
+		// Client and SDK are compatible.
+		return cb(true);
+	}
 
-    // Temporary: Support old clients reporting the legacy protocol version.
-    // TODO: Remove this after a few releases.
-    const legacyProtocolVersion = decodeURIComponent(headers[Constants.HTTPHeaders.LegacyProtocolVersion]);
-    if (legacyProtocolVersion === '1') {
-        return cb(true);
-    }
+	// Temporary: Support old clients reporting the legacy protocol version.
+	// TODO: Remove this after a few releases.
+	const legacyProtocolVersion = decodeURIComponent(headers[Constants.HTTPHeaders.LegacyProtocolVersion]);
+	if (legacyProtocolVersion === '1') {
+		return cb(true);
+	}
 
-    return cb(false, 403, "Version headers missing.");
+	return cb(false, 403, "Version headers missing.");
 }

@@ -13,35 +13,35 @@ export type InitializeActorMessage = Message<Payloads.CreateActorCommon | Payloa
  * @hidden
  */
 export type InitializeActor = {
-    message: InitializeActorMessage;
+	message: InitializeActorMessage;
 };
 
 /**
  * @hidden
  */
 export type CreateAnimation = {
-    message: Message<Payloads.CreateAnimation>;
-    enabled: boolean;
+	message: Message<Payloads.CreateAnimation>;
+	enabled: boolean;
 };
 
 /**
  * @hidden
  */
 export type ActiveSoundInstance = {
-    message: Message<Payloads.SetSoundState>;
-    basisTime: number
+	message: Message<Payloads.SetSoundState>;
+	basisTime: number
 };
 
 /**
  * @hidden
  */
 export type SyncActor = {
-    actorId: string;
-    initialization: InitializeActor;
-    createdAnimations: CreateAnimation[];
-    activeSoundInstances: ActiveSoundInstance[];
-    activeInterpolations: Payloads.InterpolateActor[];
-    behavior: BehaviorType;
-    grabbedBy: string;
-    exclusiveToUser: string;
+	actorId: string;
+	initialization: InitializeActor;
+	createdAnimations: CreateAnimation[];
+	activeSoundInstances: ActiveSoundInstance[];
+	activeInterpolations: Payloads.InterpolateActor[];
+	behavior: BehaviorType;
+	grabbedBy: string;
+	exclusiveToUser: string;
 };

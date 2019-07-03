@@ -9,10 +9,10 @@
  * fields into network payloads.
  */
 export default function validateJsonFieldName(key: string) {
-    // Uncomment to validate JSON payloads
-    /*
-    if (key.startsWith('_')) {
-        throw new Error(`JSON contains invalid key name "${key}".`);
-    }
-    */
+	// Uncomment to validate JSON payloads
+	/*
+	if (key.startsWith('_')) {
+		throw new Error(`JSON contains invalid key name "${key}".`);
+	}
+	*/
 }

@@ -7,6 +7,6 @@ import { Actor } from "../types/runtime";
 
 /** @hidden */
 export default function VisitActor(actor: Actor, callback: (actor: Actor) => void) {
-    actor.children.forEach(child => VisitActor(child, callback));
-    callback(actor);
+	actor.children.forEach(child => VisitActor(child, callback));
+	callback(actor);
 }

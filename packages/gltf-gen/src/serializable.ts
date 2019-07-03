@@ -7,9 +7,9 @@ import GLTF from './gen/gltf';
 
 /** @hidden */
 export abstract class Serializable {
-    protected cachedSerialId: GLTF.GlTfId;
-    public abstract serialize(document: GLTF.GlTf, buffer: Buffer): GLTF.GlTfId;
+	protected cachedSerialId: GLTF.GlTfId;
+	public abstract serialize(document: GLTF.GlTf, buffer: Buffer): GLTF.GlTfId;
 
-    protected scanList: number[] = [];
-    public abstract getByteSize(scanId: number): number;
+	protected scanList: number[] = [];
+	public abstract getByteSize(scanId: number): number;
 }

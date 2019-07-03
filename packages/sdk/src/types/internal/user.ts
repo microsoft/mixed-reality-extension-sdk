@@ -10,20 +10,20 @@ import { InternalPatchable } from '../patchable';
  * @hidden
  */
 export class InternalUser implements InternalPatchable<UserLike> {
-    // tslint:disable-next-line:variable-name
-    public __rpc: any;
-    public observing = true;
-    public patch: UserLike;
+	// tslint:disable-next-line:variable-name
+	public __rpc: any;
+	public observing = true;
+	public patch: UserLike;
 
-    constructor(public user: User) {
-    }
+	constructor(public user: User) {
+	}
 
-    public getPatchAndReset(): UserLike {
-        const patch = this.patch;
-        if (patch) {
-            patch.id = this.user.id;
-            delete this.patch;
-        }
-        return patch;
-    }
+	public getPatchAndReset(): UserLike {
+		const patch = this.patch;
+		if (patch) {
+			patch.id = this.user.id;
+			delete this.patch;
+		}
+		return patch;
+	}
 }
