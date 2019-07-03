@@ -41,7 +41,12 @@ any new functionality to the proposal, but reduces multipeer adapter complexity.
 	assets. Even if it isn't, this will be more efficient than piecemeal unloading, but
 	the developer can decide which is more appropriate.
 
-3. `Asset.unload(): Promise<void>`
+3. `AssetManager.unloadUnused(): Promise<void>`
+
+	Loops over all assets, finds those that have no references, and calls `unloadAssets`
+	with their IDs.
+
+4. `Asset.unload(): Promise<void>`
 
 	Calls `unloadAssets` with the current asset ID.
 
