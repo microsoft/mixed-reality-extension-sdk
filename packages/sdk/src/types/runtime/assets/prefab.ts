@@ -4,6 +4,7 @@
  */
 
 import { Asset, AssetLike, AssetManager } from '.';
+import { Actor } from '..';
 import { InternalAsset } from '../../internal/asset';
 import { Patchable } from '../../patchable';
 
@@ -65,5 +66,11 @@ export class Prefab extends Asset implements PrefabLike, Patchable<AssetLike> {
 				actorCount: this._actorCount
 			}
 		};
+	}
+
+	/** @hidden */
+	public clearReference(ref: Actor | Asset) {
+		super.clearReference(ref);
+		if (!(ref instanceof Actor)) return;
 	}
 }

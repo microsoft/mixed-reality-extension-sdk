@@ -108,7 +108,14 @@ export class Appearance implements AppearanceLike {
 		if (!this.actor.context.assetManager.assets[value]) {
 			value = ZeroGuid; // throw?
 		}
+
+		if (this.material) {
+			this.material.clearReference(this.actor);
+		}
 		this._materialId = value;
+		if (this.material) {
+			this.material.addReference(this.actor);
+		}
 	}
 
 	constructor(private actor: Actor) { }

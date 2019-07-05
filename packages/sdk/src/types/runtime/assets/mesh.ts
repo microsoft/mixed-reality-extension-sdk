@@ -4,6 +4,7 @@
  */
 
 import { Asset, AssetLike, AssetManager } from '.';
+import { Actor } from '..';
 
 export interface MeshLike {
 	/** The number of vertices in this mesh. */
@@ -47,5 +48,11 @@ export class Mesh extends Asset implements MeshLike {
 				triangleCount: this.triangleCount
 			}
 		};
+	}
+
+	/** @hidden */
+	public clearReference(ref: Actor | Asset) {
+		super.clearReference(ref);
+		if (!(ref instanceof Actor)) return;
 	}
 }

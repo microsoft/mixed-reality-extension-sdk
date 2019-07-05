@@ -4,6 +4,7 @@
  */
 
 import { Asset, AssetLike, AssetManager } from '.';
+import { Actor } from '..';
 import readPath from '../../../utils/readPath';
 import { InternalAsset } from '../../internal/asset';
 import { Patchable } from '../../patchable';
@@ -80,4 +81,11 @@ export class Sound extends Asset implements SoundLike, Patchable<AssetLike> {
 		};
 	}
 
+	/** @hidden */
+	public clearReference(ref: Actor | Asset) {
+		super.clearReference(ref);
+		if (!(ref instanceof Actor)) return;
+
+		// TODO: Destroy all SoundInstances playing this Sound
+	}
 }

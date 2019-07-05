@@ -3,7 +3,8 @@
  * Licensed under the MIT License.
  */
 
-import { Asset, AssetLike, AssetManager } from '.';
+import { Asset, AssetLike, AssetManager, Material } from '.';
+import { Actor } from '..';
 import { Vector2, Vector2Like } from '../../../math';
 import { observe } from '../../../utils/observe';
 import readPath from '../../../utils/readPath';
@@ -121,6 +122,15 @@ export class Texture extends Asset implements TextureLike, Patchable<AssetLike> 
 			this.manager.context.internal.incrementGeneration();
 			this.internal.patch = this.internal.patch || { texture: {} } as AssetLike;
 			readPath(this, this.internal.patch.texture, ...path);
+		}
+	}
+
+	/** @hidden */
+	public clearReference(ref: Actor | Asset) {
+		super.clearReference(ref);
+		if (!(ref instanceof Material)) return;
+		if (ref.mainTexture === this) {
+			ref.mainTexture = null;
 		}
 	}
 }
