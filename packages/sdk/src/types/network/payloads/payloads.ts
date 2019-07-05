@@ -3,7 +3,6 @@
  * Licensed under the MIT License.
  */
 
-import { AssetPayloadType } from './assets';
 import { OperationResultCode, Trace } from '..';
 import { CreateAnimationOptions, SetAnimationStateOptions } from '../../..';
 import { SetSoundStateOptions, SoundCommand } from '../../../sound';
@@ -11,6 +10,7 @@ import { PrimitiveDefinition } from '../../primitiveTypes';
 import { ActorLike, ColliderType, TransformLike, UserLike } from '../../runtime';
 import { ActionState, BehaviorType } from '../../runtime/behaviors';
 import { OperatingModel } from '../operatingModel';
+import { AssetPayloadType } from './assets';
 
 /**
  * @hidden

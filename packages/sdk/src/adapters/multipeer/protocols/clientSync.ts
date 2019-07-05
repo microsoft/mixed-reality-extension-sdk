@@ -161,7 +161,7 @@ export class ClientSync extends Protocols.Protocol {
 	public 'stage:load-assets' = async () => {
 		// Send all cached asset creation messages.
 		for (const creator of this.client.session.assetCreators) {
-			this.sendAndExpectResponse(creator);
+			this.sendMessage(creator);
 		}
 
 		// Some assets might be loaded, even though they shouldn't. Identify and unload them now.

@@ -122,7 +122,7 @@ export class AssetManager {
 	 */
 	public async unloadAssets(...assets: Asset[]): Promise<void> {
 		// unassign assets
-		for(const a of assets) {
+		for (const a of assets) {
 			a.clearAllReferences();
 		}
 
@@ -146,7 +146,7 @@ export class AssetManager {
 		// compose error message if any fail
 		if (errors.length > 0) {
 			let message = "The following assets could not be unloaded:";
-			for(const e of errors) {
+			for (const e of errors) {
 				message += `\n${e.id} (${e.name}) - ${e.code}: ${e.message}`;
 			}
 			throw new Error(message);
@@ -197,7 +197,11 @@ export class AssetManager {
 	 * @param uri The URI to a glTF model.
 	 * @returns The promise of a new asset group.
 	 */
-	public loadGltf(groupName: string, uri: string, colliderType: Payloads.CreateColliderType = 'none'): Promise<AssetGroup> {
+	public loadGltf(
+		groupName: string,
+		uri: string,
+		colliderType: Payloads.CreateColliderType = 'none'
+	): Promise<AssetGroup> {
 		const p = this.loadGltfHelper(groupName, uri, colliderType);
 
 		this.registerLoadPromise(p);

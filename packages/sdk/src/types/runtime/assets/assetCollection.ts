@@ -29,5 +29,5 @@ export class AssetCollection<T extends Asset> implements Iterable<T> {
 	}
 
 	/** @hidden */
-	[Symbol.iterator] = () => new AssetIterator<T>(Object.values(this.collection));
+	public [Symbol.iterator] = () => new AssetIterator<T>(Object.values(this.collection));
 }

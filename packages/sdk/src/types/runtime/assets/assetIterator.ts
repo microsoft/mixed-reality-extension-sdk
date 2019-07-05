@@ -12,6 +12,6 @@ export class AssetIterator<T extends Asset> implements Iterator<T> {
 		return {
 			done: this.assets.length === 0,
 			value: this.assets.shift()
-		}
+		};
 	}
 }

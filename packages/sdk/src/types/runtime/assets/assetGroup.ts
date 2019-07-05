@@ -32,7 +32,7 @@ export class AssetGroup implements Iterable<Asset> {
 	}
 
 	/** @hidden */
-	[Symbol.iterator] = () => new AssetIterator<Asset>([
+	public [Symbol.iterator] = () => new AssetIterator<Asset>([
 		...this.prefabs,
 		...this.meshes,
 		...this.materials,

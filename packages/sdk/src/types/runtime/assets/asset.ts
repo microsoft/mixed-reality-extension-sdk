@@ -114,7 +114,7 @@ export abstract class Asset implements AssetLike {
 
 	/** @hidden */
 	public clearAllReferences() {
-		for(const r of this.references) {
+		for (const r of this.references) {
 			this.clearReference(r);
 		}
 	}
