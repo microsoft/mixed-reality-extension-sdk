@@ -8,7 +8,7 @@ Today, assets can be created individually, or created en masse by loading a cont
 (glTF) for assets. This proposal does not have separate unload APIs for these two cases.
 Instead, during synchronization, the adapter will examine which assets are loaded at sync
 time, send a container load request if at least one asset from that container is still
-live, then send unloads for all the unused ones. This is processor-inefficient, but
+loaded, then send unloads for all the other assets. This is processor-inefficient, but
 maintains API focus on the concept of assets.
 
 An alternative to the above would be to modify `AssetManager.loadGltf` to allow the
