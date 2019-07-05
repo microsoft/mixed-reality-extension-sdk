@@ -9,9 +9,10 @@ import * as Payloads from '../../types/network/payloads';
 export class SyncAsset {
 	id: string;
 	/** Used if asset was packaged with other assets */
-	creationBatch: Message<Payloads.LoadAssets>;
-	/** Used if asset was created from a definition */
-	creationSimple: Message<Payloads.CreateAsset>;
-	/** Used only with creationBatch, as definition is updated for other */
+	creatorMessageId: string;
+	/** Used only with batch creation, as definition is updated for other */
 	update: Message<Payloads.AssetUpdate>;
+	/** Indicates that this asset has been unloaded, but we can't ditch this
+	 * reference yet */
+	unloaded: boolean = false;
 }

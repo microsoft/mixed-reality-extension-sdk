@@ -159,13 +159,27 @@ export class ClientSync extends Protocols.Protocol {
 	 * Driver for the `load-assets` synchronization stage.
 	 */
 	public 'stage:load-assets' = async () => {
-		// Send all cached load-assets messages.
-		await Promise.all(
-			this.client.session.assets.map(
-				message => this.sendAndExpectResponse(message)));
+		// Send all cached asset creation messages.
+		for (const creator of this.client.session.assetCreators) {
+			this.sendAndExpectResponse(creator);
+		}
+
+		// Some assets might be loaded, even though they shouldn't. Identify and unload them now.
+		const assetIds = this.client.session.assets.filter(a => a.unloaded).map(a => a.id);
+		if (assetIds.length > 0) {
+			this.sendMessage({
+				id: UUID(),
+				payload: {
+					type: 'unload-assets',
+					assetIds
+				} as Payloads.UnloadAssets
+			});
+		}
+
 		// Send all cached asset-update messages.
-		this.client.session.assetUpdates.map(
-			payload => this.sendMessage({ payload }));
+		for (const update of this.client.session.assets.map(a => a.update)) {
+			this.sendMessage(update);
+		}
 	}
 
 	/**

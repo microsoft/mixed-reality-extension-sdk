@@ -14,6 +14,8 @@ import { log } from '../../log';
 import * as Protocols from '../../protocols';
 import * as Payloads from '../../types/network/payloads';
 
+type AssetCreationMessage = Message<Payloads.LoadAssets | Payloads.CreateAsset>;
+
 /**
  * @hidden
  * Class for associating multiple client connections with a single app session.
@@ -23,6 +25,7 @@ export class Session extends EventEmitter {
 	private _clientSet: { [id: string]: Client } = {};
 	private _actorSet: { [id: string]: Partial<SyncActor> } = {};
 	private _assetSet: { [id: string]: Partial<SyncAsset> } = {};
+	private _assetCreatorSet: { [id: string]: AssetCreationMessage } = {};
 	private _userSet: { [id: string]: Partial<UserLike> } = {};
 	private _protocol: Protocols.Protocol;
 	// tslint:enable:variable-name
@@ -31,22 +34,24 @@ export class Session extends EventEmitter {
 	public get sessionId() { return this._sessionId; }
 	public get protocol() { return this._protocol; }
 	public get clients() {
-		return Object.keys(this._clientSet).map(clientId =>
-			this._clientSet[clientId]).sort((a, b) => a.order - b.order);
+		return Object.values(this._clientSet).sort((a, b) => a.order - b.order);
 	}
-	public get actors() { return Object.keys(this._actorSet).map(actorId => this._actorSet[actorId]); }
-	public get assets() { return Object.keys(this._assetSet).map(id => this._assetSet[id]); }
-	public get rootActors() {
-		return Object.keys(this._actorSet)
-			.filter(actorId => !this._actorSet[actorId].initialization.message.payload.actor.parentId)
-			.map(actorId => this._actorSet[actorId]);
-	}
-	public get users() { return Object.keys(this._userSet).map(userId => this._userSet[userId]); }
-	public get authoritativeClient() { return this.clients.find(client => client.authoritative); }
-	public get peerAuthoritative() { return this._peerAuthoritative; }
+
+	public get actors() { return Object.values(this._actorSet); }
+	public get assets() { return Object.values(this._assetSet); }
+	public get assetCreators() { return Object.values(this._assetCreatorSet); }
+	public get users() { return Object.values(this._userSet); }
 	public get actorSet() { return this._actorSet; }
 	public get assetSet() { return this._assetSet; }
+	public get assetCreatorSet() { return this._assetCreatorSet; }
 	public get userSet() { return this._userSet; }
+
+	public get rootActors() {
+		return Object.values(this._actorSet)
+			.filter(actor => !this._actorSet[actor.actorId].initialization.message.payload.actor.parentId);
+	}
+	public get authoritativeClient() { return this.clients.find(client => client.authoritative); }
+	public get peerAuthoritative() { return this._peerAuthoritative; }
 
 	public client = (clientId: string) => this._clientSet[clientId];
 	public actor = (actorId: string) => this._actorSet[actorId];
@@ -266,50 +271,68 @@ export class Session extends EventEmitter {
 		}
 	}
 
-	public cacheAssetCreation(
-		assetId: string,
-		creator: Message<Payloads.LoadAssets | Payloads.CreateAsset>
-	) {
+	public cacheAssetCreationRequest(message: AssetCreationMessage) {
+		this.assetCreatorSet[message.id] = message;
+	}
+
+	public cacheAssetCreation(assetId: string, creatorId: string) {
 		const syncAsset = this.assetSet[assetId] = { id: assetId } as Partial<SyncAsset>;
+		const creator = this.assetCreatorSet[creatorId];
+		syncAsset.creatorMessageId = creatorId;
 
-		if (creator.payload.type === 'create-asset') {
-			syncAsset.creationSimple = creator as Message<Payloads.CreateAsset>;
-
-			// Updates are cached on send, creates are cached on receive,
-			// so it's possible something was updated while it was loading.
-			// Merge those updates into creation once the create comes back.
-			if (syncAsset.update) {
-				syncAsset.creationSimple.payload.definition = deepmerge(
-					syncAsset.creationSimple.payload.definition,
-					syncAsset.update.payload.asset
-				);
-				syncAsset.update = undefined;
-			}
-		} else {
-			syncAsset.creationBatch = creator as Message<Payloads.LoadAssets>;
+		// Updates are cached on send, creates are cached on receive,
+		// so it's possible something was updated while it was loading.
+		// Merge those updates into creation once the create comes back.
+		if (creator.payload.type === 'create-asset' && syncAsset.update) {
+			creator.payload.definition = deepmerge(
+				creator.payload.definition,
+				syncAsset.update.payload.asset
+			);
+			syncAsset.update = undefined;
 		}
 	}
 
 	public cacheAssetUpdate(update: Message<Payloads.AssetUpdate>) {
 		const syncAsset = this.assetSet[update.payload.asset.id] =
 			this.assetSet[update.payload.asset.id] || { id: update.payload.asset.id };
+		const creator = this.assetCreatorSet[syncAsset.creatorMessageId];
 
-		if (syncAsset.creationSimple) {
-			syncAsset.creationSimple.payload.definition = deepmerge(
-				syncAsset.creationSimple.payload.definition,
+		if (creator && creator.payload.type === 'create-asset') {
+			// roll update into creation message
+			creator.payload.definition = deepmerge(
+				creator.payload.definition,
 				update.payload.asset);
 		} else if (syncAsset.update) {
+			// merge with previous update message
 			syncAsset.update.payload.asset = deepmerge(
 				syncAsset.update.payload.asset,
 				update.payload.asset);
 		} else {
+			// just save it
 			syncAsset.update = update;
 		}
 	}
 
 	public cacheAssetUnload(...assetIds: string[]) {
+		// flag the assets for unload
 		for (const id of assetIds) {
-			delete this.assetSet[id];
+			this.assetSet[id].unloaded = true;
+		}
+
+		// unique creator IDs of the freshly unloaded assets
+		const creatorIds = assetIds
+			.map(assetId => this.assetSet[assetId].creatorMessageId)
+			.filter((id, i, arr) => arr.lastIndexOf(id) === i);
+
+		// if a creator has no loaded assets, delete creator message
+		for (const creatorId of creatorIds) {
+			const assets = this.assets.filter(a => a.creatorMessageId === creatorId);
+			if (assets.every(a => a.unloaded)) {
+				delete this.assetCreatorSet[creatorId];
+				for (const asset of assets) {
+					delete this.assetSet[asset.id];
+				}
+			}
 		}
 	}
 }
