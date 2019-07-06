@@ -83,7 +83,7 @@ export class VideoStream extends Asset implements VideoStreamLike, Patchable<Ass
 			this._videoSourceType = from.videoStream.videoSourceType;
 		if (from.videoStream && from.videoStream.uri)
 			this._uri = from.videoStream.uri;
-		if (from.videoStream && from.videoStream.duration)
+		if (from.videoStream && from.videoStream.duration !== undefined)
 			this._duration = from.videoStream.duration;
 		// tslint:enable:curly
 

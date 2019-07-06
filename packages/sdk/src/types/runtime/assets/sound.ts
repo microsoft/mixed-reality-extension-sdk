@@ -61,7 +61,7 @@ export class Sound extends Asset implements SoundLike, Patchable<AssetLike> {
 		super.copy(from);
 		if (from.sound && from.sound.uri)
 			this._uri = from.sound.uri;
-		if (from.sound && from.sound.duration)
+		if (from.sound && from.sound.duration !== undefined)
 			this._duration = from.sound.duration;
 		// tslint:enable:curly
 
