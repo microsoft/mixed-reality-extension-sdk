@@ -96,7 +96,7 @@ export default class LightTest extends Test {
 					local: { scale: { x: 0.5, y: 0.5, z: 0.5 } }
 				}
 			}
-		}).value;
+		});
 
 		const propWidth = 0.33;
 		const propHeight = 0.33;
@@ -113,7 +113,7 @@ export default class LightTest extends Test {
 					}
 				}
 			}
-		}).value;
+		});
 		props['right-box'] = MRE.Actor.CreatePrimitive(this.app.context, {
 			definition: {
 				shape: MRE.PrimitiveShape.Box,
@@ -127,7 +127,7 @@ export default class LightTest extends Test {
 					}
 				}
 			}
-		}).value;
+		});
 		return props;
 	}
 
@@ -142,6 +142,6 @@ export default class LightTest extends Test {
 				parentId: root.id,
 				light: { type: 'spot', intensity: 5 } // Add a light component.
 			}
-		}).value;
+		});
 	}
 }

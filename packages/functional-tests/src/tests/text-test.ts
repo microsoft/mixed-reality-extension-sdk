@@ -35,32 +35,25 @@ export default class TextTest extends Test {
 	private color: MRE.Actor;
 
 	public async run(root: MRE.Actor): Promise<boolean> {
-		const enabled = this.createTemplate(root, "enabled");
-		this.enabled = enabled.value;
+		this.enabled = this.createTemplate(root, "enabled");
 		this.enabled.transform.local.position.copy({ x: -1, y: 1.5, z: 0 });
 
-		const contents = this.createTemplate(root, 'contents');
-		this.contents = contents.value;
+		this.contents = this.createTemplate(root, 'contents');
 		this.contents.transform.local.position.copy({ x: 0, y: 1.5, z: 0 });
 
-		const ppl = this.createTemplate(root, 'pixelsPerLine');
-		this.ppl = ppl.value;
+		this.ppl = this.createTemplate(root, 'pixelsPerLine');
 		this.ppl.transform.local.position.copy({ x: -1, y: 1, z: 0 });
 
-		const height = this.createTemplate(root, 'height');
-		this.height = height.value;
+		this.height = this.createTemplate(root, 'height');
 		this.height.transform.local.position.copy({ x: 0, y: 1, z: 0 });
 
-		const font = this.createTemplate(root, 'font');
-		this.font = font.value;
+		this.font = this.createTemplate(root, 'font');
 		this.font.transform.local.position.copy({ x: -1, y: 0.5, z: 0 });
 
-		const color = this.createTemplate(root, 'color');
-		this.color = color.value;
+		this.color = this.createTemplate(root, 'color');
 		this.color.transform.local.position.copy({ x: 0, y: 0.5, z: 0 });
 
-		const anchor = this.createTemplate(root, 'anchor');
-		this.anchor = anchor.value;
+		this.anchor = this.createTemplate(root, 'anchor');
 		this.anchor.transform.local.position.copy({ x: 1, y: 1.3, z: 0 });
 		MRE.Actor.CreatePrimitive(this.app.context, {
 			definition: {
@@ -73,8 +66,7 @@ export default class TextTest extends Test {
 			}
 		});
 
-		const justify = this.createTemplate(root, 'multiline\njustify');
-		this.justify = justify.value;
+		this.justify = this.createTemplate(root, 'multiline\njustify');
 		this.justify.transform.local.position.copy({ x: 1, y: 0.7, z: 0 });
 		MRE.Actor.CreatePrimitive(this.app.context, {
 			definition: {
@@ -128,7 +120,7 @@ export default class TextTest extends Test {
 		];
 	}
 
-	private createTemplate(root: MRE.Actor, text: string): MRE.ForwardPromise<MRE.Actor> {
+	private createTemplate(root: MRE.Actor, text: string): MRE.Actor {
 		return MRE.Actor.CreateEmpty(this.app.context, {
 			actor: {
 				name: text.replace('\n', ' '),

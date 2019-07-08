@@ -43,7 +43,7 @@ export default class InterpolationTest extends Test {
 				}
 			},
 			addCollider: true
-		}).value;
+		});
 
 		while (!this.stopped) {
 			// Random point on unit sphere (pick random axis).
