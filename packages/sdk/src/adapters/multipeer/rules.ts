@@ -270,7 +270,7 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 						(value.message.payload as Payloads.ActorUpdate).actor.id === payload.actorId).shift();
 				if (queuedMessage) {
 					const existingPayload = queuedMessage.message.payload as Partial<Payloads.ActorUpdate>;
-					existingPayload.actor = deepmerge(existingPayload.actor,  {
+					existingPayload.actor = deepmerge(existingPayload.actor, {
 						payload: {
 							actor: {
 								transform: {
@@ -682,7 +682,10 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 				message: Message<Payloads.ObjectSpawned>
 			) => {
 				// Check that this is the authoritative client
-				const exclusiveUser = session.actorSet[message.payload.actors[0].id].exclusiveToUser;
+				const exclusiveUser =
+					message.payload.actors && message.payload.actors.length ?
+						session.actorSet[message.payload.actors[0].id].exclusiveToUser :
+						undefined;
 				if (client.authoritative || client.userId && client.userId === exclusiveUser) {
 					// Create no-op creation message. Implicit sync from initialization until they're updated
 					for (const spawned of message.payload.actors) {
