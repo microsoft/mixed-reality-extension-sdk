@@ -661,7 +661,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 		if (from.collider) this._setCollider(from.collider);
 		if (from.text) this.enableText(from.text);
 		if (from.lookAt) this.enableLookAt(from.lookAt.actorId, from.lookAt.mode);
-		if (from.grabbable) this._grabbable = from.grabbable;
+		if (from.grabbable !== undefined) this._grabbable = from.grabbable;
 
 		this.internal.observing = wasObserving;
 		return this;
