@@ -59,17 +59,17 @@ export class ClientSync extends Protocols.Protocol {
 	 * @override
 	 * Handle the outgoing message according to the synchronization rules specified for this payload.
 	 */
-	public sendMessage(message: Message, promise?: ExportedPromise) {
+	public sendMessage(message: Message, promise?: ExportedPromise, timeoutSeconds?: number) {
 		message.id = message.id || UUID();
 		const handling = this.handlingForMessage(message);
 		// tslint:disable-next-line:switch-default
 		switch (handling) {
 			case 'allow': {
-				super.sendMessage(message, promise);
+				super.sendMessage(message, promise, timeoutSeconds);
 				break;
 			}
 			case 'queue': {
-				this.client.queueMessage(message, promise);
+				this.client.queueMessage(message, promise, timeoutSeconds);
 				break;
 			}
 			case 'ignore': {
@@ -327,7 +327,7 @@ export class ClientSync extends Protocols.Protocol {
 				break;
 			}
 			for (const queuedMessage of queuedMessages) {
-				this.sendMessage(queuedMessage.message, queuedMessage.promise);
+				this.sendMessage(queuedMessage.message, queuedMessage.promise, queuedMessage.timeoutSeconds);
 			}
 			await this.drainPromises();
 		} while (true);

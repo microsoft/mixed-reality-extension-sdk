@@ -4,8 +4,10 @@
  */
 
 import { Client, ClientDesyncPreprocessor } from '..';
+import { MissingRule, Rules } from '..';
 import { Message } from '../../..';
 import * as Protocols from '../../../protocols';
+import { ExportedPromise } from '../../../utils/exportedPromise';
 
 /**
  * @hidden
@@ -20,10 +22,6 @@ export class ClientExecution extends Protocols.Protocol implements Protocols.Mid
 
 	constructor(private client: Client) {
 		super(client.conn);
-		// Set timeout a little shorter than the app/session connection, ensuring we don't
-		// cause an app/session message timeout - which is not a supported scenario (there
-		// is no reconnect).
-		this.timeoutSeconds = Protocols.DefaultConnectionTimeoutSeconds * 2 / 3;
 		this.heartbeat = new Protocols.Heartbeat(this);
 		this.beforeRecv = this.beforeRecv.bind(this);
 		// Behave like a server-side endpoint (send heartbeats, measure connection quality)
@@ -32,6 +30,13 @@ export class ClientExecution extends Protocols.Protocol implements Protocols.Mid
 		this.use(new ClientDesyncPreprocessor(client));
 		// Use middleware to pipe client messages to the session.
 		this.use(this);
+	}
+
+	/** @override */
+	public sendMessage(message: Message, promise?: ExportedPromise, timeoutSeconds?: number) {
+		// Apply timeout to messages going to the client.
+		const rule = Rules[message.payload.type] || MissingRule;
+		super.sendMessage(message, promise, rule.client.timeoutSeconds);
 	}
 
 	public startListening() {

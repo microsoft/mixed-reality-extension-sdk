@@ -67,6 +67,12 @@ export type Rule = {
 	 */
 	client: {
 		/**
+		 * If non-zero, a timeout will be set for this message. If we don't receive a reply before the
+		 * timeout expires, the client connection will be closed. Only applicable to messages expecting
+		 * replies.
+		 */
+		timeoutSeconds: number;
+		/**
 		 * Called before a message is queued for later delivery to a client.
 		 * @param session The current session.
 		 * @param client The client to receive the message.
@@ -129,6 +135,7 @@ export const DefaultRule: Rule = {
 		after: 'allow'
 	},
 	client: {
+		timeoutSeconds: 0,
 		beforeQueueMessageForClient: (
 			session: Session, client: Client, message: any, promise: ExportedPromise) => {
 			return message;
@@ -585,7 +592,13 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 	'engine2app-rpc': ClientOnlyRule,
 
 	// ========================================================================
-	'handshake': ClientOnlyRule,
+	'handshake': {
+		...ClientOnlyRule,
+		client: {
+			...ClientOnlyRule.client,
+			timeoutSeconds: 30
+		},
+	},
 
 	// ========================================================================
 	'handshake-complete': ClientOnlyRule,
@@ -610,6 +623,10 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 			during: 'allow',
 			after: 'allow',
 		},
+		client: {
+			...DefaultRule.client,
+			timeoutSeconds: 30
+		}
 	},
 
 	// ========================================================================
@@ -1004,7 +1021,6 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 				return message;
 			}
 		}
-
 	},
 
 	// ========================================================================
@@ -1015,6 +1031,10 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 			before: 'error',
 			during: 'allow',
 			after: 'error'
+		},
+		client: {
+			...DefaultRule.client,
+			timeoutSeconds: 30
 		}
 	},
 
