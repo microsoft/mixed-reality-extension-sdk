@@ -1,6 +1,6 @@
 {
   "name": "@microsoft/mixed-reality-extension-altspacevr-extras",
-  "version": "0.11.1",
+  "version": "0.11.2",
   "description": "The Mixed Reality Extension AltspaceVR Extras package enables MRE developers to access custom AltspaceVR features.",
   "main": "built/index.js",
   "types": "built/index.d.ts",
@@ -41,6 +41,6 @@
     "typescript": "3.0.3"
   },
   "dependencies": {
-    "@microsoft/mixed-reality-extension-sdk": "^0.11.1"
+    "@microsoft/mixed-reality-extension-sdk": "^0.11.2"
   }
 }
