@@ -4,8 +4,8 @@
  */
 
 import UUID from 'uuid/v4';
+import { MediaCommand, SetMediaStateOptions } from '../..';
 import { log } from '../../log';
-import { MediaCommand, SetMediaStateOptions } from '../../sound';
 import { createForwardPromise, ForwardPromise } from '../forwardPromise';
 import { Actor } from './actor';
 

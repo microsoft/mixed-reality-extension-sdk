@@ -4,8 +4,7 @@
  */
 
 import { OperationResultCode, Trace } from '..';
-import { CreateAnimationOptions, SetAnimationStateOptions } from '../../..';
-import { MediaCommand, SetMediaStateOptions } from '../../../sound';
+import { CreateAnimationOptions, MediaCommand, SetAnimationStateOptions, SetMediaStateOptions } from '../../..';
 import { PrimitiveDefinition } from '../../primitiveTypes';
 import { ActorLike, ColliderType, TransformLike, UserLike } from '../../runtime';
 import { ActionState, BehaviorType } from '../../runtime/behaviors';

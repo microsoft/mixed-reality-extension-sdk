@@ -17,14 +17,16 @@ import {
 	CollisionEvent,
 	Context,
 	CreateAnimationOptions,
+	MediaCommand,
 	PrimitiveDefinition,
 	SetAnimationStateOptions,
-	SubscriptionType,
+	SetMediaStateOptions,
 	TriggerEvent,
 	User,
 	UserLike,
 	UserSet,
 } from '../..';
+
 import {
 	ActorUpdate,
 	AssetUpdate,
@@ -52,7 +54,6 @@ import { log } from '../../log';
 import * as Protocols from '../../protocols';
 import { Execution } from '../../protocols/execution';
 import { Handshake } from '../../protocols/handshake';
-import { MediaCommand, SetMediaStateOptions } from '../../sound';
 import resolveJsonValues from '../../utils/resolveJsonValues';
 import safeGet from '../../utils/safeAccessPath';
 import { createForwardPromise, ForwardPromise } from '../forwardPromise';

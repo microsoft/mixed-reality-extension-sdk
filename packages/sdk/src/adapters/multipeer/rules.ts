@@ -5,9 +5,8 @@
 
 import deepmerge from 'deepmerge';
 import { Client, Session, SynchronizationStage } from '.';
-import { Message, WebSocket } from '../..';
+import { MediaCommand, Message, WebSocket } from '../..';
 import { log } from '../../log';
-import { MediaCommand } from '../../sound';
 import * as Payloads from '../../types/network/payloads';
 import { ExportedPromise } from '../../utils/exportedPromise';
 
