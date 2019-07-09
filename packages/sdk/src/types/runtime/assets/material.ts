@@ -3,7 +3,7 @@
  * Licensed under the MIT License.
  */
 
-import { Asset, AssetLike, AssetManager, Texture } from '.';
+import { Asset, AssetContainer, AssetLike, Texture } from '.';
 import { Actor } from '..';
 import { ZeroGuid } from '../../../constants';
 import { Color3, Color4, Color4Like, Vector2, Vector2Like } from '../../../math';
@@ -69,7 +69,9 @@ export class Material extends Asset implements MaterialLike, Patchable<AssetLike
 	public set color(value) { if (value) { this._color.copy(value); } }
 
 	/** @returns A shared reference to this material's texture asset */
-	public get mainTexture() { return this.manager.assets[this._mainTextureId] as Texture; }
+	public get mainTexture() {
+		return this.container.context.internal.lookupAsset(this._mainTextureId) as Texture;
+	}
 	public set mainTexture(value) {
 		this.mainTextureId = value && value.id || ZeroGuid;
 	}
@@ -80,7 +82,7 @@ export class Material extends Asset implements MaterialLike, Patchable<AssetLike
 		if (!value || value.startsWith('0000')) {
 			value = ZeroGuid;
 		}
-		if (!this.manager.assets[value]) {
+		if (!this.container.context.internal.lookupAsset(value)) {
 			value = ZeroGuid; // throw?
 		}
 
@@ -114,8 +116,8 @@ export class Material extends Asset implements MaterialLike, Patchable<AssetLike
 	public get material(): MaterialLike { return this; }
 
 	/** INTERNAL USE ONLY. To create a new material from scratch, use [[AssetManager.createMaterial]]. */
-	public constructor(manager: AssetManager, def: AssetLike) {
-		super(manager, def);
+	public constructor(container: AssetContainer, def: AssetLike) {
+		super(container, def);
 
 		if (!def.material) {
 			throw new Error("Cannot construct material from non-material definition");
@@ -205,7 +207,7 @@ export class Material extends Asset implements MaterialLike, Patchable<AssetLike
 
 	private materialChanged(...path: string[]): void {
 		if (this.internal.observing) {
-			this.manager.context.internal.incrementGeneration();
+			this.container.context.internal.incrementGeneration();
 			this.internal.patch = this.internal.patch || { material: {} } as AssetLike;
 			readPath(this, this.internal.patch.material, ...path);
 		}

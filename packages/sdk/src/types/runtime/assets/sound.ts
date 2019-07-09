@@ -3,7 +3,7 @@
  * Licensed under the MIT License.
  */
 
-import { Asset, AssetLike, AssetManager } from '.';
+import { Asset, AssetContainer, AssetLike } from '.';
 import { Actor } from '..';
 import readPath from '../../../utils/readPath';
 import { InternalAsset } from '../../internal/asset';
@@ -34,8 +34,8 @@ export class Sound extends Asset implements SoundLike, Patchable<AssetLike> {
 	public get sound(): SoundLike { return this; }
 
 	/** @hidden */
-	public constructor(manager: AssetManager, def: AssetLike) {
-		super(manager, def);
+	public constructor(container: AssetContainer, def: AssetLike) {
+		super(container, def);
 
 		if (!def.sound) {
 			throw new Error("Cannot construct sound from non-texture definition");

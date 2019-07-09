@@ -4,7 +4,7 @@
  */
 
 import {
-	AssetManager,
+	AssetContainer,
 	Material,
 	MaterialLike,
 	Mesh,
@@ -72,6 +72,7 @@ export abstract class Asset implements AssetLike {
 	private _id: string;
 	private _name: string;
 	private _source: AssetSource;
+	private _loadedPromise: Promise<void>;
 	// tslint:enable:variable-name
 
 	/** @inheritdoc */
@@ -83,23 +84,16 @@ export abstract class Asset implements AssetLike {
 	/** @inheritdoc */
 	public get source() { return this._source; }
 
+	/** @returns A promise that resolves when the asset is finished loading */
+	public get loaded() { return this._loadedPromise; }
+
 	/** Stores which actors/assets refer to this asset */
 	protected references = new Set<Actor | Asset>();
 
-	protected constructor(public manager: AssetManager, def: Partial<AssetLike>) {
+	protected constructor(public container: AssetContainer, def: Partial<AssetLike>) {
 		this._id = def.id;
 		this._name = def.name;
 		this._source = def.source;
-	}
-
-	/** @returns A promise that resolves once this asset is loaded */
-	public loaded(): Promise<void> {
-		return this.manager.assetLoaded(this.id);
-	}
-
-	/** Unload this asset from client memory, and clear all references to this asset. */
-	public unload(): Promise<void> {
-		return this.manager.unloadAssets(this);
 	}
 
 	/** @hidden */
@@ -117,6 +111,11 @@ export abstract class Asset implements AssetLike {
 		for (const r of this.references) {
 			this.clearReference(r);
 		}
+	}
+
+	/** @hidden */
+	public setLoadedPromise(p: Promise<void>) {
+		this._loadedPromise = p;
 	}
 
 	/** @hidden */
@@ -140,17 +139,17 @@ export abstract class Asset implements AssetLike {
 	}
 
 	/** @hidden */
-	public static Parse(manager: AssetManager, def: AssetLike): Asset {
+	public static Parse(container: AssetContainer, def: AssetLike): Asset {
 		if (def.prefab) {
-			return new Prefab(manager, def);
+			return new Prefab(container, def);
 		} else if (def.mesh) {
-			return new Mesh(manager, def);
+			return new Mesh(container, def);
 		} else if (def.material) {
-			return new Material(manager, def);
+			return new Material(container, def);
 		} else if (def.texture) {
-			return new Texture(manager, def);
+			return new Texture(container, def);
 		} else if (def.sound) {
-			return new Sound(manager, def);
+			return new Sound(container, def);
 		} else {
 			throw new Error(`Asset ${def.id} is not of a known type.`);
 		}

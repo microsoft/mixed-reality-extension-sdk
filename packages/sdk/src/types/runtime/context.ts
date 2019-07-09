@@ -12,7 +12,7 @@ import {
 	User,
 } from '../..';
 import { InternalContext } from '../../types/internal/context';
-import { AssetManager } from '../../types/runtime/assets';
+import { AssetContainer } from '../../types/runtime/assets';
 
 /**
  * Settings used to configure a `Context` instance.
@@ -36,12 +36,11 @@ export class Context {
 	/** @hidden */
 	public get emitter() { return this._emitter; }
 
-	private _assetManager: AssetManager;
 	private _sessionId: string;
 	private _conn: Connection;
+
 	// tslint:enable:variable-name
 
-	public get assetManager() { return this._assetManager; }
 	public get sessionId() { return this._sessionId; }
 	public get conn() { return this._conn; }
 	public get actors() { return Object.keys(this.internal.actorSet).map(actorId => this.internal.actorSet[actorId]); }
@@ -62,7 +61,6 @@ export class Context {
 		this._conn = settings.connection || new NullConnection();
 		this._sessionId = settings.sessionId || UUID();
 		this._internal = new InternalContext(this);
-		this._assetManager = new AssetManager(this);
 	}
 
 	/**

@@ -3,7 +3,7 @@
  * Licensed under the MIT License.
  */
 
-import { Asset, AssetLike, AssetManager } from '.';
+import { Asset, AssetContainer, AssetLike } from '.';
 import { Actor } from '..';
 
 export interface MeshLike {
@@ -28,8 +28,8 @@ export class Mesh extends Asset implements MeshLike {
 	public get mesh(): MeshLike { return this; }
 
 	/** @hidden */
-	public constructor(manager: AssetManager, def: AssetLike) {
-		super(manager, def);
+	public constructor(container: AssetContainer, def: AssetLike) {
+		super(container, def);
 
 		if (!def.mesh) {
 			throw new Error("Cannot construct mesh from non-mesh definition");

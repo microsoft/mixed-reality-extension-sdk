@@ -3,15 +3,38 @@
  * Licensed under the MIT License.
  */
 
-import { Asset } from '.';
+import { Asset, AssetContainer } from '.';
+
+// tslint:disable:max-classes-per-file
 
 /** @hidden */
-export class AssetIterator<T extends Asset> implements Iterator<T> {
-	public constructor(private assets: T[]) {}
-	public next(): IteratorResult<T> {
+export class AssetContainerIterable implements Iterable<Asset> {
+	public constructor(private containers: AssetContainer[]) {}
+	public [Symbol.iterator] = () => new AssetContainerIterator(this.containers);
+}
+
+/** @hidden */
+export class AssetContainerIterator implements Iterator<Asset> {
+	private containerIndex = 0;
+	private assetIndex = 0;
+	private get container() { return this.containers[this.containerIndex]; }
+	private get asset() { return this.container && this.container.assets[this.assetIndex]; }
+
+	public constructor(private containers: AssetContainer[]) {}
+	public next(): IteratorResult<Asset> {
+		if (!this.asset) {
+			this.containerIndex += 1;
+			this.assetIndex = 0;
+		}
+		if (!this.container) {
+			return { done: true, value: null };
+		}
+
+		const asset = this.asset;
+		this.assetIndex += 1;
 		return {
-			done: this.assets.length === 0,
-			value: this.assets.shift()
+			done: false,
+			value: asset
 		};
 	}
 }

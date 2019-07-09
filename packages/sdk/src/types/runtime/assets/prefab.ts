@@ -3,7 +3,7 @@
  * Licensed under the MIT License.
  */
 
-import { Asset, AssetLike, AssetManager } from '.';
+import { Asset, AssetContainer, AssetLike } from '.';
 import { Actor } from '..';
 import { InternalAsset } from '../../internal/asset';
 import { Patchable } from '../../patchable';
@@ -29,8 +29,8 @@ export class Prefab extends Asset implements PrefabLike, Patchable<AssetLike> {
 	public get prefab(): PrefabLike { return this; }
 
 	/** @hidden */
-	public constructor(manager: AssetManager, def: AssetLike) {
-		super(manager, def);
+	public constructor(container: AssetContainer, def: AssetLike) {
+		super(container, def);
 
 		if (!def.prefab) {
 			throw new Error("Cannot construct prefab from non-prefab definition");

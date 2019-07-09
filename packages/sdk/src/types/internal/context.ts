@@ -12,6 +12,8 @@ import {
 	ActorSet,
 	AnimationWrapMode,
 	Asset,
+	AssetContainer,
+	AssetContainerIterable,
 	AssetLike,
 	BehaviorType,
 	CollisionEvent,
@@ -67,6 +69,7 @@ export class InternalContext {
 	public actorSet: ActorSet = {};
 	public userSet: UserSet = {};
 	public userGroupMapping: { [id: string]: number } = { default: 1 };
+	public assetContainers = new Set<AssetContainer>();
 	public protocol: Protocols.Protocol;
 	public interval: NodeJS.Timer;
 	public generation = 0;
@@ -379,6 +382,10 @@ export class InternalContext {
 		this.generation++;
 	}
 
+	private assetsIterable() {
+		return new AssetContainerIterable([...this.assetContainers]);
+	}
+
 	public update() {
 		// Early out if no state changes occurred.
 		if (this.generation === this.prevGeneration) {
@@ -389,7 +396,7 @@ export class InternalContext {
 
 		const syncObjects = [
 			...Object.values(this.actorSet),
-			...Object.values(this.context.assetManager.assets),
+			...this.assetsIterable(),
 			...Object.values(this.userSet)
 		] as Array<Patchable<any>>;
 
@@ -599,6 +606,14 @@ export class InternalContext {
 				actorId,
 				behaviorType: newBehaviorType || 'none'
 			} as SetBehavior);
+		}
+	}
+
+	public lookupAsset(id: string): Asset {
+		for (const c of this.assetContainers) {
+			if (c.assetsById[id]) {
+				return c.assetsById[id];
+			}
 		}
 	}
 }

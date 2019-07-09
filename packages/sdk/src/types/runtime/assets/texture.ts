@@ -3,7 +3,7 @@
  * Licensed under the MIT License.
  */
 
-import { Asset, AssetLike, AssetManager, Material } from '.';
+import { Asset, AssetContainer, AssetLike, Material } from '.';
 import { Actor } from '..';
 import { Vector2, Vector2Like } from '../../../math';
 import { observe } from '../../../utils/observe';
@@ -58,8 +58,8 @@ export class Texture extends Asset implements TextureLike, Patchable<AssetLike> 
 	public get texture(): TextureLike { return this; }
 
 	/** INTERNAL USE ONLY. To load a new texture from scratch, use [[AssetManager.createTexture]] */
-	public constructor(manager: AssetManager, def: AssetLike) {
-		super(manager, def);
+	public constructor(container: AssetContainer, def: AssetLike) {
+		super(container, def);
 
 		if (!def.texture) {
 			throw new Error("Cannot construct texture from non-texture definition");
@@ -119,7 +119,7 @@ export class Texture extends Asset implements TextureLike, Patchable<AssetLike> 
 
 	private textureChanged(...path: string[]): void {
 		if (this.internal.observing) {
-			this.manager.context.internal.incrementGeneration();
+			this.container.context.internal.incrementGeneration();
 			this.internal.patch = this.internal.patch || { texture: {} } as AssetLike;
 			readPath(this, this.internal.patch.texture, ...path);
 		}
