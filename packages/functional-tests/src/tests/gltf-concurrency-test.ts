@@ -9,8 +9,11 @@ import { Test } from '../test';
 
 export default class GltfConcurrencyTest extends Test {
 	public expectedResultDescription = "Cesium man, a bottle, and maybe a gearbox.";
+	private assets: MRE.AssetContainer;
 
 	public async run(root: MRE.Actor): Promise<boolean> {
+		this.assets = new MRE.AssetContainer(this.app.context);
+
 		const runnerPromise = MRE.Actor.CreateFromGltf(this.app.context, {
 			// tslint:disable-next-line:max-line-length
 			resourceUrl: `https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/CesiumMan/glTF-Binary/CesiumMan.glb`,
@@ -32,7 +35,7 @@ export default class GltfConcurrencyTest extends Test {
 			}
 		});
 
-		const bottlePromise = this.app.context.assetManager.loadGltf('bottle',
+		const bottlePromise = this.assets.loadGltf(
 			// tslint:disable-next-line:max-line-length
 			'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/WaterBottle/glTF/WaterBottle.gltf');
 
@@ -45,16 +48,16 @@ export default class GltfConcurrencyTest extends Test {
 		}
 
 		let runnerActor: MRE.Actor;
-		let bottleAsset: MRE.AssetGroup;
+		let bottleAssets: MRE.Asset[];
 		try {
-			[runnerActor, bottleAsset] = await Promise.all([runnerPromise, bottlePromise]);
+			[runnerActor, bottleAssets] = await Promise.all([runnerPromise, bottlePromise]);
 		} catch (errs) {
 			console.error(errs);
 			return false;
 		}
 
 		MRE.Actor.CreateFromPrefab(this.app.context, {
-			prefabId: bottleAsset.prefabs.byIndex(0).id,
+			prefabId: bottleAssets.find(a => a.prefab !== null).id,
 			actor: {
 				name: 'bottle',
 				parentId: root.id,
@@ -64,5 +67,9 @@ export default class GltfConcurrencyTest extends Test {
 
 		await this.stoppedAsync();
 		return true;
+	}
+
+	public cleanup() {
+		this.assets.unload();
 	}
 }

@@ -25,7 +25,7 @@ export class Mesh extends Asset implements MeshLike {
 	public get triangleCount() { return this._triangleCount; }
 
 	/** @inheritdoc */
-	public get mesh(): MeshLike { return this; }
+	public get mesh(): Mesh { return this; }
 
 	/** @hidden */
 	public constructor(container: AssetContainer, def: AssetLike) {

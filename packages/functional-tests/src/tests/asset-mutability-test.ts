@@ -12,14 +12,12 @@ import delay from '../utils/delay';
 
 export default class AssetMutabilityTest extends Test {
 	public expectedResultDescription = "Animate a cube's color, texture, and transparency";
+	private assets: MRE.AssetContainer;
 
 	public async run(root: MRE.Actor): Promise<boolean> {
-
-		const assets = await this.app.context.assetManager.loadGltf(
-			'assets', this.generateMaterial()
-		);
-
-		const mat = assets.materials.byIndex(0);
+		this.assets = new MRE.AssetContainer(this.app.context);
+		await this.assets.loadGltf(this.generateMaterial(), 'none');
+		const mat = this.assets.materials[0];
 		mat.alphaMode = MRE.AlphaMode.Blend;
 		MRE.Actor.CreatePrimitive(this.app.context, {
 			definition: {
@@ -76,5 +74,9 @@ export default class AssetMutabilityTest extends Test {
 			return v - v * s * Math.max(Math.min(k, 4 - k, 1), 0);
 		}
 		return new MRE.Color4(f(5), f(3), f(1), a);
+	}
+
+	public cleanup() {
+		this.assets.unload();
 	}
 }

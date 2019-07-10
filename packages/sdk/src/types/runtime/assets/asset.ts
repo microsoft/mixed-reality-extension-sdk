@@ -84,6 +84,17 @@ export abstract class Asset implements AssetLike {
 	/** @inheritdoc */
 	public get source() { return this._source; }
 
+	/** @inheritdoc */
+	public get prefab(): Prefab { return null; }
+	/** @inheritdoc */
+	public get mesh(): Mesh { return null; }
+	/** @inheritdoc */
+	public get material(): Material { return null; }
+	/** @inheritdoc */
+	public get texture(): Texture { return null; }
+	/** @inheritdoc */
+	public get sound(): Sound { return null; }
+
 	/** A promise that resolves when the asset is finished loading */
 	public get created() { return this._loadedPromise; }
 

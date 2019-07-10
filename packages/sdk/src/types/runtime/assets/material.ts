@@ -113,7 +113,7 @@ export class Material extends Asset implements MaterialLike, Patchable<AssetLike
 	public set alphaCutoff(value) { this._alphaCutoff = value; this.materialChanged('alphaCutoff'); }
 
 	/** @inheritdoc */
-	public get material(): MaterialLike { return this; }
+	public get material(): Material { return this; }
 
 	/** INTERNAL USE ONLY. To create a new material from scratch, use [[AssetManager.createMaterial]]. */
 	public constructor(container: AssetContainer, def: AssetLike) {

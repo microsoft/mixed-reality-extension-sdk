@@ -31,7 +31,7 @@ export class Sound extends Asset implements SoundLike, Patchable<AssetLike> {
 	public get duration() { return this._duration; }
 
 	/** @inheritdoc */
-	public get sound(): SoundLike { return this; }
+	public get sound(): Sound { return this; }
 
 	/** @hidden */
 	public constructor(container: AssetContainer, def: AssetLike) {

@@ -55,7 +55,7 @@ export class Texture extends Asset implements TextureLike, Patchable<AssetLike> 
 	public set wrapV(val) { this._wrapV = val; this.textureChanged('wrapV'); }
 
 	/** @inheritdoc */
-	public get texture(): TextureLike { return this; }
+	public get texture(): Texture { return this; }
 
 	/** INTERNAL USE ONLY. To load a new texture from scratch, use [[AssetManager.createTexture]] */
 	public constructor(container: AssetContainer, def: AssetLike) {

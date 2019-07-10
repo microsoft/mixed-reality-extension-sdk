@@ -12,6 +12,7 @@ import delay from '../utils/delay';
 
 export default class AssetPreloadTest extends Test {
 	public expectedResultDescription = "Two meshes juggle their materials and textures. Click to advance.";
+	private assets: MRE.AssetContainer;
 	private state = 0;
 
 	private root: MRE.Actor;
@@ -30,21 +31,22 @@ export default class AssetPreloadTest extends Test {
 
 	public async run(root: MRE.Actor): Promise<boolean> {
 		this.root = root;
+		this.assets = new MRE.AssetContainer(this.app.context);
 		this.app.setOverrideText("Preloading assets");
 		const [monkey, uvgrid] = await Promise.all([
-			this.app.context.assetManager.loadGltf('monkey', this.baseUrl + '/monkey.glb', 'box'),
-			this.app.context.assetManager.loadGltf('uvgrid', this.generateMaterial())
+			this.assets.loadGltf(this.baseUrl + '/monkey.glb', 'box'),
+			this.assets.loadGltf(this.generateMaterial(), 'none')
 		]);
 		this.app.setOverrideText("Assets preloaded:" +
-			`${monkey.prefabs.count + uvgrid.prefabs.count} prefabs, ` +
-			`${monkey.materials.count + uvgrid.materials.count} materials, ` +
-			`${monkey.textures.count + uvgrid.textures.count} textures`);
+			`${this.assets.prefabs.length} prefabs, ` +
+			`${this.assets.materials.length} materials, ` +
+			`${this.assets.textures.length} textures`);
 		await delay(1000);
 
-		this.monkeyPrefab = monkey.prefabs.byIndex(0);
-		this.monkeyMat = monkey.materials.byIndex(0);
-		this.uvgridMat = uvgrid.materials.byIndex(0);
-		this.uvgridTex = uvgrid.textures.byIndex(0);
+		this.monkeyPrefab = monkey.find(a => a.prefab !== null).prefab;
+		this.monkeyMat = monkey.find(a => a.material !== null).material;
+		this.uvgridMat = uvgrid.find(a => a.material !== null).material;
+		this.uvgridTex = uvgrid.find(a => a.texture !== null).texture;
 
 		await this.cycleState();
 		await this.stoppedAsync();
@@ -140,5 +142,9 @@ export default class AssetPreloadTest extends Test {
 		const gltfFactory = new GltfGen.GltfFactory(null, null, [material]);
 
 		return Server.registerStaticBuffer('uvgrid', gltfFactory.generateGLTF());
+	}
+
+	public cleanup() {
+		this.assets.unload();
 	}
 }

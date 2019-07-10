@@ -10,6 +10,7 @@ import delay from '../utils/delay';
 
 export default class SoundTest extends Test {
 	public expectedResultDescription = "Sounds. Click buttons to toggle";
+	private assets: MRE.AssetContainer;
 
 	private _musicState = 0;
 	private _dopplerSoundState = 0;
@@ -49,7 +50,7 @@ export default class SoundTest extends Test {
 		];
 
 	public async run(root: MRE.Actor): Promise<boolean> {
-
+		this.assets = new MRE.AssetContainer(this.app.context);
 		const musicButtonPromise = MRE.Actor.CreatePrimitive(this.app.context, {
 			definition: {
 				shape: MRE.PrimitiveShape.Sphere,
@@ -70,11 +71,11 @@ export default class SoundTest extends Test {
 			}
 		});
 
-		const musicAssetPromise = this.app.context.assetManager.createSound(
-			'group1',
+		const musicAsset = this.assets.createSound(
+			'music',
 			{ uri: `${this.baseUrl}/FTUI_Music.ogg` }
 		);
-		const musicSoundInstance = musicButtonPromise.value.startSound(musicAssetPromise.value.id,
+		const musicSoundInstance = musicButtonPromise.value.startSound(musicAsset.id,
 			{
 				volume: 0.2,
 				looping: true,
@@ -115,8 +116,8 @@ export default class SoundTest extends Test {
 			}
 		});
 
-		const notesAssetPromise = this.app.context.assetManager.createSound(
-			'group1',
+		const notesAsset = this.assets.createSound(
+			'piano',
 			{ uri: `${this.baseUrl}/Piano_C4.wav` }
 		);
 
@@ -124,7 +125,7 @@ export default class SoundTest extends Test {
 		const playNotes = async () => {
 			for (const chord of this.chords) {
 				for (const note of chord) {
-					notesButtonPromise.value.startSound(notesAssetPromise.value.id,
+					notesButtonPromise.value.startSound(notesAsset.id,
 						{
 							doppler: 0.0,
 							pitch: note,
@@ -178,11 +179,11 @@ export default class SoundTest extends Test {
 				wrapMode: MRE.AnimationWrapMode.Loop
 			});
 
-		const dopplerAssetPromise = this.app.context.assetManager.createSound(
-			'group1',
+		const dopplerAsset = this.assets.createSound(
+			'truck',
 			{ uri: `${this.baseUrl}/Car_Engine_Loop.wav` }
 		);
-		const dopplerSoundInstance = dopplerMoverPromise.value.startSound(dopplerAssetPromise.value.id,
+		const dopplerSoundInstance = dopplerMoverPromise.value.startSound(dopplerAsset.id,
 			{
 				volume: 0.5,
 				looping: true,
@@ -228,5 +229,9 @@ export default class SoundTest extends Test {
 			time: 1 * duration,
 			value: { transform: { local: { rotation: MRE.Quaternion.RotationAxis(axis, start + Math.PI * 4 / 2) } } }
 		}];
+	}
+
+	public cleanup() {
+		this.assets.unload();
 	}
 }

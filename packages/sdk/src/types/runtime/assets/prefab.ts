@@ -26,7 +26,7 @@ export class Prefab extends Asset implements PrefabLike, Patchable<AssetLike> {
 	public get actorCount() { return this._actorCount; }
 
 	/** @inheritdoc */
-	public get prefab(): PrefabLike { return this; }
+	public get prefab(): Prefab { return this; }
 
 	/** @hidden */
 	public constructor(container: AssetContainer, def: AssetLike) {
