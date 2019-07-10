@@ -84,8 +84,8 @@ export abstract class Asset implements AssetLike {
 	/** @inheritdoc */
 	public get source() { return this._source; }
 
-	/** @returns A promise that resolves when the asset is finished loading */
-	public get loaded() { return this._loadedPromise; }
+	/** A promise that resolves when the asset is finished loading */
+	public get created() { return this._loadedPromise; }
 
 	/** Stores which actors/assets refer to this asset */
 	protected references = new Set<Actor | Asset>();

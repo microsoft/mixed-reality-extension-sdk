@@ -25,7 +25,7 @@ export class SoundInstance {
 		ForwardPromise<SoundInstance> {
 		return createForwardPromise(this,
 			new Promise<SoundInstance>((resolve, reject) => {
-				this.actor.context.internal.lookupAsset(this.soundAssetId).loaded.then(() => {
+				this.actor.context.internal.lookupAsset(this.soundAssetId).created.then(() => {
 					this.actor.context.internal.setSoundState(
 						this, SoundCommand.Start, options, this.soundAssetId, startTimeOffset);
 
@@ -41,7 +41,7 @@ export class SoundInstance {
 	}
 
 	public setSoundState(options: SetSoundStateOptions, soundCommand?: SoundCommand) {
-		this.actor.context.internal.lookupAsset(this.soundAssetId).loaded.then(() => {
+		this.actor.context.internal.lookupAsset(this.soundAssetId).created.then(() => {
 			if (soundCommand === undefined) {
 				soundCommand = SoundCommand.Update;
 			}
