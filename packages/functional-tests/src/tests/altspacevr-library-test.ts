@@ -11,7 +11,7 @@ export default class AltspaceVRLibraryTest extends Test {
 
 	public async run(root: MRE.Actor): Promise<boolean> {
 		// AltspaceVR resource IDs from https://account.altvr.com/kits/
-		const libraryActors: Array<MRE.ForwardPromise<MRE.Actor>> = [];
+		const libraryActors: MRE.Actor[] = [];
 		libraryActors.push(MRE.Actor.CreateFromLibrary(this.app.context, {
 			resourceId: "artifact:993646440251130011",
 			actor: {
@@ -92,12 +92,12 @@ export default class AltspaceVRLibraryTest extends Test {
 		}));
 
 		// Show the item name when hovering on each item
-		libraryActors.forEach((actor: MRE.ForwardPromise<MRE.Actor>) => {
+		libraryActors.forEach((actor: MRE.Actor) => {
 			if (actor) {
-				const buttonBehavior = actor.value.setBehavior(MRE.ButtonBehavior);
+				const buttonBehavior = actor.setBehavior(MRE.ButtonBehavior);
 				// Trigger the grow/shrink animations on hover.
 				buttonBehavior.onHover('enter', () => {
-					this.app.setOverrideText(actor.value.name);
+					this.app.setOverrideText(actor.name);
 				});
 				buttonBehavior.onHover('exit', () => {
 					this.app.setOverrideText(null);

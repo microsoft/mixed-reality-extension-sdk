@@ -55,7 +55,6 @@ import { Handshake } from '../../protocols/handshake';
 import { SetSoundStateOptions, SoundCommand } from '../../sound';
 import resolveJsonValues from '../../utils/resolveJsonValues';
 import safeGet from '../../utils/safeAccessPath';
-import { createForwardPromise, ForwardPromise } from '../forwardPromise';
 import { OperatingModel } from '../network/operatingModel';
 import { Patchable } from '../patchable';
 import { SoundInstance } from '../runtime/soundInstance';
@@ -82,7 +81,7 @@ export class InternalContext {
 
 	public CreateEmpty(options?: {
 		actor?: Partial<ActorLike>
-	}): ForwardPromise<Actor> {
+	}): Actor {
 		options = { ...options };
 		options = {
 			...options,
@@ -103,7 +102,7 @@ export class InternalContext {
 		assetName?: string,
 		colliderType?: CreateColliderType,
 		actor?: Partial<ActorLike>
-	}): ForwardPromise<Actor> {
+	}): Actor {
 		options = { ...options };
 		options = {
 			colliderType: 'none',
@@ -123,7 +122,7 @@ export class InternalContext {
 	public CreateFromLibrary(options: {
 		resourceId: string,
 		actor?: Partial<ActorLike>
-	}): ForwardPromise<Actor> {
+	}): Actor {
 		options = { ...options };
 		options = {
 			...options,
@@ -143,7 +142,7 @@ export class InternalContext {
 		definition: PrimitiveDefinition,
 		addCollider?: boolean,
 		actor?: Partial<ActorLike>
-	}): ForwardPromise<Actor> {
+	}): Actor {
 		options = { ...options };
 		options = {
 			addCollider: false,
@@ -163,7 +162,7 @@ export class InternalContext {
 	public CreateFromPrefab(options: {
 		prefabId: string,
 		actor?: Partial<ActorLike>
-	}): ForwardPromise<Actor> {
+	}): Actor {
 		options = { ...options };
 		options = {
 			...options,
@@ -178,7 +177,7 @@ export class InternalContext {
 		} as CreateFromPrefab);
 	}
 
-	private createActorFromPayload(payload: CreateActorCommon): ForwardPromise<Actor> {
+	private createActorFromPayload(payload: CreateActorCommon): Actor {
 		// Resolve by-reference values now, ensuring they won't change in the
 		// time between now and when this message is actually sent.
 		payload.actor = Actor.sanitize(payload.actor);
@@ -187,45 +186,46 @@ export class InternalContext {
 		// Get a reference to the new actor.
 		const actor = this.context.actor(payload.actor.id);
 
-		// If we have a parent, make sure it is done getting created first.
-		return createForwardPromise<Actor>(actor, new Promise((resolve, reject) => {
-			// Send a message to the engine to instantiate the object.
-			this.protocol.sendPayload(
-				payload,
-				{
-					resolve: (replyPayload: ObjectSpawned | OperationResult) => {
-						this.protocol.recvPayload(replyPayload);
-						let success: boolean;
-						let message: string;
-						if (replyPayload.type === 'operation-result') {
-							success = replyPayload.resultCode !== 'error';
-							message = replyPayload.message;
-						} else {
-							success = replyPayload.result.resultCode !== 'error';
-							message = replyPayload.result.message;
+		// Send a message to the engine to instantiate the object.
+		this.protocol.sendPayload(
+			payload,
+			{
+				resolve: (replyPayload: ObjectSpawned | OperationResult) => {
+					this.protocol.recvPayload(replyPayload);
+					let success: boolean;
+					let message: string;
+					if (replyPayload.type === 'operation-result') {
+						success = replyPayload.resultCode !== 'error';
+						message = replyPayload.message;
+					} else {
+						success = replyPayload.result.resultCode !== 'error';
+						message = replyPayload.result.message;
 
-							for (const createdActorLike of replyPayload.actors) {
-								const createdActor = this.actorSet[createdActorLike.id];
-								if (createdActor) {
-									createdActor.internal.notifyCreated(success, replyPayload.result.message);
-								}
+						for (const createdActorLike of replyPayload.actors) {
+							const createdActor = this.actorSet[createdActorLike.id];
+							if (createdActor) {
+								createdActor.internal.notifyCreated(success, replyPayload.result.message);
 							}
 						}
+					}
 
-						if (success) {
-							if (!actor.collider && actor.internal.behavior) {
-								log.warning('app', 'Behaviors will not function on Unity host apps without adding a'
-									+ ' collider to this actor first. Recommend adding a primitive collider'
-									+ ' to this actor.');
-							}
-							resolve(actor);
-						} else {
-							reject(message);
+					if (success) {
+						if (!actor.collider && actor.internal.behavior) {
+							log.warning('app', 'Behaviors will not function on Unity host apps without adding a'
+								+ ' collider to this actor first. Recommend adding a primitive collider'
+								+ ' to this actor.');
 						}
-					},
-					reject
-				});
-		}));
+						actor.internal.notifyCreated(true);
+					} else {
+						actor.internal.notifyCreated(false, message);
+					}
+				},
+				reject: (reason?: any) => {
+					actor.internal.notifyCreated(false, reason);
+				}
+			});
+
+		return actor;
 	}
 
 	public createAnimation(actorId: string, animationName: string, options: CreateAnimationOptions) {

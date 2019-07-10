@@ -35,7 +35,7 @@ export default class PrimitivesTest extends Test {
 				}
 			}
 		});
-		const primitiveActors: Array<MRE.ForwardPromise<MRE.Actor>> = [];
+		const primitiveActors: MRE.Actor[] = [];
 
 		for (let x = 0.1; x < 0.35; x += 0.1) {
 			for (let y = 0.1; y < 0.35; y += 0.1) {
@@ -48,7 +48,7 @@ export default class PrimitivesTest extends Test {
 						addCollider: true,
 						actor: {
 							name: 'Box',
-							parentId: tester.value.id,
+							parentId: tester.id,
 							transform: {
 								local: {
 									position: { x: x * 4 - 0.8, y: y * 4 + 0., z: z * 4 - 0.5 }
@@ -69,7 +69,7 @@ export default class PrimitivesTest extends Test {
 			addCollider: true,
 			actor: {
 				name: 'Sphere',
-				parentId: tester.value.id,
+				parentId: tester.id,
 				transform: {
 					local: {
 						position: { x: -1, y: 1, z: 0 }
@@ -89,7 +89,7 @@ export default class PrimitivesTest extends Test {
 			addCollider: true,
 			actor: {
 				name: 'Capsule',
-				parentId: tester.value.id,
+				parentId: tester.id,
 				transform: {
 					local: {
 						position: { x: 1, y: 1, z: 0 }
@@ -109,7 +109,7 @@ export default class PrimitivesTest extends Test {
 			addCollider: true,
 			actor: {
 				name: 'Capsule',
-				parentId: tester.value.id,
+				parentId: tester.id,
 				transform: {
 					local: {
 						position: { x: 1, y: 2.0, z: 0 }
@@ -129,7 +129,7 @@ export default class PrimitivesTest extends Test {
 			addCollider: true,
 			actor: {
 				name: 'Capsule',
-				parentId: tester.value.id,
+				parentId: tester.id,
 				transform: {
 					local: {
 						position: { x: 1 }
@@ -148,7 +148,7 @@ export default class PrimitivesTest extends Test {
 			addCollider: true,
 			actor: {
 				name: 'Cylinder',
-				parentId: tester.value.id,
+				parentId: tester.id,
 				transform: {
 					local: {
 						position: { x: 2, y: 1, z: 0 }
@@ -167,7 +167,7 @@ export default class PrimitivesTest extends Test {
 			addCollider: true,
 			actor: {
 				name: 'Cylinder',
-				parentId: tester.value.id,
+				parentId: tester.id,
 				transform: {
 					local: {
 						position: { x: 2, y: 2.0, z: 0 }
@@ -186,7 +186,7 @@ export default class PrimitivesTest extends Test {
 			addCollider: true,
 			actor: {
 				name: 'Cylinder',
-				parentId: tester.value.id,
+				parentId: tester.id,
 				transform: {
 					local: {
 						position: { x: 2 }
@@ -206,7 +206,7 @@ export default class PrimitivesTest extends Test {
 			addCollider: true,
 			actor: {
 				name: 'Plane',
-				parentId: tester.value.id,
+				parentId: tester.id,
 				transform: {
 					local: {
 						position: { x: -2, y: 0.0, z: 0 }
@@ -225,7 +225,7 @@ export default class PrimitivesTest extends Test {
 			addCollider: true,
 			actor: {
 				name: 'Inner Sphere',
-				parentId: tester.value.id,
+				parentId: tester.id,
 				transform: {
 					local: {
 						position: { x: -1 }
@@ -234,12 +234,12 @@ export default class PrimitivesTest extends Test {
 			}
 		}));
 
-		primitiveActors.forEach((actor: MRE.ForwardPromise<MRE.Actor>) => {
+		primitiveActors.forEach((actor) => {
 			if (actor) {
-				const buttonBehavior = actor.value.setBehavior(MRE.ButtonBehavior);
+				const buttonBehavior = actor.setBehavior(MRE.ButtonBehavior);
 				// Trigger the grow/shrink animations on hover.
 				buttonBehavior.onHover('enter', _ => {
-					this.app.setOverrideText(actor.value.name);
+					this.app.setOverrideText(actor.name);
 				});
 				buttonBehavior.onHover('exit', _ => {
 					this.app.setOverrideText(null);

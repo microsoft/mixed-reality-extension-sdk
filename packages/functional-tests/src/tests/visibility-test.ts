@@ -19,7 +19,7 @@ export default class VisibilityTest extends Test {
 				parentId: root.id,
 				transform: { local: { position: { x: -0.9, y: 1, z: -1 } } }
 			}
-		}).value;
+		});
 		let lastCol = rowRoot;
 		for (let i = 0; i < 10; i++) {
 			lastCol = this.createColumn(lastCol, i);
@@ -52,7 +52,7 @@ export default class VisibilityTest extends Test {
 				parentId: parent.id,
 				transform: { local: { position: { x: spacing } } }
 			}
-		}).value;
+		});
 
 		MRE.Actor.CreatePrimitive(this.app.context, {
 			definition: {

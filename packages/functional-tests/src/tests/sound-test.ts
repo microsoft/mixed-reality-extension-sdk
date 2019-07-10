@@ -50,7 +50,7 @@ export default class SoundTest extends Test {
 
 	public async run(root: MRE.Actor): Promise<boolean> {
 
-		const musicButtonPromise = MRE.Actor.CreatePrimitive(this.app.context, {
+		const musicButton = MRE.Actor.CreatePrimitive(this.app.context, {
 			definition: {
 				shape: MRE.PrimitiveShape.Sphere,
 				radius: 0.2,
@@ -74,7 +74,7 @@ export default class SoundTest extends Test {
 			'group1',
 			{ uri: `${this.baseUrl}/FTUI_Music.ogg` }
 		);
-		const musicSoundInstance = musicButtonPromise.value.startSound(musicAssetPromise.value.id,
+		const musicSoundInstance = musicButton.startSound(musicAssetPromise.value.id,
 			{
 				volume: 0.2,
 				looping: true,
@@ -84,7 +84,7 @@ export default class SoundTest extends Test {
 			},
 			0.0);
 		musicSoundInstance.value.pause();
-		const musicButtonBehavior = musicButtonPromise.value.setBehavior(MRE.ButtonBehavior);
+		const musicButtonBehavior = musicButton.setBehavior(MRE.ButtonBehavior);
 		const cycleMusicState = () => {
 			if (this._musicState === 0) {
 				musicSoundInstance.value.resume();
@@ -95,7 +95,7 @@ export default class SoundTest extends Test {
 		};
 		musicButtonBehavior.onButton('released', cycleMusicState);
 
-		const notesButtonPromise = MRE.Actor.CreatePrimitive(this.app.context, {
+		const notesButton = MRE.Actor.CreatePrimitive(this.app.context, {
 			definition: {
 				shape: MRE.PrimitiveShape.Sphere,
 				radius: 0.2,
@@ -120,11 +120,11 @@ export default class SoundTest extends Test {
 			{ uri: `${this.baseUrl}/Piano_C4.wav` }
 		);
 
-		const notesButtonBehavior = notesButtonPromise.value.setBehavior(MRE.ButtonBehavior);
+		const notesButtonBehavior = notesButton.setBehavior(MRE.ButtonBehavior);
 		const playNotes = async () => {
 			for (const chord of this.chords) {
 				for (const note of chord) {
-					notesButtonPromise.value.startSound(notesAssetPromise.value.id,
+					notesButton.startSound(notesAssetPromise.value.id,
 						{
 							doppler: 0.0,
 							pitch: note,
@@ -135,7 +135,7 @@ export default class SoundTest extends Test {
 		};
 		notesButtonBehavior.onButton('released', playNotes);
 
-		const dopplerButtonPromise = MRE.Actor.CreatePrimitive(this.app.context, {
+		const dopplerButton = MRE.Actor.CreatePrimitive(this.app.context, {
 			definition: {
 				shape: MRE.PrimitiveShape.Sphere,
 				radius: 0.2,
@@ -154,7 +154,7 @@ export default class SoundTest extends Test {
 				}
 			}
 		});
-		const dopplerMoverPromise = MRE.Actor.CreatePrimitive(this.app.context, {
+		const dopplerMover = MRE.Actor.CreatePrimitive(this.app.context, {
 			definition: {
 				shape: MRE.PrimitiveShape.Sphere,
 				radius: 0.15,
@@ -163,7 +163,7 @@ export default class SoundTest extends Test {
 
 			},
 			actor: {
-				parentId: dopplerButtonPromise.value.id,
+				parentId: dopplerButton.id,
 				name: 'DopplerMover',
 				transform: {
 					local: {
@@ -172,7 +172,7 @@ export default class SoundTest extends Test {
 				}
 			}
 		});
-		dopplerButtonPromise.value.createAnimation(
+		dopplerButton.createAnimation(
 			'flyaround', {
 				keyframes: this.generateSpinKeyframes(2.0, MRE.Vector3.Up()),
 				wrapMode: MRE.AnimationWrapMode.Loop
@@ -182,7 +182,7 @@ export default class SoundTest extends Test {
 			'group1',
 			{ uri: `${this.baseUrl}/Car_Engine_Loop.wav` }
 		);
-		const dopplerSoundInstance = dopplerMoverPromise.value.startSound(dopplerAssetPromise.value.id,
+		const dopplerSoundInstance = dopplerMover.startSound(dopplerAssetPromise.value.id,
 			{
 				volume: 0.5,
 				looping: true,
@@ -192,14 +192,14 @@ export default class SoundTest extends Test {
 			},
 			0.0);
 		dopplerSoundInstance.value.pause();
-		const dopplerButtonBehavior = dopplerButtonPromise.value.setBehavior(MRE.ButtonBehavior);
+		const dopplerButtonBehavior = dopplerButton.setBehavior(MRE.ButtonBehavior);
 		const cycleDopplerSoundState = () => {
 			if (this._dopplerSoundState === 0) {
 				dopplerSoundInstance.value.resume();
-				dopplerButtonPromise.value.enableAnimation('flyaround');
+				dopplerButton.enableAnimation('flyaround');
 
 			} else if (this._dopplerSoundState === 1) {
-				dopplerButtonPromise.value.disableAnimation('flyaround');
+				dopplerButton.disableAnimation('flyaround');
 				dopplerSoundInstance.value.pause();
 			}
 			this._dopplerSoundState = (this._dopplerSoundState + 1) % 2;
