@@ -313,25 +313,16 @@ export class Session extends EventEmitter {
 		}
 	}
 
-	public cacheAssetUnload(...assetIds: string[]) {
-		// flag the assets for unload
-		for (const id of assetIds) {
-			this.assetSet[id].unloaded = true;
-		}
+	public cacheAssetUnload(containerId: string) {
+		const creators = this.assetCreators.filter(c => c.payload.containerId === containerId);
+		for (const creator of creators) {
+			// un-cache creation message
+			delete this.assetCreatorSet[creator.id];
 
-		// unique creator IDs of the freshly unloaded assets
-		const creatorIds = assetIds
-			.map(assetId => this.assetSet[assetId].creatorMessageId)
-			.filter((id, i, arr) => arr.lastIndexOf(id) === i);
-
-		// if a creator has no loaded assets, delete creator message
-		for (const creatorId of creatorIds) {
-			const assets = this.assets.filter(a => a.creatorMessageId === creatorId);
-			if (assets.every(a => a.unloaded)) {
-				delete this.assetCreatorSet[creatorId];
-				for (const asset of assets) {
-					delete this.assetSet[asset.id];
-				}
+			// un-cache created assets
+			const assets = this.assets.filter(a => a.creatorMessageId === creator.id);
+			for (const asset of assets) {
+				delete this.assetSet[asset.id];
 			}
 		}
 	}

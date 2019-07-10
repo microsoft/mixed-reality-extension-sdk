@@ -1033,9 +1033,7 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 	'traces': ClientOnlyRule,
 
 	// ========================================================================
-	'trigger-event-raised': {
-		...ClientOnlyRule
-	},
+	'trigger-event-raised': ClientOnlyRule,
 
 	// ========================================================================
 	'unload-assets': {
@@ -1052,7 +1050,7 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 				session: Session,
 				message: Message<Payloads.UnloadAssets>
 			) => {
-				session.cacheAssetUnload(...message.payload.assetIds);
+				session.cacheAssetUnload(message.payload.containerId);
 				return message;
 			}
 		}

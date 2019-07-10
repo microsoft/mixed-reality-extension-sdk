@@ -14,13 +14,18 @@ import {
 	Texture, TextureLike
 } from '.';
 import { Context } from '..';
+import { log } from '../../../log';
 import resolveJsonValues from '../../../utils/resolveJsonValues';
 import * as Payloads from '../../network/payloads';
 
 export class AssetContainer {
 	// tslint:disable:variable-name
+	private _id: string;
 	private _assets: { [id: string]: Asset } = {};
 	// tslint:enable:variable-name
+
+	/** @hidden */
+	public get id() { return this._id; }
 
 	/** A mapping of asset IDs to assets in this container */
 	public get assetsById() { return Object.freeze({ ...this._assets }); }
@@ -38,6 +43,7 @@ export class AssetContainer {
 	public get textures() { return this.assets.filter(a => a instanceof Texture) as Texture[]; }
 
 	public constructor(public context: Context) {
+		this._id = UUID();
 		context.internal.assetContainers.add(this);
 	}
 
@@ -89,6 +95,7 @@ export class AssetContainer {
 	/**
 	 * Load the assets in a glTF file by URL, and this container with the result.
 	 * @param uri The URI to a glTF model.
+	 * @param colliderType The shape of the generated prefab collider.
 	 * @returns A promise that resolves with the list of loaded assets.
 	 */
 	public async loadGltf(uri: string, colliderType: Payloads.CreateColliderType): Promise<Asset[]> {
@@ -99,11 +106,12 @@ export class AssetContainer {
 
 		const payload = {
 			type: 'load-assets',
+			containerId: this.id,
 			source,
 			colliderType
 		} as Payloads.LoadAssets;
 
-		const response = await this.sendPayload<Payloads.LoadAssets, Payloads.AssetsLoaded>(payload);
+		const response = await this.sendPayloadAndGetReply<Payloads.LoadAssets, Payloads.AssetsLoaded>(payload);
 		if (response.failureMessage) {
 			throw new Error(response.failureMessage);
 		}
@@ -118,15 +126,27 @@ export class AssetContainer {
 		return newAssets;
 	}
 
-	public unloadAssets(): void {
+	/** Break references to all assets in the container, and free memory */
+	public unload(): void {
+		for (const a of this.assets) {
+			a.clearAllReferences();
+		}
 
+		this.context.internal.nextUpdate().then(() => {
+			this.context.internal.protocol.sendPayload({
+				type: 'unload-assets',
+				containerId: this.id
+			} as Payloads.UnloadAssets);
+		})
+		.catch(err => log.error('app', err));
 	}
 
 	private async sendCreateAsset(asset: Asset): Promise<void> {
 		this._assets[asset.id] = asset;
 
-		const reply = await this.sendPayload<Payloads.CreateAsset, Payloads.AssetsLoaded>({
+		const reply = await this.sendPayloadAndGetReply<Payloads.CreateAsset, Payloads.AssetsLoaded>({
 			type: 'create-asset',
+			containerId: this.id,
 			definition: resolveJsonValues(asset)
 		});
 
@@ -135,7 +155,7 @@ export class AssetContainer {
 		}
 	}
 
-	private sendPayload<T extends Payloads.Payload, U extends Payloads.Payload>(payload: T): Promise<U> {
+	private sendPayloadAndGetReply<T extends Payloads.Payload, U extends Payloads.Payload>(payload: T): Promise<U> {
 		return new Promise<U>((resolve, reject) => {
 			this.context.internal.protocol.sendPayload(
 				payload, { resolve, reject }

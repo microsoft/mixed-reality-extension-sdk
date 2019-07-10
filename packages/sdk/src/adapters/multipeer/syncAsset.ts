@@ -12,9 +12,4 @@ export class SyncAsset {
 	public creatorMessageId: string;
 	/** Used only with batch creation, as definition is updated for other */
 	public update: Message<Payloads.AssetUpdate>;
-	/**
-	 * Indicates that this asset has been unloaded, but we can't ditch this
-	 * reference yet
-	 */
-	public unloaded = false;
 }

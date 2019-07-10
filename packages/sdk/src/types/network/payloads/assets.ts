@@ -20,6 +20,7 @@ export type AssetPayloadType
 /** @hidden */
 export type LoadAssets = Payload & {
 	type: 'load-assets';
+	containerId: string;
 	source: AssetSource;
 	colliderType: CreateColliderType;
 };
@@ -27,6 +28,7 @@ export type LoadAssets = Payload & {
 /** @hidden */
 export type CreateAsset = Payload & {
 	type: 'create-asset';
+	containerId: string;
 	definition: AssetLike;
 };
 
@@ -52,5 +54,5 @@ export type CreateFromPrefab = CreateActorCommon & {
 /** @hidden */
 export type UnloadAssets = Payload & {
 	type: 'unload-assets';
-	assetIds: string[];
+	containerId: string;
 };

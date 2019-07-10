@@ -164,18 +164,6 @@ export class ClientSync extends Protocols.Protocol {
 			this.sendMessage(creator);
 		}
 
-		// Some assets might be loaded, even though they shouldn't. Identify and unload them now.
-		const assetIds = this.client.session.assets.filter(a => a.unloaded).map(a => a.id);
-		if (assetIds.length > 0) {
-			this.sendMessage({
-				id: UUID(),
-				payload: {
-					type: 'unload-assets',
-					assetIds
-				} as Payloads.UnloadAssets
-			});
-		}
-
 		// Send all cached asset-update messages.
 		for (const update of this.client.session.assets.map(a => a.update)) {
 			this.sendMessage(update);
