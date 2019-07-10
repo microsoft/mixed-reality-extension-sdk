@@ -18,6 +18,11 @@ import { log } from '../../../log';
 import resolveJsonValues from '../../../utils/resolveJsonValues';
 import * as Payloads from '../../network/payloads';
 
+/**
+ * The root object of the MRE SDK's asset system. Once you create an AssetContainer,
+ * you can create new materials, textures, or sounds from scratch, or load glTF
+ * files for their assets.
+ */
 export class AssetContainer {
 	// tslint:disable:variable-name
 	private _id: string;
@@ -42,6 +47,7 @@ export class AssetContainer {
 	/** A list of all textures in this container */
 	public get textures() { return this.assets.filter(a => a instanceof Texture) as Texture[]; }
 
+	/** Create a new asset container */
 	public constructor(public context: Context) {
 		this._id = UUID();
 		context.internal.assetContainers.add(this);
@@ -99,6 +105,10 @@ export class AssetContainer {
 	 * @returns A promise that resolves with the list of loaded assets.
 	 */
 	public async loadGltf(uri: string, colliderType: Payloads.CreateColliderType): Promise<Asset[]> {
+		if (!this._assets) {
+			throw new Error("Cannot load new assets into an unloaded container!");
+		}
+
 		const source = {
 			containerType: 'gltf',
 			uri
@@ -126,11 +136,13 @@ export class AssetContainer {
 		return newAssets;
 	}
 
-	/** Break references to all assets in the container, and free memory */
+	/** Break references to all assets in the container, and unload them to free memory */
 	public unload(): void {
 		for (const a of this.assets) {
 			a.clearAllReferences();
 		}
+		this.context.internal.assetContainers.delete(this);
+		this._assets = null;
 
 		this.context.internal.nextUpdate().then(() => {
 			this.context.internal.protocol.sendPayload({
@@ -142,6 +154,10 @@ export class AssetContainer {
 	}
 
 	private async sendCreateAsset(asset: Asset): Promise<void> {
+		if (!this._assets) {
+			throw new Error("Cannot load new assets into an unloaded container!");
+		}
+
 		this._assets[asset.id] = asset;
 
 		const reply = await this.sendPayloadAndGetReply<Payloads.CreateAsset, Payloads.AssetsLoaded>({
