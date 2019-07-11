@@ -9,6 +9,10 @@ import { log } from '../../log';
 import { createForwardPromise, ForwardPromise } from '../forwardPromise';
 import { Actor } from './actor';
 
+/**
+ * A MediaInstance represents an instance managing the playback of a sound or video stream,
+ * i.e. it plays an asset that was preloaded in an asset container
+ */
 export class MediaInstance {
 
 	public id: string;
@@ -21,6 +25,9 @@ export class MediaInstance {
 		this.soundAssetId = soundAssetId;
 	}
 
+	/**
+	 * @hidden
+	 */
 	public start(options: SetMediaStateOptions, startTimeOffset?: number):
 		ForwardPromise<MediaInstance> {
 		return createForwardPromise(this,
@@ -40,26 +47,40 @@ export class MediaInstance {
 		);
 	}
 
-	public setState(options: SetMediaStateOptions, mediaCommand?: MediaCommand) {
+	/**
+	 * Updates the state of the active media
+	 * @param options Adjustments to pitch and volume, and other characteristics.
+	 */
+	public setState(options: SetMediaStateOptions) {
 		this.actor.context.assetManager.assetLoaded(this.soundAssetId).then(() => {
-			if (mediaCommand === undefined) {
-				mediaCommand = MediaCommand.Update;
-			}
-			this.actor.context.internal.setMediaState(this, mediaCommand, options);
+			this.actor.context.internal.setMediaState(this, MediaCommand.Update, options);
 		}).catch((reason: any) => {
 			log.error('app', `SetState failed ${this.actor.id}. ${(reason || '').toString()}`.trim());
 		});
 	}
 
+	/**
+	 * Pause the media playback
+	 */
 	public pause() {
 		this.setState({ paused: true });
 	}
 
+	/**
+	 * Unpause the media playback
+	 */
 	public resume() {
 		this.setState({ paused: false });
 	}
 
+	/**
+	 * Finish the media playback and destroy the instance.
+	 */
 	public stop() {
-		this.setState({}, MediaCommand.Stop);
+		this.actor.context.assetManager.assetLoaded(this.soundAssetId).then(() => {
+			this.actor.context.internal.setMediaState(this, MediaCommand.Stop);
+		}).catch((reason: any) => {
+			log.error('app', `Stop failed ${this.actor.id}. ${(reason || '').toString()}`.trim());
+		});
 	}
 }
