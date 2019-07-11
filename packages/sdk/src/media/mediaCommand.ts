@@ -4,9 +4,9 @@
  */
 
 /**
- * The sound commands used to control the sound instance.
+ * The media commands used to control the media instance.
  */
-export enum SoundCommand {
+export enum MediaCommand {
 	Start = 'start',
 	Update = 'update',
 	Stop = 'stop'

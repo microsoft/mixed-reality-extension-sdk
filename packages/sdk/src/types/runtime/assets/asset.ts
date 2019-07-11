@@ -14,7 +14,9 @@ import {
 	Sound,
 	SoundLike,
 	Texture,
-	TextureLike
+	TextureLike,
+	VideoStream,
+	VideoStreamLike
 } from '.';
 
 /**
@@ -63,6 +65,8 @@ export interface AssetLike {
 	texture?: Partial<TextureLike>;
 	/** Only populated when this asset is a sound. An asset will have only one of these types specified. */
 	sound?: Partial<SoundLike>;
+	/** Only populated when this asset is a video stream. An asset will have only one of these types specified. */
+	videoStream?: Partial<VideoStreamLike>;
 }
 
 /** The base class for all asset types. */
@@ -120,6 +124,8 @@ export abstract class Asset implements AssetLike {
 			return new Texture(manager, def);
 		} else if (def.sound) {
 			return new Sound(manager, def);
+		} else if (def.videoStream) {
+			return new VideoStream(manager, def);
 		} else {
 			throw new Error(`Asset ${def.id} is not of a known type.`);
 		}

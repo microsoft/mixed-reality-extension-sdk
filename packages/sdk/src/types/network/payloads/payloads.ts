@@ -4,8 +4,7 @@
  */
 
 import { OperationResultCode, Trace } from '..';
-import { CreateAnimationOptions, SetAnimationStateOptions } from '../../..';
-import { SetSoundStateOptions, SoundCommand } from '../../../sound';
+import { CreateAnimationOptions, MediaCommand, SetAnimationStateOptions, SetMediaStateOptions } from '../../..';
 import { PrimitiveDefinition } from '../../primitiveTypes';
 import { ActorLike, ColliderType, TransformLike, UserLike } from '../../runtime';
 import { ActionState, BehaviorType } from '../../runtime/behaviors';
@@ -52,7 +51,7 @@ export type PayloadType
 	| 'set-animation-state'
 	| 'set-authoritative'
 	| 'set-behavior'
-	| 'set-sound-state'
+	| 'set-media-state'
 	| 'sync-animations'
 	| 'sync-complete'
 	| 'sync-request'
@@ -359,13 +358,13 @@ export type SyncAnimations = Payload & {
  * @hidden
  * App to engine. Starts playing a sound.
  */
-export type SetSoundState = Payload & {
-	type: 'set-sound-state';
+export type SetMediaState = Payload & {
+	type: 'set-media-state';
 	id: string;
 	actorId: string;
-	soundAssetId: string;
-	soundCommand: SoundCommand,
-	options: SetSoundStateOptions,
+	mediaAssetId: string;
+	mediaCommand: MediaCommand,
+	options: SetMediaStateOptions,
 	startTimeOffset: number;
 };
 

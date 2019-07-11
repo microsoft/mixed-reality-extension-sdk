@@ -30,6 +30,7 @@ import TextTest from './text-test';
 import TransformTest from './transform-test';
 import UserMaskTest from './user-mask-test';
 import UserTest from './user-test';
+import VideoTest from './video-test';
 import VisibilityTest from './visibility-test';
 
 export type FactoryMap = { [key: string]: TestFactory };
@@ -65,5 +66,6 @@ export const Factories = {
 	'transform-test': (...args) => new TransformTest(...args),
 	'user-mask-test': (...args) => new UserMaskTest(...args),
 	'user-test': (...args) => new UserTest(...args),
+	'video-test': (...args) => new VideoTest(...args),
 	'visibility-test': (...args) => new VisibilityTest(...args),
 } as FactoryMap;

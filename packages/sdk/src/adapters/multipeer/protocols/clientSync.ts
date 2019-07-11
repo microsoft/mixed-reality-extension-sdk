@@ -20,7 +20,7 @@ export type SynchronizationStage =
 	'always' |
 	'load-assets' |
 	'create-actors' |
-	'active-sound-instances' |
+	'active-media-instances' |
 	'create-animations' |
 	'sync-animations' |
 	'set-behaviors' |
@@ -38,7 +38,7 @@ export class ClientSync extends Protocols.Protocol {
 	private sequence: SynchronizationStage[] = [
 		'load-assets',
 		'create-actors',
-		'active-sound-instances',
+		'active-media-instances',
 		'set-behaviors',
 		'create-animations',
 		'sync-animations',
@@ -189,11 +189,11 @@ export class ClientSync extends Protocols.Protocol {
 
 	/**
 	 * @hidden
-	 * Driver for the `active-sound-instances` synchronization stage.
+	 * Driver for the `active-media-instances` synchronization stage.
 	 */
-	public 'stage:active-sound-instances' = () => {
+	public 'stage:active-media-instances' = () => {
 		// Send all cached set-behavior messages.
-		this.client.session.actors.map(syncActor => this.activeSoundInstances(syncActor));
+		this.client.session.actors.map(syncActor => this.activeMediaInstances(syncActor));
 	}
 	/**
 	 * @hidden
@@ -266,23 +266,23 @@ export class ClientSync extends Protocols.Protocol {
 		}
 	}
 
-	private activeSoundInstances(actor: Partial<SyncActor>) {
-		(actor.activeSoundInstances || [])
-			.map(activeSoundInstance => {
+	private activeMediaInstances(actor: Partial<SyncActor>) {
+		(actor.activeMediaInstances || [])
+			.map(activeMediaInstance => {
 				// TODO This sound tweaking should ideally be done on the client, because then it can consider the
 				// time it takes for packet to arrive. This is needed for optimal timing .
 				const targetTime = Date.now() / 1000.0;
-				if (activeSoundInstance.message.payload.options.paused !== true) {
-					let timeOffset = (targetTime - activeSoundInstance.basisTime);
-					if (activeSoundInstance.message.payload.options.pitch !== undefined) {
-						timeOffset *= Math.pow(2.0, (activeSoundInstance.message.payload.options.pitch / 12.0));
+				if (activeMediaInstance.message.payload.options.paused !== true) {
+					let timeOffset = (targetTime - activeMediaInstance.basisTime);
+					if (activeMediaInstance.message.payload.options.pitch !== undefined) {
+						timeOffset *= Math.pow(2.0, (activeMediaInstance.message.payload.options.pitch / 12.0));
 					}
-					if (activeSoundInstance.message.payload.startTimeOffset === undefined) {
-						activeSoundInstance.message.payload.startTimeOffset = 0.0;
+					if (activeMediaInstance.message.payload.startTimeOffset === undefined) {
+						activeMediaInstance.message.payload.startTimeOffset = 0.0;
 					}
-					activeSoundInstance.message.payload.startTimeOffset += timeOffset;
+					activeMediaInstance.message.payload.startTimeOffset += timeOffset;
 				}
-				return this.sendMessage(activeSoundInstance.message);
+				return this.sendMessage(activeMediaInstance.message);
 			});
 	}
 
