@@ -26,7 +26,7 @@ export class Sound extends Asset implements SoundLike, Patchable<AssetLike> {
 	/** The URI, if any, this sound was loaded from */
 	public get uri() { return this._uri; }
 
-	/** The length the loaded sound at default pitch */
+	/** The length of the loaded sound in seconds at default pitch */
 	public get duration() { return this._duration; }
 
 	/** @inheritdoc */

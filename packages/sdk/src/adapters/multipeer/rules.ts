@@ -987,6 +987,10 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 								activeMediaInstance.message.payload.startTimeOffset += timeOffset;
 							}
 
+							if (activeMediaInstance.message.payload.options.time !== undefined) {
+								activeMediaInstance.message.payload.startTimeOffset = activeMediaInstance.message.payload.options.time;
+							}
+
 							// merge existing message and new message
 							activeMediaInstance.message.payload.options = {
 								...activeMediaInstance.message.payload.options,

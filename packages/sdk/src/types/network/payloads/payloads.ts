@@ -362,7 +362,7 @@ export type SetMediaState = Payload & {
 	type: 'set-media-state';
 	id: string;
 	actorId: string;
-	soundAssetId: string;
+	mediaAssetId: string;
 	mediaCommand: MediaCommand,
 	options: SetMediaStateOptions,
 	startTimeOffset: number;

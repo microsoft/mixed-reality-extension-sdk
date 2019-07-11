@@ -17,12 +17,12 @@ export class MediaInstance {
 
 	public id: string;
 	public actor: Actor;
-	private soundAssetId: string;
+	private mediaAssetId: string;
 
-	constructor(actor: Actor, soundAssetId: string) {
+	constructor(actor: Actor, mediaAssetId: string) {
 		this.id = UUID();
 		this.actor = actor;
-		this.soundAssetId = soundAssetId;
+		this.mediaAssetId = mediaAssetId;
 	}
 
 	/**
@@ -32,9 +32,9 @@ export class MediaInstance {
 		ForwardPromise<MediaInstance> {
 		return createForwardPromise(this,
 			new Promise<MediaInstance>((resolve, reject) => {
-				this.actor.context.assetManager.assetLoaded(this.soundAssetId).then(() => {
+				this.actor.context.assetManager.assetLoaded(this.mediaAssetId).then(() => {
 					this.actor.context.internal.setMediaState(
-						this, MediaCommand.Start, options, this.soundAssetId, startTimeOffset);
+						this, MediaCommand.Start, options, this.mediaAssetId, startTimeOffset);
 
 					resolve();
 				}).catch((reason: any) => {
@@ -52,7 +52,7 @@ export class MediaInstance {
 	 * @param options Adjustments to pitch and volume, and other characteristics.
 	 */
 	public setState(options: SetMediaStateOptions) {
-		this.actor.context.assetManager.assetLoaded(this.soundAssetId).then(() => {
+		this.actor.context.assetManager.assetLoaded(this.mediaAssetId).then(() => {
 			this.actor.context.internal.setMediaState(this, MediaCommand.Update, options);
 		}).catch((reason: any) => {
 			log.error('app', `SetState failed ${this.actor.id}. ${(reason || '').toString()}`.trim());
@@ -77,7 +77,7 @@ export class MediaInstance {
 	 * Finish the media playback and destroy the instance.
 	 */
 	public stop() {
-		this.actor.context.assetManager.assetLoaded(this.soundAssetId).then(() => {
+		this.actor.context.assetManager.assetLoaded(this.mediaAssetId).then(() => {
 			this.actor.context.internal.setMediaState(this, MediaCommand.Stop);
 		}).catch((reason: any) => {
 			log.error('app', `Stop failed ${this.actor.id}. ${(reason || '').toString()}`.trim());

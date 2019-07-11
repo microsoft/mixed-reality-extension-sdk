@@ -25,7 +25,7 @@ export class VideoStream extends Asset implements VideoStreamLike, Patchable<Ass
 	/** The URI, if any, this videostream was loaded from */
 	public get uri() { return this._uri; }
 
-	/** The length the loaded videostream */
+	/** The length of the loaded videostream in seconds */
 	public get duration() { return this._duration; }
 
 	/** @inheritdoc */
