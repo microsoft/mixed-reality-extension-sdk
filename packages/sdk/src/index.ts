@@ -7,7 +7,7 @@ export * from './adapters';
 export * from './animation';
 export * from './math';
 export * from './connection';
-export * from './sound';
+export * from './media';
 export * from './webHost';
 export * from './log';
 export * from './types/runtime';

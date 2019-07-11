@@ -4,31 +4,16 @@
  */
 
 import { Asset, AssetLike, AssetManager } from '.';
-import readPath from '../../../utils/readPath';
 import { InternalAsset } from '../../internal/asset';
 import { Patchable } from '../../patchable';
 
 export interface VideoStreamLike {
-	videoSourceType: VideoSourceType;
 	uri: string;
 	duration: number;
 }
 
-/** Type describing how to interpret the video Source URI. */
-export enum VideoSourceType {
-	/** URI is just a Raw URL. */
-	Raw = 'raw',
-	/** URI is Mixer.com stream. */
-	Mixer = 'mixer',
-	/** URI is Twitch stream. */
-	Twitch = 'twitch',
-	/** URI is a YouTube video or live stream. */
-	YouTube = 'youtube'
-}
-
 export class VideoStream extends Asset implements VideoStreamLike, Patchable<AssetLike> {
 	// tslint:disable:variable-name
-	private _videoSourceType: VideoSourceType;
 	private _uri: string;
 	private _duration = 0;
 	private _internal = new InternalAsset(this);
@@ -36,9 +21,6 @@ export class VideoStream extends Asset implements VideoStreamLike, Patchable<Ass
 
 	/** @hidden */
 	public get internal() { return this._internal; }
-
-	/** The VideoSourceType, if any, this videostream was loaded from */
-	public get videoSourceType() { return this._videoSourceType; }
 
 	/** The URI, if any, this videostream was loaded from */
 	public get uri() { return this._uri; }
@@ -57,9 +39,6 @@ export class VideoStream extends Asset implements VideoStreamLike, Patchable<Ass
 			throw new Error("Cannot construct videoStream from non-videostream definition");
 		}
 
-		if (def.videoStream.videoSourceType) {
-			this._videoSourceType = def.videoStream.videoSourceType;
-		}
 		if (def.videoStream.uri) {
 			this._uri = def.videoStream.uri;
 		}
@@ -79,8 +58,6 @@ export class VideoStream extends Asset implements VideoStreamLike, Patchable<Ass
 
 		// tslint:disable:curly
 		super.copy(from);
-		if (from.videoStream && from.videoStream.videoSourceType)
-			this._videoSourceType = from.videoStream.videoSourceType;
 		if (from.videoStream && from.videoStream.uri)
 			this._uri = from.videoStream.uri;
 		if (from.videoStream && from.videoStream.duration !== undefined)
@@ -96,11 +73,9 @@ export class VideoStream extends Asset implements VideoStreamLike, Patchable<Ass
 		return {
 			...super.toJSON(),
 			videoStream: {
-				videoSourceType: this.videoSourceType,
 				uri: this.uri,
 				duration: this.duration,
 			}
 		};
 	}
-
 }

@@ -33,16 +33,14 @@ export default class VideoTest extends Test {
 		const videoStreamPromise1 = this.app.context.assetManager.createVideoStream(
 			'group1',
 			{
-				videoSourceType: MRE.VideoSourceType.YouTube,
-				uri: `1roy4o4tqQM`
-				// `z1YNh9BQVRg`
+				uri: `youtube://1roy4o4tqQM`
+				// `youtube://z1YNh9BQVRg`
 			}
 		);
 		const videoStreamPromise2 = this.app.context.assetManager.createVideoStream(
 			'group1',
 			{
-				videoSourceType: MRE.VideoSourceType.YouTube,
-				uri: `9RTaIpVuTqE`
+				uri: `youtube://9RTaIpVuTqE`
 			}
 		);
 		let videoInstance: MRE.ForwardPromise<MRE.MediaInstance>;
@@ -54,7 +52,6 @@ export default class VideoTest extends Test {
 						{
 							volume: 0.2,
 							looping: true,
-							doppler: 0.0,
 							spread: 0.7,
 							rolloffStartDistance: 2.5
 						},
@@ -86,21 +83,21 @@ export default class VideoTest extends Test {
 					this.app.setOverrideText("Seeking!");
 					videoInstance.value.setState(
 						{
-							Time: 60.0
+							time: 60.0
 						});
 					break;
 				case 6:
 					this.app.setOverrideText("Hiding!");
 					videoInstance.value.setState(
 						{
-							Visible: false
+							visible: false
 						});
 					break;
 				case 7:
 					this.app.setOverrideText("unhiding!");
 					videoInstance.value.setState(
 						{
-							Visible: true
+							visible: true
 						});
 					break;
 				case 8:
@@ -110,7 +107,6 @@ export default class VideoTest extends Test {
 						{
 							volume: 0.2,
 							looping: true,
-							doppler: 0.0,
 							spread: 0.7,
 							rolloffStartDistance: 2.5
 						},

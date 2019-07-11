@@ -31,12 +31,13 @@ import {
 	LookAtMode,
 	PrimitiveDefinition,
 	SetAnimationStateOptions,
+	SetAudioStateOptions,
+	SetVideoStateOptions,
 	Vector3Like
 } from '../..';
 
 import { ZeroGuid } from '../../constants';
 import { log } from '../../log';
-import { SetMediaStateOptions } from '../../sound';
 import { observe, unobserve } from '../../utils/observe';
 import readPath from '../../utils/readPath';
 import resolveJsonValues from '../../utils/resolveJsonValues';
@@ -510,7 +511,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	 * @param startTimeOffset How many seconds to offset into the sound
 	 */
 	public startSound(
-		soundAssetId: string, options: SetMediaStateOptions,
+		soundAssetId: string, options: SetAudioStateOptions,
 		startTimeOffset?: number): ForwardPromise<MediaInstance> {
 		return new MediaInstance(this, soundAssetId).start(options, startTimeOffset);
 	}
@@ -522,7 +523,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	 * @param startTimeOffset How many seconds to offset into the sound
 	 */
 	public startVideoStream(
-		videoStreamAssetId: string, options: SetMediaStateOptions,
+		videoStreamAssetId: string, options: SetVideoStateOptions,
 		startTimeOffset?: number): ForwardPromise<MediaInstance> {
 		return new MediaInstance(this, videoStreamAssetId).start(options, startTimeOffset);
 	}
