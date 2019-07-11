@@ -45,7 +45,7 @@ export default class LookAtTest extends Test {
 				parentId: root.id,
 				transform: { local: { scale: { x: 0.5, y: 0.5, z: 0.5 } } }
 			}
-		}).value;
+		});
 		const lookAtTarget = MRE.Actor.CreateEmpty(this.app.context, {
 			actor: {
 				parentId: root.id,
@@ -54,7 +54,7 @@ export default class LookAtTest extends Test {
 					attachPoint: 'head'
 				}
 			}
-		}).value;
+		});
 		tester.createAnimation('circle', {
 			wrapMode: MRE.AnimationWrapMode.Loop,
 			keyframes: circleKeyframes

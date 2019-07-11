@@ -26,7 +26,7 @@ export class InternalActor implements InternalPatchable<ActorLike> {
 	public patch: ActorLike;
 	public behavior: Behavior;
 	public createdPromises: ExportedPromise[];
-	public created: boolean;
+	public created: { success: boolean; reason?: any };
 
 	public get collider(): InternalCollider {
 		return this.actor.collider ? this.actor.collider.internal : undefined;
@@ -82,10 +82,10 @@ export class InternalActor implements InternalPatchable<ActorLike> {
 	}
 
 	public notifyCreated(success: boolean, reason?: any): void {
-		this.created = true;
+		this.created = { success, reason };
 		if (this.createdPromises) {
-			const createdPromises = this.createdPromises.splice(0);
-			this.createdPromises = undefined;
+			const createdPromises = this.createdPromises;
+			delete this.createdPromises;
 			for (const promise of createdPromises) {
 				if (success) {
 					promise.resolve();
@@ -97,9 +97,7 @@ export class InternalActor implements InternalPatchable<ActorLike> {
 	}
 
 	public enqueueCreatedPromise(promise: ExportedPromise): void {
-		if (!this.createdPromises) {
-			this.createdPromises = [];
-		}
+		this.createdPromises = this.createdPromises || [];
 		this.createdPromises.push(promise);
 	}
 }

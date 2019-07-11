@@ -22,7 +22,7 @@ export default class GltfAnimationTest extends Test {
 					}
 				}
 			}
-		}).value;
+		});
 		tester.enableAnimation('animation:0');
 		this.app.rpc.send('functional-test:trace-message', 'gltf-animation-test', "start animation");
 

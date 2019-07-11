@@ -96,7 +96,7 @@ export default class AssetPreloadTest extends Test {
 
 	private async setup() {
 		this.uvgridMat.mainTexture = this.uvgridTex;
-		this.head = await MRE.Actor.CreateFromPrefab(this.app.context, {
+		this.head = MRE.Actor.CreateFromPrefab(this.app.context, {
 			prefabId: this.monkeyPrefab.id,
 			actor: {
 				parentId: this.root.id,
@@ -108,7 +108,7 @@ export default class AssetPreloadTest extends Test {
 				}
 			}
 		});
-		this.sphere = await MRE.Actor.CreatePrimitive(this.app.context, {
+		this.sphere = MRE.Actor.CreatePrimitive(this.app.context, {
 			definition: {
 				shape: MRE.PrimitiveShape.Sphere,
 				radius: 0.5

@@ -38,7 +38,7 @@ export default class UserMaskTest extends Test {
 				appearance: { enabled: true },
 				text: textDef
 			}
-		}).value;
+		});
 		this.blueList = MRE.Actor.CreateEmpty(this.app.context, {
 			actor: {
 				name: 'blueList',
@@ -47,7 +47,7 @@ export default class UserMaskTest extends Test {
 				appearance: { enabled: true },
 				text: textDef
 			}
-		}).value;
+		});
 		this.updateLabels();
 		this.app.context.onUserLeft(_ => this.updateLabels());
 
@@ -69,7 +69,7 @@ export default class UserMaskTest extends Test {
 					app: { position: { y: 1 } }
 				}
 			}
-		}).value;
+		});
 
 		const blueIcon = MRE.Actor.CreatePrimitive(this.app.context, {
 			definition: {
@@ -88,7 +88,7 @@ export default class UserMaskTest extends Test {
 					app: { position: { y: 1 } }
 				}
 			}
-		}).value;
+		});
 
 		// blink the icons for unaffiliated users
 		this.interval = setInterval(() => {

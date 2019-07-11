@@ -209,7 +209,7 @@ export class App {
 				name: 'testRoot',
 				exclusiveToUser: this.exclusiveUser && this.exclusiveUser.id || undefined
 			}
-		}).value;
+		});
 
 		if (wasRunning) {
 			this.runTest(user);
@@ -235,7 +235,7 @@ export class App {
 					}
 				}
 			}
-		}).value;
+		});
 		const label = MRE.Actor.CreateEmpty(this.context, {
 			actor: {
 				parentId: this.exclusiveUserToggle.id,
@@ -250,7 +250,7 @@ export class App {
 					anchor: MRE.TextAnchorLocation.MiddleLeft
 				}
 			}
-		}).value;
+		});
 		this.exclusiveUserLabel = label.text;
 
 		this.exclusiveUserToggle.setBehavior(MRE.ButtonBehavior)
@@ -271,7 +271,7 @@ export class App {
 					}
 				},
 			}
-		}).value;
+		});
 
 		const wall = MRE.Actor.CreatePrimitive(this.context, {
 			definition: {
@@ -288,7 +288,7 @@ export class App {
 					}
 				}
 			}
-		}).value;
+		});
 
 		this.sharedActors = [this.exclusiveUserToggle, label, wall, floor];
 	}
@@ -311,14 +311,14 @@ export class App {
 					}
 				}
 			}
-		}).value;
+		});
 
 		this.testRoot = MRE.Actor.CreateEmpty(this.context, {
 			actor: {
 				name: 'testRoot',
 				exclusiveToUser: this.exclusiveUser && this.exclusiveUser.id || undefined
 			}
-		}).value;
+		});
 
 		if (this.params.nomenu === 'true') {
 			this.runnerActors = [this.contextLabel];
@@ -345,7 +345,7 @@ export class App {
 					}
 				}
 			}
-		}).value;
+		});
 
 		this.playPauseText = MRE.Actor.CreateEmpty(this.context, {
 			actor: {
@@ -363,7 +363,7 @@ export class App {
 					color: NeutralColor
 				}
 			}
-		}).value;
+		});
 
 		this.playPauseButton.setBehavior(MRE.ButtonBehavior)
 			.onButton("released", user => {
@@ -388,7 +388,7 @@ export class App {
 					}
 				}
 			}
-		}).value;
+		});
 
 		const menuText = MRE.Actor.CreateEmpty(this.context, {
 			actor: {
@@ -406,7 +406,7 @@ export class App {
 					color: MRE.Color3.Black()
 				}
 			}
-		}).value;
+		});
 
 		menuButton.setBehavior(MRE.ButtonBehavior)
 			.onButton("released", async () => {

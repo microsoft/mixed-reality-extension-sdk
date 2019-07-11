@@ -26,7 +26,7 @@ export default class TransformTest extends Test {
 					}
 				}
 			}
-		}).value;
+		});
 
 		const cube2actor = {
 			name: 'cube2',
@@ -41,18 +41,19 @@ export default class TransformTest extends Test {
 		} as Partial<MRE.ActorLike>;
 
 		// note: the altspace kit cube is 20cm to a side, and the testbed cube matches
-		let cube2: MRE.Actor;
+		let cube2 = MRE.Actor.CreateFromLibrary(this.app.context, {
+			resourceId: 'artifact:989569229617365197',
+			actor: cube2actor
+		});
 		try {
-			cube2 = await MRE.Actor.CreateFromLibrary(this.app.context, {
-				resourceId: 'artifact:989569229617365197',
+			await cube2.created();
+		} catch (_) {
+			cube2 = MRE.Actor.CreateFromLibrary(this.app.context, {
+				resourceId: 'cube_20cm',
 				actor: cube2actor
 			});
-		} catch (_) {
 			try {
-				cube2 = await MRE.Actor.CreateFromLibrary(this.app.context, {
-					resourceId: 'cube_20cm',
-					actor: cube2actor
-				});
+				await cube2.created();
 			} catch (_) {
 				cube2 = cube1;
 			}
@@ -71,7 +72,7 @@ export default class TransformTest extends Test {
 					}
 				}
 			}
-		}).value;
+		});
 
 		const cube4 = MRE.Actor.CreatePrimitive(this.app.context, {
 			definition: {
@@ -89,7 +90,7 @@ export default class TransformTest extends Test {
 					}
 				}
 			}
-		}).value;
+		});
 
 		await this.stoppedAsync();
 		return true;

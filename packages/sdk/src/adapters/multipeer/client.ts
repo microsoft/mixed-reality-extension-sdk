@@ -19,6 +19,7 @@ import filterEmpty from '../../utils/filterEmpty';
 export type QueuedMessage = {
 	message: Message;
 	promise?: ExportedPromise;
+	timeoutSeconds?: number;
 };
 
 /**
@@ -125,7 +126,7 @@ export class Client extends EventEmitter {
 		}
 	}
 
-	public queueMessage(message: Message, promise?: ExportedPromise) {
+	public queueMessage(message: Message, promise?: ExportedPromise, timeoutSeconds?: number) {
 		const rule = Rules[message.payload.type] || MissingRule;
 		const beforeQueueMessageForClient = rule.client.beforeQueueMessageForClient || (() => message);
 		message = beforeQueueMessageForClient(this.session, this, message, promise);
@@ -133,7 +134,7 @@ export class Client extends EventEmitter {
 			// tslint:disable-next-line:max-line-length
 			log.verbose('network', `Client ${this.id.substr(0, 8)} queue id:${message.id.substr(0, 8)}, type:${message.payload.type}`);
 			log.verbose('network-content', JSON.stringify(message, (key, value) => filterEmpty(value)));
-			this.queuedMessages.push({ message, promise });
+			this.queuedMessages.push({ message, promise, timeoutSeconds });
 		}
 	}
 

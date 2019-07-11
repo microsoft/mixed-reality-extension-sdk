@@ -4,8 +4,11 @@
  */
 
 import { Client } from '..';
+import { MissingRule, Rules } from '..';
+import { Message } from '../../..';
 import * as Protocols from '../../../protocols';
 import * as Payloads from '../../../types/network/payloads';
+import { ExportedPromise } from '../../../utils/exportedPromise';
 
 export class ClientStartup extends Protocols.Protocol {
 	/** @override */
@@ -21,6 +24,13 @@ export class ClientStartup extends Protocols.Protocol {
 				await this.performStartup(syncRequest);
 			});
 		}
+	}
+
+	/** @override */
+	public sendMessage(message: Message, promise?: ExportedPromise, timeoutSeconds?: number) {
+		// Apply timeout to messages going to the client.
+		const rule = Rules[message.payload.type] || MissingRule;
+		super.sendMessage(message, promise, rule.client.timeoutSeconds);
 	}
 
 	/**

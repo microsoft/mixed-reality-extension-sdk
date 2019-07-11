@@ -132,7 +132,7 @@ export default class Menu {
 						}
 					}
 				}
-			}).value;
+			});
 			this.behaviors.push(control.setBehavior(MRE.ButtonBehavior));
 			this.buttons.push(control);
 
@@ -151,7 +151,7 @@ export default class Menu {
 						anchor: MRE.TextAnchorLocation.MiddleLeft
 					}
 				}
-			}).value;
+			});
 			this.labels.push(label);
 		}
 
@@ -169,7 +169,7 @@ export default class Menu {
 					}
 				}
 			}
-		}).value;
+		});
 
 		const backLabel = MRE.Actor.CreateEmpty(this.context, {
 			actor: {
@@ -186,7 +186,7 @@ export default class Menu {
 					anchor: MRE.TextAnchorLocation.MiddleLeft
 				}
 			}
-		}).value;
+		});
 
 		backButton.setBehavior(MRE.ButtonBehavior)
 			.onButton('released', () => {

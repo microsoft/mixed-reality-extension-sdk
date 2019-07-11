@@ -11,7 +11,7 @@ export default class GltfActorSyncTest extends Test {
 	public expectedResultDescription = "Text should be visible";
 
 	public async run(root: MRE.Actor): Promise<boolean> {
-		const actorRoot = await MRE.Actor.CreateFromGltf(this.app.context, {
+		const actorRoot = MRE.Actor.CreateFromGltf(this.app.context, {
 			resourceUrl: `${this.baseUrl}/monkey.glb`,
 			actor: {
 				parentId: root.id,

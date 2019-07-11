@@ -12,22 +12,12 @@ import { ExportedPromise } from '../utils/exportedPromise';
 import filterEmpty from '../utils/filterEmpty';
 import { Middleware } from './middleware';
 
-// tslint:disable:variable-name
-/**
- * The amount of time to wait for a reply message before closing the connection.
- * Set to zero to disable timeouts.
- */
-export let DefaultConnectionTimeoutSeconds = 30;
-// tslint:enable:variable-name
-
 /**
  * @hidden
  * Class to handle sending and receiving messages with a client.
  */
 export class Protocol extends EventEmitter {
 	private middlewares: Middleware[] = [];
-	// tslint:disable-next-line:variable-name
-	private _timeoutSeconds = DefaultConnectionTimeoutSeconds;
 
 	private promise: Promise<void>;
 	private promiseResolve: (value?: void | PromiseLike<void>) => void;
@@ -36,9 +26,6 @@ export class Protocol extends EventEmitter {
 	public get conn() { return this._conn; }
 	public get promises() { return this.conn.promises; }
 	public get name() { return this.constructor.name; }
-
-	public get timeoutSeconds() { return this._timeoutSeconds; }
-	public set timeoutSeconds(value) { this._timeoutSeconds = value; }
 
 	// tslint:disable-next-line:variable-name
 	constructor(private _conn: Connection) {
@@ -84,7 +71,7 @@ export class Protocol extends EventEmitter {
 		this.sendMessage({ payload }, promise);
 	}
 
-	public sendMessage(message: Message, promise?: ExportedPromise) {
+	public sendMessage(message: Message, promise?: ExportedPromise, timeoutSeconds?: number) {
 		message.id = message.id || UUID();
 
 		// Run message through all the middlewares
@@ -102,14 +89,14 @@ export class Protocol extends EventEmitter {
 		}
 
 		const setReplyTimeout = () => {
-			if (this.timeoutSeconds > 0) {
+			if (timeoutSeconds > 0) {
 				return setTimeout(() => {
 					// tslint:disable-next-line:max-line-length
 					const reason = `${this.name} timed out awaiting response for ${message.payload.type}, id:${message.id}.`;
 					log.error('network', reason);
 					this.rejectPromiseForMessage(message.id, reason);
 					this.conn.close();
-				}, this.timeoutSeconds * 1000);
+				}, timeoutSeconds * 1000);
 			}
 		};
 

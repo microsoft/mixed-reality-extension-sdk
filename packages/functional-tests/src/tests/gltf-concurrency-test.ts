@@ -14,7 +14,7 @@ export default class GltfConcurrencyTest extends Test {
 	public async run(root: MRE.Actor): Promise<boolean> {
 		this.assets = new MRE.AssetContainer(this.app.context);
 
-		const runnerPromise = MRE.Actor.CreateFromGltf(this.app.context, {
+		const runner = MRE.Actor.CreateFromGltf(this.app.context, {
 			// tslint:disable-next-line:max-line-length
 			resourceUrl: `https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/CesiumMan/glTF-Binary/CesiumMan.glb`,
 			actor: {
@@ -23,9 +23,8 @@ export default class GltfConcurrencyTest extends Test {
 				transform: { local: { position: { x: 0.66, y: 0.0, z: -0.5 } } }
 			}
 		});
-		const runner = runnerPromise.value;
 
-		const gearboxPromise = MRE.Actor.CreateFromGltf(this.app.context, {
+		const gearbox = MRE.Actor.CreateFromGltf(this.app.context, {
 			// tslint:disable-next-line:max-line-length
 			resourceUrl: 'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/GearboxAssy/glTF/GearboxAssy.gltf',
 			actor: {
@@ -42,15 +41,15 @@ export default class GltfConcurrencyTest extends Test {
 		runner.enableAnimation('animation:0');
 
 		try {
-			await gearboxPromise;
+			await gearbox.created();
 		} catch (e) {
 			console.log('Gearbox didn\'t load, as expected in Altspace');
 		}
 
-		let runnerActor: MRE.Actor;
 		let bottleAssets: MRE.Asset[];
 		try {
-			[runnerActor, bottleAssets] = await Promise.all([runnerPromise, bottlePromise]);
+			let _: any;
+			[_, bottleAssets] = await Promise.all([runner.created(), bottlePromise]);
 		} catch (errs) {
 			console.error(errs);
 			return false;

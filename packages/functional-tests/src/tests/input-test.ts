@@ -51,7 +51,7 @@ export default class InputTest extends Test {
 					}
 				}
 			}
-		}).value;
+		});
 
 		// Create some animations on the cube.
 		this.model.createAnimation(

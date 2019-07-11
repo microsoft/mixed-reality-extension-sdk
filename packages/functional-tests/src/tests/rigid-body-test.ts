@@ -21,7 +21,7 @@ export default class RigidBodyTest extends Test {
 	}
 
 	public async runSphereTest(): Promise<boolean> {
-		const actors: Array<MRESDK.ForwardPromise<MRESDK.Actor>> = [];
+		const actors: MRESDK.Actor[] = [];
 
 		const sphereCount = 20;
 
@@ -47,7 +47,7 @@ export default class RigidBodyTest extends Test {
 		}
 
 		// Wait for all actors to instantiate on the host.
-		await Promise.all(actors);
+		await Promise.all(actors.map(actor => actor.created()));
 
 		// Wait for a short period.
 		await delay(1000);
@@ -56,7 +56,7 @@ export default class RigidBodyTest extends Test {
 		//   Do not use gravity.
 		//   Add a small initial velocity.
 		actors.forEach(actor =>
-			actor.value.enableRigidBody({
+			actor.enableRigidBody({
 				useGravity: false,
 				velocity: {
 					x: 2 * (Math.random() - 0.5),
@@ -70,19 +70,19 @@ export default class RigidBodyTest extends Test {
 		await delay(2000);
 
 		// Enable gravity on the spheres.
-		actors.forEach(actor => actor.value.rigidBody.useGravity = true);
+		actors.forEach(actor => actor.rigidBody.useGravity = true);
 
 		// Wait for a short period.
 		await delay(4000);
 
 		// Clean up.
-		destroyActors(actors.map(actor => actor.value));
+		destroyActors(actors);
 
 		return true;
 	}
 
 	public async runStackedBoxTest(): Promise<boolean> {
-		let actors: Array<MRESDK.ForwardPromise<MRESDK.Actor>> = [];
+		let actors: MRESDK.Actor[] = [];
 
 		const size = 0.5;
 		const spacing = 0.25;
@@ -105,13 +105,13 @@ export default class RigidBodyTest extends Test {
 		}
 
 		// Wait for all the boxes to instantiate on the host.
-		await Promise.all(actors);
+		await Promise.all(actors.map(actor => actor.created()));
 
 		// Wait for a short period.
 		await delay(500);
 
 		// Add rigid bodies to boxes.
-		actors.map(actor => actor.value).forEach(actor =>
+		actors.forEach(actor =>
 			actor.enableRigidBody({
 				useGravity: true,
 			})
@@ -139,7 +139,7 @@ export default class RigidBodyTest extends Test {
 			}
 		});
 		actors.push(cannonball);
-		cannonball.value.enableRigidBody({
+		cannonball.enableRigidBody({
 			useGravity: false,
 			mass: 5,
 		});
@@ -148,14 +148,14 @@ export default class RigidBodyTest extends Test {
 		await delay(1000);
 
 		// Shoot the cannonball at the pyramid.
-		cannonball.value.rigidBody.addForce({ z: 10000 });    // tests rigid body update via command
+		cannonball.rigidBody.addForce({ z: 10000 });    // tests rigid body update via command
 		// cannonball.rigidBody.velocity.z = 20; // tests rigid body update via actor patch
 
 		// Wait for a short period.
 		await delay(5000);
 
 		// Clean up.
-		destroyActors(actors.map(actor => actor.value));
+		destroyActors(actors);
 
 		return true;
 	}
@@ -166,8 +166,8 @@ export default class RigidBodyTest extends Test {
 		y: number,
 		size: number,
 		spacing: number
-	): Array<MRESDK.ForwardPromise<MRESDK.Actor>> {
-		const actors: Array<MRESDK.ForwardPromise<MRESDK.Actor>> = [];
+	): MRESDK.Actor[] {
+		const actors: MRESDK.Actor[] = [];
 		for (let i = 0; i < count; ++i) {
 			const actor = MRESDK.Actor.CreatePrimitive(this.app.context, {
 				definition: {

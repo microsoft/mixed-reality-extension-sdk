@@ -200,7 +200,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	 */
 	public static CreateEmpty(context: Context, options?: {
 		actor?: Partial<ActorLike>
-	}): ForwardPromise<Actor> {
+	}): Actor {
 		return context.internal.CreateEmpty(options);
 	}
 
@@ -218,7 +218,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 		assetName?: string,
 		colliderType?: CreateColliderType,
 		actor?: Partial<ActorLike>
-	}): ForwardPromise<Actor> {
+	}): Actor {
 		return context.internal.CreateFromGltf(options);
 	}
 
@@ -231,7 +231,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 		assetName?: string,
 		colliderType?: CreateColliderType,
 		actor?: Partial<ActorLike>
-	}): ForwardPromise<Actor> {
+	}): Actor {
 		return context.internal.CreateFromGltf(options);
 	}
 
@@ -245,7 +245,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	public static CreateFromLibrary(context: Context, options: {
 		resourceId: string,
 		actor?: Partial<ActorLike>
-	}): ForwardPromise<Actor> {
+	}): Actor {
 		return context.internal.CreateFromLibrary(options);
 	}
 
@@ -260,7 +260,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 		definition: PrimitiveDefinition,
 		addCollider?: boolean,
 		actor?: Partial<ActorLike>
-	}): ForwardPromise<Actor> {
+	}): Actor {
 		return context.internal.CreatePrimitive(options);
 	}
 
@@ -274,8 +274,23 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	public static CreateFromPrefab(context: Context, options: {
 		prefabId: string,
 		actor?: Partial<ActorLike>
-	}): ForwardPromise<Actor> {
+	}): Actor {
 		return context.internal.CreateFromPrefab(options);
+	}
+
+	/**
+	 * Creates a Promise that will resolve once the actor is created on the host.
+	 * @returns Promise<void>
+	 */
+	public created(): Promise<void> {
+		if (!this.internal.created) {
+			return new Promise<void>((resolve, reject) => this.internal.enqueueCreatedPromise({ resolve, reject }));
+		}
+		if (this.internal.created.success) {
+			return Promise.resolve();
+		} else {
+			return Promise.reject(this.internal.created.reason);
+		}
 	}
 
 	/**

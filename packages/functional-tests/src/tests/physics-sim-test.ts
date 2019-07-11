@@ -58,10 +58,10 @@ export default class PhysicsSimTest extends Test {
 					height: .2
 				}
 			}
-		}).value;
+		});
 
 		// Create the trigger plane for the ball counter.
-		MRE.Actor.CreatePrimitive(this.app.context, {
+		const counter = MRE.Actor.CreatePrimitive(this.app.context, {
 			definition: {
 				shape: MRE.PrimitiveShape.Plane,
 				dimensions: { x: width, y: 0, z: 2 }
@@ -74,9 +74,11 @@ export default class PhysicsSimTest extends Test {
 				},
 				appearance: { enabled: false },
 			}
-		}).then(actor => {
-			actor.collider.isTrigger = true;
-			actor.collider.onTrigger('trigger-enter', _ => {
+		});
+		// TODO: Should not have to wait for counter to be created before setting the collider
+		counter.created().then(() => {
+			counter.collider.isTrigger = true;
+			counter.collider.onTrigger('trigger-enter', _ => {
 				++this.ballCount;
 				this.counterPlane.text.contents = `Ball count: ${this.ballCount}`;
 			});
@@ -94,7 +96,7 @@ export default class PhysicsSimTest extends Test {
 		let oddRow = 0;
 
 		while (position.x <= finalPosition.x && position.y <= finalPosition.y) {
-			MRE.Actor.CreatePrimitive(this.app.context, {
+			const peg = MRE.Actor.CreatePrimitive(this.app.context, {
 				definition: {
 					shape: MRE.PrimitiveShape.Cylinder,
 					dimensions: { x: 0, y: 0, z: 0.2 },
@@ -106,27 +108,29 @@ export default class PhysicsSimTest extends Test {
 					transform: { local: { position } },
 					appearance: { materialId: this.pegMat.id }
 				}
-			}).then(actor => {
-				if (actor.collider) {
-					actor.collider.onCollision('collision-enter', data => {
+			});
+			// TODO: Should not have to wait for peg to be created here.
+			peg.created().then(() => {
+				if (peg.collider) {
+					peg.collider.onCollision('collision-enter', data => {
 						++this.collRefCount;
 						if (this.collRefCount === 1) {
-							actor.appearance.material.color.set(
+							peg.appearance.material.color.set(
 								collisionPegColor.r,
 								collisionPegColor.g,
 								collisionPegColor.b,
-								actor.appearance.material.color.a);
+								peg.appearance.material.color.a);
 						}
 					});
 
-					actor.collider.onCollision('collision-exit', data => {
+					peg.collider.onCollision('collision-exit', data => {
 						--this.collRefCount;
 						if (this.collRefCount === 0) {
-							actor.appearance.material.color.set(
+							peg.appearance.material.color.set(
 								defaultPegColor.r,
 								defaultPegColor.g,
 								defaultPegColor.b,
-								actor.appearance.material.color.a);
+								peg.appearance.material.color.a);
 						}
 					});
 				}
@@ -160,7 +164,7 @@ export default class PhysicsSimTest extends Test {
 					constraints: [MRE.RigidBodyConstraints.FreezePositionZ]
 				}
 			}
-		}).value;
+		});
 
 		setTimeout(() => {
 			// We need to disable rendering and move the ball before destroying it so that if it is currently

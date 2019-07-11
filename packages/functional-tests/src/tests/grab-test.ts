@@ -53,7 +53,7 @@ export default class GrabTest extends Test {
 					}
 				}
 			}
-		}).value;
+		});
 
 		// Create some animations on the cube.
 		this.model.createAnimation(
@@ -94,7 +94,7 @@ export default class GrabTest extends Test {
 					parentId: root.id,
 					transform: { local: { position: { x: cube.x, y: 1, z: -1 } } }
 				}
-			}).value.grabbable = true;
+			}).grabbable = true;
 		}
 
 		this.cycleState();

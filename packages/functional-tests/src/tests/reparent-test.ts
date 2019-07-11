@@ -21,7 +21,7 @@ export default class ReparentTest extends Test {
 					}
 				}
 			}
-		}).value;
+		});
 		const rightParent = MRE.Actor.CreateEmpty(this.app.context, {
 			actor: {
 				parentId: root.id,
@@ -31,7 +31,7 @@ export default class ReparentTest extends Test {
 					}
 				}
 			}
-		}).value;
+		});
 
 		const sphere = MRE.Actor.CreatePrimitive(this.app.context, {
 			definition: {
@@ -41,7 +41,7 @@ export default class ReparentTest extends Test {
 			actor: {
 				parentId: leftParent.id
 			}
-		}).value;
+		});
 
 		let nextParent = 1;
 		const parentIds = [leftParent.id, null, rightParent.id];

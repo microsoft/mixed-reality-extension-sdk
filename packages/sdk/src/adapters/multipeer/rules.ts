@@ -67,6 +67,12 @@ export type Rule = {
 	 */
 	client: {
 		/**
+		 * If non-zero, a timeout will be set for this message. If we don't receive a reply before the
+		 * timeout expires, the client connection will be closed. Only applicable to messages expecting
+		 * replies.
+		 */
+		timeoutSeconds: number;
+		/**
 		 * Called before a message is queued for later delivery to a client.
 		 * @param session The current session.
 		 * @param client The client to receive the message.
@@ -129,6 +135,7 @@ export const DefaultRule: Rule = {
 		after: 'allow'
 	},
 	client: {
+		timeoutSeconds: 0,
 		beforeQueueMessageForClient: (
 			session: Session, client: Client, message: any, promise: ExportedPromise) => {
 			return message;
@@ -270,7 +277,7 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 						(value.message.payload as Payloads.ActorUpdate).actor.id === payload.actorId).shift();
 				if (queuedMessage) {
 					const existingPayload = queuedMessage.message.payload as Partial<Payloads.ActorUpdate>;
-					existingPayload.actor = deepmerge(existingPayload.actor,  {
+					existingPayload.actor = deepmerge(existingPayload.actor, {
 						payload: {
 							actor: {
 								transform: {
@@ -588,7 +595,13 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 	'engine2app-rpc': ClientOnlyRule,
 
 	// ========================================================================
-	'handshake': ClientOnlyRule,
+	'handshake': {
+		...ClientOnlyRule,
+		client: {
+			...ClientOnlyRule.client,
+			timeoutSeconds: 30
+		},
+	},
 
 	// ========================================================================
 	'handshake-complete': ClientOnlyRule,
@@ -613,6 +626,10 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 			during: 'allow',
 			after: 'allow',
 		},
+		client: {
+			...DefaultRule.client,
+			timeoutSeconds: 30
+		}
 	},
 
 	// ========================================================================
@@ -682,7 +699,10 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 				message: Message<Payloads.ObjectSpawned>
 			) => {
 				// Check that this is the authoritative client
-				const exclusiveUser = session.actorSet[message.payload.actors[0].id].exclusiveToUser;
+				const exclusiveUser =
+					message.payload.actors && message.payload.actors.length ?
+						session.actorSet[message.payload.actors[0].id].exclusiveToUser :
+						undefined;
 				if (client.authoritative || client.userId && client.userId === exclusiveUser) {
 					// Create no-op creation message. Implicit sync from initialization until they're updated
 					for (const spawned of message.payload.actors) {
@@ -1001,7 +1021,6 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 				return message;
 			}
 		}
-
 	},
 
 	// ========================================================================
@@ -1012,6 +1031,10 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 			before: 'error',
 			during: 'allow',
 			after: 'error'
+		},
+		client: {
+			...DefaultRule.client,
+			timeoutSeconds: 30
 		}
 	},
 

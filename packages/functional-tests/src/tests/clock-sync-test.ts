@@ -35,7 +35,7 @@ export default class ClockSyncTest extends Test {
 				dimensions: { x: boxWidth, y: boxHeight, z: 0.2 }
 			},
 			actor: {
-				parentId: tester.value.id,
+				parentId: tester.id,
 				transform: {
 					local: {
 						position: { x: 0.0, y: boxYPosition * textScale + (boxHeight / 2 + boxGap), z: 0.05 }
@@ -49,7 +49,7 @@ export default class ClockSyncTest extends Test {
 				dimensions: { x: boxWidth, y: boxHeight, z: 0.2 }
 			},
 			actor: {
-				parentId: tester.value.id,
+				parentId: tester.id,
 				transform: {
 					local: {
 						position: { x: 0.0, y: boxYPosition * textScale - (boxHeight / 2 + boxGap), z: 0.05 }
@@ -59,16 +59,16 @@ export default class ClockSyncTest extends Test {
 		});
 		// Create the digits.
 		const meshHundredths =
-			this.createAnimatableDigit('hundredths', '0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0', tester.value.id);
-		const meshTenths = this.createAnimatableDigit('tenths', '0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0', tester.value.id);
-		const meshSeconds = this.createAnimatableDigit('seconds', '0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0', tester.value.id);
-		const mesh10Seconds = this.createAnimatableDigit('10seconds', '0\n1\n2\n3\n4\n5\n0', tester.value.id);
-		const meshMinutes = this.createAnimatableDigit('minutes', '0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0', tester.value.id);
-		const mesh10Minutes = this.createAnimatableDigit('10minutes', '0\n1\n2\n3\n4\n5\n0', tester.value.id);
+			this.createAnimatableDigit('hundredths', '0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0', tester.id);
+		const meshTenths = this.createAnimatableDigit('tenths', '0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0', tester.id);
+		const meshSeconds = this.createAnimatableDigit('seconds', '0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0', tester.id);
+		const mesh10Seconds = this.createAnimatableDigit('10seconds', '0\n1\n2\n3\n4\n5\n0', tester.id);
+		const meshMinutes = this.createAnimatableDigit('minutes', '0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0', tester.id);
+		const mesh10Minutes = this.createAnimatableDigit('10minutes', '0\n1\n2\n3\n4\n5\n0', tester.id);
 		const meshHours =
 			this.createAnimatableDigit('hours',
-				'0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n0', tester.value.id);
-		const mesh10Hours = this.createAnimatableDigit('10hours', ' \n1\n2\n ', tester.value.id);
+				'0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n0', tester.id);
+		const mesh10Hours = this.createAnimatableDigit('10hours', ' \n1\n2\n ', tester.id);
 
 		// Make a handy array of all the digits.
 		const actors = [
@@ -77,27 +77,27 @@ export default class ClockSyncTest extends Test {
 
 		// Build animations.
 		const yOffset = boxYPosition + lineHeight * 0.5;
-		this.buildDigitAnimation(meshHundredths.value, 4.25, yOffset, 1 / 100, 10, 10, lineHeight, textScale);
-		this.buildDigitAnimation(meshTenths.value, 3.25, yOffset, 1 / 10, 10, 10, lineHeight, textScale);
-		this.buildDigitAnimation(meshSeconds.value, 1.75, yOffset, 1, 10, 10, lineHeight, textScale);
-		this.buildDigitAnimation(mesh10Seconds.value, 0.75, yOffset, 10, 6, 6, lineHeight, textScale);
-		this.buildDigitAnimation(meshMinutes.value, -0.75, yOffset, 60, 10, 10, lineHeight, textScale);
-		this.buildDigitAnimation(mesh10Minutes.value, -1.75, yOffset, 10 * 60, 6, 6, lineHeight, textScale);
-		this.buildDigitAnimation(meshHours.value, -3.25, yOffset, 60 * 60, 24, 24, lineHeight, textScale);
-		this.buildDigitAnimation(mesh10Hours.value, -4.25, yOffset, 10 * 60 * 60, 3, 2.4, lineHeight, textScale);
+		this.buildDigitAnimation(meshHundredths, 4.25, yOffset, 1 / 100, 10, 10, lineHeight, textScale);
+		this.buildDigitAnimation(meshTenths, 3.25, yOffset, 1 / 10, 10, 10, lineHeight, textScale);
+		this.buildDigitAnimation(meshSeconds, 1.75, yOffset, 1, 10, 10, lineHeight, textScale);
+		this.buildDigitAnimation(mesh10Seconds, 0.75, yOffset, 10, 6, 6, lineHeight, textScale);
+		this.buildDigitAnimation(meshMinutes, -0.75, yOffset, 60, 10, 10, lineHeight, textScale);
+		this.buildDigitAnimation(mesh10Minutes, -1.75, yOffset, 10 * 60, 6, 6, lineHeight, textScale);
+		this.buildDigitAnimation(meshHours, -3.25, yOffset, 60 * 60, 24, 24, lineHeight, textScale);
+		this.buildDigitAnimation(mesh10Hours, -4.25, yOffset, 10 * 60 * 60, 3, 2.4, lineHeight, textScale);
 
 		// Start the animations.
-		actors.forEach(actor => actor.value.enableAnimation('anim'));
+		actors.forEach(actor => actor.enableAnimation('anim'));
 
 		await this.stoppedAsync();
 
 		// Stop the animations.
-		actors.forEach(actor => actor.value.disableAnimation('anim'));
+		actors.forEach(actor => actor.disableAnimation('anim'));
 
 		return true;
 	}
 
-	public createAnimatableDigit(name: string, digits: string, parentId: string): MRE.ForwardPromise<MRE.Actor> {
+	public createAnimatableDigit(name: string, digits: string, parentId: string): MRE.Actor {
 		return MRE.Actor.CreateEmpty(this.app.context, {
 			actor: {
 				name,
