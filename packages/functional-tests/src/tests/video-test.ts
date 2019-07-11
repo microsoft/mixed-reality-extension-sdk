@@ -125,7 +125,7 @@ export default class VideoTest extends Test {
 		};
 		cycleState();
 
-		const buttonPromise = MRE.Actor.CreatePrimitive(this.app.context, {
+		const buttonActor = MRE.Actor.CreatePrimitive(this.app.context, {
 			definition: {
 				shape: MRE.PrimitiveShape.Sphere,
 				radius: 0.2,
@@ -145,7 +145,7 @@ export default class VideoTest extends Test {
 			}
 		});
 
-		const buttonBehavior = buttonPromise.value.setBehavior(MRE.ButtonBehavior);
+		const buttonBehavior = buttonActor.setBehavior(MRE.ButtonBehavior);
 		buttonBehavior.onButton('released', cycleState);
 
 		await this.stoppedAsync();
