@@ -51,8 +51,7 @@ export class Mesh extends Asset implements MeshLike {
 	}
 
 	/** @hidden */
-	public clearReference(ref: Actor | Asset) {
-		super.clearReference(ref);
+	public breakReference(ref: Actor | Asset) {
 		if (!(ref instanceof Actor)) return;
 	}
 }

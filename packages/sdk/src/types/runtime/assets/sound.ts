@@ -82,8 +82,7 @@ export class Sound extends Asset implements SoundLike, Patchable<AssetLike> {
 	}
 
 	/** @hidden */
-	public clearReference(ref: Actor | Asset) {
-		super.clearReference(ref);
+	public breakReference(ref: Actor | Asset) {
 		if (!(ref instanceof Actor)) return;
 
 		// TODO: Destroy all SoundInstances playing this Sound

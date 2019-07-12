@@ -214,8 +214,7 @@ export class Material extends Asset implements MaterialLike, Patchable<AssetLike
 	}
 
 	/** @hidden */
-	public clearReference(ref: Actor | Asset) {
-		super.clearReference(ref);
+	public breakReference(ref: Actor | Asset) {
 		if (!(ref instanceof Actor)) return;
 		if (ref.appearance.material === this) {
 			ref.appearance.material = null;

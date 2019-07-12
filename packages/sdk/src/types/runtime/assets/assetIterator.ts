@@ -26,7 +26,7 @@ export class AssetContainerIterator implements Iterator<Asset> {
 			this.containerIndex += 1;
 			this.assetIndex = 0;
 		}
-		if (!this.container) {
+		if (!this.asset) {
 			return { done: true, value: null };
 		}
 

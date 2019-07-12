@@ -139,7 +139,7 @@ export class AssetContainer {
 	/** Break references to all assets in the container, and unload them to free memory */
 	public unload(): void {
 		for (const a of this.assets) {
-			a.clearAllReferences();
+			a.breakAllReferences();
 		}
 		this.context.internal.assetContainers.delete(this);
 		this._assets = null;

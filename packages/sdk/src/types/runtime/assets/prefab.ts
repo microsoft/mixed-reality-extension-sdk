@@ -69,8 +69,7 @@ export class Prefab extends Asset implements PrefabLike, Patchable<AssetLike> {
 	}
 
 	/** @hidden */
-	public clearReference(ref: Actor | Asset) {
-		super.clearReference(ref);
+	public breakReference(ref: Actor | Asset) {
 		if (!(ref instanceof Actor)) return;
 	}
 }

@@ -126,8 +126,7 @@ export class Texture extends Asset implements TextureLike, Patchable<AssetLike> 
 	}
 
 	/** @hidden */
-	public clearReference(ref: Actor | Asset) {
-		super.clearReference(ref);
+	public breakReference(ref: Actor | Asset) {
 		if (!(ref instanceof Material)) return;
 		if (ref.mainTexture === this) {
 			ref.mainTexture = null;

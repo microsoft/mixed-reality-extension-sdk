@@ -118,8 +118,12 @@ export abstract class Asset implements AssetLike {
 	}
 
 	/** @hidden */
-	public clearAllReferences() {
+	public breakReference(ref: Actor | Asset): void { }
+
+	/** @hidden */
+	public breakAllReferences() {
 		for (const r of this.references) {
+			this.breakReference(r);
 			this.clearReference(r);
 		}
 	}
