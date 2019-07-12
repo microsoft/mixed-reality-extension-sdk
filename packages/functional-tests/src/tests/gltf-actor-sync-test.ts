@@ -23,6 +23,7 @@ export default class GltfActorSyncTest extends Test {
 				}
 			}
 		});
+		await actorRoot.created();
 
 		// place text on gltf scene
 		const gltfRoot = actorRoot.children[0];
