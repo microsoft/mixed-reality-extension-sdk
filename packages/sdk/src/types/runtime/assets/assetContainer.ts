@@ -11,7 +11,8 @@ import {
 	Mesh,
 	Prefab,
 	Sound, SoundLike,
-	Texture, TextureLike
+	Texture, TextureLike,
+	VideoStream, VideoStreamLike
 } from '.';
 import { Context } from '..';
 import { log } from '../../../log';
@@ -96,6 +97,22 @@ export class AssetContainer {
 		});
 		sound.setLoadedPromise(this.sendCreateAsset(sound));
 		return sound;
+	}
+
+	/**
+	 * preload a video stream and generate a new video stream asset
+	 * @param name The new stream's name
+	 * @param definition The initial video stream properties. The `uri` property is required.
+	 */
+	public createVideoStream(name: string, definition: Partial<VideoStreamLike>): VideoStream {
+
+		const video = new VideoStream(this, {
+			id: UUID(),
+			name,
+			videoStream: resolveJsonValues(definition)
+		});
+		video.setLoadedPromise(this.sendCreateAsset(video));
+		return video;
 	}
 
 	/**

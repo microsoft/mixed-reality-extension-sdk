@@ -27,8 +27,8 @@ export type CreateAnimation = {
 /**
  * @hidden
  */
-export type ActiveSoundInstance = {
-	message: Message<Payloads.SetSoundState>;
+export type ActiveMediaInstance = {
+	message: Message<Payloads.SetMediaState>;
 	basisTime: number
 };
 
@@ -39,7 +39,7 @@ export type SyncActor = {
 	actorId: string;
 	initialization: InitializeActor;
 	createdAnimations: CreateAnimation[];
-	activeSoundInstances: ActiveSoundInstance[];
+	activeMediaInstances: ActiveMediaInstance[];
 	activeInterpolations: Payloads.InterpolateActor[];
 	behavior: BehaviorType;
 	grabbedBy: string;
