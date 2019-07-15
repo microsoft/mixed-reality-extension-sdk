@@ -3,7 +3,8 @@
  * Licensed under the MIT License.
  */
 
-import { Asset, AssetLike, AssetManager, Texture } from '.';
+import { Asset, AssetContainer, AssetLike, Texture } from '.';
+import { Actor } from '..';
 import { ZeroGuid } from '../../../constants';
 import { Color3, Color4, Color4Like, Vector2, Vector2Like } from '../../../math';
 import { observe } from '../../../utils/observe';
@@ -68,7 +69,9 @@ export class Material extends Asset implements MaterialLike, Patchable<AssetLike
 	public set color(value) { if (value) { this._color.copy(value); } }
 
 	/** @returns A shared reference to this material's texture asset */
-	public get mainTexture() { return this.manager.assets[this._mainTextureId] as Texture; }
+	public get mainTexture() {
+		return this.container.context.internal.lookupAsset(this._mainTextureId) as Texture;
+	}
 	public set mainTexture(value) {
 		this.mainTextureId = value && value.id || ZeroGuid;
 	}
@@ -79,10 +82,19 @@ export class Material extends Asset implements MaterialLike, Patchable<AssetLike
 		if (!value || value.startsWith('0000')) {
 			value = ZeroGuid;
 		}
-		if (!this.manager.assets[value]) {
+		if (!this.container.context.internal.lookupAsset(value)) {
 			value = ZeroGuid; // throw?
 		}
+
+		if (value === this._mainTextureId) return;
+
+		if (this.mainTexture) {
+			this.mainTexture.clearReference(this);
+		}
 		this._mainTextureId = value;
+		if (this.mainTexture) {
+			this.mainTexture.addReference(this);
+		}
 		this.materialChanged('mainTextureId');
 	}
 
@@ -103,34 +115,17 @@ export class Material extends Asset implements MaterialLike, Patchable<AssetLike
 	public set alphaCutoff(value) { this._alphaCutoff = value; this.materialChanged('alphaCutoff'); }
 
 	/** @inheritdoc */
-	public get material(): MaterialLike { return this; }
+	public get material(): Material { return this; }
 
 	/** INTERNAL USE ONLY. To create a new material from scratch, use [[AssetManager.createMaterial]]. */
-	public constructor(manager: AssetManager, def: AssetLike) {
-		super(manager, def);
+	public constructor(container: AssetContainer, def: AssetLike) {
+		super(container, def);
 
 		if (!def.material) {
 			throw new Error("Cannot construct material from non-material definition");
 		}
 
-		if (def.material.color) {
-			this._color.copy(def.material.color);
-		}
-		if (def.material.mainTextureId) {
-			this._mainTextureId = def.material.mainTextureId;
-		}
-		if (def.material.mainTextureOffset) {
-			this._mainTextureOffset.copy(def.material.mainTextureOffset);
-		}
-		if (def.material.mainTextureScale) {
-			this._mainTextureScale.copy(def.material.mainTextureScale);
-		}
-		if (def.material.alphaMode) {
-			this._alphaMode = def.material.alphaMode;
-		}
-		if (def.material.alphaCutoff) {
-			this._alphaCutoff = def.material.alphaCutoff;
-		}
+		this.copy(def);
 
 		// material patching: observe the nested material properties
 		// for changed values, and write them to a patch
@@ -163,17 +158,17 @@ export class Material extends Asset implements MaterialLike, Patchable<AssetLike
 		super.copy(from);
 		if (from.material) {
 			if (from.material.color) {
-				this._color.copy(from.material.color);
+				this.color.copy(from.material.color);
 			}
 			if (from.material.mainTextureOffset) {
-				this._mainTextureOffset.copy(from.material.mainTextureOffset);
+				this.mainTextureOffset.copy(from.material.mainTextureOffset);
 			}
 			if (from.material.mainTextureScale) {
-				this._mainTextureScale.copy(from.material.mainTextureScale);
+				this.mainTextureScale.copy(from.material.mainTextureScale);
 			}
-			this._mainTextureId = from.material.mainTextureId || null;
-			this._alphaMode = from.material.alphaMode || AlphaMode.Opaque;
-			this._alphaCutoff = from.material.alphaCutoff || 0.5;
+			this.mainTextureId = from.material.mainTextureId || null;
+			this.alphaMode = from.material.alphaMode || AlphaMode.Opaque;
+			this.alphaCutoff = from.material.alphaCutoff || 0.5;
 		}
 
 		this.internal.observing = wasObserving;
@@ -197,9 +192,17 @@ export class Material extends Asset implements MaterialLike, Patchable<AssetLike
 
 	private materialChanged(...path: string[]): void {
 		if (this.internal.observing) {
-			this.manager.context.internal.incrementGeneration();
+			this.container.context.internal.incrementGeneration();
 			this.internal.patch = this.internal.patch || { material: {} } as AssetLike;
 			readPath(this, this.internal.patch.material, ...path);
+		}
+	}
+
+	/** @hidden */
+	public breakReference(ref: Actor | Asset) {
+		if (!(ref instanceof Actor)) return;
+		if (ref.appearance.material === this) {
+			ref.appearance.material = null;
 		}
 	}
 }

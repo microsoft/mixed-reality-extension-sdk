@@ -23,7 +23,9 @@ export const BackgroundColor = new MRE.Color3(0.25, 0.25, 0.25);
  * @param nomenu - Do not spawn the controls
  */
 export class App {
+	public assets: MRE.AssetContainer;
 	private _rpc: MRERPC.ContextRPC;
+
 	private firstUser: MRE.User;
 	private _connectedUsers: { [id: string]: MRE.User } = {};
 	public testResults: { [name: string]: boolean } = {};
@@ -52,6 +54,7 @@ export class App {
 	public get connectedUsers() { return this._connectedUsers; }
 
 	constructor(private _context: MRE.Context, private params: MRE.ParameterSet, private baseUrl: string) {
+		this.assets = new MRE.AssetContainer(_context);
 		this._rpc = new MRERPC.ContextRPC(_context);
 
 		this.context.onStarted(() => {
@@ -66,10 +69,9 @@ export class App {
 		});
 		this.context.onUserJoined((user) => this.userJoined(user));
 		this.context.onUserLeft((user) => this.userLeft(user));
-		this.backgroundMaterial = this.context.assetManager.createMaterial('background',
-			{
-				color: BackgroundColor
-			}).value;
+		this.backgroundMaterial = this.assets.createMaterial('background', {
+			color: BackgroundColor
+		});
 
 		this.menu.onSelection((name, factory, user) => {
 			this.menu.hide();
@@ -159,7 +161,6 @@ export class App {
 		// Delete all actors
 		destroyActors(this.context.rootActors.filter(x =>
 			!this.runnerActors.includes(x) && !this.sharedActors.includes(x)));
-		this.context.assetManager.cleanup();
 	}
 
 	private async stopTest() {
@@ -325,9 +326,9 @@ export class App {
 		}
 
 		// start or stop the active test
-		const ppMat = this.context.assetManager.createMaterial('pp', {
+		const ppMat = this.assets.createMaterial('pp', {
 			color: MRE.Color3.Green().toJSON()
-		}).value;
+		});
 
 		this.playPauseButton = MRE.Actor.CreatePrimitive(this.context, {
 			definition: {

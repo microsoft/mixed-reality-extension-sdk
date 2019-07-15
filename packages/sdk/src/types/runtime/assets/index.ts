@@ -10,5 +10,5 @@ export * from './prefab';
 export * from './sound';
 export * from './texture';
 export * from './videoStream';
-export * from './assetGroup';
-export * from './assetManager';
+export * from './assetIterator';
+export * from './assetContainer';

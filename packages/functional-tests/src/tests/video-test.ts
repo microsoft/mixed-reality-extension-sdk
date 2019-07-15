@@ -9,15 +9,17 @@ import { Test } from '../test';
 
 export default class VideoTest extends Test {
 	public expectedResultDescription = "Play a couple youtube videos. Click to cycle.";
+	private assets: MRE.AssetContainer;
 
 	constructor(app: App, baseUrl: string, user: MRE.User) {
 		super(app, baseUrl, user);
+		this.assets = new MRE.AssetContainer(this.app.context);
 	}
 
 	private _state = 0;
 
 	public async run(root: MRE.Actor): Promise<boolean> {
-		const parentActor = await MRE.Actor.CreateEmpty(this.app.context, {
+		const parentActor = MRE.Actor.CreateEmpty(this.app.context, {
 			actor: {
 				parentId: root.id,
 				name: 'video',
@@ -30,25 +32,25 @@ export default class VideoTest extends Test {
 			}
 		});
 
-		const videoStreamPromise1 = this.app.context.assetManager.createVideoStream(
-			'group1',
+		const videoStream1 = this.assets.createVideoStream(
+			'stream1',
 			{
 				uri: `youtube://1roy4o4tqQM`
 				// `youtube://z1YNh9BQVRg`
 			}
 		);
-		const videoStreamPromise2 = this.app.context.assetManager.createVideoStream(
-			'group1',
+		const videoStream2 = this.assets.createVideoStream(
+			'stream2',
 			{
 				uri: `youtube://9RTaIpVuTqE`
 			}
 		);
-		let videoInstance: MRE.ForwardPromise<MRE.MediaInstance>;
+		let videoInstance: MRE.MediaInstance;
 		const cycleState = () => {
 			switch (this._state) {
 				case 0:
 					this.app.setOverrideText("Playing Movie 1!");
-					videoInstance = parentActor.startVideoStream(videoStreamPromise1.value.id,
+					videoInstance = parentActor.startVideoStream(videoStream1.id,
 						{
 							volume: 0.2,
 							looping: true,
@@ -59,51 +61,51 @@ export default class VideoTest extends Test {
 					break;
 				case 1:
 					this.app.setOverrideText("Pausing!");
-					videoInstance.value.pause();
+					videoInstance.pause();
 					break;
 				case 2:
 					this.app.setOverrideText("Resuming!");
-					videoInstance.value.resume();
+					videoInstance.resume();
 					break;
 				case 3:
 					this.app.setOverrideText("Raising volume!");
-					videoInstance.value.setState(
+					videoInstance.setState(
 						{
 							volume: 0.5
 						});
 					break;
 				case 4:
 					this.app.setOverrideText("Making sound fully directional!");
-					videoInstance.value.setState(
+					videoInstance.setState(
 						{
 							spread: 0.0
 						});
 					break;
 				case 5:
 					this.app.setOverrideText("Seeking!");
-					videoInstance.value.setState(
+					videoInstance.setState(
 						{
 							time: 60.0
 						});
 					break;
 				case 6:
 					this.app.setOverrideText("Hiding!");
-					videoInstance.value.setState(
+					videoInstance.setState(
 						{
 							visible: false
 						});
 					break;
 				case 7:
 					this.app.setOverrideText("unhiding!");
-					videoInstance.value.setState(
+					videoInstance.setState(
 						{
 							visible: true
 						});
 					break;
 				case 8:
 					this.app.setOverrideText("Switching to movie 2!");
-					videoInstance.value.stop();
-					videoInstance = parentActor.startVideoStream(videoStreamPromise2.value.id,
+					videoInstance.stop();
+					videoInstance = parentActor.startVideoStream(videoStream2.id,
 						{
 							volume: 0.2,
 							looping: true,
@@ -114,7 +116,7 @@ export default class VideoTest extends Test {
 					break;
 				case 9:
 					this.app.setOverrideText("Stopping!");
-					videoInstance.value.stop();
+					videoInstance.stop();
 					this._state = -1;
 					break;
 
@@ -150,5 +152,9 @@ export default class VideoTest extends Test {
 
 		await this.stoppedAsync();
 		return true;
+	}
+
+	public cleanup() {
+		this.assets.unload();
 	}
 }

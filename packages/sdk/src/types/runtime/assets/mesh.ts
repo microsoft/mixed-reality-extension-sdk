@@ -3,7 +3,8 @@
  * Licensed under the MIT License.
  */
 
-import { Asset, AssetLike, AssetManager } from '.';
+import { Asset, AssetContainer, AssetLike } from '.';
+import { Actor } from '..';
 
 export interface MeshLike {
 	/** The number of vertices in this mesh. */
@@ -24,18 +25,17 @@ export class Mesh extends Asset implements MeshLike {
 	public get triangleCount() { return this._triangleCount; }
 
 	/** @inheritdoc */
-	public get mesh(): MeshLike { return this; }
+	public get mesh(): Mesh { return this; }
 
 	/** @hidden */
-	public constructor(manager: AssetManager, def: AssetLike) {
-		super(manager, def);
+	public constructor(container: AssetContainer, def: AssetLike) {
+		super(container, def);
 
 		if (!def.mesh) {
 			throw new Error("Cannot construct mesh from non-mesh definition");
 		}
 
-		this._vertexCount = def.mesh.vertexCount;
-		this._triangleCount = def.mesh.triangleCount;
+		this.copy(def);
 	}
 
 	/** @hidden */
@@ -47,5 +47,10 @@ export class Mesh extends Asset implements MeshLike {
 				triangleCount: this.triangleCount
 			}
 		};
+	}
+
+	/** @hidden */
+	public breakReference(ref: Actor | Asset) {
+		if (!(ref instanceof Actor)) return;
 	}
 }

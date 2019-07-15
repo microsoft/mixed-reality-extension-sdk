@@ -9,24 +9,22 @@ import { PrimitiveDefinition } from '../../primitiveTypes';
 import { ActorLike, ColliderType, TransformLike, UserLike } from '../../runtime';
 import { ActionState, BehaviorType } from '../../runtime/behaviors';
 import { OperatingModel } from '../operatingModel';
+import { AssetPayloadType } from './assets';
 
 /**
  * @hidden
  * *** KEEP ENTRIES SORTED ***
  */
 export type PayloadType
-	= 'actor-correction'
+	= AssetPayloadType
+	| 'actor-correction'
 	| 'actor-update'
 	| 'app2engine-rpc'
-	| 'asset-update'
-	| 'assets-loaded'
 	| 'collision-event-raised'
 	| 'create-animation'
-	| 'create-asset'
 	| 'create-empty'
 	| 'create-from-gltf'
 	| 'create-from-library'
-	| 'create-from-prefab'
 	| 'create-primitive'
 	| 'destroy-actors'
 	| 'engine2app-rpc'
@@ -36,7 +34,6 @@ export type PayloadType
 	| 'heartbeat'
 	| 'heartbeat-reply'
 	| 'interpolate-actor'
-	| 'load-assets'
 	| 'multi-operation-result'
 	| 'object-spawned'
 	| 'operation-result'

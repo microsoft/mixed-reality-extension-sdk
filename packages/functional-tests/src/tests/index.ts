@@ -9,6 +9,7 @@ import AltspaceVRVideoTest from './altspacevr-video-test';
 import AssetEarlyAssignmentTest from './asset-early-assignment-test';
 import AssetMutabilityTest from './asset-mutability-test';
 import AssetPreloadTest from './asset-preload-test';
+import AssetUnloadTest from './asset-unload-test';
 import ClockSyncTest from './clock-sync-test';
 import FailureTest from './failure-test';
 import GltfActorSyncTest from './gltf-actor-sync-test';
@@ -45,6 +46,7 @@ export const Factories = {
 	'asset-early-assignment-test': (...args) => new AssetEarlyAssignmentTest(...args),
 	'asset-mutability-test': (...args) => new AssetMutabilityTest(...args),
 	'asset-preload-test': (...args) => new AssetPreloadTest(...args),
+	'asset-unload-test': (...args) => new AssetUnloadTest(...args),
 	'clock-sync-test': (...args) => new ClockSyncTest(...args),
 	'failure-test': (...args) => new FailureTest(...args),
 	'gltf-actor-sync-test': (...args) => new GltfActorSyncTest(...args),

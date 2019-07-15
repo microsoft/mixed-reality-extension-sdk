@@ -95,10 +95,10 @@ export default class Menu {
 
 	private setup() {
 		if (!this.successMat) {
-			const am = this.context.assetManager;
-			this.successMat = am.createMaterial('success', { color: SuccessColor }).value;
-			this.failureMat = am.createMaterial('failure', { color: FailureColor }).value;
-			this.neutralMat = am.createMaterial('neutral', { color: NeutralColor }).value;
+			const am = this.app.assets;
+			this.successMat = am.createMaterial('success', { color: SuccessColor });
+			this.failureMat = am.createMaterial('failure', { color: FailureColor });
+			this.neutralMat = am.createMaterial('neutral', { color: NeutralColor });
 		}
 
 		if (this.buttons) {

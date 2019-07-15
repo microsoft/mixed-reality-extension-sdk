@@ -4,7 +4,7 @@
  */
 
 import {
-	AssetManager,
+	AssetContainer,
 	Material,
 	MaterialLike,
 	Mesh,
@@ -18,6 +18,7 @@ import {
 	VideoStream,
 	VideoStreamLike
 } from '.';
+import { Actor } from '..';
 
 /**
  * Instructions for how to load an asset.
@@ -75,6 +76,7 @@ export abstract class Asset implements AssetLike {
 	private _id: string;
 	private _name: string;
 	private _source: AssetSource;
+	private _loadedPromise: Promise<void>;
 	// tslint:enable:variable-name
 
 	/** @inheritdoc */
@@ -86,10 +88,53 @@ export abstract class Asset implements AssetLike {
 	/** @inheritdoc */
 	public get source() { return this._source; }
 
-	protected constructor(public manager: AssetManager, def: Partial<AssetLike>) {
+	/** @inheritdoc */
+	public get prefab(): Prefab { return null; }
+	/** @inheritdoc */
+	public get mesh(): Mesh { return null; }
+	/** @inheritdoc */
+	public get material(): Material { return null; }
+	/** @inheritdoc */
+	public get texture(): Texture { return null; }
+	/** @inheritdoc */
+	public get sound(): Sound { return null; }
+
+	/** A promise that resolves when the asset is finished loading */
+	public get created() { return this._loadedPromise; }
+
+	/** Stores which actors/assets refer to this asset */
+	protected references = new Set<Actor | Asset>();
+
+	protected constructor(public container: AssetContainer, def: Partial<AssetLike>) {
 		this._id = def.id;
 		this._name = def.name;
 		this._source = def.source;
+	}
+
+	/** @hidden */
+	public addReference(ref: Actor | Asset) {
+		this.references.add(ref);
+	}
+
+	/** @hidden */
+	public clearReference(ref: Actor | Asset) {
+		this.references.delete(ref);
+	}
+
+	/** @hidden */
+	public breakReference(ref: Actor | Asset): void { }
+
+	/** @hidden */
+	public breakAllReferences() {
+		for (const r of this.references) {
+			this.breakReference(r);
+			this.clearReference(r);
+		}
+	}
+
+	/** @hidden */
+	public setLoadedPromise(p: Promise<void>) {
+		this._loadedPromise = p;
 	}
 
 	/** @hidden */
@@ -113,19 +158,19 @@ export abstract class Asset implements AssetLike {
 	}
 
 	/** @hidden */
-	public static Parse(manager: AssetManager, def: AssetLike): Asset {
+	public static Parse(container: AssetContainer, def: AssetLike): Asset {
 		if (def.prefab) {
-			return new Prefab(manager, def);
+			return new Prefab(container, def);
 		} else if (def.mesh) {
-			return new Mesh(manager, def);
+			return new Mesh(container, def);
 		} else if (def.material) {
-			return new Material(manager, def);
+			return new Material(container, def);
 		} else if (def.texture) {
-			return new Texture(manager, def);
+			return new Texture(container, def);
 		} else if (def.sound) {
-			return new Sound(manager, def);
+			return new Sound(container, def);
 		} else if (def.videoStream) {
-			return new VideoStream(manager, def);
+			return new VideoStream(container, def);
 		} else {
 			throw new Error(`Asset ${def.id} is not of a known type.`);
 		}

@@ -3,7 +3,8 @@
  * Licensed under the MIT License.
  */
 
-import { Asset, AssetLike, AssetManager } from '.';
+import { Asset, AssetContainer, AssetLike } from '.';
+import { Actor } from '..';
 import readPath from '../../../utils/readPath';
 import { InternalAsset } from '../../internal/asset';
 import { Patchable } from '../../patchable';
@@ -30,22 +31,17 @@ export class Sound extends Asset implements SoundLike, Patchable<AssetLike> {
 	public get duration() { return this._duration; }
 
 	/** @inheritdoc */
-	public get sound(): SoundLike { return this; }
+	public get sound(): Sound { return this; }
 
 	/** @hidden */
-	public constructor(manager: AssetManager, def: AssetLike) {
-		super(manager, def);
+	public constructor(container: AssetContainer, def: AssetLike) {
+		super(container, def);
 
 		if (!def.sound) {
 			throw new Error("Cannot construct sound from non-sound definition");
 		}
 
-		if (def.sound.uri) {
-			this._uri = def.sound.uri;
-		}
-		if (def.sound.duration) {
-			this._duration = def.sound.duration;
-		}
+		this.copy(def);
 	}
 
 	public copy(from: Partial<AssetLike>): this {
@@ -80,4 +76,10 @@ export class Sound extends Asset implements SoundLike, Patchable<AssetLike> {
 		};
 	}
 
+	/** @hidden */
+	public breakReference(ref: Actor | Asset) {
+		if (!(ref instanceof Actor)) return;
+
+		// TODO: Destroy all SoundInstances playing this Sound
+	}
 }

@@ -12,6 +12,8 @@ import {
 	ActorSet,
 	AnimationWrapMode,
 	Asset,
+	AssetContainer,
+	AssetContainerIterable,
 	AssetLike,
 	BehaviorType,
 	CollisionEvent,
@@ -50,6 +52,7 @@ import {
 	UserUpdate,
 } from '../network/payloads';
 
+import { ZeroGuid } from '../../constants';
 import { log } from '../../log';
 import * as Protocols from '../../protocols';
 import { Execution } from '../../protocols/execution';
@@ -67,6 +70,7 @@ export class InternalContext {
 	public actorSet: ActorSet = {};
 	public userSet: UserSet = {};
 	public userGroupMapping: { [id: string]: number } = { default: 1 };
+	public assetContainers = new Set<AssetContainer>();
 	public protocol: Protocols.Protocol;
 	public interval: NodeJS.Timer;
 	public generation = 0;
@@ -380,6 +384,10 @@ export class InternalContext {
 		this.generation++;
 	}
 
+	private assetsIterable() {
+		return new AssetContainerIterable([...this.assetContainers]);
+	}
+
 	public update() {
 		// Early out if no state changes occurred.
 		if (this.generation === this.prevGeneration) {
@@ -390,7 +398,7 @@ export class InternalContext {
 
 		const syncObjects = [
 			...Object.values(this.actorSet),
-			...Object.values(this.context.assetManager.assets),
+			...this.assetsIterable(),
 			...Object.values(this.userSet)
 		] as Array<Patchable<any>>;
 
@@ -417,6 +425,25 @@ export class InternalContext {
 				} as UserUpdate);
 			}
 		}
+
+		if (this.nextUpdatePromise) {
+			this.resolveNextUpdatePromise();
+			this.nextUpdatePromise = null;
+			this.resolveNextUpdatePromise = null;
+		}
+	}
+
+	private nextUpdatePromise: Promise<void>;
+	private resolveNextUpdatePromise: () => void;
+	/** @hidden */
+	public nextUpdate(): Promise<void> {
+		if (this.nextUpdatePromise) {
+			return this.nextUpdatePromise;
+		}
+
+		return this.nextUpdatePromise = new Promise(resolve => {
+			this.resolveNextUpdatePromise = resolve;
+		});
 	}
 
 	public sendDestroyActors(actorIds: string[]) {
@@ -581,6 +608,16 @@ export class InternalContext {
 				actorId,
 				behaviorType: newBehaviorType || 'none'
 			} as SetBehavior);
+		}
+	}
+
+	public lookupAsset(id: string): Asset {
+		if (id === ZeroGuid) return null;
+
+		for (const c of this.assetContainers) {
+			if (c.assetsById[id]) {
+				return c.assetsById[id];
+			}
 		}
 	}
 }

@@ -464,7 +464,7 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 				session: Session,
 				message: Message<Payloads.AssetUpdate>
 			) => {
-				session.cacheUpdateAssetMessage(message);
+				session.cacheAssetUpdate(message);
 				return message;
 			}
 		}
@@ -481,6 +481,9 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 				message: Message<Payloads.AssetsLoaded>
 			) => {
 				if (client.authoritative) {
+					for (const asset of message.payload.assets) {
+						session.cacheAssetCreation(asset.id, message.replyToId);
+					}
 					return message;
 				} else if (message.payload.failureMessage && message.payload.failureMessage.length) {
 					// TODO: Propagate to app as a general failure message once
@@ -543,7 +546,7 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 				session: Session,
 				message: Message<Payloads.CreateAsset>
 			) => {
-				session.cacheCreateAssetMessage(message);
+				session.cacheAssetCreationRequest(message);
 				return message;
 			}
 		}
@@ -674,11 +677,8 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 		},
 		session: {
 			...DefaultRule.session,
-			beforeReceiveFromApp: (
-				session: Session,
-				message: Message<Payloads.LoadAssets>
-			) => {
-				session.cacheCreateAssetMessage(message);
+			beforeReceiveFromApp: (session, message) => {
+				session.cacheAssetCreationRequest(message);
 				return message;
 			}
 		}
@@ -1059,8 +1059,27 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 	'traces': ClientOnlyRule,
 
 	// ========================================================================
-	'trigger-event-raised': {
-		...ClientOnlyRule
+	'trigger-event-raised': ClientOnlyRule,
+
+	// ========================================================================
+	'unload-assets': {
+		...DefaultRule,
+		synchronization: {
+			stage: 'load-assets',
+			before: 'ignore',
+			during: 'queue',
+			after: 'allow'
+		},
+		session: {
+			...DefaultRule.session,
+			beforeReceiveFromApp: (
+				session: Session,
+				message: Message<Payloads.UnloadAssets>
+			) => {
+				session.cacheAssetUnload(message.payload.containerId);
+				return message;
+			}
+		}
 	},
 
 	// ========================================================================

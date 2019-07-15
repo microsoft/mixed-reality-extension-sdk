@@ -13,6 +13,7 @@ const collisionPegColor = MRE.Color3.FromInts(0, 252, 75);
 
 export default class PhysicsSimTest extends Test {
 	public expectedResultDescription = "Balls trickle through the plinko board";
+	private assets: MRE.AssetContainer;
 	private interval: NodeJS.Timeout;
 	private pegMat: MRE.Material;
 	private ballMat: MRE.Material;
@@ -21,12 +22,13 @@ export default class PhysicsSimTest extends Test {
 	private counterPlane: MRE.Actor;
 
 	public async run(root: MRE.Actor): Promise<boolean> {
-		this.pegMat = this.app.context.assetManager.createMaterial('peg', {
+		this.assets = new MRE.AssetContainer(this.app.context);
+		this.pegMat = this.assets.createMaterial('peg', {
 			color: defaultPegColor
-		}).value;
-		this.ballMat = this.app.context.assetManager.createMaterial('ball', {
+		});
+		this.ballMat = this.assets.createMaterial('ball', {
 			color: defaultBallColor
-		}).value;
+		});
 
 		await this.createCounterPlane(root, 2, 1.25);
 
@@ -39,6 +41,7 @@ export default class PhysicsSimTest extends Test {
 
 	public cleanup() {
 		clearInterval(this.interval);
+		this.assets.unload();
 	}
 
 	private async createCounterPlane(root: MRE.Actor, width: number, height: number) {

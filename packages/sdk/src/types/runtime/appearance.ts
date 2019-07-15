@@ -94,7 +94,9 @@ export class Appearance implements AppearanceLike {
 	}
 
 	/** @returns A shared reference to this actor's material, or null if this actor has no material */
-	public get material() { return this.actor.context.assetManager.assets[this._materialId] as Material; }
+	public get material() {
+		return this.actor.context.internal.lookupAsset(this._materialId) as Material;
+	}
 	public set material(value) {
 		this.materialId = value && value.id || ZeroGuid;
 	}
@@ -105,10 +107,19 @@ export class Appearance implements AppearanceLike {
 		if (!value || value.startsWith('0000')) {
 			value = ZeroGuid;
 		}
-		if (!this.actor.context.assetManager.assets[value]) {
+		if (!this.actor.context.internal.lookupAsset(value)) {
 			value = ZeroGuid; // throw?
 		}
+
+		if (value === this._materialId) return;
+
+		if (this.material) {
+			this.material.clearReference(this.actor);
+		}
 		this._materialId = value;
+		if (this.material) {
+			this.material.addReference(this.actor);
+		}
 	}
 
 	constructor(private actor: Actor) { }

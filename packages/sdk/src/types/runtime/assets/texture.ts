@@ -3,7 +3,8 @@
  * Licensed under the MIT License.
  */
 
-import { Asset, AssetLike, AssetManager } from '.';
+import { Asset, AssetContainer, AssetLike, Material } from '.';
+import { Actor } from '..';
 import { Vector2, Vector2Like } from '../../../math';
 import { observe } from '../../../utils/observe';
 import readPath from '../../../utils/readPath';
@@ -54,28 +55,17 @@ export class Texture extends Asset implements TextureLike, Patchable<AssetLike> 
 	public set wrapV(val) { this._wrapV = val; this.textureChanged('wrapV'); }
 
 	/** @inheritdoc */
-	public get texture(): TextureLike { return this; }
+	public get texture(): Texture { return this; }
 
 	/** INTERNAL USE ONLY. To load a new texture from scratch, use [[AssetManager.createTexture]] */
-	public constructor(manager: AssetManager, def: AssetLike) {
-		super(manager, def);
+	public constructor(container: AssetContainer, def: AssetLike) {
+		super(container, def);
 
 		if (!def.texture) {
 			throw new Error("Cannot construct texture from non-texture definition");
 		}
 
-		if (def.texture.uri) {
-			this._uri = def.texture.uri;
-		}
-		if (def.texture.resolution) {
-			this._resolution = new Vector2(def.texture.resolution.x, def.texture.resolution.y);
-		}
-		if (def.texture.wrapU) {
-			this._wrapU = def.texture.wrapU;
-		}
-		if (def.texture.wrapV) {
-			this._wrapV = def.texture.wrapV;
-		}
+		this.copy(def);
 	}
 
 	public copy(from: Partial<AssetLike>): this {
@@ -94,9 +84,9 @@ export class Texture extends Asset implements TextureLike, Patchable<AssetLike> 
 		if (from.texture && from.texture.resolution)
 			this._resolution = new Vector2(from.texture.resolution.x, from.texture.resolution.y);
 		if (from.texture && from.texture.wrapU)
-			this._wrapU = from.texture.wrapU;
+			this.wrapU = from.texture.wrapU;
 		if (from.texture && from.texture.wrapV)
-			this._wrapV = from.texture.wrapV;
+			this.wrapV = from.texture.wrapV;
 		// tslint:enable:curly
 
 		this.internal.observing = wasObserving;
@@ -118,9 +108,17 @@ export class Texture extends Asset implements TextureLike, Patchable<AssetLike> 
 
 	private textureChanged(...path: string[]): void {
 		if (this.internal.observing) {
-			this.manager.context.internal.incrementGeneration();
+			this.container.context.internal.incrementGeneration();
 			this.internal.patch = this.internal.patch || { texture: {} } as AssetLike;
 			readPath(this, this.internal.patch.texture, ...path);
+		}
+	}
+
+	/** @hidden */
+	public breakReference(ref: Actor | Asset) {
+		if (!(ref instanceof Material)) return;
+		if (ref.mainTexture === this) {
+			ref.mainTexture = null;
 		}
 	}
 }

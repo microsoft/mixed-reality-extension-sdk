@@ -9,18 +9,20 @@ import { Test } from '../test';
 
 export default class UserMaskTest extends Test {
 	public expectedResultDescription = "Click to change teams";
+	private assets: MRE.AssetContainer;
 	private redList: MRE.Actor;
 	private blueList: MRE.Actor;
 	private interval: NodeJS.Timeout;
 
 	public async run(root: MRE.Actor): Promise<boolean> {
 		// create colors
-		const blue = this.app.context.assetManager.createMaterial('blueMat', {
+		this.assets = new MRE.AssetContainer(this.app.context);
+		const blue = this.assets.createMaterial('blueMat', {
 			color: { r: .102, g: 0.169, b: 0.843 }
-		}).value;
-		const red = this.app.context.assetManager.createMaterial('redMat', {
+		});
+		const red = this.assets.createMaterial('redMat', {
 			color: { r: .854, g: 0.132, b: 0.132 }
-		}).value;
+		});
 
 		// create team labels
 		const textDef = {
@@ -140,5 +142,6 @@ export default class UserMaskTest extends Test {
 
 	public cleanup() {
 		clearInterval(this.interval);
+		this.assets.unload();
 	}
 }

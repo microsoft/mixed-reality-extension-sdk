@@ -3,7 +3,8 @@
  * Licensed under the MIT License.
  */
 
-import { Asset, AssetLike, AssetManager } from '.';
+import { Asset, AssetContainer, AssetLike } from '.';
+import { Actor } from '..';
 import { InternalAsset } from '../../internal/asset';
 import { Patchable } from '../../patchable';
 
@@ -25,17 +26,17 @@ export class Prefab extends Asset implements PrefabLike, Patchable<AssetLike> {
 	public get actorCount() { return this._actorCount; }
 
 	/** @inheritdoc */
-	public get prefab(): PrefabLike { return this; }
+	public get prefab(): Prefab { return this; }
 
 	/** @hidden */
-	public constructor(manager: AssetManager, def: AssetLike) {
-		super(manager, def);
+	public constructor(container: AssetContainer, def: AssetLike) {
+		super(container, def);
 
 		if (!def.prefab) {
 			throw new Error("Cannot construct prefab from non-prefab definition");
 		}
 
-		this._actorCount = def.prefab.actorCount;
+		this.copy(def);
 	}
 
 	public copy(from: Partial<AssetLike>): this {
@@ -65,5 +66,10 @@ export class Prefab extends Asset implements PrefabLike, Patchable<AssetLike> {
 				actorCount: this._actorCount
 			}
 		};
+	}
+
+	/** @hidden */
+	public breakReference(ref: Actor | Asset) {
+		if (!(ref instanceof Actor)) return;
 	}
 }
