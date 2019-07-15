@@ -9,6 +9,7 @@ import { AssetLike, AssetSource } from '../../runtime/assets';
 
 export type CreateColliderType = ColliderType | 'none';
 
+/** @hidden */
 export type AssetPayloadType
 	= 'assets-loaded'
 	| 'asset-update'

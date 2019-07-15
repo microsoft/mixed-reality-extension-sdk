@@ -161,6 +161,8 @@ export class AssetContainer {
 		this.context.internal.assetContainers.delete(this);
 		this._assets = null;
 
+		// wait until after the unassignments get propagated to clients to avoid visually
+		// missing textures (renders black) and missing materials (renders magenta)
 		this.context.internal.nextUpdate().then(() => {
 			this.context.internal.protocol.sendPayload({
 				type: 'unload-assets',
