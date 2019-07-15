@@ -86,6 +86,8 @@ export class Material extends Asset implements MaterialLike, Patchable<AssetLike
 			value = ZeroGuid; // throw?
 		}
 
+		if (value === this._mainTextureId) return;
+
 		if (this.mainTexture) {
 			this.mainTexture.clearReference(this);
 		}
@@ -123,24 +125,7 @@ export class Material extends Asset implements MaterialLike, Patchable<AssetLike
 			throw new Error("Cannot construct material from non-material definition");
 		}
 
-		if (def.material.color) {
-			this._color.copy(def.material.color);
-		}
-		if (def.material.mainTextureId) {
-			this._mainTextureId = def.material.mainTextureId;
-		}
-		if (def.material.mainTextureOffset) {
-			this._mainTextureOffset.copy(def.material.mainTextureOffset);
-		}
-		if (def.material.mainTextureScale) {
-			this._mainTextureScale.copy(def.material.mainTextureScale);
-		}
-		if (def.material.alphaMode) {
-			this._alphaMode = def.material.alphaMode;
-		}
-		if (def.material.alphaCutoff) {
-			this._alphaCutoff = def.material.alphaCutoff;
-		}
+		this.copy(def);
 
 		// material patching: observe the nested material properties
 		// for changed values, and write them to a patch

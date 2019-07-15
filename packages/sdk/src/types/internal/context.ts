@@ -52,6 +52,7 @@ import {
 	UserUpdate,
 } from '../network/payloads';
 
+import { ZeroGuid } from '../../constants';
 import { log } from '../../log';
 import * as Protocols from '../../protocols';
 import { Execution } from '../../protocols/execution';
@@ -611,6 +612,8 @@ export class InternalContext {
 	}
 
 	public lookupAsset(id: string): Asset {
+		if (id === ZeroGuid) return null;
+
 		for (const c of this.assetContainers) {
 			if (c.assetsById[id]) {
 				return c.assetsById[id];

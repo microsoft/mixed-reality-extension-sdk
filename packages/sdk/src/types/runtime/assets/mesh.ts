@@ -35,8 +35,7 @@ export class Mesh extends Asset implements MeshLike {
 			throw new Error("Cannot construct mesh from non-mesh definition");
 		}
 
-		this._vertexCount = def.mesh.vertexCount;
-		this._triangleCount = def.mesh.triangleCount;
+		this.copy(def);
 	}
 
 	/** @hidden */

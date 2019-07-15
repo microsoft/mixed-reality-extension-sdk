@@ -4,6 +4,7 @@
  */
 
 import { Asset,  AssetContainer, AssetLike } from '.';
+import { Actor } from '..';
 import { InternalAsset } from '../../internal/asset';
 import { Patchable } from '../../patchable';
 
@@ -77,5 +78,10 @@ export class VideoStream extends Asset implements VideoStreamLike, Patchable<Ass
 				duration: this.duration,
 			}
 		};
+	}
+
+	/** @hidden */
+	public breakReference(ref: Actor | Asset) {
+		// TODO: destroy all media instances
 	}
 }

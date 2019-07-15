@@ -41,12 +41,7 @@ export class Sound extends Asset implements SoundLike, Patchable<AssetLike> {
 			throw new Error("Cannot construct sound from non-sound definition");
 		}
 
-		if (def.sound.uri) {
-			this._uri = def.sound.uri;
-		}
-		if (def.sound.duration) {
-			this._duration = def.sound.duration;
-		}
+		this.copy(def);
 	}
 
 	public copy(from: Partial<AssetLike>): this {

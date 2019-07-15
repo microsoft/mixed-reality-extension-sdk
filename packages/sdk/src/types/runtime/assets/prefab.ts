@@ -36,7 +36,7 @@ export class Prefab extends Asset implements PrefabLike, Patchable<AssetLike> {
 			throw new Error("Cannot construct prefab from non-prefab definition");
 		}
 
-		this._actorCount = def.prefab.actorCount;
+		this.copy(def);
 	}
 
 	public copy(from: Partial<AssetLike>): this {

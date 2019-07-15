@@ -65,18 +65,7 @@ export class Texture extends Asset implements TextureLike, Patchable<AssetLike> 
 			throw new Error("Cannot construct texture from non-texture definition");
 		}
 
-		if (def.texture.uri) {
-			this._uri = def.texture.uri;
-		}
-		if (def.texture.resolution) {
-			this._resolution = new Vector2(def.texture.resolution.x, def.texture.resolution.y);
-		}
-		if (def.texture.wrapU) {
-			this._wrapU = def.texture.wrapU;
-		}
-		if (def.texture.wrapV) {
-			this._wrapV = def.texture.wrapV;
-		}
+		this.copy(def);
 	}
 
 	public copy(from: Partial<AssetLike>): this {
@@ -95,9 +84,9 @@ export class Texture extends Asset implements TextureLike, Patchable<AssetLike> 
 		if (from.texture && from.texture.resolution)
 			this._resolution = new Vector2(from.texture.resolution.x, from.texture.resolution.y);
 		if (from.texture && from.texture.wrapU)
-			this._wrapU = from.texture.wrapU;
+			this.wrapU = from.texture.wrapU;
 		if (from.texture && from.texture.wrapV)
-			this._wrapV = from.texture.wrapV;
+			this.wrapV = from.texture.wrapV;
 		// tslint:enable:curly
 
 		this.internal.observing = wasObserving;

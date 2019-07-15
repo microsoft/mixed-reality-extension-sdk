@@ -111,6 +111,8 @@ export class Appearance implements AppearanceLike {
 			value = ZeroGuid; // throw?
 		}
 
+		if (value === this._materialId) return;
+
 		if (this.material) {
 			this.material.clearReference(this.actor);
 		}
