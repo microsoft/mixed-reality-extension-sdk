@@ -28,8 +28,12 @@ export class MediaInstance {
 	 * @hidden
 	 */
 	public start(options: SetMediaStateOptions, startTimeOffset?: number): MediaInstance {
-		this.actor.context.internal.setMediaState(
-			this, MediaCommand.Start, options, this.mediaAssetId, startTimeOffset);
+		this.actor.context.internal.lookupAsset(this.mediaAssetId).created.then(() => {
+			this.actor.context.internal.setMediaState(
+				this, MediaCommand.Start, options, this.mediaAssetId, startTimeOffset);
+		}).catch(reason => {
+			log.error('app', `Start failed ${this.actor.id}. ${(reason || '').toString()}`.trim());
+		});
 		return this;
 	}
 
