@@ -45,7 +45,7 @@ export default class VideoTest extends Test {
 				uri: `youtube://9RTaIpVuTqE`
 			}
 		);
-		let videoInstance: MRE.ForwardPromise<MRE.MediaInstance>;
+		let videoInstance: MRE.MediaInstance;
 		const cycleState = () => {
 			switch (this._state) {
 				case 0:
@@ -61,50 +61,50 @@ export default class VideoTest extends Test {
 					break;
 				case 1:
 					this.app.setOverrideText("Pausing!");
-					videoInstance.value.pause();
+					videoInstance.pause();
 					break;
 				case 2:
 					this.app.setOverrideText("Resuming!");
-					videoInstance.value.resume();
+					videoInstance.resume();
 					break;
 				case 3:
 					this.app.setOverrideText("Raising volume!");
-					videoInstance.value.setState(
+					videoInstance.setState(
 						{
 							volume: 0.5
 						});
 					break;
 				case 4:
 					this.app.setOverrideText("Making sound fully directional!");
-					videoInstance.value.setState(
+					videoInstance.setState(
 						{
 							spread: 0.0
 						});
 					break;
 				case 5:
 					this.app.setOverrideText("Seeking!");
-					videoInstance.value.setState(
+					videoInstance.setState(
 						{
 							time: 60.0
 						});
 					break;
 				case 6:
 					this.app.setOverrideText("Hiding!");
-					videoInstance.value.setState(
+					videoInstance.setState(
 						{
 							visible: false
 						});
 					break;
 				case 7:
 					this.app.setOverrideText("unhiding!");
-					videoInstance.value.setState(
+					videoInstance.setState(
 						{
 							visible: true
 						});
 					break;
 				case 8:
 					this.app.setOverrideText("Switching to movie 2!");
-					videoInstance.value.stop();
+					videoInstance.stop();
 					videoInstance = parentActor.startVideoStream(videoStream2.id,
 						{
 							volume: 0.2,
@@ -116,7 +116,7 @@ export default class VideoTest extends Test {
 					break;
 				case 9:
 					this.app.setOverrideText("Stopping!");
-					videoInstance.value.stop();
+					videoInstance.stop();
 					this._state = -1;
 					break;
 
@@ -152,5 +152,9 @@ export default class VideoTest extends Test {
 
 		await this.stoppedAsync();
 		return true;
+	}
+
+	public cleanup() {
+		this.assets.unload();
 	}
 }

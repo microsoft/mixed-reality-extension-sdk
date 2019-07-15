@@ -85,13 +85,13 @@ export default class SoundTest extends Test {
 				rolloffStartDistance: 2.5
 			},
 			0.0);
-		musicSoundInstance.value.pause();
+		musicSoundInstance.pause();
 		const musicButtonBehavior = musicButton.setBehavior(MRE.ButtonBehavior);
 		const cycleMusicState = () => {
 			if (this._musicState === 0) {
-				musicSoundInstance.value.resume();
+				musicSoundInstance.resume();
 			} else if (this._musicState === 1) {
-				musicSoundInstance.value.pause();
+				musicSoundInstance.pause();
 			}
 			this._musicState = (this._musicState + 1) % 2;
 		};
@@ -192,16 +192,16 @@ export default class SoundTest extends Test {
 				rolloffStartDistance: 9.3
 			},
 			0.0);
-		dopplerSoundInstance.value.pause();
+		dopplerSoundInstance.pause();
 		const dopplerButtonBehavior = dopplerButton.setBehavior(MRE.ButtonBehavior);
 		const cycleDopplerSoundState = () => {
 			if (this._dopplerSoundState === 0) {
-				dopplerSoundInstance.value.resume();
+				dopplerSoundInstance.resume();
 				dopplerButton.enableAnimation('flyaround');
 
 			} else if (this._dopplerSoundState === 1) {
 				dopplerButton.disableAnimation('flyaround');
-				dopplerSoundInstance.value.pause();
+				dopplerSoundInstance.pause();
 			}
 			this._dopplerSoundState = (this._dopplerSoundState + 1) % 2;
 		};

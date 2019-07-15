@@ -41,7 +41,6 @@ import { log } from '../../log';
 import { observe, unobserve } from '../../utils/observe';
 import readPath from '../../utils/readPath';
 import resolveJsonValues from '../../utils/resolveJsonValues';
-import { ForwardPromise } from '../forwardPromise';
 import { InternalActor } from '../internal/actor';
 import { CreateColliderType } from '../network/payloads';
 import { SubscriptionType } from '../network/subscriptionType';
@@ -526,8 +525,10 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	 * @param startTimeOffset How many seconds to offset into the sound
 	 */
 	public startSound(
-		soundAssetId: string, options: SetAudioStateOptions,
-		startTimeOffset?: number): ForwardPromise<MediaInstance> {
+		soundAssetId: string,
+		options: SetAudioStateOptions,
+		startTimeOffset?: number
+	): MediaInstance {
 		return new MediaInstance(this, soundAssetId).start(options, startTimeOffset);
 	}
 
@@ -538,8 +539,10 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	 * @param startTimeOffset How many seconds to offset into the sound
 	 */
 	public startVideoStream(
-		videoStreamAssetId: string, options: SetVideoStateOptions,
-		startTimeOffset?: number): ForwardPromise<MediaInstance> {
+		videoStreamAssetId: string,
+		options: SetVideoStateOptions,
+		startTimeOffset?: number
+	): MediaInstance {
 		return new MediaInstance(this, videoStreamAssetId).start(options, startTimeOffset);
 	}
 

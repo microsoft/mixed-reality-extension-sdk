@@ -6,7 +6,6 @@
 import UUID from 'uuid/v4';
 import { MediaCommand, SetMediaStateOptions } from '../..';
 import { log } from '../../log';
-import { createForwardPromise, ForwardPromise } from '../forwardPromise';
 import { Actor } from './actor';
 
 /**
@@ -28,23 +27,10 @@ export class MediaInstance {
 	/**
 	 * @hidden
 	 */
-	public start(options: SetMediaStateOptions, startTimeOffset?: number):
-		ForwardPromise<MediaInstance> {
-		return createForwardPromise(this,
-			new Promise<MediaInstance>((resolve, reject) => {
-				this.actor.context.internal.lookupAsset(this.mediaAssetId).created.then(() => {
-					this.actor.context.internal.setMediaState(
-						this, MediaCommand.Start, options, this.mediaAssetId, startTimeOffset);
-
-					resolve();
-				}).catch((reason: any) => {
-					log.error(
-						'app',
-						`Failed Starting media on actor ${this.actor.id}. ${(reason || '').toString()}`.trim());
-					reject();
-				});
-			})
-		);
+	public start(options: SetMediaStateOptions, startTimeOffset?: number): MediaInstance {
+		this.actor.context.internal.setMediaState(
+			this, MediaCommand.Start, options, this.mediaAssetId, startTimeOffset);
+		return this;
 	}
 
 	/**

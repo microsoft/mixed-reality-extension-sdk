@@ -16,4 +16,3 @@ export * from './types/rigidBodyConstraints';
 export * from './types/primitiveTypes';
 export * from './types/lookatMode';
 export * from './types/parameterSet';
-export * from './types/forwardPromise';
