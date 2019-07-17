@@ -108,17 +108,19 @@ actor.animation("jump").start().then(() => console.log("done jumping"));
 await actor.animation("victory").start();
 ```
 
+
 ### Interpolations
 
 #### Add `Context.interpolate` method
 
-Add an `interpolate` method to class `Context`. Calling `interpolate` initiates a lerp operation on the host and returns a Promise that will resolve after `seconds` time has elapsed or the interpolation is otherwise canceled.
+Add an `interpolate` method to the `Actor` and `Asset` classes. Calling `interpolate` starts a lerp operation on the host, and returns a Promise that will resolve after `seconds` time has elapsed or the interpolation is otherwise canceled.
 
 ```ts
 /**
  * Interpolates the field indicated by `selector` to `value` over `interval` seconds along `options.curve`.
- * @param selector The selector of the field to interpolate. Get this value by calling actor.selector(fieldpath).
- * @param value The value to interpolate to or by, depending on the value of options.basis. Can be a selector or a concrete value.
+ * @param selector The selector of the field to interpolate. Get this value by calling actor.selector(fieldpath) or asset.selector(fieldpath).
+ * @param from (Optional) The starting value of the interpolation. Can be a selector or a concrete value. Pass `null` to start at the current value of the `selector` field.
+ * @param to The ending value of the interpolation. Can be a selector or a concrete value.
  * @param interval The duration of the interolation in seconds. Pass in `null` to cancel an existing matching interpolation.
  * @param options Optional parameters to further customize the interpolation.
  * @param options.curve Specifies the interpolation's speed curve. This can be one of the predefined curve names, or a custom curve. Default: "linear".
@@ -128,7 +130,8 @@ Add an `interpolate` method to class `Context`. Calling `interpolate` initiates 
  */
 public interpolate(
 	selector: string,
-	value: InterpolationValueType,
+	from: InterpolationValueType | null,
+	to: InterpolationValueType,
 	interval: number | null,
 	options?: {
 		curve: InterpolationCurve = "linear",
@@ -296,15 +299,6 @@ public selector(path: string): string;
 ```
 
 
-#### Convenience API
-
-An `interpolate` method on context isn't very discoverable. We may want to add convenience methods on `Actor` and `Asset`, so that `interpolate` shows up in intellisense. Example:
-
-```ts
-actor.interpolate("transform.app.position", position, 0.2);
-material.interpolate("mainTextureOffset", offset, 0.5);
-```
-
 
 ## Synchronization support
 
@@ -336,3 +330,8 @@ In this scenario, the `interpolate` command will be sent before the patching sys
 
 
 To correct this, we need to batch all outgoing messages and send them after actor patch detection runs. And we will need to make improvements to how actor patch detection is triggered.
+
+
+
+## Selector
+
