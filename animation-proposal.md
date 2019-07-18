@@ -113,7 +113,7 @@ await actor.animation("victory").start();
 
 #### Add `Context.interpolate` method
 
-Add an `interpolate` method to the `Actor` and `Asset` classes. Calling `interpolate` starts a lerp operation on the host, and returns a Promise that will resolve after `seconds` time has elapsed or the interpolation is otherwise canceled.
+Add an `interpolate` method to the `Context` class. Calling `interpolate` starts a lerp operation on the host, and returns a Promise that will resolve after `seconds` time has elapsed or the interpolation is otherwise canceled.
 
 ```ts
 /**
@@ -129,7 +129,7 @@ Add an `interpolate` method to the `Actor` and `Asset` classes. Calling `interpo
  * @param options.direction The direction the interpolation should be played.
  */
 public interpolate(
-	selector: string,
+	selector: Selector,
 	from: InterpolationValueType | null,
 	to: InterpolationValueType,
 	interval: number | null,
@@ -150,13 +150,11 @@ Several new types were introduced in the definition of `interpolate` above. Expa
  * `interpolate` method's `value` parameter.
  */
 export type InterpolationValueType
-	/** A string type indicates the value is a field selector. */
-	= string
-	/** The rest represent concrete final values. */
+	= Selector
 	| Quaternion
-	| Vector3
-	| Vector2
-	| Color
+	| Partial<Vector3>
+	| Partial<Vector2>
+	| Partial<Color>
 	| number
 	;
 
@@ -250,27 +248,51 @@ export type InterpolationDirection
 
 ```ts
 // Interpolate a vector (lerp).
-this.context.interpolate(actor.selector("transform.app.position"), position, 0.2);
+this.context.interpolate(
+	actor.selector.transform.app.position,
+	null, // use current value as starting value
+	position,
+	0.2);
 
 // Interpolate a quaternion (slerp).
-this.context.interpolate(actor.selector("transform.app.rotation"), rotation, 0.2, { curve: "ease" });
+this.context.interpolate(
+	actor.selector.transform.app.rotation,
+	null, // use current value as starting value
+	rotation,
+	0.2,
+	{ curve: "ease" });
 
 // Interpolate a number.
-this.context.interpolate(actor.selector("light.intensity"), 1, 0.2, { curve: "ease-in" });
+this.context.interpolate(
+	actor.selector.light.intensity,
+	null, // use current value as starting value
+	1,
+	0.2,
+	{ curve: "ease-in" });
 
 // Interpolate a color.
-this.context.interpolate(material.selector("color"), color, 0.2, { curve: "ease-out" });
+this.context.interpolate(
+	material.selector.color,
+	color,
+	0.2,
+	{ curve: "ease-out" });
 
 // Interpolate a value on a custom curve (a "bounce", in this case).
-this.context.interpolate(material.selector("color"), color, 0.2, { curve: [0.1, -0.6, 0.2, 0] });
+this.context.interpolate(
+	material.selector.color,
+	null, // use current value as starting value
+	color,
+	0.2,
+	{ curve: [0.1, -0.6, 0.2, 0] });
 
 // Interpolate to another actor's position by reference. The host reads the
 // target actor's position locally via the target selector, enabling smooth
 // continuous interpolation to a moving target, and alleviating the need to
 // subscribe to the target actor's transform.
 this.context.interpolate(
-	actor.selector("transform.app.position"),
-	target.selector("transform.app.position"),
+	actor.selector.transform.app.position,
+	null, // use current value as starting value
+	target.selector.transform.app.position,
 	0.2, {
 		iterationCount: "infinite"
 	});
@@ -278,15 +300,16 @@ this.context.interpolate(
 // Cancel an interpolation. This applies to all types of interpolations, but
 // is particularly useful for stopping continuous interpolations.
 this.context.interpolate(
-	actor.selector("transform.app.position"),
-	target.selector("transform.app.position"),
+	actor.selector.transform.app.position,
+	null, // use current value as starting value
+	target.selector.transform.app.position,
 	null);
 )
 ```
 
-#### Add `Actor.selector` and `Asset.selector` methods
+#### Add `Actor.selector` and `Asset.selector` accessors
 
-Add a `selector` method to classes `Actor` and `Asset`. `selector` takes a string representation of a path to a member and returns an absolute path to it, allowing the host to look up the value client-side.
+Add a `selector` getters to classes `Actor` and `Asset`. `selector` exposes the schema of mutable properties of the object in a way that can resolve to an absolute path string suitable for the host to look up the value client-side.
 
 ```ts
 /**
@@ -295,7 +318,7 @@ Add a `selector` method to classes `Actor` and `Asset`. `selector` takes a strin
  * @returns An absolute path to the field, suitable for use by the host to look
  * up the value client-side.
  */
-public selector(path: string): string;
+public get selector: Selector;
 ```
 
 
@@ -322,7 +345,11 @@ How the actor patching system works will not play well with interpolations in so
 
 ```ts
 actor.transform.local.position.x = 1;
-this.context.interpolate(actor.selector("transform.local.position.x"), 5, 0.2);
+this.context.interpolate(
+	actor.selector.transform.local.position.x,
+	null, // use current value as starting value
+	5,
+	0.2);
 ```
 
 
@@ -335,3 +362,4 @@ To correct this, we need to batch all outgoing messages and send them after acto
 
 ## Selector
 
+TBD
