@@ -1004,7 +1004,7 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 									if (activeMediaInstance.message.payload.options.time === undefined) {
 										activeMediaInstance.message.payload.options.time = 0.0;
 									}
-									let timeOffset = (targetTime - activeMediaInstance.basisTime);
+									let timeOffset = (basisTime - activeMediaInstance.basisTime);
 									if (activeMediaInstance.message.payload.options.pitch !== undefined) {
 										timeOffset *= Math.pow(2.0,
 											(activeMediaInstance.message.payload.options.pitch / 12.0));
