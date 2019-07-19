@@ -360,9 +360,9 @@ export type SetMediaState = Payload & {
 	id: string;
 	actorId: string;
 	mediaAssetId: string;
-	mediaCommand: MediaCommand,
-	options: SetMediaStateOptions,
-	startTimeOffset: number;
+	mediaCommand: MediaCommand;
+	options: SetMediaStateOptions;
+
 };
 
 /**

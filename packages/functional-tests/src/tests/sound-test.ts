@@ -82,9 +82,9 @@ export default class SoundTest extends Test {
 				looping: true,
 				doppler: 0.0,
 				spread: 0.7,
-				rolloffStartDistance: 2.5
-			},
-			0.0);
+				rolloffStartDistance: 2.5,
+				time: 30.0
+			});
 		musicSoundInstance.pause();
 		const musicButtonBehavior = musicButton.setBehavior(MRE.ButtonBehavior);
 		const cycleMusicState = () => {
@@ -190,8 +190,7 @@ export default class SoundTest extends Test {
 				doppler: 5.0,
 				spread: 0.3,
 				rolloffStartDistance: 9.3
-			},
-			0.0);
+			});
 		dopplerSoundInstance.pause();
 		const dopplerButtonBehavior = dopplerButton.setBehavior(MRE.ButtonBehavior);
 		const cycleDopplerSoundState = () => {
