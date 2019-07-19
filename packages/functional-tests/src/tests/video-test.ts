@@ -56,8 +56,7 @@ export default class VideoTest extends Test {
 							looping: true,
 							spread: 0.7,
 							rolloffStartDistance: 2.5
-						},
-						0.0);
+						});
 					break;
 				case 1:
 					this.app.setOverrideText("Pausing!");
@@ -111,8 +110,7 @@ export default class VideoTest extends Test {
 							looping: true,
 							spread: 0.7,
 							rolloffStartDistance: 2.5
-						},
-						0.0);
+						});
 					break;
 				case 9:
 					this.app.setOverrideText("Stopping!");

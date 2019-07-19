@@ -27,10 +27,10 @@ export class MediaInstance {
 	/**
 	 * @hidden
 	 */
-	public start(options: SetMediaStateOptions, startTimeOffset?: number): MediaInstance {
+	public start(options: SetMediaStateOptions): MediaInstance {
 		this.actor.context.internal.lookupAsset(this.mediaAssetId).created.then(() => {
 			this.actor.context.internal.setMediaState(
-				this, MediaCommand.Start, options, this.mediaAssetId, startTimeOffset);
+				this, MediaCommand.Start, options, this.mediaAssetId);
 		}).catch(reason => {
 			log.error('app', `Start failed ${this.actor.id}. ${(reason || '').toString()}`.trim());
 		});

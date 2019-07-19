@@ -279,10 +279,11 @@ export class ClientSync extends Protocols.Protocol {
 					if (activeMediaInstance.message.payload.options.pitch !== undefined) {
 						timeOffset *= Math.pow(2.0, (activeMediaInstance.message.payload.options.pitch / 12.0));
 					}
-					if (activeMediaInstance.message.payload.startTimeOffset === undefined) {
-						activeMediaInstance.message.payload.startTimeOffset = 0.0;
+					if (activeMediaInstance.message.payload.options.time === undefined) {
+						activeMediaInstance.message.payload.options.time = 0.0;
 					}
-					activeMediaInstance.message.payload.startTimeOffset += timeOffset;
+					activeMediaInstance.message.payload.options.time += timeOffset;
+					activeMediaInstance.basisTime = targetTime;
 				}
 				return this.sendMessage(activeMediaInstance.message);
 			});
