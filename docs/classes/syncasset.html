@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>AssetCollection | Mixed Reality Extension SDK</title>
+	<title>SyncAsset | Mixed Reality Extension SDK</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -52,29 +52,21 @@
 					<a href="../index.html">Globals</a>
 				</li>
 				<li>
-					<a href="assetcollection.html">AssetCollection</a>
+					<a href="syncasset.html">SyncAsset</a>
 				</li>
 			</ul>
-			<h1>Class AssetCollection&lt;T&gt;</h1>
+			<h1>Class SyncAsset</h1>
 		</div>
 	</div>
 </header>
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
-			<section class="tsd-panel tsd-type-parameters">
-				<h3>Type parameters</h3>
-				<ul class="tsd-type-parameters">
-					<li>
-						<h4>T<span class="tsd-signature-symbol">: </span><a href="asset.html" class="tsd-signature-type">Asset</a></h4>
-					</li>
-				</ul>
-			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">AssetCollection</span>
+						<span class="target">SyncAsset</span>
 					</li>
 				</ul>
 			</section>
@@ -83,112 +75,57 @@
 				<section class="tsd-panel tsd-index-panel">
 					<div class="tsd-index-content">
 						<section class="tsd-index-section ">
-							<h3>Accessors</h3>
+							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="assetcollection.html#count" class="tsd-kind-icon">count</a></li>
-							</ul>
-						</section>
-						<section class="tsd-index-section ">
-							<h3>Methods</h3>
-							<ul class="tsd-index-list">
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="assetcollection.html#byindex" class="tsd-kind-icon">by<wbr>Index</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="assetcollection.html#byname" class="tsd-kind-icon">by<wbr>Name</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="assetcollection.html#push" class="tsd-kind-icon">push</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="syncasset.html#creatormessageid" class="tsd-kind-icon">creator<wbr>Message<wbr>Id</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="syncasset.html#id" class="tsd-kind-icon">id</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="syncasset.html#update" class="tsd-kind-icon">update</a></li>
 							</ul>
 						</section>
 					</div>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
-				<h2>Accessors</h2>
-				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
-					<a name="count" class="tsd-anchor"></a>
-					<h3>count</h3>
-					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> count<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/e9af73b/packages/sdk/src/types/runtime/assets/assetCollection.ts#L13">types/runtime/assets/assetCollection.ts:13</a></li>
-								</ul>
-							</aside>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
-						</li>
-					</ul>
+				<h2>Properties</h2>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="creatormessageid" class="tsd-anchor"></a>
+					<h3>creator<wbr>Message<wbr>Id</h3>
+					<div class="tsd-signature tsd-kind-icon">creator<wbr>Message<wbr>Id<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in adapters/multipeer/syncAsset.ts:12</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Used if asset was packaged with other assets</p>
+						</div>
+					</div>
 				</section>
-			</section>
-			<section class="tsd-panel-group tsd-member-group ">
-				<h2>Methods</h2>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="byindex" class="tsd-anchor"></a>
-					<h3>by<wbr>Index</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">by<wbr>Index<span class="tsd-signature-symbol">(</span>index<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/e9af73b/packages/sdk/src/types/runtime/assets/assetCollection.ts#L15">types/runtime/assets/assetCollection.ts:15</a></li>
-								</ul>
-							</aside>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>index: <span class="tsd-signature-type">number</span></h5>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">T</span></h4>
-						</li>
-					</ul>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="id" class="tsd-anchor"></a>
+					<h3>id</h3>
+					<div class="tsd-signature tsd-kind-icon">id<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in adapters/multipeer/syncAsset.ts:10</li>
+						</ul>
+					</aside>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="byname" class="tsd-anchor"></a>
-					<h3>by<wbr>Name</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">by<wbr>Name<span class="tsd-signature-symbol">(</span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/e9af73b/packages/sdk/src/types/runtime/assets/assetCollection.ts#L19">types/runtime/assets/assetCollection.ts:19</a></li>
-								</ul>
-							</aside>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>name: <span class="tsd-signature-type">string</span></h5>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">T</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="push" class="tsd-anchor"></a>
-					<h3>push</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">push<span class="tsd-signature-symbol">(</span>asset<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/e9af73b/packages/sdk/src/types/runtime/assets/assetCollection.ts#L23">types/runtime/assets/assetCollection.ts:23</a></li>
-								</ul>
-							</aside>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>asset: <span class="tsd-signature-type">T</span></h5>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
-						</li>
-					</ul>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="update" class="tsd-anchor"></a>
+					<h3>update</h3>
+					<div class="tsd-signature tsd-kind-icon">update<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Message</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Payloads.AssetUpdate</span><span class="tsd-signature-symbol">&gt;</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in adapters/multipeer/syncAsset.ts:14</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Used only with batch creation, as definition is updated for other</p>
+						</div>
+					</div>
 				</section>
 			</section>
 		</div>
@@ -204,20 +141,17 @@
 				<ul class="before-current">
 				</ul>
 				<ul class="current">
-					<li class="current tsd-kind-class tsd-has-type-parameter">
-						<a href="assetcollection.html" class="tsd-kind-icon">Asset<wbr>Collection</a>
+					<li class="current tsd-kind-class">
+						<a href="syncasset.html" class="tsd-kind-icon">Sync<wbr>Asset</a>
 						<ul>
-							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
-								<a href="assetcollection.html#count" class="tsd-kind-icon">count</a>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="syncasset.html#creatormessageid" class="tsd-kind-icon">creator<wbr>Message<wbr>Id</a>
 							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="assetcollection.html#byindex" class="tsd-kind-icon">by<wbr>Index</a>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="syncasset.html#id" class="tsd-kind-icon">id</a>
 							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="assetcollection.html#byname" class="tsd-kind-icon">by<wbr>Name</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="assetcollection.html#push" class="tsd-kind-icon">push</a>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="syncasset.html#update" class="tsd-kind-icon">update</a>
 							</li>
 						</ul>
 					</li>
