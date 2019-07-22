@@ -165,7 +165,7 @@ export class ClientSync extends Protocols.Protocol {
 		}
 
 		// Send all cached asset-update messages.
-		for (const update of this.client.session.assets.map(a => a.update)) {
+		for (const update of this.client.session.assets.map(a => a.update).filter(x => !!x)) {
 			this.sendMessage(update);
 		}
 	}
