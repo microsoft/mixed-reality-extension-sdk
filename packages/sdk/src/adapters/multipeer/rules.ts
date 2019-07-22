@@ -277,11 +277,9 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 				if (queuedMessage) {
 					const existingPayload = queuedMessage.message.payload as Partial<Payloads.ActorUpdate>;
 					existingPayload.actor = deepmerge(existingPayload.actor, {
-						payload: {
-							actor: {
-								transform: {
-									app: message.payload.appTransform
-								}
+						actor: {
+							transform: {
+								app: message.payload.appTransform
 							}
 						}
 					});
