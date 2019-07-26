@@ -6,6 +6,7 @@
 import { Asset, AssetContainer, AssetLike } from '.';
 import { Actor } from '..';
 
+/** Describes the properties of a mesh */
 export interface MeshLike {
 	/** The number of vertices in this mesh. */
 	vertexCount: number;
@@ -13,6 +14,7 @@ export interface MeshLike {
 	triangleCount: number;
 }
 
+/** Represents a mesh on an actor */
 export class Mesh extends Asset implements MeshLike {
 	// tslint:disable:variable-name
 	private _vertexCount: number;
@@ -52,5 +54,9 @@ export class Mesh extends Asset implements MeshLike {
 	/** @hidden */
 	public breakReference(ref: Actor | Asset) {
 		if (!(ref instanceof Actor)) return;
+
+		if (ref.appearance.mesh === this) {
+			ref.appearance.mesh = null;
+		}
 	}
 }
