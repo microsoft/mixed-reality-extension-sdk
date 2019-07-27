@@ -8,13 +8,14 @@ import UUID from 'uuid/v4';
 import {
 	Asset, AssetSource,
 	Material, MaterialLike,
-	Mesh,
+	Mesh, MeshLike,
 	Prefab,
 	Sound, SoundLike,
 	Texture, TextureLike,
 	VideoStream, VideoStreamLike
 } from '.';
 import { Context } from '..';
+import { PrimitiveDefinition } from '../../..';
 import { log } from '../../../log';
 import resolveJsonValues from '../../../utils/resolveJsonValues';
 import * as Payloads from '../../network/payloads';
@@ -100,12 +101,11 @@ export class AssetContainer {
 	}
 
 	/**
-	 * preload a video stream and generate a new video stream asset
+	 * Preload a video stream and generate a new video stream asset
 	 * @param name The new stream's name
 	 * @param definition The initial video stream properties. The `uri` property is required.
 	 */
 	public createVideoStream(name: string, definition: Partial<VideoStreamLike>): VideoStream {
-
 		const video = new VideoStream(this, {
 			id: UUID(),
 			name,
@@ -113,6 +113,23 @@ export class AssetContainer {
 		});
 		video.setLoadedPromise(this.sendCreateAsset(video));
 		return video;
+	}
+
+	/**
+	 * Create a new mesh from the given primitive definition
+	 * @param name The new mesh's name
+	 * @param definition A description of the desired mesh
+	 */
+	public createPrimitiveMesh(name: string, definition: PrimitiveDefinition): Mesh {
+		const mesh = new Mesh(this, {
+			id: UUID(),
+			name,
+			mesh: {
+				primitiveDefinition: definition
+			}
+		});
+		mesh.setLoadedPromise(this.sendCreateAsset(mesh));
+		return mesh;
 	}
 
 	/**
