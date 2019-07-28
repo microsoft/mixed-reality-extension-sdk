@@ -104,7 +104,7 @@ export class Execution extends Protocol {
 
 	/** @private */
 	public 'recv-user-update' = (payload: UserUpdate) => {
-		this.emit('protocol.update-user', payload.user);
+		this.emit('protocol.user-update', payload.user);
 	}
 
 	/** @private */

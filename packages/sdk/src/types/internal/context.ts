@@ -345,7 +345,7 @@ export class InternalContext {
 			execution.on('protocol.destroy-actors', this.localDestroyActors);
 			execution.on('protocol.user-joined', this.userJoined);
 			execution.on('protocol.user-left', this.userLeft);
-			execution.on('protocol.update-user', this.updateUser);
+			execution.on('protocol.user-update', this.updateUser);
 			execution.on('protocol.perform-action', this.performAction);
 			execution.on('protocol.receive-rpc', this.receiveRPC);
 			execution.on('protocol.collision-event-raised', this.collisionEventRaised);
