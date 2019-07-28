@@ -79,7 +79,7 @@ export class Execution extends Protocol {
 	/** @private */
 	public 'recv-traces' = (payload: Traces) => {
 		payload.traces.forEach(trace => {
-			log.log('network', trace.severity, trace.message);
+			log.log('client-trace', trace.severity, trace.message);
 		});
 	}
 

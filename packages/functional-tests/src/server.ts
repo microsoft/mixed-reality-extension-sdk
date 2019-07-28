@@ -15,6 +15,7 @@ process.on('uncaughtException', (err) => console.log('uncaughtException', err));
 process.on('unhandledRejection', (reason) => console.log('unhandledRejection', reason));
 
 MRE.log.enable('app');
+MRE.log.enable('client-trace');
 // MRE.log.enable('network');
 // MRE.log.enable('network-content');
 
