@@ -108,6 +108,7 @@ class Log {
 
 	private checkInitialize = () => {
 		this.enable('app');
+		this.enable('client');
 		const logging = process.env.MRE_LOGGING || '';
 		if (logging && logging.length) {
 			const parts = logging.split(',').map(s => s.trim());
