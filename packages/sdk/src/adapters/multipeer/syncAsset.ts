@@ -12,4 +12,6 @@ export class SyncAsset {
 	public creatorMessageId: string;
 	/** Used only with batch creation, as definition is updated for other */
 	public update: Message<Payloads.AssetUpdate>;
+	/** Used only for runtime instances (like MediaInstances) that need to know the duration of the asset */
+	public duration?: number;
 }

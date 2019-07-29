@@ -286,8 +286,8 @@ export class Session extends EventEmitter {
 		this.assetCreatorSet[message.id] = message;
 	}
 
-	public cacheAssetCreation(assetId: string, creatorId: string) {
-		const syncAsset = this.assetSet[assetId] = { id: assetId } as Partial<SyncAsset>;
+	public cacheAssetCreation(assetId: string, creatorId: string, duration?: number) {
+		const syncAsset = this.assetSet[assetId] = { id: assetId, duration } as Partial<SyncAsset>;
 		const creator = this.assetCreatorSet[creatorId];
 		syncAsset.creatorMessageId = creatorId;
 

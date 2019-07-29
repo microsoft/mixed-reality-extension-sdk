@@ -30,6 +30,7 @@ export type CreateAnimation = {
 export type ActiveMediaInstance = {
 	message: Message<Payloads.SetMediaState>;
 	basisTime: number
+	expirationTime: number
 };
 
 /**
