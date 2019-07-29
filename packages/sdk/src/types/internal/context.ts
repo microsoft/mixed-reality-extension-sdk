@@ -513,7 +513,7 @@ export class InternalContext {
 		if (isNewUser) {
 			this.context.emitter.emit('user-joined', user);
 		} else {
-			this.context.emitter.emit('user-updated', user);
+			this.context.emitter.emit('user-update', user);
 		}
 	}
 
