@@ -35,7 +35,7 @@ export default class AssetPreloadTest extends Test {
 		this.app.setOverrideText("Preloading assets");
 		const [monkey, uvgrid] = await Promise.all([
 			this.assets.loadGltf(this.baseUrl + '/monkey.glb', 'box'),
-			this.assets.loadGltf(this.generateMaterial(), 'none')
+			this.assets.loadGltf(this.generateMaterial())
 		]);
 		this.app.setOverrideText("Assets preloaded:" +
 			`${this.assets.prefabs.length} prefabs, ` +

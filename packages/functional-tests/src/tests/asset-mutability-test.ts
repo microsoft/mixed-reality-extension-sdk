@@ -16,7 +16,7 @@ export default class AssetMutabilityTest extends Test {
 
 	public async run(root: MRE.Actor): Promise<boolean> {
 		this.assets = new MRE.AssetContainer(this.app.context);
-		await this.assets.loadGltf(this.generateMaterial(), 'none');
+		await this.assets.loadGltf(this.generateMaterial());
 		const mat = this.assets.materials[0];
 		mat.alphaMode = MRE.AlphaMode.Blend;
 
