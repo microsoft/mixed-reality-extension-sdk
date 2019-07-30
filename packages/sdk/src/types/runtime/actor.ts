@@ -15,7 +15,7 @@ import {
 	AttachPoint,
 	Collider,
 	ColliderLike,
-	CollisionData,
+	ColliderType,
 	Light,
 	LightLike,
 	LookAt,
@@ -30,7 +30,6 @@ import {
 	Context,
 	CreateAnimationOptions,
 	LookAtMode,
-	PrimitiveDefinition,
 	SetAnimationStateOptions,
 	SetAudioStateOptions,
 	SetVideoStateOptions,
@@ -43,7 +42,6 @@ import { observe, unobserve } from '../../utils/observe';
 import readPath from '../../utils/readPath';
 import resolveJsonValues from '../../utils/resolveJsonValues';
 import { InternalActor } from '../internal/actor';
-import { CreateColliderType } from '../network/payloads';
 import { SubscriptionType } from '../network/subscriptionType';
 import { Patchable } from '../patchable';
 import { ActionHandler, ActionState, Behavior, DiscreteAction } from './behaviors';
@@ -207,7 +205,6 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	 * @param options.actor The initial state of the actor.
 	 */
 	public static CreateEmpty(context: Context, options?: {
-		colliderType?: CreateColliderType,
 		actor?: Partial<ActorLike>
 	}): Actor {
 		return context.internal.CreateEmpty(options);
@@ -230,7 +227,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	/**
 	 * Creates a new actor hierarchy from the provided prefab.
 	 * @param context The SDK context object.
-	 * @param options.prefabId The ID of the prefab asset.
+	 * @param options.prefabId The ID of the prefab asset, or an array of assets from which the first prefab is taken.
 	 * @param options.actor The initial state of the root actor.
 	 * given a collider type when loaded @see AssetManager.loadGltf.
 	 */
@@ -372,13 +369,12 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 		size?: number | Vector3Like
 	): void {
 		const colliderGeometry = this.generateColliderGeometry(colliderType, center, size);
-
 		if (colliderGeometry) {
 			this._setCollider({
 				enabled: true,
 				isTrigger,
 				// collisionLayer,
-				colliderGeometry
+				geometry: colliderGeometry
 			} as ColliderLike);
 		}
 	}
@@ -728,31 +724,30 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	private generateColliderGeometry(
 		colliderType: 'box' | 'sphere' | 'capsule' | 'auto',
 		center?: Vector3Like,
-		size?: number | Vector3Like,
-		height?: number
+		size?: number | Vector3Like
 	): ColliderGeometry {
 		switch (colliderType) {
 			case 'box':
 				return {
-					colliderType: 'box',
+					shape: 'box',
 					center,
 					size: size as Partial<Vector3Like>
 				} as BoxColliderGeometry;
 			case 'sphere':
 				return {
-					colliderType: 'sphere',
+					shape: 'sphere',
 					center,
 					radius: size as number
 				} as SphereColliderGeometry;
 			case 'capsule':
 				return {
-					colliderType: 'capsule',
+					shape: 'capsule',
 					center,
 					size: size as Partial<Vector3Like>
 				} as CapsuleColliderGeometry;
 			case 'auto':
 				return {
-					colliderType: 'auto'
+					shape: 'auto'
 				} as AutoColliderGeometry;
 			default:
 				log.error(null,

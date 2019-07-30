@@ -233,7 +233,7 @@ export class AssetContainer {
 	 * @param colliderType The shape of the generated prefab collider.
 	 * @returns A promise that resolves with the list of loaded assets.
 	 */
-	public async loadGltf(uri: string, colliderType?: Payloads.CreateColliderType): Promise<Asset[]> {
+	public async loadGltf(uri: string, colliderType?: 'box' | 'mesh'): Promise<Asset[]> {
 		if (!this._assets) {
 			throw new Error("Cannot load new assets into an unloaded container!");
 		}

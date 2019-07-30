@@ -16,11 +16,11 @@ import {
 	AssetContainerIterable,
 	AssetLike,
 	BehaviorType,
+	ColliderType,
 	CollisionEvent,
 	Context,
 	CreateAnimationOptions,
 	MediaCommand,
-	PrimitiveDefinition,
 	SetAnimationStateOptions,
 	SetMediaStateOptions,
 	TriggerEvent,
@@ -84,7 +84,6 @@ export class InternalContext {
 	public CreateEmpty(options?: {
 		actor?: Partial<ActorLike>
 	}): Actor {
-		options = { ...options };
 		options = {
 			...options,
 			actor: {
@@ -103,7 +102,6 @@ export class InternalContext {
 		resourceId: string,
 		actor?: Partial<ActorLike>
 	}): Actor {
-		options = { ...options };
 		options = {
 			...options,
 			actor: {
@@ -122,7 +120,6 @@ export class InternalContext {
 		prefabId: string,
 		actor?: Partial<ActorLike>
 	}): Actor {
-		options = { ...options };
 		options = {
 			...options,
 			actor: {

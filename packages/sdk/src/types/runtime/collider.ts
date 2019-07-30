@@ -15,7 +15,7 @@ export interface ColliderLike {
 	enabled: boolean;
 	isTrigger: boolean;
 	// collisionLayer: CollisionLayer;
-	colliderGeometry: ColliderGeometry;
+	geometry: ColliderGeometry;
 	eventSubscriptions: ColliderEventType[];
 }
 
@@ -27,7 +27,7 @@ export class Collider implements ColliderLike {
 
 	// Readonly params that are not patchable or observable.
 	// tslint:disable:variable-name
-	private _colliderGeometry: Readonly<ColliderGeometry>;
+	private _geometry: Readonly<ColliderGeometry>;
 	private _internal: InternalCollider;
 	// tslint:enable:variable-name
 
@@ -49,7 +49,7 @@ export class Collider implements ColliderLike {
 	 * The collider geometry that the collider was initialized with.  These are a
 	 * readonly structure and are not able to be updated after creation.
 	 */
-	public get colliderGeometry() { return this._colliderGeometry; }
+	public get geometry() { return this._geometry; }
 
 	/**
 	 * @hidden
@@ -60,13 +60,13 @@ export class Collider implements ColliderLike {
 	 */
 	constructor(private $owner: Actor, initFrom: Partial<ColliderLike>) {
 		if (initFrom) {
-			if (!initFrom.colliderGeometry && !initFrom.colliderGeometry.colliderType) {
+			if (!initFrom.geometry && !initFrom.geometry.shape) {
 				throw new Error("Must provide valid collider params containing a valid collider type");
 			}
 
 			this._internal = new InternalCollider(this, $owner);
 
-			if (initFrom.colliderGeometry !== undefined) this._colliderGeometry = initFrom.colliderGeometry;
+			if (initFrom.geometry !== undefined) this._geometry = initFrom.geometry;
 			if (initFrom.enabled !== undefined) this.enabled = initFrom.enabled;
 			if (initFrom.isTrigger !== undefined) this.isTrigger = initFrom.isTrigger;
 			// if (initFrom.collisionLayer !== undefined) this.collisionLayer = initFrom.collisionLayer;
@@ -119,7 +119,7 @@ export class Collider implements ColliderLike {
 			enabled: this.enabled,
 			isTrigger: this.isTrigger,
 			// collisionLayer: this.collisionLayer,
-			colliderGeometry: this._colliderGeometry,
+			geometry: this._geometry,
 			eventSubscriptions: this.eventSubscriptions
 		} as ColliderLike;
 	}
