@@ -108,20 +108,19 @@ export default class AssetPreloadTest extends Test {
 				}
 			}
 		});
-		this.sphere = MRE.Actor.CreatePrimitive(this.app.context, {
-			definition: {
-				shape: MRE.PrimitiveShape.Sphere,
-				radius: 0.5
-			},
-			addCollider: true,
+		this.sphere = MRE.Actor.CreateEmpty(this.app.context, {
 			actor: {
 				parentId: this.root.id,
-				appearance: { materialId: this.uvgridMat.id },
+				appearance: {
+					meshId: this.assets.createSphereMesh('sphere', 0.5).id,
+					materialId: this.uvgridMat.id
+				},
 				transform: {
 					local: {
 						position: { x: 0.5, y: 1, z: -1 }
 					}
-				}
+				},
+				collider: { geometry: { shape: 'auto' } as MRE.AutoColliderGeometry }
 			}
 		});
 

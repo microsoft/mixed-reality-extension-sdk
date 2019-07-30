@@ -19,15 +19,15 @@ export default class AssetMutabilityTest extends Test {
 		await this.assets.loadGltf(this.generateMaterial(), 'none');
 		const mat = this.assets.materials[0];
 		mat.alphaMode = MRE.AlphaMode.Blend;
-		MRE.Actor.CreatePrimitive(this.app.context, {
-			definition: {
-				shape: MRE.PrimitiveShape.Box,
-				dimensions: { x: 1, y: 1, z: 1 }
-			},
+
+		MRE.Actor.CreateEmpty(this.app.context, {
 			actor: {
 				name: 'box',
 				parentId: root.id,
-				appearance: { materialId: mat.id },
+				appearance: {
+					meshId: this.assets.createBoxMesh('box', 1, 1, 1).id,
+					materialId: mat.id
+				},
 				transform: {
 					local: {
 						position: { y: 1, z: -1 }

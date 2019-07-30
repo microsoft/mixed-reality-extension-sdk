@@ -9,10 +9,16 @@ import { Test } from '../test';
 
 export default class GltfActorSyncTest extends Test {
 	public expectedResultDescription = "Text should be visible";
+	private assets: MRE.AssetContainer;
+
+	public cleanup() {
+		this.assets.unload();
+	}
 
 	public async run(root: MRE.Actor): Promise<boolean> {
-		const actorRoot = MRE.Actor.CreateFromGltf(this.app.context, {
-			resourceUrl: `${this.baseUrl}/monkey.glb`,
+		this.assets = new MRE.AssetContainer(this.app.context);
+		const actorRoot = MRE.Actor.CreateFromPrefab(this.app.context, {
+			prefabId: await this.assets.loadGltf(`${this.baseUrl}/monkey.glb`, 'box'),
 			actor: {
 				parentId: root.id,
 				transform: {

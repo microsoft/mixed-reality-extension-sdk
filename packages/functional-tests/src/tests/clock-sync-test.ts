@@ -9,7 +9,22 @@ import { Test } from '../test';
 
 export default class ClockSyncTest extends Test {
 	public expectedResultDescription = "Digital clock face from animating text strips";
+	private assets: MRE.AssetContainer;
+
+	public cleanup() {
+		this.assets.unload();
+	}
+
 	public async run(root: MRE.Actor): Promise<boolean> {
+		this.assets = new MRE.AssetContainer(this.app.context);
+
+		const textScale = 0.15;
+		const boxYPosition = 20;
+		const boxHeight = 20 * textScale;
+		const boxWidth = 10 * textScale;
+		const boxGap = textScale * 0.6;
+		const lineHeight = 1.20; // magic value based on default font
+
 		// Make a root object.
 		const tester = MRE.Actor.CreateEmpty(this.app.context, {
 			actor: {
@@ -22,20 +37,14 @@ export default class ClockSyncTest extends Test {
 			}
 		});
 
-		const textScale = 0.15;
-		const boxYPosition = 20;
-		const boxHeight = 20 * textScale;
-		const boxWidth = 10 * textScale;
-		const boxGap = textScale * 0.6;
-		const lineHeight = 1.20; // magic value based on default font
+		const mesh = this.assets.createBoxMesh('box', boxWidth, boxHeight, 0.2);
 
-		const topBox = MRE.Actor.CreatePrimitive(this.app.context, {
-			definition: {
-				shape: MRE.PrimitiveShape.Box,
-				dimensions: { x: boxWidth, y: boxHeight, z: 0.2 }
-			},
+		const topBox = MRE.Actor.CreateEmpty(this.app.context, {
 			actor: {
 				parentId: tester.id,
+				appearance: {
+					meshId: mesh.id
+				},
 				transform: {
 					local: {
 						position: { x: 0.0, y: boxYPosition * textScale + (boxHeight / 2 + boxGap), z: 0.05 }
@@ -43,13 +52,12 @@ export default class ClockSyncTest extends Test {
 				}
 			}
 		});
-		const bottomBox = MRE.Actor.CreatePrimitive(this.app.context, {
-			definition: {
-				shape: MRE.PrimitiveShape.Box,
-				dimensions: { x: boxWidth, y: boxHeight, z: 0.2 }
-			},
+		const bottomBox = MRE.Actor.CreateEmpty(this.app.context, {
 			actor: {
 				parentId: tester.id,
+				appearance: {
+					meshId: mesh.id
+				},
 				transform: {
 					local: {
 						position: { x: 0.0, y: boxYPosition * textScale - (boxHeight / 2 + boxGap), z: 0.05 }

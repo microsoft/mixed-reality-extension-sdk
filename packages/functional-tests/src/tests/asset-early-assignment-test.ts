@@ -23,15 +23,16 @@ export default class AssetEarlyAssignmentTest extends Test {
 			mainTextureId: tex.id
 		});
 
-		MRE.Actor.CreatePrimitive(this.app.context, {
-			definition: {
-				shape: MRE.PrimitiveShape.Sphere,
-				radius: 0.5
-			},
+		const mesh = this.assets.createSphereMesh('sphere', 0.5);
+
+		MRE.Actor.CreateEmpty(this.app.context, {
 			actor: {
 				name: 'sphere',
 				parentId: root.id,
-				appearance: { materialId: mat.id },
+				appearance: {
+					meshId: mesh.id,
+					materialId: mat.id
+				},
 				transform: {
 					local: {
 						position: { y: 1, z: -1 }

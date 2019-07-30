@@ -9,11 +9,18 @@ import { Test } from '../test';
 
 export default class GltfAnimationTest extends Test {
 	public expectedResultDescription = "Cesium Man walking";
+	private assets: MRE.AssetContainer;
+
+	public cleanup() {
+		this.assets.unload();
+	}
 
 	public async run(root: MRE.Actor): Promise<boolean> {
-		const tester = MRE.Actor.CreateFromGltf(this.app.context, {
-			// tslint:disable-next-line:max-line-length
-			resourceUrl: `https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/CesiumMan/glTF-Binary/CesiumMan.glb`,
+		this.assets = new MRE.AssetContainer(this.app.context);
+		const tester = MRE.Actor.CreateFromPrefab(this.app.context, {
+			prefabId: await this.assets.loadGltf('https://raw.githubusercontent.com/'+
+				'KhronosGroup/glTF-Sample-Models/master/2.0/CesiumMan/glTF-Binary/CesiumMan.glb'
+			),
 			actor: {
 				parentId: root.id,
 				transform: {

@@ -10,16 +10,12 @@ export default class AssetUnloadTest extends Test {
 	public expectedResultDescription = "Unload assets one at a time";
 	private assetContainer1: MRE.AssetContainer;
 	private assetContainer2: MRE.AssetContainer;
+	private assetContainer3: MRE.AssetContainer;
 	private prim: MRE.Actor;
 	private state = 0;
 
 	public async run(root: MRE.Actor): Promise<boolean> {
-		this.prim = MRE.Actor.CreatePrimitive(this.app.context, {
-			definition: {
-				shape: MRE.PrimitiveShape.Sphere,
-				radius: 0.5
-			},
-			addCollider: true,
+		this.prim = MRE.Actor.CreateEmpty(this.app.context, {
 			actor: {
 				name: 'sphere',
 				parentId: root.id,
@@ -27,7 +23,8 @@ export default class AssetUnloadTest extends Test {
 					local: {
 						position: { y: 1, z: -1 }
 					}
-				}
+				},
+				collider: { geometry: { shape: 'sphere', radius: 0.5 } as MRE.SphereColliderGeometry }
 			}
 		});
 		this.setup();
@@ -45,11 +42,15 @@ export default class AssetUnloadTest extends Test {
 		if (this.assetContainer2) {
 			this.assetContainer2.unload();
 		}
+		if (this.assetContainer3) {
+			this.assetContainer3.unload();
+		}
 	}
 
 	private setup() {
 		this.assetContainer1 = new MRE.AssetContainer(this.app.context);
 		this.assetContainer2 = new MRE.AssetContainer(this.app.context);
+		this.assetContainer3 = new MRE.AssetContainer(this.app.context);
 		this.app.setOverrideText("Colored & textured sphere");
 
 		const tex = this.assetContainer1.createTexture('uvgrid', {
@@ -61,11 +62,14 @@ export default class AssetUnloadTest extends Test {
 			mainTextureId: tex.id
 		});
 
+		const mesh = this.assetContainer3.createSphereMesh('sphere', 0.5);
+
+		this.prim.appearance.mesh = mesh;
 		this.prim.appearance.material = mat;
 	}
 
 	private cycleState() {
-		switch (++this.state % 3) {
+		switch (++this.state % 4) {
 			case 0:
 				this.setup();
 				break;
@@ -78,6 +82,11 @@ export default class AssetUnloadTest extends Test {
 				this.assetContainer2.unload();
 				this.assetContainer2 = null;
 				this.app.setOverrideText("Plain sphere");
+				break;
+			case 3:
+				this.assetContainer3.unload();
+				this.assetContainer3 = null;
+				this.app.setOverrideText("Collider only");
 				break;
 			default:
 				throw new Error("How did we get here?");
