@@ -23,7 +23,6 @@ export type PayloadType
 	| 'collision-event-raised'
 	| 'create-animation'
 	| 'create-empty'
-	| 'create-from-gltf'
 	| 'create-from-library'
 	| 'destroy-actors'
 	| 'engine2app-rpc'
@@ -169,18 +168,6 @@ export type CreateActorCommon = Payload & {
 export type CreateFromLibrary = CreateActorCommon & {
 	type: 'create-from-library';
 	resourceId: string;
-};
-
-/**
- * @hidden
- * App to engine. Request for engine to load a game object from a glTF file.
- * Response is an ObjectSpawned payload.
- */
-export type CreateFromGltf = CreateActorCommon & {
-	type: 'create-from-gltf';
-	resourceUrl: string;
-	assetName: string;
-	colliderType: ColliderType;
 };
 
 /**

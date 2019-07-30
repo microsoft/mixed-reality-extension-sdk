@@ -554,9 +554,6 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 	'create-empty': CreateActorRule,
 
 	// ========================================================================
-	'create-from-gltf': CreateActorRule,
-
-	// ========================================================================
 	'create-from-library': CreateActorRule,
 
 	// ========================================================================

@@ -214,19 +214,6 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	}
 
 	/**
-	 * @deprecated
-	 * Use [[AssetContainer.loadGltf]] and [[Actor.CreateFromPrefab]] instead.
-	 */
-	public static CreateFromGltf(context: Context, options: {
-		resourceUrl: string,
-		assetName?: string,
-		colliderType?: CreateColliderType,
-		actor?: Partial<ActorLike>
-	}): Actor {
-		return context.internal.CreateFromGltf(options);
-	}
-
-	/**
 	 * Creates a new actor from a library resource.
 	 * AltspaceVR-specific list of library resources: https://account.altvr.com/kits
 	 * @param context The SDK context object.
@@ -238,19 +225,6 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 		actor?: Partial<ActorLike>
 	}): Actor {
 		return context.internal.CreateFromLibrary(options);
-	}
-
-	/**
-	 * @deprecated
-	 * Use [[AssetContainer.createPrimitiveMesh]] and [[Appearance.mesh]] instead.
-	 */
-	public static CreatePrimitive(context: Context, options: {
-		definition: PrimitiveDefinition,
-		addCollider?: boolean,
-		actor?: Partial<ActorLike>
-	}): Actor {
-		throw new Error("Actor.CreatePrimitive is deprecated! "+
-			"Use AssetContainer.createMeshPrimitive and Actor.appearance.mesh instead.");
 	}
 
 	/**

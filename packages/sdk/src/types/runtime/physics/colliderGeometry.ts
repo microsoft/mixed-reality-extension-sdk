@@ -35,8 +35,9 @@ export interface CapsuleColliderGeometry {
 
 /** A best-guess shape for the currently assigned mesh */
 export interface AutoColliderGeometry {
-	colliderType: 'auto'
+	colliderType: 'auto';
 }
+
 /**
  * All collider parameter types.
  */

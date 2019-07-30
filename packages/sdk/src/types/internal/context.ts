@@ -34,9 +34,7 @@ import {
 	AssetUpdate,
 	CreateActorCommon,
 	CreateAnimation,
-	CreateColliderType,
 	CreateEmpty,
-	CreateFromGltf,
 	CreateFromLibrary,
 	CreateFromPrefab,
 	DestroyActors,
@@ -98,28 +96,6 @@ export class InternalContext {
 			...options,
 			type: 'create-empty',
 		} as CreateEmpty;
-		return this.createActorFromPayload(payload);
-	}
-
-	public CreateFromGltf(options: {
-		resourceUrl: string,
-		assetName?: string,
-		colliderType?: CreateColliderType,
-		actor?: Partial<ActorLike>
-	}): Actor {
-		options = { ...options };
-		options = {
-			colliderType: 'none',
-			...options,
-			actor: {
-				...options.actor,
-				id: UUID()
-			}
-		};
-		const payload = {
-			...options,
-			type: 'create-from-gltf'
-		} as CreateFromGltf;
 		return this.createActorFromPayload(payload);
 	}
 

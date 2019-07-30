@@ -129,7 +129,7 @@ export class AssetContainer {
 			uSegments,
 			vSegments
 		});
-	};
+	}
 
 	/**
 	 * Create a new box-shaped mesh.
@@ -154,14 +154,15 @@ export class AssetContainer {
 	 * @param uSegments The number of longitudinal segments.
 	 * @param vSegments The number of latitudinal segments.
 	 */
-	public createCapsuleMesh(name: string, height: number, radius: number,
+	public createCapsuleMesh(
+		name: string, height: number, radius: number,
 		direction: 'x' | 'y' | 'z' = 'y', uSegments = 36, vSegments = 18
 	): Mesh {
 		if (height < 2 * radius) {
 			throw new Error("Capsule height must be greater than twice the radius");
 		}
 
-		let dimensions = { x: 2 * radius, y: 2 * radius, z: 2 * radius } as Vector3Like;
+		const dimensions = { x: 2 * radius, y: 2 * radius, z: 2 * radius } as Vector3Like;
 		dimensions[direction] = height;
 		return this.createPrimitiveMesh(name, {
 			shape: PrimitiveShape.Capsule,
@@ -179,10 +180,11 @@ export class AssetContainer {
 	 * @param direction The long axis of the cylinder.
 	 * @param uSegments The number of longitudinal segments.
 	 */
-	public createCylinderMesh(name: string, height: number, radius: number,
+	public createCylinderMesh(
+		name: string, height: number, radius: number,
 		direction: 'x' | 'y' | 'z' = 'y', uSegments = 36
 	): Mesh {
-		let dimensions = { x: 2 * radius, y: 2 * radius, z: 2 * radius };
+		const dimensions = { x: 2 * radius, y: 2 * radius, z: 2 * radius };
 		dimensions[direction] = height;
 		return this.createPrimitiveMesh(name, {
 			shape: PrimitiveShape.Cylinder,
