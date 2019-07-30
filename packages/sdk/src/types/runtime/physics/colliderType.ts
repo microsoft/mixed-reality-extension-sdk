@@ -11,4 +11,5 @@ export type ColliderType
 	| 'sphere'
 	| 'mesh'
 	| 'capsule'
+	| 'auto'
 	;

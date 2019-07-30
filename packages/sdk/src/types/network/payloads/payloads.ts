@@ -25,7 +25,6 @@ export type PayloadType
 	| 'create-empty'
 	| 'create-from-gltf'
 	| 'create-from-library'
-	| 'create-primitive'
 	| 'destroy-actors'
 	| 'engine2app-rpc'
 	| 'handshake'
@@ -191,18 +190,6 @@ export type CreateFromGltf = CreateActorCommon & {
  */
 export type CreateEmpty = CreateActorCommon & {
 	type: 'create-empty';
-};
-
-/**
- * @hidden
- * App to engine. Creates a primitive shape.
- * Response is an ObjectSpawned payload.
- */
-export type CreatePrimitive = CreateActorCommon & {
-	type: 'create-primitive';
-	definition: PrimitiveDefinition;
-	addCollider: boolean;
-	actor: Partial<ActorLike>;
 };
 
 /**

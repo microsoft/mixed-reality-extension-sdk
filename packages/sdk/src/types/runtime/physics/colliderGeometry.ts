@@ -29,8 +29,14 @@ export interface MeshColliderGeometry {
 
 export interface CapsuleColliderGeometry {
 	colliderType: 'capsule';
+	center?: Readonly<Vector3Like>;
+	size?: Readonly<Vector3Like>;
 }
 
+/** A best-guess shape for the currently assigned mesh */
+export interface AutoColliderGeometry {
+	colliderType: 'auto'
+}
 /**
  * All collider parameter types.
  */
@@ -38,4 +44,6 @@ export type ColliderGeometry
 	= SphereColliderGeometry
 	| BoxColliderGeometry
 	| MeshColliderGeometry
+	| CapsuleColliderGeometry
+	| AutoColliderGeometry
 	;

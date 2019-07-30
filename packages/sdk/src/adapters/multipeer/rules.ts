@@ -560,9 +560,6 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 	'create-from-library': CreateActorRule,
 
 	// ========================================================================
-	'create-primitive': CreateActorRule,
-
-	// ========================================================================
 	'create-from-prefab': CreateActorRule,
 
 	// ========================================================================

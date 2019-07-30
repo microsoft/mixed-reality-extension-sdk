@@ -39,7 +39,6 @@ import {
 	CreateFromGltf,
 	CreateFromLibrary,
 	CreateFromPrefab,
-	CreatePrimitive,
 	DestroyActors,
 	InterpolateActor,
 	ObjectSpawned,
@@ -140,27 +139,6 @@ export class InternalContext {
 			...options,
 			type: 'create-from-library'
 		} as CreateFromLibrary;
-		return this.createActorFromPayload(payload);
-	}
-
-	public CreatePrimitive(options: {
-		definition: PrimitiveDefinition,
-		addCollider?: boolean,
-		actor?: Partial<ActorLike>
-	}): Actor {
-		options = { ...options };
-		options = {
-			addCollider: false,
-			...options,
-			actor: {
-				...options.actor,
-				id: UUID()
-			}
-		};
-		const payload = {
-			...options,
-			type: 'create-primitive'
-		} as CreatePrimitive;
 		return this.createActorFromPayload(payload);
 	}
 

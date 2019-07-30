@@ -47,7 +47,13 @@ import { SubscriptionType } from '../network/subscriptionType';
 import { Patchable } from '../patchable';
 import { ActionHandler, ActionState, Behavior, DiscreteAction } from './behaviors';
 import { MediaInstance } from './mediaInstance';
-import { BoxColliderGeometry, ColliderGeometry, SphereColliderGeometry } from './physics';
+import {
+	AutoColliderGeometry,
+	BoxColliderGeometry,
+	CapsuleColliderGeometry,
+	ColliderGeometry,
+	SphereColliderGeometry
+} from './physics';
 
 /**
  * Describes the properties of an Actor.
@@ -200,6 +206,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	 * @param options.actor The initial state of the actor.
 	 */
 	public static CreateEmpty(context: Context, options?: {
+		colliderType?: CreateColliderType,
 		actor?: Partial<ActorLike>
 	}): Actor {
 		return context.internal.CreateEmpty(options);
@@ -251,18 +258,16 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	}
 
 	/**
-	 * Creates a new actor with a primitive shape.
-	 * @param context The SDK context object.
-	 * @param options.definiton @see PrimitiveDefinition
-	 * @param options.addCollder Whether or not to add a collider to the actor.
-	 * @param options.actor The initial state of the actor.
+	 * @deprecated
+	 * Use [[AssetContainer.createMeshPrimitive]] and [[Appearance.mesh]] instead.
 	 */
 	public static CreatePrimitive(context: Context, options: {
 		definition: PrimitiveDefinition,
 		addCollider?: boolean,
 		actor?: Partial<ActorLike>
 	}): Actor {
-		return context.internal.CreatePrimitive(options);
+		throw new Error("Actor.CreatePrimitive is deprecated! "+
+			"Use AssetContainer.createMeshPrimitive and Actor.appearance.mesh instead.");
 	}
 
 	/**
@@ -346,7 +351,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	 * @param colliderType Type of the collider to enable.
 	 * @param isTrigger Whether the collider is a trigger volume or not.
 	 * @param center The center of the collider, or default of the object if none is provided.
-	 * @param radius The radius of the collider, or default bounding if non is provided.
+	 * @param radius The radius of the collider.
 	 */
 	// * @param collisionLayer The layer that the collider operates in.
 	public setCollider(
@@ -361,7 +366,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	 * @param colliderType Type of the collider to enable.
 	 * @param isTrigger Whether the collider is a trigger volume or not.
 	 * @param center The center of the collider, or default of the object if none is provided.
-	 * @param size
+	 * @param size The dimensions of the collider.
 	 */
 	public setCollider(
 		colliderType: 'box',
@@ -370,9 +375,33 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 		center?: Vector3Like,
 		size?: Vector3Like): void;
 
+	/**
+	 * Adds a collider of the give type and parameters on the actor.
+	 * @param colliderType Type of the collider to enable.
+	 * @param isTrigger Whether the collider is a trigger volume or not.
+	 * @param center The center of the collider, or default of the object if none is provided.
+	 * @param size The dimensions of the collider, with the largest component of the vector
+	 * being the primary axis and height of the capsule, and the second largest the radius.
+	 */
+	public setCollider(
+		colliderType: 'capsule',
+		isTrigger: boolean,
+		center?: Vector3Like,
+		size?: Vector3Like): void;
+
+	/**
+	 * Adds a collider whose shape is determined by the current mesh.
+	 * @param colliderType Type of the collider to enable.
+	 * @param isTrigger Whether the collider is a trigger volume or not.
+	 */
+	public setCollider(
+		colliderType: 'auto',
+		isTrigger: boolean
+	): void;
+
 	/** @ignore */
 	public setCollider(
-		colliderType: 'box' | 'sphere',
+		colliderType: 'box' | 'sphere' | 'capsule' | 'auto',
 		// collisionLayer: CollisionLayer,
 		isTrigger: boolean,
 		center?: Vector3Like,
@@ -733,9 +762,10 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	 */
 
 	private generateColliderGeometry(
-		colliderType: 'box' | 'sphere',
+		colliderType: 'box' | 'sphere' | 'capsule' | 'auto',
 		center?: Vector3Like,
-		size?: number | Vector3Like
+		size?: number | Vector3Like,
+		height?: number
 	): ColliderGeometry {
 		switch (colliderType) {
 			case 'box':
@@ -750,7 +780,16 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 					center,
 					radius: size as number
 				} as SphereColliderGeometry;
-
+			case 'capsule':
+				return {
+					colliderType: 'capsule',
+					center,
+					size: size as Partial<Vector3Like>
+				} as CapsuleColliderGeometry;
+			case 'auto':
+				return {
+					colliderType: 'auto'
+				} as AutoColliderGeometry;
 			default:
 				log.error(null,
 					'Trying to enable a collider on the actor with an invalid collider geometry type.' +
