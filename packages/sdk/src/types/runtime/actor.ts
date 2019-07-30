@@ -9,6 +9,7 @@ import {
 	ActorTransformLike,
 	Appearance,
 	AppearanceLike,
+	Asset,
 	Attachment,
 	AttachmentLike,
 	AttachPoint,
@@ -213,28 +214,10 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	}
 
 	/**
-	 * Creates a new actor from a glTF resource.
-	 * @param context The SDK context object.
-	 * @param options.resourceUrl The URL of the source .gltf or .glb file.
-	 * @param options.assetName The name of the asset within the glTF to load. Leave empty to select the
-	 * first scene in the file.
-	 * @param options.colliderType The collider to assign to loaded objects. Leave blank for no colliders.
-	 * @param options.actor The initial state of the root actor.
+	 * @deprecated
+	 * Use [[AssetContainer.loadGltf]] and [[Actor.CreateFromPrefab]] instead.
 	 */
 	public static CreateFromGltf(context: Context, options: {
-		resourceUrl: string,
-		assetName?: string,
-		colliderType?: CreateColliderType,
-		actor?: Partial<ActorLike>
-	}): Actor {
-		return context.internal.CreateFromGltf(options);
-	}
-
-	/**
-	 * @deprecated
-	 * Use CreateFromGltf instead.
-	 */
-	public static CreateFromGLTF(context: Context, options: {
 		resourceUrl: string,
 		assetName?: string,
 		colliderType?: CreateColliderType,
@@ -259,7 +242,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 
 	/**
 	 * @deprecated
-	 * Use [[AssetContainer.createMeshPrimitive]] and [[Appearance.mesh]] instead.
+	 * Use [[AssetContainer.createPrimitiveMesh]] and [[Appearance.mesh]] instead.
 	 */
 	public static CreatePrimitive(context: Context, options: {
 		definition: PrimitiveDefinition,
@@ -278,10 +261,17 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	 * given a collider type when loaded @see AssetManager.loadGltf.
 	 */
 	public static CreateFromPrefab(context: Context, options: {
-		prefabId: string,
+		prefabId: string | Asset[],
 		actor?: Partial<ActorLike>
 	}): Actor {
-		return context.internal.CreateFromPrefab(options);
+		if (typeof(options.prefabId) !== 'string') {
+			const prefab = options.prefabId.find(a => !!a.prefab);
+			if (!prefab) {
+				throw new Error("CreateFromPrefab requires a valid prefab to instantiate");
+			}
+			options.prefabId = prefab.id;
+		}
+		return context.internal.CreateFromPrefab({...options, prefabId: options.prefabId as string});
 	}
 
 	/**

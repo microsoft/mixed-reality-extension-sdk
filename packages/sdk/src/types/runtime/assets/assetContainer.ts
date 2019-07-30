@@ -15,7 +15,7 @@ import {
 	VideoStream, VideoStreamLike
 } from '.';
 import { Context } from '..';
-import { PrimitiveDefinition } from '../../..';
+import { PrimitiveDefinition, PrimitiveShape, Vector3Like } from '../../..';
 import { log } from '../../../log';
 import resolveJsonValues from '../../../utils/resolveJsonValues';
 import * as Payloads from '../../network/payloads';
@@ -113,6 +113,99 @@ export class AssetContainer {
 		});
 		video.setLoadedPromise(this.sendCreateAsset(video));
 		return video;
+	}
+
+	/**
+	 * Create a new sphere-shaped mesh.
+	 * @param name The name to give to the asset.
+	 * @param radius The radius of the sphere.
+	 * @param uSegments The number of longitudinal segments.
+	 * @param vSegments The number of latitudinal segments.
+	 */
+	public createSphereMesh(name: string, radius: number, uSegments = 36, vSegments = 18): Mesh {
+		return this.createPrimitiveMesh(name, {
+			shape: PrimitiveShape.Sphere,
+			dimensions: { x: radius, y: radius, z: radius },
+			uSegments,
+			vSegments
+		});
+	};
+
+	/**
+	 * Create a new box-shaped mesh.
+	 * @param name The name to give to the asset.
+	 * @param width The length of the box on the X axis.
+	 * @param height The length of the box on the Y axis.
+	 * @param depth The length of the box on the Z axis.
+	 */
+	public createBoxMesh(name: string, width: number, height: number, depth: number): Mesh {
+		return this.createPrimitiveMesh(name, {
+			shape: PrimitiveShape.Box,
+			dimensions: { x: width, y: height, z: depth }
+		});
+	}
+
+	/**
+	 * Create a new capsule-shaped mesh.
+	 * @param name The name to give to the asset.
+	 * @param height The height of the capsule from tip to tip.
+	 * @param radius The thickness of the capsule.
+	 * @param direction The long axis of the capsule.
+	 * @param uSegments The number of longitudinal segments.
+	 * @param vSegments The number of latitudinal segments.
+	 */
+	public createCapsuleMesh(name: string, height: number, radius: number,
+		direction: 'x' | 'y' | 'z' = 'y', uSegments = 36, vSegments = 18
+	): Mesh {
+		if (height < 2 * radius) {
+			throw new Error("Capsule height must be greater than twice the radius");
+		}
+
+		let dimensions = { x: 2 * radius, y: 2 * radius, z: 2 * radius } as Vector3Like;
+		dimensions[direction] = height;
+		return this.createPrimitiveMesh(name, {
+			shape: PrimitiveShape.Capsule,
+			dimensions,
+			uSegments,
+			vSegments
+		});
+	}
+
+	/**
+	 * Create a new cylinder-shaped mesh.
+	 * @param name The name to give to the asset.
+	 * @param height The height of the cylinder.
+	 * @param radius The thickness of the cylinder.
+	 * @param direction The long axis of the cylinder.
+	 * @param uSegments The number of longitudinal segments.
+	 */
+	public createCylinderMesh(name: string, height: number, radius: number,
+		direction: 'x' | 'y' | 'z' = 'y', uSegments = 36
+	): Mesh {
+		let dimensions = { x: 2 * radius, y: 2 * radius, z: 2 * radius };
+		dimensions[direction] = height;
+		return this.createPrimitiveMesh(name, {
+			shape: PrimitiveShape.Cylinder,
+			dimensions,
+			uSegments
+		});
+	}
+
+	/**
+	 * Create a flat mesh on the X-Z plane.
+	 * @param name The name to give to the asset.
+	 * @param width The X-axis length of the plane.
+	 * @param height The Z-axis length of the plane.
+	 * @param uSegments The number of X-axis segments.
+	 * @param vSegments The number of Z-axis segments.
+	 */
+	public createPlaneMesh(name: string, width: number, height: number, uSegments = 1, vSegments = 1): Mesh {
+		return this.createPrimitiveMesh(name, {
+			shape: PrimitiveShape.Plane,
+			dimensions: { x: width, y: 0, z: height },
+			uSegments,
+			vSegments
+		});
 	}
 
 	/**

@@ -9,11 +9,11 @@ import { Vector3Like } from '..';
  * Describes the general shape of a primitive. Specifics are described in a [[PrimitiveDefinition]] object.
  */
 export enum PrimitiveShape {
+	Sphere = 'sphere',
 	Box = 'box',
 	Capsule = 'capsule',
 	Cylinder = 'cylinder',
-	Plane = 'plane',
-	InnerSphere = 'inner-sphere'
+	Plane = 'plane'
 }
 
 /**
