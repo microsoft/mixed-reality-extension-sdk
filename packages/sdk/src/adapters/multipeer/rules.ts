@@ -277,11 +277,9 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 				if (queuedMessage) {
 					const existingPayload = queuedMessage.message.payload as Partial<Payloads.ActorUpdate>;
 					existingPayload.actor = deepmerge(existingPayload.actor, {
-						payload: {
-							actor: {
-								transform: {
-									app: message.payload.appTransform
-								}
+						actor: {
+							transform: {
+								app: message.payload.appTransform
 							}
 						}
 					});
@@ -992,31 +990,34 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 
 						// store the updated sound instance if sound isn't stopping
 						if (message.payload.mediaCommand !== MediaCommand.Stop) {
-
-							// update startimeoffset and update basistime in oldmessage.
-							const targetTime = Date.now() / 1000.0;
-							if (activeMediaInstance.message.payload.options.paused !== true) {
-								let timeOffset = (targetTime - activeMediaInstance.basisTime);
-								if (activeMediaInstance.message.payload.options.pitch !== undefined) {
-									timeOffset *= Math.pow(2.0,
-										(activeMediaInstance.message.payload.options.pitch / 12.0));
+							// if speed or position changes, reset basistime and recalculate the time.
+							if (message.payload.options.time !== undefined) {
+								// a time change(seek) just needs to reset basis time. The payload merge does the rest
+								activeMediaInstance.basisTime = basisTime;
+							} else if (message.payload.options.paused !== undefined ||
+								message.payload.options.pitch !== undefined) {
+								// if the media instance wasn't paused, then recalculate the current time
+								// if media instance was paused then current time doesn't change
+								if (activeMediaInstance.message.payload.options.paused !== true) {
+									if (activeMediaInstance.message.payload.options.time === undefined) {
+										activeMediaInstance.message.payload.options.time = 0.0;
+									}
+									let timeOffset = (basisTime - activeMediaInstance.basisTime);
+									if (activeMediaInstance.message.payload.options.pitch !== undefined) {
+										timeOffset *= Math.pow(2.0,
+											(activeMediaInstance.message.payload.options.pitch / 12.0));
+									}
+									activeMediaInstance.message.payload.options.time += timeOffset;
 								}
-								if (activeMediaInstance.message.payload.startTimeOffset === undefined) {
-									activeMediaInstance.message.payload.startTimeOffset = 0.0;
-								}
-								activeMediaInstance.message.payload.startTimeOffset += timeOffset;
+								activeMediaInstance.basisTime = basisTime;
 							}
 
-							if (activeMediaInstance.message.payload.options.time !== undefined) {
-								activeMediaInstance.message.payload.startTimeOffset = activeMediaInstance.message.payload.options.time;
-							}
-
-							// merge existing message and new message
+							// merge existing payload and new payload
 							activeMediaInstance.message.payload.options = {
 								...activeMediaInstance.message.payload.options,
 								...message.payload.options
 							};
-							syncActor.activeMediaInstances.push({ message: activeMediaInstance.message, basisTime });
+							syncActor.activeMediaInstances.push(activeMediaInstance);
 						}
 					}
 

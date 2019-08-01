@@ -76,19 +76,22 @@
 						<span class="target">Asset</span>
 						<ul class="tsd-hierarchy">
 							<li>
+								<a href="material.html" class="tsd-signature-type">Material</a>
+							</li>
+							<li>
 								<a href="mesh.html" class="tsd-signature-type">Mesh</a>
 							</li>
 							<li>
 								<a href="prefab.html" class="tsd-signature-type">Prefab</a>
 							</li>
 							<li>
-								<a href="material.html" class="tsd-signature-type">Material</a>
+								<a href="sound.html" class="tsd-signature-type">Sound</a>
 							</li>
 							<li>
 								<a href="texture.html" class="tsd-signature-type">Texture</a>
 							</li>
 							<li>
-								<a href="sound.html" class="tsd-signature-type">Sound</a>
+								<a href="videostream.html" class="tsd-signature-type">VideoStream</a>
 							</li>
 						</ul>
 					</li>
@@ -107,9 +110,15 @@
 						<section class="tsd-index-section ">
 							<h3>Accessors</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="asset.html#created" class="tsd-kind-icon">created</a></li>
 								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="asset.html#id" class="tsd-kind-icon">id</a></li>
+								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="asset.html#material" class="tsd-kind-icon">material</a></li>
+								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="asset.html#mesh" class="tsd-kind-icon">mesh</a></li>
 								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="asset.html#name" class="tsd-kind-icon">name</a></li>
+								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="asset.html#prefab" class="tsd-kind-icon">prefab</a></li>
+								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="asset.html#sound" class="tsd-kind-icon">sound</a></li>
 								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="asset.html#source" class="tsd-kind-icon">source</a></li>
+								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="asset.html#texture" class="tsd-kind-icon">texture</a></li>
 							</ul>
 						</section>
 					</div>
@@ -117,6 +126,28 @@
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Accessors</h2>
+				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
+					<a name="created" class="tsd-anchor"></a>
+					<h3>created</h3>
+					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> created<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in types/runtime/assets/asset.ts:103</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>A promise that resolves when the asset is finished loading</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
 				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
 					<a name="id" class="tsd-anchor"></a>
 					<h3>id</h3>
@@ -127,7 +158,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/e9af73b/packages/sdk/src/types/runtime/assets/asset.ts#L77">types/runtime/assets/asset.ts:77</a></li>
+									<li>Defined in types/runtime/assets/asset.ts:83</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -144,6 +175,58 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
+					<a name="material" class="tsd-anchor"></a>
+					<h3>material</h3>
+					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> material<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="material.html" class="tsd-signature-type">Material</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in types/runtime/assets/asset.ts:96</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Only populated when this asset is a material. An asset will have only one of these types specified.</p>
+								</div>
+								<dl class="tsd-comment-tags">
+									<dt>inheritdoc</dt>
+									<dd></dd>
+								</dl>
+							</div>
+							<h4 class="tsd-returns-title">Returns <a href="material.html" class="tsd-signature-type">Material</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
+					<a name="mesh" class="tsd-anchor"></a>
+					<h3>mesh</h3>
+					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> mesh<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="mesh.html" class="tsd-signature-type">Mesh</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in types/runtime/assets/asset.ts:94</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Only populated when this asset is a mesh. An asset will have only one of these types specified.</p>
+								</div>
+								<dl class="tsd-comment-tags">
+									<dt>inheritdoc</dt>
+									<dd></dd>
+								</dl>
+							</div>
+							<h4 class="tsd-returns-title">Returns <a href="mesh.html" class="tsd-signature-type">Mesh</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
 					<a name="name" class="tsd-anchor"></a>
 					<h3>name</h3>
 					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class">
@@ -153,7 +236,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/e9af73b/packages/sdk/src/types/runtime/assets/asset.ts#L80">types/runtime/assets/asset.ts:80</a></li>
+									<li>Defined in types/runtime/assets/asset.ts:86</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -171,6 +254,58 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
+					<a name="prefab" class="tsd-anchor"></a>
+					<h3>prefab</h3>
+					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> prefab<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="prefab.html" class="tsd-signature-type">Prefab</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in types/runtime/assets/asset.ts:92</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Only populated when this asset is a prefab. An asset will have only one of these types specified.</p>
+								</div>
+								<dl class="tsd-comment-tags">
+									<dt>inheritdoc</dt>
+									<dd></dd>
+								</dl>
+							</div>
+							<h4 class="tsd-returns-title">Returns <a href="prefab.html" class="tsd-signature-type">Prefab</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
+					<a name="sound" class="tsd-anchor"></a>
+					<h3>sound</h3>
+					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> sound<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="sound.html" class="tsd-signature-type">Sound</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in types/runtime/assets/asset.ts:100</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Only populated when this asset is a sound. An asset will have only one of these types specified.</p>
+								</div>
+								<dl class="tsd-comment-tags">
+									<dt>inheritdoc</dt>
+									<dd></dd>
+								</dl>
+							</div>
+							<h4 class="tsd-returns-title">Returns <a href="sound.html" class="tsd-signature-type">Sound</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
 					<a name="source" class="tsd-anchor"></a>
 					<h3>source</h3>
 					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class">
@@ -180,7 +315,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/e9af73b/packages/sdk/src/types/runtime/assets/asset.ts#L83">types/runtime/assets/asset.ts:83</a></li>
+									<li>Defined in types/runtime/assets/asset.ts:89</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -193,6 +328,32 @@
 								</dl>
 							</div>
 							<h4 class="tsd-returns-title">Returns <a href="../interfaces/assetsource.html" class="tsd-signature-type">AssetSource</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
+					<a name="texture" class="tsd-anchor"></a>
+					<h3>texture</h3>
+					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> texture<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="texture.html" class="tsd-signature-type">Texture</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in types/runtime/assets/asset.ts:98</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Only populated when this asset is a texture. An asset will have only one of these types specified.</p>
+								</div>
+								<dl class="tsd-comment-tags">
+									<dt>inheritdoc</dt>
+									<dd></dd>
+								</dl>
+							</div>
+							<h4 class="tsd-returns-title">Returns <a href="texture.html" class="tsd-signature-type">Texture</a></h4>
 						</li>
 					</ul>
 				</section>
@@ -214,13 +375,31 @@
 						<a href="asset.html" class="tsd-kind-icon">Asset</a>
 						<ul>
 							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
+								<a href="asset.html#created" class="tsd-kind-icon">created</a>
+							</li>
+							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
 								<a href="asset.html#id" class="tsd-kind-icon">id</a>
+							</li>
+							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
+								<a href="asset.html#material" class="tsd-kind-icon">material</a>
+							</li>
+							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
+								<a href="asset.html#mesh" class="tsd-kind-icon">mesh</a>
 							</li>
 							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
 								<a href="asset.html#name" class="tsd-kind-icon">name</a>
 							</li>
 							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
+								<a href="asset.html#prefab" class="tsd-kind-icon">prefab</a>
+							</li>
+							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
+								<a href="asset.html#sound" class="tsd-kind-icon">sound</a>
+							</li>
+							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
 								<a href="asset.html#source" class="tsd-kind-icon">source</a>
+							</li>
+							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
+								<a href="asset.html#texture" class="tsd-kind-icon">texture</a>
 							</li>
 						</ul>
 					</li>

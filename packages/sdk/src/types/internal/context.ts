@@ -284,7 +284,6 @@ export class InternalContext {
 		command: MediaCommand,
 		options?: SetMediaStateOptions,
 		mediaAssetId?: string,
-		startTimeOffset?: number
 	) {
 		this.protocol.sendPayload({
 			type: 'set-media-state',
@@ -292,8 +291,7 @@ export class InternalContext {
 			actorId: mediaInstance.actor.id,
 			mediaAssetId,
 			mediaCommand: command,
-			options,
-			startTimeOffset
+			options
 		} as SetMediaState);
 	}
 

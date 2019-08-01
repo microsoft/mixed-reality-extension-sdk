@@ -165,7 +165,7 @@ export class ClientSync extends Protocols.Protocol {
 		}
 
 		// Send all cached asset-update messages.
-		for (const update of this.client.session.assets.map(a => a.update)) {
+		for (const update of this.client.session.assets.map(a => a.update).filter(x => !!x)) {
 			this.sendMessage(update);
 		}
 	}
@@ -279,10 +279,11 @@ export class ClientSync extends Protocols.Protocol {
 					if (activeMediaInstance.message.payload.options.pitch !== undefined) {
 						timeOffset *= Math.pow(2.0, (activeMediaInstance.message.payload.options.pitch / 12.0));
 					}
-					if (activeMediaInstance.message.payload.startTimeOffset === undefined) {
-						activeMediaInstance.message.payload.startTimeOffset = 0.0;
+					if (activeMediaInstance.message.payload.options.time === undefined) {
+						activeMediaInstance.message.payload.options.time = 0.0;
 					}
-					activeMediaInstance.message.payload.startTimeOffset += timeOffset;
+					activeMediaInstance.message.payload.options.time += timeOffset;
+					activeMediaInstance.basisTime = targetTime;
 				}
 				return this.sendMessage(activeMediaInstance.message);
 			});

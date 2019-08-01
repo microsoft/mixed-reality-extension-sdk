@@ -522,28 +522,24 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	 * Starts playing a preloaded sound.
 	 * @param soundAssetId Name of sound asset preloaded using AssetManager.
 	 * @param options Adjustments to pitch and volume, and other characteristics.
-	 * @param startTimeOffset How many seconds to offset into the sound
 	 */
 	public startSound(
 		soundAssetId: string,
 		options: SetAudioStateOptions,
-		startTimeOffset?: number
 	): MediaInstance {
-		return new MediaInstance(this, soundAssetId).start(options, startTimeOffset);
+		return new MediaInstance(this, soundAssetId).start(options);
 	}
 
 	/**
 	 * Starts playing a preloaded video stream.
 	 * @param videoStreamAssetId Name of video stream asset preloaded using AssetManager.
 	 * @param options Adjustments to pitch and volume, and other characteristics.
-	 * @param startTimeOffset How many seconds to offset into the sound
 	 */
 	public startVideoStream(
 		videoStreamAssetId: string,
 		options: SetVideoStateOptions,
-		startTimeOffset?: number
 	): MediaInstance {
-		return new MediaInstance(this, videoStreamAssetId).start(options, startTimeOffset);
+		return new MediaInstance(this, videoStreamAssetId).start(options);
 	}
 
 	/**
