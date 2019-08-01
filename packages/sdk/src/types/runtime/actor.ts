@@ -232,17 +232,10 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	 * given a collider type when loaded @see AssetManager.loadGltf.
 	 */
 	public static CreateFromPrefab(context: Context, options: {
-		prefabId: string | Asset[],
+		prefabId: string | Promise<Asset[]>,
 		actor?: Partial<ActorLike>
 	}): Actor {
-		if (typeof(options.prefabId) !== 'string') {
-			const prefab = options.prefabId.find(a => !!a.prefab);
-			if (!prefab) {
-				throw new Error("CreateFromPrefab requires a valid prefab to instantiate");
-			}
-			options.prefabId = prefab.id;
-		}
-		return context.internal.CreateFromPrefab({...options, prefabId: options.prefabId as string});
+		return context.internal.CreateFromPrefab(options);
 	}
 
 	/**

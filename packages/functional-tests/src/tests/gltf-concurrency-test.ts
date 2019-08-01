@@ -34,7 +34,7 @@ export default class GltfConcurrencyTest extends Test {
 		}
 
 		const runner = MRE.Actor.CreateFromPrefab(this.app.context, {
-			prefabId: runnerAssets,
+			prefabId: runnerAssets.find(a => !!a.prefab).id,
 			actor: {
 				name: 'runner',
 				parentId: root.id,
@@ -44,7 +44,7 @@ export default class GltfConcurrencyTest extends Test {
 		runner.enableAnimation('animation:0');
 
 		MRE.Actor.CreateFromPrefab(this.app.context, {
-			prefabId: gearboxAssets,
+			prefabId: gearboxAssets.find(a => !!a.prefab).id,
 			actor: {
 				name: 'gearbox',
 				parentId: root.id,
@@ -53,7 +53,7 @@ export default class GltfConcurrencyTest extends Test {
 		});
 
 		MRE.Actor.CreateFromPrefab(this.app.context, {
-			prefabId: bottleAssets,
+			prefabId: bottleAssets.find(a => !!a.prefab).id,
 			actor: {
 				name: 'bottle',
 				parentId: root.id,

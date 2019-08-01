@@ -14,8 +14,15 @@ export default class InputTest extends Test {
 	private state = 0;
 	private spinCount = 0;
 	private model: MRE.Actor;
+	private assets: MRE.AssetContainer;
+
+	public cleanup() {
+		this.assets.unload();
+	}
 
 	public async run(root: MRE.Actor): Promise<boolean> {
+		this.assets = new MRE.AssetContainer(this.app.context);
+
 		MRE.Actor.CreateEmpty(this.app.context, {
 			actor: {
 				name: "Light",
@@ -34,12 +41,10 @@ export default class InputTest extends Test {
 			}
 		});
 
-		// Load a glTF model
-		this.model = MRE.Actor.CreateFromGltf(this.app.context, {
-			// at the given URL
-			resourceUrl: `${this.baseUrl}/monkey.glb`,
-			// and spawn box colliders around the meshes.
-			colliderType: 'box',
+		// Create an actor
+		this.model = MRE.Actor.CreateFromPrefab(this.app.context, {
+			// from the glTF at the given URL, with box colliders on each mesh
+			prefabId: this.assets.loadGltf(`${this.baseUrl}/monkey.glb`, 'box'),
 			// Also apply the following generic actor properties.
 			actor: {
 				name: 'clickable',

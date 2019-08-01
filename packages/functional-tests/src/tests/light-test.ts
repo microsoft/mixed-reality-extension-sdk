@@ -12,7 +12,15 @@ import delay from '../utils/delay';
 
 export default class LightTest extends Test {
 	public expectedResultDescription = "Different types of lights";
+	private assets: MRE.AssetContainer;
+
+	public cleanup() {
+		this.assets.unload();
+	}
+
 	public async run(root: MRE.Actor): Promise<boolean> {
+		this.assets = new MRE.AssetContainer(this.app.context);
+
 		// Create scene objects.
 		const props = this.createProps(root);
 		const sphere = this.createSphere(root);
@@ -84,8 +92,8 @@ export default class LightTest extends Test {
 
 	private createProps(root: MRE.Actor) {
 		const props: { [id: string]: MRE.Actor } = {};
-		props['monkey'] = MRE.Actor.CreateFromGltf(this.app.context, {
-			resourceUrl: `${this.baseUrl}/monkey.glb`,
+		props['monkey'] = MRE.Actor.CreateFromPrefab(this.app.context, {
+			prefabId: this.assets.loadGltf(`${this.baseUrl}/monkey.glb`),
 			actor: {
 				parentId: root.id,
 				transform: {
@@ -100,13 +108,11 @@ export default class LightTest extends Test {
 
 		const propWidth = 0.33;
 		const propHeight = 0.33;
-		props['left-box'] = MRE.Actor.CreatePrimitive(this.app.context, {
-			definition: {
-				shape: MRE.PrimitiveShape.Box,
-				dimensions: { x: propWidth, z: propWidth, y: propHeight }
-			},
+		const boxMesh = this.assets.createBoxMesh('box', propWidth, propHeight, propWidth);
+		props['left-box'] = MRE.Actor.CreateEmpty(this.app.context, {
 			actor: {
 				parentId: root.id,
+				appearance: { meshId: boxMesh.id },
 				transform: {
 					app: {
 						position: { x: 0.5, y: 0.65, z: -1 }
@@ -114,13 +120,10 @@ export default class LightTest extends Test {
 				}
 			}
 		});
-		props['right-box'] = MRE.Actor.CreatePrimitive(this.app.context, {
-			definition: {
-				shape: MRE.PrimitiveShape.Box,
-				dimensions: { x: propWidth, z: propWidth, y: propHeight }
-			},
+		props['right-box'] = MRE.Actor.CreateEmpty(this.app.context, {
 			actor: {
 				parentId: root.id,
+				appearance: { meshId: boxMesh.id },
 				transform: {
 					app: {
 						position: { x: -0.5, y: 0.65, z: -1 }
@@ -132,14 +135,13 @@ export default class LightTest extends Test {
 	}
 
 	private createSphere(root: MRE.Actor) {
-		return MRE.Actor.CreatePrimitive(this.app.context, {
-			definition: {
-				shape: MRE.PrimitiveShape.Sphere,
-				radius: 0.1
-			},
-			addCollider: true,
+		return MRE.Actor.CreateEmpty(this.app.context, {
 			actor: {
 				parentId: root.id,
+				appearance: {
+					meshId: this.assets.createSphereMesh('sphere', 0.1).id
+				},
+				collider: { geometry: { shape: 'auto' } as MRE.AutoColliderGeometry },
 				light: { type: 'spot', intensity: 5 } // Add a light component.
 			}
 		});
