@@ -128,7 +128,7 @@ export class InternalContext {
 			}
 		};
 
-		let delayPromise = Promise.resolve();
+		let delayPromise = null;
 		if (typeof(options.prefabId) !== 'string') {
 			delayPromise = options.prefabId.then(assets => {
 				options.prefabId = assets.find(a => !!a.prefab).id as string;
@@ -143,7 +143,7 @@ export class InternalContext {
 
 	private createActorFromPayload(
 		payload: CreateActorCommon,
-		delayPromise = Promise.resolve()
+		delayPromise?: Promise<void>
 	): Actor {
 		// Resolve by-reference values now, ensuring they won't change in the
 		// time between now and when this message is actually sent.
@@ -153,46 +153,49 @@ export class InternalContext {
 		// Get a reference to the new actor.
 		const actor = this.context.actor(payload.actor.id);
 
-		// Send a message to the engine to instantiate the object.
-		delayPromise.then(() => this.protocol.sendPayload(
-			payload,
-			{
-				resolve: (replyPayload: ObjectSpawned | OperationResult) => {
-					this.protocol.recvPayload(replyPayload);
-					let success: boolean;
-					let message: string;
-					if (replyPayload.type === 'operation-result') {
-						success = replyPayload.resultCode !== 'error';
-						message = replyPayload.message;
-					} else {
-						success = replyPayload.result.resultCode !== 'error';
-						message = replyPayload.result.message;
+		const send = () => this.protocol.sendPayload( payload, {
+			resolve: (replyPayload: ObjectSpawned | OperationResult) => {
+				this.protocol.recvPayload(replyPayload);
+				let success: boolean;
+				let message: string;
+				if (replyPayload.type === 'operation-result') {
+					success = replyPayload.resultCode !== 'error';
+					message = replyPayload.message;
+				} else {
+					success = replyPayload.result.resultCode !== 'error';
+					message = replyPayload.result.message;
 
-						for (const createdActorLike of replyPayload.actors) {
-							const createdActor = this.actorSet[createdActorLike.id];
-							if (createdActor) {
-								createdActor.internal.notifyCreated(success, replyPayload.result.message);
-							}
+					for (const createdActorLike of replyPayload.actors) {
+						const createdActor = this.actorSet[createdActorLike.id];
+						if (createdActor) {
+							createdActor.internal.notifyCreated(success, replyPayload.result.message);
 						}
 					}
-
-					if (success) {
-						if (!actor.collider && actor.internal.behavior) {
-							log.warning('app', 'Behaviors will not function on Unity host apps without adding a'
-								+ ' collider to this actor first. Recommend adding a primitive collider'
-								+ ' to this actor.');
-						}
-						actor.internal.notifyCreated(true);
-					} else {
-						actor.internal.notifyCreated(false, message);
-					}
-				},
-				reject: (reason?: any) => {
-					actor.internal.notifyCreated(false, reason);
 				}
-			})
-		)
-		.catch(reason => actor.internal.notifyCreated(false, reason));
+
+				if (success) {
+					if (!actor.collider && actor.internal.behavior) {
+						log.warning('app', 'Behaviors will not function on Unity host apps without adding a'
+							+ ' collider to this actor first. Recommend adding a primitive collider'
+							+ ' to this actor.');
+					}
+					actor.internal.notifyCreated(true);
+				} else {
+					actor.internal.notifyCreated(false, message);
+				}
+			},
+			reject: (reason?: any) => {
+				actor.internal.notifyCreated(false, reason);
+			}
+		});
+
+		// Send a message to the engine to instantiate the object.
+		if (delayPromise) {
+			delayPromise.then(() => send())
+				.catch(reason => actor.internal.notifyCreated(false, reason));
+		} else {
+			send();
+		}
 
 		return actor;
 	}
