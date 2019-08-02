@@ -19,8 +19,16 @@ export default class LookAtTest extends Test {
 	public expectedResultDescription = "No swivel, XY swivel, Y swivel";
 	public interval: NodeJS.Timeout;
 	public state = 0;
+	public assets: MRE.AssetContainer;
+
+	public cleanup() {
+		clearInterval(this.interval);
+		this.assets.unload();
+	}
 
 	public async run(root: MRE.Actor): Promise<boolean> {
+		this.assets = new MRE.AssetContainer(this.app.context);
+
 		MRE.Actor.CreateEmpty(this.app.context, {
 			actor: {
 				name: "Light",
@@ -39,8 +47,8 @@ export default class LookAtTest extends Test {
 			}
 		});
 
-		const tester = MRE.Actor.CreateFromGltf(this.app.context, {
-			resourceUrl: `${this.baseUrl}/monkey.glb`,
+		const tester = MRE.Actor.CreateFromPrefab(this.app.context, {
+			prefabId: this.assets.loadGltf(`${this.baseUrl}/monkey.glb`),
 			actor: {
 				parentId: root.id,
 				transform: { local: { scale: { x: 0.5, y: 0.5, z: 0.5 } } }
@@ -68,9 +76,5 @@ export default class LookAtTest extends Test {
 
 		await this.stoppedAsync();
 		return true;
-	}
-
-	public cleanup() {
-		clearInterval(this.interval);
 	}
 }

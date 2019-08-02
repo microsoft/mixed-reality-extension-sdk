@@ -6,9 +6,14 @@
 import * as MRE from '@microsoft/mixed-reality-extension-sdk';
 
 import { Test } from '../test';
-import destroyActors from '../utils/destroyActors';
 
 export default class PrimitivesTest extends Test {
+	public expectedResultDescription = "A variety of primitives";
+	private assets: MRE.AssetContainer;
+
+	public cleanup() {
+		this.assets.unload();
+	}
 
 	public async run(root: MRE.Actor): Promise<boolean> {
 		// Make a root object.
@@ -37,18 +42,18 @@ export default class PrimitivesTest extends Test {
 		});
 		const primitiveActors: MRE.Actor[] = [];
 
+		let i = 0;
 		for (let x = 0.1; x < 0.35; x += 0.1) {
 			for (let y = 0.1; y < 0.35; y += 0.1) {
 				for (let z = 0.1; z < 0.35; z += 0.1) {
-					primitiveActors.push(MRE.Actor.CreatePrimitive(this.app.context, {
-						definition: {
-							shape: MRE.PrimitiveShape.Box,
-							dimensions: { x, y, z }
-						},
-						addCollider: true,
+					primitiveActors.push(MRE.Actor.CreateEmpty(this.app.context, {
 						actor: {
 							name: 'Box',
 							parentId: tester.id,
+							appearance: {
+								meshId: this.assets.createBoxMesh(`box${i++}`, x, y, z).id
+							},
+							collider: { geometry: { shape: 'auto' } as MRE.AutoColliderGeometry },
 							transform: {
 								local: {
 									position: { x: x * 4 - 0.8, y: y * 4 + 0., z: z * 4 - 0.5 }
@@ -59,17 +64,14 @@ export default class PrimitivesTest extends Test {
 				}
 			}
 		}
-		primitiveActors.push(MRE.Actor.CreatePrimitive(this.app.context, {
-			definition: {
-				shape: MRE.PrimitiveShape.Sphere,
-				radius: 0.4,
-				uSegments: 8,
-				vSegments: 4
-			},
-			addCollider: true,
+		primitiveActors.push(MRE.Actor.CreateEmpty(this.app.context, {
 			actor: {
 				name: 'Sphere',
 				parentId: tester.id,
+				appearance: {
+					meshId: this.assets.createSphereMesh('sphere', 0.4, 8, 4).id
+				},
+				collider: { geometry: { shape: 'auto' } as MRE.AutoColliderGeometry },
 				transform: {
 					local: {
 						position: { x: -1, y: 1, z: 0 }
@@ -78,18 +80,14 @@ export default class PrimitivesTest extends Test {
 			}
 		}));
 
-		primitiveActors.push(MRE.Actor.CreatePrimitive(this.app.context, {
-			definition: {
-				shape: MRE.PrimitiveShape.Capsule,
-				dimensions: { x: 0, y: 0.7, z: 0 },
-				radius: 0.3,
-				uSegments: 8,
-				vSegments: 4
-			},
-			addCollider: true,
+		primitiveActors.push(MRE.Actor.CreateEmpty(this.app.context, {
 			actor: {
 				name: 'Capsule',
 				parentId: tester.id,
+				appearance: {
+					meshId: this.assets.createCapsuleMesh('capsule1', 0.7, 0.3, 'y', 8, 4).id
+				},
+				collider: { geometry: { shape: 'auto' } as MRE.AutoColliderGeometry },
 				transform: {
 					local: {
 						position: { x: 1, y: 1, z: 0 }
@@ -98,18 +96,14 @@ export default class PrimitivesTest extends Test {
 			}
 		}));
 
-		primitiveActors.push(MRE.Actor.CreatePrimitive(this.app.context, {
-			definition: {
-				shape: MRE.PrimitiveShape.Capsule,
-				dimensions: { x: 0.35, y: 0.0, z: 0 },
-				radius: 0.15,
-				uSegments: 8,
-				vSegments: 4
-			},
-			addCollider: true,
+		primitiveActors.push(MRE.Actor.CreateEmpty(this.app.context, {
 			actor: {
 				name: 'Capsule',
 				parentId: tester.id,
+				appearance: {
+					meshId: this.assets.createCapsuleMesh('capsule2', 0.35, 0.15, 'x', 8, 4).id
+				},
+				collider: { geometry: { shape: 'auto' } as MRE.AutoColliderGeometry },
 				transform: {
 					local: {
 						position: { x: 1, y: 2.0, z: 0 }
@@ -118,18 +112,14 @@ export default class PrimitivesTest extends Test {
 			}
 		}));
 
-		primitiveActors.push(MRE.Actor.CreatePrimitive(this.app.context, {
-			definition: {
-				shape: MRE.PrimitiveShape.Capsule,
-				dimensions: { x: 0, y: 0.0, z: 0.7 },
-				radius: 0.3,
-				uSegments: 8,
-				vSegments: 4
-			},
-			addCollider: true,
+		primitiveActors.push(MRE.Actor.CreateEmpty(this.app.context, {
 			actor: {
 				name: 'Capsule',
 				parentId: tester.id,
+				appearance: {
+					meshId: this.assets.createCapsuleMesh('capsule3', 0.7, 0.3, 'z', 8, 4).id
+				},
+				collider: { geometry: { shape: 'auto' } as MRE.AutoColliderGeometry },
 				transform: {
 					local: {
 						position: { x: 1 }
@@ -138,17 +128,14 @@ export default class PrimitivesTest extends Test {
 			}
 		}));
 
-		primitiveActors.push(MRE.Actor.CreatePrimitive(this.app.context, {
-			definition: {
-				shape: MRE.PrimitiveShape.Cylinder,
-				dimensions: { x: 0, y: 1.3, z: 0 },
-				radius: 0.3,
-				uSegments: 8,
-			},
-			addCollider: true,
+		primitiveActors.push(MRE.Actor.CreateEmpty(this.app.context, {
 			actor: {
 				name: 'Cylinder',
 				parentId: tester.id,
+				appearance: {
+					meshId: this.assets.createCylinderMesh('cylinder1', 1.3, 0.3, 'y', 8).id
+				},
+				collider: { geometry: { shape: 'auto' } as MRE.AutoColliderGeometry },
 				transform: {
 					local: {
 						position: { x: 2, y: 1, z: 0 }
@@ -157,17 +144,14 @@ export default class PrimitivesTest extends Test {
 			}
 		}));
 
-		primitiveActors.push(MRE.Actor.CreatePrimitive(this.app.context, {
-			definition: {
-				shape: MRE.PrimitiveShape.Cylinder,
-				dimensions: { x: 0.65, y: 0, z: 0 },
-				radius: 0.15,
-				uSegments: 8,
-			},
-			addCollider: true,
+		primitiveActors.push(MRE.Actor.CreateEmpty(this.app.context, {
 			actor: {
 				name: 'Cylinder',
 				parentId: tester.id,
+				appearance: {
+					meshId: this.assets.createCylinderMesh('cylinder2', 0.65, 0.15, 'x', 8).id
+				},
+				collider: { geometry: { shape: 'auto' } as MRE.AutoColliderGeometry },
 				transform: {
 					local: {
 						position: { x: 2, y: 2.0, z: 0 }
@@ -176,17 +160,14 @@ export default class PrimitivesTest extends Test {
 			}
 		}));
 
-		primitiveActors.push(MRE.Actor.CreatePrimitive(this.app.context, {
-			definition: {
-				shape: MRE.PrimitiveShape.Cylinder,
-				dimensions: { x: 0, y: 0, z: 1.3 },
-				radius: 0.3,
-				uSegments: 8,
-			},
-			addCollider: true,
+		primitiveActors.push(MRE.Actor.CreateEmpty(this.app.context, {
 			actor: {
 				name: 'Cylinder',
 				parentId: tester.id,
+				appearance: {
+					meshId: this.assets.createCylinderMesh('cylinder3', 1.3, 0.3, 'z', 8).id
+				},
+				collider: { geometry: { shape: 'auto' } as MRE.AutoColliderGeometry },
 				transform: {
 					local: {
 						position: { x: 2 }
@@ -195,18 +176,14 @@ export default class PrimitivesTest extends Test {
 			}
 		}));
 
-		primitiveActors.push(MRE.Actor.CreatePrimitive(this.app.context, {
-			definition: {
-				shape: MRE.PrimitiveShape.Plane,
-				dimensions: { x: 1, y: 0, z: 1 },
-				uSegments: 1,
-				vSegments: 4,
-
-			},
-			addCollider: true,
+		primitiveActors.push(MRE.Actor.CreateEmpty(this.app.context, {
 			actor: {
 				name: 'Plane',
 				parentId: tester.id,
+				appearance: {
+					meshId: this.assets.createPlaneMesh('plane', 1, 1, 1, 4).id
+				},
+				collider: { geometry: { shape: 'auto' } as MRE.AutoColliderGeometry },
 				transform: {
 					local: {
 						position: { x: -2, y: 0.0, z: 0 }
@@ -215,17 +192,14 @@ export default class PrimitivesTest extends Test {
 			}
 		}));
 
-		primitiveActors.push(MRE.Actor.CreatePrimitive(this.app.context, {
-			definition: {
-				shape: MRE.PrimitiveShape.InnerSphere,
-				radius: 0.4,
-				uSegments: 12,
-				vSegments: 8
-			},
-			addCollider: true,
+		primitiveActors.push(MRE.Actor.CreateEmpty(this.app.context, {
 			actor: {
 				name: 'Inner Sphere',
 				parentId: tester.id,
+				appearance: {
+					meshId: this.assets.createSphereMesh('innerSphere', -0.4, 12, 8).id
+				},
+				collider: { geometry: { shape: 'auto' } as MRE.AutoColliderGeometry },
 				transform: {
 					local: {
 						position: { x: -1 }

@@ -12,8 +12,17 @@ export default class VisibilityTest extends Test {
 	private columns = [] as MRE.Actor[];
 	private activeColumn = 0;
 	private interval: NodeJS.Timeout;
+	private assets: MRE.AssetContainer;
+
+	public cleanup() {
+		clearInterval(this.interval);
+		this.assets.unload();
+	}
 
 	public async run(root: MRE.Actor): Promise<boolean> {
+		this.assets = new MRE.AssetContainer(this.app.context);
+		this.assets.createBoxMesh('box', 0.1, 0.1, 0.1);
+
 		const rowRoot = MRE.Actor.CreateEmpty(this.app.context, {
 			actor: {
 				parentId: root.id,
@@ -37,31 +46,21 @@ export default class VisibilityTest extends Test {
 		return true;
 	}
 
-	public cleanup() {
-		clearInterval(this.interval);
-	}
-
-	private createColumn(parent: MRE.Actor, colNum: number, spacing = 0.15, boxSize = 0.1): MRE.Actor {
-		const top = MRE.Actor.CreatePrimitive(this.app.context, {
-			definition: {
-				shape: MRE.PrimitiveShape.Box,
-				dimensions: { x: boxSize, y: boxSize, z: boxSize }
-			},
+	private createColumn(parent: MRE.Actor, colNum: number, spacing = 0.15): MRE.Actor {
+		const top = MRE.Actor.CreateEmpty(this.app.context, {
 			actor: {
 				name: `${colNum}-0`,
 				parentId: parent.id,
+				appearance: { meshId: this.assets.meshes[0].id },
 				transform: { local: { position: { x: spacing } } }
 			}
 		});
 
-		MRE.Actor.CreatePrimitive(this.app.context, {
-			definition: {
-				shape: MRE.PrimitiveShape.Box,
-				dimensions: { x: boxSize, y: boxSize, z: boxSize }
-			},
+		MRE.Actor.CreateEmpty(this.app.context, {
 			actor: {
 				name: `${colNum}-1`,
 				parentId: top.id,
+				appearance: { meshId: this.assets.meshes[0].id },
 				transform: { local: { position: { y: -spacing } } }
 			}
 		});

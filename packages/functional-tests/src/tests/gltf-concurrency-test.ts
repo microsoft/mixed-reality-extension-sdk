@@ -14,21 +14,23 @@ export default class GltfConcurrencyTest extends Test {
 	public async run(root: MRE.Actor): Promise<boolean> {
 		this.assets = new MRE.AssetContainer(this.app.context);
 
-		let runnerAssets, bottleAssets, gearboxAssets: MRE.Asset[];
-		this.assets.loadGltf('https://raw.githubusercontent.com/'+
+		let runnerAssets: MRE.Asset[];
+		let bottleAssets: MRE.Asset[];
+		let gearboxAssets: MRE.Asset[];
+
+		this.assets.loadGltf('https://raw.githubusercontent.com/' +
 			'KhronosGroup/glTF-Sample-Models/master/2.0/GearboxAssy/glTF/GearboxAssy.gltf')
 		.then(assets => gearboxAssets = assets)
 		.catch(() => console.log('Gearbox didn\'t load, as expected in Altspace'));
 
 		try {
 			[runnerAssets, bottleAssets] = await Promise.all([
-				this.assets.loadGltf('https://raw.githubusercontent.com/'+
+				this.assets.loadGltf('https://raw.githubusercontent.com/' +
 					'KhronosGroup/glTF-Sample-Models/master/2.0/CesiumMan/glTF-Binary/CesiumMan.glb'),
-				this.assets.loadGltf('https://raw.githubusercontent.com/'+
+				this.assets.loadGltf('https://raw.githubusercontent.com/' +
 					'KhronosGroup/glTF-Sample-Models/master/2.0/WaterBottle/glTF/WaterBottle.gltf')
 			]);
-		}
-		catch (errs) {
+		} catch (errs) {
 			console.error(errs);
 			return false;
 		}

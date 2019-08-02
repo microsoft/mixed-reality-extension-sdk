@@ -24,6 +24,7 @@ const options = {
 export default class TextTest extends Test {
 	public expectedResultDescription = "Text cycling their options";
 	public interval: NodeJS.Timeout;
+	private assets: MRE.AssetContainer;
 
 	private enabled: MRE.Actor;
 	private contents: MRE.Actor;
@@ -34,7 +35,15 @@ export default class TextTest extends Test {
 	private font: MRE.Actor;
 	private color: MRE.Actor;
 
+	public cleanup() {
+		clearInterval(this.interval);
+		this.assets.unload();
+	}
+
 	public async run(root: MRE.Actor): Promise<boolean> {
+		this.assets = new MRE.AssetContainer(this.app.context);
+		const referenceMesh = this.assets.createSphereMesh('reference', 0.05);
+
 		this.enabled = this.createTemplate(root, "enabled");
 		this.enabled.transform.local.position.copy({ x: -1, y: 1.5, z: 0 });
 
@@ -55,27 +64,21 @@ export default class TextTest extends Test {
 
 		this.anchor = this.createTemplate(root, 'anchor');
 		this.anchor.transform.local.position.copy({ x: 1, y: 1.3, z: 0 });
-		MRE.Actor.CreatePrimitive(this.app.context, {
-			definition: {
-				shape: MRE.PrimitiveShape.Sphere,
-				radius: .05
-			},
+		MRE.Actor.CreateEmpty(this.app.context, {
 			actor: {
 				name: "anchorReference",
-				parentId: this.anchor.id
+				parentId: this.anchor.id,
+				appearance: { meshId: referenceMesh.id }
 			}
 		});
 
 		this.justify = this.createTemplate(root, 'multiline\njustify');
 		this.justify.transform.local.position.copy({ x: 1, y: 0.7, z: 0 });
-		MRE.Actor.CreatePrimitive(this.app.context, {
-			definition: {
-				shape: MRE.PrimitiveShape.Sphere,
-				radius: .05
-			},
+		MRE.Actor.CreateEmpty(this.app.context, {
 			actor: {
 				name: "justifyReference",
-				parentId: this.justify.id
+				parentId: this.justify.id,
+				appearance: { meshId: referenceMesh.id }
 			}
 		});
 
