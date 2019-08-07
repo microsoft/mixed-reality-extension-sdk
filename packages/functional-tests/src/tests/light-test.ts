@@ -22,7 +22,7 @@ export default class LightTest extends Test {
 		this.assets = new MRE.AssetContainer(this.app.context);
 
 		// Create scene objects.
-		const props = this.createProps(root);
+		const props = await this.createProps(root);
 		const sphere = this.createSphere(root);
 
 		// Updates the label for the test stage.
@@ -90,10 +90,10 @@ export default class LightTest extends Test {
 		return true;
 	}
 
-	private createProps(root: MRE.Actor) {
+	private async createProps(root: MRE.Actor): Promise<{[id: string]: MRE.Actor}> {
 		const props: { [id: string]: MRE.Actor } = {};
 		props['monkey'] = MRE.Actor.CreateFromPrefab(this.app.context, {
-			prefabId: this.assets.loadGltf(`${this.baseUrl}/monkey.glb`),
+			prefabId: await this.assets.loadGltf(`${this.baseUrl}/monkey.glb`),
 			actor: {
 				parentId: root.id,
 				transform: {

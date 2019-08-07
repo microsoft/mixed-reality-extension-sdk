@@ -117,7 +117,7 @@ export class InternalContext {
 	}
 
 	public CreateFromPrefab(options: {
-		prefabId: string | Promise<Asset[]>,
+		prefabId: string | Asset[],
 		actor?: Partial<ActorLike>
 	}): Actor {
 		options = {
@@ -128,22 +128,18 @@ export class InternalContext {
 			}
 		};
 
-		let delayPromise = null;
 		if (typeof(options.prefabId) !== 'string') {
-			delayPromise = options.prefabId.then(assets => {
-				options.prefabId = assets.find(a => !!a.prefab).id as string;
-			});
+			options.prefabId = options.prefabId.find(a => !!a.prefab).id as string;
 		}
 
 		return this.createActorFromPayload({
 			...options,
 			type: 'create-from-prefab'
-		} as CreateFromPrefab, delayPromise);
+		} as CreateFromPrefab);
 	}
 
 	private createActorFromPayload(
-		payload: CreateActorCommon,
-		delayPromise?: Promise<void>
+		payload: CreateActorCommon
 	): Actor {
 		// Resolve by-reference values now, ensuring they won't change in the
 		// time between now and when this message is actually sent.
@@ -153,7 +149,7 @@ export class InternalContext {
 		// Get a reference to the new actor.
 		const actor = this.context.actor(payload.actor.id);
 
-		const send = () => this.protocol.sendPayload( payload, {
+		this.protocol.sendPayload( payload, {
 			resolve: (replyPayload: ObjectSpawned | OperationResult) => {
 				this.protocol.recvPayload(replyPayload);
 				let success: boolean;
@@ -188,14 +184,6 @@ export class InternalContext {
 				actor.internal.notifyCreated(false, reason);
 			}
 		});
-
-		// Send a message to the engine to instantiate the object.
-		if (delayPromise) {
-			delayPromise.then(() => send())
-				.catch(reason => actor.internal.notifyCreated(false, reason));
-		} else {
-			send();
-		}
 
 		return actor;
 	}

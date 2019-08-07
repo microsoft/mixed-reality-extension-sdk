@@ -23,10 +23,6 @@ export interface BoxColliderGeometry {
 	size?: Readonly<Vector3Like>;
 }
 
-export interface MeshColliderGeometry {
-	shape: 'mesh';
-}
-
 export interface CapsuleColliderGeometry {
 	shape: 'capsule';
 	center?: Readonly<Vector3Like>;
@@ -44,7 +40,6 @@ export interface AutoColliderGeometry {
 export type ColliderGeometry
 	= SphereColliderGeometry
 	| BoxColliderGeometry
-	| MeshColliderGeometry
 	| CapsuleColliderGeometry
 	| AutoColliderGeometry
 	;

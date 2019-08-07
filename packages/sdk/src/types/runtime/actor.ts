@@ -232,7 +232,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	 * given a collider type when loaded @see AssetManager.loadGltf.
 	 */
 	public static CreateFromPrefab(context: Context, options: {
-		prefabId: string | Promise<Asset[]>,
+		prefabId: string | Asset[],
 		actor?: Partial<ActorLike>
 	}): Actor {
 		return context.internal.CreateFromPrefab(options);
