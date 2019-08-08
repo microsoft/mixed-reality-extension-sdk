@@ -16,6 +16,8 @@ export default class PrimitivesTest extends Test {
 	}
 
 	public async run(root: MRE.Actor): Promise<boolean> {
+		this.assets = new MRE.AssetContainer(this.app.context);
+
 		// Make a root object.
 		const tester = MRE.Actor.CreateEmpty(this.app.context, {
 			actor: {

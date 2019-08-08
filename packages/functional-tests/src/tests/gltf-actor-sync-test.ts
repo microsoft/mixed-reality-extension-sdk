@@ -20,7 +20,13 @@ export default class GltfActorSyncTest extends Test {
 		const actorRoot = MRE.Actor.CreateFromPrefab(this.app.context, {
 			prefabId: await this.assets.loadGltf(`${this.baseUrl}/monkey.glb`, 'box'),
 			actor: {
+				name: 'glTF',
 				parentId: root.id,
+				text: {
+					contents: 'Peek-a-boo!',
+					height: 0.1,
+					anchor: MRE.TextAnchorLocation.BottomCenter
+				},
 				transform: {
 					local: {
 						position: { y: 1.5, z: -1 },
@@ -31,19 +37,8 @@ export default class GltfActorSyncTest extends Test {
 		});
 		await actorRoot.created();
 
-		// place text on gltf scene
-		const gltfRoot = actorRoot.children[0];
-		if (!gltfRoot) {
-			throw new Error('glTF scene actor not found');
-		}
-		gltfRoot.enableText({
-			contents: 'Peek-a-boo!',
-			height: 0.1,
-			anchor: MRE.TextAnchorLocation.BottomCenter
-		});
-
 		// move monkey head up
-		const monkeyRoot = gltfRoot.children[0];
+		const monkeyRoot = actorRoot.children[0];
 		if (!monkeyRoot) {
 			throw new Error('glTF node actor not found');
 		}

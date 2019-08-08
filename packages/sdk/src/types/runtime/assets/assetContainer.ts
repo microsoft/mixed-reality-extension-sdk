@@ -125,7 +125,7 @@ export class AssetContainer {
 	public createSphereMesh(name: string, radius: number, uSegments = 36, vSegments = 18): Mesh {
 		return this.createPrimitiveMesh(name, {
 			shape: PrimitiveShape.Sphere,
-			dimensions: { x: radius, y: radius, z: radius },
+			dimensions: { x: 2 * radius, y: 2 * radius, z: 2 * radius },
 			uSegments,
 			vSegments
 		});
