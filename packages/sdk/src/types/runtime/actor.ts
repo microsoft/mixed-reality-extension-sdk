@@ -752,18 +752,18 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	}
 
 	private _setCollider(collider: Partial<ColliderLike>) {
-		if (this._collider) {
-			unobserve(this._collider);
-			this._collider = undefined;
+		if (!this._collider) {
+			this._collider = new Collider(this, collider);
+			// Actor patching: Observe the collider component for changed values.
+			observe({
+				target: this._collider,
+				targetName: 'collider',
+				notifyChanged: (...path: string[]) => this.actorChanged(...path),
+				// Trigger notifications for every observed leaf node to ensure we get all values in the initial patch.
+				triggerNotificationsNow: true
+			});
 		}
-
-		this._collider = new Collider(this, collider);
-		observe({
-			target: this._collider,
-			targetName: 'collider',
-			notifyChanged: (...path: string[]) => this.actorChanged(...path),
-			// Trigger notifications for every observed leaf node to ensure we get all values in the initial patch.
-			triggerNotificationsNow: true
-		});
+		// Copying the new values will trigger an actor update and enable/update the collider component.
+		this._collider.copy(collider);
 	}
 }

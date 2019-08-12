@@ -25,14 +25,12 @@ export interface ColliderLike {
 export class Collider implements ColliderLike {
 	public $DoNotObserve = ['_internal'];
 
-	// Readonly params that are not patchable or observable.
-	// tslint:disable:variable-name
-	private _geometry: Readonly<ColliderGeometry>;
+	// tslint:disable-next-line:variable-name
 	private _internal: InternalCollider;
-	// tslint:enable:variable-name
 
 	public enabled = true;
 	public isTrigger = false;
+	public geometry: Readonly<ColliderGeometry>;
 	// public collisionLayer = CollisionLayer.Object;
 
 	/** @hidden */
@@ -46,17 +44,11 @@ export class Collider implements ColliderLike {
 	}
 
 	/**
-	 * The collider geometry that the collider was initialized with.  These are a
-	 * readonly structure and are not able to be updated after creation.
-	 */
-	public get geometry() { return this._geometry; }
-
-	/**
 	 * @hidden
 	 * Creates a new Collider instance.
 	 * @param $owner The owning actor instance. Field name is prefixed with a dollar sign so that it is ignored by
-	 * @param initFrom The collider like to use to init from.
 	 * the actor patch detection system.
+	 * @param initFrom The collider like to use to init from.
 	 */
 	constructor(private $owner: Actor, initFrom: Partial<ColliderLike>) {
 		if (initFrom) {
@@ -65,11 +57,8 @@ export class Collider implements ColliderLike {
 			}
 
 			this._internal = new InternalCollider(this, $owner);
-
-			if (initFrom.geometry !== undefined) this._geometry = initFrom.geometry;
-			if (initFrom.enabled !== undefined) this.enabled = initFrom.enabled;
-			if (initFrom.isTrigger !== undefined) this.isTrigger = initFrom.isTrigger;
-			// if (initFrom.collisionLayer !== undefined) this.collisionLayer = initFrom.collisionLayer;
+			this.copy(initFrom);
+			console.log(`collider created for actor ${$owner.id}`);
 		} else {
 			throw new Error("Must provide a valid collider like to init from.");
 		}
@@ -119,8 +108,17 @@ export class Collider implements ColliderLike {
 			enabled: this.enabled,
 			isTrigger: this.isTrigger,
 			// collisionLayer: this.collisionLayer,
-			geometry: this._geometry,
+			geometry: this.geometry,
 			eventSubscriptions: this.eventSubscriptions
 		} as ColliderLike;
+	}
+
+	public copy(from: Partial<ColliderLike>): this {
+		if (!from) return this;
+		if (from.geometry !== undefined) this.geometry = from.geometry;
+		if (from.enabled !== undefined) this.enabled = from.enabled;
+		if (from.isTrigger !== undefined) this.isTrigger = from.isTrigger;
+		// if (from.collisionLayer !== undefined) this.collisionLayer = from.collisionLayer;
+		return this;
 	}
 }

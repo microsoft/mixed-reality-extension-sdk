@@ -18,7 +18,7 @@ export default class PhysicsSimTest extends Test {
 	private defaultPegMat: MRE.Material;
 	private collisionPegMat: MRE.Material;
 	private ballMat: MRE.Material;
-	private collRefCount = 0;
+	private collRefCount: { [id: string]: number } = {};
 	private ballCount = 0;
 	private counterPlane: MRE.Actor;
 
@@ -112,15 +112,15 @@ export default class PhysicsSimTest extends Test {
 				}
 			});
 			peg.collider.onCollision('collision-enter', data => {
-				++this.collRefCount;
-				if (this.collRefCount === 1) {
+				this.collRefCount[peg.id] = this.collRefCount[peg.id] + 1 || 1;
+				if (this.collRefCount[peg.id] > 0) {
 					peg.appearance.material = this.collisionPegMat;
 				}
 			});
 
 			peg.collider.onCollision('collision-exit', data => {
-				--this.collRefCount;
-				if (this.collRefCount === 0) {
+				this.collRefCount[peg.id]--;
+				if (this.collRefCount[peg.id] === 0) {
 					peg.appearance.material = this.defaultPegMat;
 				}
 			});
