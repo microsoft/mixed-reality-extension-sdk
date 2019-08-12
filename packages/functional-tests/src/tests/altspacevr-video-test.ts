@@ -33,7 +33,7 @@ export default class AltspaceVRVideoTest extends Test {
 	private _state = 0;
 
 	public async run(root: MRE.Actor): Promise<boolean> {
-		const video = MRE.Actor.CreateEmpty(this.app.context, {
+		const video = MRE.Actor.Create(this.app.context, {
 			actor: {
 				parentId: root.id,
 				name: 'video',
@@ -68,7 +68,7 @@ export default class AltspaceVRVideoTest extends Test {
 		};
 		cycleState();
 
-		const button = MRE.Actor.CreateEmpty(this.app.context, {
+		const button = MRE.Actor.Create(this.app.context, {
 			actor: {
 				name: 'Button',
 				parentId: root.id,

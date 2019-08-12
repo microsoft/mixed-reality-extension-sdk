@@ -116,7 +116,7 @@ export default class Menu {
 		this.labels = [];
 
 		for (let i = 0; i < pageSize; i++) {
-			const control = MRE.Actor.CreateEmpty(this.context, {
+			const control = MRE.Actor.Create(this.context, {
 				actor: {
 					name: 'Button' + i,
 					appearance: {
@@ -138,7 +138,7 @@ export default class Menu {
 			this.behaviors.push(control.setBehavior(MRE.ButtonBehavior));
 			this.buttons.push(control);
 
-			const label = MRE.Actor.CreateEmpty(this.context, {
+			const label = MRE.Actor.Create(this.context, {
 				actor: {
 					name: 'Label' + i,
 					parentId: control.id,
@@ -157,7 +157,7 @@ export default class Menu {
 			this.labels.push(label);
 		}
 
-		const backButton = MRE.Actor.CreateEmpty(this.context, {
+		const backButton = MRE.Actor.Create(this.context, {
 			actor: {
 				name: 'BackButton',
 				appearance: {
@@ -172,7 +172,7 @@ export default class Menu {
 			}
 		});
 
-		const backLabel = MRE.Actor.CreateEmpty(this.context, {
+		const backLabel = MRE.Actor.Create(this.context, {
 			actor: {
 				name: 'BackLabel',
 				parentId: backButton.id,

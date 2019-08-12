@@ -109,7 +109,7 @@ export default class LightTest extends Test {
 		const propWidth = 0.33;
 		const propHeight = 0.33;
 		const boxMesh = this.assets.createBoxMesh('box', propWidth, propHeight, propWidth);
-		props['left-box'] = MRE.Actor.CreateEmpty(this.app.context, {
+		props['left-box'] = MRE.Actor.Create(this.app.context, {
 			actor: {
 				parentId: root.id,
 				appearance: { meshId: boxMesh.id },
@@ -120,7 +120,7 @@ export default class LightTest extends Test {
 				}
 			}
 		});
-		props['right-box'] = MRE.Actor.CreateEmpty(this.app.context, {
+		props['right-box'] = MRE.Actor.Create(this.app.context, {
 			actor: {
 				parentId: root.id,
 				appearance: { meshId: boxMesh.id },
@@ -135,7 +135,7 @@ export default class LightTest extends Test {
 	}
 
 	private createSphere(root: MRE.Actor) {
-		return MRE.Actor.CreateEmpty(this.app.context, {
+		return MRE.Actor.Create(this.app.context, {
 			actor: {
 				parentId: root.id,
 				appearance: {

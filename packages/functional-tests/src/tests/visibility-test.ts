@@ -23,7 +23,7 @@ export default class VisibilityTest extends Test {
 		this.assets = new MRE.AssetContainer(this.app.context);
 		this.assets.createBoxMesh('box', 0.1, 0.1, 0.1);
 
-		const rowRoot = MRE.Actor.CreateEmpty(this.app.context, {
+		const rowRoot = MRE.Actor.Create(this.app.context, {
 			actor: {
 				parentId: root.id,
 				transform: { local: { position: { x: -0.9, y: 1, z: -1 } } }
@@ -47,7 +47,7 @@ export default class VisibilityTest extends Test {
 	}
 
 	private createColumn(parent: MRE.Actor, colNum: number, spacing = 0.15): MRE.Actor {
-		const top = MRE.Actor.CreateEmpty(this.app.context, {
+		const top = MRE.Actor.Create(this.app.context, {
 			actor: {
 				name: `${colNum}-0`,
 				parentId: parent.id,
@@ -56,7 +56,7 @@ export default class VisibilityTest extends Test {
 			}
 		});
 
-		MRE.Actor.CreateEmpty(this.app.context, {
+		MRE.Actor.Create(this.app.context, {
 			actor: {
 				name: `${colNum}-1`,
 				parentId: top.id,

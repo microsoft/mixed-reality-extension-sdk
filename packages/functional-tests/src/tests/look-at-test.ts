@@ -29,7 +29,7 @@ export default class LookAtTest extends Test {
 	public async run(root: MRE.Actor): Promise<boolean> {
 		this.assets = new MRE.AssetContainer(this.app.context);
 
-		MRE.Actor.CreateEmpty(this.app.context, {
+		MRE.Actor.Create(this.app.context, {
 			actor: {
 				name: "Light",
 				parentId: root.id,
@@ -54,7 +54,7 @@ export default class LookAtTest extends Test {
 				transform: { local: { scale: { x: 0.5, y: 0.5, z: 0.5 } } }
 			}
 		});
-		const lookAtTarget = MRE.Actor.CreateEmpty(this.app.context, {
+		const lookAtTarget = MRE.Actor.Create(this.app.context, {
 			actor: {
 				parentId: root.id,
 				attachment: {

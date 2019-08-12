@@ -26,7 +26,7 @@ export default class ClockSyncTest extends Test {
 		const lineHeight = 1.20; // magic value based on default font
 
 		// Make a root object.
-		const tester = MRE.Actor.CreateEmpty(this.app.context, {
+		const tester = MRE.Actor.Create(this.app.context, {
 			actor: {
 				parentId: root.id,
 				transform: {
@@ -39,7 +39,7 @@ export default class ClockSyncTest extends Test {
 
 		const mesh = this.assets.createBoxMesh('box', boxWidth, boxHeight, 0.2);
 
-		const topBox = MRE.Actor.CreateEmpty(this.app.context, {
+		const topBox = MRE.Actor.Create(this.app.context, {
 			actor: {
 				parentId: tester.id,
 				appearance: {
@@ -52,7 +52,7 @@ export default class ClockSyncTest extends Test {
 				}
 			}
 		});
-		const bottomBox = MRE.Actor.CreateEmpty(this.app.context, {
+		const bottomBox = MRE.Actor.Create(this.app.context, {
 			actor: {
 				parentId: tester.id,
 				appearance: {
@@ -106,7 +106,7 @@ export default class ClockSyncTest extends Test {
 	}
 
 	public createAnimatableDigit(name: string, digits: string, parentId: string): MRE.Actor {
-		return MRE.Actor.CreateEmpty(this.app.context, {
+		return MRE.Actor.Create(this.app.context, {
 			actor: {
 				name,
 				parentId,

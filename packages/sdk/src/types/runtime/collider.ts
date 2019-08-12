@@ -58,7 +58,6 @@ export class Collider implements ColliderLike {
 
 			this._internal = new InternalCollider(this, $owner);
 			this.copy(initFrom);
-			console.log(`collider created for actor ${$owner.id}`);
 		} else {
 			throw new Error("Must provide a valid collider like to init from.");
 		}

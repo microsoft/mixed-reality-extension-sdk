@@ -18,7 +18,7 @@ export default class VideoTest extends Test {
 
 	public async run(root: MRE.Actor): Promise<boolean> {
 		this.assets = new MRE.AssetContainer(this.app.context);
-		const parentActor = MRE.Actor.CreateEmpty(this.app.context, {
+		const parentActor = MRE.Actor.Create(this.app.context, {
 			actor: {
 				parentId: root.id,
 				name: 'video',
@@ -124,7 +124,7 @@ export default class VideoTest extends Test {
 		};
 		cycleState();
 
-		const buttonActor = MRE.Actor.CreateEmpty(this.app.context, {
+		const buttonActor = MRE.Actor.Create(this.app.context, {
 			actor: {
 				name: 'Button',
 				parentId: root.id,

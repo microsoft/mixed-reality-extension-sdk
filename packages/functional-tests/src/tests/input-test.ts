@@ -23,7 +23,7 @@ export default class InputTest extends Test {
 	public async run(root: MRE.Actor): Promise<boolean> {
 		this.assets = new MRE.AssetContainer(this.app.context);
 
-		MRE.Actor.CreateEmpty(this.app.context, {
+		MRE.Actor.Create(this.app.context, {
 			actor: {
 				name: "Light",
 				parentId: root.id,

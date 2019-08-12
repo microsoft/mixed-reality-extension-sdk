@@ -50,7 +50,7 @@ export default class PhysicsSimTest extends Test {
 
 	private async createCounterPlane(root: MRE.Actor, width: number, height: number) {
 		// Create the ball count text objects
-		this.counterPlane = MRE.Actor.CreateEmpty(this.app.context, {
+		this.counterPlane = MRE.Actor.Create(this.app.context, {
 			actor: {
 				parentId: root.id,
 				transform: {
@@ -65,7 +65,7 @@ export default class PhysicsSimTest extends Test {
 		});
 
 		// Create the trigger plane for the ball counter.
-		const counter = MRE.Actor.CreateEmpty(this.app.context, {
+		const counter = MRE.Actor.Create(this.app.context, {
 			actor: {
 				parentId: root.id,
 				transform: {
@@ -100,7 +100,7 @@ export default class PhysicsSimTest extends Test {
 		const pegMesh = this.assets.createCylinderMesh('peg', 0.2, pegRadius, 'z');
 
 		while (position.x <= finalPosition.x && position.y <= finalPosition.y) {
-			const peg = MRE.Actor.CreateEmpty(this.app.context, {
+			const peg = MRE.Actor.Create(this.app.context, {
 				actor: {
 					parentId: root.id,
 					transform: { local: { position } },
@@ -136,7 +136,7 @@ export default class PhysicsSimTest extends Test {
 	}
 
 	private spawnBall(root: MRE.Actor, width: number, height: number, ballRadius = 0.07, killTimeout = 5000) {
-		const ball = MRE.Actor.CreateEmpty(this.app.context, {
+		const ball = MRE.Actor.Create(this.app.context, {
 			actor: {
 				parentId: root.id,
 				appearance: {

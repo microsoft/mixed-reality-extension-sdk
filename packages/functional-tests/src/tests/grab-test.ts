@@ -25,7 +25,7 @@ export default class GrabTest extends Test {
 	public async run(root: MRE.Actor): Promise<boolean> {
 		this.assets = new MRE.AssetContainer(this.app.context);
 
-		MRE.Actor.CreateEmpty(this.app.context, {
+		MRE.Actor.Create(this.app.context, {
 			actor: {
 				name: "Light",
 				parentId: root.id,
@@ -89,7 +89,7 @@ export default class GrabTest extends Test {
 		// anr right of the monkey.
 		const boxMesh = this.assets.createBoxMesh('box', 0.5, 0.5, 0.5);
 		for (const cube of [{ name: 'Cube1', x: -1 }, { name: 'Cube2', x: 1 }]) {
-			MRE.Actor.CreateEmpty(this.app.context, {
+			MRE.Actor.Create(this.app.context, {
 				actor: {
 					name: cube.name,
 					parentId: root.id,

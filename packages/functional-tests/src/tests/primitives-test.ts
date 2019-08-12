@@ -19,13 +19,13 @@ export default class PrimitivesTest extends Test {
 		this.assets = new MRE.AssetContainer(this.app.context);
 
 		// Make a root object.
-		const tester = MRE.Actor.CreateEmpty(this.app.context, {
+		const tester = MRE.Actor.Create(this.app.context, {
 			actor: {
 				parentId: root.id,
 				transform: { local: { position: { y: 0.5, z: -0.5 }, scale: { x: 0.5, y: 0.5, z: 0.5 } } }
 			}
 		});
-		MRE.Actor.CreateEmpty(this.app.context, {
+		MRE.Actor.Create(this.app.context, {
 			actor: {
 				name: "Light",
 				parentId: root.id,
@@ -48,7 +48,7 @@ export default class PrimitivesTest extends Test {
 		for (let x = 0.1; x < 0.35; x += 0.1) {
 			for (let y = 0.1; y < 0.35; y += 0.1) {
 				for (let z = 0.1; z < 0.35; z += 0.1) {
-					primitiveActors.push(MRE.Actor.CreateEmpty(this.app.context, {
+					primitiveActors.push(MRE.Actor.Create(this.app.context, {
 						actor: {
 							name: 'Box',
 							parentId: tester.id,
@@ -66,7 +66,7 @@ export default class PrimitivesTest extends Test {
 				}
 			}
 		}
-		primitiveActors.push(MRE.Actor.CreateEmpty(this.app.context, {
+		primitiveActors.push(MRE.Actor.Create(this.app.context, {
 			actor: {
 				name: 'Sphere',
 				parentId: tester.id,
@@ -82,7 +82,7 @@ export default class PrimitivesTest extends Test {
 			}
 		}));
 
-		primitiveActors.push(MRE.Actor.CreateEmpty(this.app.context, {
+		primitiveActors.push(MRE.Actor.Create(this.app.context, {
 			actor: {
 				name: 'Capsule',
 				parentId: tester.id,
@@ -98,7 +98,7 @@ export default class PrimitivesTest extends Test {
 			}
 		}));
 
-		primitiveActors.push(MRE.Actor.CreateEmpty(this.app.context, {
+		primitiveActors.push(MRE.Actor.Create(this.app.context, {
 			actor: {
 				name: 'Capsule',
 				parentId: tester.id,
@@ -114,7 +114,7 @@ export default class PrimitivesTest extends Test {
 			}
 		}));
 
-		primitiveActors.push(MRE.Actor.CreateEmpty(this.app.context, {
+		primitiveActors.push(MRE.Actor.Create(this.app.context, {
 			actor: {
 				name: 'Capsule',
 				parentId: tester.id,
@@ -130,7 +130,7 @@ export default class PrimitivesTest extends Test {
 			}
 		}));
 
-		primitiveActors.push(MRE.Actor.CreateEmpty(this.app.context, {
+		primitiveActors.push(MRE.Actor.Create(this.app.context, {
 			actor: {
 				name: 'Cylinder',
 				parentId: tester.id,
@@ -146,7 +146,7 @@ export default class PrimitivesTest extends Test {
 			}
 		}));
 
-		primitiveActors.push(MRE.Actor.CreateEmpty(this.app.context, {
+		primitiveActors.push(MRE.Actor.Create(this.app.context, {
 			actor: {
 				name: 'Cylinder',
 				parentId: tester.id,
@@ -162,7 +162,7 @@ export default class PrimitivesTest extends Test {
 			}
 		}));
 
-		primitiveActors.push(MRE.Actor.CreateEmpty(this.app.context, {
+		primitiveActors.push(MRE.Actor.Create(this.app.context, {
 			actor: {
 				name: 'Cylinder',
 				parentId: tester.id,
@@ -178,7 +178,7 @@ export default class PrimitivesTest extends Test {
 			}
 		}));
 
-		primitiveActors.push(MRE.Actor.CreateEmpty(this.app.context, {
+		primitiveActors.push(MRE.Actor.Create(this.app.context, {
 			actor: {
 				name: 'Plane',
 				parentId: tester.id,
@@ -194,7 +194,7 @@ export default class PrimitivesTest extends Test {
 			}
 		}));
 
-		primitiveActors.push(MRE.Actor.CreateEmpty(this.app.context, {
+		primitiveActors.push(MRE.Actor.Create(this.app.context, {
 			actor: {
 				name: 'Inner Sphere',
 				parentId: tester.id,

@@ -64,7 +64,7 @@ export default class TextTest extends Test {
 
 		this.anchor = this.createTemplate(root, 'anchor');
 		this.anchor.transform.local.position.copy({ x: 1, y: 1.3, z: 0 });
-		MRE.Actor.CreateEmpty(this.app.context, {
+		MRE.Actor.Create(this.app.context, {
 			actor: {
 				name: "anchorReference",
 				parentId: this.anchor.id,
@@ -74,7 +74,7 @@ export default class TextTest extends Test {
 
 		this.justify = this.createTemplate(root, 'multiline\njustify');
 		this.justify.transform.local.position.copy({ x: 1, y: 0.7, z: 0 });
-		MRE.Actor.CreateEmpty(this.app.context, {
+		MRE.Actor.Create(this.app.context, {
 			actor: {
 				name: "justifyReference",
 				parentId: this.justify.id,
@@ -124,7 +124,7 @@ export default class TextTest extends Test {
 	}
 
 	private createTemplate(root: MRE.Actor, text: string): MRE.Actor {
-		return MRE.Actor.CreateEmpty(this.app.context, {
+		return MRE.Actor.Create(this.app.context, {
 			actor: {
 				name: text.replace('\n', ' '),
 				parentId: root.id,

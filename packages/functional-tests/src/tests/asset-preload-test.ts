@@ -108,7 +108,7 @@ export default class AssetPreloadTest extends Test {
 				}
 			}
 		});
-		this.sphere = MRE.Actor.CreateEmpty(this.app.context, {
+		this.sphere = MRE.Actor.Create(this.app.context, {
 			actor: {
 				parentId: this.root.id,
 				appearance: {

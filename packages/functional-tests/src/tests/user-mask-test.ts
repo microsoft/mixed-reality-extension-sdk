@@ -35,7 +35,7 @@ export default class UserMaskTest extends Test {
 			anchor: MRE.TextAnchorLocation.TopCenter,
 			height: 0.08
 		} as MRE.TextLike;
-		this.redList = MRE.Actor.CreateEmpty(this.app.context, {
+		this.redList = MRE.Actor.Create(this.app.context, {
 			actor: {
 				name: 'redList',
 				parentId: root.id,
@@ -44,7 +44,7 @@ export default class UserMaskTest extends Test {
 				text: textDef
 			}
 		});
-		this.blueList = MRE.Actor.CreateEmpty(this.app.context, {
+		this.blueList = MRE.Actor.Create(this.app.context, {
 			actor: {
 				name: 'blueList',
 				parentId: root.id,
@@ -57,7 +57,7 @@ export default class UserMaskTest extends Test {
 		this.app.context.onUserLeft(_ => this.updateLabels());
 
 		// create icons
-		const redIcon = MRE.Actor.CreateEmpty(this.app.context, {
+		const redIcon = MRE.Actor.Create(this.app.context, {
 			actor: {
 				name: 'redIcon',
 				parentId: root.id,
@@ -73,7 +73,7 @@ export default class UserMaskTest extends Test {
 			}
 		});
 
-		const blueIcon = MRE.Actor.CreateEmpty(this.app.context, {
+		const blueIcon = MRE.Actor.Create(this.app.context, {
 			actor: {
 				name: 'blueIcon',
 				parentId: root.id,

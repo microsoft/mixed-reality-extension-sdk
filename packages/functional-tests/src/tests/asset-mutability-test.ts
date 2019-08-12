@@ -20,7 +20,7 @@ export default class AssetMutabilityTest extends Test {
 		const mat = this.assets.materials[0];
 		mat.alphaMode = MRE.AlphaMode.Blend;
 
-		MRE.Actor.CreateEmpty(this.app.context, {
+		MRE.Actor.Create(this.app.context, {
 			actor: {
 				name: 'box',
 				parentId: root.id,

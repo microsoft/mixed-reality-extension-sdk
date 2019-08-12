@@ -56,7 +56,7 @@ export default class SoundTest extends Test {
 		this.assets = new MRE.AssetContainer(this.app.context);
 		const buttonMesh = this.assets.createSphereMesh('sphere', 0.2, 8, 4);
 
-		const musicButton = MRE.Actor.CreateEmpty(this.app.context, {
+		const musicButton = MRE.Actor.Create(this.app.context, {
 			actor: {
 				name: 'MusicButton',
 				parentId: root.id,
@@ -95,7 +95,7 @@ export default class SoundTest extends Test {
 		};
 		musicButtonBehavior.onButton('released', cycleMusicState);
 
-		const notesButton = MRE.Actor.CreateEmpty(this.app.context, {
+		const notesButton = MRE.Actor.Create(this.app.context, {
 			actor: {
 				name: 'NotesButton',
 				parentId: root.id,
@@ -128,7 +128,7 @@ export default class SoundTest extends Test {
 		};
 		notesButtonBehavior.onButton('released', playNotes);
 
-		const dopplerButton = MRE.Actor.CreateEmpty(this.app.context, {
+		const dopplerButton = MRE.Actor.Create(this.app.context, {
 			actor: {
 				name: 'DopplerButton',
 				parentId: root.id,
@@ -141,7 +141,7 @@ export default class SoundTest extends Test {
 				}
 			}
 		});
-		const dopplerMover = MRE.Actor.CreateEmpty(this.app.context, {
+		const dopplerMover = MRE.Actor.Create(this.app.context, {
 			actor: {
 				parentId: dopplerButton.id,
 				name: 'DopplerMover',

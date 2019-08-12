@@ -204,7 +204,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	 * @param context The SDK context object.
 	 * @param options.actor The initial state of the actor.
 	 */
-	public static CreateEmpty(context: Context, options?: {
+	public static Create(context: Context, options?: {
 		actor?: Partial<ActorLike>
 	}): Actor {
 		return context.internal.CreateEmpty(options);

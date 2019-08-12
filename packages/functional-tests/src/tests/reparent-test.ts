@@ -20,7 +20,7 @@ export default class ReparentTest extends Test {
 	public async run(root: MRE.Actor): Promise<boolean> {
 		this.assets = new MRE.AssetContainer(this.app.context);
 
-		const leftParent = MRE.Actor.CreateEmpty(this.app.context, {
+		const leftParent = MRE.Actor.Create(this.app.context, {
 			actor: {
 				parentId: root.id,
 				transform: {
@@ -30,7 +30,7 @@ export default class ReparentTest extends Test {
 				}
 			}
 		});
-		const rightParent = MRE.Actor.CreateEmpty(this.app.context, {
+		const rightParent = MRE.Actor.Create(this.app.context, {
 			actor: {
 				parentId: root.id,
 				transform: {
@@ -41,7 +41,7 @@ export default class ReparentTest extends Test {
 			}
 		});
 
-		const sphere = MRE.Actor.CreateEmpty(this.app.context, {
+		const sphere = MRE.Actor.Create(this.app.context, {
 			actor: {
 				parentId: leftParent.id,
 				appearance: {

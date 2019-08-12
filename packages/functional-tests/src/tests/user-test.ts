@@ -16,7 +16,7 @@ export default class UserTest extends Test {
 			"\nProperties: " + this.formatProperties(this.user.properties) +
 			"\nTotal Connected Users:" + connectedUserCount;
 
-		MRE.Actor.CreateEmpty(this.app.context, {
+		MRE.Actor.Create(this.app.context, {
 			actor: {
 				parentId: root.id,
 				transform: {

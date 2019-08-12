@@ -15,7 +15,7 @@ export default class AssetUnloadTest extends Test {
 	private state = 0;
 
 	public async run(root: MRE.Actor): Promise<boolean> {
-		this.prim = MRE.Actor.CreateEmpty(this.app.context, {
+		this.prim = MRE.Actor.Create(this.app.context, {
 			actor: {
 				name: 'sphere',
 				parentId: root.id,

@@ -25,7 +25,7 @@ export default class AssetEarlyAssignmentTest extends Test {
 
 		const mesh = this.assets.createSphereMesh('sphere', 0.5);
 
-		MRE.Actor.CreateEmpty(this.app.context, {
+		MRE.Actor.Create(this.app.context, {
 			actor: {
 				name: 'sphere',
 				parentId: root.id,

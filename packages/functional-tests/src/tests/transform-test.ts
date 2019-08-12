@@ -13,7 +13,7 @@ export default class TransformTest extends Test {
 		this.assets = new MRE.AssetContainer(this.app.context);
 		const deg45 = MRE.Quaternion.FromEulerAngles(0, 0, -Math.PI / 4);
 
-		const cube1 = MRE.Actor.CreateEmpty(this.app.context, {
+		const cube1 = MRE.Actor.Create(this.app.context, {
 			actor: {
 				name: 'cube1',
 				parentId: root.id,
@@ -76,7 +76,7 @@ export default class TransformTest extends Test {
 			}
 		});
 
-		const cube4 = MRE.Actor.CreateEmpty(this.app.context, {
+		const cube4 = MRE.Actor.Create(this.app.context, {
 			actor: {
 				name: 'cube4',
 				parentId: cube3.id,

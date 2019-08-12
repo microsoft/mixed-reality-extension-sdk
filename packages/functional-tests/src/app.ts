@@ -204,7 +204,7 @@ export class App {
 			this.testRoot.destroy();
 		}
 
-		this.testRoot = MRE.Actor.CreateEmpty(this.context, {
+		this.testRoot = MRE.Actor.Create(this.context, {
 			actor: {
 				name: 'testRoot',
 				exclusiveToUser: this.exclusiveUser && this.exclusiveUser.id || undefined
@@ -222,7 +222,7 @@ export class App {
 			this.exclusiveUser = this.firstUser;
 		}
 
-		this.exclusiveUserToggle = MRE.Actor.CreateEmpty(this.context, {
+		this.exclusiveUserToggle = MRE.Actor.Create(this.context, {
 			actor: {
 				appearance: {
 					meshId: this.assets.createBoxMesh('button', 0.25, 0.25, 0.1).id
@@ -237,7 +237,7 @@ export class App {
 				}
 			}
 		});
-		const label = MRE.Actor.CreateEmpty(this.context, {
+		const label = MRE.Actor.Create(this.context, {
 			actor: {
 				parentId: this.exclusiveUserToggle.id,
 				transform: {
@@ -257,7 +257,7 @@ export class App {
 		this.exclusiveUserToggle.setBehavior(MRE.ButtonBehavior)
 			.onButton('released', user => this.toggleExclusiveUser(user));
 
-		const floor = MRE.Actor.CreateEmpty(this.context, {
+		const floor = MRE.Actor.Create(this.context, {
 			actor: {
 				name: 'floor',
 				appearance: {
@@ -273,7 +273,7 @@ export class App {
 			}
 		});
 
-		const wall = MRE.Actor.CreateEmpty(this.context, {
+		const wall = MRE.Actor.Create(this.context, {
 			actor: {
 				name: 'wall',
 				appearance: {
@@ -294,7 +294,7 @@ export class App {
 
 	private setupRunner() {
 		// Main label at the top of the stage
-		this.contextLabel = MRE.Actor.CreateEmpty(this.context, {
+		this.contextLabel = MRE.Actor.Create(this.context, {
 			actor: {
 				name: 'contextLabel',
 				text: {
@@ -312,7 +312,7 @@ export class App {
 			}
 		});
 
-		this.testRoot = MRE.Actor.CreateEmpty(this.context, {
+		this.testRoot = MRE.Actor.Create(this.context, {
 			actor: {
 				name: 'testRoot',
 				exclusiveToUser: this.exclusiveUser && this.exclusiveUser.id || undefined
@@ -330,7 +330,7 @@ export class App {
 		});
 		const ppMesh = this.assets.createBoxMesh('playpause', 0.7, 0.3, 0.1);
 
-		this.playPauseButton = MRE.Actor.CreateEmpty(this.context, {
+		this.playPauseButton = MRE.Actor.Create(this.context, {
 			actor: {
 				name: 'playpause',
 				appearance: {
@@ -346,7 +346,7 @@ export class App {
 			}
 		});
 
-		this.playPauseText = MRE.Actor.CreateEmpty(this.context, {
+		this.playPauseText = MRE.Actor.Create(this.context, {
 			actor: {
 				parentId: this.playPauseButton.id,
 				transform: {
@@ -373,7 +373,7 @@ export class App {
 				}
 			});
 
-		const menuButton = MRE.Actor.CreateEmpty(this.context, {
+		const menuButton = MRE.Actor.Create(this.context, {
 			actor: {
 				name: 'menu',
 				appearance: {
@@ -388,7 +388,7 @@ export class App {
 			}
 		});
 
-		const menuText = MRE.Actor.CreateEmpty(this.context, {
+		const menuText = MRE.Actor.Create(this.context, {
 			actor: {
 				parentId: menuButton.id,
 				transform: {
