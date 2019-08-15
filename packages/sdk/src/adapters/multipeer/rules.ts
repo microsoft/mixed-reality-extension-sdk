@@ -306,7 +306,9 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 					// Send this to the cacheActorUpdateMessage call.
 					const updateMessage: Message<Payloads.ActorUpdate> = {
 						payload: {
+							type: 'actor-update',
 							actor: {
+								id: correctionPayload.actorId,
 								transform: {
 									app: correctionPayload.appTransform
 								}
