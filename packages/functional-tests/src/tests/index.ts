@@ -19,6 +19,7 @@ import GltfGenTest from './gltf-gen-test';
 import GrabTest from './grab-test';
 import InputTest from './input-test';
 import InterpolationTest from './interpolation-test';
+import LibraryAnimationTest from './library-animation-test';
 import LibraryFailTest from './library-fail-test';
 import LightTest from './light-test';
 import LookAtTest from './look-at-test';
@@ -56,6 +57,7 @@ export const Factories = {
 	'grab-test': (...args) => new GrabTest(...args),
 	'input-test': (...args) => new InputTest(...args),
 	'interpolation-test': (...args) => new InterpolationTest(...args),
+	'library-animation-test': (...args) => new LibraryAnimationTest(...args),
 	'library-fail-test': (...args) => new LibraryFailTest(...args),
 	'light-test': (...args) => new LightTest(...args),
 	'look-at-test': (...args) => new LookAtTest(...args),
