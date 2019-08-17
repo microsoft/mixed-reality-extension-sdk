@@ -81,7 +81,7 @@ export class InternalContext {
 		this.context.conn.on('close', this.onClose);
 	}
 
-	public CreateEmpty(options?: {
+	public Create(options?: {
 		actor?: Partial<ActorLike>
 	}): Actor {
 		options = {

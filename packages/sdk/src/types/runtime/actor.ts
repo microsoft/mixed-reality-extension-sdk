@@ -207,7 +207,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	public static Create(context: Context, options?: {
 		actor?: Partial<ActorLike>
 	}): Actor {
-		return context.internal.CreateEmpty(options);
+		return context.internal.Create(options);
 	}
 
 	/**
@@ -304,44 +304,47 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	 * Adds a collider of the given type and parameters on the actor.
 	 * @param colliderType Type of the collider to enable.
 	 * @param isTrigger Whether the collider is a trigger volume or not.
-	 * @param center The center of the collider, or default of the object if none is provided.
 	 * @param radius The radius of the collider.
+	 * @param center The center of the collider, or default of the object if none is provided.
 	 */
 	// * @param collisionLayer The layer that the collider operates in.
 	public setCollider(
 		colliderType: 'sphere',
 		// collisionLayer: CollisionLayer,
 		isTrigger: boolean,
-		center?: Vector3Like,
-		radius?: number): void;
+		radius: number,
+		center?: Vector3Like
+	): void;
 
 	/**
 	 * Adds a collider of the given type and parameters on the actor.
 	 * @param colliderType Type of the collider to enable.
 	 * @param isTrigger Whether the collider is a trigger volume or not.
-	 * @param center The center of the collider, or default of the object if none is provided.
 	 * @param size The dimensions of the collider.
+	 * @param center The center of the collider, or default of the object if none is provided.
 	 */
 	public setCollider(
 		colliderType: 'box',
 		// collisionLayer: CollisionLayer,
 		isTrigger: boolean,
-		center?: Vector3Like,
-		size?: Vector3Like): void;
+		size: Vector3Like,
+		center?: Vector3Like
+	): void;
 
 	/**
 	 * Adds a collider of the give type and parameters on the actor.
 	 * @param colliderType Type of the collider to enable.
 	 * @param isTrigger Whether the collider is a trigger volume or not.
-	 * @param center The center of the collider, or default of the object if none is provided.
 	 * @param size The dimensions of the collider, with the largest component of the vector
-	 * being the primary axis and height of the capsule, and the second largest the radius.
+	 * being the primary axis and height of the capsule, and the smallest the radius.
+	 * @param center The center of the collider, or default of the object if none is provided.
 	 */
 	public setCollider(
 		colliderType: 'capsule',
 		isTrigger: boolean,
-		center?: Vector3Like,
-		size?: Vector3Like): void;
+		size: Vector3Like,
+		center?: Vector3Like
+	): void;
 
 	/**
 	 * Adds a collider whose shape is determined by the current mesh.
@@ -355,13 +358,13 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 
 	/** @ignore */
 	public setCollider(
-		colliderType: 'box' | 'sphere' | 'capsule' | 'auto',
+		colliderType: ColliderType,
 		// collisionLayer: CollisionLayer,
 		isTrigger: boolean,
-		center?: Vector3Like,
-		size?: number | Vector3Like
+		size?: number | Vector3Like,
+		center = { x: 0, y: 0, z: 0 } as Vector3Like
 	): void {
-		const colliderGeometry = this.generateColliderGeometry(colliderType, center, size);
+		const colliderGeometry = this.generateColliderGeometry(colliderType, size, center);
 		if (colliderGeometry) {
 			this._setCollider({
 				enabled: true,
@@ -715,33 +718,33 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	 */
 
 	private generateColliderGeometry(
-		colliderType: 'box' | 'sphere' | 'capsule' | 'auto',
-		center?: Vector3Like,
-		size?: number | Vector3Like
+		colliderType: ColliderType,
+		size?: number | Vector3Like,
+		center = { x: 0, y: 0, z: 0 } as Vector3Like,
 	): ColliderGeometry {
 		switch (colliderType) {
 			case 'box':
 				return {
 					shape: 'box',
 					center,
-					size: size as Partial<Vector3Like>
-				} as BoxColliderGeometry;
+					size: (size || { x: 1, y: 1, z: 1 }) as Readonly<Vector3Like>
+				};
 			case 'sphere':
 				return {
 					shape: 'sphere',
 					center,
-					radius: size as number
-				} as SphereColliderGeometry;
+					radius: (size || 0.5) as number
+				};
 			case 'capsule':
 				return {
 					shape: 'capsule',
 					center,
-					size: size as Partial<Vector3Like>
-				} as CapsuleColliderGeometry;
+					size: (size || { x: 0.5, y: 1, z: 0.5 }) as Readonly<Vector3Like>
+				};
 			case 'auto':
 				return {
 					shape: 'auto'
-				} as AutoColliderGeometry;
+				};
 			default:
 				log.error(null,
 					'Trying to enable a collider on the actor with an invalid collider geometry type.' +
