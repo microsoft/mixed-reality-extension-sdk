@@ -132,7 +132,7 @@ export default class Menu {
 							}
 						}
 					},
-					collider: { geometry: { shape: 'auto' } as MRE.AutoColliderGeometry }
+					collider: { geometry: { shape: 'auto' } }
 				}
 			});
 			this.behaviors.push(control.setBehavior(MRE.ButtonBehavior));
@@ -168,7 +168,7 @@ export default class Menu {
 						position: { x: -1 + buttonWidth / 2, y: buttonSpacing / 2, z: -0.05 }
 					}
 				},
-				collider: { geometry: { shape: 'auto' } as MRE.AutoColliderGeometry }
+				collider: { geometry: { shape: 'auto' } }
 			}
 		});
 

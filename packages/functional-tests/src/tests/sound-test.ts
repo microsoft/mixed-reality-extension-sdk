@@ -61,7 +61,7 @@ export default class SoundTest extends Test {
 				name: 'MusicButton',
 				parentId: root.id,
 				appearance: { meshId: buttonMesh.id },
-				collider: { geometry: { shape: 'auto' } as MRE.AutoColliderGeometry },
+				collider: { geometry: { shape: 'auto' } },
 				transform: {
 					local: {
 						position: { x: -0.8, y: 1.3, z: -0.2 }
@@ -100,7 +100,7 @@ export default class SoundTest extends Test {
 				name: 'NotesButton',
 				parentId: root.id,
 				appearance: { meshId: buttonMesh.id },
-				collider: { geometry: { shape: 'auto' } as MRE.AutoColliderGeometry },
+				collider: { geometry: { shape: 'auto' } },
 				transform: {
 					local: {
 						position: { x: 0, y: 1.3, z: -0.2 }
@@ -133,7 +133,7 @@ export default class SoundTest extends Test {
 				name: 'DopplerButton',
 				parentId: root.id,
 				appearance: { meshId: buttonMesh.id },
-				collider: { geometry: { shape: 'auto' } as MRE.AutoColliderGeometry },
+				collider: { geometry: { shape: 'auto' } },
 				transform: {
 					local: {
 						position: { x: 0.8, y: 1.3, z: -0.2 }
@@ -146,7 +146,7 @@ export default class SoundTest extends Test {
 				parentId: dopplerButton.id,
 				name: 'DopplerMover',
 				appearance: { meshId: this.assets.createSphereMesh('doppler', 0.15, 8, 4).id },
-				collider: { geometry: { shape: 'auto' } as MRE.AutoColliderGeometry },
+				collider: { geometry: { shape: 'auto' } },
 				transform: {
 					local: {
 						position: { x: 0, y: 0, z: 3 }

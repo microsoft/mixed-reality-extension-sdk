@@ -66,7 +66,7 @@ export default class UserMaskTest extends Test {
 					meshId: this.assets.createBoxMesh('box', 0.5, 0.5, 0.5).id,
 					materialId: red.id
 				},
-				collider: { geometry: { shape: 'auto' } as MRE.AutoColliderGeometry },
+				collider: { geometry: { shape: 'auto' } },
 				transform: {
 					app: { position: { y: 1 } }
 				}
@@ -82,7 +82,7 @@ export default class UserMaskTest extends Test {
 					meshId: this.assets.createSphereMesh('sphere', 0.3).id,
 					materialId: blue.id
 				},
-				collider: { geometry: { shape: 'auto' } as MRE.AutoColliderGeometry },
+				collider: { geometry: { shape: 'auto' } },
 				transform: {
 					app: { position: { y: 1 } }
 				}

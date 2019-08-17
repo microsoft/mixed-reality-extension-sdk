@@ -233,7 +233,7 @@ export class App {
 					}
 				},
 				collider: {
-					geometry: { shape: 'auto' } as MRE.AutoColliderGeometry
+					geometry: { shape: 'auto' }
 				}
 			}
 		});
@@ -269,7 +269,7 @@ export class App {
 						position: { x: 0, y: -0.05, z: -1 }
 					}
 				},
-				collider: { geometry: { shape: 'auto' } as MRE.AutoColliderGeometry }
+				collider: { geometry: { shape: 'auto' } }
 			}
 		});
 
@@ -285,7 +285,7 @@ export class App {
 						position: { x: 0, y: 1, z: 0.1 }
 					}
 				},
-				collider: { geometry: { shape: 'auto' } as MRE.AutoColliderGeometry }
+				collider: { geometry: { shape: 'auto' } }
 			}
 		});
 
@@ -342,7 +342,7 @@ export class App {
 						position: { x: -0.65, y: 0.15, z: -1.95 }
 					}
 				},
-				collider: { geometry: { shape: 'auto' } as MRE.AutoColliderGeometry }
+				collider: { geometry: { shape: 'auto' } }
 			}
 		});
 
@@ -384,7 +384,7 @@ export class App {
 						position: { x: 0.65, y: 0.15, z: -1.95 }
 					}
 				},
-				collider: { geometry: { shape: 'auto' } as MRE.AutoColliderGeometry }
+				collider: { geometry: { shape: 'auto' } }
 			}
 		});
 

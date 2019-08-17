@@ -24,7 +24,7 @@ export default class AssetUnloadTest extends Test {
 						position: { y: 1, z: -1 }
 					}
 				},
-				collider: { geometry: { shape: 'sphere', radius: 0.5 } as MRE.SphereColliderGeometry }
+				collider: { geometry: { shape: 'sphere', radius: 0.5 } }
 			}
 		});
 		this.setup();

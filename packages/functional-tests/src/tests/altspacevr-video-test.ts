@@ -80,7 +80,7 @@ export default class AltspaceVRVideoTest extends Test {
 						position: { x: -0.8, y: 0.2, z: 0 }
 					}
 				},
-				collider: { geometry: { shape: 'auto' } as MRE.AutoColliderGeometry }
+				collider: { geometry: { shape: 'auto' } }
 			}
 		});
 
