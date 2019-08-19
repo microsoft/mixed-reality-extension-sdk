@@ -45,14 +45,16 @@ export default class GltfConcurrencyTest extends Test {
 		});
 		runner.enableAnimation('animation:0');
 
-		MRE.Actor.CreateFromPrefab(this.app.context, {
-			prefabId: gearboxAssets.find(a => !!a.prefab).id,
-			actor: {
-				name: 'gearbox',
-				parentId: root.id,
-				transform: { local: { position: { x: 16, y: 0.3, z: -1.5 }, scale: { x: 0.1, y: 0.1, z: 0.1 } } }
-			}
-		});
+		if (gearboxAssets) {
+			MRE.Actor.CreateFromPrefab(this.app.context, {
+				prefabId: gearboxAssets.find(a => !!a.prefab).id,
+				actor: {
+					name: 'gearbox',
+					parentId: root.id,
+					transform: { local: { position: { x: 16, y: 0.3, z: -1.5 }, scale: { x: 0.1, y: 0.1, z: 0.1 } } }
+				}
+			});
+		}
 
 		MRE.Actor.CreateFromPrefab(this.app.context, {
 			prefabId: bottleAssets.find(a => !!a.prefab).id,

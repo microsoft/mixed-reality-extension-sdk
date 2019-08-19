@@ -89,7 +89,15 @@ export default class Menu {
 					this.breadcrumbs.push(i);
 					this.show();
 				};
-				buttonMat = null;
+				const allTestsPass = (menu[i].action as MenuItem[])
+					.reduce((sum, test, j, arr) => {
+						if (Array.isArray(test.action)) {
+							arr.push(...test.action);
+						} else {
+							return sum || !!this.app.testResults[test.label];
+						}
+					}, false);
+				buttonMat = allTestsPass ? this.successMat : null;
 			}
 
 			this.buttons[i].appearance.material = buttonMat;
