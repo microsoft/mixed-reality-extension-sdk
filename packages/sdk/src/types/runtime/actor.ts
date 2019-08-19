@@ -10,6 +10,7 @@ import {
 	Appearance,
 	AppearanceLike,
 	Asset,
+	AssetContainer,
 	Attachment,
 	AttachmentLike,
 	AttachPoint,
@@ -278,6 +279,19 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 		}
 
 		return context.internal.CreateFromPrefab({ prefabId, actor: options.actor });
+	}
+
+	/**
+	 * Loads assets from a glTF file, populates the container with the assets, and spawns
+	 * @param container
+	 * @param options
+	 */
+	public static CreateFromGltf(container: AssetContainer, options: {
+		uri: string,
+		colliderType?: ColliderType
+		actor?: Partial<ActorLike>
+	}): Actor {
+		return container.context.internal.CreateFromGltf(container, options);
 	}
 
 	/**

@@ -4,7 +4,8 @@
  */
 
 import { CreateActorCommon, Payload } from '.';
-import { ColliderType } from '../../runtime';
+import { OperationResultCode } from '..';
+import { ActorLike, ColliderType } from '../../runtime';
 import { AssetLike, AssetSource } from '../../runtime/assets';
 
 export type CreateColliderType = ColliderType | 'none';
@@ -15,6 +16,7 @@ export type AssetPayloadType
 	| 'asset-update'
 	| 'create-asset'
 	| 'create-from-prefab'
+	| 'load-and-spawn-prefab'
 	| 'load-assets'
 	| 'unload-assets';
 
@@ -57,3 +59,20 @@ export type UnloadAssets = Payload & {
 	type: 'unload-assets';
 	containerId: string;
 };
+
+/** @hidden */
+export type LoadAndSpawnPrefab = CreateActorCommon & {
+	type: 'load-and-spawn-prefab',
+	containerId: string;
+	source: AssetSource;
+	colliderType: CreateColliderType;
+}
+
+export type LoadAndSpawnResult = Payload & {
+	type: 'load-and-spawn-result';
+	resultCode: OperationResultCode;
+	message: string;
+
+	assets: AssetLike[];
+	actors: Partial<ActorLike>[];
+}

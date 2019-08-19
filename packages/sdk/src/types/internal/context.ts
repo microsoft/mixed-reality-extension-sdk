@@ -39,6 +39,8 @@ import {
 	CreateFromPrefab,
 	DestroyActors,
 	InterpolateActor,
+	LoadAndSpawnPrefab,
+	LoadAndSpawnResult,
 	ObjectSpawned,
 	OperationResult,
 	Payload,
@@ -172,6 +174,57 @@ export class InternalContext {
 					actor.internal.notifyCreated(true);
 				} else {
 					actor.internal.notifyCreated(false, message);
+				}
+			},
+			reject: (reason?: any) => {
+				actor.internal.notifyCreated(false, reason);
+			}
+		});
+
+		return actor;
+	}
+
+	public CreateFromGltf(container: AssetContainer, options: {
+		uri: string,
+		colliderType?: ColliderType
+		actor?: Partial<ActorLike>
+	}): Actor {
+		const payload = {
+			type: 'load-and-spawn-prefab',
+			containerId: container.id,
+			source: {
+				containerType: 'gltf',
+				uri: options.uri
+			},
+			colliderType: options.colliderType,
+			actor: Actor.sanitize(options.actor)
+		} as LoadAndSpawnPrefab;
+		this.updateActors(payload.actor);
+		const actor = this.context.actor(payload.actor.id);
+
+		this.protocol.sendPayload(payload, {
+			resolve: (reply: LoadAndSpawnResult) => {
+				this.protocol.recvPayload(reply);
+
+				let success = reply.resultCode !== 'error';
+				let message = reply.message;
+				for (const createdActorLike of reply.actors) {
+					const createdActor = this.actorSet[createdActorLike.id];
+					if (createdActor) {
+						createdActor.internal.notifyCreated(success, message);
+					}
+				}
+
+				for (const def of reply.assets) {
+					def.source = payload.source;
+					const asset = Asset.Parse(container, def);
+					container.addAsset(asset);
+				}
+
+				if (!actor.collider && actor.internal.behavior) {
+					log.warning('app', 'Behaviors will not function on Unity host apps without adding a'
+						+ ' collider to this actor first. Recommend adding a primitive collider'
+						+ ' to this actor.');
 				}
 			},
 			reject: (reason?: any) => {
