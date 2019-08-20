@@ -17,6 +17,7 @@ export type AssetPayloadType
 	| 'create-asset'
 	| 'create-from-prefab'
 	| 'load-and-spawn-prefab'
+	| 'load-and-spawn-result'
 	| 'load-assets'
 	| 'unload-assets';
 
