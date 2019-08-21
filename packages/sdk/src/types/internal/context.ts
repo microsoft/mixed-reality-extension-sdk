@@ -29,27 +29,7 @@ import {
 	UserSet,
 } from '../..';
 
-import {
-	ActorUpdate,
-	AssetUpdate,
-	CreateActorCommon,
-	CreateAnimation,
-	CreateEmpty,
-	CreateFromLibrary,
-	CreateFromPrefab,
-	DestroyActors,
-	InterpolateActor,
-	LoadAndSpawnPrefab,
-	LoadAndSpawnResult,
-	ObjectSpawned,
-	OperationResult,
-	Payload,
-	RigidBodyCommands,
-	SetAnimationState,
-	SetBehavior,
-	SetMediaState,
-	UserUpdate,
-} from '../network/payloads';
+import * as Payloads from '../network/payloads';
 
 import { ZeroGuid } from '../../constants';
 import { log } from '../../log';
@@ -96,7 +76,7 @@ export class InternalContext {
 		const payload = {
 			...options,
 			type: 'create-empty',
-		} as CreateEmpty;
+		} as Payloads.CreateEmpty;
 		return this.createActorFromPayload(payload);
 	}
 
@@ -114,7 +94,7 @@ export class InternalContext {
 		const payload = {
 			...options,
 			type: 'create-from-library'
-		} as CreateFromLibrary;
+		} as Payloads.CreateFromLibrary;
 		return this.createActorFromPayload(payload);
 	}
 
@@ -129,13 +109,13 @@ export class InternalContext {
 				...options.actor,
 				id: UUID()
 			}
-		} as CreateFromPrefab;
+		} as Payloads.CreateFromPrefab;
 
 		return this.createActorFromPayload(payload);
 	}
 
 	private createActorFromPayload(
-		payload: CreateActorCommon
+		payload: Payloads.CreateActorCommon
 	): Actor {
 		// Resolve by-reference values now, ensuring they won't change in the
 		// time between now and when this message is actually sent.
@@ -146,7 +126,7 @@ export class InternalContext {
 		const actor = this.context.actor(payload.actor.id);
 
 		this.protocol.sendPayload( payload, {
-			resolve: (replyPayload: ObjectSpawned | OperationResult) => {
+			resolve: (replyPayload: Payloads.ObjectSpawned | Payloads.OperationResult) => {
 				this.protocol.recvPayload(replyPayload);
 				let success: boolean;
 				let message: string;
@@ -186,51 +166,36 @@ export class InternalContext {
 
 	public CreateFromGltf(container: AssetContainer, options: {
 		uri: string,
-		colliderType?: ColliderType
+		colliderType?: 'box' | 'mesh',
 		actor?: Partial<ActorLike>
 	}): Actor {
-		const payload = {
-			type: 'load-and-spawn-prefab',
-			containerId: container.id,
-			source: {
-				containerType: 'gltf',
-				uri: options.uri
-			},
-			colliderType: options.colliderType,
-			actor: Actor.sanitize(options.actor)
-		} as LoadAndSpawnPrefab;
-		this.updateActors(payload.actor);
-		const actor = this.context.actor(payload.actor.id);
+		// reserve actor immediately so the pending actor is ready for commands
+		this.protocol.sendPayload({
+			type: 'x-reserve-actor',
+			actor: options.actor
+		} as Payloads.XReserveActor);
 
-		this.protocol.sendPayload(payload, {
-			resolve: (reply: LoadAndSpawnResult) => {
-				this.protocol.recvPayload(reply);
+		// create actor locally
+		options.actor = Actor.sanitize({ ...options.actor, id: UUID() });
+		this.updateActors(options.actor);
+		const actor = this.context.actor(options.actor.id);
 
-				let success = reply.resultCode !== 'error';
-				let message = reply.message;
-				for (const createdActorLike of reply.actors) {
-					const createdActor = this.actorSet[createdActorLike.id];
-					if (createdActor) {
-						createdActor.internal.notifyCreated(success, message);
-					}
-				}
-
-				for (const def of reply.assets) {
-					def.source = payload.source;
-					const asset = Asset.Parse(container, def);
-					container.addAsset(asset);
-				}
-
-				if (!actor.collider && actor.internal.behavior) {
-					log.warning('app', 'Behaviors will not function on Unity host apps without adding a'
-						+ ' collider to this actor first. Recommend adding a primitive collider'
-						+ ' to this actor.');
-				}
-			},
-			reject: (reason?: any) => {
-				actor.internal.notifyCreated(false, reason);
+		// kick off asset loading
+		container.loadGltf(options.uri, options.colliderType)
+		.then(assets => {
+			const prefab = assets.find(a => !!a.prefab);
+			if (!prefab) {
+				actor.internal.notifyCreated(false, `glTF file specifies no scenes: ${options.uri}`);
+				return;
 			}
-		});
+
+			// once assets are done, find first prefab and spawn it
+			this.CreateFromPrefab({
+				prefabId: prefab.id,
+				actor: options.actor
+			});
+		})
+		.catch(reason => actor.internal.notifyCreated(false, reason));
 
 		return actor;
 	}
@@ -260,7 +225,7 @@ export class InternalContext {
 			actorId,
 			animationName,
 			...options
-		} as CreateAnimation);
+		} as Payloads.CreateAnimation);
 	}
 
 	public setAnimationState(
@@ -277,7 +242,7 @@ export class InternalContext {
 				actorId,
 				animationName,
 				state
-			} as SetAnimationState);
+			} as Payloads.SetAnimationState);
 		}
 	}
 
@@ -294,7 +259,7 @@ export class InternalContext {
 			mediaAssetId,
 			mediaCommand: command,
 			options
-		} as SetMediaState);
+		} as Payloads.SetMediaState);
 	}
 
 	public animateTo(
@@ -318,7 +283,7 @@ export class InternalContext {
 				duration,
 				curve,
 				enabled: true
-			} as InterpolateActor);
+			} as Payloads.InterpolateActor);
 		}
 	}
 
@@ -412,17 +377,17 @@ export class InternalContext {
 				this.protocol.sendPayload({
 					type: 'actor-update',
 					actor: patch as ActorLike
-				} as ActorUpdate);
+				} as Payloads.ActorUpdate);
 			} else if (patchable instanceof Asset) {
 				this.protocol.sendPayload({
 					type: 'asset-update',
 					asset: patch as AssetLike
-				} as AssetUpdate);
+				} as Payloads.AssetUpdate);
 			} else if (patchable instanceof User) {
 				this.protocol.sendPayload({
 					type: 'user-update',
 					user: patch as UserLike
-				} as UserUpdate);
+				} as Payloads.UserUpdate);
 			}
 		}
 
@@ -451,7 +416,7 @@ export class InternalContext {
 			this.protocol.sendPayload({
 				type: 'destroy-actors',
 				actorIds,
-			} as DestroyActors);
+			} as Payloads.DestroyActors);
 		}
 	}
 
@@ -479,7 +444,7 @@ export class InternalContext {
 		});
 	}
 
-	public sendPayload(payload: Payload): void {
+	public sendPayload(payload: Payloads.Payload): void {
 		this.protocol.sendPayload(payload);
 	}
 
@@ -592,12 +557,12 @@ export class InternalContext {
 		}
 	}
 
-	public sendRigidBodyCommand(actorId: string, payload: Payload) {
+	public sendRigidBodyCommand(actorId: string, payload: Payloads.Payload) {
 		this.protocol.sendPayload({
 			type: 'rigidbody-commands',
 			actorId,
 			commandPayloads: [payload]
-		} as RigidBodyCommands);
+		} as Payloads.RigidBodyCommands);
 	}
 
 	public setBehavior(actorId: string, newBehaviorType: BehaviorType) {
@@ -607,7 +572,7 @@ export class InternalContext {
 				type: 'set-behavior',
 				actorId,
 				behaviorType: newBehaviorType || 'none'
-			} as SetBehavior);
+			} as Payloads.SetBehavior);
 		}
 	}
 
