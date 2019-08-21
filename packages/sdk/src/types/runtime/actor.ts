@@ -47,11 +47,9 @@ import { Patchable } from '../patchable';
 import { ActionHandler, ActionState, Behavior, DiscreteAction } from './behaviors';
 import { MediaInstance } from './mediaInstance';
 import {
-	AutoColliderGeometry,
-	BoxColliderGeometry,
-	CapsuleColliderGeometry,
 	ColliderGeometry,
-	SphereColliderGeometry
+	CollisionHandler,
+	TriggerHandler
 } from './physics';
 
 /**
@@ -763,18 +761,24 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	}
 
 	private _setCollider(collider: Partial<ColliderLike>) {
-		if (!this._collider) {
-			this._collider = new Collider(this, collider);
-			// Actor patching: Observe the collider component for changed values.
-			observe({
-				target: this._collider,
-				targetName: 'collider',
-				notifyChanged: (...path: string[]) => this.actorChanged(...path),
-				// Trigger notifications for every observed leaf node to ensure we get all values in the initial patch.
-				triggerNotificationsNow: true
-			});
+		let oldCollider = this._collider;
+		if (this._collider) {
+			unobserve(this._collider);
+			this._collider = undefined;
 		}
-		// Copying the new values will trigger an actor update and enable/update the collider component.
-		this._collider.copy(collider);
+
+		this._collider = new Collider(this, collider);
+		if (oldCollider) {
+			this._collider.internal.copyHandlers(oldCollider.internal);
+		}
+
+		// Actor patching: Observe the collider component for changed values.
+		observe({
+			target: this._collider,
+			targetName: 'collider',
+			notifyChanged: (...path: string[]) => this.actorChanged(...path),
+			// Trigger notifications for every observed leaf node to ensure we get all values in the initial patch.
+			triggerNotificationsNow: true
+		});
 	}
 }

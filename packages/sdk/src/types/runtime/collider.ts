@@ -50,16 +50,18 @@ export class Collider implements ColliderLike {
 	 * the actor patch detection system.
 	 * @param initFrom The collider like to use to init from.
 	 */
-	constructor(private $owner: Actor, initFrom: Partial<ColliderLike>) {
-		if (initFrom) {
-			if (!initFrom.geometry && !initFrom.geometry.shape) {
-				throw new Error("Must provide valid collider params containing a valid collider type");
+	constructor(private $owner: Actor, from: Partial<ColliderLike>) {
+		if (from) {
+			if (!from.geometry || !from.geometry.shape) {
+				throw new Error("Must provide valid collider params containing a valid shape");
 			}
 
 			this._internal = new InternalCollider(this, $owner);
-			this.copy(initFrom);
+			if (from.geometry !== undefined) this.geometry = from.geometry;
+			if (from.enabled !== undefined) this.enabled = from.enabled;
+			if (from.isTrigger !== undefined) this.isTrigger = from.isTrigger;
 		} else {
-			throw new Error("Must provide a valid collider like to init from.");
+			throw new Error("Must provide a valid collider-like to initialize from.");
 		}
 	}
 
@@ -110,14 +112,5 @@ export class Collider implements ColliderLike {
 			geometry: this.geometry,
 			eventSubscriptions: this.eventSubscriptions
 		} as ColliderLike;
-	}
-
-	public copy(from: Partial<ColliderLike>): this {
-		if (!from) return this;
-		if (from.geometry !== undefined) this.geometry = from.geometry;
-		if (from.enabled !== undefined) this.enabled = from.enabled;
-		if (from.isTrigger !== undefined) this.isTrigger = from.isTrigger;
-		// if (from.collisionLayer !== undefined) this.collisionLayer = from.collisionLayer;
-		return this;
 	}
 }

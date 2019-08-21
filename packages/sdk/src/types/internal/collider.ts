@@ -46,6 +46,15 @@ export class InternalCollider {
 		this._eventHandlers.emit(event, payload);
 	}
 
+	/** @hidden */
+	public copyHandlers(other: InternalCollider): void {
+		for (const event of other._eventHandlers.eventNames()) {
+			for (const handler of other._eventHandlers.listeners(event)) {
+				this._eventHandlers.on(event, handler as (...args: any) => void);
+			}
+		}
+	}
+
 	private updateEventSubscriptions() {
 		const newSubCount = this._eventHandlers.eventNames().length;
 		if (this._eventSubCount !== newSubCount) {
