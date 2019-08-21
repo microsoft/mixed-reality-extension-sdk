@@ -1114,5 +1114,17 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 				return null;
 			}
 		}
+	},
+
+	// ========================================================================
+	'x-reserve-actor': {
+		...DefaultRule,
+		session: {
+			...DefaultRule.session,
+			beforeReceiveFromApp: (session: Session, message: Message<Payloads.XReserveActor>) => {
+				session.cacheInitializeActorMessage(message);
+				return null;
+			}
+		}
 	}
 };
