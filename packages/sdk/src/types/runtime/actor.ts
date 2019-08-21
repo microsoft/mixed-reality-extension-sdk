@@ -304,7 +304,9 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	 * Adds a collider of the given type and parameters on the actor.
 	 * @param colliderType Type of the collider to enable.
 	 * @param isTrigger Whether the collider is a trigger volume or not.
-	 * @param radius The radius of the collider.
+	 * @param radius The radius of the collider. If omitted, a best-guess radius is chosen
+	 * based on the size of the currently assigned mesh (loading meshes are not considered).
+	 * If no mesh is assigned, defaults to 0.5.
 	 * @param center The center of the collider, or default of the object if none is provided.
 	 */
 	// * @param collisionLayer The layer that the collider operates in.
@@ -312,7 +314,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 		colliderType: 'sphere',
 		// collisionLayer: CollisionLayer,
 		isTrigger: boolean,
-		radius: number,
+		radius?: number,
 		center?: Vector3Like
 	): void;
 
@@ -320,14 +322,16 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	 * Adds a collider of the given type and parameters on the actor.
 	 * @param colliderType Type of the collider to enable.
 	 * @param isTrigger Whether the collider is a trigger volume or not.
-	 * @param size The dimensions of the collider.
+	 * @param size The dimensions of the collider. If omitted, a best-guess size is chosen
+	 * based on the currently assigned mesh (loading meshes are not considered).
+	 * If no mesh is assigned, defaults to (1,1,1).
 	 * @param center The center of the collider, or default of the object if none is provided.
 	 */
 	public setCollider(
 		colliderType: 'box',
 		// collisionLayer: CollisionLayer,
 		isTrigger: boolean,
-		size: Vector3Like,
+		size?: Vector3Like,
 		center?: Vector3Like
 	): void;
 
@@ -336,13 +340,15 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	 * @param colliderType Type of the collider to enable.
 	 * @param isTrigger Whether the collider is a trigger volume or not.
 	 * @param size The dimensions of the collider, with the largest component of the vector
-	 * being the primary axis and height of the capsule, and the smallest the radius.
+	 * being the primary axis and height of the capsule (including end caps), and the smallest the diameter.
+	 * If omitted, a best-guess size is chosen based on the currently assigned mesh
+	 * (loading meshes are not considered). If no mesh is assigned, defaults to (1, 1, 1).
 	 * @param center The center of the collider, or default of the object if none is provided.
 	 */
 	public setCollider(
 		colliderType: 'capsule',
 		isTrigger: boolean,
-		size: Vector3Like,
+		size?: Vector3Like,
 		center?: Vector3Like
 	): void;
 
@@ -727,19 +733,19 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 				return {
 					shape: 'box',
 					center,
-					size: (size || { x: 1, y: 1, z: 1 }) as Readonly<Vector3Like>
+					size: size as Readonly<Vector3Like>
 				};
 			case 'sphere':
 				return {
 					shape: 'sphere',
 					center,
-					radius: (size || 0.5) as number
+					radius: size as number
 				};
 			case 'capsule':
 				return {
 					shape: 'capsule',
 					center,
-					size: (size || { x: 0.5, y: 1, z: 0.5 }) as Readonly<Vector3Like>
+					size: size as Readonly<Vector3Like>
 				};
 			case 'auto':
 				return {
