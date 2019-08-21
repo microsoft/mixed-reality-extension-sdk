@@ -117,21 +117,12 @@ export class InternalContext {
 	}
 
 	public CreateFromPrefab(options: {
-		prefabId?: string,
-		firstPrefabFrom?: Asset[],
+		prefabId: string,
 		actor?: Partial<ActorLike>
 	}): Actor {
-		let prefabId = options.prefabId;
-		if (!prefabId && options.firstPrefabFrom) {
-			prefabId = options.firstPrefabFrom.find(a => !!a.prefab).id as string;
-		}
-		if (!prefabId) {
-			throw new Error("No prefab supplied to CreateFromPrefab");
-		}
-
 		const payload = {
 			type: 'create-from-prefab',
-			prefabId,
+			prefabId: options.prefabId,
 			actor: {
 				...options.actor,
 				id: UUID()

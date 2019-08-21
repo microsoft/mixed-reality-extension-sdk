@@ -20,6 +20,7 @@ import {
 	LightLike,
 	LookAt,
 	LookAtLike,
+	Prefab,
 	RigidBody,
 	RigidBodyLike,
 	Text,
@@ -225,17 +226,58 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	/**
 	 * Creates a new actor hierarchy from the provided prefab.
 	 * @param context The SDK context object.
-	 * @param options.prefabId The ID of the prefab asset. If not specified, you must specify firstPrefabFrom.
-	 * @param options.firstPrefabFrom If supplied, the first prefab from the array will be used.
+	 * @param options.prefabId The ID of a prefab asset to spawn.
 	 * @param options.actor The initial state of the root actor.
 	 * given a collider type when loaded @see AssetManager.loadGltf.
 	 */
 	public static CreateFromPrefab(context: Context, options: {
+		prefabId: string,
+		actor?: Partial<ActorLike>
+	}): Actor;
+
+	/**
+	 * Creates a new actor hierarchy from the provided prefab.
+	 * @param context The SDK context object.
+	 * @param options.prefab The prefab asset to spawn.
+	 * @param options.actor The initial state of the root actor.
+	 * given a collider type when loaded @see AssetManager.loadGltf.
+	 */
+	public static CreateFromPrefab(context: Context, options: {
+		prefab: Prefab,
+		actor?: Partial<ActorLike>
+	}): Actor;
+
+	/**
+	 * Creates a new actor hierarchy from the provided prefab.
+	 * @param context The SDK context object.
+	 * @param options.firstPrefabFrom An asset array containing at least one prefab.
+	 * @param options.actor The initial state of the root actor.
+	 * given a collider type when loaded @see AssetManager.loadGltf.
+	 */
+	public static CreateFromPrefab(context: Context, options: {
+		firstPrefabFrom: Asset[],
+		actor?: Partial<ActorLike>
+	}): Actor;
+
+	/** @hidden */
+	public static CreateFromPrefab(context: Context, options: {
 		prefabId?: string,
+		prefab?: Prefab,
 		firstPrefabFrom?: Asset[],
 		actor?: Partial<ActorLike>
 	}): Actor {
-		return context.internal.CreateFromPrefab(options);
+		let prefabId = options.prefabId;
+		if (!prefabId && options.prefab) {
+			prefabId = options.prefab.id;
+		}
+		if (!prefabId && options.firstPrefabFrom) {
+			prefabId = options.firstPrefabFrom.find(a => !!a.prefab).id as string;
+		}
+		if (!prefabId) {
+			throw new Error("No prefab supplied to CreateFromPrefab");
+		}
+
+		return context.internal.CreateFromPrefab({ prefabId, actor: options.actor });
 	}
 
 	/**
