@@ -227,12 +227,14 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	/**
 	 * Creates a new actor hierarchy from the provided prefab.
 	 * @param context The SDK context object.
-	 * @param options.prefabId The ID of the prefab asset, or an array of assets from which the first prefab is taken.
+	 * @param options.prefabId The ID of the prefab asset. If not specified, you must specify firstPrefabFrom.
+	 * @param options.firstPrefabFrom If supplied, the first prefab from the array will be used.
 	 * @param options.actor The initial state of the root actor.
 	 * given a collider type when loaded @see AssetManager.loadGltf.
 	 */
 	public static CreateFromPrefab(context: Context, options: {
-		prefabId: string | Asset[],
+		prefabId?: string,
+		firstPrefabFrom?: Asset[],
 		actor?: Partial<ActorLike>
 	}): Actor {
 		return context.internal.CreateFromPrefab(options);
