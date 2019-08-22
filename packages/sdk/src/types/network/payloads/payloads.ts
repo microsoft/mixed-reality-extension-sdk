@@ -329,9 +329,13 @@ export type SetBehavior = Payload & {
  */
 export type SetTriggeredAction = Payload & {
 	type: 'set-triggered-action';
-	targetId: string,
+	// The actor on which the source behavior is registered
+	actorId: string,
+	// The name of the action that will fire this triggered action
 	actionName: string,
+	// The state of the action that will fire this triggered action
 	actionState: string
+	// Triggered action details
 	triggeredAction: TriggeredAction;
 };
 

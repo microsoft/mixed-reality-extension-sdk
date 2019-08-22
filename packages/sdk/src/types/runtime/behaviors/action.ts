@@ -49,7 +49,7 @@ export class DiscreteAction {
 		if (typeof options === 'object') {
 			context.internal.sendPayload({
 				type: 'set-triggered-action',
-				targetId: actorId,
+				actorId,
 				actionName: this.name,
 				actionState,
 				triggeredAction: options.action,
