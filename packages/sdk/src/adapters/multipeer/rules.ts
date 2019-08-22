@@ -948,7 +948,7 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 	},
 
 	// ========================================================================
-	'set-client-action': {
+	'set-triggered-action': {
 		...DefaultRule
 		// TODO: Cache in sync layer. Synchronize in set-behaviors stage
 	},
