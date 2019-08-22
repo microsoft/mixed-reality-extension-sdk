@@ -105,13 +105,11 @@ export class InternalContext {
 		const payload = {
 			...options,
 			actor: {
-				...options.actor
+				...options.actor,
+				id: UUID()
 			},
 			type: 'create-from-prefab'
 		} as Payloads.CreateFromPrefab;
-		if (!payload.actor.id) {
-			payload.actor.id = UUID();
-		}
 
 		return this.createActorFromPayload(payload);
 	}
@@ -171,31 +169,33 @@ export class InternalContext {
 		colliderType?: 'box' | 'mesh',
 		actor?: Partial<ActorLike>
 	}): Actor {
-		// reserve actor immediately so the pending actor is ready for commands
-		this.protocol.sendPayload({
-			type: 'x-reserve-actor',
-			actor: options.actor
-		} as Payloads.XReserveActor);
-
 		// create actor locally
 		options.actor = Actor.sanitize({ ...options.actor, id: UUID() });
 		this.updateActors(options.actor);
 		const actor = this.context.actor(options.actor.id);
 
+		// reserve actor so the pending actor is ready for commands
+		this.protocol.sendPayload({
+			type: 'x-reserve-actor',
+			actor: options.actor
+		} as Payloads.XReserveActor);
+
 		// kick off asset loading
 		container.loadGltf(options.uri, options.colliderType)
 		.then(assets => {
+			// once assets are done, find first prefab...
 			const prefab = assets.find(a => !!a.prefab);
 			if (!prefab) {
-				actor.internal.notifyCreated(false, `glTF file specifies no scenes: ${options.uri}`);
+				actor.internal.notifyCreated(false, `glTF contains no prefabs: ${options.uri}`);
 				return;
 			}
 
-			// once assets are done, find first prefab and spawn it
-			this.CreateFromPrefab({
+			// ...and spawn it
+			this.createActorFromPayload({
+				type: 'create-from-prefab',
 				prefabId: prefab.id,
 				actor: options.actor
-			});
+			} as Payloads.CreateFromPrefab);
 		})
 		.catch(reason => actor.internal.notifyCreated(false, reason));
 
