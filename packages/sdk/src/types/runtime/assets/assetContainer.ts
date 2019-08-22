@@ -284,11 +284,6 @@ export class AssetContainer {
 		.catch(err => log.error('app', err));
 	}
 
-	/** @hidden */
-	public addAsset(asset: Asset) {
-		this._assets[asset.id] = asset;
-	}
-
 	private async sendCreateAsset(asset: Asset): Promise<void> {
 		if (!this._assets) {
 			throw new Error("Cannot load new assets into an unloaded container!");
