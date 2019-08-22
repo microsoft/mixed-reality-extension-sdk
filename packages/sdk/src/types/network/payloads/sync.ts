@@ -14,4 +14,4 @@ export type SyncPayloadType = 'x-reserve-actor';
  */
 export type XReserveActor = CreateActorCommon & {
 	type: 'x-reserve-actor'
-}
+};
