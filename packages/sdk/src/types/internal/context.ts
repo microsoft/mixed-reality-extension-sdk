@@ -103,13 +103,15 @@ export class InternalContext {
 		actor?: Partial<ActorLike>
 	}): Actor {
 		const payload = {
-			type: 'create-from-prefab',
-			prefabId: options.prefabId,
+			...options,
 			actor: {
-				...options.actor,
-				id: UUID()
-			}
+				...options.actor
+			},
+			type: 'create-from-prefab'
 		} as Payloads.CreateFromPrefab;
+		if (!payload.actor.id) {
+			payload.actor.id = UUID();
+		}
 
 		return this.createActorFromPayload(payload);
 	}
