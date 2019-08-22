@@ -22,7 +22,7 @@ export default class GltfAnimationTest extends Test {
 		this.assets = new MRE.AssetContainer(this.app.context);
 
 		this.prefab = MRE.Actor.CreateFromPrefab(this.app.context, {
-			prefabId:
+			firstPrefabFrom:
 				(await this.assets.loadGltf('https://raw.githubusercontent.com/KhronosGroup/' +
 					'glTF-Sample-Models/master/2.0/CesiumMan/glTF-Binary/CesiumMan.glb', 'box')
 				),

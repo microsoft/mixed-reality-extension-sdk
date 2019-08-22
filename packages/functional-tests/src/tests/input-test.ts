@@ -44,7 +44,7 @@ export default class InputTest extends Test {
 		// Create an actor
 		this.model = MRE.Actor.CreateFromPrefab(this.app.context, {
 			// from the glTF at the given URL, with box colliders on each mesh
-			prefabId: await this.assets.loadGltf(`${this.baseUrl}/monkey.glb`, 'box'),
+			firstPrefabFrom: await this.assets.loadGltf(`${this.baseUrl}/monkey.glb`, 'box'),
 			// Also apply the following generic actor properties.
 			actor: {
 				name: 'clickable',

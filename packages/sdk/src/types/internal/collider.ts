@@ -50,7 +50,7 @@ export class InternalCollider {
 	public copyHandlers(other: InternalCollider): void {
 		for (const event of other._eventHandlers.eventNames()) {
 			for (const handler of other._eventHandlers.listeners(event)) {
-				this._eventHandlers.on(event, handler as (...args: any) => void);
+				this._eventHandlers.on(event, handler as (...args: any[]) => void);
 			}
 		}
 	}

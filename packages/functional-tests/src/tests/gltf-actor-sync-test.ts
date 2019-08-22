@@ -18,7 +18,7 @@ export default class GltfActorSyncTest extends Test {
 	public async run(root: MRE.Actor): Promise<boolean> {
 		this.assets = new MRE.AssetContainer(this.app.context);
 		const actorRoot = MRE.Actor.CreateFromPrefab(this.app.context, {
-			prefabId: await this.assets.loadGltf(`${this.baseUrl}/monkey.glb`, 'box'),
+			firstPrefabFrom: await this.assets.loadGltf(`${this.baseUrl}/monkey.glb`, 'box'),
 			actor: {
 				name: 'glTF',
 				parentId: root.id,
