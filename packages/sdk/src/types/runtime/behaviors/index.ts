@@ -8,5 +8,6 @@ export * from './actionEvent';
 export * from './actionStates';
 export * from './behavior';
 export * from './behaviorTypes';
+export * from './clientAction';
 export * from './targetBehavior';
 export * from './buttonBehavior';

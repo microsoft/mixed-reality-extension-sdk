@@ -3,7 +3,14 @@
  * Licensed under the MIT License.
  */
 
-import { ActionHandler, ActionState, BehaviorType, DiscreteAction, TargetBehavior } from '.';
+import {
+	ActionHandler,
+	ActionHandlerWithClientAction,
+	ActionState,
+	BehaviorType,
+	DiscreteAction,
+	TargetBehavior
+} from '.';
 import { User } from '..';
 
 /**
@@ -11,9 +18,9 @@ import { User } from '..';
  */
 export class ButtonBehavior extends TargetBehavior {
 	// tslint:disable:variable-name
-	private _hover: DiscreteAction = new DiscreteAction();
-	private _click: DiscreteAction = new DiscreteAction();
-	private _button: DiscreteAction = new DiscreteAction();
+	private _hover: DiscreteAction = new DiscreteAction('hover');
+	private _click: DiscreteAction = new DiscreteAction('click');
+	private _button: DiscreteAction = new DiscreteAction('button');
 	// tslint:enable:variable-name
 
 	/** @inheritdoc */
@@ -29,9 +36,9 @@ export class ButtonBehavior extends TargetBehavior {
 	 * @param handler The handler to call when the hover state is triggered.
 	 * @return This button behavior.
 	 */
-	public onHover(hoverState: 'enter' | 'exit', handler: ActionHandler): this {
+	public onHover(hoverState: 'enter' | 'exit', handler: ActionHandler | ActionHandlerWithClientAction): this {
 		const actionState: ActionState = (hoverState === 'enter') ? 'started' : 'stopped';
-		this._hover.on(actionState, handler);
+		this._hover.on(this.context, this.actorId, actionState, handler);
 		return this;
 	}
 
@@ -41,7 +48,7 @@ export class ButtonBehavior extends TargetBehavior {
 	 * @return This button behavior.
 	 */
 	public onClick(handler: ActionHandler): this {
-		this._click.on('started', handler);
+		this._click.on(this.context, this.actorId, 'started', handler);
 		return this;
 	}
 
@@ -51,9 +58,9 @@ export class ButtonBehavior extends TargetBehavior {
 	 * @param handler The handler to call when the click state is triggered.
 	 * @return This button behavior.
 	 */
-	public onButton(buttonState: 'pressed' | 'released', handler: ActionHandler): this {
+	public onButton(buttonState: 'pressed' | 'released', handler: ActionHandler | ActionHandlerWithClientAction): this {
 		const actionState: ActionState = (buttonState === 'pressed') ? 'started' : 'stopped';
-		this._button.on(actionState, handler);
+		this._button.on(this.context, this.actorId, actionState, handler);
 		return this;
 	}
 

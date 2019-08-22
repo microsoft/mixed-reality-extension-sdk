@@ -48,6 +48,7 @@ export type PayloadType
 	| 'set-animation-state'
 	| 'set-authoritative'
 	| 'set-behavior'
+	| 'set-client-action'
 	| 'set-media-state'
 	| 'sync-animations'
 	| 'sync-complete'
@@ -319,6 +320,11 @@ export type SetBehavior = Payload & {
 	type: 'set-behavior';
 	actorId: string;
 	behaviorType: BehaviorType;
+};
+
+export type SetClientAction = Payload & {
+	type: 'set-client-action';
+	clientAction: any;
 };
 
 /**

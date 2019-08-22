@@ -3,13 +3,18 @@
  * Licensed under the MIT License.
  */
 
-import { ActionState } from '.';
-import { User } from '..';
+import { ActionState, ClientAction } from '.';
+import { Context, User } from '..';
 
 /**
  * The action handler function type.
  */
 export type ActionHandler = (user: User) => void;
+
+export type ActionHandlerWithClientAction = {
+	handler?: ActionHandler;
+	clientAction?: ClientAction;
+};
 
 interface ActionHandlers {
 	'started'?: ActionHandler;
@@ -24,13 +29,25 @@ export class DiscreteAction {
 	private handlers: ActionHandlers = {};
 	private activeUserIds: string[] = [];
 
+	/** @hidden */
+	constructor(private name: string) {
+	}
+
 	/**
 	 * Add a handler for the given action state for when it is triggered.
 	 * @param actionState The action state that the handle should be assigned to.
 	 * @param handler The handler to call when the action state is triggered.
 	 */
-	public on(actionState: ActionState, handler: ActionHandler): this {
+	public on(
+		context: Context,
+		actorId: string,
+		actionState: ActionState,
+		options: ActionHandler | ActionHandlerWithClientAction): this {
+		const handler = (typeof options === 'function') ? options : options.handler;
 		this.handlers[actionState] = handler;
+		if (typeof options === 'object' && options.clientAction) {
+			options.clientAction.sendPayload(context, actorId, this.name, actionState);
+		}
 		return this;
 	}
 

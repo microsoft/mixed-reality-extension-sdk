@@ -45,7 +45,7 @@ import { InternalActor } from '../internal/actor';
 import { CreateColliderType } from '../network/payloads';
 import { SubscriptionType } from '../network/subscriptionType';
 import { Patchable } from '../patchable';
-import { ActionHandler, ActionState, Behavior, DiscreteAction } from './behaviors';
+import { ActionHandler, ActionHandlerWithClientAction, ActionState, Behavior, DiscreteAction } from './behaviors';
 import { MediaInstance } from './mediaInstance';
 import { BoxColliderGeometry, ColliderGeometry, SphereColliderGeometry } from './physics';
 
@@ -113,7 +113,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	private _grab: DiscreteAction;
 	// tslint:enable:variable-name
 
-	private get grab() { this._grab = this._grab || new DiscreteAction(); return this._grab; }
+	private get grab() { this._grab = this._grab || new DiscreteAction('grab'); return this._grab; }
 
 	/*
 	 * PUBLIC ACCESSORS
@@ -496,18 +496,19 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	 * @param grabState The grab state to fire the handler on.
 	 * @param handler The handler to call when the grab state has changed.
 	 */
-	public onGrab(grabState: 'begin' | 'end', handler: ActionHandler) {
+	public onGrab(grabState: 'begin' | 'end', handler: ActionHandler | ActionHandlerWithClientAction) {
 		const actionState: ActionState = (grabState === 'begin') ? 'started' : 'stopped';
-		this.grab.on(actionState, handler);
+		this.grab.on(this.context, this.id, actionState, handler);
 	}
 
 	/**
 	 * Sets the behavior on this actor.
 	 * @param behavior The type of behavior to set. Pass null to clear the behavior.
 	 */
-	public setBehavior<BehaviorT extends Behavior>(behavior: { new(): BehaviorT }): BehaviorT {
+	public setBehavior<BehaviorT extends Behavior>(
+		behavior: { new(context: Context, actorId: string): BehaviorT }): BehaviorT {
 		if (behavior) {
-			const newBehavior = new behavior();
+			const newBehavior = new behavior(this.context, this.id);
 			this.internal.behavior = newBehavior;
 			this.context.internal.setBehavior(this.id, this.internal.behavior.behaviorType);
 			return newBehavior;

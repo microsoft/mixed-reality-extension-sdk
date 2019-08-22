@@ -3,7 +3,14 @@
  * Licensed under the MIT License.
  */
 
-import { ActionHandler, ActionState, Behavior, BehaviorType, DiscreteAction } from '.';
+import {
+	ActionHandler,
+	ActionHandlerWithClientAction,
+	ActionState,
+	Behavior,
+	BehaviorType,
+	DiscreteAction
+} from '.';
 import { User } from '..';
 
 /**
@@ -11,7 +18,7 @@ import { User } from '..';
  */
 export class TargetBehavior extends Behavior {
 	// tslint:disable:variable-name
-	private _target: DiscreteAction = new DiscreteAction();
+	private _target: DiscreteAction = new DiscreteAction('target');
 	// tslint:enable:variable-name
 
 	/** @inheritdoc */
@@ -25,9 +32,9 @@ export class TargetBehavior extends Behavior {
 	 * @param handler The handler to call when the target state is triggered.
 	 * @return This target behavior.
 	 */
-	public onTarget(targetState: 'enter' | 'exit', handler: ActionHandler): this {
+	public onTarget(targetState: 'enter' | 'exit', handler: ActionHandler | ActionHandlerWithClientAction): this {
 		const actionState: ActionState = (targetState === 'enter') ? 'started' : 'stopped';
-		this._target.on(actionState, handler);
+		this._target.on(this.context, this.actorId, actionState, handler);
 		return this;
 	}
 

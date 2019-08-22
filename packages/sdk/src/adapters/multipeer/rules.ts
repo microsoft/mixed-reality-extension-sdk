@@ -948,6 +948,12 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 	},
 
 	// ========================================================================
+	'set-client-action': {
+		...DefaultRule
+		// TODO: Cache in sync layer. Synchronize in set-behaviors stage
+	},
+
+	// ========================================================================
 	'set-media-state': {
 		...DefaultRule,
 		synchronization: {
