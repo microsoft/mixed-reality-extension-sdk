@@ -949,8 +949,42 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 
 	// ========================================================================
 	'set-triggered-action': {
-		...DefaultRule
-		// TODO: Cache in sync layer. Synchronize in set-behaviors stage
+		...DefaultRule,
+		synchronization: {
+			stage: 'set-behaviors',
+			before: 'ignore',
+			during: 'queue',
+			after: 'allow'
+		},
+		client: {
+			...DefaultRule.client,
+			shouldSendToUser: (message: Message<Payloads.SetTriggeredAction>, userId, session, client) => {
+				const exclusiveUser = session.actorSet[message.payload.actorId].exclusiveToUser;
+				return exclusiveUser ? exclusiveUser === userId : null;
+			}
+		},
+		session: {
+			...DefaultRule.session,
+			beforeReceiveFromApp: (
+				session: Session,
+				message: Message<Payloads.SetTriggeredAction>
+			) => {
+				const syncActor = session.actorSet[message.payload.actorId];
+				if (syncActor) {
+					syncActor.triggeredActions = syncActor.triggeredActions || {};
+					// Key format is important here. We split it again in clientSync.ts.
+					const key = `${message.payload.actionName}|${message.payload.actionState}`;
+					if (message.payload.triggeredAction) {
+						syncActor.triggeredActions[key] = message.payload.triggeredAction;
+					} else {
+						delete syncActor.triggeredActions[key];
+					}
+				} else {
+					console.log(`[ERROR] Sync: set-triggered-action on unknown actor ${message.payload.actorId}`);
+				}
+				return message;
+			}
+		}
 	},
 
 	// ========================================================================

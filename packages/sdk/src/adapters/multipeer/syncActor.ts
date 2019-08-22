@@ -3,7 +3,7 @@
  * Licensed under the MIT License.
  */
 
-import { BehaviorType, Message } from '../..';
+import { BehaviorType, Message, TriggeredAction } from '../..';
 import * as Payloads from '../../types/network/payloads';
 
 /** @hidden */
@@ -42,6 +42,7 @@ export type SyncActor = {
 	activeMediaInstances: ActiveMediaInstance[];
 	activeInterpolations: Payloads.InterpolateActor[];
 	behavior: BehaviorType;
+	triggeredActions: { [id: string]: TriggeredAction };
 	grabbedBy: string;
 	exclusiveToUser: string;
 };

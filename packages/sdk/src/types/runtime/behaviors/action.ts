@@ -14,7 +14,7 @@ export type ActionHandler = (user: User) => void;
 
 export type ActionHandlerWithTriggeredAction = {
 	handler?: ActionHandler;
-	action?: TriggeredAction;
+	triggeredAction?: TriggeredAction;
 };
 
 interface ActionHandlers {
@@ -35,7 +35,10 @@ export class DiscreteAction {
 	}
 
 	/**
+	 * @hidden
 	 * Add a handler for the given action state for when it is triggered.
+	 * @param context The session context object.
+	 * @param actorId The actor associated with this action.
 	 * @param actionState The action state that the handle should be assigned to.
 	 * @param handler The handler to call when the action state is triggered.
 	 */
@@ -52,7 +55,7 @@ export class DiscreteAction {
 				actorId,
 				actionName: this.name,
 				actionState,
-				triggeredAction: options.action,
+				triggeredAction: options.triggeredAction,
 			} as Payloads.SetTriggeredAction);
 		}
 		return this;

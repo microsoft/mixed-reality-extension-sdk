@@ -187,6 +187,7 @@ export class ClientSync extends Protocols.Protocol {
 	public 'stage:set-behaviors' = () => {
 		// Send all cached set-behavior messages.
 		this.client.session.actors.map(syncActor => this.createActorBehavior(syncActor));
+		this.client.session.actors.map(syncActor => this.createTriggeredActions(syncActor));
 	}
 
 	/**
@@ -259,6 +260,23 @@ export class ClientSync extends Protocols.Protocol {
 				behaviorType: actor.behavior,
 				actorId: actor.actorId
 			} as Payloads.SetBehavior);
+		}
+	}
+
+	private createTriggeredActions(actor: Partial<SyncActor>) {
+		if (actor.triggeredActions) {
+			const keys = Object.keys(actor.triggeredActions);
+			for (const key of keys) {
+				// Key creation in this concatenated format is done in rules.ts.
+				const [actionName, actionState] = key.split('|');
+				super.sendPayload({
+					type: 'set-triggered-action',
+					actorId: actor.actorId,
+					actionName,
+					actionState,
+					triggeredAction: actor.triggeredActions[key]
+				} as Payloads.SetTriggeredAction);
+			}
 		}
 	}
 

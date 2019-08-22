@@ -6,24 +6,38 @@
 import { SetAudioStateOptions } from '../../..';
 
 /**
- * Plays an animation in response to the associated event. Animation plays on the actor specified by `targetId`.
- * If `targetId` is not given, the animation plays on the actor associated with the event that fired.
+ * Plays an animation in response to the associated event when fired.
  */
 export type PlayAnimationTriggeredAction = {
 	type: 'play-animation',
-	// TODO: Fill in all doc strings
+	/**
+	 * The name of the animation to play.
+	 */
 	animationName: string,
+	/**
+	 * The actor on which to play the animation. If omitted, the animation plays on the actor associated with
+	 * the event that fired.
+	 */
 	targetId?: string
 };
 
 /**
- * Plays a sound in response to the associated event. The sound plays on the actor specified by `targetId`.
- * If `targetId` is not given, the sound plays on the actor associated with the event that fired.
+ * Plays a sound in response to the associated event when fired.
  */
 export type PlaySoundTriggeredAction = {
 	type: 'play-sound',
+	/**
+	 * The assetId of the sound to play.
+	 */
 	assetId: string,
+	/**
+	 * The actor on which to play the sound. If omitted, the sound plays on the actor associated with
+	 * the event that fired.
+	 */
 	targetId?: string,
+	/**
+	 * Optional sound configuration such as volume, pitch, etc.
+	 */
 	options?: SetAudioStateOptions
 };
 
