@@ -52,7 +52,7 @@ export class DiscreteAction {
 				targetId: actorId,
 				actionName: this.name,
 				actionState,
-				action: options.action,
+				triggeredAction: options.action,
 			} as Payloads.SetTriggeredAction);
 		}
 		return this;

@@ -332,7 +332,7 @@ export type SetTriggeredAction = Payload & {
 	targetId: string,
 	actionName: string,
 	actionState: string
-	action: TriggeredAction;
+	triggeredAction: TriggeredAction;
 };
 
 /**
