@@ -241,7 +241,8 @@ export class Session extends EventEmitter {
 	}
 
 	public cacheInitializeActorMessage(message: InitializeActorMessage) {
-		if (!this.actorSet[message.payload.actor.id]) {
+		const syncActor = this.actorSet[message.payload.actor.id];
+		if (!syncActor) {
 			const parent = this.actorSet[message.payload.actor.parentId];
 			this.actorSet[message.payload.actor.id] = {
 				actorId: message.payload.actor.id,
@@ -249,6 +250,16 @@ export class Session extends EventEmitter {
 					|| message.payload.actor.exclusiveToUser,
 				initialization: deepmerge({ message }, {})
 			};
+		}
+		// update reserved actor init message with something the client can use
+		else if (syncActor.initialization.message.payload.type === 'x-reserve-actor') {
+			// send real init message, but with session's initial actor state
+			message.payload = {
+				...message.payload,
+				actor: syncActor.initialization.message.payload.actor
+			}
+			// write the merged message back to the session
+			syncActor.initialization.message = message;
 		}
 	}
 

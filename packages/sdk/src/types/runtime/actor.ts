@@ -288,7 +288,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	 */
 	public static CreateFromGltf(container: AssetContainer, options: {
 		uri: string,
-		colliderType?: ColliderType
+		colliderType?: 'box' | 'mesh',
 		actor?: Partial<ActorLike>
 	}): Actor {
 		return container.context.internal.CreateFromGltf(container, options);

@@ -1119,6 +1119,12 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 	// ========================================================================
 	'x-reserve-actor': {
 		...DefaultRule,
+		synchronization: {
+			stage: 'never',
+			before: 'ignore',
+			during: 'ignore',
+			after: 'ignore'
+		},
 		session: {
 			...DefaultRule.session,
 			beforeReceiveFromApp: (session: Session, message: Message<Payloads.XReserveActor>) => {
