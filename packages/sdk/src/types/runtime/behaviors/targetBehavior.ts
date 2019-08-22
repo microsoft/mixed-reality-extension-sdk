@@ -5,7 +5,7 @@
 
 import {
 	ActionHandler,
-	ActionHandlerWithClientAction,
+	ActionHandlerWithTriggeredAction,
 	ActionState,
 	Behavior,
 	BehaviorType,
@@ -32,7 +32,7 @@ export class TargetBehavior extends Behavior {
 	 * @param handler The handler to call when the target state is triggered.
 	 * @return This target behavior.
 	 */
-	public onTarget(targetState: 'enter' | 'exit', handler: ActionHandler | ActionHandlerWithClientAction): this {
+	public onTarget(targetState: 'enter' | 'exit', handler: ActionHandler | ActionHandlerWithTriggeredAction): this {
 		const actionState: ActionState = (targetState === 'enter') ? 'started' : 'stopped';
 		this._target.on(this.context, this.actorId, actionState, handler);
 		return this;

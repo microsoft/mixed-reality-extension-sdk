@@ -45,7 +45,7 @@ import { InternalActor } from '../internal/actor';
 import { CreateColliderType } from '../network/payloads';
 import { SubscriptionType } from '../network/subscriptionType';
 import { Patchable } from '../patchable';
-import { ActionHandler, ActionHandlerWithClientAction, ActionState, Behavior, DiscreteAction } from './behaviors';
+import { ActionHandler, ActionHandlerWithTriggeredAction, ActionState, Behavior, DiscreteAction } from './behaviors';
 import { MediaInstance } from './mediaInstance';
 import { BoxColliderGeometry, ColliderGeometry, SphereColliderGeometry } from './physics';
 
@@ -496,7 +496,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	 * @param grabState The grab state to fire the handler on.
 	 * @param handler The handler to call when the grab state has changed.
 	 */
-	public onGrab(grabState: 'begin' | 'end', handler: ActionHandler | ActionHandlerWithClientAction) {
+	public onGrab(grabState: 'begin' | 'end', handler: ActionHandler | ActionHandlerWithTriggeredAction) {
 		const actionState: ActionState = (grabState === 'begin') ? 'started' : 'stopped';
 		this.grab.on(this.context, this.id, actionState, handler);
 	}

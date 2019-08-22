@@ -7,7 +7,7 @@ import { OperationResultCode, Trace } from '..';
 import { CreateAnimationOptions, MediaCommand, SetAnimationStateOptions, SetMediaStateOptions } from '../../..';
 import { PrimitiveDefinition } from '../../primitiveTypes';
 import { ActorLike, ColliderType, TransformLike, UserLike } from '../../runtime';
-import { ActionState, BehaviorType } from '../../runtime/behaviors';
+import { ActionState, BehaviorType, TriggeredAction } from '../../runtime/behaviors';
 import { OperatingModel } from '../operatingModel';
 import { AssetPayloadType } from './assets';
 
@@ -48,7 +48,7 @@ export type PayloadType
 	| 'set-animation-state'
 	| 'set-authoritative'
 	| 'set-behavior'
-	| 'set-client-action'
+	| 'set-triggered-action'
 	| 'set-media-state'
 	| 'sync-animations'
 	| 'sync-complete'
@@ -322,9 +322,17 @@ export type SetBehavior = Payload & {
 	behaviorType: BehaviorType;
 };
 
-export type SetClientAction = Payload & {
-	type: 'set-client-action';
-	clientAction: any;
+/**
+ * @hidden
+ * App to engine. Specify an action that should happen
+ * when an event occurs (input, colliders, etc).
+ */
+export type SetTriggeredAction = Payload & {
+	type: 'set-triggered-action';
+	targetId: string,
+	actionName: string,
+	actionState: string
+	action: TriggeredAction;
 };
 
 /**

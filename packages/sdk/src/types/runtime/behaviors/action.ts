@@ -3,17 +3,18 @@
  * Licensed under the MIT License.
  */
 
-import { ActionState, ClientAction } from '.';
+import { ActionState, TriggeredAction } from '.';
 import { Context, User } from '..';
+import * as Payloads from '../../network/payloads';
 
 /**
  * The action handler function type.
  */
 export type ActionHandler = (user: User) => void;
 
-export type ActionHandlerWithClientAction = {
+export type ActionHandlerWithTriggeredAction = {
 	handler?: ActionHandler;
-	clientAction?: ClientAction;
+	action?: TriggeredAction;
 };
 
 interface ActionHandlers {
@@ -42,11 +43,17 @@ export class DiscreteAction {
 		context: Context,
 		actorId: string,
 		actionState: ActionState,
-		options: ActionHandler | ActionHandlerWithClientAction): this {
+		options: ActionHandler | ActionHandlerWithTriggeredAction): this {
 		const handler = (typeof options === 'function') ? options : options.handler;
 		this.handlers[actionState] = handler;
-		if (typeof options === 'object' && options.clientAction) {
-			options.clientAction.sendPayload(context, actorId, this.name, actionState);
+		if (typeof options === 'object') {
+			context.internal.sendPayload({
+				type: 'set-triggered-action',
+				targetId: actorId,
+				actionName: this.name,
+				actionState,
+				action: options.action,
+			} as Payloads.SetTriggeredAction);
 		}
 		return this;
 	}

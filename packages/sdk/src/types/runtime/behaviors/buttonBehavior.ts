@@ -5,7 +5,7 @@
 
 import {
 	ActionHandler,
-	ActionHandlerWithClientAction,
+	ActionHandlerWithTriggeredAction,
 	ActionState,
 	BehaviorType,
 	DiscreteAction,
@@ -36,7 +36,7 @@ export class ButtonBehavior extends TargetBehavior {
 	 * @param handler The handler to call when the hover state is triggered.
 	 * @return This button behavior.
 	 */
-	public onHover(hoverState: 'enter' | 'exit', handler: ActionHandler | ActionHandlerWithClientAction): this {
+	public onHover(hoverState: 'enter' | 'exit', handler: ActionHandler | ActionHandlerWithTriggeredAction): this {
 		const actionState: ActionState = (hoverState === 'enter') ? 'started' : 'stopped';
 		this._hover.on(this.context, this.actorId, actionState, handler);
 		return this;
@@ -58,7 +58,7 @@ export class ButtonBehavior extends TargetBehavior {
 	 * @param handler The handler to call when the click state is triggered.
 	 * @return This button behavior.
 	 */
-	public onButton(buttonState: 'pressed' | 'released', handler: ActionHandler | ActionHandlerWithClientAction): this {
+	public onButton(buttonState: 'pressed' | 'released', handler: ActionHandler | ActionHandlerWithTriggeredAction): this {
 		const actionState: ActionState = (buttonState === 'pressed') ? 'started' : 'stopped';
 		this._button.on(this.context, this.actorId, actionState, handler);
 		return this;
