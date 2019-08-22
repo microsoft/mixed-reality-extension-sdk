@@ -817,7 +817,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	}
 
 	private _setCollider(collider: Partial<ColliderLike>) {
-		let oldCollider = this._collider;
+		const oldCollider = this._collider;
 		if (this._collider) {
 			unobserve(this._collider);
 			this._collider = undefined;

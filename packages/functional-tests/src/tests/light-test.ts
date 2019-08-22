@@ -93,7 +93,7 @@ export default class LightTest extends Test {
 	private async createProps(root: MRE.Actor): Promise<{[id: string]: MRE.Actor}> {
 		const props: { [id: string]: MRE.Actor } = {};
 		props['monkey'] = MRE.Actor.CreateFromPrefab(this.app.context, {
-			prefabId: await this.assets.loadGltf(`${this.baseUrl}/monkey.glb`),
+			firstPrefabFrom: await this.assets.loadGltf(`${this.baseUrl}/monkey.glb`),
 			actor: {
 				parentId: root.id,
 				transform: {
