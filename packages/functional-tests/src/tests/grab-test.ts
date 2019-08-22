@@ -44,9 +44,10 @@ export default class GrabTest extends Test {
 		});
 
 		// Create an actor
-		this.model = MRE.Actor.CreateFromPrefab(this.app.context, {
+		this.model = MRE.Actor.CreateFromGltf(this.assets, {
 			// from the glTF at the given URL, with box colliders on each mesh
-			firstPrefabFrom: await this.assets.loadGltf(`${this.baseUrl}/monkey.glb`, 'box'),
+			uri: `${this.baseUrl}/monkey.glb`,
+			colliderType: 'box',
 			// Also apply the following generic actor properties.
 			actor: {
 				name: 'clickable',

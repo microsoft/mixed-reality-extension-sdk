@@ -41,10 +41,8 @@ export default class GltfGenTest extends Test {
 			})]
 		})]);
 
-		MRE.Actor.CreateFromPrefab(this.app.context, {
-			firstPrefabFrom: await this.assets.loadGltf(
-				Server.registerStaticBuffer('sphere.glb', gltfFactory.generateGLTF())
-			),
+		MRE.Actor.CreateFromGltf(this.assets, {
+			uri: Server.registerStaticBuffer('sphere.glb', gltfFactory.generateGLTF()),
 			actor: {
 				parentId: root.id,
 				transform: {

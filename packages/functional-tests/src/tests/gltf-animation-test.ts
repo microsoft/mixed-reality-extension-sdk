@@ -21,11 +21,10 @@ export default class GltfAnimationTest extends Test {
 	public async run(root: MRE.Actor): Promise<boolean> {
 		this.assets = new MRE.AssetContainer(this.app.context);
 
-		this.prefab = MRE.Actor.CreateFromPrefab(this.app.context, {
-			firstPrefabFrom:
-				(await this.assets.loadGltf('https://raw.githubusercontent.com/KhronosGroup/' +
-					'glTF-Sample-Models/master/2.0/CesiumMan/glTF-Binary/CesiumMan.glb', 'box')
-				),
+		this.prefab = MRE.Actor.CreateFromGltf(this.assets, {
+			uri: 'https://raw.githubusercontent.com/KhronosGroup/' +
+				'glTF-Sample-Models/master/2.0/CesiumMan/glTF-Binary/CesiumMan.glb',
+			colliderType: 'box',
 			actor: {
 				parentId: root.id,
 				transform: {
