@@ -282,14 +282,13 @@ export class InternalContext {
 	public setMediaState(
 		mediaInstance: MediaInstance,
 		command: MediaCommand,
-		options?: SetMediaStateOptions,
-		mediaAssetId?: string,
+		options?: SetMediaStateOptions
 	) {
 		this.protocol.sendPayload({
 			type: 'set-media-state',
 			id: mediaInstance.id,
-			actorId: mediaInstance.actor.id,
-			mediaAssetId,
+			actorId: mediaInstance.actorId,
+			mediaAssetId: mediaInstance.mediaAssetId,
 			mediaCommand: command,
 			options
 		} as SetMediaState);

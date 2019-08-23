@@ -34,7 +34,7 @@ export class TargetBehavior extends Behavior {
 	 */
 	public onTarget(targetState: 'enter' | 'exit', handler: ActionHandler | ActionHandlerWithTriggeredAction): this {
 		const actionState: ActionState = (targetState === 'enter') ? 'started' : 'stopped';
-		this._target.on(this.context, this.actorId, actionState, handler);
+		this._target.on(this.sendPayload, this.actorId, actionState, handler);
 		return this;
 	}
 

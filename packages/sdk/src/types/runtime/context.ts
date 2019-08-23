@@ -12,7 +12,6 @@ import {
 	User,
 } from '../..';
 import { InternalContext } from '../../types/internal/context';
-import { AssetContainer } from '../../types/runtime/assets';
 
 /**
  * Settings used to configure a `Context` instance.

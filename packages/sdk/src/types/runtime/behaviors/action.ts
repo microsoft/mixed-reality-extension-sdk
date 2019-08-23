@@ -3,19 +3,14 @@
  * Licensed under the MIT License.
  */
 
-import { ActionState, TriggeredAction } from '.';
-import { Context, User } from '..';
+import { ActionHandlerWithTriggeredAction, ActionState } from '.';
+import { User } from '..';
 import * as Payloads from '../../network/payloads';
 
 /**
  * The action handler function type.
  */
 export type ActionHandler = (user: User) => void;
-
-export type ActionHandlerWithTriggeredAction = {
-	handler?: ActionHandler;
-	triggeredAction?: TriggeredAction;
-};
 
 interface ActionHandlers {
 	'started'?: ActionHandler;
@@ -37,20 +32,20 @@ export class DiscreteAction {
 	/**
 	 * @hidden
 	 * Add a handler for the given action state for when it is triggered.
-	 * @param context The session context object.
 	 * @param actorId The actor associated with this action.
 	 * @param actionState The action state that the handle should be assigned to.
 	 * @param handler The handler to call when the action state is triggered.
 	 */
 	public on(
-		context: Context,
+		sendPayload: (payload: Payloads.Payload) => void,
 		actorId: string,
 		actionState: ActionState,
 		options: ActionHandler | ActionHandlerWithTriggeredAction): this {
+		options = options || {};
 		const handler = (typeof options === 'function') ? options : options.handler;
 		this.handlers[actionState] = handler;
 		if (typeof options === 'object') {
-			context.internal.sendPayload({
+			sendPayload({
 				type: 'set-triggered-action',
 				actorId,
 				actionName: this.name,

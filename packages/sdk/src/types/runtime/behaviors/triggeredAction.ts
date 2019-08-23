@@ -3,7 +3,15 @@
  * Licensed under the MIT License.
  */
 
-import { SetAudioStateOptions } from '../../..';
+import { ActionHandler, SetAudioStateOptions } from '../../..';
+
+/**
+ * Describes and action handler with an associated triggered action.
+ */
+export type ActionHandlerWithTriggeredAction = {
+	handler?: ActionHandler;
+	triggeredAction?: TriggeredAction;
+};
 
 /**
  * Plays an animation in response to the associated event when fired.

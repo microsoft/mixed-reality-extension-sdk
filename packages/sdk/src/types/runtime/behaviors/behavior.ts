@@ -4,7 +4,8 @@
  */
 
 import { ActionState, BehaviorType, DiscreteAction } from '.';
-import { Context, User } from '..';
+import { User } from '..';
+import * as Payloads from '../../network/payloads';
 
 /**
  * Abstract class that serves as the base class for all behaviors.
@@ -15,16 +16,8 @@ export abstract class Behavior {
 	 */
 	public abstract get behaviorType(): BehaviorType;
 
-	/** @hidden */
-	public get context() { return this._context; }
-	/** @hidden */
-	public get actorId() { return this._actorId; }
-
-	/** @hidden */
-	// tslint:disable-next-line: variable-name
-	constructor(private _context: Context, private _actorId: string) {
+	constructor(protected sendPayload: (payload: Payloads.Payload) => void, protected actorId: string) {
 	}
-
 	/**
 	 * INTERNAL METHODS
 	 */

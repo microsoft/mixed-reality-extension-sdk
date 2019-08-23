@@ -42,7 +42,7 @@ import { observe, unobserve } from '../../utils/observe';
 import readPath from '../../utils/readPath';
 import resolveJsonValues from '../../utils/resolveJsonValues';
 import { InternalActor } from '../internal/actor';
-import { CreateColliderType } from '../network/payloads';
+import * as Payloads from '../network/payloads';
 import { SubscriptionType } from '../network/subscriptionType';
 import { Patchable } from '../patchable';
 import { ActionHandler, ActionHandlerWithTriggeredAction, ActionState, Behavior, DiscreteAction } from './behaviors';
@@ -217,7 +217,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	public static CreateFromGltf(context: Context, options: {
 		resourceUrl: string,
 		assetName?: string,
-		colliderType?: CreateColliderType,
+		colliderType?: Payloads.CreateColliderType,
 		actor?: Partial<ActorLike>
 	}): Actor {
 		return context.internal.CreateFromGltf(options);
@@ -230,7 +230,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	public static CreateFromGLTF(context: Context, options: {
 		resourceUrl: string,
 		assetName?: string,
-		colliderType?: CreateColliderType,
+		colliderType?: Payloads.CreateColliderType,
 		actor?: Partial<ActorLike>
 	}): Actor {
 		return context.internal.CreateFromGltf(options);
@@ -498,7 +498,8 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	 */
 	public onGrab(grabState: 'begin' | 'end', handler: ActionHandler | ActionHandlerWithTriggeredAction) {
 		const actionState: ActionState = (grabState === 'begin') ? 'started' : 'stopped';
-		this.grab.on(this.context, this.id, actionState, handler);
+		this.grab.on(
+			(payload: Payloads.Payload) => this.context.internal.sendPayload(payload), this.id, actionState, handler);
 	}
 
 	/**
@@ -506,9 +507,9 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	 * @param behavior The type of behavior to set. Pass null to clear the behavior.
 	 */
 	public setBehavior<BehaviorT extends Behavior>(
-		behavior: { new(context: Context, actorId: string): BehaviorT }): BehaviorT {
+		behavior: { new(sendPayload: (payload: Payloads.Payload) => void, actorId: string): BehaviorT }): BehaviorT {
 		if (behavior) {
-			const newBehavior = new behavior(this.context, this.id);
+			const newBehavior = new behavior((payload: Payloads.Payload) => this.context.internal.sendPayload(payload), this.id);
 			this.internal.behavior = newBehavior;
 			this.context.internal.setBehavior(this.id, this.internal.behavior.behaviorType);
 			return newBehavior;
@@ -528,7 +529,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 		soundAssetId: string,
 		options: SetAudioStateOptions,
 	): MediaInstance {
-		return new MediaInstance(this, soundAssetId).start(options);
+		return new MediaInstance(this.context, this.id, soundAssetId).start(options);
 	}
 
 	/**
@@ -540,7 +541,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 		videoStreamAssetId: string,
 		options: SetVideoStateOptions,
 	): MediaInstance {
-		return new MediaInstance(this, videoStreamAssetId).start(options);
+		return new MediaInstance(this.context, this.id, videoStreamAssetId).start(options);
 	}
 
 	/**

@@ -38,7 +38,7 @@ export class ButtonBehavior extends TargetBehavior {
 	 */
 	public onHover(hoverState: 'enter' | 'exit', handler: ActionHandler | ActionHandlerWithTriggeredAction): this {
 		const actionState: ActionState = (hoverState === 'enter') ? 'started' : 'stopped';
-		this._hover.on(this.context, this.actorId, actionState, handler);
+		this._hover.on(this.sendPayload, this.actorId, actionState, handler);
 		return this;
 	}
 
@@ -48,7 +48,7 @@ export class ButtonBehavior extends TargetBehavior {
 	 * @return This button behavior.
 	 */
 	public onClick(handler: ActionHandler): this {
-		this._click.on(this.context, this.actorId, 'started', handler);
+		this._click.on(this.sendPayload, this.actorId, 'started', handler);
 		return this;
 	}
 
@@ -60,7 +60,7 @@ export class ButtonBehavior extends TargetBehavior {
 	 */
 	public onButton(buttonState: 'pressed' | 'released', handler: ActionHandler | ActionHandlerWithTriggeredAction): this {
 		const actionState: ActionState = (buttonState === 'pressed') ? 'started' : 'stopped';
-		this._button.on(this.context, this.actorId, actionState, handler);
+		this._button.on(this.sendPayload, this.actorId, actionState, handler);
 		return this;
 	}
 
