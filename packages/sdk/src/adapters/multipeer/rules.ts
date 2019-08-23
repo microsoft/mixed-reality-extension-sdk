@@ -234,7 +234,7 @@ const CreateActorRule: Rule = {
 		...DefaultRule.session,
 		beforeReceiveFromApp: (
 			session: Session,
-			message: Message<Payloads.CreateEmpty>
+			message: Message<Payloads.CreateActorCommon>
 		) => {
 			session.cacheInitializeActorMessage(message);
 			return message;

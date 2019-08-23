@@ -241,10 +241,10 @@ export class Session extends EventEmitter {
 	}
 
 	public cacheInitializeActorMessage(message: InitializeActorMessage) {
-		const syncActor = this.actorSet[message.payload.actor.id];
+		let syncActor = this.actorSet[message.payload.actor.id];
 		if (!syncActor) {
 			const parent = this.actorSet[message.payload.actor.parentId];
-			this.actorSet[message.payload.actor.id] = {
+			syncActor = this.actorSet[message.payload.actor.id] = {
 				actorId: message.payload.actor.id,
 				exclusiveToUser: parent && parent.exclusiveToUser
 					|| message.payload.actor.exclusiveToUser,
