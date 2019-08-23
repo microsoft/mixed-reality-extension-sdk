@@ -32,6 +32,7 @@ import {
 	Context,
 	CreateAnimationOptions,
 	LookAtMode,
+	PrimitiveDefinition,
 	SetAnimationStateOptions,
 	SetAudioStateOptions,
 	SetVideoStateOptions,
@@ -211,6 +212,16 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	}
 
 	/**
+	 * @deprecated
+	 * Use [[Actor.Create]] instead.
+	 */
+	public static CreateEmpty(context: Context, options?: {
+		actor?: Partial<ActorLike>
+	}): Actor {
+		return Actor.Create(context, options);
+	}
+
+	/**
 	 * Creates a new actor from a library resource.
 	 * AltspaceVR-specific list of library resources: https://account.altvr.com/kits
 	 * @param context The SDK context object.
@@ -282,9 +293,12 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	}
 
 	/**
-	 * Loads assets from a glTF file, populates the container with the assets, and spawns
-	 * @param container
-	 * @param options
+	 * @deprecated
+	 * Use [[AssetContainer.loadGltf]] and [[Actor.CreatePrefab]] instead.
+	 * @param container The asset container to load the glTF assets into
+	 * @param options.uri A URI to a .gltf or .glb file
+	 * @param options.colliderType The type of collider to add to each mesh
+	 * @param options.actor The initial state of the actor
 	 */
 	public static CreateFromGltf(container: AssetContainer, options: {
 		uri: string,
@@ -292,6 +306,35 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 		actor?: Partial<ActorLike>
 	}): Actor {
 		return container.context.internal.CreateFromGltf(container, options);
+	}
+
+	/**
+	 * @deprecated
+	 * Use AssetContainer.create*Mesh and [[Actor.Create]] instead.
+	 * @param container The asset container to load the mesh into
+	 * @param options.definition The primitive shape and size
+	 * @param options.addCollider Add an auto-typed collider to the actor
+	 * @param options.actor The initial state of the actor
+	 */
+	public static CreatePrimitive(container: AssetContainer, options: {
+		definition: PrimitiveDefinition,
+		addCollider?: boolean,
+		actor?: Partial<ActorLike>
+	}): Actor {
+		const actor = options.actor || {};
+		const mesh = container.createPrimitiveMesh(actor.name, options.definition);
+		return Actor.Create(container.context, {
+			actor: {
+				...actor,
+				appearance: {
+					...actor.appearance,
+					meshId: mesh.id
+				},
+				collider: options.addCollider
+					? actor.collider || { geometry: { shape: 'auto' } }
+					: actor.collider
+			}
+		});
 	}
 
 	/**
