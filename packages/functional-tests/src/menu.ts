@@ -5,6 +5,7 @@
 
 import * as MRE from '@microsoft/mixed-reality-extension-sdk';
 import { App, FailureColor, NeutralColor, SuccessColor } from './app';
+import server from './server';
 import { TestFactory } from './test';
 import { Factories, FactoryMap } from './tests';
 import destroyActors from './utils/destroyActors';
@@ -23,6 +24,7 @@ export default class Menu {
 	private buttons: MRE.Actor[];
 	private behaviors: MRE.ButtonBehavior[];
 	private labels: MRE.Actor[];
+	private rolloverSound: MRE.Sound;
 
 	private successMat: MRE.Material;
 	private failureMat: MRE.Material;
@@ -89,7 +91,14 @@ export default class Menu {
 
 			this.buttons[i].appearance.material = buttonMat;
 			this.labels[i].text.contents = label;
-			behavior.onButton('released', handler);
+			behavior
+				.onButton('released', handler)
+				.onHover('enter', {
+					triggeredAction: {
+						type: 'play-sound',
+						assetId: this.rolloverSound.id
+					}
+				});
 		});
 	}
 
@@ -99,6 +108,9 @@ export default class Menu {
 			this.successMat = am.createMaterial('success', { color: SuccessColor });
 			this.failureMat = am.createMaterial('failure', { color: FailureColor });
 			this.neutralMat = am.createMaterial('neutral', { color: NeutralColor });
+			this.rolloverSound = am.createSound('rollover', {
+				uri: `${server.baseUrl}/rollover_tone.wav`
+			});
 		}
 
 		if (this.buttons) {
@@ -192,6 +204,11 @@ export default class Menu {
 			.onButton('released', () => {
 				this.back();
 				this.show();
+			}).onHover('enter', {
+				triggeredAction: {
+					type: 'play-sound',
+					assetId: this.rolloverSound.id
+				}
 			});
 
 		this.otherActors = [backButton, backLabel];
