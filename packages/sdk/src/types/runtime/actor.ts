@@ -293,11 +293,11 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	}
 
 	/**
-	 * @deprecated
-	 * Use [[AssetContainer.loadGltf]] and [[Actor.CreatePrefab]] instead.
+	 * Load a glTF model, and spawn the first prefab in the resulting assets. Equivalent
+	 * to using [[AssetContainer.loadGltf]] and [[Actor.CreateFromPrefab]].
 	 * @param container The asset container to load the glTF assets into
 	 * @param options.uri A URI to a .gltf or .glb file
-	 * @param options.colliderType The type of collider to add to each mesh
+	 * @param options.colliderType The type of collider to add to each mesh actor
 	 * @param options.actor The initial state of the actor
 	 */
 	public static CreateFromGltf(container: AssetContainer, options: {
@@ -309,8 +309,8 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	}
 
 	/**
-	 * @deprecated
-	 * Use AssetContainer.create*Mesh and [[Actor.Create]] instead.
+	 * Create an actor with a newly generated mesh. Equivalent to using
+	 * [[AssetContainer.createPrimitiveMesh]] and adding the result to [[Actor.Create]].
 	 * @param container The asset container to load the mesh into
 	 * @param options.definition The primitive shape and size
 	 * @param options.addCollider Add an auto-typed collider to the actor
