@@ -30,6 +30,22 @@ export type PlayAnimationTriggeredAction = {
 };
 
 /**
+ * Stops an animation in response to the associated event when fired.
+ */
+export type StopAnimationTriggeredAction = {
+	type: 'stop-animation',
+	/**
+	 * The name of the animation to stop.
+	 */
+	animationName: string,
+	/**
+	 * The actor on which to stop the animation. If omitted, the animation plays on the actor associated with
+	 * the event that fired.
+	 */
+	targetId?: string
+};
+
+/**
  * Plays a sound in response to the associated event when fired.
  */
 export type PlaySoundTriggeredAction = {
@@ -54,5 +70,6 @@ export type PlaySoundTriggeredAction = {
  */
 export type TriggeredAction
 	= PlayAnimationTriggeredAction
+	| StopAnimationTriggeredAction
 	| PlaySoundTriggeredAction
 	;
