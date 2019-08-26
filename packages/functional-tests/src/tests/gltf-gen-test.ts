@@ -13,8 +13,15 @@ import { Test } from '../test';
 
 export default class GltfGenTest extends Test {
 	public expectedResultDescription = "A textured sphere";
+	private assets: MRE.AssetContainer;
+
+	public cleanup() {
+		this.assets.unload();
+	}
 
 	public async run(root: MRE.Actor): Promise<boolean> {
+		this.assets = new MRE.AssetContainer(this.app.context);
+
 		const spherePrim = new GltfGen.Sphere(0.5);
 		spherePrim.material = new GltfGen.Material({
 			baseColorFactor: new MRE.Color4(1, 1, 1, 0.7),
@@ -34,8 +41,8 @@ export default class GltfGenTest extends Test {
 			})]
 		})]);
 
-		MRE.Actor.CreateFromGltf(this.app.context, {
-			resourceUrl: Server.registerStaticBuffer('sphere.glb', gltfFactory.generateGLTF()),
+		MRE.Actor.CreateFromGltf(this.assets, {
+			uri: Server.registerStaticBuffer('sphere.glb', gltfFactory.generateGLTF()),
 			actor: {
 				parentId: root.id,
 				transform: {

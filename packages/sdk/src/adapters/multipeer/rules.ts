@@ -234,7 +234,7 @@ const CreateActorRule: Rule = {
 		...DefaultRule.session,
 		beforeReceiveFromApp: (
 			session: Session,
-			message: Message<Payloads.CreateEmpty>
+			message: Message<Payloads.CreateActorCommon>
 		) => {
 			session.cacheInitializeActorMessage(message);
 			return message;
@@ -556,13 +556,7 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 	'create-empty': CreateActorRule,
 
 	// ========================================================================
-	'create-from-gltf': CreateActorRule,
-
-	// ========================================================================
 	'create-from-library': CreateActorRule,
-
-	// ========================================================================
-	'create-primitive': CreateActorRule,
 
 	// ========================================================================
 	'create-from-prefab': CreateActorRule,
@@ -1119,6 +1113,24 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 				if (client) {
 					client.send(message);
 				}
+				return null;
+			}
+		}
+	},
+
+	// ========================================================================
+	'x-reserve-actor': {
+		...DefaultRule,
+		synchronization: {
+			stage: 'never',
+			before: 'ignore',
+			during: 'ignore',
+			after: 'ignore'
+		},
+		session: {
+			...DefaultRule.session,
+			beforeReceiveFromApp: (session: Session, message: Message<Payloads.XReserveActor>) => {
+				session.cacheInitializeActorMessage(message);
 				return null;
 			}
 		}

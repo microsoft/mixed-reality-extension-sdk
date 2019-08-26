@@ -14,6 +14,11 @@ export default class UserMaskTest extends Test {
 	private blueList: MRE.Actor;
 	private interval: NodeJS.Timeout;
 
+	public cleanup() {
+		clearInterval(this.interval);
+		this.assets.unload();
+	}
+
 	public async run(root: MRE.Actor): Promise<boolean> {
 		// create colors
 		this.assets = new MRE.AssetContainer(this.app.context);
@@ -30,7 +35,7 @@ export default class UserMaskTest extends Test {
 			anchor: MRE.TextAnchorLocation.TopCenter,
 			height: 0.08
 		} as MRE.TextLike;
-		this.redList = MRE.Actor.CreateEmpty(this.app.context, {
+		this.redList = MRE.Actor.Create(this.app.context, {
 			actor: {
 				name: 'redList',
 				parentId: root.id,
@@ -39,7 +44,7 @@ export default class UserMaskTest extends Test {
 				text: textDef
 			}
 		});
-		this.blueList = MRE.Actor.CreateEmpty(this.app.context, {
+		this.blueList = MRE.Actor.Create(this.app.context, {
 			actor: {
 				name: 'blueList',
 				parentId: root.id,
@@ -52,38 +57,32 @@ export default class UserMaskTest extends Test {
 		this.app.context.onUserLeft(_ => this.updateLabels());
 
 		// create icons
-		const redIcon = MRE.Actor.CreatePrimitive(this.app.context, {
-			definition: {
-				shape: MRE.PrimitiveShape.Box,
-				dimensions: { x: 0.5, y: 0.5, z: 0.5 }
-			},
-			addCollider: true,
+		const redIcon = MRE.Actor.Create(this.app.context, {
 			actor: {
 				name: 'redIcon',
 				parentId: root.id,
 				appearance: {
 					enabled: new MRE.GroupMask(this.app.context, ['red', 'default']),
+					meshId: this.assets.createBoxMesh('box', 0.5, 0.5, 0.5).id,
 					materialId: red.id
 				},
+				collider: { geometry: { shape: 'auto' } },
 				transform: {
 					app: { position: { y: 1 } }
 				}
 			}
 		});
 
-		const blueIcon = MRE.Actor.CreatePrimitive(this.app.context, {
-			definition: {
-				shape: MRE.PrimitiveShape.Sphere,
-				radius: 0.3
-			},
-			addCollider: true,
+		const blueIcon = MRE.Actor.Create(this.app.context, {
 			actor: {
 				name: 'blueIcon',
 				parentId: root.id,
 				appearance: {
 					enabled: new MRE.GroupMask(this.app.context, ['blue', 'default']),
+					meshId: this.assets.createSphereMesh('sphere', 0.3).id,
 					materialId: blue.id
 				},
+				collider: { geometry: { shape: 'auto' } },
 				transform: {
 					app: { position: { y: 1 } }
 				}
@@ -138,10 +137,5 @@ export default class UserMaskTest extends Test {
 
 		this.redList.text.contents = `Red team:\n${redList.join('\n')}`;
 		this.blueList.text.contents = `Blue team:\n${blueList.join('\n')}`;
-	}
-
-	public cleanup() {
-		clearInterval(this.interval);
-		this.assets.unload();
 	}
 }

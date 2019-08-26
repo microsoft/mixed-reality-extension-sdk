@@ -17,6 +17,10 @@ interface MenuItem {
 }
 
 const pageSize = 6;
+const buttonSpacing = 2 / (pageSize + 1);
+const buttonWidth = 0.25;
+const buttonHeight = buttonSpacing * 0.8;
+
 const MenuItems = paginate(Factories);
 
 export default class Menu {
@@ -27,6 +31,7 @@ export default class Menu {
 	private successMat: MRE.Material;
 	private failureMat: MRE.Material;
 	private neutralMat: MRE.Material;
+	private buttonMesh: MRE.Mesh;
 
 	private breadcrumbs: number[] = [];
 	private otherActors: MRE.Actor[];
@@ -84,7 +89,15 @@ export default class Menu {
 					this.breadcrumbs.push(i);
 					this.show();
 				};
-				buttonMat = null;
+				const allTestsPass = (menu[i].action as MenuItem[])
+					.reduce((sum, test, j, arr) => {
+						if (Array.isArray(test.action)) {
+							arr.push(...test.action);
+						} else {
+							return sum || !!this.app.testResults[test.label];
+						}
+					}, false);
+				buttonMat = allTestsPass ? this.successMat : null;
 			}
 
 			this.buttons[i].appearance.material = buttonMat;
@@ -99,6 +112,7 @@ export default class Menu {
 			this.successMat = am.createMaterial('success', { color: SuccessColor });
 			this.failureMat = am.createMaterial('failure', { color: FailureColor });
 			this.neutralMat = am.createMaterial('neutral', { color: NeutralColor });
+			this.buttonMesh = am.createBoxMesh('button', buttonWidth, buttonHeight, 0.1);
 		}
 
 		if (this.buttons) {
@@ -109,19 +123,14 @@ export default class Menu {
 		this.behaviors = [];
 		this.labels = [];
 
-		const buttonSpacing = 2 / (pageSize + 1);
-		const buttonWidth = 0.25;
-		const buttonHeight = buttonSpacing * 0.8;
-
 		for (let i = 0; i < pageSize; i++) {
-			const control = MRE.Actor.CreatePrimitive(this.context, {
-				definition: {
-					shape: MRE.PrimitiveShape.Box,
-					dimensions: { x: buttonWidth, y: buttonHeight, z: 0.1 }
-				},
-				addCollider: true,
+			const control = MRE.Actor.Create(this.context, {
 				actor: {
 					name: 'Button' + i,
+					appearance: {
+						meshId: this.buttonMesh.id,
+						materialId: this.neutralMat.id
+					},
 					transform: {
 						local: {
 							position: {
@@ -130,13 +139,14 @@ export default class Menu {
 								z: -0.05
 							}
 						}
-					}
+					},
+					collider: { geometry: { shape: 'auto' } }
 				}
 			});
 			this.behaviors.push(control.setBehavior(MRE.ButtonBehavior));
 			this.buttons.push(control);
 
-			const label = MRE.Actor.CreateEmpty(this.context, {
+			const label = MRE.Actor.Create(this.context, {
 				actor: {
 					name: 'Label' + i,
 					parentId: control.id,
@@ -155,23 +165,22 @@ export default class Menu {
 			this.labels.push(label);
 		}
 
-		const backButton = MRE.Actor.CreatePrimitive(this.context, {
-			definition: {
-				shape: MRE.PrimitiveShape.Box,
-				dimensions: { x: buttonWidth, y: buttonHeight, z: 0.1 }
-			},
-			addCollider: true,
+		const backButton = MRE.Actor.Create(this.context, {
 			actor: {
 				name: 'BackButton',
+				appearance: {
+					meshId: this.buttonMesh.id
+				},
 				transform: {
 					local: {
 						position: { x: -1 + buttonWidth / 2, y: buttonSpacing / 2, z: -0.05 }
 					}
-				}
+				},
+				collider: { geometry: { shape: 'auto' } }
 			}
 		});
 
-		const backLabel = MRE.Actor.CreateEmpty(this.context, {
+		const backLabel = MRE.Actor.Create(this.context, {
 			actor: {
 				name: 'BackLabel',
 				parentId: backButton.id,

@@ -204,7 +204,7 @@ export class App {
 			this.testRoot.destroy();
 		}
 
-		this.testRoot = MRE.Actor.CreateEmpty(this.context, {
+		this.testRoot = MRE.Actor.Create(this.context, {
 			actor: {
 				name: 'testRoot',
 				exclusiveToUser: this.exclusiveUser && this.exclusiveUser.id || undefined
@@ -222,21 +222,22 @@ export class App {
 			this.exclusiveUser = this.firstUser;
 		}
 
-		this.exclusiveUserToggle = MRE.Actor.CreatePrimitive(this.context, {
-			definition: {
-				shape: MRE.PrimitiveShape.Box,
-				dimensions: { x: 0.25, y: 0.25, z: 0.1 }
-			},
-			addCollider: true,
+		this.exclusiveUserToggle = MRE.Actor.Create(this.context, {
 			actor: {
+				appearance: {
+					meshId: this.assets.createBoxMesh('button', 0.25, 0.25, 0.1).id
+				},
 				transform: {
 					local: {
 						position: { x: -0.875, y: 2.3 }
 					}
+				},
+				collider: {
+					geometry: { shape: 'auto' }
 				}
 			}
 		});
-		const label = MRE.Actor.CreateEmpty(this.context, {
+		const label = MRE.Actor.Create(this.context, {
 			actor: {
 				parentId: this.exclusiveUserToggle.id,
 				transform: {
@@ -256,37 +257,35 @@ export class App {
 		this.exclusiveUserToggle.setBehavior(MRE.ButtonBehavior)
 			.onButton('released', user => this.toggleExclusiveUser(user));
 
-		const floor = MRE.Actor.CreatePrimitive(this.context, {
-			definition: {
-				shape: MRE.PrimitiveShape.Box,
-				dimensions: { x: 2, y: 0.1, z: 2.1 }
-			},
-			addCollider: true,
+		const floor = MRE.Actor.Create(this.context, {
 			actor: {
 				name: 'floor',
-				appearance: { materialId: this.backgroundMaterial.id },
+				appearance: {
+					meshId: this.assets.createBoxMesh('floor', 2, 0.1, 2.1 ).id,
+					materialId: this.backgroundMaterial.id
+				},
 				transform: {
 					local: {
 						position: { x: 0, y: -0.05, z: -1 }
 					}
 				},
+				collider: { geometry: { shape: 'auto' } }
 			}
 		});
 
-		const wall = MRE.Actor.CreatePrimitive(this.context, {
-			definition: {
-				shape: MRE.PrimitiveShape.Box,
-				dimensions: { x: 2, y: 2, z: 0.1 }
-			},
-			addCollider: true,
+		const wall = MRE.Actor.Create(this.context, {
 			actor: {
-				name: 'floor',
-				appearance: { materialId: this.backgroundMaterial.id },
+				name: 'wall',
+				appearance: {
+					meshId: this.assets.createBoxMesh('wall', 2, 2, 0.1).id,
+					materialId: this.backgroundMaterial.id
+				},
 				transform: {
 					local: {
 						position: { x: 0, y: 1, z: 0.1 }
 					}
-				}
+				},
+				collider: { geometry: { shape: 'auto' } }
 			}
 		});
 
@@ -295,7 +294,7 @@ export class App {
 
 	private setupRunner() {
 		// Main label at the top of the stage
-		this.contextLabel = MRE.Actor.CreateEmpty(this.context, {
+		this.contextLabel = MRE.Actor.Create(this.context, {
 			actor: {
 				name: 'contextLabel',
 				text: {
@@ -313,7 +312,7 @@ export class App {
 			}
 		});
 
-		this.testRoot = MRE.Actor.CreateEmpty(this.context, {
+		this.testRoot = MRE.Actor.Create(this.context, {
 			actor: {
 				name: 'testRoot',
 				exclusiveToUser: this.exclusiveUser && this.exclusiveUser.id || undefined
@@ -329,25 +328,25 @@ export class App {
 		const ppMat = this.assets.createMaterial('pp', {
 			color: MRE.Color3.Green().toJSON()
 		});
+		const ppMesh = this.assets.createBoxMesh('playpause', 0.7, 0.3, 0.1);
 
-		this.playPauseButton = MRE.Actor.CreatePrimitive(this.context, {
-			definition: {
-				shape: MRE.PrimitiveShape.Box,
-				dimensions: { x: 0.7, y: 0.3, z: 0.1 }
-			},
-			addCollider: true,
+		this.playPauseButton = MRE.Actor.Create(this.context, {
 			actor: {
 				name: 'playpause',
-				appearance: { materialId: ppMat.id },
+				appearance: {
+					meshId: ppMesh.id,
+					materialId: ppMat.id
+				},
 				transform: {
 					local: {
 						position: { x: -0.65, y: 0.15, z: -1.95 }
 					}
-				}
+				},
+				collider: { geometry: { shape: 'auto' } }
 			}
 		});
 
-		this.playPauseText = MRE.Actor.CreateEmpty(this.context, {
+		this.playPauseText = MRE.Actor.Create(this.context, {
 			actor: {
 				parentId: this.playPauseButton.id,
 				transform: {
@@ -374,23 +373,22 @@ export class App {
 				}
 			});
 
-		const menuButton = MRE.Actor.CreatePrimitive(this.context, {
-			definition: {
-				shape: MRE.PrimitiveShape.Box,
-				dimensions: { x: 0.7, y: 0.3, z: 0.1 }
-			},
-			addCollider: true,
+		const menuButton = MRE.Actor.Create(this.context, {
 			actor: {
 				name: 'menu',
+				appearance: {
+					meshId: ppMesh.id
+				},
 				transform: {
 					local: {
 						position: { x: 0.65, y: 0.15, z: -1.95 }
 					}
-				}
+				},
+				collider: { geometry: { shape: 'auto' } }
 			}
 		});
 
-		const menuText = MRE.Actor.CreateEmpty(this.context, {
+		const menuText = MRE.Actor.Create(this.context, {
 			actor: {
 				parentId: menuButton.id,
 				transform: {

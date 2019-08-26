@@ -10,6 +10,7 @@ import { ActorLike, ColliderType, TransformLike, UserLike } from '../../runtime'
 import { ActionState, BehaviorType } from '../../runtime/behaviors';
 import { OperatingModel } from '../operatingModel';
 import { AssetPayloadType } from './assets';
+import { SyncPayloadType } from './sync';
 
 /**
  * @hidden
@@ -17,15 +18,14 @@ import { AssetPayloadType } from './assets';
  */
 export type PayloadType
 	= AssetPayloadType
+	| SyncPayloadType
 	| 'actor-correction'
 	| 'actor-update'
 	| 'app2engine-rpc'
 	| 'collision-event-raised'
 	| 'create-animation'
 	| 'create-empty'
-	| 'create-from-gltf'
 	| 'create-from-library'
-	| 'create-primitive'
 	| 'destroy-actors'
 	| 'engine2app-rpc'
 	| 'handshake'
@@ -174,35 +174,11 @@ export type CreateFromLibrary = CreateActorCommon & {
 
 /**
  * @hidden
- * App to engine. Request for engine to load a game object from a glTF file.
- * Response is an ObjectSpawned payload.
- */
-export type CreateFromGltf = CreateActorCommon & {
-	type: 'create-from-gltf';
-	resourceUrl: string;
-	assetName: string;
-	colliderType: ColliderType;
-};
-
-/**
- * @hidden
  * App to engine. Create an empty game object.
  * Response is an ObjectSpawned payload.
  */
 export type CreateEmpty = CreateActorCommon & {
 	type: 'create-empty';
-};
-
-/**
- * @hidden
- * App to engine. Creates a primitive shape.
- * Response is an ObjectSpawned payload.
- */
-export type CreatePrimitive = CreateActorCommon & {
-	type: 'create-primitive';
-	definition: PrimitiveDefinition;
-	addCollider: boolean;
-	actor: Partial<ActorLike>;
 };
 
 /**

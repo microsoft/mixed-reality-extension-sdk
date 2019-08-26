@@ -7,17 +7,19 @@ import { Test } from '../test';
 
 export default class TransformTest extends Test {
 	public expectedResultDescription = "Four half-meter cubes in a row";
+	private assets: MRE.AssetContainer;
+
 	public async run(root: MRE.Actor): Promise<boolean> {
+		this.assets = new MRE.AssetContainer(this.app.context);
 		const deg45 = MRE.Quaternion.FromEulerAngles(0, 0, -Math.PI / 4);
 
-		const cube1 = MRE.Actor.CreatePrimitive(this.app.context, {
-			definition: {
-				shape: MRE.PrimitiveShape.Box,
-				dimensions: { x: 1, y: 1, z: 1 }
-			},
+		const cube1 = MRE.Actor.Create(this.app.context, {
 			actor: {
 				name: 'cube1',
 				parentId: root.id,
+				appearance: {
+					meshId: this.assets.createBoxMesh('smallBox', 1, 1, 1).id
+				},
 				transform: {
 					local: {
 						position: { x: -0.75 * Math.SQRT2, y: 1 },
@@ -59,8 +61,8 @@ export default class TransformTest extends Test {
 			}
 		}
 
-		const cube3 = MRE.Actor.CreateFromGltf(this.app.context, {
-			resourceUrl: `${this.baseUrl}/cube_4m.glb`,
+		const cube3 = MRE.Actor.CreateFromGltf(this.assets, {
+			uri: `${this.baseUrl}/cube_4m.glb`,
 			actor: {
 				name: 'cube3',
 				parentId: cube2.id,
@@ -74,14 +76,13 @@ export default class TransformTest extends Test {
 			}
 		});
 
-		const cube4 = MRE.Actor.CreatePrimitive(this.app.context, {
-			definition: {
-				shape: MRE.PrimitiveShape.Box,
-				dimensions: { x: 8, y: 8, z: 8 }
-			},
+		const cube4 = MRE.Actor.Create(this.app.context, {
 			actor: {
 				name: 'cube4',
 				parentId: cube3.id,
+				appearance: {
+					meshId: this.assets.createBoxMesh('largeBox', 8, 8, 8).id
+				},
 				transform: {
 					local: {
 						position: { x: -4, y: 4 },

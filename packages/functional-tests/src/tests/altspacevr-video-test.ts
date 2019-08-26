@@ -17,20 +17,23 @@ export default class AltspaceVRVideoTest extends Test {
 	// Note that videoPlayerManager is deprecated. Please use Actor.startVideoStream() instead.
 	/* tslint:disable-next-line */
 	private videoPlayerManager: VideoPlayerManager;
+	private assets: MRE.AssetContainer;
 
 	constructor(app: App, baseUrl: string, user: MRE.User) {
 		super(app, baseUrl, user);
 		/* tslint:disable-next-line */
 		this.videoPlayerManager = new VideoPlayerManager(app.context);
+		this.assets = new MRE.AssetContainer(this.app.context);
 	}
 	public cleanup() {
 		this.videoPlayerManager.cleanup();
+		this.assets.unload();
 	}
 
 	private _state = 0;
 
 	public async run(root: MRE.Actor): Promise<boolean> {
-		const video = MRE.Actor.CreateEmpty(this.app.context, {
+		const video = MRE.Actor.Create(this.app.context, {
 			actor: {
 				parentId: root.id,
 				name: 'video',
@@ -65,23 +68,19 @@ export default class AltspaceVRVideoTest extends Test {
 		};
 		cycleState();
 
-		const button = MRE.Actor.CreatePrimitive(this.app.context, {
-			definition: {
-				shape: MRE.PrimitiveShape.Sphere,
-				radius: 0.2,
-				uSegments: 8,
-				vSegments: 4
-
-			},
-			addCollider: true,
+		const button = MRE.Actor.Create(this.app.context, {
 			actor: {
 				name: 'Button',
 				parentId: root.id,
+				appearance: {
+					meshId: this.assets.createSphereMesh('spherebutton', 0.2).id
+				},
 				transform: {
 					local: {
 						position: { x: -0.8, y: 0.2, z: 0 }
 					}
-				}
+				},
+				collider: { geometry: { shape: 'auto' } }
 			}
 		});
 

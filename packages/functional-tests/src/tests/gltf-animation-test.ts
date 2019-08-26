@@ -12,7 +12,6 @@ export default class GltfAnimationTest extends Test {
 
 	private assets: MRE.AssetContainer;
 	private animating = false;
-	private rawGltf: MRE.Actor;
 	private prefab: MRE.Actor;
 
 	public cleanup() {
@@ -22,34 +21,15 @@ export default class GltfAnimationTest extends Test {
 	public async run(root: MRE.Actor): Promise<boolean> {
 		this.assets = new MRE.AssetContainer(this.app.context);
 
-		this.rawGltf = MRE.Actor.CreateFromGltf(this.app.context, {
-			resourceUrl: 'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models' +
-				'/master/2.0/CesiumMan/glTF-Binary/CesiumMan.glb',
+		this.prefab = MRE.Actor.CreateFromGltf(this.assets, {
+			uri: 'https://raw.githubusercontent.com/KhronosGroup/' +
+				'glTF-Sample-Models/master/2.0/CesiumMan/glTF-Binary/CesiumMan.glb',
 			colliderType: 'box',
 			actor: {
 				parentId: root.id,
 				transform: {
 					local: {
-						position: { x: -1, z: -1 }
-					}
-				}
-			}
-		});
-
-		this.rawGltf.setBehavior(MRE.ButtonBehavior)
-			.onClick(() => this.setAnimationState(this.animating = !this.animating));
-
-		this.prefab = MRE.Actor.CreateFromPrefab(this.app.context, {
-			prefabId:
-				(await this.assets.loadGltf('https://raw.githubusercontent.com/KhronosGroup/' +
-					'glTF-Sample-Models/master/2.0/CesiumMan/glTF-Binary/CesiumMan.glb', 'box')
-				)
-				.find(a => !!a.prefab).id,
-			actor: {
-				parentId: root.id,
-				transform: {
-					local: {
-						position: { x: 1, z: -1 }
+						position: { z: -1 }
 					}
 				}
 			}
@@ -64,10 +44,8 @@ export default class GltfAnimationTest extends Test {
 
 	private setAnimationState(play: boolean): void {
 		if (play) {
-			this.rawGltf.enableAnimation('animation:0');
 			this.prefab.enableAnimation('animation:0');
 		} else {
-			this.rawGltf.disableAnimation('animation:0');
 			this.prefab.disableAnimation('animation:0');
 		}
 	}

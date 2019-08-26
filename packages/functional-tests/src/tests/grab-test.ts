@@ -14,11 +14,18 @@ export default class GrabTest extends Test {
 	private state = 0;
 	private clickCount = 0;
 	private model: MRE.Actor;
+	private assets: MRE.AssetContainer;
 
 	private readonly SCALE = 0.2;
 
+	public cleanup() {
+		this.assets.unload();
+	}
+
 	public async run(root: MRE.Actor): Promise<boolean> {
-		MRE.Actor.CreateEmpty(this.app.context, {
+		this.assets = new MRE.AssetContainer(this.app.context);
+
+		MRE.Actor.Create(this.app.context, {
 			actor: {
 				name: "Light",
 				parentId: root.id,
@@ -36,11 +43,10 @@ export default class GrabTest extends Test {
 			}
 		});
 
-		// Load a glTF model
-		this.model = MRE.Actor.CreateFromGltf(this.app.context, {
-			// at the given URL
-			resourceUrl: `${this.baseUrl}/monkey.glb`,
-			// and spawn box colliders around the meshes.
+		// Create an actor
+		this.model = MRE.Actor.CreateFromGltf(this.assets, {
+			// from the glTF at the given URL, with box colliders on each mesh
+			uri: `${this.baseUrl}/monkey.glb`,
 			colliderType: 'box',
 			// Also apply the following generic actor properties.
 			actor: {
@@ -82,16 +88,16 @@ export default class GrabTest extends Test {
 
 		// Create two grabbable cubes that can be played with at will.  Position left
 		// anr right of the monkey.
+		const boxMesh = this.assets.createBoxMesh('box', 0.5, 0.5, 0.5);
 		for (const cube of [{ name: 'Cube1', x: -1 }, { name: 'Cube2', x: 1 }]) {
-			MRE.Actor.CreatePrimitive(this.app.context, {
-				definition: {
-					shape: MRE.PrimitiveShape.Box,
-					dimensions: { x: 0.5, y: 0.5, z: 0.5 }
-				},
-				addCollider: true,
+			MRE.Actor.Create(this.app.context, {
 				actor: {
 					name: cube.name,
 					parentId: root.id,
+					appearance: {
+						meshId: boxMesh.id
+					},
+					collider: { geometry: { shape: 'auto' } },
 					transform: { local: { position: { x: cube.x, y: 1, z: -1 } } }
 				}
 			}).grabbable = true;

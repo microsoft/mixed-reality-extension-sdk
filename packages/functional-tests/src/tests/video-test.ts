@@ -10,16 +10,15 @@ import { Test } from '../test';
 export default class VideoTest extends Test {
 	public expectedResultDescription = "Play a couple youtube videos. Click to cycle.";
 	private assets: MRE.AssetContainer;
-
-	constructor(app: App, baseUrl: string, user: MRE.User) {
-		super(app, baseUrl, user);
-		this.assets = new MRE.AssetContainer(this.app.context);
-	}
-
 	private _state = 0;
 
+	public cleanup() {
+		this.assets.unload();
+	}
+
 	public async run(root: MRE.Actor): Promise<boolean> {
-		const parentActor = MRE.Actor.CreateEmpty(this.app.context, {
+		this.assets = new MRE.AssetContainer(this.app.context);
+		const parentActor = MRE.Actor.Create(this.app.context, {
 			actor: {
 				parentId: root.id,
 				name: 'video',
@@ -125,18 +124,14 @@ export default class VideoTest extends Test {
 		};
 		cycleState();
 
-		const buttonActor = MRE.Actor.CreatePrimitive(this.app.context, {
-			definition: {
-				shape: MRE.PrimitiveShape.Sphere,
-				radius: 0.2,
-				uSegments: 8,
-				vSegments: 4
-
-			},
-			addCollider: true,
+		const buttonActor = MRE.Actor.Create(this.app.context, {
 			actor: {
 				name: 'Button',
 				parentId: root.id,
+				appearance: {
+					meshId: this.assets.createSphereMesh('sphere', 0.2).id
+				},
+				collider: { geometry: { shape: 'auto' } },
 				transform: {
 					local: {
 						position: { x: -0.8, y: 0.2, z: 0 }
@@ -150,9 +145,5 @@ export default class VideoTest extends Test {
 
 		await this.stoppedAsync();
 		return true;
-	}
-
-	public cleanup() {
-		this.assets.unload();
 	}
 }

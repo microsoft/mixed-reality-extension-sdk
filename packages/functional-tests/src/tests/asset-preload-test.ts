@@ -35,7 +35,7 @@ export default class AssetPreloadTest extends Test {
 		this.app.setOverrideText("Preloading assets");
 		const [monkey, uvgrid] = await Promise.all([
 			this.assets.loadGltf(this.baseUrl + '/monkey.glb', 'box'),
-			this.assets.loadGltf(this.generateMaterial(), 'none')
+			this.assets.loadGltf(this.generateMaterial())
 		]);
 		this.app.setOverrideText("Assets preloaded:" +
 			`${this.assets.prefabs.length} prefabs, ` +
@@ -108,20 +108,19 @@ export default class AssetPreloadTest extends Test {
 				}
 			}
 		});
-		this.sphere = MRE.Actor.CreatePrimitive(this.app.context, {
-			definition: {
-				shape: MRE.PrimitiveShape.Sphere,
-				radius: 0.5
-			},
-			addCollider: true,
+		this.sphere = MRE.Actor.Create(this.app.context, {
 			actor: {
 				parentId: this.root.id,
-				appearance: { materialId: this.uvgridMat.id },
+				appearance: {
+					meshId: this.assets.createSphereMesh('sphere', 0.5).id,
+					materialId: this.uvgridMat.id
+				},
 				transform: {
 					local: {
 						position: { x: 0.5, y: 1, z: -1 }
 					}
-				}
+				},
+				collider: { geometry: { shape: 'auto' } }
 			}
 		});
 

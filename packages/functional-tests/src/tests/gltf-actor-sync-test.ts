@@ -9,12 +9,25 @@ import { Test } from '../test';
 
 export default class GltfActorSyncTest extends Test {
 	public expectedResultDescription = "Text should be visible";
+	private assets: MRE.AssetContainer;
+
+	public cleanup() {
+		this.assets.unload();
+	}
 
 	public async run(root: MRE.Actor): Promise<boolean> {
-		const actorRoot = MRE.Actor.CreateFromGltf(this.app.context, {
-			resourceUrl: `${this.baseUrl}/monkey.glb`,
+		this.assets = new MRE.AssetContainer(this.app.context);
+		const actorRoot = MRE.Actor.CreateFromGltf(this.assets, {
+			uri: `${this.baseUrl}/monkey.glb`,
+			colliderType: 'box',
 			actor: {
+				name: 'glTF',
 				parentId: root.id,
+				text: {
+					contents: 'Peek-a-boo!',
+					height: 0.1,
+					anchor: MRE.TextAnchorLocation.BottomCenter
+				},
 				transform: {
 					local: {
 						position: { y: 1.5, z: -1 },
@@ -25,19 +38,8 @@ export default class GltfActorSyncTest extends Test {
 		});
 		await actorRoot.created();
 
-		// place text on gltf scene
-		const gltfRoot = actorRoot.children[0];
-		if (!gltfRoot) {
-			throw new Error('glTF scene actor not found');
-		}
-		gltfRoot.enableText({
-			contents: 'Peek-a-boo!',
-			height: 0.1,
-			anchor: MRE.TextAnchorLocation.BottomCenter
-		});
-
 		// move monkey head up
-		const monkeyRoot = gltfRoot.children[0];
+		const monkeyRoot = actorRoot.children[0];
 		if (!monkeyRoot) {
 			throw new Error('glTF node actor not found');
 		}

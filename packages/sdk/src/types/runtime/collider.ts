@@ -15,7 +15,7 @@ export interface ColliderLike {
 	enabled: boolean;
 	isTrigger: boolean;
 	// collisionLayer: CollisionLayer;
-	colliderGeometry: ColliderGeometry;
+	geometry: ColliderGeometry;
 	eventSubscriptions: ColliderEventType[];
 }
 
@@ -25,14 +25,12 @@ export interface ColliderLike {
 export class Collider implements ColliderLike {
 	public $DoNotObserve = ['_internal'];
 
-	// Readonly params that are not patchable or observable.
-	// tslint:disable:variable-name
-	private _colliderGeometry: Readonly<ColliderGeometry>;
+	// tslint:disable-next-line:variable-name
 	private _internal: InternalCollider;
-	// tslint:enable:variable-name
 
 	public enabled = true;
 	public isTrigger = false;
+	public geometry: Readonly<ColliderGeometry>;
 	// public collisionLayer = CollisionLayer.Object;
 
 	/** @hidden */
@@ -46,32 +44,24 @@ export class Collider implements ColliderLike {
 	}
 
 	/**
-	 * The collider geometry that the collider was initialized with.  These are a
-	 * readonly structure and are not able to be updated after creation.
-	 */
-	public get colliderGeometry() { return this._colliderGeometry; }
-
-	/**
 	 * @hidden
 	 * Creates a new Collider instance.
 	 * @param $owner The owning actor instance. Field name is prefixed with a dollar sign so that it is ignored by
-	 * @param initFrom The collider like to use to init from.
 	 * the actor patch detection system.
+	 * @param initFrom The collider like to use to init from.
 	 */
-	constructor(private $owner: Actor, initFrom: Partial<ColliderLike>) {
-		if (initFrom) {
-			if (!initFrom.colliderGeometry && !initFrom.colliderGeometry.colliderType) {
-				throw new Error("Must provide valid collider params containing a valid collider type");
+	constructor(private $owner: Actor, from: Partial<ColliderLike>) {
+		if (from) {
+			if (!from.geometry || !from.geometry.shape) {
+				throw new Error("Must provide valid collider params containing a valid shape");
 			}
 
 			this._internal = new InternalCollider(this, $owner);
-
-			if (initFrom.colliderGeometry !== undefined) this._colliderGeometry = initFrom.colliderGeometry;
-			if (initFrom.enabled !== undefined) this.enabled = initFrom.enabled;
-			if (initFrom.isTrigger !== undefined) this.isTrigger = initFrom.isTrigger;
-			// if (initFrom.collisionLayer !== undefined) this.collisionLayer = initFrom.collisionLayer;
+			if (from.geometry !== undefined) this.geometry = from.geometry;
+			if (from.enabled !== undefined) this.enabled = from.enabled;
+			if (from.isTrigger !== undefined) this.isTrigger = from.isTrigger;
 		} else {
-			throw new Error("Must provide a valid collider like to init from.");
+			throw new Error("Must provide a valid collider-like to initialize from.");
 		}
 	}
 
@@ -119,7 +109,7 @@ export class Collider implements ColliderLike {
 			enabled: this.enabled,
 			isTrigger: this.isTrigger,
 			// collisionLayer: this.collisionLayer,
-			colliderGeometry: this._colliderGeometry,
+			geometry: this.geometry,
 			eventSubscriptions: this.eventSubscriptions
 		} as ColliderLike;
 	}

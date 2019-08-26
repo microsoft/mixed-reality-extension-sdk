@@ -8,13 +8,14 @@ import UUID from 'uuid/v4';
 import {
 	Asset, AssetSource,
 	Material, MaterialLike,
-	Mesh,
+	Mesh, MeshLike,
 	Prefab,
 	Sound, SoundLike,
 	Texture, TextureLike,
 	VideoStream, VideoStreamLike
 } from '.';
 import { Context } from '..';
+import { PrimitiveDefinition, PrimitiveShape, Vector3Like } from '../../..';
 import { log } from '../../../log';
 import resolveJsonValues from '../../../utils/resolveJsonValues';
 import * as Payloads from '../../network/payloads';
@@ -100,12 +101,11 @@ export class AssetContainer {
 	}
 
 	/**
-	 * preload a video stream and generate a new video stream asset
+	 * Preload a video stream and generate a new video stream asset
 	 * @param name The new stream's name
 	 * @param definition The initial video stream properties. The `uri` property is required.
 	 */
 	public createVideoStream(name: string, definition: Partial<VideoStreamLike>): VideoStream {
-
 		const video = new VideoStream(this, {
 			id: UUID(),
 			name,
@@ -116,12 +116,124 @@ export class AssetContainer {
 	}
 
 	/**
+	 * Create a new sphere-shaped mesh.
+	 * @param name The name to give to the asset.
+	 * @param radius The radius of the sphere.
+	 * @param uSegments The number of longitudinal segments.
+	 * @param vSegments The number of latitudinal segments.
+	 */
+	public createSphereMesh(name: string, radius: number, uSegments = 36, vSegments = 18): Mesh {
+		return this.createPrimitiveMesh(name, {
+			shape: PrimitiveShape.Sphere,
+			dimensions: { x: 2 * radius, y: 2 * radius, z: 2 * radius },
+			uSegments,
+			vSegments
+		});
+	}
+
+	/**
+	 * Create a new box-shaped mesh.
+	 * @param name The name to give to the asset.
+	 * @param width The length of the box on the X axis.
+	 * @param height The length of the box on the Y axis.
+	 * @param depth The length of the box on the Z axis.
+	 */
+	public createBoxMesh(name: string, width: number, height: number, depth: number): Mesh {
+		return this.createPrimitiveMesh(name, {
+			shape: PrimitiveShape.Box,
+			dimensions: { x: width, y: height, z: depth }
+		});
+	}
+
+	/**
+	 * Create a new capsule-shaped mesh.
+	 * @param name The name to give to the asset.
+	 * @param height The height of the capsule from tip to tip.
+	 * @param radius The thickness of the capsule.
+	 * @param direction The long axis of the capsule.
+	 * @param uSegments The number of longitudinal segments.
+	 * @param vSegments The number of latitudinal segments.
+	 */
+	public createCapsuleMesh(
+		name: string, height: number, radius: number,
+		direction: 'x' | 'y' | 'z' = 'y', uSegments = 36, vSegments = 18
+	): Mesh {
+		if (height < 2 * radius) {
+			throw new Error("Capsule height must be greater than twice the radius");
+		}
+
+		const dimensions = { x: 2 * radius, y: 2 * radius, z: 2 * radius } as Vector3Like;
+		dimensions[direction] = height;
+		return this.createPrimitiveMesh(name, {
+			shape: PrimitiveShape.Capsule,
+			dimensions,
+			uSegments,
+			vSegments
+		});
+	}
+
+	/**
+	 * Create a new cylinder-shaped mesh.
+	 * @param name The name to give to the asset.
+	 * @param height The height of the cylinder.
+	 * @param radius The thickness of the cylinder.
+	 * @param direction The long axis of the cylinder.
+	 * @param uSegments The number of longitudinal segments.
+	 */
+	public createCylinderMesh(
+		name: string, height: number, radius: number,
+		direction: 'x' | 'y' | 'z' = 'y', uSegments = 36
+	): Mesh {
+		const dimensions = { x: 2 * radius, y: 2 * radius, z: 2 * radius };
+		dimensions[direction] = height;
+		return this.createPrimitiveMesh(name, {
+			shape: PrimitiveShape.Cylinder,
+			dimensions,
+			uSegments
+		});
+	}
+
+	/**
+	 * Create a flat mesh on the X-Z plane.
+	 * @param name The name to give to the asset.
+	 * @param width The X-axis length of the plane.
+	 * @param height The Z-axis length of the plane.
+	 * @param uSegments The number of X-axis segments.
+	 * @param vSegments The number of Z-axis segments.
+	 */
+	public createPlaneMesh(name: string, width: number, height: number, uSegments = 1, vSegments = 1): Mesh {
+		return this.createPrimitiveMesh(name, {
+			shape: PrimitiveShape.Plane,
+			dimensions: { x: width, y: 0, z: height },
+			uSegments,
+			vSegments
+		});
+	}
+
+	/**
+	 * Create a new mesh from the given primitive definition
+	 * @param name The new mesh's name
+	 * @param definition A description of the desired mesh
+	 */
+	public createPrimitiveMesh(name: string, definition: PrimitiveDefinition): Mesh {
+		const mesh = new Mesh(this, {
+			id: UUID(),
+			name,
+			mesh: {
+				primitiveDefinition: definition
+			}
+		});
+		mesh.setLoadedPromise(this.sendCreateAsset(mesh));
+		return mesh;
+	}
+
+	/**
 	 * Load the assets in a glTF file by URL, and this container with the result.
 	 * @param uri The URI to a glTF model.
 	 * @param colliderType The shape of the generated prefab collider.
 	 * @returns A promise that resolves with the list of loaded assets.
 	 */
-	public async loadGltf(uri: string, colliderType?: Payloads.CreateColliderType): Promise<Asset[]> {
+	public async loadGltf(uri: string, colliderType?: 'box' | 'mesh'): Promise<Asset[]> {
 		if (!this._assets) {
 			throw new Error("Cannot load new assets into an unloaded container!");
 		}

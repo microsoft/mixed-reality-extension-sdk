@@ -9,16 +9,19 @@ import {
 	ActorTransformLike,
 	Appearance,
 	AppearanceLike,
+	Asset,
+	AssetContainer,
 	Attachment,
 	AttachmentLike,
 	AttachPoint,
 	Collider,
 	ColliderLike,
-	CollisionData,
+	ColliderType,
 	Light,
 	LightLike,
 	LookAt,
 	LookAtLike,
+	Prefab,
 	RigidBody,
 	RigidBodyLike,
 	Text,
@@ -42,12 +45,15 @@ import { observe, unobserve } from '../../utils/observe';
 import readPath from '../../utils/readPath';
 import resolveJsonValues from '../../utils/resolveJsonValues';
 import { InternalActor } from '../internal/actor';
-import { CreateColliderType } from '../network/payloads';
 import { SubscriptionType } from '../network/subscriptionType';
 import { Patchable } from '../patchable';
 import { ActionHandler, ActionState, Behavior, DiscreteAction } from './behaviors';
 import { MediaInstance } from './mediaInstance';
-import { BoxColliderGeometry, ColliderGeometry, SphereColliderGeometry } from './physics';
+import {
+	ColliderGeometry,
+	CollisionHandler,
+	TriggerHandler
+} from './physics';
 
 /**
  * Describes the properties of an Actor.
@@ -199,41 +205,20 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	 * @param context The SDK context object.
 	 * @param options.actor The initial state of the actor.
 	 */
-	public static CreateEmpty(context: Context, options?: {
+	public static Create(context: Context, options?: {
 		actor?: Partial<ActorLike>
 	}): Actor {
-		return context.internal.CreateEmpty(options);
-	}
-
-	/**
-	 * Creates a new actor from a glTF resource.
-	 * @param context The SDK context object.
-	 * @param options.resourceUrl The URL of the source .gltf or .glb file.
-	 * @param options.assetName The name of the asset within the glTF to load. Leave empty to select the
-	 * first scene in the file.
-	 * @param options.colliderType The collider to assign to loaded objects. Leave blank for no colliders.
-	 * @param options.actor The initial state of the root actor.
-	 */
-	public static CreateFromGltf(context: Context, options: {
-		resourceUrl: string,
-		assetName?: string,
-		colliderType?: CreateColliderType,
-		actor?: Partial<ActorLike>
-	}): Actor {
-		return context.internal.CreateFromGltf(options);
+		return context.internal.Create(options);
 	}
 
 	/**
 	 * @deprecated
-	 * Use CreateFromGltf instead.
+	 * Use [[Actor.Create]] instead.
 	 */
-	public static CreateFromGLTF(context: Context, options: {
-		resourceUrl: string,
-		assetName?: string,
-		colliderType?: CreateColliderType,
+	public static CreateEmpty(context: Context, options?: {
 		actor?: Partial<ActorLike>
 	}): Actor {
-		return context.internal.CreateFromGltf(options);
+		return Actor.Create(context, options);
 	}
 
 	/**
@@ -251,32 +236,105 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	}
 
 	/**
-	 * Creates a new actor with a primitive shape.
-	 * @param context The SDK context object.
-	 * @param options.definiton @see PrimitiveDefinition
-	 * @param options.addCollder Whether or not to add a collider to the actor.
-	 * @param options.actor The initial state of the actor.
-	 */
-	public static CreatePrimitive(context: Context, options: {
-		definition: PrimitiveDefinition,
-		addCollider?: boolean,
-		actor?: Partial<ActorLike>
-	}): Actor {
-		return context.internal.CreatePrimitive(options);
-	}
-
-	/**
 	 * Creates a new actor hierarchy from the provided prefab.
 	 * @param context The SDK context object.
-	 * @param options.prefabId The ID of the prefab asset.
+	 * @param options.prefabId The ID of a prefab asset to spawn.
 	 * @param options.actor The initial state of the root actor.
 	 * given a collider type when loaded @see AssetManager.loadGltf.
 	 */
 	public static CreateFromPrefab(context: Context, options: {
 		prefabId: string,
 		actor?: Partial<ActorLike>
+	}): Actor;
+
+	/**
+	 * Creates a new actor hierarchy from the provided prefab.
+	 * @param context The SDK context object.
+	 * @param options.prefab The prefab asset to spawn.
+	 * @param options.actor The initial state of the root actor.
+	 * given a collider type when loaded @see AssetManager.loadGltf.
+	 */
+	public static CreateFromPrefab(context: Context, options: {
+		prefab: Prefab,
+		actor?: Partial<ActorLike>
+	}): Actor;
+
+	/**
+	 * Creates a new actor hierarchy from the provided prefab.
+	 * @param context The SDK context object.
+	 * @param options.firstPrefabFrom An asset array containing at least one prefab.
+	 * @param options.actor The initial state of the root actor.
+	 * given a collider type when loaded @see AssetManager.loadGltf.
+	 */
+	public static CreateFromPrefab(context: Context, options: {
+		firstPrefabFrom: Asset[],
+		actor?: Partial<ActorLike>
+	}): Actor;
+
+	/** @hidden */
+	public static CreateFromPrefab(context: Context, options: {
+		prefabId?: string,
+		prefab?: Prefab,
+		firstPrefabFrom?: Asset[],
+		actor?: Partial<ActorLike>
 	}): Actor {
-		return context.internal.CreateFromPrefab(options);
+		let prefabId = options.prefabId;
+		if (!prefabId && options.prefab) {
+			prefabId = options.prefab.id;
+		}
+		if (!prefabId && options.firstPrefabFrom) {
+			prefabId = options.firstPrefabFrom.find(a => !!a.prefab).id as string;
+		}
+		if (!prefabId) {
+			throw new Error("No prefab supplied to CreateFromPrefab");
+		}
+
+		return context.internal.CreateFromPrefab({ prefabId, actor: options.actor });
+	}
+
+	/**
+	 * Load a glTF model, and spawn the first prefab in the resulting assets. Equivalent
+	 * to using [[AssetContainer.loadGltf]] and [[Actor.CreateFromPrefab]].
+	 * @param container The asset container to load the glTF assets into
+	 * @param options.uri A URI to a .gltf or .glb file
+	 * @param options.colliderType The type of collider to add to each mesh actor
+	 * @param options.actor The initial state of the actor
+	 */
+	public static CreateFromGltf(container: AssetContainer, options: {
+		uri: string,
+		colliderType?: 'box' | 'mesh',
+		actor?: Partial<ActorLike>
+	}): Actor {
+		return container.context.internal.CreateFromGltf(container, options);
+	}
+
+	/**
+	 * Create an actor with a newly generated mesh. Equivalent to using
+	 * [[AssetContainer.createPrimitiveMesh]] and adding the result to [[Actor.Create]].
+	 * @param container The asset container to load the mesh into
+	 * @param options.definition The primitive shape and size
+	 * @param options.addCollider Add an auto-typed collider to the actor
+	 * @param options.actor The initial state of the actor
+	 */
+	public static CreatePrimitive(container: AssetContainer, options: {
+		definition: PrimitiveDefinition,
+		addCollider?: boolean,
+		actor?: Partial<ActorLike>
+	}): Actor {
+		const actor = options.actor || {};
+		const mesh = container.createPrimitiveMesh(actor.name, options.definition);
+		return Actor.Create(container.context, {
+			actor: {
+				...actor,
+				appearance: {
+					...actor.appearance,
+					meshId: mesh.id
+				},
+				collider: options.addCollider
+					? actor.collider || { geometry: { shape: 'auto' } }
+					: actor.collider
+			}
+		});
 	}
 
 	/**
@@ -345,47 +403,79 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	 * Adds a collider of the given type and parameters on the actor.
 	 * @param colliderType Type of the collider to enable.
 	 * @param isTrigger Whether the collider is a trigger volume or not.
+	 * @param radius The radius of the collider. If omitted, a best-guess radius is chosen
+	 * based on the size of the currently assigned mesh (loading meshes are not considered).
+	 * If no mesh is assigned, defaults to 0.5.
 	 * @param center The center of the collider, or default of the object if none is provided.
-	 * @param radius The radius of the collider, or default bounding if non is provided.
 	 */
 	// * @param collisionLayer The layer that the collider operates in.
 	public setCollider(
 		colliderType: 'sphere',
 		// collisionLayer: CollisionLayer,
 		isTrigger: boolean,
-		center?: Vector3Like,
-		radius?: number): void;
+		radius?: number,
+		center?: Vector3Like
+	): void;
 
 	/**
 	 * Adds a collider of the given type and parameters on the actor.
 	 * @param colliderType Type of the collider to enable.
 	 * @param isTrigger Whether the collider is a trigger volume or not.
+	 * @param size The dimensions of the collider. If omitted, a best-guess size is chosen
+	 * based on the currently assigned mesh (loading meshes are not considered).
+	 * If no mesh is assigned, defaults to (1,1,1).
 	 * @param center The center of the collider, or default of the object if none is provided.
-	 * @param size
 	 */
 	public setCollider(
 		colliderType: 'box',
 		// collisionLayer: CollisionLayer,
 		isTrigger: boolean,
-		center?: Vector3Like,
-		size?: Vector3Like): void;
+		size?: Vector3Like,
+		center?: Vector3Like
+	): void;
+
+	/**
+	 * Adds a collider of the give type and parameters on the actor.
+	 * @param colliderType Type of the collider to enable.
+	 * @param isTrigger Whether the collider is a trigger volume or not.
+	 * @param size The dimensions of the collider, with the largest component of the vector
+	 * being the primary axis and height of the capsule (including end caps), and the smallest the diameter.
+	 * If omitted, a best-guess size is chosen based on the currently assigned mesh
+	 * (loading meshes are not considered). If no mesh is assigned, defaults to (1, 1, 1).
+	 * @param center The center of the collider, or default of the object if none is provided.
+	 */
+	public setCollider(
+		colliderType: 'capsule',
+		isTrigger: boolean,
+		size?: Vector3Like,
+		center?: Vector3Like
+	): void;
+
+	/**
+	 * Adds a collider whose shape is determined by the current mesh.
+	 * @param colliderType Type of the collider to enable.
+	 * @param isTrigger Whether the collider is a trigger volume or not.
+	 */
+	public setCollider(
+		colliderType: 'auto',
+		isTrigger: boolean
+	): void;
 
 	/** @ignore */
 	public setCollider(
-		colliderType: 'box' | 'sphere',
+		colliderType: ColliderType,
 		// collisionLayer: CollisionLayer,
 		isTrigger: boolean,
-		center?: Vector3Like,
-		size?: number | Vector3Like
+		size?: number | Vector3Like,
+		center = { x: 0, y: 0, z: 0 } as Vector3Like
 	): void {
-		const colliderGeometry = this.generateColliderGeometry(colliderType, center, size);
-
+		const colliderGeometry = this.generateColliderGeometry(colliderType, size, center);
 		if (colliderGeometry) {
 			this._setCollider({
 				enabled: true,
 				isTrigger,
 				// collisionLayer,
-				colliderGeometry
+				geometry: colliderGeometry
 			} as ColliderLike);
 		}
 	}
@@ -733,24 +823,33 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	 */
 
 	private generateColliderGeometry(
-		colliderType: 'box' | 'sphere',
-		center?: Vector3Like,
-		size?: number | Vector3Like
+		colliderType: ColliderType,
+		size?: number | Vector3Like,
+		center = { x: 0, y: 0, z: 0 } as Vector3Like,
 	): ColliderGeometry {
 		switch (colliderType) {
 			case 'box':
 				return {
-					colliderType: 'box',
+					shape: 'box',
 					center,
-					size: size as Partial<Vector3Like>
-				} as BoxColliderGeometry;
+					size: size as Readonly<Vector3Like>
+				};
 			case 'sphere':
 				return {
-					colliderType: 'sphere',
+					shape: 'sphere',
 					center,
 					radius: size as number
-				} as SphereColliderGeometry;
-
+				};
+			case 'capsule':
+				return {
+					shape: 'capsule',
+					center,
+					size: size as Readonly<Vector3Like>
+				};
+			case 'auto':
+				return {
+					shape: 'auto'
+				};
 			default:
 				log.error(null,
 					'Trying to enable a collider on the actor with an invalid collider geometry type.' +
@@ -761,12 +860,18 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	}
 
 	private _setCollider(collider: Partial<ColliderLike>) {
+		const oldCollider = this._collider;
 		if (this._collider) {
 			unobserve(this._collider);
 			this._collider = undefined;
 		}
 
 		this._collider = new Collider(this, collider);
+		if (oldCollider) {
+			this._collider.internal.copyHandlers(oldCollider.internal);
+		}
+
+		// Actor patching: Observe the collider component for changed values.
 		observe({
 			target: this._collider,
 			targetName: 'collider',

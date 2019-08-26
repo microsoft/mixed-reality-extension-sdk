@@ -7,8 +7,8 @@
  * The type of the collider.
  */
 export type ColliderType
-	= 'box'
+	= 'auto'
+	| 'box'
 	| 'sphere'
-	| 'mesh'
 	| 'capsule'
 	;

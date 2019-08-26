@@ -14,49 +14,50 @@ export default class GltfConcurrencyTest extends Test {
 	public async run(root: MRE.Actor): Promise<boolean> {
 		this.assets = new MRE.AssetContainer(this.app.context);
 
-		const runner = MRE.Actor.CreateFromGltf(this.app.context, {
-			// tslint:disable-next-line:max-line-length
-			resourceUrl: `https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/CesiumMan/glTF-Binary/CesiumMan.glb`,
+		let runnerAssets: MRE.Asset[];
+		let bottleAssets: MRE.Asset[];
+		let gearboxAssets: MRE.Asset[];
+
+		this.assets.loadGltf('https://raw.githubusercontent.com/' +
+			'KhronosGroup/glTF-Sample-Models/master/2.0/GearboxAssy/glTF/GearboxAssy.gltf')
+		.then(assets => gearboxAssets = assets)
+		.catch(() => console.log('Gearbox didn\'t load, as expected in Altspace'));
+
+		try {
+			[runnerAssets, bottleAssets] = await Promise.all([
+				this.assets.loadGltf('https://raw.githubusercontent.com/' +
+					'KhronosGroup/glTF-Sample-Models/master/2.0/CesiumMan/glTF-Binary/CesiumMan.glb'),
+				this.assets.loadGltf('https://raw.githubusercontent.com/' +
+					'KhronosGroup/glTF-Sample-Models/master/2.0/WaterBottle/glTF/WaterBottle.gltf')
+			]);
+		} catch (errs) {
+			console.error(errs);
+			return false;
+		}
+
+		const runner = MRE.Actor.CreateFromPrefab(this.app.context, {
+			prefabId: runnerAssets.find(a => !!a.prefab).id,
 			actor: {
 				name: 'runner',
 				parentId: root.id,
 				transform: { local: { position: { x: 0.66, y: 0.0, z: -0.5 } } }
 			}
 		});
-
-		const gearbox = MRE.Actor.CreateFromGltf(this.app.context, {
-			// tslint:disable-next-line:max-line-length
-			resourceUrl: 'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/GearboxAssy/glTF/GearboxAssy.gltf',
-			actor: {
-				name: 'gearbox',
-				parentId: root.id,
-				transform: { local: { position: { x: 16, y: 0.3, z: -1.5 }, scale: { x: 0.1, y: 0.1, z: 0.1 } } }
-			}
-		});
-
-		const bottlePromise = this.assets.loadGltf(
-			// tslint:disable-next-line:max-line-length
-			'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/WaterBottle/glTF/WaterBottle.gltf');
-
 		runner.enableAnimation('animation:0');
 
-		try {
-			await gearbox.created();
-		} catch (e) {
-			console.log('Gearbox didn\'t load, as expected in Altspace');
-		}
-
-		let bottleAssets: MRE.Asset[];
-		try {
-			let _: any;
-			[_, bottleAssets] = await Promise.all([runner.created(), bottlePromise]);
-		} catch (errs) {
-			console.error(errs);
-			return false;
+		if (gearboxAssets) {
+			MRE.Actor.CreateFromPrefab(this.app.context, {
+				prefabId: gearboxAssets.find(a => !!a.prefab).id,
+				actor: {
+					name: 'gearbox',
+					parentId: root.id,
+					transform: { local: { position: { x: 16, y: 0.3, z: -1.5 }, scale: { x: 0.1, y: 0.1, z: 0.1 } } }
+				}
+			});
 		}
 
 		MRE.Actor.CreateFromPrefab(this.app.context, {
-			prefabId: bottleAssets.find(a => a.prefab !== null).id,
+			prefabId: bottleAssets.find(a => !!a.prefab).id,
 			actor: {
 				name: 'bottle',
 				parentId: root.id,

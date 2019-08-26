@@ -15,16 +15,20 @@ export default class PhysicsSimTest extends Test {
 	public expectedResultDescription = "Balls trickle through the plinko board";
 	private assets: MRE.AssetContainer;
 	private interval: NodeJS.Timeout;
-	private pegMat: MRE.Material;
+	private defaultPegMat: MRE.Material;
+	private collisionPegMat: MRE.Material;
 	private ballMat: MRE.Material;
-	private collRefCount = 0;
+	private collRefCount: { [id: string]: number } = {};
 	private ballCount = 0;
 	private counterPlane: MRE.Actor;
 
 	public async run(root: MRE.Actor): Promise<boolean> {
 		this.assets = new MRE.AssetContainer(this.app.context);
-		this.pegMat = this.assets.createMaterial('peg', {
+		this.defaultPegMat = this.assets.createMaterial('defaultPeg', {
 			color: defaultPegColor
+		});
+		this.collisionPegMat = this.assets.createMaterial('collisionPeg', {
+			color: collisionPegColor
 		});
 		this.ballMat = this.assets.createMaterial('ball', {
 			color: defaultBallColor
@@ -46,7 +50,7 @@ export default class PhysicsSimTest extends Test {
 
 	private async createCounterPlane(root: MRE.Actor, width: number, height: number) {
 		// Create the ball count text objects
-		this.counterPlane = MRE.Actor.CreateEmpty(this.app.context, {
+		this.counterPlane = MRE.Actor.Create(this.app.context, {
 			actor: {
 				parentId: root.id,
 				transform: {
@@ -61,28 +65,26 @@ export default class PhysicsSimTest extends Test {
 		});
 
 		// Create the trigger plane for the ball counter.
-		const counter = MRE.Actor.CreatePrimitive(this.app.context, {
-			definition: {
-				shape: MRE.PrimitiveShape.Plane,
-				dimensions: { x: width, y: 0, z: 2 }
-			},
-			addCollider: true,
+		const counter = MRE.Actor.Create(this.app.context, {
 			actor: {
 				parentId: root.id,
 				transform: {
 					local: { position: { x: 0, y: height, z: 0 } }
 				},
-				appearance: { enabled: false },
+				collider: {
+					geometry: {
+						shape: 'box',
+						size: { x: width, y: 0.01, z: 2 }
+					},
+					isTrigger: true
+				}
 			}
 		});
-		// TODO: Should not have to wait for counter to be created before setting the collider
-		counter.created().then(() => {
-			counter.collider.isTrigger = true;
-			counter.collider.onTrigger('trigger-enter', _ => {
-				++this.ballCount;
-				this.counterPlane.text.contents = `Ball count: ${this.ballCount}`;
-			});
-		}).catch();
+
+		counter.collider.onTrigger('trigger-enter', _ => {
+			++this.ballCount;
+			this.counterPlane.text.contents = `Ball count: ${this.ballCount}`;
+		});
 	}
 
 	private async createPegField(
@@ -95,46 +97,33 @@ export default class PhysicsSimTest extends Test {
 		const position = new MRE.Vector3(-width / 2, 0.25, -0.07);
 		let oddRow = 0;
 
+		const pegMesh = this.assets.createCylinderMesh('peg', 0.2, pegRadius, 'z');
+
 		while (position.x <= finalPosition.x && position.y <= finalPosition.y) {
-			const peg = MRE.Actor.CreatePrimitive(this.app.context, {
-				definition: {
-					shape: MRE.PrimitiveShape.Cylinder,
-					dimensions: { x: 0, y: 0, z: 0.2 },
-					radius: pegRadius
-				},
-				addCollider: true,
+			const peg = MRE.Actor.Create(this.app.context, {
 				actor: {
 					parentId: root.id,
 					transform: { local: { position } },
-					appearance: { materialId: this.pegMat.id }
+					appearance: {
+						meshId: pegMesh.id,
+						materialId: this.defaultPegMat.id
+					},
+					collider: { geometry: { shape: 'auto' } }
 				}
 			});
-			// TODO: Should not have to wait for peg to be created here.
-			peg.created().then(() => {
-				if (peg.collider) {
-					peg.collider.onCollision('collision-enter', data => {
-						++this.collRefCount;
-						if (this.collRefCount === 1) {
-							peg.appearance.material.color.set(
-								collisionPegColor.r,
-								collisionPegColor.g,
-								collisionPegColor.b,
-								peg.appearance.material.color.a);
-						}
-					});
-
-					peg.collider.onCollision('collision-exit', data => {
-						--this.collRefCount;
-						if (this.collRefCount === 0) {
-							peg.appearance.material.color.set(
-								defaultPegColor.r,
-								defaultPegColor.g,
-								defaultPegColor.b,
-								peg.appearance.material.color.a);
-						}
-					});
+			peg.collider.onCollision('collision-enter', data => {
+				this.collRefCount[peg.id] = this.collRefCount[peg.id] + 1 || 1;
+				if (this.collRefCount[peg.id] > 0) {
+					peg.appearance.material = this.collisionPegMat;
 				}
-			}).catch();
+			});
+
+			peg.collider.onCollision('collision-exit', data => {
+				this.collRefCount[peg.id]--;
+				if (this.collRefCount[peg.id] === 0) {
+					peg.appearance.material = this.defaultPegMat;
+				}
+			});
 
 			position.x += spacing;
 			if (position.x > finalPosition.x) {
@@ -147,22 +136,21 @@ export default class PhysicsSimTest extends Test {
 	}
 
 	private spawnBall(root: MRE.Actor, width: number, height: number, ballRadius = 0.07, killTimeout = 5000) {
-		const ball = MRE.Actor.CreatePrimitive(this.app.context, {
-			definition: {
-				shape: MRE.PrimitiveShape.Sphere,
-				radius: ballRadius
-			},
-			addCollider: true,
+		const ball = MRE.Actor.Create(this.app.context, {
 			actor: {
 				parentId: root.id,
-				appearance: { materialId: this.ballMat.id },
+				appearance: {
+					meshId: this.assets.createSphereMesh('ball', ballRadius).id,
+					materialId: this.ballMat.id
+				},
 				transform: {
 					local: { position: { x: -width / 2 + width * Math.random(), y: height, z: -0.1 } }
 				},
 				rigidBody: {
 					mass: 3,
 					constraints: [MRE.RigidBodyConstraints.FreezePositionZ]
-				}
+				},
+				collider: { geometry: { shape: 'auto' } }
 			}
 		});
 

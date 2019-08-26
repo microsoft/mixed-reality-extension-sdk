@@ -10,8 +10,16 @@ import delay from '../utils/delay';
 
 export default class InterpolationTest extends Test {
 	public expectedResultDescription = "Lerping scale and rotation";
+	private assets: MRE.AssetContainer;
+
+	public cleanup() {
+		this.assets.unload();
+	}
+
 	public async run(root: MRE.Actor): Promise<boolean> {
-		MRE.Actor.CreateEmpty(this.app.context, {
+		this.assets = new MRE.AssetContainer(this.app.context);
+
+		MRE.Actor.Create(this.app.context, {
 			actor: {
 				name: "Light",
 				parentId: root.id,
@@ -29,20 +37,19 @@ export default class InterpolationTest extends Test {
 			}
 		});
 
-		const cube = MRE.Actor.CreatePrimitive(this.app.context, {
-			definition: {
-				shape: MRE.PrimitiveShape.Box,
-				dimensions: { x: 0.65, y: 0.65, z: 0.65 }
-			},
+		const cube = MRE.Actor.Create(this.app.context, {
 			actor: {
 				parentId: root.id,
+				appearance: {
+					meshId: this.assets.createBoxMesh('box', 0.65, 0.65, 0.65).id
+				},
+				collider: { geometry: { shape: 'auto' } },
 				transform: {
 					local: {
 						position: { y: 1.0, z: -1.0 }
 					}
 				}
-			},
-			addCollider: true
+			}
 		});
 
 		while (!this.stopped) {

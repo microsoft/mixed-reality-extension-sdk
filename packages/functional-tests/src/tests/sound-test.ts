@@ -16,54 +16,52 @@ export default class SoundTest extends Test {
 	private _dopplerSoundState = 0;
 
 	// Chords for the first few seconds of The Entertainer
-	private chords: number[][] =
-		[
-			[2 + 12],
-			[4 + 12],
-			[0 + 12],
-			[-3 + 12],
-			[],
-			[-1 + 12],
-			[-5 + 12],
-			[],
-			[2],
-			[4],
-			[0],
-			[-3],
-			[],
-			[-1],
-			[-5],
-			[],
-			[2 - 12],
-			[4 - 12],
-			[0 - 12],
-			[-3 - 12],
-			[],
-			[-1 - 12],
-			[-3 - 12],
-			[-4 - 12],
-			[-5 - 12],
-			[],
-			[],
-			[],
-			[-1, 7]
-		];
+	private chords: number[][] = [
+		[2 + 12],
+		[4 + 12],
+		[0 + 12],
+		[-3 + 12],
+		[],
+		[-1 + 12],
+		[-5 + 12],
+		[],
+		[2],
+		[4],
+		[0],
+		[-3],
+		[],
+		[-1],
+		[-5],
+		[],
+		[2 - 12],
+		[4 - 12],
+		[0 - 12],
+		[-3 - 12],
+		[],
+		[-1 - 12],
+		[-3 - 12],
+		[-4 - 12],
+		[-5 - 12],
+		[],
+		[],
+		[],
+		[-1, 7]
+	];
+
+	public cleanup() {
+		this.assets.unload();
+	}
 
 	public async run(root: MRE.Actor): Promise<boolean> {
 		this.assets = new MRE.AssetContainer(this.app.context);
+		const buttonMesh = this.assets.createSphereMesh('sphere', 0.2, 8, 4);
 
-		const musicButton = MRE.Actor.CreatePrimitive(this.app.context, {
-			definition: {
-				shape: MRE.PrimitiveShape.Sphere,
-				radius: 0.2,
-				uSegments: 8,
-				vSegments: 4
-
-			},
-			addCollider: true,
+		const musicButton = MRE.Actor.Create(this.app.context, {
 			actor: {
 				name: 'MusicButton',
 				parentId: root.id,
+				appearance: { meshId: buttonMesh.id },
+				collider: { geometry: { shape: 'auto' } },
 				transform: {
 					local: {
 						position: { x: -0.8, y: 1.3, z: -0.2 }
@@ -97,18 +95,12 @@ export default class SoundTest extends Test {
 		};
 		musicButtonBehavior.onButton('released', cycleMusicState);
 
-		const notesButton = MRE.Actor.CreatePrimitive(this.app.context, {
-			definition: {
-				shape: MRE.PrimitiveShape.Sphere,
-				radius: 0.2,
-				uSegments: 8,
-				vSegments: 4
-
-			},
-			addCollider: true,
+		const notesButton = MRE.Actor.Create(this.app.context, {
 			actor: {
 				name: 'NotesButton',
 				parentId: root.id,
+				appearance: { meshId: buttonMesh.id },
+				collider: { geometry: { shape: 'auto' } },
 				transform: {
 					local: {
 						position: { x: 0, y: 1.3, z: -0.2 }
@@ -136,18 +128,12 @@ export default class SoundTest extends Test {
 		};
 		notesButtonBehavior.onButton('released', playNotes);
 
-		const dopplerButton = MRE.Actor.CreatePrimitive(this.app.context, {
-			definition: {
-				shape: MRE.PrimitiveShape.Sphere,
-				radius: 0.2,
-				uSegments: 8,
-				vSegments: 4
-
-			},
-			addCollider: true,
+		const dopplerButton = MRE.Actor.Create(this.app.context, {
 			actor: {
 				name: 'DopplerButton',
 				parentId: root.id,
+				appearance: { meshId: buttonMesh.id },
+				collider: { geometry: { shape: 'auto' } },
 				transform: {
 					local: {
 						position: { x: 0.8, y: 1.3, z: -0.2 }
@@ -155,17 +141,12 @@ export default class SoundTest extends Test {
 				}
 			}
 		});
-		const dopplerMover = MRE.Actor.CreatePrimitive(this.app.context, {
-			definition: {
-				shape: MRE.PrimitiveShape.Sphere,
-				radius: 0.15,
-				uSegments: 8,
-				vSegments: 4
-
-			},
+		const dopplerMover = MRE.Actor.Create(this.app.context, {
 			actor: {
 				parentId: dopplerButton.id,
 				name: 'DopplerMover',
+				appearance: { meshId: this.assets.createSphereMesh('doppler', 0.15, 8, 4).id },
+				collider: { geometry: { shape: 'auto' } },
 				transform: {
 					local: {
 						position: { x: 0, y: 0, z: 3 }
@@ -228,9 +209,5 @@ export default class SoundTest extends Test {
 			time: 1 * duration,
 			value: { transform: { local: { rotation: MRE.Quaternion.RotationAxis(axis, start + Math.PI * 4 / 2) } } }
 		}];
-	}
-
-	public cleanup() {
-		this.assets.unload();
 	}
 }

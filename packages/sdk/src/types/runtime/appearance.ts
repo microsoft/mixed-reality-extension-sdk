@@ -3,7 +3,7 @@
  * Licensed under the MIT License.
  */
 
-import { Actor, GroupMask, Material } from '.';
+import { Actor, GroupMask, Material, Mesh } from '.';
 import { ZeroGuid } from '../../constants';
 
 export interface AppearanceLike {
@@ -18,6 +18,11 @@ export interface AppearanceLike {
 	 * The ID of a previously-created [[Material]] asset.
 	 */
 	materialId: string;
+
+	/**
+	 * The ID of a previously-created [[Mesh]] asset.
+	 */
+	meshId: string;
 }
 
 export class Appearance implements AppearanceLike {
@@ -28,6 +33,7 @@ export class Appearance implements AppearanceLike {
 	private _enabled = GroupMask.ALL_PACKED; // authoritative
 	private _enabledFor: GroupMask; // cached object, synced with _enabledPacked
 	private _materialId = ZeroGuid;
+	private _meshId = ZeroGuid;
 	// tslint:enable:variable-name
 
 	/**
@@ -122,11 +128,41 @@ export class Appearance implements AppearanceLike {
 		}
 	}
 
+	/** @returns A shared reference to this actor's mesh, or null if this actor has no mesh */
+	public get mesh() {
+		return this.actor.context.internal.lookupAsset(this._meshId) as Mesh;
+	}
+	public set mesh(value) {
+		this.meshId = value && value.id || ZeroGuid;
+	}
+
+	/** @inheritdoc */
+	public get meshId() { return this._meshId; }
+	public set meshId(value) {
+		if (!value || value.startsWith('0000')) {
+			value = ZeroGuid;
+		}
+		if (!this.actor.context.internal.lookupAsset(value)) {
+			value = ZeroGuid; // throw?
+		}
+
+		if (value === this._meshId) return;
+
+		if (this.mesh) {
+			this.mesh.clearReference(this.actor);
+		}
+		this._meshId = value;
+		if (this.mesh) {
+			this.mesh.addReference(this.actor);
+		}
+	}
+
 	constructor(private actor: Actor) { }
 
 	public copy(from: Partial<AppearanceLike>): this {
 		if (!from) return this;
 		if (from.materialId !== undefined) this.materialId = from.materialId;
+		if (from.meshId !== undefined) this.meshId = from.meshId;
 		if (typeof from.enabled === 'number') {
 			// redirect masks that got into the enabled field
 			this.enabledPacked = from.enabled;
@@ -139,7 +175,8 @@ export class Appearance implements AppearanceLike {
 	public toJSON() {
 		return {
 			enabled: this.enabledPacked,
-			materialId: this.materialId
+			materialId: this.materialId,
+			meshId: this.meshId
 		} as AppearanceLike;
 	}
 
