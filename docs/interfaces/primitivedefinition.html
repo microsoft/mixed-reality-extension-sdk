@@ -85,7 +85,6 @@
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="primitivedefinition.html#dimensions" class="tsd-kind-icon">dimensions</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="primitivedefinition.html#radius" class="tsd-kind-icon">radius</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="primitivedefinition.html#shape" class="tsd-kind-icon">shape</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="primitivedefinition.html#usegments" class="tsd-kind-icon">u<wbr>Segments</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="primitivedefinition.html#vsegments" class="tsd-kind-icon">v<wbr>Segments</a></li>
@@ -99,30 +98,15 @@
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="dimensions" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagOptional">Optional</span> dimensions</h3>
-					<div class="tsd-signature tsd-kind-icon">dimensions<span class="tsd-signature-symbol">:</span> <a href="vector3like.html" class="tsd-signature-type">Vector3Like</a></div>
+					<div class="tsd-signature tsd-kind-icon">dimensions<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="vector3like.html" class="tsd-signature-type">Vector3Like</a><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/04b35a3/packages/sdk/src/types/primitiveTypes.ts#L73">types/primitiveTypes.ts:73</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/125d0f4/packages/sdk/src/types/primitiveTypes.ts#L32">types/primitiveTypes.ts:32</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>The size of boxes, cylinders, capsules, and planes.</p>
-						</div>
-					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="radius" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> radius</h3>
-					<div class="tsd-signature tsd-kind-icon">radius<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/04b35a3/packages/sdk/src/types/primitiveTypes.ts#L68">types/primitiveTypes.ts:68</a></li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>The radius of spheres, cylinders, and capsules.</p>
+							<p>The bounding box size of the primitive.</p>
 						</div>
 					</div>
 				</section>
@@ -132,7 +116,7 @@
 					<div class="tsd-signature tsd-kind-icon">shape<span class="tsd-signature-symbol">:</span> <a href="../enums/primitiveshape.html" class="tsd-signature-type">PrimitiveShape</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/04b35a3/packages/sdk/src/types/primitiveTypes.ts#L63">types/primitiveTypes.ts:63</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/125d0f4/packages/sdk/src/types/primitiveTypes.ts#L27">types/primitiveTypes.ts:27</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -147,7 +131,7 @@
 					<div class="tsd-signature tsd-kind-icon">u<wbr>Segments<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/04b35a3/packages/sdk/src/types/primitiveTypes.ts#L78">types/primitiveTypes.ts:78</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/125d0f4/packages/sdk/src/types/primitiveTypes.ts#L37">types/primitiveTypes.ts:37</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -162,7 +146,7 @@
 					<div class="tsd-signature tsd-kind-icon">v<wbr>Segments<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/04b35a3/packages/sdk/src/types/primitiveTypes.ts#L83">types/primitiveTypes.ts:83</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/125d0f4/packages/sdk/src/types/primitiveTypes.ts#L42">types/primitiveTypes.ts:42</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -190,9 +174,6 @@
 						<ul>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
 								<a href="primitivedefinition.html#dimensions" class="tsd-kind-icon">dimensions</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="primitivedefinition.html#radius" class="tsd-kind-icon">radius</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
 								<a href="primitivedefinition.html#shape" class="tsd-kind-icon">shape</a>

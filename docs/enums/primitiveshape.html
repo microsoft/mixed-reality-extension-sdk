@@ -79,7 +79,6 @@
 								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="primitiveshape.html#box" class="tsd-kind-icon">Box</a></li>
 								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="primitiveshape.html#capsule" class="tsd-kind-icon">Capsule</a></li>
 								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="primitiveshape.html#cylinder" class="tsd-kind-icon">Cylinder</a></li>
-								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="primitiveshape.html#innersphere" class="tsd-kind-icon">Inner<wbr>Sphere</a></li>
 								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="primitiveshape.html#plane" class="tsd-kind-icon">Plane</a></li>
 								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="primitiveshape.html#sphere" class="tsd-kind-icon">Sphere</a></li>
 							</ul>
@@ -95,14 +94,9 @@
 					<div class="tsd-signature tsd-kind-icon">Box<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> =&nbsp;&quot;box&quot;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/04b35a3/packages/sdk/src/types/primitiveTypes.ts#L23">types/primitiveTypes.ts:23</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/125d0f4/packages/sdk/src/types/primitiveTypes.ts#L13">types/primitiveTypes.ts:13</a></li>
 						</ul>
 					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>The primitive is a box with dimensions defined by <a href="../interfaces/primitivedefinition.html#dimensions">PrimitiveDefinition.dimensions</a>, centered at the origin.</p>
-						</div>
-					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum">
 					<a name="capsule" class="tsd-anchor"></a>
@@ -110,17 +104,9 @@
 					<div class="tsd-signature tsd-kind-icon">Capsule<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> =&nbsp;&quot;capsule&quot;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/04b35a3/packages/sdk/src/types/primitiveTypes.ts#L31">types/primitiveTypes.ts:31</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/125d0f4/packages/sdk/src/types/primitiveTypes.ts#L14">types/primitiveTypes.ts:14</a></li>
 						</ul>
 					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>The primitive is a capsule whose height (not counting caps) and axis are defined by the largest component of
-								<a href="../interfaces/primitivedefinition.html#dimensions">PrimitiveDefinition.dimensions</a>, with radius <a href="../interfaces/primitivedefinition.html#radius">PrimitiveDefinition.radius</a>, radial segment count
-								<a href="../interfaces/primitivedefinition.html#usegments">PrimitiveDefinition.uSegments</a>, and axial segment count <a href="../interfaces/primitivedefinition.html#vsegments">PrimitiveDefinition.vSegments</a>, centered at
-							the origin.</p>
-						</div>
-					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum">
 					<a name="cylinder" class="tsd-anchor"></a>
@@ -128,33 +114,9 @@
 					<div class="tsd-signature tsd-kind-icon">Cylinder<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> =&nbsp;&quot;cylinder&quot;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/04b35a3/packages/sdk/src/types/primitiveTypes.ts#L38">types/primitiveTypes.ts:38</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/125d0f4/packages/sdk/src/types/primitiveTypes.ts#L15">types/primitiveTypes.ts:15</a></li>
 						</ul>
 					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>The primitive is a cylinder whose height and axis are defined by the largest component of
-								<a href="../interfaces/primitivedefinition.html#dimensions">PrimitiveDefinition.dimensions</a>, with radius <a href="../interfaces/primitivedefinition.html#radius">PrimitiveDefinition.radius</a>, and radial segment count
-							<a href="../interfaces/primitivedefinition.html#usegments">PrimitiveDefinition.uSegments</a>, centered at the origin.</p>
-						</div>
-					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum">
-					<a name="innersphere" class="tsd-anchor"></a>
-					<h3>Inner<wbr>Sphere</h3>
-					<div class="tsd-signature tsd-kind-icon">Inner<wbr>Sphere<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> =&nbsp;&quot;inner-sphere&quot;</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/04b35a3/packages/sdk/src/types/primitiveTypes.ts#L52">types/primitiveTypes.ts:52</a></li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>The primitive is a sphere with a radius of <a href="../interfaces/primitivedefinition.html#radius">PrimitiveDefinition.radius</a>, horizontal segment count
-								<a href="../interfaces/primitivedefinition.html#usegments">PrimitiveDefinition.uSegments</a>, and vertical segment count <a href="../interfaces/primitivedefinition.html#vsegments">PrimitiveDefinition.vSegments</a>, with normals
-							pointed inward, centered at the origin.</p>
-						</div>
-					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum">
 					<a name="plane" class="tsd-anchor"></a>
@@ -162,16 +124,9 @@
 					<div class="tsd-signature tsd-kind-icon">Plane<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> =&nbsp;&quot;plane&quot;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/04b35a3/packages/sdk/src/types/primitiveTypes.ts#L45">types/primitiveTypes.ts:45</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/125d0f4/packages/sdk/src/types/primitiveTypes.ts#L16">types/primitiveTypes.ts:16</a></li>
 						</ul>
 					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>The primitive is a plane with dimensions from the x and z coordinates of <a href="../interfaces/primitivedefinition.html#dimensions">PrimitiveDefinition.dimensions</a> (y
-								coordinate is ignored), horizontal segment count <a href="../interfaces/primitivedefinition.html#usegments">PrimitiveDefinition.uSegments</a>, and vertical segment count
-							<a href="../interfaces/primitivedefinition.html#vsegments">PrimitiveDefinition.vSegments</a>, centered at the origin.</p>
-						</div>
-					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum">
 					<a name="sphere" class="tsd-anchor"></a>
@@ -179,16 +134,9 @@
 					<div class="tsd-signature tsd-kind-icon">Sphere<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> =&nbsp;&quot;sphere&quot;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/04b35a3/packages/sdk/src/types/primitiveTypes.ts#L18">types/primitiveTypes.ts:18</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/125d0f4/packages/sdk/src/types/primitiveTypes.ts#L12">types/primitiveTypes.ts:12</a></li>
 						</ul>
 					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>The primitive is a sphere with a radius of <a href="../interfaces/primitivedefinition.html#radius">PrimitiveDefinition.radius</a>, horizontal segment count
-								<a href="../interfaces/primitivedefinition.html#usegments">PrimitiveDefinition.uSegments</a>, and vertical segment count <a href="../interfaces/primitivedefinition.html#vsegments">PrimitiveDefinition.vSegments</a>, centered
-							at the origin.</p>
-						</div>
-					</div>
 				</section>
 			</section>
 		</div>
@@ -215,9 +163,6 @@
 							</li>
 							<li class=" tsd-kind-enum-member tsd-parent-kind-enum">
 								<a href="primitiveshape.html#cylinder" class="tsd-kind-icon">Cylinder</a>
-							</li>
-							<li class=" tsd-kind-enum-member tsd-parent-kind-enum">
-								<a href="primitiveshape.html#innersphere" class="tsd-kind-icon">Inner<wbr>Sphere</a>
 							</li>
 							<li class=" tsd-kind-enum-member tsd-parent-kind-enum">
 								<a href="primitiveshape.html#plane" class="tsd-kind-icon">Plane</a>

@@ -62,6 +62,13 @@
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Represents a mesh on an actor</p>
+					</div>
+				</div>
+			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
@@ -80,6 +87,7 @@
 				<ul class="tsd-hierarchy">
 					<li><a href="../interfaces/assetlike.html" class="tsd-signature-type">AssetLike</a></li>
 					<li><a href="../interfaces/meshlike.html" class="tsd-signature-type">MeshLike</a></li>
+					<li><span class="tsd-signature-type">Patchable</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/assetlike.html" class="tsd-signature-type">AssetLike</a><span class="tsd-signature-symbol">&gt;</span></li>
 				</ul>
 			</section>
 			<section class="tsd-panel-group tsd-index-group">
@@ -89,12 +97,15 @@
 						<section class="tsd-index-section ">
 							<h3>Accessors</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="mesh.html#boundingboxcenter" class="tsd-kind-icon">bounding<wbr>Box<wbr>Center</a></li>
+								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="mesh.html#boundingboxdimensions" class="tsd-kind-icon">bounding<wbr>Box<wbr>Dimensions</a></li>
 								<li class="tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited"><a href="mesh.html#created" class="tsd-kind-icon">created</a></li>
 								<li class="tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited"><a href="mesh.html#id" class="tsd-kind-icon">id</a></li>
 								<li class="tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited"><a href="mesh.html#material" class="tsd-kind-icon">material</a></li>
 								<li class="tsd-kind-get-signature tsd-parent-kind-class tsd-is-overwrite"><a href="mesh.html#mesh-1" class="tsd-kind-icon">mesh</a></li>
 								<li class="tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited"><a href="mesh.html#name" class="tsd-kind-icon">name</a></li>
 								<li class="tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited"><a href="mesh.html#prefab" class="tsd-kind-icon">prefab</a></li>
+								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="mesh.html#primitivedefinition" class="tsd-kind-icon">primitive<wbr>Definition</a></li>
 								<li class="tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited"><a href="mesh.html#sound" class="tsd-kind-icon">sound</a></li>
 								<li class="tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited"><a href="mesh.html#source" class="tsd-kind-icon">source</a></li>
 								<li class="tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited"><a href="mesh.html#texture" class="tsd-kind-icon">texture</a></li>
@@ -102,11 +113,69 @@
 								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="mesh.html#vertexcount" class="tsd-kind-icon">vertex<wbr>Count</a></li>
 							</ul>
 						</section>
+						<section class="tsd-index-section ">
+							<h3>Methods</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite"><a href="mesh.html#copy" class="tsd-kind-icon">copy</a></li>
+							</ul>
+						</section>
 					</div>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Accessors</h2>
+				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
+					<a name="boundingboxcenter" class="tsd-anchor"></a>
+					<h3>bounding<wbr>Box<wbr>Center</h3>
+					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> boundingBoxCenter<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="vector3.html" class="tsd-signature-type">Vector3</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/125d0f4/packages/sdk/src/types/runtime/assets/mesh.ts#L48">types/runtime/assets/mesh.ts:48</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>The center of the axis-aligned box that exactly contains the mesh</p>
+								</div>
+								<dl class="tsd-comment-tags">
+									<dt>inheritdoc</dt>
+									<dd></dd>
+								</dl>
+							</div>
+							<h4 class="tsd-returns-title">Returns <a href="vector3.html" class="tsd-signature-type">Vector3</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
+					<a name="boundingboxdimensions" class="tsd-anchor"></a>
+					<h3>bounding<wbr>Box<wbr>Dimensions</h3>
+					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> boundingBoxDimensions<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="vector3.html" class="tsd-signature-type">Vector3</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/125d0f4/packages/sdk/src/types/runtime/assets/mesh.ts#L46">types/runtime/assets/mesh.ts:46</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>The size of the axis-aligned box that exactly contains the mesh</p>
+								</div>
+								<dl class="tsd-comment-tags">
+									<dt>inheritdoc</dt>
+									<dd></dd>
+								</dl>
+							</div>
+							<h4 class="tsd-returns-title">Returns <a href="vector3.html" class="tsd-signature-type">Vector3</a></h4>
+						</li>
+					</ul>
+				</section>
 				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited">
 					<a name="created" class="tsd-anchor"></a>
 					<h3>created</h3>
@@ -118,7 +187,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="asset.html">Asset</a>.<a href="asset.html#created">created</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/04b35a3/packages/sdk/src/types/runtime/assets/asset.ts#L103">types/runtime/assets/asset.ts:103</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/125d0f4/packages/sdk/src/types/runtime/assets/asset.ts#L103">types/runtime/assets/asset.ts:103</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -141,7 +210,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="asset.html">Asset</a>.<a href="asset.html#id">id</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/04b35a3/packages/sdk/src/types/runtime/assets/asset.ts#L83">types/runtime/assets/asset.ts:83</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/125d0f4/packages/sdk/src/types/runtime/assets/asset.ts#L83">types/runtime/assets/asset.ts:83</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -168,7 +237,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="asset.html">Asset</a>.<a href="asset.html#material">material</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/04b35a3/packages/sdk/src/types/runtime/assets/asset.ts#L96">types/runtime/assets/asset.ts:96</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/125d0f4/packages/sdk/src/types/runtime/assets/asset.ts#L96">types/runtime/assets/asset.ts:96</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -195,7 +264,7 @@
 							<aside class="tsd-sources">
 								<p>Overrides <a href="asset.html">Asset</a>.<a href="asset.html#mesh">mesh</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/04b35a3/packages/sdk/src/types/runtime/assets/mesh.ts#L28">types/runtime/assets/mesh.ts:28</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/125d0f4/packages/sdk/src/types/runtime/assets/mesh.ts#L53">types/runtime/assets/mesh.ts:53</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -222,7 +291,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="asset.html">Asset</a>.<a href="asset.html#name">name</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/04b35a3/packages/sdk/src/types/runtime/assets/asset.ts#L86">types/runtime/assets/asset.ts:86</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/125d0f4/packages/sdk/src/types/runtime/assets/asset.ts#L86">types/runtime/assets/asset.ts:86</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -250,7 +319,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="asset.html">Asset</a>.<a href="asset.html#prefab">prefab</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/04b35a3/packages/sdk/src/types/runtime/assets/asset.ts#L92">types/runtime/assets/asset.ts:92</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/125d0f4/packages/sdk/src/types/runtime/assets/asset.ts#L92">types/runtime/assets/asset.ts:92</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -266,6 +335,32 @@
 						</li>
 					</ul>
 				</section>
+				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
+					<a name="primitivedefinition" class="tsd-anchor"></a>
+					<h3>primitive<wbr>Definition</h3>
+					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> primitiveDefinition<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/primitivedefinition.html" class="tsd-signature-type">PrimitiveDefinition</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/125d0f4/packages/sdk/src/types/runtime/assets/mesh.ts#L50">types/runtime/assets/mesh.ts:50</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>If this mesh is a primitive, the primitive&#39;s description</p>
+								</div>
+								<dl class="tsd-comment-tags">
+									<dt>inheritdoc</dt>
+									<dd></dd>
+								</dl>
+							</div>
+							<h4 class="tsd-returns-title">Returns <a href="../interfaces/primitivedefinition.html" class="tsd-signature-type">PrimitiveDefinition</a></h4>
+						</li>
+					</ul>
+				</section>
 				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited">
 					<a name="sound" class="tsd-anchor"></a>
 					<h3>sound</h3>
@@ -277,7 +372,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="asset.html">Asset</a>.<a href="asset.html#sound">sound</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/04b35a3/packages/sdk/src/types/runtime/assets/asset.ts#L100">types/runtime/assets/asset.ts:100</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/125d0f4/packages/sdk/src/types/runtime/assets/asset.ts#L100">types/runtime/assets/asset.ts:100</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -304,7 +399,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="asset.html">Asset</a>.<a href="asset.html#source">source</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/04b35a3/packages/sdk/src/types/runtime/assets/asset.ts#L89">types/runtime/assets/asset.ts:89</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/125d0f4/packages/sdk/src/types/runtime/assets/asset.ts#L89">types/runtime/assets/asset.ts:89</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -331,7 +426,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="asset.html">Asset</a>.<a href="asset.html#texture">texture</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/04b35a3/packages/sdk/src/types/runtime/assets/asset.ts#L98">types/runtime/assets/asset.ts:98</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/125d0f4/packages/sdk/src/types/runtime/assets/asset.ts#L98">types/runtime/assets/asset.ts:98</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -357,7 +452,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/04b35a3/packages/sdk/src/types/runtime/assets/mesh.ts#L25">types/runtime/assets/mesh.ts:25</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/125d0f4/packages/sdk/src/types/runtime/assets/mesh.ts#L44">types/runtime/assets/mesh.ts:44</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -383,7 +478,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/04b35a3/packages/sdk/src/types/runtime/assets/mesh.ts#L23">types/runtime/assets/mesh.ts:23</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/125d0f4/packages/sdk/src/types/runtime/assets/mesh.ts#L42">types/runtime/assets/mesh.ts:42</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -396,6 +491,33 @@
 								</dl>
 							</div>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
+						</li>
+					</ul>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Methods</h2>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
+					<a name="copy" class="tsd-anchor"></a>
+					<h3>copy</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
+						<li class="tsd-signature tsd-kind-icon">copy<span class="tsd-signature-symbol">(</span>from<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/assetlike.html" class="tsd-signature-type">AssetLike</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Overrides Asset.copy</p>
+								<ul>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/125d0f4/packages/sdk/src/types/runtime/assets/mesh.ts#L66">types/runtime/assets/mesh.ts:66</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>from: <span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/assetlike.html" class="tsd-signature-type">AssetLike</a><span class="tsd-signature-symbol">&gt;</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -416,6 +538,12 @@
 					<li class="current tsd-kind-class">
 						<a href="mesh.html" class="tsd-kind-icon">Mesh</a>
 						<ul>
+							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
+								<a href="mesh.html#boundingboxcenter" class="tsd-kind-icon">bounding<wbr>Box<wbr>Center</a>
+							</li>
+							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
+								<a href="mesh.html#boundingboxdimensions" class="tsd-kind-icon">bounding<wbr>Box<wbr>Dimensions</a>
+							</li>
 							<li class=" tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited">
 								<a href="mesh.html#created" class="tsd-kind-icon">created</a>
 							</li>
@@ -434,6 +562,9 @@
 							<li class=" tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited">
 								<a href="mesh.html#prefab" class="tsd-kind-icon">prefab</a>
 							</li>
+							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
+								<a href="mesh.html#primitivedefinition" class="tsd-kind-icon">primitive<wbr>Definition</a>
+							</li>
 							<li class=" tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited">
 								<a href="mesh.html#sound" class="tsd-kind-icon">sound</a>
 							</li>
@@ -448,6 +579,9 @@
 							</li>
 							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
 								<a href="mesh.html#vertexcount" class="tsd-kind-icon">vertex<wbr>Count</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
+								<a href="mesh.html#copy" class="tsd-kind-icon">copy</a>
 							</li>
 						</ul>
 					</li>
