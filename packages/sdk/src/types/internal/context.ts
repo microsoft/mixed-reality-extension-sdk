@@ -66,52 +66,42 @@ export class InternalContext {
 	public Create(options?: {
 		actor?: Partial<ActorLike>
 	}): Actor {
-		options = {
+		return this.createActorFromPayload({
 			...options,
 			actor: {
-				...options.actor,
+				...(options && options.actor),
 				id: UUID()
-			}
-		};
-		const payload = {
-			...options,
-			type: 'create-empty',
-		} as Payloads.CreateEmpty;
-		return this.createActorFromPayload(payload);
+			},
+			type: 'create-empty'
+		} as Payloads.CreateEmpty);
 	}
 
 	public CreateFromLibrary(options: {
 		resourceId: string,
 		actor?: Partial<ActorLike>
 	}): Actor {
-		options = {
+		return this.createActorFromPayload({
 			...options,
 			actor: {
-				...options.actor,
+				...(options && options.actor),
 				id: UUID()
-			}
-		};
-		const payload = {
-			...options,
+			},
 			type: 'create-from-library'
-		} as Payloads.CreateFromLibrary;
-		return this.createActorFromPayload(payload);
+		} as Payloads.CreateFromLibrary);
 	}
 
 	public CreateFromPrefab(options: {
 		prefabId: string,
 		actor?: Partial<ActorLike>
 	}): Actor {
-		const payload = {
+		return this.createActorFromPayload({
 			...options,
 			actor: {
-				...options.actor,
+				...(options && options.actor),
 				id: UUID()
 			},
 			type: 'create-from-prefab'
-		} as Payloads.CreateFromPrefab;
-
-		return this.createActorFromPayload(payload);
+		} as Payloads.CreateFromPrefab);
 	}
 
 	private createActorFromPayload(
