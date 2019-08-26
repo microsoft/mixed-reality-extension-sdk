@@ -300,6 +300,8 @@ export class AssetContainer {
 		if (reply.failureMessage || reply.assets.length !== 1) {
 			throw new Error(`Creation/Loading of asset ${asset.name} failed: ${reply.failureMessage}`);
 		}
+
+		asset.copy(reply.assets[0]);
 	}
 
 	private sendPayloadAndGetReply<T extends Payloads.Payload, U extends Payloads.Payload>(payload: T): Promise<U> {

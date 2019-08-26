@@ -6,3 +6,4 @@
 export * from './payloads';
 export * from './assets';
 export * from './physics';
+export * from './sync';

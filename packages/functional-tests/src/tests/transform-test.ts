@@ -61,8 +61,8 @@ export default class TransformTest extends Test {
 			}
 		}
 
-		const cube3 = MRE.Actor.CreateFromPrefab(this.app.context, {
-			firstPrefabFrom: await this.assets.loadGltf(`${this.baseUrl}/cube_4m.glb`),
+		const cube3 = MRE.Actor.CreateFromGltf(this.assets, {
+			uri: `${this.baseUrl}/cube_4m.glb`,
 			actor: {
 				name: 'cube3',
 				parentId: cube2.id,

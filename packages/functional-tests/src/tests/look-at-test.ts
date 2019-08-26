@@ -47,8 +47,8 @@ export default class LookAtTest extends Test {
 			}
 		});
 
-		const tester = MRE.Actor.CreateFromPrefab(this.app.context, {
-			firstPrefabFrom: await this.assets.loadGltf(`${this.baseUrl}/monkey.glb`),
+		const tester = MRE.Actor.CreateFromGltf(this.assets, {
+			uri: `${this.baseUrl}/monkey.glb`,
 			actor: {
 				parentId: root.id,
 				transform: { local: { scale: { x: 0.5, y: 0.5, z: 0.5 } } }

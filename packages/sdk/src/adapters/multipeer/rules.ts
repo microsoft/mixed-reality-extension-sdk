@@ -234,7 +234,7 @@ const CreateActorRule: Rule = {
 		...DefaultRule.session,
 		beforeReceiveFromApp: (
 			session: Session,
-			message: Message<Payloads.CreateEmpty>
+			message: Message<Payloads.CreateActorCommon>
 		) => {
 			session.cacheInitializeActorMessage(message);
 			return message;
@@ -306,7 +306,9 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 					// Send this to the cacheActorUpdateMessage call.
 					const updateMessage: Message<Payloads.ActorUpdate> = {
 						payload: {
+							type: 'actor-update',
 							actor: {
+								id: correctionPayload.actorId,
 								transform: {
 									app: correctionPayload.appTransform
 								}
@@ -1111,6 +1113,24 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 				if (client) {
 					client.send(message);
 				}
+				return null;
+			}
+		}
+	},
+
+	// ========================================================================
+	'x-reserve-actor': {
+		...DefaultRule,
+		synchronization: {
+			stage: 'never',
+			before: 'ignore',
+			during: 'ignore',
+			after: 'ignore'
+		},
+		session: {
+			...DefaultRule.session,
+			beforeReceiveFromApp: (session: Session, message: Message<Payloads.XReserveActor>) => {
+				session.cacheInitializeActorMessage(message);
 				return null;
 			}
 		}

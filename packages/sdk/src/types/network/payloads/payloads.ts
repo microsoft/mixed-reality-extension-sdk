@@ -10,6 +10,7 @@ import { ActorLike, ColliderType, TransformLike, UserLike } from '../../runtime'
 import { ActionState, BehaviorType } from '../../runtime/behaviors';
 import { OperatingModel } from '../operatingModel';
 import { AssetPayloadType } from './assets';
+import { SyncPayloadType } from './sync';
 
 /**
  * @hidden
@@ -17,6 +18,7 @@ import { AssetPayloadType } from './assets';
  */
 export type PayloadType
 	= AssetPayloadType
+	| SyncPayloadType
 	| 'actor-correction'
 	| 'actor-update'
 	| 'app2engine-rpc'
