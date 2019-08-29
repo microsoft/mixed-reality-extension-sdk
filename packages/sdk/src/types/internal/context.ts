@@ -173,6 +173,11 @@ export class InternalContext {
 		// kick off asset loading
 		container.loadGltf(options.uri, options.colliderType)
 		.then(assets => {
+			if (!this.context.actor(actor.id)) {
+				// actor was destroyed, stop loading
+				return;
+			}
+
 			// once assets are done, find first prefab...
 			const prefab = assets.find(a => !!a.prefab);
 			if (!prefab) {
