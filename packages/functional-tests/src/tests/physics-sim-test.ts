@@ -54,7 +54,7 @@ export default class PhysicsSimTest extends Test {
 			actor: {
 				parentId: root.id,
 				transform: {
-					app: { position: { x: -width / 2, y: height + 0.2, z: 0.1 } }
+					app: { position: { x: -width / 2, y: height + 0.2, z: 0.01 } }
 				},
 				text: {
 					contents: `Ball count: ${this.ballCount}`,
