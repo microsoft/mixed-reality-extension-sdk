@@ -166,9 +166,15 @@ export class Material extends Asset implements MaterialLike, Patchable<AssetLike
 			if (from.material.mainTextureScale) {
 				this.mainTextureScale.copy(from.material.mainTextureScale);
 			}
-			this.mainTextureId = from.material.mainTextureId || null;
-			this.alphaMode = from.material.alphaMode || AlphaMode.Opaque;
-			this.alphaCutoff = from.material.alphaCutoff || 0.5;
+			if (from.material.mainTextureId) {
+				this.mainTextureId = from.material.mainTextureId;
+			}
+			if (from.material.alphaMode) {
+				this.alphaMode = from.material.alphaMode;
+			}
+			if (from.material.alphaCutoff) {
+				this.alphaCutoff = from.material.alphaCutoff;
+			}
 		}
 
 		this.internal.observing = wasObserving;
