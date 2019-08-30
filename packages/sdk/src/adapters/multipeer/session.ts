@@ -273,10 +273,11 @@ export class Session extends EventEmitter {
 			// so it doesn't desync from the updated one
 			const cacheTransform = syncActor.initialization.message.payload.actor.transform;
 			const patchTransform = message.payload.actor.transform;
-			if (patchTransform && !patchTransform.local) {
-				cacheTransform.local = undefined;
-			} else if (patchTransform && !patchTransform.app) {
-				cacheTransform.app = undefined;
+			if (patchTransform && patchTransform.app && cacheTransform.local) {
+				delete cacheTransform.local.position;
+				delete cacheTransform.local.rotation;
+			} else if (patchTransform && patchTransform.local) {
+				delete cacheTransform.app;
 			}
 		}
 	}
