@@ -354,3 +354,28 @@ export type InterpolateActor = Payload & {
 	curve: number[];
 	enabled: boolean;
 };
+
+/**
+ * @hidden
+ * App to engine. Prompt to show modal dialog box.
+ */
+export type ShowDialog = Payload & {
+	type: 'show-dialog';
+	dialogId: string;
+	dialogType: string;
+	text: string;
+	recipients?: string[];
+	icon?: string;
+};
+
+/**
+ * @hidden
+ * Engine to app. Acknowledgement of modal dialog.
+ */
+export type DialogResponse = Payload & {
+	type: 'dialog-response';
+	dialogId: string;
+	userId: string;
+	booleanResponse?: boolean;
+	stringResponse?: string;
+}
