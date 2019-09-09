@@ -274,6 +274,11 @@ export class ClientSync extends Protocols.Protocol {
 				// TODO This sound tweaking should ideally be done on the client, because then it can consider the
 				// time it takes for packet to arrive. This is needed for optimal timing .
 				const targetTime = Date.now() / 1000.0;
+				if (activeMediaInstance.expirationTime !== undefined &&
+					targetTime > activeMediaInstance.expirationTime) {
+					// non-looping mediainstance has completed, so ignore it
+					return undefined;
+				}
 				if (activeMediaInstance.message.payload.options.paused !== true) {
 					let timeOffset = (targetTime - activeMediaInstance.basisTime);
 					if (activeMediaInstance.message.payload.options.pitch !== undefined) {

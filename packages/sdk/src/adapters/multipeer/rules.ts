@@ -4,10 +4,11 @@
  */
 
 import deepmerge from 'deepmerge';
-import { Client, Session, SynchronizationStage } from '.';
+import { ActiveMediaInstance, Client, Session, SynchronizationStage } from '.';
 import { MediaCommand, Message, WebSocket } from '../..';
 import { log } from '../../log';
 import * as Payloads from '../../types/network/payloads';
+import { Asset } from '../../types/runtime';
 import { ExportedPromise } from '../../utils/exportedPromise';
 
 // tslint:disable:variable-name new-parens no-console
@@ -482,7 +483,9 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 			) => {
 				if (client.authoritative) {
 					for (const asset of message.payload.assets) {
-						session.cacheAssetCreation(asset.id, message.replyToId);
+						session.cacheAssetCreation(asset.id, message.replyToId,
+							(asset.sound && asset.sound.duration) ||
+							(asset.videoStream && asset.videoStream.duration));
 					}
 					return message;
 				} else if (message.payload.failureMessage && message.payload.failureMessage.length) {
@@ -966,13 +969,20 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 				const syncActor = session.actorSet[message.payload.actorId];
 				if (syncActor) {
 					syncActor.activeMediaInstances = syncActor.activeMediaInstances || [];
-
+					let activeMediaInstance: ActiveMediaInstance;
 					const basisTime = Date.now() / 1000.0;
+
 					if (message.payload.mediaCommand === MediaCommand.Start) {
-						syncActor.activeMediaInstances.push({ message, basisTime });
+						// Garbage collect expired media instances when adding a new media instance on an actor
+						syncActor.activeMediaInstances = syncActor.activeMediaInstances.filter(
+							item => item.expirationTime === undefined ||
+								basisTime <= item.expirationTime);
+
+						// Prepare the new media instance
+						activeMediaInstance = { message, basisTime, expirationTime: undefined };
 					} else {
 						// find the existing message that needs to be updated
-						const activeMediaInstance = syncActor.activeMediaInstances.filter(
+						activeMediaInstance = syncActor.activeMediaInstances.filter(
 							item => item.message.payload.id === message.payload.id).shift();
 
 						// if sound expired then skip this message completely
@@ -984,40 +994,72 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 							syncActor.activeMediaInstances.filter(
 								item => item.message.payload.id !== message.payload.id);
 
-						// store the updated sound instance if sound isn't stopping
-						if (message.payload.mediaCommand !== MediaCommand.Stop) {
-							// if speed or position changes, reset basistime and recalculate the time.
-							if (message.payload.options.time !== undefined) {
-								// a time change(seek) just needs to reset basis time. The payload merge does the rest
-								activeMediaInstance.basisTime = basisTime;
-							} else if (message.payload.options.paused !== undefined ||
-								message.payload.options.pitch !== undefined) {
-								// if the media instance wasn't paused, then recalculate the current time
-								// if media instance was paused then current time doesn't change
-								if (activeMediaInstance.message.payload.options.paused !== true) {
-									if (activeMediaInstance.message.payload.options.time === undefined) {
-										activeMediaInstance.message.payload.options.time = 0.0;
-									}
-									let timeOffset = (basisTime - activeMediaInstance.basisTime);
-									if (activeMediaInstance.message.payload.options.pitch !== undefined) {
-										timeOffset *= Math.pow(2.0,
-											(activeMediaInstance.message.payload.options.pitch / 12.0));
-									}
-									activeMediaInstance.message.payload.options.time += timeOffset;
-								}
-								activeMediaInstance.basisTime = basisTime;
+						if (activeMediaInstance.expirationTime !== undefined) {
+							if (basisTime > activeMediaInstance.expirationTime) {
+								// non-looping mediainstance has completed, so ignore it, which will remove it from the list
+								return undefined;
 							}
-
-							// merge existing payload and new payload
-							activeMediaInstance.message.payload.options = {
-								...activeMediaInstance.message.payload.options,
-								...message.payload.options
-							};
-							syncActor.activeMediaInstances.push(activeMediaInstance);
 						}
+
+						// store the updated sound instance if sound isn't stopping
+						if (message.payload.mediaCommand === MediaCommand.Stop) {
+							return message;
+						}
+
+						// if speed or position changes, reset basistime and recalculate the time.
+						if (message.payload.options.time !== undefined) {
+							// a time change(seek) just needs to reset basis time. The payload merge does the rest
+							activeMediaInstance.basisTime = basisTime;
+						} else if (message.payload.options.paused !== undefined ||
+							message.payload.options.pitch !== undefined) {
+							// if the media instance wasn't paused, then recalculate the current time
+							// if media instance was paused then current time doesn't change
+							if (activeMediaInstance.message.payload.options.paused !== true) {
+								if (activeMediaInstance.message.payload.options.time === undefined) {
+									activeMediaInstance.message.payload.options.time = 0.0;
+								}
+								let timeOffset = (basisTime - activeMediaInstance.basisTime);
+								if (activeMediaInstance.message.payload.options.pitch !== undefined) {
+									timeOffset *= Math.pow(2.0,
+										(activeMediaInstance.message.payload.options.pitch / 12.0));
+								}
+								activeMediaInstance.message.payload.options.time += timeOffset;
+							}
+							activeMediaInstance.basisTime = basisTime;
+
+						}
+
+						// merge existing payload and new payload
+						activeMediaInstance.message.payload.options = {
+							...activeMediaInstance.message.payload.options,
+							...message.payload.options
+						};
 					}
 
+					// Look up asset duration from cached assets
+					const asset = session.assetSet[message.payload.mediaAssetId];
+
+					if (activeMediaInstance.message.payload.options.looping === true ||
+						activeMediaInstance.message.payload.options.paused === true ||
+						(asset === undefined || asset.duration === undefined)) {
+						// media instance current will last forever
+						activeMediaInstance.expirationTime = undefined;
+					} else {
+						// media instance will expire automatically
+						let timeRemaining: number = asset.duration;
+						if (activeMediaInstance.message.payload.options.time !== undefined) {
+							timeRemaining -= activeMediaInstance.message.payload.options.time;
+						}
+						if (activeMediaInstance.message.payload.options.pitch !== undefined) {
+							timeRemaining /= Math.pow(2.0,
+								(activeMediaInstance.message.payload.options.pitch / 12.0));
+						}
+						activeMediaInstance.expirationTime = basisTime + timeRemaining;
+					}
+
+					syncActor.activeMediaInstances.push(activeMediaInstance);
 				}
+
 				return message;
 			}
 		}
