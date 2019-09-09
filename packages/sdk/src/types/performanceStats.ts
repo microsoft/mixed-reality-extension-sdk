@@ -47,27 +47,25 @@ export interface PerformanceStats {
 	soundCount: number;
 	/** The total number of seconds of loaded audio. */
 	soundSecondsTotal: number;
-	/**
-	 * The number of active sounds/videos. Unity clients may have a limited number of "voices", and sounds may cut off
-	 * unexpectedly if that limit is reached.
-	 */
-	// activeMediaInstances: number;
 
 	/**
-	 * The number of kilobytes sent by this app in the last 1/5/30 seconds. This is roughly equivalent to the
-	 * bandwidth received by a single steady-state client over the interval, though does not correlate exactly.
-	 * Only MRE internal traffic is counted, not general HTTP requests (static file hosting, etc.).
+	 * The average incoming bandwidth of this app over the last 1/5/30 seconds, in KB/s. This is roughly equivalent
+	 * to the bandwidth sent by a single steady-state client over the interval, though does not correlate exactly.
+	 * Because of the added overhead, network stats are only collected if the `MONITOR_NETWORKING` environment
+	 * variable is set. Only MRE internal traffic is counted, not general HTTP requests (static file hosting, etc.).
 	 */
-	networkBandwidthDown: [number, number, number];
+	networkBandwidthIn: [number, number, number];
 	/**
-	 * The number of kilobytes received by this app in the last 1/5/30 seconds. This is roughly equivalent to the
-	 * bandwidth sent by the busiest client over the interval, though does not correlate exactly.
-	 * Only MRE internal traffic is counted, not general HTTP requests (static file hosting, etc.).
+	 * The average outgoing bandwidth of this app over the last 1/5/30 seconds, in KB/s. This is roughly equivalent
+	 * to the bandwidth sent by the busiest client over the interval, though does not correlate exactly.
+	 * Because of the added overhead, network stats are only collected if the `MONITOR_NETWORKING` environment
+	 * variable is set. Only MRE internal traffic is counted, not general HTTP requests (static file hosting, etc.).
 	 */
-	networkBandwidthUp: [number, number, number];
+	networkBandwidthOut: [number, number, number];
 	/**
 	 * The number of messages sent and received by this app in the last 1/5/30 seconds. A high number might indicate
-	 * that clients are wasting CPU cycles serializing and deserializing messages.
+	 * that clients are wasting CPU cycles serializing and deserializing messages. Because of the added overhead,
+	 * network stats are only collected if the `MONITOR_NETWORKING` environment variable is set.
 	 */
 	networkMessageCount: [number, number, number];
 }

@@ -8,3 +8,4 @@ export * from './heartbeat';
 export * from './middleware';
 export * from './clientPreprocessing';
 export * from './serverPreprocessing';
+export * from './networkStats';

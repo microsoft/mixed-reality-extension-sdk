@@ -585,6 +585,13 @@ export class InternalContext {
 	}
 
 	public getStats(): PerformanceStats {
+		const networkStats = (this.protocol instanceof Execution && this.protocol.networkStats)
+			? this.protocol.networkStats.reportStats()
+			: {
+				networkBandwidthIn: [0, 0, 0] as [number, number, number],
+				networkBandwidthOut: [0, 0, 0] as [number, number, number],
+				networkMessageCount: [0, 0, 0] as [number, number, number]
+			};
 		const stats: PerformanceStats = {
 			actorCount: Object.keys(this.actorSet).length,
 			actorWithMeshCount: 0,
@@ -598,9 +605,7 @@ export class InternalContext {
 			meshTrianglesTotal: 0,
 			soundCount: 0,
 			soundSecondsTotal: 0,
-			networkBandwidthDown: [0, 0, 0],
-			networkBandwidthUp: [0, 0, 0],
-			networkMessageCount: [0, 0, 0]
+			...networkStats
 		};
 
 		for (const container of this.assetContainers) {
