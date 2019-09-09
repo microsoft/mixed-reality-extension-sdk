@@ -6,16 +6,15 @@ import { EventEmitter } from 'events';
 
 import { Context, GroupMask, Texture, User } from '.';
 
-export enum DialogIcon {
+export type DialogIcon
 	/** A speech bubble */
-	Info = 'info',
+	= 'info'
 	/** A yellow exclamation point */
-	Warning = 'warning',
+	| 'warning'
 	/** A red exclamation point */
-	Error = 'error',
+	| 'error'
 	/** A question mark */
-	Question = 'question'
-}
+	| 'question';
 
 export interface DialogResponse {
 	user: User;
@@ -46,8 +45,23 @@ export class Dialog extends EventEmitter {
 		super();
 	}
 
-	/** Broadcast the dialog */
-	public show() { }
+	/** Identical to `new Dialog(...)` */
+	public static Create(context: Context, options: {
+		text: string,
+		buttons: string[],
+		input?: boolean
+		recipients?: GroupMask | User[] | User,
+		icon?: DialogIcon | Texture,
+		persistent?: boolean
+	}) {
+		return new Dialog(context, options);
+	}
+
+	/**
+	 * Display the dialog to the configured users.
+	 * @returns A promise that resolves after the `finished` event is fired.
+	 */
+	public show(): Promise<DialogResponse[]> { }
 
 	/** Close the dialog on all clients, and clear persistence. */
 	public cancel() { }
