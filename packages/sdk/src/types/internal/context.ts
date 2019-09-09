@@ -21,6 +21,7 @@ import {
 	Context,
 	CreateAnimationOptions,
 	MediaCommand,
+	PerformanceStats,
 	SetAnimationStateOptions,
 	SetMediaStateOptions,
 	TriggerEvent,
@@ -581,5 +582,53 @@ export class InternalContext {
 				return c.assetsById[id];
 			}
 		}
+	}
+
+	public getStats(): PerformanceStats {
+		const stats: PerformanceStats = {
+			actorCount: Object.keys(this.actorSet).length,
+			actorWithMeshCount: 0,
+			prefabCount: 0,
+			materialCount: 0,
+			textureCount: 0,
+			texturePixelsTotal: 0,
+			texturePixelsAverage: 0,
+			meshCount: 0,
+			meshVerticesTotal: 0,
+			meshTrianglesTotal: 0,
+			soundCount: 0,
+			soundSecondsTotal: 0,
+			networkBandwidthDown: [0, 0, 0],
+			networkBandwidthUp: [0, 0, 0],
+			networkMessageCount: [0, 0, 0]
+		};
+
+		for (const container of this.assetContainers) {
+			stats.prefabCount += container.prefabs.length;
+			stats.materialCount += container.materials.length;
+			stats.textureCount += container.textures.length;
+			stats.meshCount += container.meshes.length;
+			stats.soundCount += container.sounds.length;
+
+			for (const tex of container.textures) {
+				stats.texturePixelsTotal += tex.texture.resolution.x * tex.texture.resolution.y;
+			}
+			for (const mesh of container.meshes) {
+				stats.meshTrianglesTotal += mesh.mesh.triangleCount;
+				stats.meshVerticesTotal += mesh.mesh.vertexCount;
+			}
+			for (const sound of container.sounds) {
+				stats.soundSecondsTotal += sound.sound.duration;
+			}
+		}
+		stats.texturePixelsAverage = stats.texturePixelsTotal / stats.textureCount;
+
+		for (const actor of Object.values(this.actorSet)) {
+			if (actor.appearance.activeAndEnabled && actor.appearance.mesh) {
+				stats.actorWithMeshCount += 1;
+			}
+		}
+
+		return stats;
 	}
 }
