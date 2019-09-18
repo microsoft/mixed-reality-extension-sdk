@@ -7,7 +7,7 @@
  * A snapshot of various stats useful for debugging and benchmarking. None of these correlate exactly with
  * a particular client's experience, framerate, memory usage, etc., but should be generally indicative.
  */
-export interface PerformanceStats {
+export type PerformanceStats = {
 	/** The number of actors in the scene. */
 	actorCount: number;
 	/**

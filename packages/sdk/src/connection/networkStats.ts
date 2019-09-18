@@ -13,7 +13,7 @@ type NetworkStatsFrame = {
 };
 
 /** A collection of network statistics from a certain point in time. */
-export interface NetworkStatsReport {
+export type NetworkStatsReport = {
 	/**
 	 * The average incoming bandwidth of this app over the last 1/5/30 seconds, in KB/s. This is roughly equivalent
 	 * to the bandwidth sent by the busiest client over the interval, though does not correlate exactly.
