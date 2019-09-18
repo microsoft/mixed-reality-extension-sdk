@@ -3,28 +3,26 @@
  * Licensed under the MIT License.
  */
 
-import { Middleware } from '.';
-import { Message } from '..';
-import { ExportedPromise } from '../utils/exportedPromise';
-import filterEmpty from '../utils/filterEmpty';
-import validateJsonFieldName from '../utils/validateJsonFieldName';
+import { EventEmitter } from 'events';
 
-export interface NetworkStatsFrame {
+/** @hidden */
+type NetworkStatsFrame = {
 	messageCount: number;
 	trafficIn: number;
 	trafficOut: number;
-}
+};
 
+/** A collection of network statistics from a certain point in time. */
 export interface NetworkStatsReport {
 	/**
 	 * The average incoming bandwidth of this app over the last 1/5/30 seconds, in KB/s. This is roughly equivalent
-	 * to the bandwidth sent by a single steady-state client over the interval, though does not correlate exactly.
+	 * to the bandwidth sent by the busiest client over the interval, though does not correlate exactly.
 	 * Only MRE internal traffic is counted, not general HTTP requests (static file hosting, etc.).
 	 */
 	networkBandwidthIn: [number, number, number];
 	/**
 	 * The average outgoing bandwidth of this app over the last 1/5/30 seconds, in KB/s. This is roughly equivalent
-	 * to the bandwidth sent by the busiest client over the interval, though does not correlate exactly.
+	 * to the bandwidth sent to the busiest client over the interval, though this does not correlate exactly.
 	 * Only MRE internal traffic is counted, not general HTTP requests (static file hosting, etc.).
 	 */
 	networkBandwidthOut: [number, number, number];
@@ -38,7 +36,7 @@ export interface NetworkStatsReport {
 /**
  * @hidden
  */
-export class NetworkStats implements Middleware {
+export class NetworkStatsTracker extends EventEmitter {
 	private buffer: NetworkStatsFrame[] = [];
 	private active: NetworkStatsFrame = {
 		messageCount: 0,
@@ -47,31 +45,22 @@ export class NetworkStats implements Middleware {
 	};
 
 	constructor() {
-		this.beforeSend = this.beforeSend.bind(this);
-		this.beforeRecv = this.beforeRecv.bind(this);
+		super();
 		setInterval(() => this.cycleStatFrames(), 1000);
 	}
 
 	/** @private */
-	public beforeSend(message: Message, promise?: ExportedPromise): Message {
-		const data = new Buffer(JSON.stringify(message, (key, value) => {
-			validateJsonFieldName(key);
-			return filterEmpty(value);
-		}));
-		this.active.trafficOut += data.byteLength / 1000;
+	public recordOutgoing(bytes: number) {
+		this.active.trafficOut += bytes / 1000;
 		this.active.messageCount++;
-		return message;
+		this.emit('outgoing', bytes);
 	}
 
 	/** @private */
-	public beforeRecv(message: Message): Message {
-		const data = new Buffer(JSON.stringify(message, (key, value) => {
-			validateJsonFieldName(key);
-			return filterEmpty(value);
-		}));
-		this.active.trafficOut += data.byteLength / 1000;
+	public recordIncoming(bytes: number) {
+		this.active.trafficIn += bytes / 1000;
 		this.active.messageCount++;
-		return message;
+		this.emit('incoming', bytes);
 	}
 
 	/** @private */

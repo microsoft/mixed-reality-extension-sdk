@@ -12,8 +12,8 @@ import { Message } from '..';
  */
 export class Pipe {
 	// tslint:disable:variable-name
-	private _local: Connection;
-	private _remote: Connection;
+	private _local: EventedConnection;
+	private _remote: EventedConnection;
 	// tslint:enable:variable-name
 
 	public get local(): Connection { return this._local; }
@@ -36,6 +36,9 @@ export class Pipe {
 		});
 		this._local.on('close', this.onLocalClose);
 		this._remote.on('close', this.onRemoteClose);
+
+		this._local.statsTracker.on('incoming', bytes => this._remote.statsTracker.recordIncoming(bytes));
+		this._local.statsTracker.on('outgoing', bytes => this._remote.statsTracker.recordOutgoing(bytes));
 	}
 
 	private onLocalClose() {

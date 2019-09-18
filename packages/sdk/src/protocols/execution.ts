@@ -3,7 +3,7 @@
  * Licensed under the MIT License.
  */
 
-import { Protocol, NetworkStats, ServerPreprocessing } from '.';
+import { Protocol, ServerPreprocessing } from '.';
 import { ActionEvent, CollisionEvent, Context, Message, TriggerEvent, WebSocket } from '..';
 import {
 	ActorUpdate,
@@ -30,15 +30,10 @@ import { Sync } from './sync';
  * Class to handle operational messages with a client.
  */
 export class Execution extends Protocol {
-	public networkStats: NetworkStats;
-
 	constructor(private context: Context) {
 		super(context.conn);
 		// Behave like a server-side endpoint (send heartbeats, measure connection quality)
 		this.use(new ServerPreprocessing());
-		if (process.env.MONITOR_NETWORK) {
-			this.use(this.networkStats = new NetworkStats());
-		}
 	}
 
 	/** @override */

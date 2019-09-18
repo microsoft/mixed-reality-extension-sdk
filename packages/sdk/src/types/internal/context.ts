@@ -585,13 +585,7 @@ export class InternalContext {
 	}
 
 	public getStats(): PerformanceStats {
-		const networkStats = (this.protocol instanceof Execution && this.protocol.networkStats)
-			? this.protocol.networkStats.reportStats()
-			: {
-				networkBandwidthIn: [0, 0, 0] as [number, number, number],
-				networkBandwidthOut: [0, 0, 0] as [number, number, number],
-				networkMessageCount: [0, 0, 0] as [number, number, number]
-			};
+		const networkStats = this.protocol.conn.statsReport;
 		const stats: PerformanceStats = {
 			actorCount: Object.keys(this.actorSet).length,
 			actorWithMeshCount: 0,

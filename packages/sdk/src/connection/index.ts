@@ -8,3 +8,4 @@ export * from './nullConnection';
 export * from './eventedConnection';
 export * from './webSocket';
 export * from './pipe';
+export * from './networkStats';

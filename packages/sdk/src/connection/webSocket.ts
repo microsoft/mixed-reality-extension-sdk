@@ -6,15 +6,15 @@
 import * as WS from 'ws';
 import { EventedConnection } from '.';
 import { Message } from '..';
+import { log } from '../log';
 import filterEmpty from '../utils/filterEmpty';
 import validateJsonFieldName from '../utils/validateJsonFieldName';
-import { log } from './../log';
+import { NetworkStatsTracker } from './networkStats';
 
 /**
  * An implementation of the Connection interface that wraps a WebSocket.
  */
 export class WebSocket extends EventedConnection {
-
 	public get remoteAddress() { return this._remoteAddress; }
 
 	// tslint:disable-next-line:variable-name
@@ -26,6 +26,8 @@ export class WebSocket extends EventedConnection {
 		});
 
 		this._ws.on('message', (json: WS.Data) => {
+			this.statsTracker.recordIncoming(Buffer.byteLength(json as string));
+
 			let message: Message = null;
 			try {
 				message = JSON.parse(json as string);
@@ -51,6 +53,8 @@ export class WebSocket extends EventedConnection {
 					validateJsonFieldName(key);
 					return filterEmpty(value);
 				});
+			this.statsTracker.recordOutgoing(Buffer.byteLength(json));
+
 			// Uncomment to introduce latency on outgoing messages.
 			// NOTE: This will sometimes change message ordering.
 			// setTimeout(() => {

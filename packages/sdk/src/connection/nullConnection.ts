@@ -4,7 +4,7 @@
  */
 
 import { EventEmitter } from 'events';
-import { Connection, ConnectionQuality } from '.';
+import { Connection, ConnectionQuality, NetworkStatsReport } from '.';
 import { Message } from '..';
 
 /**
@@ -21,6 +21,16 @@ export class NullConnection extends EventEmitter implements Connection {
 
 	/** @inheritdoc */
 	public get promises() { return {}; }
+
+	/** @inheritdoc */
+	public get statsReport(): NetworkStatsReport {
+		// events don't have a size, cannot report message bytes cheaply
+		return {
+			networkBandwidthIn: [0, 0, 0] as [number, number, number],
+			networkBandwidthOut: [0, 0, 0] as [number, number, number],
+			networkMessageCount: [0, 0, 0] as [number, number, number]
+		};
+	}
 
 	// Bug in Node: EventEmitter doesn't alias this method
 	/** @inheritdoc */
