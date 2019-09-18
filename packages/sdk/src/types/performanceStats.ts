@@ -50,13 +50,13 @@ export interface PerformanceStats {
 
 	/**
 	 * The average incoming bandwidth of this app over the last 1/5/30 seconds, in KB/s. This is roughly equivalent
-	 * to the bandwidth sent by a single steady-state client over the interval, though does not correlate exactly.
+	 * to the bandwidth sent by the busiest client over the interval, though does not correlate exactly.
 	 * Only MRE internal traffic is counted, not general HTTP requests (static file hosting, etc.).
 	 */
 	networkBandwidthIn: [number, number, number];
 	/**
 	 * The average outgoing bandwidth of this app over the last 1/5/30 seconds, in KB/s. This is roughly equivalent
-	 * to the bandwidth sent by the busiest client over the interval, though does not correlate exactly.
+	 * to the bandwidth sent to the busiest client over the interval, though this does not correlate exactly.
 	 * Only MRE internal traffic is counted, not general HTTP requests (static file hosting, etc.).
 	 */
 	networkBandwidthOut: [number, number, number];

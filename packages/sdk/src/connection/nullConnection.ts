@@ -24,7 +24,7 @@ export class NullConnection extends EventEmitter implements Connection {
 
 	/** @inheritdoc */
 	public get statsReport(): NetworkStatsReport {
-		// events don't have a size, cannot report message bytes cheaply
+		// null connections do not send or receive traffic
 		return {
 			networkBandwidthIn: [0, 0, 0] as [number, number, number],
 			networkBandwidthOut: [0, 0, 0] as [number, number, number],
