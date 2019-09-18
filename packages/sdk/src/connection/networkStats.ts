@@ -31,7 +31,7 @@ export type NetworkStatsReport = {
 	 * that clients are wasting CPU cycles serializing and deserializing messages.
 	 */
 	networkMessageCount: [number, number, number];
-}
+};
 
 /**
  * @hidden

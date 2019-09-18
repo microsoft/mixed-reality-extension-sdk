@@ -65,4 +65,4 @@ export type PerformanceStats = {
 	 * that clients are wasting CPU cycles serializing and deserializing messages.
 	 */
 	networkMessageCount: [number, number, number];
-}
+};
