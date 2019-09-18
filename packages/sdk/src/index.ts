@@ -13,6 +13,7 @@ export * from './log';
 export * from './types/runtime';
 export * from './types/network';
 export * from './types/rigidBodyConstraints';
+export * from './types/performanceStats';
 export * from './types/primitiveTypes';
 export * from './types/lookatMode';
 export * from './types/parameterSet';

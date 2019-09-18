@@ -9,10 +9,10 @@ import {
 	Actor,
 	Connection,
 	NullConnection,
+	PerformanceStats,
 	User,
 } from '../..';
-import { InternalContext } from '../../types/internal/context';
-import { AssetContainer } from '../../types/runtime/assets';
+import { InternalContext } from '../internal/context';
 
 /**
  * Settings used to configure a `Context` instance.
@@ -180,5 +180,13 @@ export class Context {
 	public offReceiveRPC(handler: (procName: string, channelName: string, args: any[]) => void): this {
 		this.emitter.removeListener('context.receive-rpc', handler);
 		return this;
+	}
+
+	/**
+	 * Collect and return a snapshot of the current resource usage of the MRE subsystem. For Node process stats,
+	 * use `process.resourceUsage()`.
+	 */
+	public getStats() {
+		return this.internal.getStats();
 	}
 }

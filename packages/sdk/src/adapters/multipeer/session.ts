@@ -9,7 +9,7 @@ import {
 	Client, InitializeActorMessage, MissingRule, Rules, SessionExecution,
 	SessionHandshake, SessionSync, SyncActor, SyncAsset
 } from '.';
-import { Connection, Message, UserLike } from '../..';
+import { Connection, EventedConnection, Message, UserLike } from '../..';
 import { log } from '../../log';
 import * as Protocols from '../../protocols';
 import * as Payloads from '../../types/network/payloads';
@@ -166,10 +166,31 @@ export class Session extends EventEmitter {
 			// tslint:disable-next-line:no-console
 			log.error('network', `[ERROR] setAuthoritativeClient: client ${clientId} does not exist.`);
 		}
-		this._clientSet[clientId].setAuthoritative(true);
-		this.clients
-			.filter(client => client.id !== clientId && client.isJoined())
-			.forEach(client => client.setAuthoritative(false));
+		const oldAuthority = this.authoritativeClient;
+		const newAuthority = this._clientSet[clientId];
+
+		newAuthority.setAuthoritative(true);
+		for (const client of this.clients.filter(c => c !== newAuthority)) {
+			client.setAuthoritative(false);
+		}
+
+		// forward network stats from the authoritative peer connection to the app
+		const toApp = this.conn instanceof EventedConnection ? this.conn : null;
+		const forwardIncoming = (bytes: number) => toApp.statsTracker.recordIncoming(bytes);
+		const forwardOutgoing = (bytes: number) => toApp.statsTracker.recordOutgoing(bytes);
+		const toNewAuthority = newAuthority.conn instanceof EventedConnection ? newAuthority.conn : null;
+		if (toNewAuthority) {
+			toNewAuthority.statsTracker.on('incoming', forwardIncoming);
+			toNewAuthority.statsTracker.on('outgoing', forwardOutgoing);
+		}
+
+		// turn off old authority
+		const toOldAuthority = oldAuthority && oldAuthority.conn instanceof EventedConnection
+			? oldAuthority.conn : null;
+		if (toOldAuthority) {
+			toOldAuthority.statsTracker.off('incoming', forwardIncoming);
+			toOldAuthority.statsTracker.off('outgoing', forwardOutgoing);
+		}
 	}
 
 	private recvFromClient = (client: Client, message: Message) => {

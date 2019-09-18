@@ -7,6 +7,7 @@ import { Message } from '..';
 import { ExponentialMovingAverage } from '../utils/exponentialMovingAverage';
 import { QueuedPromise } from '../utils/queuedPromise';
 import { TrackingClock } from '../utils/trackingClock';
+import { NetworkStatsReport } from './networkStats';
 
 // tslint:disable:no-any
 
@@ -38,6 +39,9 @@ export class ConnectionQuality {
 export interface Connection {
 	readonly quality: ConnectionQuality;
 	readonly promises: { [id: string]: QueuedPromise };
+
+	/** A snapshot of this connection's bandwidth usage */
+	readonly statsReport: NetworkStatsReport;
 
 	/**
 	 * Registers a handler for the 'send' or 'recv' events. Called when a new message is to be sent.

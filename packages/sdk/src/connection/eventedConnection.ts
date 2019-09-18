@@ -7,6 +7,7 @@ import { EventEmitter } from 'events';
 import { Connection, ConnectionQuality } from '.';
 import { Message } from '..';
 import { QueuedPromise } from '../utils/queuedPromise';
+import { NetworkStatsReport, NetworkStatsTracker } from './networkStats';
 
 /**
  * @hidden
@@ -15,6 +16,7 @@ export class EventedConnection extends EventEmitter implements Connection {
 	// tslint:disable:variable-name
 	private _quality = new ConnectionQuality();
 	private _promises: { [id: string]: QueuedPromise } = {};
+	public statsTracker = new NetworkStatsTracker();
 	// tslint:enable:variable-name
 
 	private queuedMessages: Message[] = [];
@@ -25,6 +27,11 @@ export class EventedConnection extends EventEmitter implements Connection {
 
 	/** @inheritdoc */
 	public get promises() { return this._promises; }
+
+	/** @inheritdoc */
+	public get statsReport(): NetworkStatsReport {
+		return this.statsTracker.reportStats();
+	}
 
 	// Bug in Node: EventEmitter doesn't alias this method
 	/** @inheritdoc */

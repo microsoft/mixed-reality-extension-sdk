@@ -26,6 +26,7 @@ import PhysicsSimTest from './physics-sim-test';
 import PrimitivesTest from './primitives-test';
 import ReparentTest from './reparent-test';
 import SoundTest from './sound-test';
+import StatsTest from './stats-test';
 import TextTest from './text-test';
 import TransformTest from './transform-test';
 import UserMaskTest from './user-mask-test';
@@ -62,6 +63,7 @@ export const Factories = {
 	'primitives-test': (...args) => new PrimitivesTest(...args),
 	'reparent-test': (...args) => new ReparentTest(...args),
 	'sound-test': (...args) => new SoundTest(...args),
+	'stats-test': (...args) => new StatsTest(...args),
 	'text-test': (...args) => new TextTest(...args),
 	'transform-test': (...args) => new TransformTest(...args),
 	'user-mask-test': (...args) => new UserMaskTest(...args),
