@@ -363,12 +363,8 @@ export type InterpolateActor = Payload & {
  */
 export type ShowDialog = Payload & {
 	type: 'show-dialog';
-	dialogId: string;
 	text: string;
-	buttons: string[];
-	recipients?: string[];
-	icon?: string;
-	input?: boolean;
+	acceptInput?: boolean;
 };
 
 /**
@@ -377,8 +373,6 @@ export type ShowDialog = Payload & {
  */
 export type DialogResponse = Payload & {
 	type: 'dialog-response';
-	dialogId: string;
-	userId: string;
-	button: string;
+	submitted: boolean;
 	text?: string;
 }
