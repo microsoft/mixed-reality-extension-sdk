@@ -170,19 +170,22 @@ export class Session extends EventEmitter {
 		const newAuthority = this._clientSet[clientId];
 
 		newAuthority.setAuthoritative(true);
-		oldAuthority.setAuthoritative(false);
 
 		// forward network stats from the authoritative peer connection to the app
 		const toApp = this.conn instanceof EventedConnection ? this.conn : null;
-		const toOldAuthority = oldAuthority.conn instanceof EventedConnection ? oldAuthority.conn : null;
 		const toNewAuthority = newAuthority.conn instanceof EventedConnection ? newAuthority.conn : null;
-		if (toApp && toOldAuthority && toNewAuthority) {
-			const forwardIncoming = (bytes: number) => toApp.statsTracker.recordIncoming(bytes);
-			const forwardOutgoing = (bytes: number) => toApp.statsTracker.recordOutgoing(bytes);
+		const forwardIncoming = (bytes: number) => toApp.statsTracker.recordIncoming(bytes);
+		const forwardOutgoing = (bytes: number) => toApp.statsTracker.recordOutgoing(bytes);
+		toNewAuthority.statsTracker.on('incoming', forwardIncoming);
+		toNewAuthority.statsTracker.on('outgoing', forwardOutgoing);
+
+		// turn off old authority
+		const toOldAuthority = oldAuthority && oldAuthority.conn instanceof EventedConnection
+			? oldAuthority.conn : null;
+		if (oldAuthority) {
+			oldAuthority.setAuthoritative(false);
 			toOldAuthority.statsTracker.off('incoming', forwardIncoming);
 			toOldAuthority.statsTracker.off('outgoing', forwardOutgoing);
-			toNewAuthority.statsTracker.on('incoming', forwardIncoming);
-			toNewAuthority.statsTracker.on('outgoing', forwardOutgoing);
 		}
 	}
 

@@ -610,17 +610,17 @@ export class InternalContext {
 			stats.soundCount += container.sounds.length;
 
 			for (const tex of container.textures) {
-				stats.texturePixelsTotal += tex.texture.resolution.x * tex.texture.resolution.y;
+				stats.texturePixelsTotal += (tex.texture.resolution.x || 0) * (tex.texture.resolution.y || 0);
 			}
 			for (const mesh of container.meshes) {
-				stats.meshTrianglesTotal += mesh.mesh.triangleCount;
-				stats.meshVerticesTotal += mesh.mesh.vertexCount;
+				stats.meshTrianglesTotal += mesh.mesh.triangleCount || 0;
+				stats.meshVerticesTotal += mesh.mesh.vertexCount || 0;
 			}
 			for (const sound of container.sounds) {
-				stats.soundSecondsTotal += sound.sound.duration;
+				stats.soundSecondsTotal += sound.sound.duration || 0;
 			}
 		}
-		stats.texturePixelsAverage = stats.texturePixelsTotal / stats.textureCount;
+		stats.texturePixelsAverage = stats.texturePixelsTotal / (stats.textureCount || 1);
 
 		for (const actor of Object.values(this.actorSet)) {
 			if (actor.appearance.activeAndEnabled && actor.appearance.mesh) {
