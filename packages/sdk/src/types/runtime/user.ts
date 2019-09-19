@@ -81,7 +81,7 @@ export class User implements UserLike, Patchable<UserLike> {
 
 	// tslint:disable-next-line:variable-name
 	constructor(private _context: Context, private _id: string) {
-		this._internal = new InternalUser(this);
+		this._internal = new InternalUser(this, this._context.internal);
 	}
 
 	/**
@@ -90,7 +90,7 @@ export class User implements UserLike, Patchable<UserLike> {
 	 * @param acceptInput Whether or not the dialog should include a text input field.
 	 */
 	public prompt(text: string, acceptInput?: boolean): Promise<DialogResponse> {
-
+		return this.internal.prompt(text, acceptInput);
 	}
 
 	public copy(from: Partial<UserLike>): this {

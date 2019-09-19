@@ -363,6 +363,7 @@ export type InterpolateActor = Payload & {
  */
 export type ShowDialog = Payload & {
 	type: 'show-dialog';
+	userId: string;
 	text: string;
 	acceptInput?: boolean;
 };

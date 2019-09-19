@@ -36,6 +36,7 @@ import { log } from '../../log';
 import * as Protocols from '../../protocols';
 import { Execution } from '../../protocols/execution';
 import { Handshake } from '../../protocols/handshake';
+import { ExportedPromise } from '../../utils/exportedPromise';
 import resolveJsonValues from '../../utils/resolveJsonValues';
 import safeGet from '../../utils/safeAccessPath';
 import { OperatingModel } from '../network/operatingModel';
@@ -441,8 +442,8 @@ export class InternalContext {
 		});
 	}
 
-	public sendPayload(payload: Payloads.Payload): void {
-		this.protocol.sendPayload(payload);
+	public sendPayload(payload: Payloads.Payload, promise?: ExportedPromise): void {
+		this.protocol.sendPayload(payload, promise);
 	}
 
 	public receiveRPC(procName: string, channelName: string, args: any[]) {
