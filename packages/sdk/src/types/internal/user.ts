@@ -4,8 +4,8 @@
  */
 
 import { DialogResponse, User, UserLike } from '../..';
-import { InternalPatchable } from '../patchable';
 import * as Payloads from '../network/payloads';
+import { InternalPatchable } from '../patchable';
 import { InternalContext } from './context';
 
 /**
@@ -29,11 +29,11 @@ export class InternalUser implements InternalPatchable<UserLike> {
 		return patch;
 	}
 
-	public prompt(text: string, acceptInput?: boolean): Promise<DialogResponse> {
+	public prompt(text: string, acceptInput: boolean): Promise<DialogResponse> {
 		const payload = {
 			type: 'show-dialog',
 			userId: this.user.id,
-			text: text,
+			text,
 			acceptInput
 		} as Payloads.ShowDialog;
 

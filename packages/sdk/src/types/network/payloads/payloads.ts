@@ -376,4 +376,4 @@ export type DialogResponse = Payload & {
 	type: 'dialog-response';
 	submitted: boolean;
 	text?: string;
-}
+};

@@ -27,7 +27,7 @@ export type DialogResponse = {
 	submitted: boolean;
 	/** The string provided by the user in the dialog text input field. */
 	text?: string;
-}
+};
 
 export class User implements UserLike, Patchable<UserLike> {
 	// tslint:disable:variable-name
@@ -89,7 +89,7 @@ export class User implements UserLike, Patchable<UserLike> {
 	 * @param text A message presented to the user.
 	 * @param acceptInput Whether or not the dialog should include a text input field.
 	 */
-	public prompt(text: string, acceptInput?: boolean): Promise<DialogResponse> {
+	public prompt(text: string, acceptInput = false): Promise<DialogResponse> {
 		return this.internal.prompt(text, acceptInput);
 	}
 
