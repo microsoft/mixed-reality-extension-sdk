@@ -23,12 +23,6 @@
         {
             "type": "npm",
             "script": "build",
-            "path": "packages/altspacevr-extras/",
-            "problemMatcher": []
-        },
-        {
-            "type": "npm",
-            "script": "build",
             "path": "packages/gltf-gen/",
             "problemMatcher": []
         }

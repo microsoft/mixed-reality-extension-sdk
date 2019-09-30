@@ -43,7 +43,7 @@ export class Execution extends Protocol {
 
 	/** @private */
 	public 'recv-engine2app-rpc' = (payload: EngineToAppRPC) => {
-		this.emit('protocol.receive-rpc', payload.procName, payload.channelName, payload.args);
+		this.emit('protocol.receive-rpc', payload);
 	}
 
 	/** @private */

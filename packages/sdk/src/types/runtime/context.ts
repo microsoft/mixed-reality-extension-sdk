@@ -9,10 +9,11 @@ import {
 	Actor,
 	Connection,
 	NullConnection,
-	PerformanceStats,
 	User,
 } from '../..';
+import { RPC, RPCChannels } from '../../rpc';
 import { InternalContext } from '../internal/context';
+import * as Payloads from '../network/payloads';
 
 /**
  * Settings used to configure a `Context` instance.
@@ -38,6 +39,8 @@ export class Context {
 
 	private _sessionId: string;
 	private _conn: Connection;
+	private _rpcChannels: RPCChannels;
+	private _rpc: RPC;
 
 	// tslint:enable:variable-name
 
@@ -49,7 +52,8 @@ export class Context {
 			.filter(actorId => !this.internal.actorSet[actorId].parent).map(actorId => this.internal.actorSet[actorId]);
 	}
 	public get users() { return Object.keys(this.internal.userSet).map(userId => this.internal.userSet[userId]); }
-
+	public get rpcChannels() { return this._rpcChannels; }
+	public get rpc() { return this._rpc; }
 	public actor = (actorId: string): Actor => this.internal.actorSet[actorId];
 	public user = (userId: string): User => this.internal.userSet[userId];
 
@@ -61,6 +65,9 @@ export class Context {
 		this._conn = settings.connection || new NullConnection();
 		this._sessionId = settings.sessionId || UUID();
 		this._internal = new InternalContext(this);
+		this._rpcChannels = new RPCChannels();
+		this._rpc = new RPC(this);
+		this.rpcChannels.setChannelHandler(null, this._rpc);
 	}
 
 	/**
@@ -167,19 +174,8 @@ export class Context {
 	/**
 	 * @hidden
 	 */
-	// tslint:disable-next-line:max-line-length
-	public onReceiveRPC(handler: (procName: string, channelName: string, args: any[]) => void): this {
-		this.emitter.addListener('context.receive-rpc', handler);
-		return this;
-	}
-
-	/**
-	 * @hidden
-	 */
-	// tslint:disable-next-line:max-line-length
-	public offReceiveRPC(handler: (procName: string, channelName: string, args: any[]) => void): this {
-		this.emitter.removeListener('context.receive-rpc', handler);
-		return this;
+	public receiveRPC(payload: Payloads.EngineToAppRPC) {
+		this.rpcChannels.receive(payload);
 	}
 
 	/**

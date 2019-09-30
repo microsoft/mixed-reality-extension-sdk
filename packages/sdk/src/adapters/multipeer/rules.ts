@@ -444,6 +444,7 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 		client: {
 			...DefaultRule.client,
 			shouldSendToUser: (message: Message<Payloads.AppToEngineRPC>, userId, session, client) => {
+				// If the AppToEngineRPC message targets a specific user, filter to that user.
 				const exclusiveUser = message.payload.userId;
 				return exclusiveUser ? exclusiveUser === userId : null;
 			}
