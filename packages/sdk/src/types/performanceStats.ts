@@ -11,7 +11,7 @@ export type PerformanceStats = {
 	/** The number of actors in the scene. */
 	actorCount: number;
 	/**
-	 * The number of visible actors with meshes assigned, not including library actors. For a mobile Altspace user with
+	 * The number of visible actors with meshes assigned, not including library actors. For a mobile user with
 	 * only one MRE running, this should generally be kept below 60, though higher can be done with judicious
 	 * use of mesh/material reuse and instancing.
 	 */

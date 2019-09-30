@@ -223,7 +223,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 
 	/**
 	 * Creates a new actor from a library resource.
-	 * AltspaceVR-specific list of library resources: https://account.altvr.com/kits
+	 * Host-specific list of library resources. For AltspaceVR, see: https://account.altvr.com/kits
 	 * @param context The SDK context object.
 	 * @param options.resourceId The id of the library resource to instantiate.
 	 * @param options.actor The initial state of the root actor.

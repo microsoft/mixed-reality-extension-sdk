@@ -24,7 +24,6 @@ export const BackgroundColor = new MRE.Color3(0.25, 0.25, 0.25);
  */
 export class App {
 	public assets: MRE.AssetContainer;
-	private _rpc: MRERPC.ContextRPC;
 
 	private firstUser: MRE.User;
 	private _connectedUsers: { [id: string]: MRE.User } = {};
@@ -50,12 +49,10 @@ export class App {
 	private readonly menu = new Menu(this);
 
 	public get context() { return this._context; }
-	public get rpc() { return this._rpc; }
 	public get connectedUsers() { return this._connectedUsers; }
 
 	constructor(private _context: MRE.Context, private params: MRE.ParameterSet, private baseUrl: string) {
 		this.assets = new MRE.AssetContainer(_context);
-		this._rpc = new MRERPC.ContextRPC(_context);
 
 		this.context.onStarted(() => {
 			this.setupShared();
@@ -128,13 +125,13 @@ export class App {
 	}
 
 	private async runTestHelper(user: MRE.User) {
-		this.rpc.send('functional-test:test-starting', this.activeTestName);
+		this.context.rpc.send({ procName: 'functional-test:test-starting' }, this.activeTestName);
 		console.log(`Test starting: '${this.activeTestName}'`);
 
 		const test = this.activeTest = this.activeTestFactory(this, this.baseUrl, user);
 		this.setOverrideText(test.expectedResultDescription);
 
-		this.rpc.send('functional-test:test-started', this.activeTestName);
+		this.context.rpc.send({ procName: 'functional-test:test-started' }, this.activeTestName);
 		console.log(`Test started: '${this.activeTestName}'`);
 
 		let success: boolean;
@@ -150,7 +147,7 @@ export class App {
 		}
 
 		console.log(`Test complete: '${this.activeTestName}'. Success: ${success}`);
-		this.rpc.send('functional-test:test-complete', this.activeTestName, success);
+		this.context.rpc.send({ procName: 'functional-test:test-complete' }, this.activeTestName, success);
 		this.testResults[this.activeTestName] = success;
 		if (success) {
 			this.setOverrideText(null);

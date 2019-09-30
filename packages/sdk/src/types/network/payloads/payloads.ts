@@ -140,6 +140,7 @@ export type HeartbeatReply = Payload & {
  */
 export type AppToEngineRPC = Payload & {
 	type: 'app2engine-rpc';
+	channelName?: string;
 	userId?: string;
 	procName: string;
 	args: any[];
@@ -151,6 +152,7 @@ export type AppToEngineRPC = Payload & {
 export type EngineToAppRPC = Payload & {
 	type: 'engine2app-rpc';
 	channelName?: string;
+	userId?: string;
 	procName: string;
 	args: any[];
 };

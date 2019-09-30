@@ -446,8 +446,8 @@ export class InternalContext {
 		this.protocol.sendPayload(payload);
 	}
 
-	public receiveRPC(procName: string, channelName: string, args: any[]) {
-		this.context.emitter.emit('context.receive-rpc', procName, channelName, args);
+	public receiveRPC(payload: Payloads.EngineToAppRPC) {
+		this.context.receiveRPC(payload);
 	}
 
 	public onClose = () => {

@@ -10,6 +10,7 @@ export * from './connection';
 export * from './media';
 export * from './webHost';
 export * from './log';
+export * from './rpc';
 export * from './types/runtime';
 export * from './types/network';
 export * from './types/rigidBodyConstraints';

@@ -8,9 +8,6 @@
       "path": "./packages/gltf-gen"
     },
     {
-      "path": "./packages/altspacevr-extras"
-    },
-    {
       "path": "./packages/functional-tests"
     }
   ]
