@@ -27,6 +27,7 @@ export type PayloadType
 	| 'create-empty'
 	| 'create-from-library'
 	| 'destroy-actors'
+	| 'dialog-response'
 	| 'engine2app-rpc'
 	| 'handshake'
 	| 'handshake-complete'
@@ -49,6 +50,7 @@ export type PayloadType
 	| 'set-authoritative'
 	| 'set-behavior'
 	| 'set-media-state'
+	| 'show-dialog'
 	| 'sync-animations'
 	| 'sync-complete'
 	| 'sync-request'
@@ -355,4 +357,26 @@ export type InterpolateActor = Payload & {
 	duration: number;
 	curve: number[];
 	enabled: boolean;
+};
+
+/**
+ * @hidden
+ * App to engine. Prompt to show modal dialog box.
+ */
+export type ShowDialog = Payload & {
+	type: 'show-dialog';
+	userId: string;
+	text: string;
+	acceptInput?: boolean;
+};
+
+/**
+ * @hidden
+ * Engine to app. Acknowledgement of modal dialog.
+ */
+export type DialogResponse = Payload & {
+	type: 'dialog-response';
+	failureMessage: string;
+	submitted: boolean;
+	text?: string;
 };

@@ -23,6 +23,7 @@ import LightTest from './light-test';
 import LookAtTest from './look-at-test';
 import PhysicsSimTest from './physics-sim-test';
 import PrimitivesTest from './primitives-test';
+import PromptTest from './prompt-test';
 import ReparentTest from './reparent-test';
 import SoundTest from './sound-test';
 import StatsTest from './stats-test';
@@ -59,6 +60,7 @@ export const Factories = {
 	'look-at-test': (...args) => new LookAtTest(...args),
 	'physics-sim-test': (...args) => new PhysicsSimTest(...args),
 	'primitives-test': (...args) => new PrimitivesTest(...args),
+	'prompt-test': (...args) => new PromptTest(...args),
 	'reparent-test': (...args) => new ReparentTest(...args),
 	'sound-test': (...args) => new SoundTest(...args),
 	'stats-test': (...args) => new StatsTest(...args),

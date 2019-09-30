@@ -19,6 +19,16 @@ export interface UserSet {
 	[id: string]: User;
 }
 
+/**
+ * The structure returned from [[User.prompt]].
+ */
+export type DialogResponse = {
+	/** Whether the user replied in the positive (OK/Accept) or in the negative (Cancel). */
+	submitted: boolean;
+	/** The string provided by the user in the dialog text input field. */
+	text?: string;
+};
+
 export class User implements UserLike, Patchable<UserLike> {
 	// tslint:disable:variable-name
 	private _internal: InternalUser;
@@ -71,7 +81,16 @@ export class User implements UserLike, Patchable<UserLike> {
 
 	// tslint:disable-next-line:variable-name
 	constructor(private _context: Context, private _id: string) {
-		this._internal = new InternalUser(this);
+		this._internal = new InternalUser(this, this._context.internal);
+	}
+
+	/**
+	 * Present the user with a modal dialog, and resolve with the response.
+	 * @param text A message presented to the user.
+	 * @param acceptInput Whether or not the dialog should include a text input field.
+	 */
+	public prompt(text: string, acceptInput = false): Promise<DialogResponse> {
+		return this.internal.prompt(text, acceptInput);
 	}
 
 	public copy(from: Partial<UserLike>): this {

@@ -589,6 +589,9 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 	},
 
 	// ========================================================================
+	'dialog-response': ClientOnlyRule,
+
+	// ========================================================================
 	'engine2app-rpc': ClientOnlyRule,
 
 	// ========================================================================
@@ -1062,6 +1065,23 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 				}
 
 				return message;
+			}
+		}
+	},
+
+	// ========================================================================
+	'show-dialog': {
+		...DefaultRule,
+		synchronization: {
+			stage: 'never',
+			before: 'ignore',
+			during: 'ignore',
+			after: 'ignore'
+		},
+		client: {
+			...DefaultRule.client,
+			shouldSendToUser: (message: Message<Payloads.ShowDialog>, userId: string) => {
+				return message.payload.userId === userId;
 			}
 		}
 	},
