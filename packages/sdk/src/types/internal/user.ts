@@ -41,10 +41,14 @@ export class InternalUser implements InternalPatchable<UserLike> {
 			this.context.sendPayload(payload, { resolve, reject });
 		})
 		.then(response => {
-			return {
-				submitted: response.submitted,
-				text: response.text
-			} as DialogResponse;
+			if (response.failureMessage) {
+				return Promise.reject(response.failureMessage);
+			} else {
+				return Promise.resolve({
+					submitted: response.submitted,
+					text: response.text
+				} as DialogResponse);
+			}
 		});
 	}
 }

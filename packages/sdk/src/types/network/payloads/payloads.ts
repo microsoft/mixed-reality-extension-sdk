@@ -374,6 +374,7 @@ export type ShowDialog = Payload & {
  */
 export type DialogResponse = Payload & {
 	type: 'dialog-response';
+	failureMessage: string;
 	submitted: boolean;
 	text?: string;
 };
