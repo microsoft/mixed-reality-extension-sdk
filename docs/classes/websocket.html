@@ -101,6 +101,7 @@
 						<section class="tsd-index-section tsd-is-inherited">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a href="websocket.html#statstracker" class="tsd-kind-icon">stats<wbr>Tracker</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static"><a href="websocket.html#defaultmaxlisteners" class="tsd-kind-icon">default<wbr>Max<wbr>Listeners</a></li>
 							</ul>
 						</section>
@@ -110,6 +111,7 @@
 								<li class="tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited"><a href="websocket.html#promises" class="tsd-kind-icon">promises</a></li>
 								<li class="tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited"><a href="websocket.html#quality" class="tsd-kind-icon">quality</a></li>
 								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="websocket.html#remoteaddress" class="tsd-kind-icon">remote<wbr>Address</a></li>
+								<li class="tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited"><a href="websocket.html#statsreport" class="tsd-kind-icon">stats<wbr>Report</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
@@ -151,7 +153,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/a06d6c9/packages/sdk/src/connection/webSocket.ts#L18">connection/webSocket.ts:18</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/cfeec33/packages/sdk/src/connection/webSocket.ts#L18">connection/webSocket.ts:18</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -170,6 +172,17 @@
 			</section>
 			<section class="tsd-panel-group tsd-member-group tsd-is-inherited">
 				<h2>Properties</h2>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
+					<a name="statstracker" class="tsd-anchor"></a>
+					<h3>stats<wbr>Tracker</h3>
+					<div class="tsd-signature tsd-kind-icon">stats<wbr>Tracker<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">NetworkStatsTracker</span><span class="tsd-signature-symbol"> =&nbsp;new NetworkStatsTracker()</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from EventedConnection.statsTracker</p>
+						<ul>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/cfeec33/packages/sdk/src/connection/eventedConnection.ts#L19">connection/eventedConnection.ts:19</a></li>
+						</ul>
+					</aside>
+				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static">
 					<a name="defaultmaxlisteners" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagStatic">Static</span> default<wbr>Max<wbr>Listeners</h3>
@@ -195,7 +208,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from EventedConnection.promises</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/a06d6c9/packages/sdk/src/connection/eventedConnection.ts#L27">connection/eventedConnection.ts:27</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/cfeec33/packages/sdk/src/connection/eventedConnection.ts#L29">connection/eventedConnection.ts:29</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -224,7 +237,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from EventedConnection.quality</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/a06d6c9/packages/sdk/src/connection/eventedConnection.ts#L24">connection/eventedConnection.ts:24</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/cfeec33/packages/sdk/src/connection/eventedConnection.ts#L26">connection/eventedConnection.ts:26</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -247,10 +260,37 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/a06d6c9/packages/sdk/src/connection/webSocket.ts#L18">connection/webSocket.ts:18</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/cfeec33/packages/sdk/src/connection/webSocket.ts#L18">connection/webSocket.ts:18</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited">
+					<a name="statsreport" class="tsd-anchor"></a>
+					<h3>stats<wbr>Report</h3>
+					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited">
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> statsReport<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../index.html#networkstatsreport" class="tsd-signature-type">NetworkStatsReport</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from EventedConnection.statsReport</p>
+								<ul>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/cfeec33/packages/sdk/src/connection/eventedConnection.ts#L32">connection/eventedConnection.ts:32</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>A snapshot of this connection&#39;s bandwidth usage</p>
+								</div>
+								<dl class="tsd-comment-tags">
+									<dt>inheritdoc</dt>
+									<dd></dd>
+								</dl>
+							</div>
+							<h4 class="tsd-returns-title">Returns <a href="../index.html#networkstatsreport" class="tsd-signature-type">NetworkStatsReport</a></h4>
 						</li>
 					</ul>
 				</section>
@@ -315,7 +355,7 @@
 								<p>Implementation of <a href="../interfaces/connection.html">Connection</a>.<a href="../interfaces/connection.html#close">close</a></p>
 								<p>Overrides EventedConnection.close</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/a06d6c9/packages/sdk/src/connection/webSocket.ts#L67">connection/webSocket.ts:67</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/cfeec33/packages/sdk/src/connection/webSocket.ts#L71">connection/webSocket.ts:71</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -456,7 +496,7 @@
 								<p>Inherited from EventedConnection.off</p>
 								<p>Overrides EventEmitter.off</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/a06d6c9/packages/sdk/src/connection/eventedConnection.ts#L31">connection/eventedConnection.ts:31</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/cfeec33/packages/sdk/src/connection/eventedConnection.ts#L38">connection/eventedConnection.ts:38</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -717,7 +757,7 @@
 								<p>Implementation of <a href="../interfaces/connection.html">Connection</a>.<a href="../interfaces/connection.html#recv">recv</a></p>
 								<p>Inherited from EventedConnection.recv</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/a06d6c9/packages/sdk/src/connection/eventedConnection.ts#L46">connection/eventedConnection.ts:46</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/cfeec33/packages/sdk/src/connection/eventedConnection.ts#L53">connection/eventedConnection.ts:53</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -818,7 +858,7 @@
 								<p>Implementation of <a href="../interfaces/connection.html">Connection</a>.<a href="../interfaces/connection.html#send">send</a></p>
 								<p>Inherited from EventedConnection.send</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/a06d6c9/packages/sdk/src/connection/eventedConnection.ts#L41">connection/eventedConnection.ts:41</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/cfeec33/packages/sdk/src/connection/eventedConnection.ts#L48">connection/eventedConnection.ts:48</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -915,6 +955,9 @@
 							<li class=" tsd-kind-constructor tsd-parent-kind-class">
 								<a href="websocket.html#constructor" class="tsd-kind-icon">constructor</a>
 							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
+								<a href="websocket.html#statstracker" class="tsd-kind-icon">stats<wbr>Tracker</a>
+							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static">
 								<a href="websocket.html#defaultmaxlisteners" class="tsd-kind-icon">default<wbr>Max<wbr>Listeners</a>
 							</li>
@@ -926,6 +969,9 @@
 							</li>
 							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
 								<a href="websocket.html#remoteaddress" class="tsd-kind-icon">remote<wbr>Address</a>
+							</li>
+							<li class=" tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited">
+								<a href="websocket.html#statsreport" class="tsd-kind-icon">stats<wbr>Report</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited">
 								<a href="websocket.html#addlistener" class="tsd-kind-icon">add<wbr>Listener</a>
