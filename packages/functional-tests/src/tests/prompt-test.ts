@@ -29,6 +29,10 @@ export default class PromptTest extends Test {
 		});
 		noTextButton.setBehavior(MRE.ButtonBehavior).onClick(user => {
 			user.prompt(`Hello ${user.name}!`)
+			.then(res => {
+				noTextButton.text.contents =
+					`Click for message\nLast response: ${res.submitted ? "<ok>" : "<cancelled>"}`;
+			})
 			.catch(err => {
 				console.error(err);
 				success = false;
