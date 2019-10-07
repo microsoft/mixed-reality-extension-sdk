@@ -5,13 +5,11 @@
 
 import * as http from 'http';
 import QueryString from 'query-string';
-import * as Restify from 'restify';
 import UUID from 'uuid/v4';
 import * as WS from 'ws';
-import { Adapter, AdapterOptions, ClientHandshake, ClientStartup } from '..';
+import { Adapter, ClientHandshake, ClientStartup } from '..';
 import { Context, ParameterSet, Pipe, WebSocket } from '../../';
 import * as Constants from '../../constants';
-import verifyClient from '../../utils/verifyClient';
 import { log } from './../../log';
 import { Client } from './client';
 import { Session } from './session';
@@ -22,7 +20,7 @@ const forwarded = require('forwarded-for');
 /**
  * Multi-peer adapter options
  */
-export type MultipeerAdapterOptions = AdapterOptions & {
+export type MultipeerAdapterOptions = {
 	/**
 	 * @member peerAuthoritative (Optional. Default: true) Whether or not to run in the `peer-authoritative`
 	 * operating model. When true, one peer is picked to synchonize actor changes, animation states, etc.
@@ -44,37 +42,49 @@ export type MultipeerAdapterOptions = AdapterOptions & {
  */
 export class MultipeerAdapter extends Adapter {
 
+	/** @inheritdoc */
+	public get name(): string { return this. constructor.name; }
+
 	// FUTURE: Make these child processes?
 	private sessions: { [id: string]: Session } = {};
-
-	/** @override */
-	protected get options(): MultipeerAdapterOptions { return this._options; }
 
 	/**
 	 * Creates a new instance of the Multi-peer Adapter
 	 */
-	constructor(options?: MultipeerAdapterOptions) {
-		super(options);
-		this._options = { peerAuthoritative: true, ...this._options } as AdapterOptions;
+	constructor(private options?: MultipeerAdapterOptions) {
+		super();
+		this.options = {
+			peerAuthoritative: true,
+			...this.options
+		};
 	}
 
-	/**
-	 * Start the adapter listening for new incoming connections from engine clients
-	 */
-	public listen() {
-		if (!this.server) {
-			// If necessary, create a new web server
-			return new Promise<Restify.Server>((resolve) => {
-				const server = this.server = Restify.createServer({ name: "Multi-peer Adapter" });
-				this.server.listen(this.port, () => {
-					this.startListening();
-					resolve(server);
-				});
-			});
-		} else {
-			// Already have a server, so just start listening
-			this.startListening();
-			return Promise.resolve(this.server);
+	/** @inheritdoc */
+	public async connectionRequest(ws: WS, request: http.IncomingMessage) {
+		try {
+			log.info('network', "New Multi-peer connection");
+
+			// Read the sessionId header.
+			let sessionId = request.headers[Constants.HTTPHeaders.SessionID] as string || UUID();
+			sessionId = decodeURIComponent(sessionId);
+
+			// Parse URL parameters.
+			const params = QueryString.parseUrl(request.url).query;
+
+			// Get the client's IP address rather than the last proxy connecting to you.
+			const address = forwarded(request, request.headers);
+
+			// Create a WebSocket for this connection.
+			const conn = new WebSocket(ws, address.ip);
+
+			// Instantiate a client for this connection.
+			const client = new Client(conn);
+
+			// Join the client to the session.
+			await this.joinClientToSession(client, sessionId, params);
+		} catch (e) {
+			log.error('network', e);
+			ws.close();
 		}
 	}
 
@@ -100,45 +110,11 @@ export class MultipeerAdapter extends Adapter {
 			// Connect the session to the context.
 			await session.connect(); // Allow exceptions to propagate.
 			// Pass the new context to the app.
-			this.emitter.emit('connection', context, params);
+			this.emit('connection', context, params);
 			// Start context's update loop.
 			context.internal.start();
 		}
 		return session;
-	}
-
-	private startListening() {
-		// Create a server for upgrading HTTP connections to WebSockets
-		const wss = new WS.Server({ server: this.server, verifyClient });
-
-		// Handle WebSocket connection upgrades
-		wss.on('connection', async (ws: WS, request: http.IncomingMessage) => {
-			try {
-				log.info('network', "New Multi-peer connection");
-
-				// Read the sessionId header.
-				let sessionId = request.headers[Constants.HTTPHeaders.SessionID] as string || UUID();
-				sessionId = decodeURIComponent(sessionId);
-
-				// Parse URL parameters.
-				const params = QueryString.parseUrl(request.url).query;
-
-				// Get the client's IP address rather than the last proxy connecting to you.
-				const address = forwarded(request, request.headers);
-
-				// Create a WebSocket for this connection.
-				const conn = new WebSocket(ws, address.ip);
-
-				// Instantiate a client for this connection.
-				const client = new Client(conn);
-
-				// Join the client to the session.
-				await this.joinClientToSession(client, sessionId, params);
-			} catch (e) {
-				log.error('network', e);
-				ws.close();
-			}
-		});
 	}
 
 	private async joinClientToSession(client: Client, sessionId: string, params: QueryString.OutputParams) {

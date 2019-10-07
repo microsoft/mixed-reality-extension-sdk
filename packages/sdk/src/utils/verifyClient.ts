@@ -3,6 +3,7 @@
  * Licensed under the MIT License.
  */
 
+import * as http from 'http';
 import semver from 'semver';
 import * as Constants from '../constants';
 import { log } from '../log';
@@ -23,18 +24,12 @@ const CurrentSDKVersion = semver.coerce(require('../../package.json').version);
 const MinimumSupportedClientVersion = semver.coerce('0.13');
 
 /**
+ * Validate the client and server version number compatibility.
+ * @param request The WebSocket upgrade request message.
  * @hidden
- * 'ws' middleware to validate the client protocol version when processing a connection upgrade request.
- * @param info 'ws' request information
- * @param cb 'ws' verification callback
  */
-export default function verifyClient(
-	info: any, cb: (verified: boolean, code?: number, message?: string) => any): any {
-	// Look for the upgrade request.
-	const req = info.req || {};
-
-	// Look for the request headers.
-	const headers = req.headers || [];
+export default function verifyClient(request: http.IncomingMessage) {
+	const headers = request.headers;
 
 	// Verify minimum supported versions are met (client and SDK).
 
@@ -47,10 +42,10 @@ export default function verifyClient(
 
 	// tslint:disable-next-line:variable-name
 	const CurrentClientVersion
-		= semver.coerce(decodeURIComponent(headers[Constants.HTTPHeaders.CurrentClientVersion]));
+		= semver.coerce(decodeURIComponent(headers[Constants.HTTPHeaders.CurrentClientVersion] as string));
 	// tslint:disable-next-line:variable-name
 	const MinimumSupportedSDKVersion
-		= semver.coerce(decodeURIComponent(headers[Constants.HTTPHeaders.MinimumSupportedSDKVersion]));
+		= semver.coerce(decodeURIComponent(headers[Constants.HTTPHeaders.MinimumSupportedSDKVersion] as string));
 
 	if (CurrentClientVersion && MinimumSupportedSDKVersion) {
 		// Test the current client version. Is it greater than or equal to the minimum client version?
@@ -62,7 +57,7 @@ export default function verifyClient(
 			// tslint:disable-next-line:max-line-length
 			const message = `Connection rejected due to out of date client. Client version: ${CurrentClientVersion.toString()}. Min supported version by SDK: ${MinimumSupportedClientVersion.toString()}`;
 			log.info('app', message);
-			return cb(false, 403, message);
+			return false;
 		}
 
 		if (!sdkPass) {
@@ -72,19 +67,13 @@ export default function verifyClient(
 			// Log this line to the console. The developer should know about this.
 			// tslint:disable-next-line:no-console
 			console.info(message);
-			return cb(false, 403, message);
+			return false;
 		}
 
 		// Client and SDK are compatible.
-		return cb(true);
+		return true;
 	}
 
-	// Temporary: Support old clients reporting the legacy protocol version.
-	// TODO: Remove this after a few releases.
-	const legacyProtocolVersion = decodeURIComponent(headers[Constants.HTTPHeaders.LegacyProtocolVersion]);
-	if (legacyProtocolVersion === '1') {
-		return cb(true);
-	}
-
-	return cb(false, 403, "Version headers missing.");
+	log.info('app', "Version headers missing from connection request.");
+	return false;
 }

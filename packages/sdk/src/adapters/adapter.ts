@@ -3,51 +3,28 @@
  * Licensed under the MIT License.
  */
 
-import events from 'events';
-import * as Restify from 'restify';
+import { EventEmitter } from 'events';
+import * as http from 'http';
+import * as WS from 'ws';
 import { Context, ParameterSet } from '..';
-
-/**
- * Adapter options
- */
-export type AdapterOptions = {
-	/**
-	 * @member {http.Server} server Provide an existing web server to use. Will create one otherwise
-	 */
-	server?: Restify.Server;
-	/**
-	 * @member {string | number} port Optional. When options.server is not supplied and an internal web server is to be
-	 * created, this is the port number it should listen on. If this value is not given, it will attempt to read the
-	 * PORT environment variable, then default to 3901
-	 */
-	port?: string | number;
-};
 
 /**
  * Base Adapter class. Adapters are where connections from hosts are accepted and mapped to Contexts. The host
  * connection requests a Context from a sessionId. If no matching Context is found, a new one is created and
  * the 'connection' event is raised.
  */
-export abstract class Adapter {
-	protected emitter = new events.EventEmitter();
+export abstract class Adapter extends EventEmitter {
 
-	protected get options() { return this._options; }
+	/**
+	 * The name of the Adapter subclass.
+	 */
+	public abstract get name(): string;
 
-	public get server() { return this._options.server; }
-	public set server(value: Restify.Server) { this._options.server = value; }
-	public get port() { return this._options.port; }
-
-	// tslint:disable-next-line:variable-name
-	constructor(protected _options: AdapterOptions) {
-		this._options = { ..._options };
-		this._options.port =
-			this._options.port ||
-			process.env.port ||
-			process.env.PORT ||
-			3901;
-	}
-
-	public abstract listen(): Promise<Restify.Server>;
+	/**
+	 * Called by WebHost when a new connection request is made.
+	 * @hidden
+	 */
+	public abstract connectionRequest(ws: WS, request: http.IncomingMessage): void;
 
 	/**
 	 * The onConnection event is raised when a new Context is created for an application session. This happens when the
@@ -55,7 +32,8 @@ export abstract class Adapter {
 	 * @event
 	 */
 	public onConnection(handler: (context: Context, params: ParameterSet) => void): this {
-		this.emitter.addListener('connection', handler);
+		this.removeAllListeners('connection');
+		this.addListener('connection', handler);
 		return this;
 	}
 }
