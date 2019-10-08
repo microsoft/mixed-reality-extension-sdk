@@ -327,9 +327,9 @@ export class Session extends EventEmitter {
 		}
 
 		// update end times on playing media instances with the now-known duration
-		for (const actorId in this.actorSet) {
+		for (const actorId of Object.keys(this.actorSet)) {
 			const syncActor = this.actorSet[actorId];
-			for (const activeMediaInstance of syncActor.activeMediaInstances) {
+			for (const activeMediaInstance of (syncActor.activeMediaInstances || [])) {
 				if (activeMediaInstance.message.payload.mediaAssetId !== assetId ||
 					activeMediaInstance.message.payload.options.looping === true ||
 					activeMediaInstance.message.payload.options.paused === true ||
