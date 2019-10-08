@@ -43,7 +43,7 @@ export type MultipeerAdapterOptions = {
 export class MultipeerAdapter extends Adapter {
 
 	/** @inheritdoc */
-	public get name(): string { return this. constructor.name; }
+	public get name(): string { return this.constructor.name; }
 
 	// FUTURE: Make these child processes?
 	private sessions: { [id: string]: Session } = {};

@@ -26,7 +26,7 @@ const forwarded = require('forwarded-for');
 export class WebSocketAdapter extends Adapter {
 
 	/** @inheritdoc */
-	public get name(): string { return this. constructor.name; }
+	public get name(): string { return this.constructor.name; }
 
 	/** @inheritdoc */
 	public connectionRequest(ws: WS, request: http.IncomingMessage) {
