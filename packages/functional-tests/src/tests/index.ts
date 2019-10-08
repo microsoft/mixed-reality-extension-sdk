@@ -6,6 +6,7 @@ import { TestFactory } from '../test';
 
 import ActorSpamTest from './actor-spam-test';
 import AltspaceVRLibraryTest from './altspacevr-library-test';
+import AltspaceVRVideoTest from './altspacevr-video-test';
 import AssetEarlyAssignmentTest from './asset-early-assignment-test';
 import AssetMutabilityTest from './asset-mutability-test';
 import AssetPreloadTest from './asset-preload-test';
@@ -44,6 +45,7 @@ export type FactoryMap = { [key: string]: TestFactory };
 export const Factories = {
 	'actor-spam-test': (...args) => new ActorSpamTest(...args),
 	'altspacevr-library-test': (...args) => new AltspaceVRLibraryTest(...args),
+	'altspacevr-video-test': (...args) => new AltspaceVRVideoTest(...args),
 	'asset-early-assignment-test': (...args) => new AssetEarlyAssignmentTest(...args),
 	'asset-mutability-test': (...args) => new AssetMutabilityTest(...args),
 	'asset-preload-test': (...args) => new AssetPreloadTest(...args),

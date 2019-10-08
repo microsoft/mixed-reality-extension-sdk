@@ -308,9 +308,12 @@ export class Session extends EventEmitter {
 	}
 
 	public cacheAssetCreation(assetId: string, creatorId: string, duration?: number) {
-		const syncAsset = this.assetSet[assetId] = { id: assetId, duration } as Partial<SyncAsset>;
+		const syncAsset = this.assetSet[assetId] = {
+			id: assetId,
+			creatorMessageId: creatorId,
+			duration
+		} as Partial<SyncAsset>;
 		const creator = this.assetCreatorSet[creatorId];
-		syncAsset.creatorMessageId = creatorId;
 
 		// Updates are cached on send, creates are cached on receive,
 		// so it's possible something was updated while it was loading.
@@ -321,6 +324,29 @@ export class Session extends EventEmitter {
 				syncAsset.update.payload.asset
 			);
 			syncAsset.update = undefined;
+		}
+
+		// update end times on playing media instances with the now-known duration
+		for (const actorId of Object.keys(this.actorSet)) {
+			const syncActor = this.actorSet[actorId];
+			for (const activeMediaInstance of (syncActor.activeMediaInstances || [])) {
+				if (activeMediaInstance.message.payload.mediaAssetId !== assetId ||
+					activeMediaInstance.message.payload.options.looping === true ||
+					activeMediaInstance.message.payload.options.paused === true ||
+					duration === undefined) {
+					continue;
+				}
+
+				let timeRemaining: number = syncAsset.duration;
+				if (activeMediaInstance.message.payload.options.time !== undefined) {
+					timeRemaining -= activeMediaInstance.message.payload.options.time;
+				}
+				if (activeMediaInstance.message.payload.options.pitch !== undefined) {
+					timeRemaining /= Math.pow(2.0,
+						(activeMediaInstance.message.payload.options.pitch / 12.0));
+				}
+				activeMediaInstance.expirationTime = activeMediaInstance.basisTime + timeRemaining;
+			}
 		}
 	}
 
