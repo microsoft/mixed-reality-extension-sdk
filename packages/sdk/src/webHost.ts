@@ -186,7 +186,7 @@ export class WebHost {
 	 * @param route The route at which to mount the MRE adapter.
 	 * @param adapter The adapter to add.
 	 */
-	public addAdapter(route: WebSocketRoute, adapter: Adapter) {
+	private addAdapter(route: WebSocketRoute, adapter: Adapter) {
 		if (adapter) {
 			log.info('app', `Added ${adapter.name} at route ${route}`);
 			this.addWebSocketRoute(route, (ws, request) => {
