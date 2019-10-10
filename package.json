@@ -22,6 +22,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "bootstrap": "lerna bootstrap",
+    "postinstall": "npm run bootstrap",
     "clean": "tsc --build --clean",
     "build": "npm run build-only && npm run lint",
     "build-only": "tsc --build",
