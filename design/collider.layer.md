@@ -24,21 +24,35 @@ I believe a fixed collision layer strategy can cover the most common use cases. 
 ```ts
 type CollisionLayer
 	= 'default'
-	| 'ui'
 	| 'navigation'
-	| 'hologram';
+	| 'hologram'
+	| 'ui';
 ```
 
-* `Default` - Good for most actors. These will collide with all "physical" things: other default actors, navigation actors, and the non-MRE environment. It also blocks the UI cursor and receives press/grab events.
-* `UI` - Actors in this layer do not collide with anything but the UI cursor.
-* `Navigation` - For actors considered part of the environment. Can move/teleport onto these colliders, but cannot click or grab them.
-* `Hologram` - For "non-physical" actors. Only interact with the cursor and other holograms.
+* `default` - Good for most actors. These will collide with all "physical" things: other default actors, navigation actors, and the non-MRE environment. It also blocks the UI cursor and receives press/grab events.
+* `navigation` - For actors considered part of the environment. Can move/teleport onto these colliders, but cannot click or grab them.
+* `hologram` - For "non-physical" actors. Only interact with the cursor and other holograms.
+* `ui` - Actors in this layer do not collide with anything but the UI cursor.
 
-| Self \ Other  | Default | UI | Navigation | Hologram | Cursor | Environment | Player |
-|---------------|---------|----|------------|----------|--------|-------------|--------|
-| Default       | X       |    | X          |          | X      | X           |        |
-| UI            |         |    |            |          | X      |             |        |
-| Navigation    | X       |    | X          |          |        | X           | X      |
-| Hologram      |         |    |            | X        | X      |             |        |
+| Self \ Other  | Default | Navigation | Hologram | UI | Cursor | Environment | Player |
+|---------------|---------|------------|----------|----|--------|-------------|--------|
+| Default       | X       | X          |          |    | X      | X           |        |
+| Navigation    | X       | X          |          |    | *      | X           | X      |
+| Hologram      |         |            | X        |    | X      |             |        |
+| UI            |         |            |          |    | X      |             |        |
 
 
+Sync Considerations
+---------------------
+
+The new field is on the actor, and doesn't require any special considerations.
+
+Unity Considerations
+---------------------
+
+Candidate Altspace layers:
+
+* `default` => "Default"
+* `navigation` => "NavMesh"
+* `hologram` => "HolographicElements"
+* `ui` => "UI"

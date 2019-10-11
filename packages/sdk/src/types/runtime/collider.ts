@@ -9,12 +9,25 @@ import { CollisionHandler, TriggerHandler } from './physics';
 import { ColliderEventType, CollisionEventType, TriggerEventType } from './physics/collisionEventType';
 
 /**
+ * Controls what the assigned actors will collide with.
+ * * `default` - Collide with all "physical" objects.
+ * * `navigation` - Collide with the player and other physical objects. Behaviors disabled here.
+ * * `hologram` - Collide only with other holograms.
+ * * `ui` - Do not collide with anything but the cursor.
+ */
+export type CollisionLayer
+	= 'default'
+	| 'navigation'
+	| 'hologram'
+	| 'ui';
+
+/**
  * Describes the properties of a collider.
  */
 export interface ColliderLike {
 	enabled: boolean;
 	isTrigger: boolean;
-	// collisionLayer: CollisionLayer;
+	layer: CollisionLayer;
 	geometry: ColliderGeometry;
 	eventSubscriptions: ColliderEventType[];
 }
@@ -30,8 +43,8 @@ export class Collider implements ColliderLike {
 
 	public enabled = true;
 	public isTrigger = false;
+	public layer: CollisionLayer = 'default';
 	public geometry: Readonly<ColliderGeometry>;
-	// public collisionLayer = CollisionLayer.Object;
 
 	/** @hidden */
 	public get internal() { return this._internal; }
@@ -60,6 +73,7 @@ export class Collider implements ColliderLike {
 			if (from.geometry !== undefined) this.geometry = from.geometry;
 			if (from.enabled !== undefined) this.enabled = from.enabled;
 			if (from.isTrigger !== undefined) this.isTrigger = from.isTrigger;
+			if (from.layer !== undefined) this.layer = from.layer;
 		} else {
 			throw new Error("Must provide a valid collider-like to initialize from.");
 		}
@@ -108,7 +122,7 @@ export class Collider implements ColliderLike {
 		return {
 			enabled: this.enabled,
 			isTrigger: this.isTrigger,
-			// collisionLayer: this.collisionLayer,
+			layer: this.layer,
 			geometry: this.geometry,
 			eventSubscriptions: this.eventSubscriptions
 		} as ColliderLike;
