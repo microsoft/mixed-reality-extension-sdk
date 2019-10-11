@@ -10,10 +10,12 @@ import { ColliderEventType, CollisionEventType, TriggerEventType } from './physi
 
 /**
  * Controls what the assigned actors will collide with.
- * * `default` - Collide with all "physical" objects.
- * * `navigation` - Collide with the player and other physical objects. Behaviors disabled here.
- * * `hologram` - Collide only with other holograms.
- * * `ui` - Do not collide with anything but the cursor.
+ * * `default` - Good for most actors. These will collide with all "physical" things: other default actors,
+ * navigation actors, and the non-MRE environment. It also blocks the UI cursor and receives press/grab events.
+ * * `navigation` - For actors considered part of the environment. Can move/teleport onto these colliders,
+ * but cannot click or grab them.
+ * * `hologram` - For "non-physical" actors. Only interact with the cursor and other holograms.
+ * * `ui` - Actors in this layer do not collide with anything but the UI cursor.
  */
 export type CollisionLayer
 	= 'default'
