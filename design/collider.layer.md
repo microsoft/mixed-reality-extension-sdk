@@ -56,6 +56,7 @@ export enum CollisionLayer {
 | Hologram      |         |            | X        |    | X      |             |        |
 | UI            |         |            |          |    | X      |             |        |
 
+\* Blocks cursor, but does not get click/grab events.
 
 Sync Considerations
 ---------------------
