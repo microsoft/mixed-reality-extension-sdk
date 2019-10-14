@@ -10,18 +10,29 @@ import { ColliderEventType, CollisionEventType, TriggerEventType } from './physi
 
 /**
  * Controls what the assigned actors will collide with.
- * * `default` - Good for most actors. These will collide with all "physical" things: other default actors,
- * navigation actors, and the non-MRE environment. It also blocks the UI cursor and receives press/grab events.
- * * `navigation` - For actors considered part of the environment. Can move/teleport onto these colliders,
- * but cannot click or grab them.
- * * `hologram` - For "non-physical" actors. Only interact with the cursor and other holograms.
- * * `ui` - Actors in this layer do not collide with anything but the UI cursor.
  */
-export type CollisionLayer
-	= 'default'
-	| 'navigation'
-	| 'hologram'
-	| 'ui';
+export enum CollisionLayer {
+	/**
+	 * Good for most actors. These will collide with all "physical" things: other default actors,
+	 * navigation actors, and the non-MRE environment. It also blocks the UI cursor and receives press/grab events.
+	 */
+	Default = 'default',
+	/**
+	 * For actors considered part of the environment. Can move/teleport onto these colliders,
+	 * but cannot click or grab them. For example, the floor, an invisible wall, or an elevator platform.
+	 */
+	Navigation = 'navigation',
+	/**
+	 * For "non-physical" actors. Only interact with the cursor (with press/grab events) and other holograms.
+	 * For example, if you wanted a group of actors to behave as a separate physics simulation
+	 * from the main scene.
+	 */
+	Hologram = 'hologram',
+	/**
+	 * Actors in this layer do not collide with anything but the UI cursor.
+	 */
+	UI = 'ui'
+}
 
 /**
  * Describes the properties of a collider.
@@ -45,7 +56,7 @@ export class Collider implements ColliderLike {
 
 	public enabled = true;
 	public isTrigger = false;
-	public layer: CollisionLayer = 'default';
+	public layer = CollisionLayer.Default;
 	public geometry: Readonly<ColliderGeometry>;
 
 	/** @hidden */
