@@ -17,6 +17,7 @@ import {
 	Collider,
 	ColliderLike,
 	ColliderType,
+	CollisionLayer,
 	Light,
 	LightLike,
 	LookAt,
@@ -239,11 +240,12 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	 * Creates a new actor hierarchy from the provided prefab.
 	 * @param context The SDK context object.
 	 * @param options.prefabId The ID of a prefab asset to spawn.
+	 * @param options.collisionLayer If the prefab contains colliders, put them on this layer.
 	 * @param options.actor The initial state of the root actor.
-	 * given a collider type when loaded @see AssetManager.loadGltf.
 	 */
 	public static CreateFromPrefab(context: Context, options: {
 		prefabId: string,
+		collisionLayer?: CollisionLayer,
 		actor?: Partial<ActorLike>
 	}): Actor;
 
@@ -251,11 +253,12 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	 * Creates a new actor hierarchy from the provided prefab.
 	 * @param context The SDK context object.
 	 * @param options.prefab The prefab asset to spawn.
+	 * @param options.collisionLayer If the prefab contains colliders, put them on this layer.
 	 * @param options.actor The initial state of the root actor.
-	 * given a collider type when loaded @see AssetManager.loadGltf.
 	 */
 	public static CreateFromPrefab(context: Context, options: {
 		prefab: Prefab,
+		collisionLayer?: CollisionLayer,
 		actor?: Partial<ActorLike>
 	}): Actor;
 
@@ -263,11 +266,12 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	 * Creates a new actor hierarchy from the provided prefab.
 	 * @param context The SDK context object.
 	 * @param options.firstPrefabFrom An asset array containing at least one prefab.
+	 * @param options.collisionLayer If the prefab contains colliders, put them on this layer.
 	 * @param options.actor The initial state of the root actor.
-	 * given a collider type when loaded @see AssetManager.loadGltf.
 	 */
 	public static CreateFromPrefab(context: Context, options: {
 		firstPrefabFrom: Asset[],
+		collisionLayer?: CollisionLayer,
 		actor?: Partial<ActorLike>
 	}): Actor;
 
@@ -276,6 +280,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 		prefabId?: string,
 		prefab?: Prefab,
 		firstPrefabFrom?: Asset[],
+		collisionLayer?: CollisionLayer,
 		actor?: Partial<ActorLike>
 	}): Actor {
 		let prefabId = options.prefabId;
@@ -289,7 +294,11 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 			throw new Error("No prefab supplied to CreateFromPrefab");
 		}
 
-		return context.internal.CreateFromPrefab({ prefabId, actor: options.actor });
+		return context.internal.CreateFromPrefab({
+			prefabId,
+			collisionLayer: options.collisionLayer,
+			actor: options.actor
+		});
 	}
 
 	/**

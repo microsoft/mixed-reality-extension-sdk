@@ -18,6 +18,7 @@ import {
 	BehaviorType,
 	ColliderType,
 	CollisionEvent,
+	CollisionLayer,
 	Context,
 	CreateAnimationOptions,
 	MediaCommand,
@@ -94,6 +95,7 @@ export class InternalContext {
 
 	public CreateFromPrefab(options: {
 		prefabId: string,
+		collisionLayer?: CollisionLayer,
 		actor?: Partial<ActorLike>
 	}): Actor {
 		return this.createActorFromPayload({
