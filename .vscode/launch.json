@@ -25,7 +25,10 @@
       "internalConsoleOptions": "openOnSessionStart",
       "autoAttachChildProcesses": true,
       "console": "internalConsole",
-      "outputCapture": "std"
+	  "outputCapture": "std",
+	  "env": {
+		  // "MRE_LOGGING": "network"
+	  }
     }
   ]
 }

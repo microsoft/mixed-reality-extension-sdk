@@ -12,7 +12,7 @@ const defaultBallColor = MRE.Color3.FromInts(220, 150, 150);
 const collisionPegColor = MRE.Color3.FromInts(0, 252, 75);
 
 export default class PhysicsSimTest extends Test {
-	public expectedResultDescription = "Balls trickle through the plinko board";
+	public expectedResultDescription = "Balls trickle through the plinko board.\nClick to disable a peg.";
 	private assets: MRE.AssetContainer;
 	private interval: NodeJS.Timeout;
 	private defaultPegMat: MRE.Material;
