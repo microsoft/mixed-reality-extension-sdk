@@ -9,12 +9,38 @@ import { CollisionHandler, TriggerHandler } from './physics';
 import { ColliderEventType, CollisionEventType, TriggerEventType } from './physics/collisionEventType';
 
 /**
+ * Controls what the assigned actors will collide with.
+ */
+export enum CollisionLayer {
+	/**
+	 * Good for most actors. These will collide with all "physical" things: other default actors,
+	 * navigation actors, and the non-MRE environment. It also blocks the UI cursor and receives press/grab events.
+	 */
+	Default = 'default',
+	/**
+	 * For actors considered part of the environment. Can move/teleport onto these colliders,
+	 * but cannot click or grab them. For example, the floor, an invisible wall, or an elevator platform.
+	 */
+	Navigation = 'navigation',
+	/**
+	 * For "non-physical" actors. Only interact with the cursor (with press/grab events) and other holograms.
+	 * For example, if you wanted a group of actors to behave as a separate physics simulation
+	 * from the main scene.
+	 */
+	Hologram = 'hologram',
+	/**
+	 * Actors in this layer do not collide with anything but the UI cursor.
+	 */
+	UI = 'ui'
+}
+
+/**
  * Describes the properties of a collider.
  */
 export interface ColliderLike {
 	enabled: boolean;
 	isTrigger: boolean;
-	// collisionLayer: CollisionLayer;
+	layer: CollisionLayer;
 	geometry: ColliderGeometry;
 	eventSubscriptions: ColliderEventType[];
 }
@@ -30,8 +56,8 @@ export class Collider implements ColliderLike {
 
 	public enabled = true;
 	public isTrigger = false;
+	public layer = CollisionLayer.Default;
 	public geometry: Readonly<ColliderGeometry>;
-	// public collisionLayer = CollisionLayer.Object;
 
 	/** @hidden */
 	public get internal() { return this._internal; }
@@ -60,6 +86,7 @@ export class Collider implements ColliderLike {
 			if (from.geometry !== undefined) this.geometry = from.geometry;
 			if (from.enabled !== undefined) this.enabled = from.enabled;
 			if (from.isTrigger !== undefined) this.isTrigger = from.isTrigger;
+			if (from.layer !== undefined) this.layer = from.layer;
 		} else {
 			throw new Error("Must provide a valid collider-like to initialize from.");
 		}
@@ -108,7 +135,7 @@ export class Collider implements ColliderLike {
 		return {
 			enabled: this.enabled,
 			isTrigger: this.isTrigger,
-			// collisionLayer: this.collisionLayer,
+			layer: this.layer,
 			geometry: this.geometry,
 			eventSubscriptions: this.eventSubscriptions
 		} as ColliderLike;

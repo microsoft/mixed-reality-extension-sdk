@@ -4,7 +4,7 @@
  */
 
 import { CreateActorCommon, Payload } from '.';
-import { ColliderType } from '../../runtime';
+import { ColliderType, CollisionLayer } from '../../runtime';
 import { AssetLike, AssetSource } from '../../runtime/assets';
 
 export type CreateColliderType = ColliderType | 'none';
@@ -50,6 +50,7 @@ export type AssetUpdate = Payload & {
 export type CreateFromPrefab = CreateActorCommon & {
 	type: 'create-from-prefab';
 	prefabId: string;
+	collisionLayer?: CollisionLayer;
 };
 
 /** @hidden */
