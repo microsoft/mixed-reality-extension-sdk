@@ -212,6 +212,7 @@ export class ClientSync extends Protocols.Protocol {
 	 * Driver for the `sync-animations` synchronization stage.
 	 */
 	public 'stage:sync-animations' = async () => {
+		return Promise.resolve();
 		const authoritativeClient = this.client.session.authoritativeClient;
 		if (!authoritativeClient) {
 			return Promise.resolve();
