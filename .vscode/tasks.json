@@ -32,6 +32,12 @@
 			"script": "build",
 			"path": "packages/gltf-gen/",
 			"problemMatcher": []
+		},
+		{
+			"type": "npm",
+			"script": "build-docs",
+			"group": "build",
+			"problemMatcher": []
 		}
 	]
 }

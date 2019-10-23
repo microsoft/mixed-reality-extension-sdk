@@ -275,7 +275,6 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 		actor?: Partial<ActorLike>
 	}): Actor;
 
-	/** @hidden */
 	public static CreateFromPrefab(context: Context, options: {
 		prefabId?: string,
 		prefab?: Prefab,
@@ -470,7 +469,6 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 		isTrigger: boolean
 	): void;
 
-	/** @ignore */
 	public setCollider(
 		colliderType: ColliderType,
 		// collisionLayer: CollisionLayer,
