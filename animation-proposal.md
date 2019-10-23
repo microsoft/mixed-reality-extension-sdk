@@ -156,6 +156,8 @@ export type InterpolationValueType
 	| Partial<Vector2>
 	| Partial<Color>
 	| number
+	| boolean
+	| GroupMask
 	;
 
 /**
@@ -249,14 +251,14 @@ export type InterpolationDirection
 ```ts
 // Interpolate a vector (lerp).
 this.context.interpolate(
-	actor.selector.transform.app.position,
+	actor.selector('transform.app.position'),
 	null, // use current value as starting value
 	position,
 	0.2);
 
 // Interpolate a quaternion (slerp).
 this.context.interpolate(
-	actor.selector.transform.app.rotation,
+	actor.selector('transform.app.rotation'),
 	null, // use current value as starting value
 	rotation,
 	0.2,
@@ -264,7 +266,7 @@ this.context.interpolate(
 
 // Interpolate a number.
 this.context.interpolate(
-	actor.selector.light.intensity,
+	actor.selector('light.intensity'),
 	null, // use current value as starting value
 	1,
 	0.2,
@@ -272,14 +274,15 @@ this.context.interpolate(
 
 // Interpolate a color.
 this.context.interpolate(
-	material.selector.color,
+	material.selector('color'),
+	null, // use current value as starting value
 	color,
 	0.2,
 	{ curve: "ease-out" });
 
 // Interpolate a value on a custom curve (a "bounce", in this case).
 this.context.interpolate(
-	material.selector.color,
+	material.selector('color'),
 	null, // use current value as starting value
 	color,
 	0.2,
@@ -290,9 +293,9 @@ this.context.interpolate(
 // continuous interpolation to a moving target, and alleviating the need to
 // subscribe to the target actor's transform.
 this.context.interpolate(
-	actor.selector.transform.app.position,
+	actor.selector('transform.app.position'),
 	null, // use current value as starting value
-	target.selector.transform.app.position,
+	target.selector('transform.app.position'),
 	0.2, {
 		iterationCount: "infinite"
 	});
@@ -300,25 +303,27 @@ this.context.interpolate(
 // Cancel an interpolation. This applies to all types of interpolations, but
 // is particularly useful for stopping continuous interpolations.
 this.context.interpolate(
-	actor.selector.transform.app.position,
-	null, // use current value as starting value
-	target.selector.transform.app.position,
+	actor.selector('transform.app.position'),
+	null,
+	target.selector('transform.app.position'),
 	null);
 )
 ```
 
 #### Add `Actor.selector` and `Asset.selector` accessors
 
-Add a `selector` getters to classes `Actor` and `Asset`. `selector` exposes the schema of mutable properties of the object in a way that can resolve to an absolute path string suitable for the host to look up the value client-side.
+Add a `selector` method to classes `Actor` and `Asset`. `selector`'s argument is a string representation of the path to the field to animate, suitable for the host to look up the value client-side. The selector method should validate the field path and that the field is animatable.
 
 ```ts
 /**
- * Returns an absolute reference to the given field.
+ * Returns an absolute reference to the given field, including object type and unique id.
  * @param path The relative path to the field, e.g.: "transform.local.position".
  * @returns An absolute path to the field, suitable for use by the host to look
- * up the value client-side.
+ * up the value client-side. Example:
+ * 	const selector = pawn.selector('transform.local.position');
+ *	console.log(selector); // prints '//Actor/<actor-id>/transform/local/position'
  */
-public get selector: Selector;
+public selector(path: string): Selector;
 ```
 
 
@@ -346,7 +351,7 @@ How the actor patching system works will not play well with interpolations in so
 ```ts
 actor.transform.local.position.x = 1;
 this.context.interpolate(
-	actor.selector.transform.local.position.x,
+	actor.selector('transform.local.position.x'),
 	null, // use current value as starting value
 	5,
 	0.2);
