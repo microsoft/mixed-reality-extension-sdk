@@ -24,6 +24,19 @@ export default class CollisionLayerTest extends Test {
 		const layers = Object.values(MRE.CollisionLayer);
 		const tableLayout = new TableLayout(5, 5, 0.2, 0.5);
 
+		MRE.Actor.CreatePrimitive(new MRE.AssetContainer(this.app.context), {
+			definition: {
+				shape: MRE.PrimitiveShape.Box,
+				dimensions: { x: 1, y: 0.1, z: 1 }
+			},
+			actor: {
+				name: 'platform',
+				parentId: root.id,
+				transform: { local: { position: { x: 2 } } },
+				collider: { geometry: { shape: 'auto' }, layer: MRE.CollisionLayer.Navigation }
+			}
+		});
+
 		// place column headers
 		for (let i = 0; i < layers.length; i++) {
 			tableLayout.setCellContents(0, 1 + i, MRE.Actor.Create(this.app.context, {
