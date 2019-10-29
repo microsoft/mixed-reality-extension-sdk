@@ -4,18 +4,105 @@ Animations
 Our current animation system is under-featured, unstable, and based on tech (Unity Animation components) that is too
 rigid for our purposes. We need an animation system that can support the following:
 
-1. Native animations - Animations added to actors from glTF or native Unity sources should support the basic API: play, pause, seek.
+1. Native animations - Animations added to actors from glTF or native Unity sources should support the basic API: play,
+	pause, seek.
 2. Keyframes - Vary actor/asset fields through a sequence of values on a timeline.
 	1. Interpolation - Make simple single-target two-frame animations easy to generate.
-	2. Moving targets - Setting/interpolating to/from another actor's dynamic values. Useful for look-at and fly-to type animations.
+	2. Moving targets - Setting/interpolating to/from another actor's dynamic values. Useful for look-at and
+		fly-to type animations.
 3. Easing - Support different interpolation curves between keyframes.
 	1. No easing - Setting fields that cannot be interpolated should also be supported (string, boolean, etc.).
 4. Chaining - Begin an animation immediately after another finishes, or on some other event (behavior tie-in?)
-5. Multiple targets - Animate multiple actors/assets, and multiple properties, in lock-step (equivalent to Unity's animation curves)
+5. Multiple targets - Animate multiple actors/assets, and multiple properties, in lock-step (equivalent to Unity's
+	animation curves)
 
 To address this need, I propose the following API:
 
-Use Cases
+API Design
+-----------
+
+Animations are assets. They are created explicitly by a function on asset containers (
+`AssetContainer.createAnimation`). Native animations from library or glTF actors do not create these assets, instead
+creating animation instances only (see [Instances](#instances)).
+
+When created directly, animations are created as an array of "tracks", each composed of:
+1. A generic path to a field that can be animated (see [Paths](#paths)).
+2. An array of keyframes, each composed of:
+	1. A time value.
+	2. A valid value for the targeted path.
+	3. An optional bezier easing function.
+
+```ts
+type AnimationLike = {
+	duration: number;
+	targetCount: number;
+}
+
+class AssetContainer {
+	public createAnimation(name: string, options: { targetCount?: number, tracks: Track<AnimationProp>[] }): Animation;
+}
+
+type AnimationProp = Vector2 | Vector3 | Quaternion | Color3 | Color4 | number | string | boolean;
+
+type Track<T extends AnimationProp> = {
+	target: TargetPath<T>;
+	keyframes: Keyframe<T>[];
+}
+
+type Keyframe<T extends AnimationProp> = {
+	time: number;
+	value: T;
+	easing?: EasingFunction;
+}
+
+type EasingFunction = [number, number, number, number];
+```
+
+### Paths
+
+Paths are references to properties on an object that can be animated (Actor, Material, etc.). Paths do not reference
+properties on a *particular* object, but instead reference a generic object of a given type by index. When bound,
+the animation will be given the list of objects which it will be modifying, and these path indices refer to that
+argument. Over the wire these are represented as strings, but are easily generated in the API with helper functions.
+
+```ts
+class TargetPath<T> {
+	constructor(name: string, children: { [prop: string]: TargetPath<any> }) { }
+}
+const actorTree = new TargetPath<any>("actor.0", {
+	transform: new TargetPath<any>("transform", {
+		local: new TargetPath<any>("local", {
+			position: new TargetPath<Vector3>("position", {
+				x: new TargetPath<number>("x"),
+				y: new TargetPath<number>("y"),
+				z: new TargetPath<number>("z")
+			})
+		})
+	})
+})
+
+const track = {
+	target: new TargetPath<Actor, Vector3>(0).transform.local.position
+	// ...
+};
+```
+
+
+### Instances
+
+Animation instances are animations that have been bound to a particular set of actors and materials. These instances
+can be created by explicitly binding an animation (`Animation.bind(...objects)`), or may be returned during actor
+creation from `Actor.CreateFromPrefab`/`Gltf`/`Library`. Unlike the asset, instances can be played, paused, set speed,
+etc.
+
+### Convenience function
+
+For many purposes, creating and managing an animation is overkill. This is why objects that can be animated have a
+convenient fire-and-forget function: `animateTo`. This function takes a "destination" ActorLike or MaterialLike and
+a duration as input, generates a simple one-frame animation from all the fields given in the -Like, binds it to the
+object, and plays it.
+
+Examples
 ----------
 
 ```ts
@@ -30,9 +117,6 @@ const actor = MRE.Actor.CreateFromPrefab(this.context, {
 Loading and playing a native animation from glTF:
 
 ```ts
-const walkAnim: MRE.Animation = assets.animations.find(a => a.name === 'walk');
-walkAnim.play();
-// or
 actor.animations('walk').play();
 ```
 
@@ -44,11 +128,12 @@ let bullseye: MRE.Actor;
 
 // Animations are assets
 const arcAnim: MRE.Animation = assets.createAnimation('arc', {
+	targetCount: 1,
 	tracks: [
 		// animate position.x straight there
 		{
 			// Easy-to-understand autocompleting syntax for target paths
-			target: MRE.Animation.Actor(arrow).transform.app.position.x,
+			target: MRE.Animation.Actor(0).transform.app.position.x,
 			// t=0 keyframe is omitted, so start from actor's current value
 			keyframes: [{
 				time: 5,
@@ -58,7 +143,7 @@ const arcAnim: MRE.Animation = assets.createAnimation('arc', {
 		},
 		// animate position.z straight there
 		{
-			target: MRE.Animation.Actor(arrow).transform.app.position.z,
+			target: MRE.Animation.Actor(0).transform.app.position.z,
 			keyframes: [{
 				time: 5,
 				value: bullseye.transform.app.position.z,
@@ -68,7 +153,7 @@ const arcAnim: MRE.Animation = assets.createAnimation('arc', {
 		// arc position.y via a point above the midpoint between start and bullseye
 		// assume bullseye is on a level with the start point
 		{
-			target: MRE.Animation.Actor(arrow).transform.app.position.y,
+			target: MRE.Animation.Actor(0).transform.app.position.y,
 			keyframes: [{
 				time: 2.5,
 				value: arrow.transform.app.position.y + 0.57 * MRE.Vector3.Distance(
@@ -85,7 +170,7 @@ const arcAnim: MRE.Animation = assets.createAnimation('arc', {
 		},
 		// rotate arrow to face direction of travel
 		{
-			target: MRE.Animation.Actor(arrow).transform.app.rotation,
+			target: MRE.Animation.Actor(0).transform.app.rotation,
 			keyframes: [{
 				time: 0,
 				value: MRE.Quaternion.FromEulerAngles(45 * MRE.DegreesToRadians, 0, 0);
@@ -97,7 +182,7 @@ const arcAnim: MRE.Animation = assets.createAnimation('arc', {
 		}
 	]
 });
-arcAnim.play();
+arcAnim.play(arrow);
 ```
 
 Fade out a material over one second:
@@ -112,8 +197,8 @@ const anim: MRE.Animation = material.animateTo({
 ```
 
 
-API Design
------------
+Scratch
+--------
 
 ```ts
 type Animatible = Actor | Material;
@@ -162,5 +247,9 @@ const Easing = {
 	Linear: [0, 0, 1, 1],
 	QuadraticIn: [0.55, 0.085, 0.68, 0.53],
 	// ...
+}
+
+class AnimationInstance {
+
 }
 ```
