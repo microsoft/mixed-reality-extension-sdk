@@ -36,6 +36,7 @@ When created directly, animations are created as an array of "tracks", each comp
 type Animatible = Actor | Material;
 
 class Animation {
+	id: string;
 	duration: number;
 	targetCount: number;
 }
@@ -109,18 +110,35 @@ etc. Animation instances can either be stored directly, or obtained from any of 
 in the animation. Instances participate in the patching system, so changing properties on the animation instance
 are pushed down to clients automatically.
 
+An animation instance can be set to start another animation on the instant that it finishes, by setting an instance's
+`continueWith` property. Because it's set in advance, there is zero downtime between one ending and another starting,
+and does not require a round trip.
+
 ```ts
 class Animation {
 	bind(...args: Animatible[]): AnimationInstance;
 }
 
 class AnimationInstance {
-	play();
-	pause();
+	/** Generated unique ID */
+	id: string;
+
+	/** Playback speed multiplier */
 	speed: number;
+	/** The current playback time, based on start time and speed */
 	time: number;
+	/** When multiple animations play together, this is the relative strength of this instance */
+	weight: number;
+	/** The list of actors/materials that participate in this instance */
 	targets: Animatible[];
+	/** The playing animation */
 	animation: Animation;
+	/** Start these animation instances after this one completes */
+	continueWith: AnimationInstance[];
+
+	play(): void;
+	pause(): void;
+	finished(): Promise<void>;
 }
 
 const ticktock: MRE.Animation = assets.createAnimation(...);
@@ -145,14 +163,14 @@ object, and plays it.
 class Animation {
 	public static AnimateTo(target: Animatible, options: {
 		duration: number;
-		easing?: EasingFunction;
 		destination: ActorLike | MaterialLike;
+		easing?: EasingFunction;
 	}): AnimationInstance { }
 }
-const anim: MRE.AnimationInstance = material.animateTo({
+const anim: MRE.AnimationInstance = Animation.AnimateTo(material, {
 	duration: 1,
 	easing: MRE.Animation.Easing.Linear,
-	// each nested non-undefined property is converted to a track in a two-frame animation
+	// each nested non-undefined property is converted to a track in a one-frame animation
 	target: { color: { a: 0 } } as MRE.MaterialLike
 });
 ```
