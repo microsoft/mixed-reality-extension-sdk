@@ -36,9 +36,9 @@ When created directly, animations are created as an array of "tracks", each comp
 type Animatible = Actor | Material;
 
 class Animation {
-	id: string;
-	duration: number;
-	targetCount: number;
+	id: Readonly<string>;
+	duration: Readonly<number>;
+	targetCount: Readonly<number>;
 }
 
 class AssetContainer {
@@ -121,24 +121,39 @@ class Animation {
 
 class AnimationInstance {
 	/** Generated unique ID */
-	id: string;
+	id: Readonly<string>;
 
 	/** Playback speed multiplier */
 	speed: number;
-	/** The current playback time, based on start time and speed */
-	time: number;
+	/** What happens when the animation hits the last frame */
+	wrapMode: WrapMode;
 	/** When multiple animations play together, this is the relative strength of this instance */
 	weight: number;
+	/** The current playback time, based on start time and speed */
+	time: number;
 	/** The list of actors/materials that participate in this instance */
-	targets: Animatible[];
+	targets: Readonly<Animatible[]>;
 	/** The playing animation */
-	animation: Animation;
+	animation: Readonly<Animation>;
 	/** Start these animation instances after this one completes */
 	continueWith: AnimationInstance[];
 
+	/** Current play state */
+	isPlaying: Readonly<boolean>;
+
 	play(): void;
 	pause(): void;
+
+	/** Only fired if wrapMode is Once */
 	finished(): Promise<void>;
+	/** Sets the `continueWith` property, and returns the next anim instance */
+	continueWith(otherAnim: AnimationInstace): AnimationInstance;
+}
+
+enum WrapMode {
+	Once = 'once',
+	Loop = 'loop',
+	Yoyo = 'yoyo'
 }
 
 const ticktock: MRE.Animation = assets.createAnimation(...);
@@ -174,6 +189,30 @@ const anim: MRE.AnimationInstance = Animation.AnimateTo(material, {
 	target: { color: { a: 0 } } as MRE.MaterialLike
 });
 ```
+
+Network Messaging
+------------------
+
+1. Modify `create-asset` for creating animations.
+2. Modify `asset-loaded` for getting animation creation results back.
+3. Modify `object-spawned` to include animation instances in prefabs/library actors.
+4. New message `create-animinstance`, sent when an animation is bound to actors/materials.
+5. New message `animinstance-update`, sent when unpredictable animation instance properties are patched, i.e.
+	properties other than `time`. This includes `isPlaying`, which is set by `play()` and `pause()`.
+
+`AnimationInstance.finished` might not require a round trip if a server-side timer can be used. Perhaps this
+server-side timer could also be used for "animation events"?
+
+Synchronization Concerns
+--------------------------
+
+
+
+
+Unity Concerns
+---------------
+
+
 
 Examples
 ----------
