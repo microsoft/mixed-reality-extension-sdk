@@ -33,7 +33,9 @@ When created directly, animations are created as an array of "tracks", each comp
 	3. An optional bezier easing function.
 
 ```ts
-type AnimationLike = {
+type Animatible = Actor | Material;
+
+class Animation {
 	duration: number;
 	targetCount: number;
 }
@@ -67,33 +69,70 @@ argument. Over the wire these are represented as strings, but are easily generat
 
 ```ts
 class TargetPath<T> {
-	constructor(name: string, children: { [prop: string]: TargetPath<any> }) { }
+	public parent: TargetPath<any>;
+	constructor(name: string, children: Map<string, TargetPath<any>>) {
+		for (const [k,v] of children) {
+			this[k] = v;
+			v.parent = this;
+		}
+	}
+	public toJSON() {
+		// convert tree into string
+	}
 }
-const actorTree = new TargetPath<any>("actor.0", {
-	transform: new TargetPath<any>("transform", {
-		local: new TargetPath<any>("local", {
-			position: new TargetPath<Vector3>("position", {
-				x: new TargetPath<number>("x"),
-				y: new TargetPath<number>("y"),
-				z: new TargetPath<number>("z")
+function AnimateActor(index: number) {
+	return new TargetPath<never>(`actor.${index}`, {
+		transform: new TargetPath<never>("transform", {
+			local: new TargetPath<never>("local", {
+				position: new TargetPath<Vector3>("position", {
+					x: new TargetPath<number>("x"),
+					y: new TargetPath<number>("y"),
+					z: new TargetPath<number>("z")
+				})
 			})
 		})
-	})
-})
+	});
+}
 
 const track = {
-	target: new TargetPath<Actor, Vector3>(0).transform.local.position
+	target: AnimateActor(0).transform.local.position
 	// ...
-};
+} as Track<Vector3>;
 ```
-
 
 ### Instances
 
 Animation instances are animations that have been bound to a particular set of actors and materials. These instances
 can be created by explicitly binding an animation (`Animation.bind(...objects)`), or may be returned during actor
 creation from `Actor.CreateFromPrefab`/`Gltf`/`Library`. Unlike the asset, instances can be played, paused, set speed,
-etc.
+etc. Animation instances can either be stored directly, or obtained from any of the actors/materials that participate
+in the animation. Instances participate in the patching system, so changing properties on the animation instance
+are pushed down to clients automatically.
+
+```ts
+class Animation {
+	bind(...args: Animatible[]): AnimationInstance;
+}
+
+class AnimationInstance {
+	play();
+	pause();
+	speed: number;
+	time: number;
+	targets: Animatible[];
+	animation: Animation;
+}
+
+const ticktock: MRE.Animation = assets.createAnimation(...);
+const animInstance: MRE.AnimationInstance = ticktock.bind(firstBall, lastBall);
+animInstance.speed = 1.5;
+animInstance.play();
+
+// this prefab has an animation instance pre-allocated
+const cradle = MRE.Actor.CreateFromPrefab(context, { prefab: assets.prefabs[0] });
+await cradle.created();
+cradle.animations('rock').play();
+```
 
 ### Convenience function
 
@@ -101,6 +140,22 @@ For many purposes, creating and managing an animation is overkill. This is why o
 convenient fire-and-forget function: `animateTo`. This function takes a "destination" ActorLike or MaterialLike and
 a duration as input, generates a simple one-frame animation from all the fields given in the -Like, binds it to the
 object, and plays it.
+
+```ts
+class Animation {
+	public static AnimateTo(target: Animatible, options: {
+		duration: number;
+		easing?: EasingFunction;
+		destination: ActorLike | MaterialLike;
+	}): AnimationInstance { }
+}
+const anim: MRE.AnimationInstance = material.animateTo({
+	duration: 1,
+	easing: MRE.Animation.Easing.Linear,
+	// each nested non-undefined property is converted to a track in a two-frame animation
+	target: { color: { a: 0 } } as MRE.MaterialLike
+});
+```
 
 Examples
 ----------
