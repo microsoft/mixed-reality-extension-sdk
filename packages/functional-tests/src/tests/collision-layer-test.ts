@@ -32,7 +32,7 @@ export default class CollisionLayerTest extends Test {
 				appearance: {
 					meshId: this.assets.createBoxMesh('platformBox', 1, 0.1, 1).id
 				},
-				collider: { geometry: { shape: 'auto' }, layer: MRE.CollisionLayer.Navigation }
+				collider: { geometry: { shape: MRE.ColliderType.Auto }, layer: MRE.CollisionLayer.Navigation }
 			}
 		});
 
@@ -103,7 +103,7 @@ export default class CollisionLayerTest extends Test {
 					materialId: boxDefaultMat.id
 				},
 				collider: {
-					geometry: { shape: 'auto' },
+					geometry: { shape: MRE.ColliderType.Auto },
 					isTrigger: true,
 					layer: layer1
 				}
@@ -125,7 +125,7 @@ export default class CollisionLayerTest extends Test {
 					materialId: ballMat.id
 				},
 				collider: {
-					geometry: { shape: 'auto' },
+					geometry: { shape: MRE.ColliderType.Auto },
 					layer: layer2
 				},
 				rigidBody: {

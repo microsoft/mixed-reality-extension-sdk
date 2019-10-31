@@ -141,7 +141,7 @@ export default class LightTest extends Test {
 				appearance: {
 					meshId: this.assets.createSphereMesh('sphere', 0.1).id
 				},
-				collider: { geometry: { shape: 'auto' } },
+				collider: { geometry: { shape: MRE.ColliderType.Auto } },
 				light: { type: 'spot', intensity: 5 } // Add a light component.
 			}
 		});

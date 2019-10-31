@@ -4,7 +4,6 @@
  */
 
 import * as MRE from '@microsoft/mixed-reality-extension-sdk';
-import * as MRERPC from '@microsoft/mixed-reality-extension-sdk/built/rpc';
 
 import Menu from './menu';
 import { Test, TestFactory } from './test';
@@ -230,7 +229,7 @@ export class App {
 					}
 				},
 				collider: {
-					geometry: { shape: 'auto' }
+					geometry: { shape: MRE.ColliderType.Auto }
 				}
 			}
 		});
@@ -266,7 +265,7 @@ export class App {
 						position: { x: 0, y: -0.05, z: -1 }
 					}
 				},
-				collider: { geometry: { shape: 'auto' } }
+				collider: { geometry: { shape: MRE.ColliderType.Auto } }
 			}
 		});
 
@@ -282,7 +281,7 @@ export class App {
 						position: { x: 0, y: 1, z: 0.1 }
 					}
 				},
-				collider: { geometry: { shape: 'auto' } }
+				collider: { geometry: { shape: MRE.ColliderType.Auto } }
 			}
 		});
 
@@ -339,7 +338,7 @@ export class App {
 						position: { x: -0.65, y: 0.15, z: -1.95 }
 					}
 				},
-				collider: { geometry: { shape: 'auto' } }
+				collider: { geometry: { shape: MRE.ColliderType.Auto } }
 			}
 		});
 
@@ -381,7 +380,7 @@ export class App {
 						position: { x: 0.65, y: 0.15, z: -1.95 }
 					}
 				},
-				collider: { geometry: { shape: 'auto' } }
+				collider: { geometry: { shape: MRE.ColliderType.Auto } }
 			}
 		});
 

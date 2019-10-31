@@ -3,36 +3,42 @@
  * Licensed under the MIT License.
  */
 
+import { ColliderType } from '.';
 import { Vector3Like } from "../../..";
 
 /**
  * Collider parameters specific to a sphere collider.
  */
-export interface SphereColliderGeometry {
-	shape: 'sphere';
+export type SphereColliderGeometry = {
+	shape: ColliderType.Sphere;
 	center?: Readonly<Vector3Like>;
 	radius?: number;
-}
+};
 
 /**
  * Collider parameters specific to a box collider
  */
-export interface BoxColliderGeometry {
-	shape: 'box';
+export type BoxColliderGeometry = {
+	shape: ColliderType.Box;
 	center?: Readonly<Vector3Like>;
 	size?: Readonly<Vector3Like>;
-}
+};
 
-export interface CapsuleColliderGeometry {
-	shape: 'capsule';
+/**
+ * Collider parameters specific to a capsule collider
+ */
+export type CapsuleColliderGeometry = {
+	shape: ColliderType.Capsule;
 	center?: Readonly<Vector3Like>;
 	size?: Readonly<Vector3Like>;
-}
+};
 
-/** A best-guess shape for the currently assigned mesh */
-export interface AutoColliderGeometry {
-	shape: 'auto';
-}
+/**
+ * A best-guess shape for the currently assigned mesh
+ */
+export type AutoColliderGeometry = {
+	shape: ColliderType.Auto;
+};
 
 /**
  * All collider parameter types.

@@ -120,7 +120,7 @@ export default class AssetPreloadTest extends Test {
 						position: { x: 0.5, y: 1, z: -1 }
 					}
 				},
-				collider: { geometry: { shape: 'auto' } }
+				collider: { geometry: { shape: MRE.ColliderType.Auto } }
 			}
 		});
 
