@@ -131,7 +131,7 @@ export default class VideoTest extends Test {
 				appearance: {
 					meshId: this.assets.createSphereMesh('sphere', 0.2).id
 				},
-				collider: { geometry: { shape: 'auto' } },
+				collider: { geometry: { shape: MRE.ColliderType.Auto } },
 				transform: {
 					local: {
 						position: { x: -0.8, y: 0.2, z: 0 }

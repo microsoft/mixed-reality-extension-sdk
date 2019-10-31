@@ -18,7 +18,7 @@ export default class PromptTest extends Test {
 				name: 'noTextButton',
 				parentId: root.id,
 				transform: { local: { position: { x: -1, y: 1, z: -1 } } },
-				collider: { geometry: { shape: 'box', size: { x: 0.5, y: 0.2, z: 0.01 } } },
+				collider: { geometry: { shape: MRE.ColliderType.Box, size: { x: 0.5, y: 0.2, z: 0.01 } } },
 				text: {
 					contents: "Click for message",
 					height: 0.1,
@@ -45,7 +45,7 @@ export default class PromptTest extends Test {
 				name: 'textButton',
 				parentId: root.id,
 				transform: { local: { position: { x: 1, y: 1, z: -1 } } },
-				collider: { geometry: { shape: 'box', size: { x: 0.5, y: 0.2, z: 0.01 } } },
+				collider: { geometry: { shape: MRE.ColliderType.Box, size: { x: 0.5, y: 0.2, z: 0.01 } } },
 				text: {
 					contents: "Click for prompt",
 					height: 0.1,

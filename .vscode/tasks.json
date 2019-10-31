@@ -4,33 +4,37 @@
 	"version": "2.0.0",
 	"tasks": [
 		{
-			"label": "Build functional tests",
 			"type": "npm",
 			"script": "build",
 			"path": "packages/functional-tests/",
+			"group": "build",
 			"problemMatcher": []
 		},
 		{
 			"type": "npm",
 			"script": "build",
 			"path": "packages/sdk/",
+			"group": "build",
 			"problemMatcher": []
 		},
 		{
 			"type": "npm",
 			"script": "build",
+			"group": "build",
 			"problemMatcher": []
 		},
 		{
 			"type": "npm",
 			"script": "build",
 			"path": "packages/altspacevr-extras/",
+			"group": "build",
 			"problemMatcher": []
 		},
 		{
 			"type": "npm",
 			"script": "build",
 			"path": "packages/gltf-gen/",
+			"group": "build",
 			"problemMatcher": []
 		},
 		{

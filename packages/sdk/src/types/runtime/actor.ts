@@ -339,7 +339,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 					meshId: mesh.id
 				},
 				collider: options.addCollider
-					? actor.collider || { geometry: { shape: 'auto' } }
+					? actor.collider || { geometry: { shape: ColliderType.Auto } }
 					: actor.collider
 			}
 		});
@@ -418,7 +418,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	 */
 	// * @param collisionLayer The layer that the collider operates in.
 	public setCollider(
-		colliderType: 'sphere',
+		colliderType: ColliderType.Sphere,
 		// collisionLayer: CollisionLayer,
 		isTrigger: boolean,
 		radius?: number,
@@ -435,7 +435,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	 * @param center The center of the collider, or default of the object if none is provided.
 	 */
 	public setCollider(
-		colliderType: 'box',
+		colliderType: ColliderType.Box,
 		// collisionLayer: CollisionLayer,
 		isTrigger: boolean,
 		size?: Vector3Like,
@@ -453,7 +453,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	 * @param center The center of the collider, or default of the object if none is provided.
 	 */
 	public setCollider(
-		colliderType: 'capsule',
+		colliderType: ColliderType.Capsule,
 		isTrigger: boolean,
 		size?: Vector3Like,
 		center?: Vector3Like
@@ -465,7 +465,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	 * @param isTrigger Whether the collider is a trigger volume or not.
 	 */
 	public setCollider(
-		colliderType: 'auto',
+		colliderType: ColliderType.Auto,
 		isTrigger: boolean
 	): void;
 
@@ -835,27 +835,27 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 		center = { x: 0, y: 0, z: 0 } as Vector3Like,
 	): ColliderGeometry {
 		switch (colliderType) {
-			case 'box':
+			case ColliderType.Box:
 				return {
-					shape: 'box',
+					shape: ColliderType.Box,
 					center,
 					size: size as Readonly<Vector3Like>
 				};
-			case 'sphere':
+			case ColliderType.Sphere:
 				return {
-					shape: 'sphere',
+					shape: ColliderType.Sphere,
 					center,
 					radius: size as number
 				};
-			case 'capsule':
+			case ColliderType.Capsule:
 				return {
-					shape: 'capsule',
+					shape: ColliderType.Capsule,
 					center,
 					size: size as Readonly<Vector3Like>
 				};
 			case 'auto':
 				return {
-					shape: 'auto'
+					shape: ColliderType.Auto
 				};
 			default:
 				log.error(null,

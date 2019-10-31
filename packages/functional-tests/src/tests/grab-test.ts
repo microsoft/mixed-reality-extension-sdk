@@ -97,7 +97,7 @@ export default class GrabTest extends Test {
 					appearance: {
 						meshId: boxMesh.id
 					},
-					collider: { geometry: { shape: 'auto' } },
+					collider: { geometry: { shape: MRE.ColliderType.Auto } },
 					transform: { local: { position: { x: cube.x, y: 1, z: -1 } } }
 				}
 			}).grabbable = true;

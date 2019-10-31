@@ -77,7 +77,7 @@ export default class PhysicsSimTest extends Test {
 				},
 				collider: {
 					geometry: {
-						shape: 'box',
+						shape: MRE.ColliderType.Box,
 						size: { x: width, y: 0.01, z: 2 }
 					},
 					isTrigger: true
@@ -112,7 +112,7 @@ export default class PhysicsSimTest extends Test {
 						meshId: pegMesh.id,
 						materialId: this.defaultPegMat.id
 					},
-					collider: { geometry: { shape: 'auto' } }
+					collider: { geometry: { shape: MRE.ColliderType.Auto } }
 				}
 			});
 			peg.collider.onCollision('collision-enter', data => {
@@ -159,7 +159,7 @@ export default class PhysicsSimTest extends Test {
 					mass: 3,
 					constraints: [MRE.RigidBodyConstraints.FreezePositionZ]
 				},
-				collider: { geometry: { shape: 'auto' } }
+				collider: { geometry: { shape: MRE.ColliderType.Auto } }
 			}
 		});
 
