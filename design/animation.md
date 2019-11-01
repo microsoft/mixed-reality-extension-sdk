@@ -15,6 +15,8 @@ rigid for our purposes. We need an animation system that can support the followi
 4. Chaining - Begin an animation immediately after another finishes, or on some other event (behavior tie-in?)
 5. Multiple targets - Animate multiple actors/assets, and multiple properties, in lock-step (equivalent to Unity's
 	animation curves)
+6. Blending - Allow multiple animations to run on the same target simultaneously, and blend the computed destinations
+	into one, proportional to a weight property.
 
 To address this need, I propose the following API:
 
@@ -70,7 +72,7 @@ argument. Over the wire these are represented as strings, but are easily generat
 
 ```ts
 class TargetPath<T> {
-	public parent: TargetPath<any>;
+	private parent: TargetPath<any>;
 	constructor(name: string, children: Map<string, TargetPath<any>>) {
 		for (const [k,v] of children) {
 			this[k] = v;
@@ -182,7 +184,7 @@ class Animation {
 		easing?: EasingFunction;
 	}): AnimationInstance { }
 }
-const anim: MRE.AnimationInstance = Animation.AnimateTo(material, {
+const anim: MRE.AnimationInstance = MRE.Animation.AnimateTo(material, {
 	duration: 1,
 	easing: MRE.Animation.Easing.Linear,
 	// each nested non-undefined property is converted to a track in a one-frame animation
@@ -206,13 +208,19 @@ server-side timer could also be used for "animation events"?
 Synchronization Concerns
 --------------------------
 
+The session needs to track animation instances (`create-animinstance`) and update them when patched
+(`animinstance-update`).
 
-
+The session needs to know what time the animation was started, so it can give late joiners the correct
+`AnimationInstance.time` value.
 
 Unity Concerns
 ---------------
 
-
+This entire animation system (except native animations) needs to be implemented in Unity. Since in Unity only actors
+can have MonoBehaviours, animations need to be driven by a singleton behavior, AnimationManager, instead of a
+behavior on each target. The manager would process all animation instance messages, look up all targets, and compute
+the correct value for each target each frame.
 
 Examples
 ----------
