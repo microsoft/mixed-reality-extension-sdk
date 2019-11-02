@@ -10,6 +10,7 @@ rigid for our purposes. We need an animation system that can support the followi
 	1. Interpolation - Make simple single-target two-frame animations easy to generate.
 	2. Moving targets - Setting/interpolating to/from another actor's dynamic values. Useful for look-at and
 		fly-to type animations.
+	3. Relative values - Add keyframe value to existing value instead of replacing it.
 3. Easing - Support different interpolation curves between keyframes.
 	1. No easing - Setting fields that cannot be interpolated should also be supported (string, boolean, etc.).
 4. Chaining - Begin an animation immediately after another finishes, or on some other event (behavior tie-in?)
@@ -31,23 +32,28 @@ When created directly, animations are created as an array of "tracks", each comp
 1. A generic path to a field that can be animated (see [Paths](#paths)).
 2. An array of keyframes, each composed of:
 	1. A time value.
-	2. A valid value for the targeted path.
+	2. A valid value for the targeted path. Can also be a reference to another actor/material, which will be evaluated
+		at runtime. See [References](#references).
 	3. An optional bezier easing function.
 
 ```ts
 type Animatible = Actor | Material;
+type AnimatibleClassName = 'actor' | 'material';
+type AnimatibleLike = ActorLike | MaterialLike;
+type AnimationProp = Vector2 | Vector3 | Quaternion | Color3 | Color4 | number | string | boolean;
+type EasingFunction = [number, number, number, number];
 
+class AssetContainer {
+	public createAnimation(name: string, options: {
+		targets: { [name: string]: AnimatibleClassName },
+		tracks: Track<AnimationProp>[]
+	}): Animation;
+}
 class Animation {
 	id: Readonly<string>;
 	duration: Readonly<number>;
-	targetCount: Readonly<number>;
+	targets: { [name: string]: AnimatibleClassName };
 }
-
-class AssetContainer {
-	public createAnimation(name: string, options: { targetCount?: number, tracks: Track<AnimationProp>[] }): Animation;
-}
-
-type AnimationProp = Vector2 | Vector3 | Quaternion | Color3 | Color4 | number | string | boolean;
 
 type Track<T extends AnimationProp> = {
 	target: TargetPath<T>;
@@ -56,11 +62,10 @@ type Track<T extends AnimationProp> = {
 
 type Keyframe<T extends AnimationProp> = {
 	time: number;
-	value: T;
+	value: T | TargetPath<T>;
+	relative?: boolean;
 	easing?: EasingFunction;
 }
-
-type EasingFunction = [number, number, number, number];
 ```
 
 ### Paths
@@ -83,8 +88,8 @@ class TargetPath<T> {
 		// convert tree into string
 	}
 }
-function AnimateActor(index: number) {
-	return new TargetPath<never>(`actor.${index}`, {
+function AnimateActor(name: string) {
+	return new TargetPath<never>(`actor.${name}`, {
 		transform: new TargetPath<never>("transform", {
 			local: new TargetPath<never>("local", {
 				position: new TargetPath<Vector3>("position", {
@@ -92,15 +97,46 @@ function AnimateActor(index: number) {
 					y: new TargetPath<number>("y"),
 					z: new TargetPath<number>("z")
 				})
+				// also rotation, scale
+			}),
+			app: new TargetPath<never>("app", {
+				/** lookAt replacement */
+				orientToward: new TargetPath<never>("orientToward", {
+					xy: new TargetPath<Vector3>("xy"),
+					y: new TargetPath<Vector3>("y")
+				})
+				// also position, rotation
 			})
 		})
+		// plus most other properties of actor
 	});
 }
 
 const track = {
-	target: AnimateActor(0).transform.local.position
+	target: AnimateActor("target").transform.local.position
 	// ...
 } as Track<Vector3>;
+```
+
+### References
+
+In addition to transitioning to a constant value on a property, you can also transition to a value on another object.
+This value is re-evaluated every frame on the client, so matches exactly.
+
+```ts
+assets.createAnimation({
+	targets: {
+		"start": "actor"
+		"end": "actor"
+	},
+	tracks: [{
+		target: AnimateActor("start").transform.local.position,
+		keyframes: [{
+			time: 1,
+			value: AnimateActor("end").transform.local.position
+		}]
+	}]
+});
 ```
 
 ### Instances
@@ -158,6 +194,13 @@ enum WrapMode {
 	Yoyo = 'yoyo'
 }
 
+/** An interface that only exposes the read properties. Necessary because you can't freeze the contents of a Map. */
+interface ReadonlyMap<K,V> { }
+
+class Actor {
+	animations: ReadonlyMap<string, AnimationInstance>;
+}
+
 const ticktock: MRE.Animation = assets.createAnimation(...);
 const animInstance: MRE.AnimationInstance = ticktock.bind(firstBall, lastBall);
 animInstance.speed = 1.5;
@@ -166,7 +209,7 @@ animInstance.play();
 // this prefab has an animation instance pre-allocated
 const cradle = MRE.Actor.CreateFromPrefab(context, { prefab: assets.prefabs[0] });
 await cradle.created();
-cradle.animations('rock').play();
+cradle.animations.get('rock').play();
 ```
 
 ### Convenience function
@@ -237,7 +280,7 @@ const actor = MRE.Actor.CreateFromPrefab(this.context, {
 Loading and playing a native animation from glTF:
 
 ```ts
-actor.animations('walk').play();
+actor.animations.get('walk').play();
 ```
 
 Create an animation from scratch, that arcs an actor toward some other stationary actor:
@@ -276,7 +319,7 @@ const arcAnim: MRE.Animation = assets.createAnimation('arc', {
 			target: MRE.Animation.Actor(0).transform.app.position.y,
 			keyframes: [{
 				time: 2.5,
-				value: arrow.transform.app.position.y + 0.57 * MRE.Vector3.Distance(
+				value: 0.57 * MRE.Vector3.Distance(
 					arrow.transform.app.position, bullseye.transform.app.position
 				),
 				// slowly approach apex
@@ -308,10 +351,10 @@ arcAnim.play(arrow);
 Fade out a material over one second:
 
 ```ts
-const anim: MRE.Animation = material.animateTo({
+const anim: MRE.Animation = Animation.animateTo(material, {
 	duration: 1,
 	easing: MRE.Animation.Easing.Linear,
 	// each nested non-undefined property is converted to a track in a two-frame animation
-	target: { color: { a: 0 } } as MRE.MaterialLike
+	target: { color: { a: 0 } }
 });
 ```
