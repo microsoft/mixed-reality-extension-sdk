@@ -37,9 +37,9 @@ When created directly, animations are created as an array of "tracks", each comp
 	3. An optional bezier easing function.
 
 ```ts
-type Animatible = Actor | Material;
-type AnimatibleClassName = 'actor' | 'material';
-type AnimatibleLike = ActorLike | MaterialLike;
+type Animatible = Actor | Material | AnimationInstance;
+type AnimatibleClassName = 'actor' | 'material' | 'animationinstance';
+type AnimatibleLike = ActorLike | MaterialLike | AnimationInstanceLike;
 type AnimationProp = Vector2 | Vector3 | Quaternion | Color3 | Color4 | number | string | boolean;
 type EasingFunction = [number, number, number, number];
 
@@ -148,9 +148,8 @@ etc. Animation instances can either be stored directly, or obtained from any of 
 in the animation. Instances participate in the patching system, so changing properties on the animation instance
 are pushed down to clients automatically.
 
-An animation instance can be set to start another animation on the instant that it finishes, by setting an instance's
-`continueWith` property. Because it's set in advance, there is zero downtime between one ending and another starting,
-and does not require a round trip.
+An animation instance can be the target of other animations. This allows you to create timelines of animation instances,
+setting their `isPlaying` property after another animation finishes, or doing cross-fades by animating instance weights.
 
 ```ts
 class Animation {
@@ -173,19 +172,15 @@ class AnimationInstance {
 	targets: Readonly<Animatible[]>;
 	/** The playing animation */
 	animation: Readonly<Animation>;
-	/** Start these animation instances after this one completes */
-	continueWith: AnimationInstance[];
 
-	/** Current play state */
-	isPlaying: Readonly<boolean>;
+	/** Current play state. Setting this property is equivalent to calling play() and pause().  */
+	isPlaying: boolean;
 
 	play(): void;
 	pause(): void;
 
 	/** Only fired if wrapMode is Once */
 	finished(): Promise<void>;
-	/** Sets the `continueWith` property, and returns the next anim instance */
-	continueWith(otherAnim: AnimationInstace): AnimationInstance;
 }
 
 enum WrapMode {
