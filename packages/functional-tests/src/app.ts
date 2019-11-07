@@ -130,9 +130,6 @@ export class App {
 		const test = this.activeTest = this.activeTestFactory(this, this.baseUrl, user);
 		this.setOverrideText(test.expectedResultDescription);
 
-		this.context.rpc.send({ procName: 'functional-test:test-started' }, this.activeTestName);
-		console.log(`Test started: '${this.activeTestName}'`);
-
 		let success: boolean;
 		try {
 			test.checkPermission(user);
