@@ -135,13 +135,14 @@ export class App {
 
 		let success: boolean;
 		try {
+			test.checkPermission(user);
 			success = await test.run(this.testRoot);
 			if (!success) {
 				this.setOverrideText("Test Failed: '${testName}'", FailureColor);
 			}
 		} catch (e) {
 			console.log(e);
-			this.setOverrideText("Test " + e, FailureColor);
+			this.setOverrideText(e.toString(), FailureColor);
 			success = false;
 		}
 
