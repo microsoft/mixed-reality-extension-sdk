@@ -9,6 +9,7 @@ import { Test } from '../test';
 
 export default class VideoTest extends Test {
 	public expectedResultDescription = "Play a couple youtube videos. Click to cycle.";
+	protected modsOnly = true;
 	private assets: MRE.AssetContainer;
 	private _state = 0;
 

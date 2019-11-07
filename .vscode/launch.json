@@ -14,7 +14,6 @@
       "type": "node",
       "request": "launch",
 	  "name": "Launch functional-tests app",
-	  "preLaunchTask": "Build functional tests",
       "runtimeExecutable": "npm",
       "runtimeArgs": [
         "run-script",

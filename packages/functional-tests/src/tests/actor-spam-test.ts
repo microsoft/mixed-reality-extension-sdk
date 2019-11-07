@@ -9,6 +9,7 @@ import { Test } from '../test';
 
 export default class ActorSpamTest extends Test {
 	public expectedResultDescription = "Spawn lots of actors all at once";
+	protected modsOnly = true;
 	private assets: MRE.AssetContainer;
 	private spamRoot: MRE.Actor;
 

@@ -10,6 +10,7 @@ import delay from '../utils/delay';
 
 export default class SoundTest extends Test {
 	public expectedResultDescription = "Sounds. Click buttons to toggle";
+	protected modsOnly = true;
 	private assets: MRE.AssetContainer;
 
 	private _musicState = 0;

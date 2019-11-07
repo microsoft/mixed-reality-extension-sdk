@@ -20,11 +20,18 @@ export abstract class Test {
 	 */
 	public expectedResultDescription: string;
 
+	protected modsOnly = false;
+
 	private _stopped = false;
 	private stoppedPromise: Promise<void> = null;
 	private stoppedContinue: () => void = null;
 
-	constructor(protected app: App, protected baseUrl: string, protected user: User) { }
+	constructor(protected app: App, protected baseUrl: string, protected user: User) {
+		if (this.modsOnly && user.properties['altspacevr-roles']
+			&& !user.properties['altspacevr-roles'].match(/moderator|presenter/)) {
+			throw new Error('Only moderators can run this test');
+		}
+	}
 
 	/**
 	 * Main test entry point. This should run indefinitely until [[stop]] is called.
