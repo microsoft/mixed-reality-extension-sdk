@@ -9,6 +9,7 @@ import { Test } from '../test';
 
 export default class GltfConcurrencyTest extends Test {
 	public expectedResultDescription = "Cesium man, a bottle, and maybe a gearbox.";
+	protected modsOnly = true;
 	private assets: MRE.AssetContainer;
 
 	public async run(root: MRE.Actor): Promise<boolean> {

@@ -13,6 +13,7 @@ import {
 
 export default class AltspaceVRVideoTest extends Test {
 	public expectedResultDescription = "Play a couple youtube videos. Click to cycle.";
+	protected modsOnly = true;
 
 	// Note that videoPlayerManager is deprecated. Please use Actor.startVideoStream() instead.
 	/* tslint:disable-next-line */

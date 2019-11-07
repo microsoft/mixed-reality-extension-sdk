@@ -130,18 +130,16 @@ export class App {
 		const test = this.activeTest = this.activeTestFactory(this, this.baseUrl, user);
 		this.setOverrideText(test.expectedResultDescription);
 
-		this.context.rpc.send({ procName: 'functional-test:test-started' }, this.activeTestName);
-		console.log(`Test started: '${this.activeTestName}'`);
-
 		let success: boolean;
 		try {
+			test.checkPermission(user);
 			success = await test.run(this.testRoot);
 			if (!success) {
 				this.setOverrideText("Test Failed: '${testName}'", FailureColor);
 			}
 		} catch (e) {
 			console.log(e);
-			this.setOverrideText("Test " + e, FailureColor);
+			this.setOverrideText(e.toString(), FailureColor);
 			success = false;
 		}
 
