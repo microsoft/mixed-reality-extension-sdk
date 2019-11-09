@@ -19,8 +19,10 @@
     "deploy": "@powershell ../../scripts/compress.ps1 -app 'functional-tests' && @powershell ../../scripts/deploy.ps1 -group 'mre-apps-linux' -name 'mre-functional-tests' -app 'functional-tests' && rm functional-tests.zip"
   },
   "devDependencies": {
-    "tslint": "5.11.0",
-    "typescript": "3.0.3"
+    "@typescript-eslint/eslint-plugin": "^2.6.1",
+    "@typescript-eslint/parser": "^2.6.1",
+    "eslint": "^6.6.0",
+    "typescript": "^3.7.2"
   },
   "dependencies": {
     "@microsoft/gltf-gen": "^0.14.0",
