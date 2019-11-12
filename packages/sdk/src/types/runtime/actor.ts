@@ -823,7 +823,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 			readPath(this, this.internal.patch, ...path);
 			this.context.internal.incrementGeneration();
 		}
-	}
+	};
 
 	/**
 	 * PRIVATE METHODS

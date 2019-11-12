@@ -22,15 +22,22 @@ module.exports = {
 	"rules": {
 		"indent": [
 			"error",
-			"tab"
+			"tab",
+			{
+				"MemberExpression": "off",
+				"SwitchCase": 1
+			}
 		],
 		"linebreak-style": [
 			"error",
 			"windows"
 		],
-		"semi": [
-			"error",
-			"always"
-		]
+		"max-len": ["error", 120],
+		"no-console": ["error"],
+		"no-empty": ["error", { "allowEmptyCatch": true }],
+		"semi": "off",
+		"@typescript-eslint/semi": ["error"],
+		"no-unused-vars": "off",
+		"@typescript-eslint/no-unused-vars": ["warn"]
 	}
 };

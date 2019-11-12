@@ -14,7 +14,7 @@ export interface MeshPrimitiveLike {
 	vertices?: Vertex[],
 	triangles?: number[],
 	material?: Material
-};
+}
 
 export class MeshPrimitive implements MeshPrimitiveLike {
 	public vertices: Vertex[] = [];

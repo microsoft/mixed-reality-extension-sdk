@@ -10,7 +10,7 @@ const readFile = promisify(readFileNodeAsync);
 
 import safeAccessPath from './safeAccessPath';
 
-// tslint:disable:no-console
+/* eslint-disable no-console */
 
 interface LogEvent {
 	input: string;

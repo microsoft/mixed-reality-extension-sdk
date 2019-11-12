@@ -2,8 +2,7 @@
  * Copyright (c) Microsoft Corporation. All rights reserved.
  * Licensed under the MIT License.
  */
-
-// tslint:disable-next-line
+/* eslint-disable no-console */
 const validator = require('gltf-validator');
 import Empty from './empty';
 import Material from './material';

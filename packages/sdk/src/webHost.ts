@@ -55,7 +55,7 @@ export class WebHost {
 				log.info('app', `${server.name} listening on ${JSON.stringify(server.address())}`);
 				log.info('app', `baseUrl: ${this.baseUrl}`);
 				log.info('app', `baseDir: ${this.baseDir}`);
-				if (!!this.baseDir) {
+				if (this.baseDir) {
 					this.serveStaticFiles(server);
 				}
 			})

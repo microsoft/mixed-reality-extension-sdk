@@ -33,5 +33,5 @@ export class ClientPreprocessing implements Middleware {
 			message = undefined;
 		}
 		return message;
-	}
+	};
 }

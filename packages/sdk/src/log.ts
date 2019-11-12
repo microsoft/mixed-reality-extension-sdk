@@ -116,7 +116,6 @@ class Log {
 				let [facility, severity] = part.split(':').map(s => s.trim());
 				const disable = facility.startsWith('-');
 				facility = facility.replace(/^-/, '');
-				severity = severity; // tslint
 				if (disable) {
 					this.disable(facility, severity);
 				} else {
@@ -125,7 +124,7 @@ class Log {
 			}
 		}
 		this.checkInitialize = () => { };
-	}
+	};
 }
 
 export const log = new Log();

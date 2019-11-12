@@ -37,7 +37,10 @@ export class Sphere extends MeshPrimitive {
 			for (let long = 0; long < 2 * Math.PI + 0.001; long += longAngle) {
 
 				// generate a vertex
-				const normal = new Vector3(Math.sin(lat) * Math.cos(long), Math.cos(lat), Math.sin(lat) * Math.sin(long))
+				const normal = new Vector3(
+					Math.sin(lat) * Math.cos(long),
+					Math.cos(lat),
+					Math.sin(lat) * Math.sin(long));
 				const vert = new Vertex({
 					position: normal.scale(radius),
 					normal: normal,

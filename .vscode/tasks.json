@@ -21,7 +21,13 @@
 			"type": "npm",
 			"script": "build",
 			"group": "build",
-			"problemMatcher": []
+			"problemMatcher": ["$tsc"]
+		},
+		{
+			"type": "npm",
+			"script": "lint",
+			"group": "build",
+			"problemMatcher": "$eslint-stylish"
 		},
 		{
 			"type": "npm",

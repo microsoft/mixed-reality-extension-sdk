@@ -7,8 +7,6 @@ import { Epsilon, Matrix, Quaternion, Scalar, Viewport } from '.';
 import { MathTmp } from './tmp';
 import { float, FloatArray } from './types';
 
-// tslint:disable:member-ordering variable-name one-variable-per-declaration trailing-comma no-bitwise curly max-line-length
-
 export interface Vector3Like {
 	x: number;
 	y: number;

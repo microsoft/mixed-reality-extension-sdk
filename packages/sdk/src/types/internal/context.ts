@@ -273,8 +273,8 @@ export class InternalContext {
 		if (!actor) {
 			log.error('app', `Failed animateTo. Actor ${actorId} not found.`);
 		} else if (!Array.isArray(curve) || curve.length !== 4) {
-			// tslint:disable-next-line:max-line-length
-			log.error('app', '`curve` parameter must be an array of four numbers. Try passing one of the predefined curves from `AnimationEaseCurves`');
+			log.error('app', '`curve` parameter must be an array of four numbers. ' +
+				'Try passing one of the predefined curves from `AnimationEaseCurves`');
 		} else {
 			this.protocol.sendPayload({
 				type: 'interpolate-actor',
@@ -455,7 +455,7 @@ export class InternalContext {
 
 	public onClose = () => {
 		this.stop();
-	}
+	};
 
 	public userJoined(suser: Partial<UserLike>) {
 		if (!this.userSet[suser.id]) {

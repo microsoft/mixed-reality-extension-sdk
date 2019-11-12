@@ -131,8 +131,8 @@ export class Client extends EventEmitter {
 		const beforeQueueMessageForClient = rule.client.beforeQueueMessageForClient || (() => message);
 		message = beforeQueueMessageForClient(this.session, this, message, promise);
 		if (message) {
-			// tslint:disable-next-line:max-line-length
-			log.verbose('network', `Client ${this.id.substr(0, 8)} queue id:${message.id.substr(0, 8)}, type:${message.payload.type}`);
+			log.verbose('network',
+				`Client ${this.id.substr(0, 8)} queue id:${message.id.substr(0, 8)}, type:${message.payload.type}`);
 			log.verbose('network-content', JSON.stringify(message, (key, value) => filterEmpty(value)));
 			this.queuedMessages.push({ message, promise, timeoutSeconds });
 		}

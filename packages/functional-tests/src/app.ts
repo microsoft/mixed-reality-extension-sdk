@@ -410,7 +410,8 @@ export class App {
 				this.menu.show();
 			});
 
-		this.runnerActors = [this.contextLabel, this.testRoot, this.playPauseButton,
-		this.playPauseText, menuButton, menuText];
+		this.runnerActors = [
+			this.contextLabel, this.testRoot, this.playPauseButton,
+			this.playPauseText, menuButton, menuText];
 	}
 }

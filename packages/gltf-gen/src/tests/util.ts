@@ -3,7 +3,7 @@
  * Licensed under the MIT License.
  */
 
-// tslint:disable:no-console
+/* eslint-disable no-console */
 
 /** @hidden */
 export function prettyPrintBuffer(buffer: Buffer, offset: number) {

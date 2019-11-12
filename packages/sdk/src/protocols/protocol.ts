@@ -91,8 +91,8 @@ export class Protocol extends EventEmitter {
 		const setReplyTimeout = () => {
 			if (timeoutSeconds > 0) {
 				return setTimeout(() => {
-					// tslint:disable-next-line:max-line-length
-					const reason = `${this.name} timed out awaiting response for ${message.payload.type}, id:${message.id}.`;
+					const reason = `${this.name} timed out awaiting response for ${message.payload.type}, ` +
+						`id:${message.id}.`;
 					log.error('network', reason);
 					this.rejectPromiseForMessage(message.id, reason);
 					this.conn.close();
@@ -116,11 +116,11 @@ export class Protocol extends EventEmitter {
 
 	public recvMessage(message: Message) {
 		if (message.replyToId) {
-			// tslint:disable-next-line:max-line-length
-			log.verbose('network', `${this.name} recv id:${message.id.substr(0, 8)}, replyTo:${message.replyToId.substr(0, 8)}, type:${message.payload.type}`);
+			log.verbose('network', `${this.name} recv id:${message.id.substr(0, 8)}, ` +
+				`replyTo:${message.replyToId.substr(0, 8)}, type:${message.payload.type}`);
 		} else {
-			// tslint:disable-next-line:max-line-length
-			log.verbose('network', `${this.name} recv id:${message.id.substr(0, 8)}, type:${message.payload.type}`);
+			log.verbose('network', `${this.name} recv id:${message.id.substr(0, 8)}, ` +
+				`type:${message.payload.type}`);
 		}
 		log.verbose('network-content', JSON.stringify(message, (key, value) => filterEmpty(value)));
 
@@ -197,17 +197,17 @@ export class Protocol extends EventEmitter {
 	}
 
 	protected missingPromiseForReplyMessage(message: Message) {
-		// tslint:disable-next-line:no-console max-line-length
-		log.error('network', `[ERROR] ${this.name} received unexpected reply message! payload: ${message.payload.type}, replyToId: ${message.replyToId}`);
+		log.error('network', `[ERROR] ${this.name} received unexpected reply message! ` +
+			`payload: ${message.payload.type}, replyToId: ${message.replyToId}`);
 	}
 
 	private onReceive = (message: Message) => {
 		this.recvMessage(message);
-	}
+	};
 
 	private onClose = () => {
 		Object.keys(this.promises).map(key => {
 			this.rejectPromiseForMessage(key, "Connection closed.");
 		});
-	}
+	};
 }

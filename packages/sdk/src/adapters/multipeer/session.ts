@@ -58,12 +58,12 @@ export class Session extends EventEmitter {
 	public user = (userId: string) => this._userSet[userId];
 	public childrenOf = (parentId: string) => {
 		return this.actors.filter(actor => actor.initialization.message.payload.actor.parentId === parentId);
-	}
+	};
 	public creatableChildrenOf = (parentId: string) => {
 		return this.actors.filter(actor =>
 			actor.initialization.message.payload.actor.parentId === parentId
 			&& !!actor.initialization.message.payload.type);
-	}
+	};
 
 	/**
 	 * Creates a new Session instance
@@ -198,14 +198,14 @@ export class Session extends EventEmitter {
 		if (message) {
 			this.sendToApp(message);
 		}
-	}
+	};
 
 	private recvFromApp = (message: Message) => {
 		message = this.preprocessFromApp(message);
 		if (message) {
 			this.sendToClients(message);
 		}
-	}
+	};
 
 	public preprocessFromApp(message: Message): Message {
 		const rule = Rules[message.payload.type] || MissingRule;
