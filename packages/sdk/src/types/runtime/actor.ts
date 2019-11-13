@@ -90,7 +90,6 @@ export interface ActorSet {
  * An actor represents an object instantiated on the host.
  */
 export class Actor implements ActorLike, Patchable<ActorLike> {
-	// tslint:disable:variable-name
 	private _internal = new InternalActor(this);
 	/** @hidden */
 	public get internal() { return this._internal; }
@@ -114,7 +113,6 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	private _lookAt: LookAt;
 	private _grabbable = false;
 	private _grab: DiscreteAction;
-	// tslint:enable:variable-name
 
 	private get grab() { this._grab = this._grab || new DiscreteAction(); return this._grab; }
 
@@ -168,7 +166,6 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 		}
 	}
 
-	// tslint:disable-next-line:variable-name
 	private constructor(private _context: Context, private _id: string) {
 		// Actor patching: Observe the transform for changed values.
 		observe({
@@ -753,24 +750,24 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 		const wasObserving = this.internal.observing;
 		this.internal.observing = false;
 
-		if (!from) return this;
-		if (from.id) this._id = from.id;
-		if (from.parentId) this._parentId = from.parentId;
-		if (from.name) this._name = from.name;
-		if (from.tag) this._tag = from.tag;
+		if (!from) { return this; }
+		if (from.id) { this._id = from.id; }
+		if (from.parentId) { this._parentId = from.parentId; }
+		if (from.name) { this._name = from.name; }
+		if (from.tag) { this._tag = from.tag; }
 		if (from.exclusiveToUser || from.parentId) {
 			this._exclusiveToUser = this.parent && this.parent.exclusiveToUser || from.exclusiveToUser;
 		}
-		if (from.transform) this._transform.copy(from.transform);
-		if (from.attachment) this.attach(from.attachment.userId, from.attachment.attachPoint);
-		if (from.appearance) this._appearance.copy(from.appearance);
-		if (from.light) this.enableLight(from.light);
-		if (from.rigidBody) this.enableRigidBody(from.rigidBody);
-		if (from.collider) this._setCollider(from.collider);
-		if (from.text) this.enableText(from.text);
-		if (from.lookAt) this.enableLookAt(from.lookAt.actorId, from.lookAt.mode);
-		if (from.grabbable !== undefined) this._grabbable = from.grabbable;
-
+		if (from.transform) { this._transform.copy(from.transform); }
+		if (from.attachment) { this.attach(from.attachment.userId, from.attachment.attachPoint); }
+		if (from.appearance) { this._appearance.copy(from.appearance); }
+		if (from.light) { this.enableLight(from.light); }
+		if (from.rigidBody) { this.enableRigidBody(from.rigidBody); }
+		if (from.collider) { this._setCollider(from.collider); }
+		if (from.text) { this.enableText(from.text); }
+		if (from.lookAt) { this.enableLookAt(from.lookAt.actorId, from.lookAt.mode); }
+		if (from.grabbable !== undefined) { this._grabbable = from.grabbable; }
+		
 		this.internal.observing = wasObserving;
 		return this;
 	}

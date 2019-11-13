@@ -41,12 +41,11 @@ function observeLeafProperties(
 			continue;
 		}
 		// Get the public name of this field by removing leading underscores.
-		const publicName = name.replace(/^_+/, '');
+		const publicName = name.replace(/^_+/u, '');
 		// If the property is a simple type, then hook it.
 		const type = typeof target[name];
 		if (type === 'number' || type === 'string' || type === 'boolean') {
 			// Create a non-enumerable backing property to hold the field value.
-			// tslint:disable-next-line:variable-name
 			const __name = `__observed_${name}`;
 			Object.defineProperty(target, __name, {
 				configurable: true,
@@ -90,7 +89,7 @@ function unobserveLeafProperties(target: any) {
 		}
 
 		// Get the original name of this field by removing the prefixed '__observed_'.
-		const originalName = name.replace(/^__observed_/, '');
+		const originalName = name.replace(/^__observed_/u, '');
 		// If the property is a simple type, then un-hook it.
 		const type = typeof target[name];
 		if (type === 'number' || type === 'string' || type === 'boolean') {

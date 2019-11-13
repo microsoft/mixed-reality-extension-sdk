@@ -7,7 +7,10 @@ import GLTF from './gen/gltf';
 import { Node } from './node';
 import { Serializable } from './serializable';
 
-export interface SceneLike { name?: string, nodes?: Node[] }
+export interface SceneLike {
+	name?: string;
+	nodes?: Node[];
+}
 
 export class Scene extends Serializable implements SceneLike {
 	public name: string;

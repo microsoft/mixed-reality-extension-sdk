@@ -56,7 +56,7 @@ export default class TransformTest extends Test {
 			});
 			try {
 				await cube2.created();
-			} catch (_) {
+			} catch {
 				cube2 = cube1;
 			}
 		}

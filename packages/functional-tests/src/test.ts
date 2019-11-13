@@ -71,7 +71,7 @@ export abstract class Test {
 
 	public checkPermission(user: User) {
 		if (this.modsOnly) {
-			if (!/moderator|presenter/.test(user.properties['altspacevr-roles'])) {
+			if (!/moderator|presenter/u.test(user.properties['altspacevr-roles'])) {
 				throw new Error('Only moderators can run this test');
 			} else {
 				console.log(`User ${user.name} allowed to start test`);

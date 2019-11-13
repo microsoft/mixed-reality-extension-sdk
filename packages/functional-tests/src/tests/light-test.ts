@@ -8,8 +8,6 @@ import * as MRE from '@microsoft/mixed-reality-extension-sdk';
 import { Test } from '../test';
 import delay from '../utils/delay';
 
-// tslint:disable:no-string-literal
-
 export default class LightTest extends Test {
 	public expectedResultDescription = "Different types of lights";
 	private assets: MRE.AssetContainer;
@@ -22,7 +20,7 @@ export default class LightTest extends Test {
 		this.assets = new MRE.AssetContainer(this.app.context);
 
 		// Create scene objects.
-		const props = await this.createProps(root);
+		const props = this.createProps(root);
 		const sphere = this.createSphere(root);
 
 		// Updates the label for the test stage.
@@ -90,7 +88,7 @@ export default class LightTest extends Test {
 		return true;
 	}
 
-	private async createProps(root: MRE.Actor): Promise<{[id: string]: MRE.Actor}> {
+	private createProps(root: MRE.Actor): {[id: string]: MRE.Actor} {
 		const props: { [id: string]: MRE.Actor } = {};
 		props['monkey'] = MRE.Actor.CreateFromGltf(this.assets, {
 			uri: `${this.baseUrl}/monkey.glb`,

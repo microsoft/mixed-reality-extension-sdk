@@ -49,14 +49,15 @@ export class Sphere extends MeshPrimitive {
 
 				// get the indices of the neighboring verts
 				const i = this.vertices.push(vert) - 1,
-					longNbr = i - 1 + (i == ringStart ? longLines + 1 : 0),
+					longNbr = i - 1 + (i === ringStart ? longLines + 1 : 0),
 					latNbr = i <= longLines + 1 ? 0 : i - longLines - 1,
 					latLongNbr = longNbr - longLines - 1;
 
 				// fill in the tri/quad connecting this vert to the sphereA
 				this.triangles.push(i, longNbr, latNbr);
-				if (latLongNbr > 0)
+				if (latLongNbr > 0) {
 					this.triangles.push(longNbr, latLongNbr, latNbr);
+				}
 			}
 		}
 
@@ -71,7 +72,7 @@ export class Sphere extends MeshPrimitive {
 		// connect last long ring to the south pole
 		const ringStart = southIdx - longLines - 1;
 		for (let i = southIdx - longLines - 1; i < southIdx; i++) {
-			const longNbr = i - 1 + (i == ringStart ? longLines + 1 : 0);
+			const longNbr = i - 1 + (i === ringStart ? longLines + 1 : 0);
 			this.triangles.push(longNbr, i, southIdx);
 		}
 	}

@@ -59,7 +59,7 @@ export type Rule = {
 		 * `after` - How to handle outgoing messages of this type after `stage` is complete.
 		 */
 		after: MessageHandling;
-	},
+	};
 
 	/**
 	 * Message preprocessing applied by the Client class.
@@ -94,7 +94,7 @@ export type Rule = {
 		 * user, and `false` if it depends on a different user.
 		 */
 		shouldSendToUser: (message: any, userId: string, session: Session, client: Client) => boolean | null;
-	},
+	};
 
 	/**
 	 * Message preprocessing applied by the Session class.
@@ -119,7 +119,7 @@ export type Rule = {
 		 */
 		beforeReceiveFromClient: (
 			session: Session, client: Client, message: any) => Message;
-	}
+	};
 };
 
 /**

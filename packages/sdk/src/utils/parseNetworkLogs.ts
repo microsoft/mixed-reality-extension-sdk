@@ -22,7 +22,7 @@ interface LogEvent {
 
 async function main(filename: string) {
 	const events = await parseFile(filename);
-	for (const evt of events.filter(e => !/heartbeat/.test(safeAccessPath(e, 'networkContents', 'payload', 'type')))) {
+	for (const evt of events.filter(e => !/heartbeat/u.test(safeAccessPath(e, 'networkContents', 'payload', 'type')))) {
 		console.log(formatEvent(evt));
 	}
 }
@@ -33,7 +33,7 @@ async function parseFile(filename: string): Promise<LogEvent[]> {
 	const events = [] as LogEvent[];
 
 	for (let i = 0; i < lines.length; i++) {
-		if (!/\bnetwork-content\b/.test(lines[i])) {
+		if (!/\bnetwork-content\b/u.test(lines[i])) {
 			continue;
 		}
 
@@ -54,18 +54,18 @@ function parseEvent(network: string, contents: string): LogEvent {
 		networkContents: JSON.parse(contents.slice(contents.indexOf('{')))
 	} as LogEvent;
 
-	const matches = /\bclient ([0-9a-f]{8})\b/.exec(network);
+	const matches = /\bclient ([0-9a-f]{8})\b/u.exec(network);
 	if (matches !== null) {
 		e.client = matches[1];
-	} else if (/\bSession/.test(network)) {
+	} else if (/\bSession/u.test(network)) {
 		e.client = 'session';
 	} else {
 		return null;
 	}
 
-	if (/\brecv\b/.test(network)) {
+	if (/\brecv\b/u.test(network)) {
 		e.direction = 'from';
-	} else if (/\bsend\b/.test(network)) {
+	} else if (/\bsend\b/u.test(network)) {
 		e.direction = 'to';
 	}
 

@@ -14,8 +14,7 @@ import * as Constants from '../../constants';
 import verifyClient from '../../utils/verifyClient';
 import { log } from './../../log';
 
-// tslint:disable-next-line:no-var-requires
-const forwarded = require('forwarded-for');
+const forwarded = require('forwarded-for'); /* eslint-disable-line @typescript-eslint/no-var-requires */
 
 /**
  * WebSocket Adapter options.

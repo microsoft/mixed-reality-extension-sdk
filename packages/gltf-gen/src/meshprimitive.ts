@@ -11,9 +11,9 @@ import { Vertex } from './vertex';
 import { VertexAttribute } from './vertexattributes';
 
 export interface MeshPrimitiveLike {
-	vertices?: Vertex[],
-	triangles?: number[],
-	material?: Material
+	vertices?: Vertex[];
+	triangles?: number[];
+	material?: Material;
 }
 
 export class MeshPrimitive implements MeshPrimitiveLike {
@@ -29,11 +29,11 @@ export class MeshPrimitive implements MeshPrimitiveLike {
 	private usesTexCoord1: boolean;
 	private usesColor0: boolean;
 
+	// eslint-disable-next-line default-param-last
 	constructor(init: MeshPrimitiveLike = {}, instanceParent?: MeshPrimitive) {
 		if (instanceParent) {
 			this.instanceParent = instanceParent;
-		}
-		else {
+		} else {
 			this.vertices = init.vertices || this.vertices;
 			this.triangles = init.triangles || this.triangles;
 		}

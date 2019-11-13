@@ -38,9 +38,9 @@ export default class PhysicsSimTest extends Test {
 			color: defaultBallColor
 		});
 
-		await this.createCounterPlane(root, 2, 1.25);
+		this.createCounterPlane(root, 2, 1.25);
 
-		await this.createPegField(root, 2, 1);
+		this.createPegField(root, 2, 1);
 		this.interval = setInterval(() => this.spawnBall(root, 1.5, 1.5), 1000);
 
 		await this.stoppedAsync();
@@ -52,7 +52,7 @@ export default class PhysicsSimTest extends Test {
 		this.assets.unload();
 	}
 
-	private async createCounterPlane(root: MRE.Actor, width: number, height: number) {
+	private createCounterPlane(root: MRE.Actor, width: number, height: number) {
 		// Create the ball count text objects
 		this.counterPlane = MRE.Actor.Create(this.app.context, {
 			actor: {
@@ -91,7 +91,7 @@ export default class PhysicsSimTest extends Test {
 		});
 	}
 
-	private async createPegField(
+	private createPegField(
 		root: MRE.Actor,
 		width: number, height: number,
 		pegRadius = 0.02, spacing = 0.2, verticalDistort = 1.1

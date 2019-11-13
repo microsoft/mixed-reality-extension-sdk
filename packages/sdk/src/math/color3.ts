@@ -2,11 +2,10 @@
  * Copyright (c) Microsoft Corporation. All rights reserved.
  * Licensed under the MIT License.
  */
+/* eslint-disable curly */
 
 import { Color4, Scalar, ToGammaSpace, ToLinearSpace } from '.';
 import { FloatArray } from './types';
-
-// tslint:disable:member-ordering
 
 export interface Color3Like {
 	r: number;

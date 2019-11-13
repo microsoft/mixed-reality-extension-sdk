@@ -13,7 +13,7 @@ export function prettyPrintBuffer(buffer: Buffer, offset: number) {
 		prettyString += rawString[i];
 
 		if (i % 32 === 31) {
-			const offsetString = (((i + 1) / 2).toString(16) as any).padStart(4, '0');
+			const offsetString = ((i + 1) / 2).toString(16).padStart(4, '0');
 			prettyString += `\n${offsetString} | `;
 		} else if (i % 8 === 7) {
 			prettyString += '  ';

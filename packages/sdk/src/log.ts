@@ -115,7 +115,7 @@ class Log {
 			for (const part of parts) {
 				let [facility, severity] = part.split(':').map(s => s.trim());
 				const disable = facility.startsWith('-');
-				facility = facility.replace(/^-/, '');
+				facility = facility.replace(/^-/u, '');
 				if (disable) {
 					this.disable(facility, severity);
 				} else {

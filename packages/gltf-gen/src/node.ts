@@ -9,13 +9,13 @@ import { Mesh } from './mesh';
 import { Serializable } from './serializable';
 
 export interface NodeLike {
-	name?: string,
-	mesh?: Mesh,
-	translation?: Vector3,
-	rotation?: Quaternion,
-	scale?: Vector3,
-	matrix?: Matrix,
-	children?: Node[]
+	name?: string;
+	mesh?: Mesh;
+	translation?: Vector3;
+	rotation?: Quaternion;
+	scale?: Vector3;
+	matrix?: Matrix;
+	children?: Node[];
 }
 
 export class Node extends Serializable implements NodeLike {

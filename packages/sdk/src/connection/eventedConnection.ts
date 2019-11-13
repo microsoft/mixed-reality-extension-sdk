@@ -13,11 +13,9 @@ import { NetworkStatsReport, NetworkStatsTracker } from './networkStats';
  * @hidden
  */
 export class EventedConnection extends EventEmitter implements Connection {
-	// tslint:disable:variable-name
 	private _quality = new ConnectionQuality();
 	private _promises: { [id: string]: QueuedPromise } = {};
 	public statsTracker = new NetworkStatsTracker();
-	// tslint:enable:variable-name
 
 	private queuedMessages: Message[] = [];
 	private timeout: NodeJS.Timer;

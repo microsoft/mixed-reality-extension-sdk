@@ -13,11 +13,9 @@ export interface LookAtLike {
 }
 
 export class LookAt implements LookAtLike {
-	// tslint:disable:variable-name
 	private _actorId = ZeroGuid;
 	private _mode = LookAtMode.None;
 	private _backward = false;
-	// tslint:enable:variable-name
 
 	public get actorId() { return this._actorId; }
 	public set actorId(value) { value ? this._actorId = value : this._actorId = ZeroGuid; }
@@ -36,10 +34,10 @@ export class LookAt implements LookAtLike {
 	}
 
 	public copy(from: Partial<LookAtLike>): this {
-		if (!from) return this;
-		if (from.actorId !== undefined) this.actorId = from.actorId;
-		if (from.mode !== undefined) this.mode = from.mode;
-		if (from.backward !== undefined) this.backward = from.backward;
+		if (!from) { return this; }
+		if (from.actorId !== undefined) { this.actorId = from.actorId; }
+		if (from.mode !== undefined) { this.mode = from.mode; }
+		if (from.backward !== undefined) { this.backward = from.backward; }
 		return this;
 	}
 }

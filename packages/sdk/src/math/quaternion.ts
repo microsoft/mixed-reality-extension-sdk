@@ -6,7 +6,7 @@
 import { Matrix, Vector3 } from '.';
 import { MathTmp } from './tmp';
 
-// tslint:disable:member-ordering variable-name one-variable-per-declaration trailing-comma no-bitwise curly
+// eslint-disable curly,block-spacing
 
 export interface QuaternionLike {
 	x: number;
@@ -128,11 +128,11 @@ export class Quaternion implements QuaternionLike {
 	 * @param from The value to read from.
 	 */
 	public copy(from: Partial<QuaternionLike>): this {
-		if (!from) return this;
-		if (from.x !== undefined) this.x = from.x;
-		if (from.y !== undefined) this.y = from.y;
-		if (from.z !== undefined) this.z = from.z;
-		if (from.w !== undefined) this.w = from.w;
+		if (!from) { return this; }
+		if (from.x !== undefined) { this.x = from.x; }
+		if (from.y !== undefined) { this.y = from.y; }
+		if (from.z !== undefined) { this.z = from.z; }
+		if (from.w !== undefined) { this.w = from.w; }
 		return this;
 	}
 

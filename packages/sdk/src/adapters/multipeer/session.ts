@@ -21,14 +21,13 @@ type AssetCreationMessage = Message<Payloads.LoadAssets | Payloads.CreateAsset>;
  * Class for associating multiple client connections with a single app session.
  */
 export class Session extends EventEmitter {
-	// tslint:disable:variable-name
 	private _clientSet: { [id: string]: Client } = {};
 	private _actorSet: { [id: string]: Partial<SyncActor> } = {};
 	private _assetSet: { [id: string]: Partial<SyncAsset> } = {};
 	private _assetCreatorSet: { [id: string]: AssetCreationMessage } = {};
 	private _userSet: { [id: string]: Partial<UserLike> } = {};
 	private _protocol: Protocols.Protocol;
-	// tslint:enable:variable-name
+	private _disconnect: () => void;
 
 	public get conn() { return this._conn; }
 	public get sessionId() { return this._sessionId; }
@@ -68,15 +67,13 @@ export class Session extends EventEmitter {
 	/**
 	 * Creates a new Session instance
 	 */
-	// tslint:disable-next-line:variable-name
 	constructor(private _conn: Connection, private _sessionId: string, private _peerAuthoritative: boolean) {
 		super();
 		this.recvFromClient = this.recvFromClient.bind(this);
 		this.recvFromApp = this.recvFromApp.bind(this);
-		this.disconnect = this.disconnect.bind(this);
-		this.leave = this.leave.bind(this);
-		this._conn.on('close', this.disconnect);
-		this._conn.on('error', this.disconnect);
+		this._disconnect = this.disconnect.bind(this);
+		this._conn.on('close', this._disconnect);
+		this._conn.on('error', this._disconnect);
 	}
 
 	/**
@@ -101,8 +98,8 @@ export class Session extends EventEmitter {
 
 	public disconnect() {
 		try {
-			this._conn.off('close', this.disconnect);
-			this._conn.off('error', this.disconnect);
+			this._conn.off('close', this._disconnect);
+			this._conn.off('error', this._disconnect);
 			this._conn.close();
 			this.emit('close');
 		} catch { }
@@ -163,7 +160,6 @@ export class Session extends EventEmitter {
 
 	private setAuthoritativeClient(clientId: string) {
 		if (!this._clientSet[clientId]) {
-			// tslint:disable-next-line:no-console
 			log.error('network', `[ERROR] setAuthoritativeClient: client ${clientId} does not exist.`);
 		}
 		const oldAuthority = this.authoritativeClient;

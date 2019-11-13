@@ -5,7 +5,7 @@
 
 import * as MRE from '@microsoft/mixed-reality-extension-sdk';
 
-import Menu from './menu';
+import { Menu } from './menu';
 import { Test, TestFactory } from './test';
 import { Factories } from './tests';
 import destroyActors from './utils/destroyActors';

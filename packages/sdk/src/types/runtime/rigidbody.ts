@@ -47,11 +47,9 @@ export interface RigidBodyLike {
  * Class that represents a rigid body found on an actor.
  */
 export class RigidBody implements RigidBodyLike {
-	// tslint:disable:variable-name
 	private _velocity: Vector3;
 	private _angularVelocity: Vector3;
 	private _constraints: RigidBodyConstraints[];
-	// tslint:enable:variable-name
 
 	/** @inheritdoc */
 	public enabled = true;
@@ -109,16 +107,16 @@ export class RigidBody implements RigidBodyLike {
 
 	/** @hidden */
 	public copy(from: Partial<RigidBodyLike>): this {
-		if (!from) return this;
-		if (from.enabled !== undefined) this.enabled = from.enabled;
-		if (from.velocity !== undefined) this._velocity.copy(from.velocity);
-		if (from.angularVelocity !== undefined) this._angularVelocity.copy(from.angularVelocity);
-		if (from.mass !== undefined) this.mass = from.mass;
-		if (from.detectCollisions !== undefined) this.detectCollisions = from.detectCollisions;
-		if (from.collisionDetectionMode !== undefined) this.collisionDetectionMode = from.collisionDetectionMode;
-		if (from.useGravity !== undefined) this.useGravity = from.useGravity;
-		if (from.isKinematic !== undefined) this.isKinematic = from.isKinematic;
-		if (from.constraints !== undefined) this.constraints = from.constraints;
+		if (!from) { return this; }
+		if (from.enabled !== undefined) { this.enabled = from.enabled; }
+		if (from.velocity !== undefined) { this._velocity.copy(from.velocity); }
+		if (from.angularVelocity !== undefined) { this._angularVelocity.copy(from.angularVelocity); }
+		if (from.mass !== undefined) { this.mass = from.mass; }
+		if (from.detectCollisions !== undefined) { this.detectCollisions = from.detectCollisions; }
+		if (from.collisionDetectionMode !== undefined) { this.collisionDetectionMode = from.collisionDetectionMode; }
+		if (from.useGravity !== undefined) { this.useGravity = from.useGravity; }
+		if (from.isKinematic !== undefined) { this.isKinematic = from.isKinematic; }
+		if (from.constraints !== undefined) { this.constraints = from.constraints; }
 		return this;
 	}
 

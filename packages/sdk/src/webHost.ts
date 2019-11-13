@@ -15,11 +15,9 @@ const BUFFER_KEYWORD = 'buffers';
  * Sets up an HTTP server, and generates an MRE context for your app to use.
  */
 export class WebHost {
-	// tslint:disable:variable-name
 	private _adapter: Adapter;
 	private _baseDir: string;
 	private _baseUrl: string;
-	// tslint:enable:variable-name
 
 	public get adapter() { return this._adapter; }
 	public get baseDir() { return this._baseDir; }
@@ -51,7 +49,7 @@ export class WebHost {
 		// Start listening for new app connections from a multi-peer client.
 		this._adapter.listen()
 			.then(server => {
-				this._baseUrl = this._baseUrl || server.url.replace(/\[::\]/, '127.0.0.1');
+				this._baseUrl = this._baseUrl || server.url.replace(/\[::\]/u, '127.0.0.1');
 				log.info('app', `${server.name} listening on ${JSON.stringify(server.address())}`);
 				log.info('app', `baseUrl: ${this.baseUrl}`);
 				log.info('app', `baseDir: ${this.baseDir}`);
@@ -74,7 +72,7 @@ export class WebHost {
 			));
 	}
 
-	private readonly bufferRegex = new RegExp(`^/${BUFFER_KEYWORD}/(.+)$`);
+	private readonly bufferRegex = new RegExp(`^/${BUFFER_KEYWORD}/(.+)$`, 'u');
 
 	private serveStaticBuffers(req: Restify.Request, res: Restify.Response, next: Restify.Next) {
 		// grab path part of URL

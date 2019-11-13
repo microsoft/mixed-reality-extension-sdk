@@ -575,7 +575,7 @@ export class InternalContext {
 	}
 
 	public lookupAsset(id: string): Asset {
-		if (id === ZeroGuid) return null;
+		if (id === ZeroGuid) { return null; }
 
 		for (const c of this.assetContainers) {
 			if (c.assetsById[id]) {

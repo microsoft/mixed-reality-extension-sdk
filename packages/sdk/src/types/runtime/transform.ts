@@ -15,10 +15,8 @@ export interface ScaledTransformLike extends TransformLike {
 }
 
 export class Transform implements TransformLike {
-	// tslint:disable:variable-name
 	private _position: Vector3;
 	private _rotation: Quaternion;
-	// tslint:enable:variable-name
 
 	public get position() { return this._position; }
 	public set position(value: Vector3) { this._position.copy(value); }
@@ -35,9 +33,9 @@ export class Transform implements TransformLike {
 	}
 
 	public copy(from: Partial<TransformLike>): this {
-		if (!from) return this;
-		if (from.position !== undefined) this.position.copy(from.position);
-		if (from.rotation !== undefined) this.rotation.copy(from.rotation);
+		if (!from) { return this; }
+		if (from.position !== undefined) { this.position.copy(from.position); }
+		if (from.rotation !== undefined) { this.rotation.copy(from.rotation); }
 
 		return this;
 	}
@@ -50,9 +48,7 @@ export class Transform implements TransformLike {
 	}
 }
 
-// tslint:disable-next-line:max-classes-per-file
 export class ScaledTransform extends Transform implements ScaledTransformLike {
-	// tslint:disable-next-line:variable-name
 	private _scale: Vector3;
 
 	public get scale() { return this._scale; }
@@ -65,7 +61,7 @@ export class ScaledTransform extends Transform implements ScaledTransformLike {
 
 	public copy(from: Partial<ScaledTransformLike>): this {
 		super.copy(from);
-		if (from.scale !== undefined) this.scale.copy(from.scale);
+		if (from.scale !== undefined) { this.scale.copy(from.scale); }
 		return this;
 	}
 

@@ -29,7 +29,6 @@ export type QueuedMessage = {
 export class Client extends EventEmitter {
 	private static orderSequence = 0;
 
-	// tslint:disable:variable-name
 	private _id: string;
 	private _session: Session;
 	private _protocol: Protocols.Protocol;
@@ -37,7 +36,7 @@ export class Client extends EventEmitter {
 	private _queuedMessages: QueuedMessage[] = [];
 	private _userExclusiveMessages: QueuedMessage[] = [];
 	private _authoritative = false;
-	// tslint:enable:variable-name
+	private leave: () => void;
 
 	public get id() { return this._id; }
 	public get order() { return this._order; }
@@ -53,12 +52,11 @@ export class Client extends EventEmitter {
 	/**
 	 * Creates a new Client instance
 	 */
-	// tslint:disable-next-line:variable-name
 	constructor(private _conn: Connection) {
 		super();
 		this._id = UUID();
 		this._order = Client.orderSequence++;
-		this.leave = this.leave.bind(this);
+		this.leave = this._leave.bind(this);
 		this._conn.on('close', this.leave);
 		this._conn.on('error', this.leave);
 	}
@@ -90,7 +88,7 @@ export class Client extends EventEmitter {
 		}
 	}
 
-	public leave() {
+	public _leave() {
 		try {
 			if (this._protocol) {
 				this._protocol.stopListening();
@@ -112,7 +110,6 @@ export class Client extends EventEmitter {
 		if (this.protocol) {
 			this.protocol.sendMessage(message, promise);
 		} else {
-			// tslint:disable-next-line:no-console
 			log.error('network', `[ERROR] No protocol for message send: ${message.payload.type}`);
 		}
 	}
@@ -121,7 +118,6 @@ export class Client extends EventEmitter {
 		if (this.protocol) {
 			this.protocol.sendPayload(payload, promise);
 		} else {
-			// tslint:disable-next-line:no-console
 			log.error('network', `[ERROR] No protocol for payload send: ${payload.type}`);
 		}
 	}
