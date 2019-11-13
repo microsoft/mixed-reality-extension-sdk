@@ -5,7 +5,9 @@ module.exports = {
 	},
 	"extends": [
 		"eslint:recommended",
-		"plugin:@typescript-eslint/eslint-recommended"
+		"plugin:@typescript-eslint/eslint-recommended",
+		"plugin:@typescript-eslint/recommended",
+		"plugin:@typescript-eslint/recommended-requiring-type-checking"
 	],
 	"globals": {
 		"Atomics": "readonly",
@@ -14,13 +16,21 @@ module.exports = {
 	"parser": "@typescript-eslint/parser",
 	"parserOptions": {
 		"ecmaVersion": 2018,
-		"sourceType": "module"
+		"sourceType": "module",
+		"project": "./packages/*/tsconfig.json"
 	},
 	"plugins": [
 		"@typescript-eslint",
 		"header"
 	],
 	"rules": {
+		"block-spacing": ["error", "always"],
+		"brace-style": ["error", "1tbs", {"allowSingleLine": true}],
+		"camelcase": ["warn", {"allow": ["^_"]}],
+		"curly": ["error", "all"],
+		"default-param-last": "warn",
+		"eol-last": ["error", "always"],
+		"eqeqeq": ["error", "always"],
 		"indent": [
 			"error",
 			"tab",
@@ -34,10 +44,23 @@ module.exports = {
 			"windows"
 		],
 		"max-len": ["error", 120],
-		"no-console": ["error"],
+		"no-console": "error",
+		"no-div-regex": "error",
 		"no-empty": ["error", { "allowEmptyCatch": true }],
-		"no-unused-vars": "off",
-		"semi": "off",
+		"no-labels": "error",
+		"no-loop-func": "error",
+		"no-multi-spaces": ["warn", {"ignoreEOLComments": true}],
+		"no-new": "error",
+		"no-self-compare": "warn",
+		"no-sequences": "error",
+		"no-shadow": "warn",
+		"no-unmodified-loop-condition": "error",
+		"no-void": "error",
+		"no-warning-comments": ["warn", {"terms": ["todo", "fixme", "tslint"]}],
+		"prefer-const": "warn",
+		"prefer-regex-literals": "warn",
+		"require-unicode-regexp": "error",
+		"yoda": "warn",
 
 		"@typescript-eslint/array-type": [
 			"error",
@@ -54,11 +77,14 @@ module.exports = {
 				}
 			}
 		],
-		"@typescript-eslint/semi": ["error"],
-		"@typescript-eslint/no-unused-vars": [
+		"@typescript-eslint/explicit-function-return-type": "off",
+		"@typescript-eslint/no-empty-function": "off",
+		"@typescript-eslint/no-floating-promises": "error",
+		"@typescript-eslint/no-misused-promises": "off",
+		/* "@typescript-eslint/no-unused-vars": [
 			"warn",
 			{ "args": "none" }
-		],
+		], */
 		"header/header": [
 			"error",
 			"block",

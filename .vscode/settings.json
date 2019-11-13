@@ -1,6 +1,5 @@
 {
     "typescript.tsdk": "node_modules\\typescript\\lib",
-    "eslint.autoFixOnSave": true,
     "eslint.run": "onType",
     "eslint.validate": [
         "javascript",
@@ -8,5 +7,9 @@
         { "language": "typescript", "autoFix": true },
         { "language": "typescriptreact", "autoFix": true }
     ],
-    "eslint.lintTask.enable": true
+    "eslint.lintTask.enable": true,
+    "eslint.codeAction.disableRuleComment": {
+        "enable": false,
+        "location": "separateLine"
+    }
 }
