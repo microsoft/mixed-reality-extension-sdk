@@ -17,7 +17,8 @@ module.exports = {
 		"sourceType": "module"
 	},
 	"plugins": [
-		"@typescript-eslint"
+		"@typescript-eslint",
+		"header"
 	],
 	"rules": {
 		"indent": [
@@ -35,9 +36,35 @@ module.exports = {
 		"max-len": ["error", 120],
 		"no-console": ["error"],
 		"no-empty": ["error", { "allowEmptyCatch": true }],
-		"semi": "off",
-		"@typescript-eslint/semi": ["error"],
 		"no-unused-vars": "off",
-		"@typescript-eslint/no-unused-vars": ["warn"]
+		"semi": "off",
+
+		"@typescript-eslint/array-type": [
+			"error",
+			{ "default": "array-simple" }
+		],
+		"@typescript-eslint/ban-types": [
+			"error",
+			{
+				"types": {
+					"Object": "Use {} instead.",
+					"String": "Use 'string' instead.",
+					"Number": "Use 'number' instead.",
+					"Boolean": "Use 'boolean' instead."
+				}
+			}
+		],
+		"@typescript-eslint/semi": ["error"],
+		"@typescript-eslint/no-unused-vars": ["warn"],
+		"header/header": [
+			"error",
+			"block",
+			[
+				"!",
+				" * Copyright (c) Microsoft Corporation. All rights reserved.",
+				" * Licensed under the MIT License.",
+				" "
+			]
+		]
 	}
 };

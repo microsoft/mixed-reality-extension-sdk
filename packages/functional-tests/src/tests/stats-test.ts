@@ -62,6 +62,7 @@ export default class StatsTest extends Test {
 		const plainStats = stats as any;
 		let pp = '';
 		for (const k in plainStats) {
+			// eslint-disable-next-line no-prototype-builtins
 			if (!plainStats.hasOwnProperty(k)) continue;
 			const v = plainStats[k];
 			if (Array.isArray(v)) {

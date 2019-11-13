@@ -15,7 +15,7 @@ export default function readPath(src: any, dst: any, ...path: string[]) {
 		field = path.shift();
 		validateJsonFieldName(field);
 		if (path.length) {
-			if (!dst.hasOwnProperty(field)) {
+			if (!Object.prototype.hasOwnProperty.call(dst, field)) {
 				dst[field] = {};
 			}
 			dst = dst[field];
