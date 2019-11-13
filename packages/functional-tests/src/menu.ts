@@ -85,7 +85,7 @@ export default class Menu {
 
 			} else {
 				label = menu[i].label;
-				handler = _ => {
+				handler = () => {
 					this.breadcrumbs.push(i);
 					this.show();
 				};

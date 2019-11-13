@@ -5,7 +5,7 @@
 
 import { EventEmitter } from 'events';
 import UUID from 'uuid/v4';
-import { ClientExecution, ClientHandshake, ClientSync, MissingRule, Rules, Session } from '.';
+import { ClientExecution, ClientSync, MissingRule, Rules, Session } from '.';
 import { Connection, Message } from '../..';
 import { log } from '../../log';
 import * as Protocols from '../../protocols';

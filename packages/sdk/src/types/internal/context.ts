@@ -16,7 +16,6 @@ import {
 	AssetContainerIterable,
 	AssetLike,
 	BehaviorType,
-	ColliderType,
 	CollisionEvent,
 	CollisionLayer,
 	Context,
@@ -536,8 +535,6 @@ export class InternalContext {
 	}
 
 	public localDestroyActor(actor: Actor) {
-		// Collect this actor and all the children recursively
-		const actorIds: string[] = [];
 		// Recursively destroy children first
 		(actor.children || []).forEach(child => {
 			this.localDestroyActor(child);

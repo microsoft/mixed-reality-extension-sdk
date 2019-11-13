@@ -5,7 +5,6 @@
 
 import { Asset, AssetContainer, AssetLike } from '.';
 import { Actor } from '..';
-import readPath from '../../../utils/readPath';
 import { InternalAsset } from '../../internal/asset';
 import { Patchable } from '../../patchable';
 

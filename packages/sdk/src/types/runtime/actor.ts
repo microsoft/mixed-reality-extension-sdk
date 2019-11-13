@@ -50,11 +50,7 @@ import { SubscriptionType } from '../network/subscriptionType';
 import { Patchable } from '../patchable';
 import { ActionHandler, ActionState, Behavior, DiscreteAction } from './behaviors';
 import { MediaInstance } from './mediaInstance';
-import {
-	ColliderGeometry,
-	CollisionHandler,
-	TriggerHandler
-} from './physics';
+import { ColliderGeometry } from './physics';
 
 /**
  * Describes the properties of an Actor.

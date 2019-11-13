@@ -83,15 +83,15 @@ export default class InputTest extends Test {
 		// Set up cursor interaction. We add the input behavior ButtonBehavior to the cube.
 		// Button behaviors have two pairs of events: hover start/stop, and click start/stop.
 		const behavior = this.model.setBehavior(MRE.ButtonBehavior);
-		behavior.onHover('enter', _ => {
+		behavior.onHover('enter', () => {
 			this.state = 1;
 			this.cycleState();
 		});
-		behavior.onButton('pressed', _ => {
+		behavior.onButton('pressed', () => {
 			this.state = 2;
 			this.cycleState();
 		});
-		behavior.onHover('exit', _ => {
+		behavior.onHover('exit', () => {
 			this.state = 0;
 			this.cycleState();
 		});

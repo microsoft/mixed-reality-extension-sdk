@@ -9,7 +9,6 @@ import { Message } from '..';
 import { log } from '../log';
 import filterEmpty from '../utils/filterEmpty';
 import validateJsonFieldName from '../utils/validateJsonFieldName';
-import { NetworkStatsTracker } from './networkStats';
 
 /**
  * An implementation of the Connection interface that wraps a WebSocket.

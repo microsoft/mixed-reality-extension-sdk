@@ -8,7 +8,6 @@ import { ActiveMediaInstance, Client, Session, SynchronizationStage } from '.';
 import { MediaCommand, Message, WebSocket } from '../..';
 import { log } from '../../log';
 import * as Payloads from '../../types/network/payloads';
-import { Asset } from '../../types/runtime';
 import { ExportedPromise } from '../../utils/exportedPromise';
 
 // tslint:disable:variable-name new-parens no-console

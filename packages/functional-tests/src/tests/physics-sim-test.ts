@@ -85,7 +85,7 @@ export default class PhysicsSimTest extends Test {
 			}
 		});
 
-		counter.collider.onTrigger('trigger-enter', _ => {
+		counter.collider.onTrigger('trigger-enter', () => {
 			++this.ballCount;
 			this.counterPlane.text.contents = `Ball count: ${this.ballCount}`;
 		});
@@ -115,14 +115,14 @@ export default class PhysicsSimTest extends Test {
 					collider: { geometry: { shape: MRE.ColliderType.Auto } }
 				}
 			});
-			peg.collider.onCollision('collision-enter', data => {
+			peg.collider.onCollision('collision-enter', () => {
 				this.collRefCount[peg.id] = this.collRefCount[peg.id] + 1 || 1;
 				if (this.collRefCount[peg.id] > 0) {
 					peg.appearance.material = this.collisionPegMat;
 				}
 			});
 
-			peg.collider.onCollision('collision-exit', data => {
+			peg.collider.onCollision('collision-exit', () => {
 				this.collRefCount[peg.id]--;
 				if (this.collRefCount[peg.id] === 0) {
 					peg.appearance.material = this.defaultPegMat;

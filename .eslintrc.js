@@ -55,7 +55,10 @@ module.exports = {
 			}
 		],
 		"@typescript-eslint/semi": ["error"],
-		"@typescript-eslint/no-unused-vars": ["warn"],
+		"@typescript-eslint/no-unused-vars": [
+			"warn",
+			{ "args": "none" }
+		],
 		"header/header": [
 			"error",
 			"block",

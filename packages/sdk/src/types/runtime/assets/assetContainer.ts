@@ -8,7 +8,7 @@ import UUID from 'uuid/v4';
 import {
 	Asset, AssetSource,
 	Material, MaterialLike,
-	Mesh, MeshLike,
+	Mesh,
 	Prefab,
 	Sound, SoundLike,
 	Texture, TextureLike,

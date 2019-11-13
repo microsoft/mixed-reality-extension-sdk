@@ -60,7 +60,7 @@ export abstract class Test {
 	 */
 	public stoppedAsync() {
 		return this.stoppedPromise = this.stoppedPromise ||
-			new Promise<void>((resolve, reject) => {
+			new Promise<void>(resolve => {
 				if (this._stopped) {
 					resolve();
 				} else {

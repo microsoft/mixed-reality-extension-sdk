@@ -3,7 +3,7 @@
  * Licensed under the MIT License.
  */
 
-import { LookAtMode, Vector3, Vector3Like } from "../..";
+import { LookAtMode } from "../..";
 import { ZeroGuid } from "../../constants";
 
 export interface LookAtLike {

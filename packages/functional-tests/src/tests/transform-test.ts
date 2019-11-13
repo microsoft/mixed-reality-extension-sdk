@@ -76,7 +76,8 @@ export default class TransformTest extends Test {
 			}
 		});
 
-		const cube4 = MRE.Actor.Create(this.app.context, {
+		// cube4
+		MRE.Actor.Create(this.app.context, {
 			actor: {
 				name: 'cube4',
 				parentId: cube3.id,

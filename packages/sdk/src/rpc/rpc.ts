@@ -3,7 +3,7 @@
  * Licensed under the MIT License.
  */
 
-import { Context, User } from '..';
+import { Context } from '..';
 import { AppToEngineRPC, EngineToAppRPC } from '../types/network/payloads';
 
 // tslint:disable:max-classes-per-file no-string-literal

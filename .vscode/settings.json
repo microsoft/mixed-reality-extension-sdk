@@ -1,7 +1,7 @@
 {
     "typescript.tsdk": "node_modules\\typescript\\lib",
     "eslint.autoFixOnSave": true,
-    "eslint.run": "onSave",
+    "eslint.run": "onType",
     "eslint.validate": [
         "javascript",
         "javascriptreact",
