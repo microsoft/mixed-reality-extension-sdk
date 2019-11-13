@@ -5,46 +5,6 @@
 	"tasks": [
 		{
 			"type": "npm",
-			"script": "build",
-			"path": "packages/functional-tests/",
-			"group": "build",
-			"problemMatcher": []
-		},
-		{
-			"type": "npm",
-			"script": "build",
-			"path": "packages/sdk/",
-			"group": "build",
-			"problemMatcher": []
-		},
-		{
-			"type": "npm",
-			"script": "build",
-			"group": "build",
-			"problemMatcher": ["$tsc"]
-		},
-		{
-			"type": "npm",
-			"script": "lint",
-			"group": "build",
-			"problemMatcher": "$eslint-stylish"
-		},
-		{
-			"type": "npm",
-			"script": "build",
-			"path": "packages/altspacevr-extras/",
-			"group": "build",
-			"problemMatcher": []
-		},
-		{
-			"type": "npm",
-			"script": "build",
-			"path": "packages/gltf-gen/",
-			"group": "build",
-			"problemMatcher": []
-		},
-		{
-			"type": "npm",
 			"script": "build-docs",
 			"group": "build",
 			"problemMatcher": []

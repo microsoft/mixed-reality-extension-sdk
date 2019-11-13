@@ -15,7 +15,7 @@
     "gltf"
   ],
   "engines": {
-    "node": ">=8.12.0",
+    "node": ">=10.13.0",
     "npm": ">=6.4.1"
   },
   "bugs": {
@@ -29,10 +29,8 @@
     "update-schema": "gltf-typescript-generator src/gen/gltf.ts https://rawgit.com/KhronosGroup/glTF/master/specification/2.0/schema/glTF.schema.json",
     "test": "npm run build && node built/tests/index.js",
     "clean": "tsc --build --clean",
-    "build": "tsc --build && npm run lint",
+    "build": "tsc --build && eslint --ext .ts src",
     "build-docs": "typedoc --externalPattern \"**/node_modules/**\" --excludeExternals --excludeNotExported --excludeProtected --excludePrivate --hideGenerator --mode file --name \"glTF Generator\" --readme none --out ../../docs/gltf-gen ./src",
-    "lint": "tslint -p ./tsconfig.json -c ../tslint.json",
-    "lint-docs": "tslint -p ./tsconfig.json -c ../tslint.docs.json",
     "prepublishOnly": "tsc --build"
   },
   "devDependencies": {

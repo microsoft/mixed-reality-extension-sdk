@@ -16,7 +16,7 @@
     "node"
   ],
   "engines": {
-    "node": ">=8.12.0",
+    "node": ">=10.13.0",
     "npm": ">=6.4.1"
   },
   "scripts": {
@@ -24,10 +24,8 @@
     "bootstrap": "lerna bootstrap",
     "postinstall": "npm run bootstrap",
     "clean": "tsc --build --clean",
-    "build": "tsc --build",
+    "build": "tsc --build && eslint --ext .ts packages",
     "build-docs": "lerna run build-docs",
-    "lint": "eslint --ext .ts packages",
-    "lint-docs": "lerna run lint-docs",
     "publish": "lerna publish",
     "start": "node ./packages/functional-tests/",
     "parseLogs": "node ./packages/sdk/built/utils/parseNetworkLogs.js"
@@ -39,5 +37,8 @@
     "eslint-plugin-header": "^3.0.0",
     "lerna": "^3.16.1",
     "typescript": "^3.7.2"
+  },
+  "dependencies": {
+    "tslint": "^5.20.1"
   }
 }
