@@ -26,7 +26,6 @@ module.exports = {
 	"rules": {
 		"block-spacing": ["warn", "always"],
 		"brace-style": ["warn", "1tbs", {"allowSingleLine": true}],
-		"camelcase": ["warn", {"allow": ["^_[a-z][A-Za-z0-9]*$"]}],
 		"curly": ["warn", "all"],
 		"default-param-last": "warn",
 		"eol-last": ["warn", "always"],
@@ -79,6 +78,7 @@ module.exports = {
 				}
 			}
 		],
+		"@typescript-eslint/camelcase": ["warn", {"allow": ["^_[a-z][A-Za-z0-9]*$"]}],
 		"@typescript-eslint/explicit-function-return-type": "off",
 		"@typescript-eslint/no-empty-function": "off",
 		"@typescript-eslint/no-explicit-any": "off",

@@ -6,8 +6,6 @@
 import { Plane, Quaternion, Vector3, Vector4, Viewport } from '.';
 import { MathTmp } from './tmp';
 
-/* eslint-disable */
-
 /**
  * Class used to store matrix data (4x4)
  */

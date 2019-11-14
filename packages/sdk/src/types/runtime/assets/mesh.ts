@@ -71,11 +71,11 @@ export class Mesh extends Asset implements MeshLike, Patchable<AssetLike> {
 		this.internal.observing = false;
 
 		super.copy(from);
-		if (from.mesh && from.mesh.vertexCount !== undefined) { this._vertexCount = from.mesh.vertexCount; }
-		if (from.mesh && from.mesh.triangleCount !== undefined) { this._triangleCount = from.mesh.triangleCount; }
-		if (from.mesh && from.mesh.boundingBoxDimensions) { this._dimensions.copy(from.mesh.boundingBoxDimensions); }
-		if (from.mesh && from.mesh.boundingBoxCenter) { this._center.copy(from.mesh.boundingBoxCenter); }
-		if (from.mesh && from.mesh.primitiveDefinition) { this._primDef = from.mesh.primitiveDefinition; }
+		if (from.mesh?.vertexCount !== undefined) { this._vertexCount = from.mesh.vertexCount; }
+		if (from.mesh?.triangleCount !== undefined) { this._triangleCount = from.mesh.triangleCount; }
+		if (from.mesh?.boundingBoxDimensions) { this._dimensions.copy(from.mesh.boundingBoxDimensions); }
+		if (from.mesh?.boundingBoxCenter) { this._center.copy(from.mesh.boundingBoxCenter); }
+		if (from.mesh?.primitiveDefinition) { this._primDef = from.mesh.primitiveDefinition; }
 
 		this.internal.observing = wasObserving;
 		return this;
