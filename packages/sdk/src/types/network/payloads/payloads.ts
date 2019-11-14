@@ -127,6 +127,7 @@ export type HandshakeComplete = Payload & {
  */
 export type Heartbeat = Payload & {
 	type: 'heartbeat';
+	serverTime: number;
 };
 
 /**

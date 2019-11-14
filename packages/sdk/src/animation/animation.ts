@@ -3,14 +3,18 @@
  * Licensed under the MIT License.
  */
 import { Guid } from '../types/guid';
-import { AnimationWrapMode } from '.';
+import { AnimationWrapMode, InternalAnimation } from '.';
 import { Patchable } from '../types/patchable';
+import { Context } from '../types/runtime';
+import readPath from '../utils/readPath';
 
 /** A serialized animation definition */
 export interface AnimationLike {
-	/** Generated unique ID */
+	/** Generated unique ID of this animation */
 	id: Readonly<Guid>;
-	/** The current playback time, based on start time and speed */
+	/** The server time (milliseconds since the UNIX epoch) when the animation was started */
+	basisTime: number;
+	/** The current playback time, based on basis time and speed */
 	time: number;
 	/** Playback speed multiplier */
 	speed: number;
@@ -18,17 +22,62 @@ export interface AnimationLike {
 	weight: number;
 	/** What happens when the animation hits the last frame */
 	wrapMode: AnimationWrapMode;
+	/** What runtime objects are being animated */
+	targetIds: Readonly<Guid[]>;
+
+	/** The length in seconds of the animation */
+	duration: number;
 }
 
 /** A runtime animation */
 export class Animation implements AnimationLike, Patchable<AnimationLike> {
+	/** @hidden */
+	public internal = new InternalAnimation(this);
+
 	private _id: Guid;
-	private _basisTime: number;
-	private _speed = 0;
-	private _weight = 1;
-	private _wrapMode = AnimationWrapMode.Once;
 	/** @inheritdoc */
 	public get id() { return this._id; }
+
+	private _basisTime = 0;
+	/** @inheritdoc */
+	public get basisTime() { return this._basisTime; }
+	public set basisTime(val) {
+		this._basisTime = val;
+		this.animationChanged('basisTime');
+	}
+
+	private _speed = 0;
+	/** @inheritdoc */
+	public get speed() { return this._speed; }
+	public set speed(val) {
+		this._speed = val;
+		this.animationChanged('speed');
+	}
+
+	private _weight = 1;
+	/** @inheritdoc */
+	public get weight() { return this._weight; }
+	public set weight(val) {
+		this._weight = val;
+		this.animationChanged('weight');
+	}
+
+	private _wrapMode = AnimationWrapMode.Once;
+	/** @inheritdoc */
+	public get wrapMode() { return this._wrapMode; }
+	public set wrapMode(val) {
+		this._wrapMode = val;
+		this.animationChanged('wrapMode');
+	}
+
+	private _targetIds: Guid[] = [];
+	/** @inheritdoc */
+	public get targetIds() { return Object.freeze([...this._targetIds]); }
+
+	private _duration: number;
+	/** @inheritdoc */
+	public get duration() { return this._duration; }
+
 	/** @inheritdoc */
 	public get time() {
 		if (this._speed !== 0) {
@@ -37,10 +86,41 @@ export class Animation implements AnimationLike, Patchable<AnimationLike> {
 			return this._basisTime;
 		}
 	}
-	/** @inheritdoc */
-	public get speed() { return this._speed; }
-	/** @inheritdoc */
-	public get weight() { return this._weight; }
-	/** @inheritdoc */
-	public get wrapMode() { return this._wrapMode; }
+	
+	/** INTERNAL USE ONLY. Animations are created by loading prefabs with animations on them. */
+	public constructor(private context: Context) { }
+
+	/** @hidden */
+	public toJSON(): AnimationLike {
+		return {
+			id: this.id,
+			basisTime: this.basisTime,
+			time: this.time,
+			speed: this.speed,
+			weight: this.weight,
+			wrapMode: this.wrapMode,
+			targetIds: this.targetIds,
+			duration: this.duration
+		};
+	}
+
+	/** @hidden */
+	public copy(patch: Partial<AnimationLike>): this {
+		if (!patch) { return this; }
+		if (patch.basisTime !== undefined) { this._basisTime = patch.basisTime; }
+		if (patch.speed !== undefined) { this._speed = patch.speed; }
+		if (patch.weight !== undefined) { this._weight = patch.weight; }
+		if (patch.wrapMode) { this._wrapMode = patch.wrapMode; }
+		if (patch.targetIds) { this._targetIds = [...patch.targetIds]; }
+		if (patch.duration !== undefined) { this._duration = patch.duration; }
+		return this;
+	}
+
+	private animationChanged(...path: string[]) {
+		if (this.internal.observing) {
+			this.context.internal.incrementGeneration();
+			this.internal.patch = this.internal.patch ?? {} as Partial<AnimationLike>;
+			readPath(this, this.internal.patch, ...path);
+		}
+	}
 }

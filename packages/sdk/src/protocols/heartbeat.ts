@@ -6,6 +6,8 @@
 import { Protocol } from '.';
 import * as Payloads from '../types/network/payloads';
 
+const MS_PER_S = 1e3;
+const MS_PER_NS = 1e-6;
 /**
  * @hidden
  * Periodically measures performance characteristics of the connection (latency).
@@ -29,12 +31,14 @@ export class Heartbeat {
 
 	public send() {
 		return new Promise<number>((resolve, reject) => {
-			const start = Date.now();
+			const start = process.hrtime();
 			this.protocol.sendPayload({
 				type: 'heartbeat',
+				serverTime: Date.now()
 			} as Payloads.Heartbeat, {
 				resolve: () => {
-					const latency = (Date.now() - start);
+					const hrInterval = process.hrtime(start);
+					const latency = hrInterval[0] * MS_PER_S + hrInterval[1] * MS_PER_NS;
 					this.protocol.conn.quality.latencyMs.update(latency);
 					resolve(latency);
 				},
