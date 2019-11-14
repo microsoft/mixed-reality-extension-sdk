@@ -2,8 +2,7 @@
  * Copyright (c) Microsoft Corporation. All rights reserved.
  * Licensed under the MIT License.
  */
-
-// tslint:disable-next-line
+/* eslint-disable */
 const validator = require('gltf-validator');
 import Empty from './empty';
 import Material from './material';
@@ -16,14 +15,9 @@ export interface Test {
 	name: string;
 	shouldPrintJson: boolean;
 	shouldPrintBuffer: boolean;
-	run(): Promise<Buffer>;
+	run(): Buffer;
 }
 
-// the whole point of this file is to output the test results to the console
-// tslint:disable:no-console
-
-// currently no way to run async code from top of file. must be in a function
-// tslint:disable-next-line:no-floating-promises
 (async () => {
 
 	const tests: Test[] = [new Empty(), new Triangle(), new PrimDupe(), new Material()];
@@ -37,7 +31,7 @@ export interface Test {
 		let time = process.hrtime();
 		let result: Buffer;
 		try {
-			result = await test.run();
+			result = test.run();
 		} catch (ex) {
 			console.log('Test failed', ex);
 			continue;

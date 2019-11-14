@@ -9,17 +9,13 @@ import { QueuedPromise } from '../utils/queuedPromise';
 import { TrackingClock } from '../utils/trackingClock';
 import { NetworkStatsReport } from './networkStats';
 
-// tslint:disable:no-any
-
 /**
  * @hidden
  * Class for tracking connection quality.
  */
 export class ConnectionQuality {
-	// tslint:disable:variable-name
 	private _latencyMs = new ExponentialMovingAverage();
 	private _trackingClock = new TrackingClock();
-	// tslint:enable:variable-name
 
 	/**
 	 * Calculates a moving average of latency on the connection.

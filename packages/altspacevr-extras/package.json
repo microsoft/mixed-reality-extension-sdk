@@ -15,7 +15,7 @@
     "node"
   ],
   "engines": {
-    "node": ">=8.12.0",
+    "node": ">=10.13.0",
     "npm": ">=6.4.1"
   },
   "bugs": {
@@ -27,18 +27,18 @@
   },
   "scripts": {
     "clean": "tsc --build --clean",
-    "build": "tsc --build && npm run lint",
+    "build": "tsc --build && eslint --ext .ts src",
     "build-docs": "typedoc --externalPattern \"**/node_modules/**\" --excludeExternals --excludeNotExported --excludeProtected --excludePrivate --hideGenerator --mode file --name \"Mixed Reality Extension AltspaceVR Extras\" --readme none --out ../../docs/altspacevr-extras ./src",
-    "lint": "tslint -p ./tsconfig.json -c ../tslint.json",
-    "lint-docs": "tslint -p ./tsconfig.json -c ../tslint.docs.json",
     "prepublishOnly": "npm run build"
   },
   "devDependencies": {
     "@types/mime-types": "^2.1.0",
     "@types/node": "^10.12.0",
-    "tslint": "5.11.0",
+    "@typescript-eslint/eslint-plugin": "^2.6.1",
+    "@typescript-eslint/parser": "^2.6.1",
+    "eslint": "^6.6.0",
     "typedoc": "^0.14.2",
-    "typescript": "3.0.3"
+    "typescript": "^3.7.2"
   },
   "dependencies": {
     "@microsoft/mixed-reality-extension-sdk": "^0.14.0"

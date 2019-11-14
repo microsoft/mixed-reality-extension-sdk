@@ -3,7 +3,7 @@
  * Licensed under the MIT License.
  */
 
-import { Asset,  AssetContainer, AssetLike } from '.';
+import { Asset, AssetContainer, AssetLike } from '.';
 import { Actor } from '..';
 import { InternalAsset } from '../../internal/asset';
 import { Patchable } from '../../patchable';
@@ -14,11 +14,9 @@ export interface VideoStreamLike {
 }
 
 export class VideoStream extends Asset implements VideoStreamLike, Patchable<AssetLike> {
-	// tslint:disable:variable-name
 	private _uri: string;
 	private _duration = 0;
 	private _internal = new InternalAsset(this);
-	// tslint:enable:variable-name
 
 	/** @hidden */
 	public get internal() { return this._internal; }
@@ -57,13 +55,13 @@ export class VideoStream extends Asset implements VideoStreamLike, Patchable<Ass
 		const wasObserving = this.internal.observing;
 		this.internal.observing = false;
 
-		// tslint:disable:curly
 		super.copy(from);
-		if (from.videoStream && from.videoStream.uri)
+		if (from.videoStream && from.videoStream.uri) {
 			this._uri = from.videoStream.uri;
-		if (from.videoStream && from.videoStream.duration !== undefined)
+		}
+		if (from.videoStream && from.videoStream.duration !== undefined) {
 			this._duration = from.videoStream.duration;
-		// tslint:enable:curly
+		}
 
 		this.internal.observing = wasObserving;
 		return this;

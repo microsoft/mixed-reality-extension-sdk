@@ -1,7 +1,7 @@
 {
   "extends": "../tsconfig.packages.json",
   "include": [
-    "./src"
+    "./src/**/*.ts"
   ],
   "compilerOptions": {
     "outDir": "./built", /* Redirect output structure to the directory. */

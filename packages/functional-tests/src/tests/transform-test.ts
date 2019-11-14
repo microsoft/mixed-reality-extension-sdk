@@ -56,7 +56,7 @@ export default class TransformTest extends Test {
 			});
 			try {
 				await cube2.created();
-			} catch (_) {
+			} catch {
 				cube2 = cube1;
 			}
 		}
@@ -76,7 +76,8 @@ export default class TransformTest extends Test {
 			}
 		});
 
-		const cube4 = MRE.Actor.Create(this.app.context, {
+		// cube4
+		MRE.Actor.Create(this.app.context, {
 			actor: {
 				name: 'cube4',
 				parentId: cube3.id,

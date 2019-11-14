@@ -11,8 +11,6 @@ import * as Protocols from '../../../protocols';
 import * as Payloads from '../../../types/network/payloads';
 import { ExportedPromise } from '../../../utils/exportedPromise';
 
-// tslint:disable:object-literal-key-quotes no-console
-
 /**
  * @hidden
  */
@@ -62,7 +60,6 @@ export class ClientSync extends Protocols.Protocol {
 	public sendMessage(message: Message, promise?: ExportedPromise, timeoutSeconds?: number) {
 		message.id = message.id || UUID();
 		const handling = this.handlingForMessage(message);
-		// tslint:disable-next-line:switch-default
 		switch (handling) {
 			case 'allow': {
 				super.sendMessage(message, promise, timeoutSeconds);
@@ -76,8 +73,10 @@ export class ClientSync extends Protocols.Protocol {
 				break;
 			}
 			case 'error': {
-				// tslint:disable-next-line: max-line-length
-				log.error('network', `[ERROR] ${this.name}: Invalid message for send during synchronization stage: ${message.payload.type}. In progress: ${this.inProgressStages.join(',')}. Complete: ${this.completedStages.join(',')}.`);
+				log.error('network', `[ERROR] ${this.name}: ` +
+					`Invalid message for send during synchronization stage: ${message.payload.type}. ` +
+					`In progress: ${this.inProgressStages.join(',')}. ` +
+					`Complete: ${this.completedStages.join(',')}.`);
 			}
 		}
 	}
@@ -158,7 +157,7 @@ export class ClientSync extends Protocols.Protocol {
 	 * @hidden
 	 * Driver for the `load-assets` synchronization stage.
 	 */
-	public 'stage:load-assets' = async () => {
+	public 'stage:load-assets' = () => {
 		// Send all cached asset creation messages.
 		for (const creator of this.client.session.assetCreators) {
 			this.sendMessage(creator);
@@ -168,7 +167,7 @@ export class ClientSync extends Protocols.Protocol {
 		for (const update of this.client.session.assets.map(a => a.update).filter(x => !!x)) {
 			this.sendMessage(update);
 		}
-	}
+	};
 
 	/**
 	 * @hidden
@@ -178,7 +177,7 @@ export class ClientSync extends Protocols.Protocol {
 		// Sync cached create-actor hierarchies, starting at roots.
 		this.client.session.rootActors.map(
 			syncActor => this.createActorRecursive(syncActor));
-	}
+	};
 
 	/**
 	 * @hidden
@@ -187,7 +186,7 @@ export class ClientSync extends Protocols.Protocol {
 	public 'stage:set-behaviors' = () => {
 		// Send all cached set-behavior messages.
 		this.client.session.actors.map(syncActor => this.createActorBehavior(syncActor));
-	}
+	};
 
 	/**
 	 * @hidden
@@ -196,7 +195,7 @@ export class ClientSync extends Protocols.Protocol {
 	public 'stage:active-media-instances' = () => {
 		// Send all cached set-behavior messages.
 		this.client.session.actors.map(syncActor => this.activeMediaInstances(syncActor));
-	}
+	};
 	/**
 	 * @hidden
 	 * Driver for the `create-animations` synchronization stage.
@@ -205,7 +204,7 @@ export class ClientSync extends Protocols.Protocol {
 		// Send all cached interpolate-actor and create-animation messages.
 		this.client.session.actors.map(syncActor => this.createActorInterpolations(syncActor));
 		this.client.session.actors.map(syncActor => this.createActorAnimations(syncActor));
-	}
+	};
 
 	/**
 	 * @hidden
@@ -222,23 +221,23 @@ export class ClientSync extends Protocols.Protocol {
 			authoritativeClient.sendPayload({
 				type: 'sync-animations',
 			} as Payloads.SyncAnimations, {
-					resolve: (payload: Payloads.SyncAnimations) => {
-						// We've received the sync-animations payload from the authoritative
-						// client, now pass it to the joining client.
-						for (const animationState of payload.animationStates) {
-							// Account for latency on the authoritative peer's connection.
-							animationState.state.time += authoritativeClient.conn.quality.latencyMs.value / 2000;
-							// Account for latency on the joining peer's connection.
-							animationState.state.time += this.conn.quality.latencyMs.value / 2000;
-						}
-						// Pass with an empty reply handler to account for an edge case that will go away once
-						// animation synchronization is refactored.
-						super.sendPayload(payload);
-						resolve();
-					}, reject
-				});
+				resolve: (payload: Payloads.SyncAnimations) => {
+					// We've received the sync-animations payload from the authoritative
+					// client, now pass it to the joining client.
+					for (const animationState of payload.animationStates) {
+						// Account for latency on the authoritative peer's connection.
+						animationState.state.time += authoritativeClient.conn.quality.latencyMs.value / 2000;
+						// Account for latency on the joining peer's connection.
+						animationState.state.time += this.conn.quality.latencyMs.value / 2000;
+					}
+					// Pass with an empty reply handler to account for an edge case that will go away once
+					// animation synchronization is refactored.
+					super.sendPayload(payload);
+					resolve();
+				}, reject
+			});
 		});
-	}
+	};
 
 	private createActorRecursive(actor: Partial<SyncActor>) {
 		// Start creating this actor and its creatable children.
@@ -338,6 +337,6 @@ export class ClientSync extends Protocols.Protocol {
 				this.sendMessage(queuedMessage.message, queuedMessage.promise, queuedMessage.timeoutSeconds);
 			}
 			await this.drainPromises();
-		} while (true);
+		} while (true); // eslint-disable-line no-constant-condition
 	}
 }

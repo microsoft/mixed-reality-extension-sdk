@@ -13,5 +13,5 @@ export type SyncPayloadType = 'x-reserve-actor';
  * Send a message to the multipeer adapter to save the given actor in the session
  */
 export type XReserveActor = CreateActorCommon & {
-	type: 'x-reserve-actor'
+	type: 'x-reserve-actor';
 };

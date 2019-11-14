@@ -10,11 +10,9 @@ import { User } from '..';
  * Button behavior class containing the target behavior actions.
  */
 export class ButtonBehavior extends TargetBehavior {
-	// tslint:disable:variable-name
 	private _hover: DiscreteAction = new DiscreteAction();
 	private _click: DiscreteAction = new DiscreteAction();
 	private _button: DiscreteAction = new DiscreteAction();
-	// tslint:enable:variable-name
 
 	/** @inheritdoc */
 	public get behaviorType(): BehaviorType { return 'button'; }

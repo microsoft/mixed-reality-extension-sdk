@@ -6,9 +6,9 @@
 /**
  * The type of the collider.
  */
-export type ColliderType
-	= 'auto'
-	| 'box'
-	| 'sphere'
-	| 'capsule'
-	;
+export enum ColliderType {
+	Auto = 'auto',
+	Box = 'box',
+	Sphere = 'sphere',
+	Capsule = 'capsule'
+}

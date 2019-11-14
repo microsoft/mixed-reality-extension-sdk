@@ -10,9 +10,7 @@ import { User } from '..';
  * Target behavior class containing the target behavior actions.
  */
 export class TargetBehavior extends Behavior {
-	// tslint:disable:variable-name
 	private _target: DiscreteAction = new DiscreteAction();
-	// tslint:enable:variable-name
 
 	/** @inheritdoc */
 	public get behaviorType(): BehaviorType { return 'target'; }

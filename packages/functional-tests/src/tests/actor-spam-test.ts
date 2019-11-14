@@ -9,6 +9,7 @@ import { Test } from '../test';
 
 export default class ActorSpamTest extends Test {
 	public expectedResultDescription = "Spawn lots of actors all at once";
+	protected modsOnly = true;
 	private assets: MRE.AssetContainer;
 	private spamRoot: MRE.Actor;
 
@@ -22,7 +23,7 @@ export default class ActorSpamTest extends Test {
 				parentId: root.id,
 				transform: { local: { position: { x: -1, y: 1.2, z: -1 } } },
 				appearance: { meshId: buttonMesh.id },
-				collider: { geometry: { shape: 'auto'} }
+				collider: { geometry: { shape: MRE.ColliderType.Auto} }
 			}
 		});
 		MRE.Actor.Create(this.app.context, {
@@ -45,7 +46,7 @@ export default class ActorSpamTest extends Test {
 				parentId: root.id,
 				transform: { local: { position: { x: -0.33, y: 1.2, z: -1 } } },
 				appearance: { meshId: buttonMesh.id },
-				collider: { geometry: { shape: 'auto'} }
+				collider: { geometry: { shape: MRE.ColliderType.Auto} }
 			}
 		});
 		MRE.Actor.Create(this.app.context, {
@@ -68,7 +69,7 @@ export default class ActorSpamTest extends Test {
 				parentId: root.id,
 				transform: { local: { position: { x: 0.33, y: 1.2, z: -1 } } },
 				appearance: { meshId: buttonMesh.id },
-				collider: { geometry: { shape: 'auto'} }
+				collider: { geometry: { shape: MRE.ColliderType.Auto} }
 			}
 		});
 		MRE.Actor.Create(this.app.context, {
@@ -91,7 +92,7 @@ export default class ActorSpamTest extends Test {
 				parentId: root.id,
 				transform: { local: { position: { x: 1, y: 1.2, z: -1 } } },
 				appearance: { meshId: buttonMesh.id },
-				collider: { geometry: { shape: 'auto'} }
+				collider: { geometry: { shape: MRE.ColliderType.Auto} }
 			}
 		});
 		MRE.Actor.Create(this.app.context, {

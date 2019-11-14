@@ -43,7 +43,7 @@ export default class InterpolationTest extends Test {
 				appearance: {
 					meshId: this.assets.createBoxMesh('box', 0.65, 0.65, 0.65).id
 				},
-				collider: { geometry: { shape: 'auto' } },
+				collider: { geometry: { shape: MRE.ColliderType.Auto } },
 				transform: {
 					local: {
 						position: { y: 1.0, z: -1.0 }

@@ -2,10 +2,7 @@
  * Copyright (c) Microsoft Corporation. All rights reserved.
  * Licensed under the MIT License.
  */
-
 import { Vector3 } from '.';
-
-// tslint:disable:member-ordering
 
 /**
  * A Curve3 object is a logical object, so not a mesh, to handle curves in the 3D geometric space.
@@ -13,10 +10,8 @@ import { Vector3 } from '.';
  * @see https://doc.babylonjs.com/how_to/how_to_use_curve3
  */
 export class Curve3 {
-	// tslint:disable:variable-name
 	private _points: Vector3[];
 	private _length = 0.0;
-	// tslint:enable:variable-name
 
 	/**
 	 * Returns a Curve3 object along a Quadratic Bezier curve :
@@ -102,7 +97,6 @@ export class Curve3 {
 		let amount = 0.0;
 		if (closed) {
 			const pointsCount = points.length;
-			// tslint:disable-next-line:no-var-keyword
 			for (var i = 0; i < pointsCount; i++) {
 				amount = 0;
 				for (let c = 0; c < nbPoints; c++) {

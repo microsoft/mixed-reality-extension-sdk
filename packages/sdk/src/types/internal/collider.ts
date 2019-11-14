@@ -15,10 +15,8 @@ import {
 
 /** @hidden */
 export class InternalCollider {
-	// tslint:disable:variable-name
 	private _eventHandlers = new EventEmitter();
 	private _eventSubCount = 0;
-	// tslint:enable:variable-name
 
 	/** @hidden */
 	public get eventSubscriptions(): ColliderEventType[] {

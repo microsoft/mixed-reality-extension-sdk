@@ -4,11 +4,11 @@
  */
 
 import * as MRE from '@microsoft/mixed-reality-extension-sdk';
-import { App } from '../app';
 import { Test } from '../test';
 
 export default class VideoTest extends Test {
 	public expectedResultDescription = "Play a couple youtube videos. Click to cycle.";
+	protected modsOnly = true;
 	private assets: MRE.AssetContainer;
 	private _state = 0;
 
@@ -131,7 +131,7 @@ export default class VideoTest extends Test {
 				appearance: {
 					meshId: this.assets.createSphereMesh('sphere', 0.2).id
 				},
-				collider: { geometry: { shape: 'auto' } },
+				collider: { geometry: { shape: MRE.ColliderType.Auto } },
 				transform: {
 					local: {
 						position: { x: -0.8, y: 0.2, z: 0 }

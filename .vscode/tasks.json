@@ -4,33 +4,129 @@
 	"version": "2.0.0",
 	"tasks": [
 		{
-			"label": "Build functional tests",
-			"type": "npm",
-			"script": "build",
-			"path": "packages/functional-tests/",
-			"problemMatcher": []
+			"label": "Build All",
+			"type": "typescript",
+			"tsconfig": "tsconfig.json",
+			"problemMatcher": "$tsc",
+			"group": "build"
+		},
+		{
+			"label": "Lint All",
+			"type": "process",
+			"command": "node",
+			"args": [
+				"node_modules/eslint/bin/eslint.js",
+				"--ext", ".ts",
+				"packages"],
+			"problemMatcher": "$eslint-stylish",
+			"group": "build"
+		},
+		{
+			"label": "Build+Lint All",
+			"dependsOn": ["Build All", "Lint All"],
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "Build SDK",
+			"type": "typescript",
+			"tsconfig": "packages/sdk/tsconfig.json",
+			"problemMatcher": "$tsc",
+			"group": "build"
+		},
+		{
+			"label": "Lint SDK",
+			"type": "process",
+			"command": "node",
+			"args": [
+				"node_modules/eslint/bin/eslint.js",
+				"--ext", ".ts",
+				"packages/sdk"],
+			"problemMatcher": "$eslint-stylish",
+			"group": "build"
+		},
+		{
+			"label": "Build+Lint SDK",
+			"dependsOn": ["Build SDK", "Lint SDK"],
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "Build Tests",
+			"type": "typescript",
+			"tsconfig": "packages/functional-tests/tsconfig.json",
+			"problemMatcher": "$tsc",
+			"group": "build"
+		},
+		{
+			"label": "Lint Tests",
+			"type": "process",
+			"command": "node",
+			"args": [
+				"node_modules/eslint/bin/eslint.js", 
+				"--ext", ".ts", 
+				"packages/functional-tests"],
+			"problemMatcher": "$eslint-stylish",
+			"group": "build"
+		},
+		{
+			"label": "Build+Lint Tests",
+			"dependsOn": ["Build Tests", "Lint Tests"],
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "Build Extras",
+			"type": "typescript",
+			"tsconfig": "packages/altspacevr-extras/tsconfig.json",
+			"problemMatcher": "$tsc",
+			"group": "build"
+		},
+		{
+			"label": "Lint Extras",
+			"type": "process",
+			"command": "node",
+			"args": [
+				"node_modules/eslint/bin/eslint.js", 
+				"--ext", ".ts", 
+				"packages/altspacevr-extras"],
+			"problemMatcher": "$eslint-stylish",
+			"group": "build"
+		},
+		{
+			"label": "Build+Lint Extras",
+			"dependsOn": ["Build Extras", "Lint Extras"],
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "Build GltfGen",
+			"type": "typescript",
+			"tsconfig": "packages/gltf-gen/tsconfig.json",
+			"problemMatcher": "$tsc",
+			"group": "build"
+		},
+		{
+			"label": "Lint GltfGen",
+			"type": "process",
+			"command": "node",
+			"args": [
+				"node_modules/eslint/bin/eslint.js", 
+				"--ext", ".ts", 
+				"packages/gltf-gen"],
+			"problemMatcher": "$eslint-stylish",
+			"group": "build"
+		},
+		{
+			"label": "Build+Lint GltfGen",
+			"dependsOn": ["Build GltfGen", "Lint GltfGen"],
+			"problemMatcher": [],
+			"group": "build"
 		},
 		{
 			"type": "npm",
-			"script": "build",
-			"path": "packages/sdk/",
-			"problemMatcher": []
-		},
-		{
-			"type": "npm",
-			"script": "build",
-			"problemMatcher": []
-		},
-		{
-			"type": "npm",
-			"script": "build",
-			"path": "packages/altspacevr-extras/",
-			"problemMatcher": []
-		},
-		{
-			"type": "npm",
-			"script": "build",
-			"path": "packages/gltf-gen/",
+			"script": "build-docs",
+			"group": "build",
 			"problemMatcher": []
 		}
 	]

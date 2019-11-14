@@ -4,9 +4,8 @@
  */
 
 import * as MRE from '@microsoft/mixed-reality-extension-sdk';
-import * as MRERPC from '@microsoft/mixed-reality-extension-sdk/built/rpc';
 
-import Menu from './menu';
+import { Menu } from './menu';
 import { Test, TestFactory } from './test';
 import { Factories } from './tests';
 import destroyActors from './utils/destroyActors';
@@ -131,18 +130,16 @@ export class App {
 		const test = this.activeTest = this.activeTestFactory(this, this.baseUrl, user);
 		this.setOverrideText(test.expectedResultDescription);
 
-		this.context.rpc.send({ procName: 'functional-test:test-started' }, this.activeTestName);
-		console.log(`Test started: '${this.activeTestName}'`);
-
 		let success: boolean;
 		try {
+			test.checkPermission(user);
 			success = await test.run(this.testRoot);
 			if (!success) {
 				this.setOverrideText("Test Failed: '${testName}'", FailureColor);
 			}
 		} catch (e) {
 			console.log(e);
-			this.setOverrideText("Test " + e, FailureColor);
+			this.setOverrideText(e.toString(), FailureColor);
 			success = false;
 		}
 
@@ -230,7 +227,7 @@ export class App {
 					}
 				},
 				collider: {
-					geometry: { shape: 'auto' }
+					geometry: { shape: MRE.ColliderType.Auto }
 				}
 			}
 		});
@@ -266,7 +263,7 @@ export class App {
 						position: { x: 0, y: -0.05, z: -1 }
 					}
 				},
-				collider: { geometry: { shape: 'auto' } }
+				collider: { geometry: { shape: MRE.ColliderType.Auto } }
 			}
 		});
 
@@ -282,7 +279,7 @@ export class App {
 						position: { x: 0, y: 1, z: 0.1 }
 					}
 				},
-				collider: { geometry: { shape: 'auto' } }
+				collider: { geometry: { shape: MRE.ColliderType.Auto } }
 			}
 		});
 
@@ -339,7 +336,7 @@ export class App {
 						position: { x: -0.65, y: 0.15, z: -1.95 }
 					}
 				},
-				collider: { geometry: { shape: 'auto' } }
+				collider: { geometry: { shape: MRE.ColliderType.Auto } }
 			}
 		});
 
@@ -381,7 +378,7 @@ export class App {
 						position: { x: 0.65, y: 0.15, z: -1.95 }
 					}
 				},
-				collider: { geometry: { shape: 'auto' } }
+				collider: { geometry: { shape: MRE.ColliderType.Auto } }
 			}
 		});
 
@@ -413,7 +410,8 @@ export class App {
 				this.menu.show();
 			});
 
-		this.runnerActors = [this.contextLabel, this.testRoot, this.playPauseButton,
-		this.playPauseText, menuButton, menuText];
+		this.runnerActors = [
+			this.contextLabel, this.testRoot, this.playPauseButton,
+			this.playPauseText, menuButton, menuText];
 	}
 }

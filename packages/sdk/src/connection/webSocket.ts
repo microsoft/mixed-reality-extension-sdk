@@ -9,7 +9,6 @@ import { Message } from '..';
 import { log } from '../log';
 import filterEmpty from '../utils/filterEmpty';
 import validateJsonFieldName from '../utils/validateJsonFieldName';
-import { NetworkStatsTracker } from './networkStats';
 
 /**
  * An implementation of the Connection interface that wraps a WebSocket.
@@ -17,7 +16,6 @@ import { NetworkStatsTracker } from './networkStats';
 export class WebSocket extends EventedConnection {
 	public get remoteAddress() { return this._remoteAddress; }
 
-	// tslint:disable-next-line:variable-name
 	constructor(private _ws: WS, private _remoteAddress: string) {
 		super();
 

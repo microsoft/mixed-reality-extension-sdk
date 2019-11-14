@@ -6,8 +6,6 @@
 import { Epsilon, Matrix, Scalar, Vector3 } from '.';
 import { FloatArray } from './types';
 
-// tslint:disable:member-ordering variable-name one-variable-per-declaration trailing-comma no-bitwise curly max-line-length
-
 /**
  * Vector4 class created for EulerAngle class conversion to Quaternion
  */

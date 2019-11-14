@@ -70,18 +70,18 @@ export default class GrabTest extends Test {
 		// Set up cursor interaction. We add the input behavior ButtonBehavior to the cube.
 		// Button behaviors have two pairs of events: hover start/stop, and click start/stop.
 		const behavior = this.model.setBehavior(MRE.ButtonBehavior);
-		behavior.onClick(_ => {
+		behavior.onClick(() => {
 			this.state = 3;
 			this.cycleState();
 		});
 
 		// Make the actor grabbable and update state based on grab.
 		this.model.grabbable = true;
-		this.model.onGrab('begin', _ => {
+		this.model.onGrab('begin', () => {
 			this.state = 1;
 			this.cycleState();
 		});
-		this.model.onGrab('end', _ => {
+		this.model.onGrab('end', () => {
 			this.state = 2;
 			this.cycleState();
 		});
@@ -97,7 +97,7 @@ export default class GrabTest extends Test {
 					appearance: {
 						meshId: boxMesh.id
 					},
-					collider: { geometry: { shape: 'auto' } },
+					collider: { geometry: { shape: MRE.ColliderType.Auto } },
 					transform: { local: { position: { x: cube.x, y: 1, z: -1 } } }
 				}
 			}).grabbable = true;

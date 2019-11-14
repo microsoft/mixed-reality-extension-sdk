@@ -20,6 +20,8 @@ export abstract class Test {
 	 */
 	public expectedResultDescription: string;
 
+	protected modsOnly = false;
+
 	private _stopped = false;
 	private stoppedPromise: Promise<void> = null;
 	private stoppedContinue: () => void = null;
@@ -58,12 +60,22 @@ export abstract class Test {
 	 */
 	public stoppedAsync() {
 		return this.stoppedPromise = this.stoppedPromise ||
-			new Promise<void>((resolve, reject) => {
+			new Promise<void>(resolve => {
 				if (this._stopped) {
 					resolve();
 				} else {
 					this.stoppedContinue = resolve;
 				}
 			});
+	}
+
+	public checkPermission(user: User) {
+		if (this.modsOnly) {
+			if (!/moderator|presenter/u.test(user.properties['altspacevr-roles'])) {
+				throw new Error('Only moderators can run this test');
+			} else {
+				console.log(`User ${user.name} allowed to start test`);
+			}
+		}
 	}
 }

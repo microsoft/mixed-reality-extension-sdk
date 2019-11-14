@@ -9,12 +9,12 @@ import GLTF from './gen/gltf';
 import { Serializable } from './serializable';
 
 export interface TextureLike {
-	name?: string,
-	source?: Image,
-	magFilter?: TextureMagFilter,
-	minFilter?: TextureMinFilter,
-	wrapS?: TextureWrapMode,
-	wrapT?: TextureWrapMode
+	name?: string;
+	source?: Image;
+	magFilter?: TextureMagFilter;
+	minFilter?: TextureMinFilter;
+	wrapS?: TextureWrapMode;
+	wrapT?: TextureWrapMode;
 }
 
 export class Texture extends Serializable implements TextureLike {

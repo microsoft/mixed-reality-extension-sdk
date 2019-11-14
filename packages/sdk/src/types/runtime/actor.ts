@@ -50,11 +50,7 @@ import { SubscriptionType } from '../network/subscriptionType';
 import { Patchable } from '../patchable';
 import { ActionHandler, ActionState, Behavior, DiscreteAction } from './behaviors';
 import { MediaInstance } from './mediaInstance';
-import {
-	ColliderGeometry,
-	CollisionHandler,
-	TriggerHandler
-} from './physics';
+import { ColliderGeometry } from './physics';
 
 /**
  * Describes the properties of an Actor.
@@ -94,7 +90,6 @@ export interface ActorSet {
  * An actor represents an object instantiated on the host.
  */
 export class Actor implements ActorLike, Patchable<ActorLike> {
-	// tslint:disable:variable-name
 	private _internal = new InternalActor(this);
 	/** @hidden */
 	public get internal() { return this._internal; }
@@ -118,7 +113,6 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	private _lookAt: LookAt;
 	private _grabbable = false;
 	private _grab: DiscreteAction;
-	// tslint:enable:variable-name
 
 	private get grab() { this._grab = this._grab || new DiscreteAction(); return this._grab; }
 
@@ -172,7 +166,6 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 		}
 	}
 
-	// tslint:disable-next-line:variable-name
 	private constructor(private _context: Context, private _id: string) {
 		// Actor patching: Observe the transform for changed values.
 		observe({
@@ -207,7 +200,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	 * @param options.actor The initial state of the actor.
 	 */
 	public static Create(context: Context, options?: {
-		actor?: Partial<ActorLike>
+		actor?: Partial<ActorLike>;
 	}): Actor {
 		return context.internal.Create(options);
 	}
@@ -217,7 +210,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	 * Use [[Actor.Create]] instead.
 	 */
 	public static CreateEmpty(context: Context, options?: {
-		actor?: Partial<ActorLike>
+		actor?: Partial<ActorLike>;
 	}): Actor {
 		return Actor.Create(context, options);
 	}
@@ -230,8 +223,8 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	 * @param options.actor The initial state of the root actor.
 	 */
 	public static CreateFromLibrary(context: Context, options: {
-		resourceId: string,
-		actor?: Partial<ActorLike>
+		resourceId: string;
+		actor?: Partial<ActorLike>;
 	}): Actor {
 		return context.internal.CreateFromLibrary(options);
 	}
@@ -244,9 +237,9 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	 * @param options.actor The initial state of the root actor.
 	 */
 	public static CreateFromPrefab(context: Context, options: {
-		prefabId: string,
-		collisionLayer?: CollisionLayer,
-		actor?: Partial<ActorLike>
+		prefabId: string;
+		collisionLayer?: CollisionLayer;
+		actor?: Partial<ActorLike>;
 	}): Actor;
 
 	/**
@@ -257,9 +250,9 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	 * @param options.actor The initial state of the root actor.
 	 */
 	public static CreateFromPrefab(context: Context, options: {
-		prefab: Prefab,
-		collisionLayer?: CollisionLayer,
-		actor?: Partial<ActorLike>
+		prefab: Prefab;
+		collisionLayer?: CollisionLayer;
+		actor?: Partial<ActorLike>;
 	}): Actor;
 
 	/**
@@ -270,25 +263,24 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	 * @param options.actor The initial state of the root actor.
 	 */
 	public static CreateFromPrefab(context: Context, options: {
-		firstPrefabFrom: Asset[],
-		collisionLayer?: CollisionLayer,
-		actor?: Partial<ActorLike>
+		firstPrefabFrom: Asset[];
+		collisionLayer?: CollisionLayer;
+		actor?: Partial<ActorLike>;
 	}): Actor;
 
-	/** @hidden */
 	public static CreateFromPrefab(context: Context, options: {
-		prefabId?: string,
-		prefab?: Prefab,
-		firstPrefabFrom?: Asset[],
-		collisionLayer?: CollisionLayer,
-		actor?: Partial<ActorLike>
+		prefabId?: string;
+		prefab?: Prefab;
+		firstPrefabFrom?: Asset[];
+		collisionLayer?: CollisionLayer;
+		actor?: Partial<ActorLike>;
 	}): Actor {
 		let prefabId = options.prefabId;
 		if (!prefabId && options.prefab) {
 			prefabId = options.prefab.id;
 		}
 		if (!prefabId && options.firstPrefabFrom) {
-			prefabId = options.firstPrefabFrom.find(a => !!a.prefab).id as string;
+			prefabId = options.firstPrefabFrom.find(a => !!a.prefab).id;
 		}
 		if (!prefabId) {
 			throw new Error("No prefab supplied to CreateFromPrefab");
@@ -310,9 +302,9 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	 * @param options.actor The initial state of the actor
 	 */
 	public static CreateFromGltf(container: AssetContainer, options: {
-		uri: string,
-		colliderType?: 'box' | 'mesh',
-		actor?: Partial<ActorLike>
+		uri: string;
+		colliderType?: 'box' | 'mesh';
+		actor?: Partial<ActorLike>;
 	}): Actor {
 		return container.context.internal.CreateFromGltf(container, options);
 	}
@@ -326,9 +318,9 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	 * @param options.actor The initial state of the actor
 	 */
 	public static CreatePrimitive(container: AssetContainer, options: {
-		definition: PrimitiveDefinition,
-		addCollider?: boolean,
-		actor?: Partial<ActorLike>
+		definition: PrimitiveDefinition;
+		addCollider?: boolean;
+		actor?: Partial<ActorLike>;
 	}): Actor {
 		const actor = options.actor || {};
 		const mesh = container.createPrimitiveMesh(actor.name, options.definition);
@@ -340,7 +332,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 					meshId: mesh.id
 				},
 				collider: options.addCollider
-					? actor.collider || { geometry: { shape: 'auto' } }
+					? actor.collider || { geometry: { shape: ColliderType.Auto } }
 					: actor.collider
 			}
 		});
@@ -419,7 +411,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	 */
 	// * @param collisionLayer The layer that the collider operates in.
 	public setCollider(
-		colliderType: 'sphere',
+		colliderType: ColliderType.Sphere,
 		// collisionLayer: CollisionLayer,
 		isTrigger: boolean,
 		radius?: number,
@@ -436,7 +428,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	 * @param center The center of the collider, or default of the object if none is provided.
 	 */
 	public setCollider(
-		colliderType: 'box',
+		colliderType: ColliderType.Box,
 		// collisionLayer: CollisionLayer,
 		isTrigger: boolean,
 		size?: Vector3Like,
@@ -454,7 +446,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	 * @param center The center of the collider, or default of the object if none is provided.
 	 */
 	public setCollider(
-		colliderType: 'capsule',
+		colliderType: ColliderType.Capsule,
 		isTrigger: boolean,
 		size?: Vector3Like,
 		center?: Vector3Like
@@ -466,11 +458,10 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	 * @param isTrigger Whether the collider is a trigger volume or not.
 	 */
 	public setCollider(
-		colliderType: 'auto',
+		colliderType: ColliderType.Auto,
 		isTrigger: boolean
 	): void;
 
-	/** @ignore */
 	public setCollider(
 		colliderType: ColliderType,
 		// collisionLayer: CollisionLayer,
@@ -759,24 +750,24 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 		const wasObserving = this.internal.observing;
 		this.internal.observing = false;
 
-		if (!from) return this;
-		if (from.id) this._id = from.id;
-		if (from.parentId) this._parentId = from.parentId;
-		if (from.name) this._name = from.name;
-		if (from.tag) this._tag = from.tag;
+		if (!from) { return this; }
+		if (from.id) { this._id = from.id; }
+		if (from.parentId) { this._parentId = from.parentId; }
+		if (from.name) { this._name = from.name; }
+		if (from.tag) { this._tag = from.tag; }
 		if (from.exclusiveToUser || from.parentId) {
 			this._exclusiveToUser = this.parent && this.parent.exclusiveToUser || from.exclusiveToUser;
 		}
-		if (from.transform) this._transform.copy(from.transform);
-		if (from.attachment) this.attach(from.attachment.userId, from.attachment.attachPoint);
-		if (from.appearance) this._appearance.copy(from.appearance);
-		if (from.light) this.enableLight(from.light);
-		if (from.rigidBody) this.enableRigidBody(from.rigidBody);
-		if (from.collider) this._setCollider(from.collider);
-		if (from.text) this.enableText(from.text);
-		if (from.lookAt) this.enableLookAt(from.lookAt.actorId, from.lookAt.mode);
-		if (from.grabbable !== undefined) this._grabbable = from.grabbable;
-
+		if (from.transform) { this._transform.copy(from.transform); }
+		if (from.attachment) { this.attach(from.attachment.userId, from.attachment.attachPoint); }
+		if (from.appearance) { this._appearance.copy(from.appearance); }
+		if (from.light) { this.enableLight(from.light); }
+		if (from.rigidBody) { this.enableRigidBody(from.rigidBody); }
+		if (from.collider) { this._setCollider(from.collider); }
+		if (from.text) { this.enableText(from.text); }
+		if (from.lookAt) { this.enableLookAt(from.lookAt.actorId, from.lookAt.mode); }
+		if (from.grabbable !== undefined) { this._grabbable = from.grabbable; }
+		
 		this.internal.observing = wasObserving;
 		return this;
 	}
@@ -825,7 +816,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 			readPath(this, this.internal.patch, ...path);
 			this.context.internal.incrementGeneration();
 		}
-	}
+	};
 
 	/**
 	 * PRIVATE METHODS
@@ -837,27 +828,27 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 		center = { x: 0, y: 0, z: 0 } as Vector3Like,
 	): ColliderGeometry {
 		switch (colliderType) {
-			case 'box':
+			case ColliderType.Box:
 				return {
-					shape: 'box',
+					shape: ColliderType.Box,
 					center,
 					size: size as Readonly<Vector3Like>
 				};
-			case 'sphere':
+			case ColliderType.Sphere:
 				return {
-					shape: 'sphere',
+					shape: ColliderType.Sphere,
 					center,
 					radius: size as number
 				};
-			case 'capsule':
+			case ColliderType.Capsule:
 				return {
-					shape: 'capsule',
+					shape: ColliderType.Capsule,
 					center,
 					size: size as Readonly<Vector3Like>
 				};
 			case 'auto':
 				return {
-					shape: 'auto'
+					shape: ColliderType.Auto
 				};
 			default:
 				log.error(null,

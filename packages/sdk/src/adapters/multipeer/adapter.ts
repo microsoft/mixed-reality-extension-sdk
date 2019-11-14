@@ -16,8 +16,8 @@ import { log } from './../../log';
 import { Client } from './client';
 import { Session } from './session';
 
-// tslint:disable-next-line:no-var-requires
-const forwarded = require('forwarded-for');
+const forwarded: (res: http.IncomingMessage, headers: http.IncomingHttpHeaders) => {ip: string; port: number}
+	= require('forwarded-for'); /* eslint-disable-line @typescript-eslint/no-var-requires */
 
 /**
  * Multi-peer adapter options
@@ -95,8 +95,7 @@ export class MultipeerAdapter extends Adapter {
 			session = this.sessions[sessionId] = new Session(
 				pipe.local, sessionId, this.options.peerAuthoritative);
 			// Handle session close.
-			const $this = this;
-			session.on('close', () => delete $this.sessions[sessionId]);
+			session.on('close', () => delete this.sessions[sessionId]);
 			// Connect the session to the context.
 			await session.connect(); // Allow exceptions to propagate.
 			// Pass the new context to the app.

@@ -3,8 +3,6 @@
  * Licensed under the MIT License.
  */
 
-// tslint:disable:variable-name
-
 /**
  * Predefined ease curves from https://easings.net/. Curve shapes can be previewed there.
  * Create your own at http://cubic-bezier.com.

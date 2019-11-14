@@ -28,5 +28,5 @@ export class SessionHandshake extends Protocols.Protocol {
 	public 'recv-handshake-reply' = (payload: Payloads.HandshakeReply) => {
 		this.sendPayload({ type: 'handshake-complete' } as Payloads.HandshakeComplete);
 		this.resolve();
-	}
+	};
 }

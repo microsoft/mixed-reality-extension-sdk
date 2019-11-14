@@ -51,7 +51,6 @@ export enum AlphaMode {
  * Represents a material on a mesh.
  */
 export class Material extends Asset implements MaterialLike, Patchable<AssetLike> {
-	// tslint:disable:variable-name
 	private _color = Color4.FromColor3(Color3.White(), 1.0);
 	private _mainTextureId: string = ZeroGuid;
 	private _mainTextureOffset = Vector2.Zero();
@@ -59,7 +58,6 @@ export class Material extends Asset implements MaterialLike, Patchable<AssetLike
 	private _alphaMode = AlphaMode.Opaque;
 	private _alphaCutoff = 0.5;
 	private _internal = new InternalAsset(this);
-	// tslint:enable:variable-name
 
 	/** @hidden */
 	public get internal() { return this._internal; }
@@ -86,7 +84,7 @@ export class Material extends Asset implements MaterialLike, Patchable<AssetLike
 			value = ZeroGuid; // throw?
 		}
 
-		if (value === this._mainTextureId) return;
+		if (value === this._mainTextureId) { return; }
 
 		if (this.mainTexture) {
 			this.mainTexture.clearReference(this);
@@ -206,7 +204,7 @@ export class Material extends Asset implements MaterialLike, Patchable<AssetLike
 
 	/** @hidden */
 	public breakReference(ref: Actor | Asset) {
-		if (!(ref instanceof Actor)) return;
+		if (!(ref instanceof Actor)) { return; }
 		if (ref.appearance.material === this) {
 			ref.appearance.material = null;
 		}

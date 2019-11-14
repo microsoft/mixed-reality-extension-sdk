@@ -29,17 +29,17 @@ export class Handshake extends Protocol {
 			sessionId: this.sessionId,
 			operatingModel: this.operatingModel,
 		} as Payloads.HandshakeReply);
-	}
+	};
 
 	/** @private */
 	public 'recv-handshake-complete' = (payload: Payloads.HandshakeComplete) => {
 		this.resolve();
-	}
+	};
 
 	/** @private */
 	public 'recv-sync-request' = (payload: Payloads.SyncRequest) => {
 		// The way the protocol works right now, this message can be sent unexpectedly early by the client.
 		// If we receive it, we'll cache it and pass it along to the next protocol.
 		this.syncRequest = payload;
-	}
+	};
 }

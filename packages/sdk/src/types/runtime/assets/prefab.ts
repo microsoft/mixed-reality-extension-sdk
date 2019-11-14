@@ -14,10 +14,8 @@ export interface PrefabLike {
 }
 
 export class Prefab extends Asset implements PrefabLike, Patchable<AssetLike> {
-	// tslint:disable:variable-name
 	private _actorCount: number;
 	private _internal = new InternalAsset(this);
-	// tslint:enable:variable-name
 
 	/** @hidden */
 	public get internal() { return this._internal; }
@@ -48,11 +46,10 @@ export class Prefab extends Asset implements PrefabLike, Patchable<AssetLike> {
 		const wasObserving = this.internal.observing;
 		this.internal.observing = false;
 
-		// tslint:disable:curly
 		super.copy(from);
-		if (from.prefab)
+		if (from.prefab) {
 			this._actorCount = from.prefab.actorCount;
-		// tslint:enable:curly
+		}
 
 		this.internal.observing = wasObserving;
 		return this;
@@ -70,6 +67,6 @@ export class Prefab extends Asset implements PrefabLike, Patchable<AssetLike> {
 
 	/** @hidden */
 	public breakReference(ref: Actor | Asset) {
-		if (!(ref instanceof Actor)) return;
+		if (!(ref instanceof Actor)) { return; }
 	}
 }

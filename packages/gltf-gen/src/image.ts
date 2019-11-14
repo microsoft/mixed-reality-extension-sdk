@@ -9,7 +9,11 @@ import GLTF from './gen/gltf';
 import { Serializable } from './serializable';
 import { roundUpToNextMultipleOf4 } from './util';
 
-export interface ImageLike { name?: string, uri?: string, embeddedFilePath?: string }
+export interface ImageLike {
+	name?: string;
+	uri?: string;
+	embeddedFilePath?: string;
+}
 
 export class Image extends Serializable implements ImageLike {
 

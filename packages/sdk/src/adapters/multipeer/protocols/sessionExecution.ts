@@ -27,5 +27,5 @@ export class SessionExecution extends Protocols.Protocol implements Protocols.Mi
 		this.emit('recv', message);
 		// Cancel the message
 		return undefined;
-	}
+	};
 }

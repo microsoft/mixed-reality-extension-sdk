@@ -11,7 +11,6 @@ export class Scalar {
 	/**
 	 * Two pi constants convenient for computation.
 	 */
-	// tslint:disable-next-line:variable-name
 	public static TwoPi: number = Math.PI * 2;
 
 	/**

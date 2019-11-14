@@ -60,10 +60,8 @@ export interface AttachmentLike {
  * Implementation of AttachmentLike. This class is observable.
  */
 export class Attachment implements AttachmentLike {
-	// tslint:disable:variable-name
 	private _userId = ZeroGuid;
 	private _attachPoint: AttachPoint = 'none';
-	// tslint:enable:variable-name
 
 	public get userId() { return this._userId; }
 	public set userId(value) { this._userId = value || ZeroGuid; }
@@ -79,9 +77,9 @@ export class Attachment implements AttachmentLike {
 	}
 
 	public copy(from: Partial<AttachmentLike>): this {
-		if (!from) return this;
-		if (from.userId) this._userId = from.userId;
-		if (from.attachPoint) this._attachPoint = from.attachPoint;
+		if (!from) { return this; }
+		if (from.userId) { this._userId = from.userId; }
+		if (from.attachPoint) { this._attachPoint = from.attachPoint; }
 		return this;
 	}
 }
