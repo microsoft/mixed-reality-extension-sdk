@@ -24,15 +24,15 @@ module.exports = {
 		"header"
 	],
 	"rules": {
-		"block-spacing": ["error", "always"],
-		"brace-style": ["error", "1tbs", {"allowSingleLine": true}],
-		"camelcase": ["warn", {"allow": ["^_"]}],
-		"curly": ["error", "all"],
+		"block-spacing": ["warn", "always"],
+		"brace-style": ["warn", "1tbs", {"allowSingleLine": true}],
+		"camelcase": ["warn", {"allow": ["^_[a-z][A-Za-z0-9]*$"]}],
+		"curly": ["warn", "all"],
 		"default-param-last": "warn",
-		"eol-last": ["error", "always"],
+		"eol-last": ["warn", "always"],
 		"eqeqeq": ["error", "always"],
 		"indent": [
-			"error",
+			"warn",
 			"tab",
 			{
 				"MemberExpression": "off",
@@ -40,7 +40,7 @@ module.exports = {
 			}
 		],
 		"linebreak-style": [
-			"error",
+			"warn",
 			"windows"
 		],
 		"max-classes-per-file": ["warn", 1],
@@ -51,6 +51,7 @@ module.exports = {
 		"no-labels": "error",
 		"no-loop-func": "error",
 		"no-multi-spaces": ["warn", {"ignoreEOLComments": true}],
+		"no-multiple-empty-lines": "warn",
 		"no-new": "error",
 		"no-self-compare": "warn",
 		"no-sequences": "error",
