@@ -12,7 +12,6 @@ import { InternalContext } from './context';
  * @hidden
  */
 export class InternalUser implements InternalPatchable<UserLike> {
-	// tslint:disable-next-line:variable-name
 	public __rpc: any;
 	public observing = true;
 	public patch: UserLike;

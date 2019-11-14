@@ -16,13 +16,11 @@ export default class AltspaceVRVideoTest extends Test {
 	protected modsOnly = true;
 
 	// Note that videoPlayerManager is deprecated. Please use Actor.startVideoStream() instead.
-	/* tslint:disable-next-line */
 	private videoPlayerManager: VideoPlayerManager;
 	private assets: MRE.AssetContainer;
 
 	constructor(app: App, baseUrl: string, user: MRE.User) {
 		super(app, baseUrl, user);
-		/* tslint:disable-next-line */
 		this.videoPlayerManager = new VideoPlayerManager(app.context);
 		this.assets = new MRE.AssetContainer(this.app.context);
 	}

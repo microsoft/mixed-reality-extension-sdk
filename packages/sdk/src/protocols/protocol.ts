@@ -27,7 +27,6 @@ export class Protocol extends EventEmitter {
 	public get promises() { return this.conn.promises; }
 	public get name() { return this.constructor.name; }
 
-	// tslint:disable-next-line:variable-name
 	constructor(private _conn: Connection) {
 		super();
 		this.onReceive = this.onReceive.bind(this);
@@ -91,8 +90,8 @@ export class Protocol extends EventEmitter {
 		const setReplyTimeout = () => {
 			if (timeoutSeconds > 0) {
 				return setTimeout(() => {
-					// tslint:disable-next-line:max-line-length
-					const reason = `${this.name} timed out awaiting response for ${message.payload.type}, id:${message.id}.`;
+					const reason = `${this.name} timed out awaiting response for ${message.payload.type}, ` +
+						`id:${message.id}.`;
 					log.error('network', reason);
 					this.rejectPromiseForMessage(message.id, reason);
 					this.conn.close();
@@ -116,11 +115,11 @@ export class Protocol extends EventEmitter {
 
 	public recvMessage(message: Message) {
 		if (message.replyToId) {
-			// tslint:disable-next-line:max-line-length
-			log.verbose('network', `${this.name} recv id:${message.id.substr(0, 8)}, replyTo:${message.replyToId.substr(0, 8)}, type:${message.payload.type}`);
+			log.verbose('network', `${this.name} recv id:${message.id.substr(0, 8)}, ` +
+				`replyTo:${message.replyToId.substr(0, 8)}, type:${message.payload.type}`);
 		} else {
-			// tslint:disable-next-line:max-line-length
-			log.verbose('network', `${this.name} recv id:${message.id.substr(0, 8)}, type:${message.payload.type}`);
+			log.verbose('network', `${this.name} recv id:${message.id.substr(0, 8)}, ` +
+				`type:${message.payload.type}`);
 		}
 		log.verbose('network-content', JSON.stringify(message, (key, value) => filterEmpty(value)));
 
@@ -145,12 +144,10 @@ export class Protocol extends EventEmitter {
 	public recvPayload(payload: Partial<Payload>) {
 		if (payload && payload.type && payload.type.length) {
 			const handler = (this as any)[`recv-${payload.type}`] || (() => {
-				// tslint:disable-next-line:no-console
 				log.error('network', `[ERROR] ${this.name} has no handler for payload ${payload.type}!`);
 			});
 			handler(payload);
 		} else {
-			// tslint:disable-next-line:no-console
 			log.error('network', `[ERROR] ${this.name} invalid message payload!`);
 		}
 	}
@@ -158,9 +155,11 @@ export class Protocol extends EventEmitter {
 	public drainPromises() {
 		if (Object.keys(this.promises).length) {
 			return new Promise<void>((resolve, reject) => {
+				/* eslint-disable @typescript-eslint/no-use-before-define */
 				const check = (): NodeJS.Timeout | void => Object.keys(this.promises).length ? set() : resolve();
 				const set = () => setTimeout(() => check(), 10);
 				set();
+				/* eslint-enable @typescript-eslint/no-use-before-define */
 				// TODO: Would be better to not have to check on a timer here
 			});
 		}
@@ -197,17 +196,17 @@ export class Protocol extends EventEmitter {
 	}
 
 	protected missingPromiseForReplyMessage(message: Message) {
-		// tslint:disable-next-line:no-console max-line-length
-		log.error('network', `[ERROR] ${this.name} received unexpected reply message! payload: ${message.payload.type}, replyToId: ${message.replyToId}`);
+		log.error('network', `[ERROR] ${this.name} received unexpected reply message! ` +
+			`payload: ${message.payload.type}, replyToId: ${message.replyToId}`);
 	}
 
 	private onReceive = (message: Message) => {
 		this.recvMessage(message);
-	}
+	};
 
 	private onClose = () => {
 		Object.keys(this.promises).map(key => {
 			this.rejectPromiseForMessage(key, "Connection closed.");
 		});
-	}
+	};
 }

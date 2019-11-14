@@ -11,10 +11,8 @@ export interface ActorTransformLike {
 }
 
 export class ActorTransform implements ActorTransformLike {
-	// tslint:disable:variable-name
 	private _app: Transform;
 	private _local: ScaledTransform;
-	// tslint:enable:variable-name
 
 	public get app() { return this._app; }
 	public set app(value) { this._app.copy(value); }
@@ -27,9 +25,9 @@ export class ActorTransform implements ActorTransformLike {
 	}
 
 	public copy(from: Partial<ActorTransformLike>): this {
-		if (!from) return this;
-		if (from.app !== undefined) this.app.copy(from.app);
-		if (from.local !== undefined) this.local.copy(from.local);
+		if (!from) { return this; }
+		if (from.app !== undefined) { this.app.copy(from.app); }
+		if (from.local !== undefined) { this.local.copy(from.local); }
 		return this;
 	}
 

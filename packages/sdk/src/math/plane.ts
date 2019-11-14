@@ -6,8 +6,6 @@
 import { Matrix, Vector3 } from '.';
 import { MathTmp } from './tmp';
 
-// tslint:disable:member-ordering variable-name one-variable-per-declaration trailing-comma no-bitwise
-
 /**
  * Represens a plane by the equation ax + by + cz + d = 0
  */

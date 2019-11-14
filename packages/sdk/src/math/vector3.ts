@@ -7,8 +7,6 @@ import { Epsilon, Matrix, Quaternion, Scalar, Viewport } from '.';
 import { MathTmp } from './tmp';
 import { float, FloatArray } from './types';
 
-// tslint:disable:member-ordering variable-name one-variable-per-declaration trailing-comma no-bitwise curly max-line-length
-
 export interface Vector3Like {
 	x: number;
 	y: number;
@@ -1130,7 +1128,6 @@ export class Vector3 implements Vector3Like {
 		}
 		MathTmp.Vector3[0].copyFrom(this);
 		["x", "y", "z"].forEach((val, i) => {
-			// tslint:disable-next-line:no-any
 			(this as any)[val] = (MathTmp.Vector3[0] as any)[order[i]];
 		});
 		return this;

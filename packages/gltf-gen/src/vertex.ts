@@ -18,12 +18,12 @@ type Attribute3 = Vector3 | [number, number, number];
 type Attribute4 = Vector4 | [number, number, number, number];
 
 export interface VertexLike {
-	position?: Attribute3,
-	normal?: Attribute3,
-	tangent?: Attribute4,
-	texCoord0?: Attribute2,
-	texCoord1?: Attribute2,
-	color0?: Attribute3
+	position?: Attribute3;
+	normal?: Attribute3;
+	tangent?: Attribute4;
+	texCoord0?: Attribute2;
+	texCoord1?: Attribute2;
+	color0?: Attribute3;
 }
 
 export class Vertex implements VertexLike {

@@ -5,7 +5,7 @@
 
 import * as MRE from '@microsoft/mixed-reality-extension-sdk';
 
-import Menu from './menu';
+import { Menu } from './menu';
 import { Test, TestFactory } from './test';
 import { Factories } from './tests';
 import destroyActors from './utils/destroyActors';
@@ -410,7 +410,8 @@ export class App {
 				this.menu.show();
 			});
 
-		this.runnerActors = [this.contextLabel, this.testRoot, this.playPauseButton,
-		this.playPauseText, menuButton, menuText];
+		this.runnerActors = [
+			this.contextLabel, this.testRoot, this.playPauseButton,
+			this.playPauseText, menuButton, menuText];
 	}
 }

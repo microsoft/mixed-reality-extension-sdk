@@ -5,8 +5,6 @@
 
 import { Epsilon, Matrix, Scalar, Vector3 } from '.';
 
-// tslint:disable:member-ordering variable-name one-variable-per-declaration trailing-comma no-bitwise curly max-line-length
-
 export interface Vector2Like {
 	x: number;
 	y: number;

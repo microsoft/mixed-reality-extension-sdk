@@ -12,8 +12,8 @@ export default class EmptyTest implements Test {
 	public shouldPrintJson = false;
 	public shouldPrintBuffer = false;
 
-	public async run(): Promise<Buffer> {
+	public run(): Buffer {
 		const factory = new GltfGen.GltfFactory();
-		return await factory.generateGLTF();
+		return factory.generateGLTF();
 	}
 }

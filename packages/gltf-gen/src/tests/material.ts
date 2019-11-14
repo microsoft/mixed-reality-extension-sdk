@@ -13,7 +13,7 @@ export default class MaterialTest implements Test {
 	public shouldPrintJson = true;
 	public shouldPrintBuffer = false;
 
-	public async run(): Promise<Buffer> {
+	public run(): Buffer {
 		const prim = new GltfGen.MeshPrimitive({
 			vertices: [
 				new GltfGen.Vertex({ position: [0, 0, 0], texCoord0: [0, 0] }),
@@ -28,6 +28,6 @@ export default class MaterialTest implements Test {
 				})
 			})
 		});
-		return await GltfGen.GltfFactory.FromSinglePrimitive(prim).generateGLTF();
+		return GltfGen.GltfFactory.FromSinglePrimitive(prim).generateGLTF();
 	}
 }

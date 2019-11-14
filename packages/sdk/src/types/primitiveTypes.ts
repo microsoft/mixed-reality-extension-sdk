@@ -17,7 +17,7 @@ export enum PrimitiveShape {
 }
 
 export type SpherePrimitiveDefinition = {
-	shape: PrimitiveShape.Sphere
+	shape: PrimitiveShape.Sphere;
 	/**
 	 * The bounding box size of the primitive.
 	 */
@@ -33,7 +33,7 @@ export type SpherePrimitiveDefinition = {
 };
 
 export type BoxPrimitiveDefinition = {
-	shape: PrimitiveShape.Box
+	shape: PrimitiveShape.Box;
 	/**
 	 * The bounding box size of the primitive.
 	 */
@@ -41,7 +41,7 @@ export type BoxPrimitiveDefinition = {
 };
 
 export type CapsulePrimitiveDefinition = {
-	shape: PrimitiveShape.Capsule
+	shape: PrimitiveShape.Capsule;
 	/**
 	 * The bounding box size of the primitive.
 	 */
@@ -57,7 +57,7 @@ export type CapsulePrimitiveDefinition = {
 };
 
 export type CylinderPrimitiveDefinition = {
-	shape: PrimitiveShape.Cylinder
+	shape: PrimitiveShape.Cylinder;
 	/**
 	 * The bounding box size of the primitive.
 	 */
@@ -69,7 +69,7 @@ export type CylinderPrimitiveDefinition = {
 };
 
 export type PlanePrimitiveDefinition = {
-	shape: PrimitiveShape.Plane
+	shape: PrimitiveShape.Plane;
 	/**
 	 * The bounding box size of the primitive.
 	 */

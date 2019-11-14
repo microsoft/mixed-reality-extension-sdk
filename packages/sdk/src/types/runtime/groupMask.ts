@@ -4,8 +4,6 @@
  */
 import { Context } from '.';
 
-// tslint:disable:no-bitwise
-
 /**
  * A set of user group IDs. User groups are used to selectively enable several different
  * properties of actors based on the memberships of the viewing user. All users not assigned
@@ -15,7 +13,6 @@ export class GroupMask extends Set<string> implements Iterable<string> {
 	public static readonly ALL_PACKED = ~0;
 	public static readonly NONE_PACKED = 0;
 
-	// tslint:disable-next-line:variable-name
 	private _allowDefault = true;
 	/** @hidden */
 	public get allowDefault() { return this._allowDefault; }

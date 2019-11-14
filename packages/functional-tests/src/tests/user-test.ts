@@ -39,7 +39,7 @@ export default class UserTest extends Test {
 	private formatProperties(props: { [key: string]: string }): string {
 		let output = "";
 		for (const k in props) {
-			if (props.hasOwnProperty(k)) {
+			if (Object.prototype.hasOwnProperty.call(props, k)) {
 				output += `\n   ${k}: ${props[k]}`;
 			}
 		}

@@ -10,7 +10,6 @@ import { log } from '../log';
 /*
  * Current SDK Version - Read from package.json.
  */
-// tslint:disable-next-line:no-var-requires variable-name
 const CurrentSDKVersion = semver.coerce(require('../../package.json').version);
 
 /*
@@ -19,7 +18,6 @@ const CurrentSDKVersion = semver.coerce(require('../../package.json').version);
  * have been added that don't work on older clients (i.e. pretty much every release). Since host apps are required to
  * update client libraries regularly, this one is not a big deal to update.
  */
-// tslint:disable-next-line:variable-name
 const MinimumSupportedClientVersion = semver.coerce('0.14');
 
 /**
@@ -45,10 +43,8 @@ export default function verifyClient(
 	 *    https://github.com/dotnet/corefx/issues/29163
 	 */
 
-	// tslint:disable-next-line:variable-name
 	const CurrentClientVersion
 		= semver.coerce(decodeURIComponent(headers[Constants.HTTPHeaders.CurrentClientVersion]));
-	// tslint:disable-next-line:variable-name
 	const MinimumSupportedSDKVersion
 		= semver.coerce(decodeURIComponent(headers[Constants.HTTPHeaders.MinimumSupportedSDKVersion]));
 
@@ -59,18 +55,20 @@ export default function verifyClient(
 		const sdkPass = semver.gte(CurrentSDKVersion, MinimumSupportedSDKVersion);
 
 		if (!clientPass) {
-			// tslint:disable-next-line:max-line-length
-			const message = `Connection rejected due to out of date client. Client version: ${CurrentClientVersion.toString()}. Min supported version by SDK: ${MinimumSupportedClientVersion.toString()}`;
+			const message = `Connection rejected due to out of date client. ` +
+				`Client version: ${CurrentClientVersion.toString()}. ` +
+				`Min supported version by SDK: ${MinimumSupportedClientVersion.toString()}`;
 			log.info('app', message);
 			return cb(false, 403, message);
 		}
 
 		if (!sdkPass) {
-			// tslint:disable-next-line:max-line-length
-			const message = `Connection rejected due to out of date SDK. Current SDK version: ${CurrentSDKVersion.toString()}. Min supported version by client: ${MinimumSupportedSDKVersion.toString()}`;
+			const message = `Connection rejected due to out of date SDK. ` +
+				`Current SDK version: ${CurrentSDKVersion.toString()}. ` +
+				`Min supported version by client: ${MinimumSupportedSDKVersion.toString()}`;
 			log.info('app', message);
 			// Log this line to the console. The developer should know about this.
-			// tslint:disable-next-line:no-console
+			// eslint-disable-next-line no-console
 			console.info(message);
 			return cb(false, 403, message);
 		}

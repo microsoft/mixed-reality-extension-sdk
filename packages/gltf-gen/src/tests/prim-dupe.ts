@@ -12,7 +12,7 @@ export default class PrimDupeTest implements Test {
 	public shouldPrintBuffer = false;
 	public shouldPrintJson = true;
 
-	public async run(): Promise<Buffer> {
+	public run() {
 		const prim1 = new GltfGen.MeshPrimitive({
 			vertices: [
 				new GltfGen.Vertex({ position: [0, 0, 0] }),
@@ -44,6 +44,6 @@ export default class PrimDupeTest implements Test {
 			})]
 		);
 
-		return await factory.generateGLTF();
+		return factory.generateGLTF();
 	}
 }

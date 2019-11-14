@@ -26,14 +26,12 @@ export interface MeshLike {
 
 /** Represents a mesh on an actor */
 export class Mesh extends Asset implements MeshLike, Patchable<AssetLike> {
-	// tslint:disable:variable-name
 	private _internal = new InternalAsset(this);
 	private _vertexCount: number;
 	private _triangleCount: number;
 	private _dimensions: Vector3 = new Vector3();
 	private _center: Vector3 = new Vector3();
 	private _primDef: PrimitiveDefinition = null;
-	// tslint:disable:variable-name
 
 	/** @hidden */
 	public get internal() { return this._internal; }
@@ -72,19 +70,12 @@ export class Mesh extends Asset implements MeshLike, Patchable<AssetLike> {
 		const wasObserving = this.internal.observing;
 		this.internal.observing = false;
 
-		// tslint:disable:curly
 		super.copy(from);
-		if (from.mesh && from.mesh.vertexCount !== undefined)
-			this._vertexCount = from.mesh.vertexCount;
-		if (from.mesh && from.mesh.triangleCount !== undefined)
-			this._triangleCount = from.mesh.triangleCount;
-		if (from.mesh && from.mesh.boundingBoxDimensions)
-			this._dimensions.copy(from.mesh.boundingBoxDimensions);
-		if (from.mesh && from.mesh.boundingBoxCenter)
-			this._center.copy(from.mesh.boundingBoxCenter);
-		if (from.mesh && from.mesh.primitiveDefinition)
-			this._primDef = from.mesh.primitiveDefinition;
-		// tslint:enable:curly
+		if (from.mesh?.vertexCount !== undefined) { this._vertexCount = from.mesh.vertexCount; }
+		if (from.mesh?.triangleCount !== undefined) { this._triangleCount = from.mesh.triangleCount; }
+		if (from.mesh?.boundingBoxDimensions) { this._dimensions.copy(from.mesh.boundingBoxDimensions); }
+		if (from.mesh?.boundingBoxCenter) { this._center.copy(from.mesh.boundingBoxCenter); }
+		if (from.mesh?.primitiveDefinition) { this._primDef = from.mesh.primitiveDefinition; }
 
 		this.internal.observing = wasObserving;
 		return this;
@@ -106,7 +97,7 @@ export class Mesh extends Asset implements MeshLike, Patchable<AssetLike> {
 
 	/** @hidden */
 	public breakReference(ref: Actor | Asset) {
-		if (!(ref instanceof Actor)) return;
+		if (!(ref instanceof Actor)) { return; }
 
 		if (ref.appearance.mesh === this) {
 			ref.appearance.mesh = null;

@@ -6,8 +6,6 @@
 import { Matrix, Quaternion, Vector3 } from '.';
 import Tools from './tools';
 
-// tslint:disable:member-ordering variable-name one-variable-per-declaration trailing-comma no-bitwise curly
-
 /**
  * @hidden
  */

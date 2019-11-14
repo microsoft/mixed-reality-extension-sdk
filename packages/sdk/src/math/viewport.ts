@@ -3,8 +3,6 @@
  * Licensed under the MIT License.
  */
 
-// tslint:disable:member-ordering variable-name one-variable-per-declaration trailing-comma no-bitwise curly max-line-length
-
 /**
  * Class used to represent a viewport on screen
  */

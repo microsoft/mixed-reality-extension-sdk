@@ -8,7 +8,7 @@ import UUID from 'uuid/v4';
 import {
 	Asset, AssetSource,
 	Material, MaterialLike,
-	Mesh, MeshLike,
+	Mesh,
 	Prefab,
 	Sound, SoundLike,
 	Texture, TextureLike,
@@ -26,10 +26,8 @@ import * as Payloads from '../../network/payloads';
  * files for their assets.
  */
 export class AssetContainer {
-	// tslint:disable:variable-name
 	private _id: string;
 	private _assets: { [id: string]: Asset } = {};
-	// tslint:enable:variable-name
 
 	/** @hidden */
 	public get id() { return this._id; }

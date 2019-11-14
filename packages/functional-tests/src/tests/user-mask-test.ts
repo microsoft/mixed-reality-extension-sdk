@@ -54,7 +54,7 @@ export default class UserMaskTest extends Test {
 			}
 		});
 		this.updateLabels();
-		this.app.context.onUserLeft(_ => this.updateLabels());
+		this.app.context.onUserLeft(() => this.updateLabels());
 
 		// create icons
 		const redIcon = MRE.Actor.Create(this.app.context, {

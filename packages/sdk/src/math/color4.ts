@@ -2,10 +2,7 @@
  * Copyright (c) Microsoft Corporation. All rights reserved.
  * Licensed under the MIT License.
  */
-
 import { Color3, Scalar, ToGammaSpace, ToLinearSpace } from '.';
-
-// tslint:disable:member-ordering
 
 export interface Color4Like {
 	r: number;
@@ -18,8 +15,6 @@ export interface Color4Like {
  * Class used to hold a RBGA color
  */
 export class Color4 {
-
-	// tslint:disable:variable-name
 	/**
 	 * Creates a new Color4 object from red, green, blue values, all between 0 and 1
 	 * @param r defines the red component (between 0 and 1, default is 0)
@@ -45,7 +40,6 @@ export class Color4 {
 		 */
 		public a = 1) {
 	}
-	// tslint:enable:variable-name
 
 	// Operators
 
@@ -229,11 +223,9 @@ export class Color4 {
 	 */
 	public getHashCode(): number {
 		let hash = this.r || 0;
-		// tslint:disable:no-bitwise
 		hash = (hash * 397) ^ (this.g || 0);
 		hash = (hash * 397) ^ (this.b || 0);
 		hash = (hash * 397) ^ (this.a || 0);
-		// tslint:enable:no-bitwise
 		return hash;
 	}
 
@@ -369,12 +361,10 @@ export class Color4 {
 			return new Color4(0.0, 0.0, 0.0, 0.0);
 		}
 
-		// tslint:disable:ban
 		const r = parseInt(hex.substring(1, 3), 16);
 		const g = parseInt(hex.substring(3, 5), 16);
 		const b = parseInt(hex.substring(5, 7), 16);
 		const a = parseInt(hex.substring(7, 9), 16);
-		// tslint:enable:ban
 
 		return Color4.FromInts(r, g, b, a);
 	}

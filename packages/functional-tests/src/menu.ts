@@ -6,12 +6,13 @@
 import * as MRE from '@microsoft/mixed-reality-extension-sdk';
 import { App, FailureColor, NeutralColor, SuccessColor } from './app';
 import { TestFactory } from './test';
-import { Factories, FactoryMap } from './tests';
+import { Factories } from './tests';
 import destroyActors from './utils/destroyActors';
+import { paginate } from './utils/paginate';
 
 type SelectionHandler = (name: string, factory: TestFactory, user: MRE.User) => void;
 
-interface MenuItem {
+export interface MenuItem {
 	label: string;
 	action: TestFactory | MenuItem[];
 }
@@ -21,9 +22,9 @@ const buttonSpacing = 2 / (pageSize + 1);
 const buttonWidth = 0.25;
 const buttonHeight = buttonSpacing * 0.8;
 
-const MenuItems = paginate(Factories);
+const MenuItems = paginate(Factories, pageSize);
 
-export default class Menu {
+export class Menu {
 	private buttons: MRE.Actor[];
 	private behaviors: MRE.ButtonBehavior[];
 	private labels: MRE.Actor[];
@@ -85,7 +86,7 @@ export default class Menu {
 
 			} else {
 				label = menu[i].label;
-				handler = _ => {
+				handler = () => {
 					this.breadcrumbs.push(i);
 					this.show();
 				};
@@ -214,41 +215,4 @@ export default class Menu {
 		this.labels = null;
 		this.otherActors = null;
 	}
-}
-
-function paginate(tests: FactoryMap): MenuItem[] {
-	const names = Object.keys(tests).sort();
-	const count = names.length;
-	if (count <= pageSize) {
-		return names.map(name => ({ label: name, action: tests[name] } as MenuItem));
-	} else {
-		const submenus: MenuItem[] = [];
-		let lastName = '';
-
-		while (names.length > 0) {
-			const pageNames = names.splice(0, Math.max(pageSize, Math.floor(count / (pageSize - 1))));
-			const lastPageName = pageNames[pageNames.length - 1];
-			submenus.push({
-				label: uniquePrefix(pageNames[0], lastName) + " - " + uniquePrefix(lastPageName, names[0] || ''),
-				action: paginate(pageNames.reduce(
-					(sum, val) => { sum[val] = tests[val]; return sum; },
-					{} as FactoryMap
-				))
-			});
-
-			lastName = lastPageName;
-		}
-
-		return submenus;
-	}
-}
-
-function uniquePrefix(of: string, against: string) {
-	let prefixEnd = 0;
-
-	while (of.charAt(prefixEnd) === against.charAt(prefixEnd)) {
-		prefixEnd++;
-	}
-
-	return of.slice(0, prefixEnd + 1);
 }

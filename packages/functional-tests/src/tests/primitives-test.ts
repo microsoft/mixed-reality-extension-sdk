@@ -214,10 +214,10 @@ export default class PrimitivesTest extends Test {
 			if (actor) {
 				const buttonBehavior = actor.setBehavior(MRE.ButtonBehavior);
 				// Trigger the grow/shrink animations on hover.
-				buttonBehavior.onHover('enter', _ => {
+				buttonBehavior.onHover('enter', () => {
 					this.app.setOverrideText(actor.name);
 				});
-				buttonBehavior.onHover('exit', _ => {
+				buttonBehavior.onHover('exit', () => {
 					this.app.setOverrideText(null);
 				});
 			}

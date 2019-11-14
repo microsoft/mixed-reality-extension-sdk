@@ -16,7 +16,6 @@ import {
 	AssetContainerIterable,
 	AssetLike,
 	BehaviorType,
-	ColliderType,
 	CollisionEvent,
 	CollisionLayer,
 	Context,
@@ -57,7 +56,6 @@ export class InternalContext {
 	public interval: NodeJS.Timer;
 	public generation = 0;
 	public prevGeneration = 0;
-	// tslint:disable-next-line:variable-name
 	public __rpc: any;
 
 	constructor(public context: Context) {
@@ -67,7 +65,7 @@ export class InternalContext {
 	}
 
 	public Create(options?: {
-		actor?: Partial<ActorLike>
+		actor?: Partial<ActorLike>;
 	}): Actor {
 		return this.createActorFromPayload({
 			...options,
@@ -80,8 +78,8 @@ export class InternalContext {
 	}
 
 	public CreateFromLibrary(options: {
-		resourceId: string,
-		actor?: Partial<ActorLike>
+		resourceId: string;
+		actor?: Partial<ActorLike>;
 	}): Actor {
 		return this.createActorFromPayload({
 			...options,
@@ -94,9 +92,9 @@ export class InternalContext {
 	}
 
 	public CreateFromPrefab(options: {
-		prefabId: string,
-		collisionLayer?: CollisionLayer,
-		actor?: Partial<ActorLike>
+		prefabId: string;
+		collisionLayer?: CollisionLayer;
+		actor?: Partial<ActorLike>;
 	}): Actor {
 		return this.createActorFromPayload({
 			...options,
@@ -159,9 +157,9 @@ export class InternalContext {
 	}
 
 	public CreateFromGltf(container: AssetContainer, options: {
-		uri: string,
-		colliderType?: 'box' | 'mesh',
-		actor?: Partial<ActorLike>
+		uri: string;
+		colliderType?: 'box' | 'mesh';
+		actor?: Partial<ActorLike>;
 	}): Actor {
 		// create actor locally
 		options.actor = Actor.sanitize({ ...options.actor, id: UUID() });
@@ -273,8 +271,8 @@ export class InternalContext {
 		if (!actor) {
 			log.error('app', `Failed animateTo. Actor ${actorId} not found.`);
 		} else if (!Array.isArray(curve) || curve.length !== 4) {
-			// tslint:disable-next-line:max-line-length
-			log.error('app', '`curve` parameter must be an array of four numbers. Try passing one of the predefined curves from `AnimationEaseCurves`');
+			log.error('app', '`curve` parameter must be an array of four numbers. ' +
+				'Try passing one of the predefined curves from `AnimationEaseCurves`');
 		} else {
 			this.protocol.sendPayload({
 				type: 'interpolate-actor',
@@ -298,27 +296,16 @@ export class InternalContext {
 			// Switch to execution protocol.
 			const execution = this.protocol = new Execution(this.context);
 
-			this.updateActors = this.updateActors.bind(this);
-			this.localDestroyActors = this.localDestroyActors.bind(this);
-			this.userJoined = this.userJoined.bind(this);
-			this.userLeft = this.userLeft.bind(this);
-			this.updateUser = this.updateUser.bind(this);
-			this.performAction = this.performAction.bind(this);
-			this.receiveRPC = this.receiveRPC.bind(this);
-			this.collisionEventRaised = this.collisionEventRaised.bind(this);
-			this.triggerEventRaised = this.triggerEventRaised.bind(this);
-			this.setAnimationStateEventRaised = this.setAnimationStateEventRaised.bind(this);
-
-			execution.on('protocol.update-actors', this.updateActors);
-			execution.on('protocol.destroy-actors', this.localDestroyActors);
-			execution.on('protocol.user-joined', this.userJoined);
-			execution.on('protocol.user-left', this.userLeft);
-			execution.on('protocol.update-user', this.updateUser);
-			execution.on('protocol.perform-action', this.performAction);
-			execution.on('protocol.receive-rpc', this.receiveRPC);
-			execution.on('protocol.collision-event-raised', this.collisionEventRaised);
-			execution.on('protocol.trigger-event-raised', this.triggerEventRaised);
-			execution.on('protocol.set-animation-state', this.setAnimationStateEventRaised);
+			execution.on('protocol.update-actors', this.updateActors.bind(this));
+			execution.on('protocol.destroy-actors', this.localDestroyActors.bind(this));
+			execution.on('protocol.user-joined', this.userJoined.bind(this));
+			execution.on('protocol.user-left', this.userLeft.bind(this));
+			execution.on('protocol.update-user', this.updateUser.bind(this));
+			execution.on('protocol.perform-action', this.performAction.bind(this));
+			execution.on('protocol.receive-rpc', this.receiveRPC.bind(this));
+			execution.on('protocol.collision-event-raised', this.collisionEventRaised.bind(this));
+			execution.on('protocol.trigger-event-raised', this.triggerEventRaised.bind(this));
+			execution.on('protocol.set-animation-state', this.setAnimationStateEventRaised.bind(this));
 
 			// Startup the execution protocol
 			execution.startListening();
@@ -455,7 +442,7 @@ export class InternalContext {
 
 	public onClose = () => {
 		this.stop();
-	}
+	};
 
 	public userJoined(suser: Partial<UserLike>) {
 		if (!this.userSet[suser.id]) {
@@ -536,8 +523,6 @@ export class InternalContext {
 	}
 
 	public localDestroyActor(actor: Actor) {
-		// Collect this actor and all the children recursively
-		const actorIds: string[] = [];
 		// Recursively destroy children first
 		(actor.children || []).forEach(child => {
 			this.localDestroyActor(child);
@@ -578,7 +563,7 @@ export class InternalContext {
 	}
 
 	public lookupAsset(id: string): Asset {
-		if (id === ZeroGuid) return null;
+		if (id === ZeroGuid) { return null; }
 
 		for (const c of this.assetContainers) {
 			if (c.assetsById[id]) {

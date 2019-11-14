@@ -113,10 +113,10 @@ class Log {
 		if (logging && logging.length) {
 			const parts = logging.split(',').map(s => s.trim());
 			for (const part of parts) {
+				/* eslint-disable-next-line prefer-const */
 				let [facility, severity] = part.split(':').map(s => s.trim());
 				const disable = facility.startsWith('-');
-				facility = facility.replace(/^-/, '');
-				severity = severity; // tslint
+				facility = facility.replace(/^-/u, '');
 				if (disable) {
 					this.disable(facility, severity);
 				} else {
@@ -125,7 +125,7 @@ class Log {
 			}
 		}
 		this.checkInitialize = () => { };
-	}
+	};
 }
 
 export const log = new Log();

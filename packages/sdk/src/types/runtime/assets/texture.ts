@@ -6,7 +6,6 @@
 import { Asset, AssetContainer, AssetLike, Material } from '.';
 import { Actor } from '..';
 import { Vector2, Vector2Like } from '../../../math';
-import { observe } from '../../../utils/observe';
 import readPath from '../../../utils/readPath';
 import { InternalAsset } from '../../internal/asset';
 import { Patchable } from '../../patchable';
@@ -29,13 +28,11 @@ export enum TextureWrapMode {
 }
 
 export class Texture extends Asset implements TextureLike, Patchable<AssetLike> {
-	// tslint:disable:variable-name
 	private _uri: string;
 	private _resolution = Vector2.One();
 	private _wrapU = TextureWrapMode.Repeat;
 	private _wrapV = TextureWrapMode.Repeat;
 	private _internal = new InternalAsset(this);
-	// tslint:enable:variable-name
 
 	/** @hidden */
 	public get internal() { return this._internal; }
@@ -77,17 +74,19 @@ export class Texture extends Asset implements TextureLike, Patchable<AssetLike> 
 		const wasObserving = this.internal.observing;
 		this.internal.observing = false;
 
-		// tslint:disable:curly
 		super.copy(from);
-		if (from.texture && from.texture.uri)
+		if (from.texture && from.texture.uri) {
 			this._uri = from.texture.uri;
-		if (from.texture && from.texture.resolution)
+		}
+		if (from.texture && from.texture.resolution) {
 			this._resolution = new Vector2(from.texture.resolution.x, from.texture.resolution.y);
-		if (from.texture && from.texture.wrapU)
+		}
+		if (from.texture && from.texture.wrapU) {
 			this.wrapU = from.texture.wrapU;
-		if (from.texture && from.texture.wrapV)
+		}
+		if (from.texture && from.texture.wrapV) {
 			this.wrapV = from.texture.wrapV;
-		// tslint:enable:curly
+		}
 
 		this.internal.observing = wasObserving;
 		return this;
@@ -116,7 +115,7 @@ export class Texture extends Asset implements TextureLike, Patchable<AssetLike> 
 
 	/** @hidden */
 	public breakReference(ref: Actor | Asset) {
-		if (!(ref instanceof Material)) return;
+		if (!(ref instanceof Material)) { return; }
 		if (ref.mainTexture === this) {
 			ref.mainTexture = null;
 		}

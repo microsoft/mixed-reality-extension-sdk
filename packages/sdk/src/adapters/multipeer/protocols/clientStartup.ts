@@ -38,7 +38,7 @@ export class ClientStartup extends Protocols.Protocol {
 	 */
 	public 'recv-sync-request' = async (payload: Payloads.SyncRequest) => {
 		await this.performStartup(payload);
-	}
+	};
 
 	private async performStartup(payload: Payloads.SyncRequest) {
 		// Do a quick measurement of connection latency.

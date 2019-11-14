@@ -3,8 +3,6 @@
  * Licensed under the MIT License.
  */
 
-// tslint:disable:variable-name
-
 export const ZeroGuid = '00000000-0000-0000-0000-000000000000';
 
 /** @hidden */

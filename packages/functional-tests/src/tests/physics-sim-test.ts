@@ -38,9 +38,9 @@ export default class PhysicsSimTest extends Test {
 			color: defaultBallColor
 		});
 
-		await this.createCounterPlane(root, 2, 1.25);
+		this.createCounterPlane(root, 2, 1.25);
 
-		await this.createPegField(root, 2, 1);
+		this.createPegField(root, 2, 1);
 		this.interval = setInterval(() => this.spawnBall(root, 1.5, 1.5), 1000);
 
 		await this.stoppedAsync();
@@ -52,7 +52,7 @@ export default class PhysicsSimTest extends Test {
 		this.assets.unload();
 	}
 
-	private async createCounterPlane(root: MRE.Actor, width: number, height: number) {
+	private createCounterPlane(root: MRE.Actor, width: number, height: number) {
 		// Create the ball count text objects
 		this.counterPlane = MRE.Actor.Create(this.app.context, {
 			actor: {
@@ -85,13 +85,13 @@ export default class PhysicsSimTest extends Test {
 			}
 		});
 
-		counter.collider.onTrigger('trigger-enter', _ => {
+		counter.collider.onTrigger('trigger-enter', () => {
 			++this.ballCount;
 			this.counterPlane.text.contents = `Ball count: ${this.ballCount}`;
 		});
 	}
 
-	private async createPegField(
+	private createPegField(
 		root: MRE.Actor,
 		width: number, height: number,
 		pegRadius = 0.02, spacing = 0.2, verticalDistort = 1.1
@@ -115,14 +115,14 @@ export default class PhysicsSimTest extends Test {
 					collider: { geometry: { shape: MRE.ColliderType.Auto } }
 				}
 			});
-			peg.collider.onCollision('collision-enter', data => {
+			peg.collider.onCollision('collision-enter', () => {
 				this.collRefCount[peg.id] = this.collRefCount[peg.id] + 1 || 1;
 				if (this.collRefCount[peg.id] > 0) {
 					peg.appearance.material = this.collisionPegMat;
 				}
 			});
 
-			peg.collider.onCollision('collision-exit', data => {
+			peg.collider.onCollision('collision-exit', () => {
 				this.collRefCount[peg.id]--;
 				if (this.collRefCount[peg.id] === 0) {
 					peg.appearance.material = this.defaultPegMat;

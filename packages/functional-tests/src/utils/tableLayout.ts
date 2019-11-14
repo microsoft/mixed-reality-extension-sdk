@@ -28,8 +28,10 @@ export class TableLayout {
 	public setCellContents(row: number, column: number, actor: MRE.Actor) {
 		this.cells[row][column] = actor;
 		actor.transform.local.position.set(
-			-this.totalWidth / 2 + (this.columnWidths.slice(0, column).reduce(sumFn, 0) + this.columnWidths[column] / 2),
-			this.totalHeight / 2 - (this.rowHeights.slice(0, row).reduce(sumFn, 0) + this.rowHeights[row] / 2),
+			-this.totalWidth / 2 + (
+				this.columnWidths.slice(0, column).reduce(sumFn, 0) + this.columnWidths[column] / 2),
+			this.totalHeight / 2 - (
+				this.rowHeights.slice(0, row).reduce(sumFn, 0) + this.rowHeights[row] / 2),
 			0
 		);
 		return actor;

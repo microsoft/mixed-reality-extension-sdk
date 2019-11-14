@@ -3,8 +3,6 @@
  * Licensed under the MIT License.
  */
 
-// tslint:disable:variable-name
-
 /**
  * Constant used to convert a value to gamma space
  * @ignorenaming

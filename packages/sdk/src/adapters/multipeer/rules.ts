@@ -8,10 +8,7 @@ import { ActiveMediaInstance, Client, Session, SynchronizationStage } from '.';
 import { MediaCommand, Message, WebSocket } from '../..';
 import { log } from '../../log';
 import * as Payloads from '../../types/network/payloads';
-import { Asset } from '../../types/runtime';
 import { ExportedPromise } from '../../utils/exportedPromise';
-
-// tslint:disable:variable-name new-parens no-console
 
 /**
  * @hidden
@@ -60,7 +57,7 @@ export type Rule = {
 		 * `after` - How to handle outgoing messages of this type after `stage` is complete.
 		 */
 		after: MessageHandling;
-	},
+	};
 
 	/**
 	 * Message preprocessing applied by the Client class.
@@ -95,7 +92,7 @@ export type Rule = {
 		 * user, and `false` if it depends on a different user.
 		 */
 		shouldSendToUser: (message: any, userId: string, session: Session, client: Client) => boolean | null;
-	},
+	};
 
 	/**
 	 * Message preprocessing applied by the Session class.
@@ -120,7 +117,7 @@ export type Rule = {
 		 */
 		beforeReceiveFromClient: (
 			session: Session, client: Client, message: any) => Message;
-	}
+	};
 };
 
 /**
@@ -941,7 +938,7 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 				if (syncActor) {
 					syncActor.behavior = message.payload.behaviorType;
 				} else {
-					console.log(`[ERROR] Sync: set-behavior on unknown actor ${message.payload.actorId}`);
+					log.error('app', `Sync: set-behavior on unknown actor ${message.payload.actorId}`);
 				}
 				return message;
 			}
@@ -1000,7 +997,8 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 
 						if (activeMediaInstance.expirationTime !== undefined) {
 							if (basisTime > activeMediaInstance.expirationTime) {
-								// non-looping mediainstance has completed, so ignore it, which will remove it from the list
+								// non-looping mediainstance has completed, so ignore it, which will remove it
+								// from the list
 								return undefined;
 							}
 						}

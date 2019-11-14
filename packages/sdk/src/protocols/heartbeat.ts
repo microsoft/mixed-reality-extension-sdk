@@ -33,13 +33,13 @@ export class Heartbeat {
 			this.protocol.sendPayload({
 				type: 'heartbeat',
 			} as Payloads.Heartbeat, {
-					resolve: () => {
-						const latency = (Date.now() - start);
-						this.protocol.conn.quality.latencyMs.update(latency);
-						resolve(latency);
-					},
-					reject
-				});
+				resolve: () => {
+					const latency = (Date.now() - start);
+					this.protocol.conn.quality.latencyMs.update(latency);
+					resolve(latency);
+				},
+				reject
+			});
 		});
 	}
 }

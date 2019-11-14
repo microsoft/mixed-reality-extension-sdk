@@ -5,8 +5,7 @@
 
 import { OperationResultCode, Trace } from '..';
 import { CreateAnimationOptions, MediaCommand, SetAnimationStateOptions, SetMediaStateOptions } from '../../..';
-import { PrimitiveDefinition } from '../../primitiveTypes';
-import { ActorLike, ColliderType, TransformLike, UserLike } from '../../runtime';
+import { ActorLike, TransformLike, UserLike } from '../../runtime';
 import { ActionState, BehaviorType } from '../../runtime/behaviors';
 import { OperatingModel } from '../operatingModel';
 import { AssetPayloadType } from './assets';

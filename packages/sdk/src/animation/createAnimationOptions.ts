@@ -17,17 +17,17 @@ export type CreateAnimationOptions = {
 	/**
 	 * The animation keyframes.
 	 */
-	keyframes: AnimationKeyframe[],
+	keyframes: AnimationKeyframe[];
 	/**
 	 * The animation events. (Not implemented yet)
 	 */
-	events?: AnimationEvent[],
+	events?: AnimationEvent[];
 	/**
 	 * How the animation should behave when it reaches the end.
 	 */
-	wrapMode?: AnimationWrapMode,
+	wrapMode?: AnimationWrapMode;
 	/**
 	 * Initial time, speed, and enabled state of the animation.
 	 */
-	initialState?: SetAnimationStateOptions,
+	initialState?: SetAnimationStateOptions;
 };

@@ -5,8 +5,6 @@
 
 import { Vector2 } from '.';
 
-// tslint:disable:variable-name member-ordering
-
 /**
  * Defines angle representation
  */
