@@ -200,7 +200,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	 * @param options.actor The initial state of the actor.
 	 */
 	public static Create(context: Context, options?: {
-		actor?: Partial<ActorLike>
+		actor?: Partial<ActorLike>;
 	}): Actor {
 		return context.internal.Create(options);
 	}
@@ -210,7 +210,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	 * Use [[Actor.Create]] instead.
 	 */
 	public static CreateEmpty(context: Context, options?: {
-		actor?: Partial<ActorLike>
+		actor?: Partial<ActorLike>;
 	}): Actor {
 		return Actor.Create(context, options);
 	}
@@ -223,8 +223,8 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	 * @param options.actor The initial state of the root actor.
 	 */
 	public static CreateFromLibrary(context: Context, options: {
-		resourceId: string,
-		actor?: Partial<ActorLike>
+		resourceId: string;
+		actor?: Partial<ActorLike>;
 	}): Actor {
 		return context.internal.CreateFromLibrary(options);
 	}
@@ -237,9 +237,9 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	 * @param options.actor The initial state of the root actor.
 	 */
 	public static CreateFromPrefab(context: Context, options: {
-		prefabId: string,
-		collisionLayer?: CollisionLayer,
-		actor?: Partial<ActorLike>
+		prefabId: string;
+		collisionLayer?: CollisionLayer;
+		actor?: Partial<ActorLike>;
 	}): Actor;
 
 	/**
@@ -250,9 +250,9 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	 * @param options.actor The initial state of the root actor.
 	 */
 	public static CreateFromPrefab(context: Context, options: {
-		prefab: Prefab,
-		collisionLayer?: CollisionLayer,
-		actor?: Partial<ActorLike>
+		prefab: Prefab;
+		collisionLayer?: CollisionLayer;
+		actor?: Partial<ActorLike>;
 	}): Actor;
 
 	/**
@@ -263,24 +263,24 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	 * @param options.actor The initial state of the root actor.
 	 */
 	public static CreateFromPrefab(context: Context, options: {
-		firstPrefabFrom: Asset[],
-		collisionLayer?: CollisionLayer,
-		actor?: Partial<ActorLike>
+		firstPrefabFrom: Asset[];
+		collisionLayer?: CollisionLayer;
+		actor?: Partial<ActorLike>;
 	}): Actor;
 
 	public static CreateFromPrefab(context: Context, options: {
-		prefabId?: string,
-		prefab?: Prefab,
-		firstPrefabFrom?: Asset[],
-		collisionLayer?: CollisionLayer,
-		actor?: Partial<ActorLike>
+		prefabId?: string;
+		prefab?: Prefab;
+		firstPrefabFrom?: Asset[];
+		collisionLayer?: CollisionLayer;
+		actor?: Partial<ActorLike>;
 	}): Actor {
 		let prefabId = options.prefabId;
 		if (!prefabId && options.prefab) {
 			prefabId = options.prefab.id;
 		}
 		if (!prefabId && options.firstPrefabFrom) {
-			prefabId = options.firstPrefabFrom.find(a => !!a.prefab).id as string;
+			prefabId = options.firstPrefabFrom.find(a => !!a.prefab).id;
 		}
 		if (!prefabId) {
 			throw new Error("No prefab supplied to CreateFromPrefab");
@@ -302,9 +302,9 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	 * @param options.actor The initial state of the actor
 	 */
 	public static CreateFromGltf(container: AssetContainer, options: {
-		uri: string,
-		colliderType?: 'box' | 'mesh',
-		actor?: Partial<ActorLike>
+		uri: string;
+		colliderType?: 'box' | 'mesh';
+		actor?: Partial<ActorLike>;
 	}): Actor {
 		return container.context.internal.CreateFromGltf(container, options);
 	}
@@ -318,9 +318,9 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	 * @param options.actor The initial state of the actor
 	 */
 	public static CreatePrimitive(container: AssetContainer, options: {
-		definition: PrimitiveDefinition,
-		addCollider?: boolean,
-		actor?: Partial<ActorLike>
+		definition: PrimitiveDefinition;
+		addCollider?: boolean;
+		actor?: Partial<ActorLike>;
 	}): Actor {
 		const actor = options.actor || {};
 		const mesh = container.createPrimitiveMesh(actor.name, options.definition);

@@ -20,32 +20,6 @@ interface LogEvent {
 	networkContents?: any;
 }
 
-async function main(filename: string) {
-	const events = await parseFile(filename);
-	for (const evt of events.filter(e => !/heartbeat/u.test(safeAccessPath(e, 'networkContents', 'payload', 'type')))) {
-		console.log(formatEvent(evt));
-	}
-}
-
-async function parseFile(filename: string): Promise<LogEvent[]> {
-	const fileContents = await readFile(resolve(process.cwd(), filename), { encoding: 'utf8' });
-	const lines = fileContents.split('\n');
-	const events = [] as LogEvent[];
-
-	for (let i = 0; i < lines.length; i++) {
-		if (!/\bnetwork-content\b/u.test(lines[i])) {
-			continue;
-		}
-
-		const e = parseEvent(lines[i - 1], lines[i]);
-		if (e !== null) {
-			events.push(e);
-		}
-	}
-
-	return events;
-}
-
 function parseEvent(network: string, contents: string): LogEvent {
 	const e = {
 		input: network + '\n' + contents,
@@ -70,6 +44,25 @@ function parseEvent(network: string, contents: string): LogEvent {
 	}
 
 	return e;
+}
+
+async function parseFile(filename: string): Promise<LogEvent[]> {
+	const fileContents = await readFile(resolve(process.cwd(), filename), { encoding: 'utf8' });
+	const lines = fileContents.split('\n');
+	const events = [] as LogEvent[];
+
+	for (let i = 0; i < lines.length; i++) {
+		if (!/\bnetwork-content\b/u.test(lines[i])) {
+			continue;
+		}
+
+		const e = parseEvent(lines[i - 1], lines[i]);
+		if (e !== null) {
+			events.push(e);
+		}
+	}
+
+	return events;
 }
 
 const columns = ['session'];
@@ -97,6 +90,14 @@ function formatEvent(event: LogEvent): string {
 		const indentation = ' '.repeat(-replyTo.length + colWidth * columns.indexOf(event.client));
 		const dir = event.direction === 'from' ? '<=' : '=>';
 		return `${props.time} ${indentation}${replyTo}${dir} (${props.messageId}) ${props.payloadType} ${props.name}`;
+	}
+}
+
+async function main(filename: string) {
+	const events = await parseFile(filename);
+	const filterFn = (e: LogEvent) => !safeAccessPath(e, 'networkContents', 'payload', 'type').includes('heartbeat');
+	for (const evt of events.filter(filterFn)) {
+		console.log(formatEvent(evt));
 	}
 }
 

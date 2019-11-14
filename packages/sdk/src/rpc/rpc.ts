@@ -2,11 +2,11 @@
  * Copyright (c) Microsoft Corporation. All rights reserved.
  * Licensed under the MIT License.
  */
+/* eslint-disable max-classes-per-file */
 
 import { Context } from '..';
 import { AppToEngineRPC, EngineToAppRPC } from '../types/network/payloads';
 
-// tslint:disable:max-classes-per-file no-string-literal
 /**
  * @hidden
  * Type defining an rpc handler function callback.
@@ -21,7 +21,6 @@ export class RPC {
 
 	public get context() { return this._context; }
 
-	// tslint:disable-next-line:variable-name
 	constructor(protected _context: Context) {
 	}
 
@@ -39,9 +38,9 @@ export class RPC {
 
 	public send(
 		options: {
-			procName: string,
-			channelName?: string,
-			userId?: string
+			procName: string;
+			channelName?: string;
+			userId?: string;
 		},
 		...args: any[]) {
 		this.context.internal.sendPayload({

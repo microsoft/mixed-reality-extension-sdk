@@ -5,6 +5,26 @@
 
 import * as crypto from 'crypto';
 
+// Map for byte <-> hex string conversion
+const byteToHex: string[] = [];
+for (let i = 0; i < 256; i++) {
+	byteToHex[i] = (i + 0x100).toString(16).substr(1);
+}
+
+function uuidParse(buf: ArrayLike<number>): string {
+	let i = 0;
+	const bth = byteToHex;
+	return (
+		bth[buf[i++]] + bth[buf[i++]] +
+		bth[buf[i++]] + bth[buf[i++]] + '-' +
+		bth[buf[i++]] + bth[buf[i++]] + '-' +
+		bth[buf[i++]] + bth[buf[i++]] + '-' +
+		bth[buf[i++]] + bth[buf[i++]] + '-' +
+		bth[buf[i++]] + bth[buf[i++]] +
+		bth[buf[i++]] + bth[buf[i++]] +
+		bth[buf[i++]] + bth[buf[i++]]);
+}
+
 /**
  * @hidden
  * Class for generating a sequence of deterministic GUID values.
@@ -22,27 +42,7 @@ export class DeterministicGuids {
 		const hashedBytes = crypto.createHash('sha1').update(this.seed, 'ascii').digest();
 		const sizedBytes = new Buffer(16);
 		sizedBytes.set(hashedBytes);
-		this.seed = uuid_parse(sizedBytes);
+		this.seed = uuidParse(sizedBytes);
 		return result;
 	}
-}
-
-function uuid_parse(buf: ArrayLike<number>): string {
-	let i = 0;
-	const bth = byteToHex;
-	return (
-		bth[buf[i++]] + bth[buf[i++]] +
-		bth[buf[i++]] + bth[buf[i++]] + '-' +
-		bth[buf[i++]] + bth[buf[i++]] + '-' +
-		bth[buf[i++]] + bth[buf[i++]] + '-' +
-		bth[buf[i++]] + bth[buf[i++]] + '-' +
-		bth[buf[i++]] + bth[buf[i++]] +
-		bth[buf[i++]] + bth[buf[i++]] +
-		bth[buf[i++]] + bth[buf[i++]]);
-}
-
-// Map for byte <-> hex string conversion
-const byteToHex: string[] = [];
-for (let i = 0; i < 256; i++) {
-	byteToHex[i] = (i + 0x100).toString(16).substr(1);
 }

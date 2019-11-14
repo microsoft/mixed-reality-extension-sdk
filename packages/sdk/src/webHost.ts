@@ -25,10 +25,12 @@ export class WebHost {
 
 	private bufferMap: { [path: string]: Buffer } = {};
 
-	public constructor(
-		options: { baseDir?: string, baseUrl?: string, port?: string | number } = {}
-	) {
-		const pjson = require('../package.json');
+	public constructor(options: {
+		baseDir?: string;
+		baseUrl?: string;
+		port?: string | number;
+	} = {}) {
+		const pjson = require('../package.json'); /* eslint-disable-line @typescript-eslint/no-var-requires */
 		log.info('app', `Node: ${process.version}`);
 		log.info('app', `${pjson.name}: v${pjson.version}`);
 

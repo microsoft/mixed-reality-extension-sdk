@@ -27,7 +27,6 @@ export class Protocol extends EventEmitter {
 	public get promises() { return this.conn.promises; }
 	public get name() { return this.constructor.name; }
 
-	// tslint:disable-next-line:variable-name
 	constructor(private _conn: Connection) {
 		super();
 		this.onReceive = this.onReceive.bind(this);
@@ -145,12 +144,10 @@ export class Protocol extends EventEmitter {
 	public recvPayload(payload: Partial<Payload>) {
 		if (payload && payload.type && payload.type.length) {
 			const handler = (this as any)[`recv-${payload.type}`] || (() => {
-				// tslint:disable-next-line:no-console
 				log.error('network', `[ERROR] ${this.name} has no handler for payload ${payload.type}!`);
 			});
 			handler(payload);
 		} else {
-			// tslint:disable-next-line:no-console
 			log.error('network', `[ERROR] ${this.name} invalid message payload!`);
 		}
 	}
@@ -158,9 +155,11 @@ export class Protocol extends EventEmitter {
 	public drainPromises() {
 		if (Object.keys(this.promises).length) {
 			return new Promise<void>((resolve, reject) => {
+				/* eslint-disable @typescript-eslint/no-use-before-define */
 				const check = (): NodeJS.Timeout | void => Object.keys(this.promises).length ? set() : resolve();
 				const set = () => setTimeout(() => check(), 10);
 				set();
+				/* eslint-enable @typescript-eslint/no-use-before-define */
 				// TODO: Would be better to not have to check on a timer here
 			});
 		}

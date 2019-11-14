@@ -3,12 +3,9 @@
  * Licensed under the MIT License.
  */
 
-// tslint:disable:member-ordering variable-name one-variable-per-declaration trailing-comma no-bitwise curly
-
 /**
  * Interface for the size containing width and height
  */
-// tslint:disable-next-line:interface-name
 export interface ISize {
 	/**
 	 * Width

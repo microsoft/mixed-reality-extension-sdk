@@ -5,8 +5,6 @@
 
 import { Epsilon, Scalar, Vector3 } from '.';
 
-// tslint:disable:member-ordering variable-name one-variable-per-declaration trailing-comma no-bitwise
-
 /**
  * Represents a 3D path made up of multiple 3D points
  */

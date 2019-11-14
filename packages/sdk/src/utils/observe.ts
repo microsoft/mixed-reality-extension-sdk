@@ -3,30 +3,6 @@
  * Licensed under the MIT License.
  */
 
-/**
- * @hidden
- * Installs "watchers" for leaf properties in the target object, and calls the supplied callback
- * when they change and passing the entire path to the leaf, e.g.: ["transform", "position", "z"]
- */
-export function observe(options: {
-	target: any,
-	targetName: string,
-	notifyChanged: (...path: string[]) => void,
-	triggerNotificationsNow?: boolean
-}) {
-	observeLeafProperties(options.target, [options.targetName], options.notifyChanged, options.triggerNotificationsNow);
-}
-
-/**
- * @hidden
- * Uninstalls "watchers" for leaf properties in the target object, and removes the attached callbacks from
- * the target object.
- * @param target The target object to unobserve.
- */
-export function unobserve(target: any) {
-	unobserveLeafProperties(target);
-}
-
 function observeLeafProperties(
 	target: any, path: string[], notifyChanged: (...path: string[]) => void, triggerNotificationsNow: boolean) {
 	const names = Object.getOwnPropertyNames(target)
@@ -107,4 +83,28 @@ function unobserveLeafProperties(target: any) {
 			unobserveLeafProperties(target[name]);
 		}
 	}
+}
+
+/**
+ * @hidden
+ * Installs "watchers" for leaf properties in the target object, and calls the supplied callback
+ * when they change and passing the entire path to the leaf, e.g.: ["transform", "position", "z"]
+ */
+export function observe(options: {
+	target: any;
+	targetName: string;
+	notifyChanged: (...path: string[]) => void;
+	triggerNotificationsNow?: boolean;
+}) {
+	observeLeafProperties(options.target, [options.targetName], options.notifyChanged, options.triggerNotificationsNow);
+}
+
+/**
+ * @hidden
+ * Uninstalls "watchers" for leaf properties in the target object, and removes the attached callbacks from
+ * the target object.
+ * @param target The target object to unobserve.
+ */
+export function unobserve(target: any) {
+	unobserveLeafProperties(target);
 }

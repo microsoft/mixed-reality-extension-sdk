@@ -11,8 +11,6 @@ import * as Protocols from '../../../protocols';
 import * as Payloads from '../../../types/network/payloads';
 import { ExportedPromise } from '../../../utils/exportedPromise';
 
-// tslint:disable:object-literal-key-quotes no-console
-
 /**
  * @hidden
  */
@@ -62,7 +60,6 @@ export class ClientSync extends Protocols.Protocol {
 	public sendMessage(message: Message, promise?: ExportedPromise, timeoutSeconds?: number) {
 		message.id = message.id || UUID();
 		const handling = this.handlingForMessage(message);
-		// tslint:disable-next-line:switch-default
 		switch (handling) {
 			case 'allow': {
 				super.sendMessage(message, promise, timeoutSeconds);
@@ -160,7 +157,7 @@ export class ClientSync extends Protocols.Protocol {
 	 * @hidden
 	 * Driver for the `load-assets` synchronization stage.
 	 */
-	public 'stage:load-assets' = async () => {
+	public 'stage:load-assets' = () => {
 		// Send all cached asset creation messages.
 		for (const creator of this.client.session.assetCreators) {
 			this.sendMessage(creator);

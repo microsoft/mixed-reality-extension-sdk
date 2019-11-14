@@ -16,7 +16,6 @@ import validateJsonFieldName from '../utils/validateJsonFieldName';
 export class WebSocket extends EventedConnection {
 	public get remoteAddress() { return this._remoteAddress; }
 
-	// tslint:disable-next-line:variable-name
 	constructor(private _ws: WS, private _remoteAddress: string) {
 		super();
 

@@ -10,8 +10,6 @@ import { log } from '../../log';
 import * as Payloads from '../../types/network/payloads';
 import { ExportedPromise } from '../../utils/exportedPromise';
 
-// tslint:disable:variable-name new-parens no-console
-
 /**
  * @hidden
  * Indicates how to handle live message traffic during the client join process.

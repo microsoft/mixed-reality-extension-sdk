@@ -2,7 +2,6 @@
  * Copyright (c) Microsoft Corporation. All rights reserved.
  * Licensed under the MIT License.
  */
-/* eslint-disable curly,default-param-last */
 import { Color3, Scalar, ToGammaSpace, ToLinearSpace } from '.';
 
 export interface Color4Like {

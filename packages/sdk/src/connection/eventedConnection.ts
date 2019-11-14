@@ -49,6 +49,7 @@ export class EventedConnection extends EventEmitter implements Connection {
 
 	/** @inheritdoc */
 	public recv(message: Message): void {
+		/* eslint-disable @typescript-eslint/no-use-before-define */
 		const hasListeners = () => !!this.listeners('recv').length;
 		const checkAndLoop = () => {
 			this.timeout = undefined;
@@ -71,5 +72,6 @@ export class EventedConnection extends EventEmitter implements Connection {
 			this.queuedMessages.push(message);
 			setRetryLoop();
 		}
+		/* eslint-enable @typescript-eslint/no-use-before-define */
 	}
 }

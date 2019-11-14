@@ -113,6 +113,7 @@ class Log {
 		if (logging && logging.length) {
 			const parts = logging.split(',').map(s => s.trim());
 			for (const part of parts) {
+				/* eslint-disable-next-line prefer-const */
 				let [facility, severity] = part.split(':').map(s => s.trim());
 				const disable = facility.startsWith('-');
 				facility = facility.replace(/^-/u, '');

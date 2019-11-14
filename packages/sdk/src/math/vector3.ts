@@ -1128,7 +1128,6 @@ export class Vector3 implements Vector3Like {
 		}
 		MathTmp.Vector3[0].copyFrom(this);
 		["x", "y", "z"].forEach((val, i) => {
-			// tslint:disable-next-line:no-any
 			(this as any)[val] = (MathTmp.Vector3[0] as any)[order[i]];
 		});
 		return this;

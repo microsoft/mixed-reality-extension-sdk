@@ -36,7 +36,7 @@ export class Client extends EventEmitter {
 	private _queuedMessages: QueuedMessage[] = [];
 	private _userExclusiveMessages: QueuedMessage[] = [];
 	private _authoritative = false;
-	private leave: () => void;
+	private _leave: () => void;
 
 	public get id() { return this._id; }
 	public get order() { return this._order; }
@@ -56,9 +56,9 @@ export class Client extends EventEmitter {
 		super();
 		this._id = UUID();
 		this._order = Client.orderSequence++;
-		this.leave = this._leave.bind(this);
-		this._conn.on('close', this.leave);
-		this._conn.on('error', this.leave);
+		this._leave = this.leave.bind(this);
+		this._conn.on('close', this._leave);
+		this._conn.on('error', this._leave);
 	}
 
 	public setAuthoritative(value: boolean) {
@@ -88,14 +88,14 @@ export class Client extends EventEmitter {
 		}
 	}
 
-	public _leave() {
+	public leave() {
 		try {
 			if (this._protocol) {
 				this._protocol.stopListening();
 				this._protocol = undefined;
 			}
-			this._conn.off('close', this.leave);
-			this._conn.off('error', this.leave);
+			this._conn.off('close', this._leave);
+			this._conn.off('error', this._leave);
 			this._conn.close();
 			this._session = undefined;
 			this.emit('close');

@@ -37,7 +37,6 @@ export abstract class Adapter {
 	public set server(value: Restify.Server) { this._options.server = value; }
 	public get port() { return this._options.port; }
 
-	// tslint:disable-next-line:variable-name
 	constructor(protected _options: AdapterOptions) {
 		this._options = { ..._options };
 		this._options.port =

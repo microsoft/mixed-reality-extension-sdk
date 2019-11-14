@@ -43,6 +43,7 @@ module.exports = {
 			"error",
 			"windows"
 		],
+		"max-classes-per-file": ["warn", 1],
 		"max-len": ["error", 120],
 		"no-console": "error",
 		"no-div-regex": "error",
@@ -86,6 +87,7 @@ module.exports = {
 			"warn",
 			{ "args": "none" }
 		],
+		"@typescript-eslint/unbound-method": "error",
 		"header/header": [
 			"error",
 			"block",

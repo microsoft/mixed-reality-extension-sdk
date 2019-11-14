@@ -12,9 +12,7 @@ import { Message } from '..';
  * A Connection that does performs nops for send and receive.
  */
 export class NullConnection extends EventEmitter implements Connection {
-	// tslint:disable:variable-name
 	private _quality = new ConnectionQuality();
-	// tslint:enable:variable-name
 
 	/** @inheritdoc */
 	public get quality() { return this._quality; }

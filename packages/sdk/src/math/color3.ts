@@ -2,7 +2,6 @@
  * Copyright (c) Microsoft Corporation. All rights reserved.
  * Licensed under the MIT License.
  */
-/* eslint-disable curly */
 
 import { Color4, Scalar, ToGammaSpace, ToLinearSpace } from '.';
 import { FloatArray } from './types';
@@ -24,7 +23,6 @@ export class Color3 implements Color3Like {
 	 * @param g defines the green component (between 0 and 1, default is 0)
 	 * @param b defines the blue component (between 0 and 1, default is 0)
 	 */
-	// tslint:disable:variable-name
 	constructor(
 		/**
 		 * Defines the red component (between 0 and 1, default is 0)
@@ -39,7 +37,6 @@ export class Color3 implements Color3Like {
 		 */
 		public b = 0) {
 	}
-	// tslint:enable:variable-name
 
 	/**
 	 * Creates a string with the Color3 current values
@@ -76,10 +73,8 @@ export class Color3 implements Color3Like {
 	 */
 	public getHashCode(): number {
 		let hash = this.r || 0;
-		// tslint:disable:no-bitwise
 		hash = (hash * 397) ^ (this.g || 0);
 		hash = (hash * 397) ^ (this.b || 0);
-		// tslint:enable:no-bitwise
 		return hash;
 	}
 
@@ -392,11 +387,9 @@ export class Color3 implements Color3Like {
 			return new Color3(0, 0, 0);
 		}
 
-		// tslint:disable:ban
 		const r = parseInt(hex.substring(1, 3), 16);
 		const g = parseInt(hex.substring(3, 5), 16);
 		const b = parseInt(hex.substring(5, 7), 16);
-		// tslint:enable:ban
 
 		return Color3.FromInts(r, g, b);
 	}
