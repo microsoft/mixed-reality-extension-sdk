@@ -18,3 +18,4 @@ export * from './types/performanceStats';
 export * from './types/primitiveTypes';
 export * from './types/lookatMode';
 export * from './types/parameterSet';
+export * from './types/guid';

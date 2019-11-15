@@ -11,7 +11,7 @@ import readPath from '../utils/readPath';
 /** A serialized animation definition */
 export interface AnimationLike {
 	/** Generated unique ID of this animation */
-	id: Readonly<Guid>;
+	id: Guid;
 	/** The server time (milliseconds since the UNIX epoch) when the animation was started */
 	basisTime: number;
 	/** The current playback time, based on basis time and speed */
@@ -88,7 +88,9 @@ export class Animation implements AnimationLike, Patchable<AnimationLike> {
 	}
 	
 	/** INTERNAL USE ONLY. Animations are created by loading prefabs with animations on them. */
-	public constructor(private context: Context) { }
+	public constructor(private context: Context, id: Guid) {
+		this._id = id;
+	}
 
 	/** @hidden */
 	public toJSON(): AnimationLike {

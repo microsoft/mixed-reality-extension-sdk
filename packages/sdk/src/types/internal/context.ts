@@ -10,6 +10,8 @@ import {
 	Actor,
 	ActorLike,
 	ActorSet,
+	Animation,
+	AnimationLike,
 	AnimationWrapMode,
 	Asset,
 	AssetContainer,
@@ -20,6 +22,7 @@ import {
 	CollisionLayer,
 	Context,
 	CreateAnimationOptions,
+	Guid,
 	MediaCommand,
 	PerformanceStats,
 	SetAnimationStateOptions,
@@ -52,6 +55,7 @@ export class InternalContext {
 	public userSet: UserSet = {};
 	public userGroupMapping: { [id: string]: number } = { default: 1 };
 	public assetContainers = new Set<AssetContainer>();
+	public animationSet: Map<Guid, Animation> = new Map<Guid, Animation>();
 	public protocol: Protocols.Protocol;
 	public interval: NodeJS.Timer;
 	public generation = 0;
@@ -306,6 +310,7 @@ export class InternalContext {
 			execution.on('protocol.collision-event-raised', this.collisionEventRaised.bind(this));
 			execution.on('protocol.trigger-event-raised', this.triggerEventRaised.bind(this));
 			execution.on('protocol.set-animation-state', this.setAnimationStateEventRaised.bind(this));
+			execution.on('protocol.update-animations', this.updateAnimations.bind(this));
 
 			// Startup the execution protocol
 			execution.startListening();
@@ -352,7 +357,8 @@ export class InternalContext {
 		const syncObjects = [
 			...Object.values(this.actorSet),
 			...this.assetsIterable(),
-			...Object.values(this.userSet)
+			...Object.values(this.userSet),
+			...this.animationSet.values()
 		] as Array<Patchable<any>>;
 
 		for (const patchable of syncObjects) {
@@ -366,6 +372,11 @@ export class InternalContext {
 					type: 'actor-update',
 					actor: patch as ActorLike
 				} as Payloads.ActorUpdate);
+			} else if (patchable instanceof Animation) {
+				this.protocol.sendPayload({
+					type: 'animation-update',
+					animation: patch as Partial<AnimationLike>
+				} as Payloads.AnimationUpdate)
 			} else if (patchable instanceof Asset) {
 				this.protocol.sendPayload({
 					type: 'asset-update',
@@ -430,6 +441,21 @@ export class InternalContext {
 			const actor = this.actorSet[actorId];
 			this.context.emitter.emit('actor-created', actor);
 		});
+	}
+
+	public updateAnimations(animPatches: Array<Partial<AnimationLike>>) {
+		if (!animPatches) { return; }
+		const newAnims: Animation[] = [];
+		for (const patch of animPatches) {
+			if (this.animationSet.has(patch.id)) { continue; }
+			const newAnim = new Animation(this.context, patch.id);
+			this.animationSet.set(newAnim.id, newAnim);
+			newAnim.copy(patch);
+			newAnims.push(newAnim);
+		}
+		for (const anim of newAnims) {
+			this.context.emitter.emit('animation-created', anim);
+		}
 	}
 
 	public sendPayload(payload: Payloads.Payload, promise?: ExportedPromise): void {

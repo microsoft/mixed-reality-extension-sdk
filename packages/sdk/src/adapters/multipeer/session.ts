@@ -7,14 +7,15 @@ import deepmerge from 'deepmerge';
 import { EventEmitter } from 'events';
 import {
 	Client, InitializeActorMessage, MissingRule, Rules, SessionExecution,
-	SessionHandshake, SessionSync, SyncActor, SyncAsset
+	SessionHandshake, SessionSync, SyncActor, SyncAnimation, SyncAsset
 } from '.';
-import { Connection, EventedConnection, Message, UserLike } from '../..';
+import { Connection, EventedConnection, Guid, Message, UserLike } from '../..';
 import { log } from '../../log';
 import * as Protocols from '../../protocols';
 import * as Payloads from '../../types/network/payloads';
 
 type AssetCreationMessage = Message<Payloads.LoadAssets | Payloads.CreateAsset>;
+type AnimationCreationMessage = Message<Payloads.CreateActorCommon>;
 
 /**
  * @hidden
@@ -25,6 +26,10 @@ export class Session extends EventEmitter {
 	private _actorSet: { [id: string]: Partial<SyncActor> } = {};
 	private _assetSet: { [id: string]: Partial<SyncAsset> } = {};
 	private _assetCreatorSet: { [id: string]: AssetCreationMessage } = {};
+	private _animationSet: Map<Guid, Partial<SyncAnimation>>
+		= new Map<Guid, Partial<SyncAnimation>>();
+	private _animationCreatorSet: Map<Guid, AnimationCreationMessage>
+		= new Map<Guid, AnimationCreationMessage>();
 	private _userSet: { [id: string]: Partial<UserLike> } = {};
 	private _protocol: Protocols.Protocol;
 	private _disconnect: () => void;
@@ -237,10 +242,12 @@ export class Session extends EventEmitter {
 		this.sendToClients({ payload }, filterFn);
 	}
 
+	/** @deprecated */
 	public findAnimation(syncActor: Partial<SyncActor>, animationName: string) {
 		return (syncActor.createdAnimations || []).find(item => item.message.payload.animationName === animationName);
 	}
 
+	/** @deprecated */
 	public isAnimating(syncActor: Partial<SyncActor>): boolean {
 		if ((syncActor.createdAnimations || []).some(item => item.enabled)) {
 			return true;
@@ -379,5 +386,21 @@ export class Session extends EventEmitter {
 				delete this.assetSet[asset.id];
 			}
 		}
+	}
+
+	public cacheAnimationCreationRequest(payload: AnimationCreationMessage) {
+
+	}
+
+	public cacheAnimationCreation(animId: Guid, creatorId: string, duration?: number) {
+
+	}
+
+	public cacheAnimationUpdate(message: Message<Payloads.AnimationUpdate>) {
+
+	}
+
+	public cacheAnimationUnload(animId: Guid) {
+		
 	}
 }

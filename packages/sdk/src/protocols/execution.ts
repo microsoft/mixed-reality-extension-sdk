@@ -49,6 +49,7 @@ export class Execution extends Protocol {
 	/** @private */
 	public 'recv-object-spawned' = (payload: ObjectSpawned) => {
 		this.emit('protocol.update-actors', payload.actors);
+		this.emit('protocol.update-animations', payload.animations);
 	};
 
 	/** @private */

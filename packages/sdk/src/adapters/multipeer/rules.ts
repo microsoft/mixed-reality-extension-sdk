@@ -235,6 +235,7 @@ const CreateActorRule: Rule = {
 			message: Message<Payloads.CreateActorCommon>
 		) => {
 			session.cacheInitializeActorMessage(message);
+			session.cacheAnimationCreationRequest(message);
 			return message;
 		}
 	}
@@ -430,6 +431,27 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 	},
 
 	// ========================================================================
+	'animation-update': {
+		...DefaultRule,
+		synchronization: {
+			stage: 'sync-animations',
+			before: 'ignore',
+			during: 'queue',
+			after: 'allow'
+		},
+		session: {
+			...DefaultRule.session,
+			beforeReceiveFromApp: (
+				session: Session,
+				message: Message<Payloads.AnimationUpdate>
+			) => {
+				session.cacheAnimationUpdate(message);
+				return message;
+			}
+		}
+	},
+
+	// ========================================================================
 	'app2engine-rpc': {
 		...DefaultRule,
 		synchronization: {
@@ -456,6 +478,14 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 			before: 'ignore',
 			during: 'queue',
 			after: 'allow'
+		},
+		client: {
+			...DefaultRule.client,
+			shouldSendToUser: (message: Message<Payloads.AnimationUpdate>, userId: string, session: Session) => {
+				// TODO: don't send animation updates when the animation targets only actors
+				// the client doesn't care/know about.
+				return true;
+			}
 		},
 		session: {
 			...DefaultRule.session,
