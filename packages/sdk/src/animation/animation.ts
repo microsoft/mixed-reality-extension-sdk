@@ -12,6 +12,8 @@ import readPath from '../utils/readPath';
 export interface AnimationLike {
 	/** Generated unique ID of this animation */
 	id: Guid;
+	/** The non-unique name of this animation */
+	name: string;
 	/** The server time (milliseconds since the UNIX epoch) when the animation was started */
 	basisTime: number;
 	/** The current playback time, based on basis time and speed */
@@ -37,6 +39,14 @@ export class Animation implements AnimationLike, Patchable<AnimationLike> {
 	private _id: Guid;
 	/** @inheritdoc */
 	public get id() { return this._id; }
+
+	private _name: string;
+	/** @inheritdoc */
+	public get name() { return this._name; }
+	public set name(val) {
+		this._name = val;
+		this.animationChanged('name');
+	}
 
 	private _basisTime = 0;
 	/** @inheritdoc */
@@ -86,7 +96,7 @@ export class Animation implements AnimationLike, Patchable<AnimationLike> {
 			return this._basisTime;
 		}
 	}
-	
+
 	/** INTERNAL USE ONLY. Animations are created by loading prefabs with animations on them. */
 	public constructor(private context: Context, id: Guid) {
 		this._id = id;
@@ -96,6 +106,7 @@ export class Animation implements AnimationLike, Patchable<AnimationLike> {
 	public toJSON(): AnimationLike {
 		return {
 			id: this.id,
+			name: this.name,
 			basisTime: this.basisTime,
 			time: this.time,
 			speed: this.speed,
@@ -109,6 +120,7 @@ export class Animation implements AnimationLike, Patchable<AnimationLike> {
 	/** @hidden */
 	public copy(patch: Partial<AnimationLike>): this {
 		if (!patch) { return this; }
+		if (patch.name !== undefined) { this._name = patch.name; }
 		if (patch.basisTime !== undefined) { this._basisTime = patch.basisTime; }
 		if (patch.speed !== undefined) { this._speed = patch.speed; }
 		if (patch.weight !== undefined) { this._weight = patch.weight; }
