@@ -175,6 +175,11 @@ export class Session extends EventEmitter {
 			client.setAuthoritative(false);
 		}
 
+		// forward connection quality metrics
+		if (this.conn instanceof EventedConnection) {
+			this.conn.linkConnectionQuality(newAuthority.conn.quality);
+		}
+
 		// forward network stats from the authoritative peer connection to the app
 		const toApp = this.conn instanceof EventedConnection ? this.conn : null;
 		const forwardIncoming = (bytes: number) => toApp.statsTracker.recordIncoming(bytes);
@@ -401,6 +406,6 @@ export class Session extends EventEmitter {
 	}
 
 	public cacheAnimationUnload(animId: Guid) {
-		
+
 	}
 }

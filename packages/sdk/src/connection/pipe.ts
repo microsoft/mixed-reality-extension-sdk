@@ -39,6 +39,8 @@ export class Pipe {
 
 		this._local.statsTracker.on('incoming', bytes => this._remote.statsTracker.recordIncoming(bytes));
 		this._local.statsTracker.on('outgoing', bytes => this._remote.statsTracker.recordOutgoing(bytes));
+
+		this._local.on('linkQuality', quality => this._remote.linkConnectionQuality(quality));
 	}
 
 	private onLocalClose() {
