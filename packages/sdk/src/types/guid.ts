@@ -15,3 +15,6 @@ export function parseGuid(val: string): Guid {
 	}
 	return (val as unknown) as Guid;
 }
+
+export const ZeroGuidString = '00000000-0000-0000-0000-000000000000';
+export const ZeroGuid = parseGuid(ZeroGuidString);

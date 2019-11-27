@@ -4,7 +4,7 @@
  */
 
 import { Actor, GroupMask, Material, Mesh } from '.';
-import { ZeroGuid } from '../../constants';
+import { ZeroGuidString as ZeroGuid } from '../..';
 
 export interface AppearanceLike {
 	/**

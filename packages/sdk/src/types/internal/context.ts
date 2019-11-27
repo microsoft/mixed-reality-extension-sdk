@@ -31,11 +31,11 @@ import {
 	User,
 	UserLike,
 	UserSet,
+	ZeroGuidString as ZeroGuid,
 } from '../..';
 
 import * as Payloads from '../network/payloads';
 
-import { ZeroGuid } from '../../constants';
 import { log } from '../../log';
 import * as Protocols from '../../protocols';
 import { Execution } from '../../protocols/execution';

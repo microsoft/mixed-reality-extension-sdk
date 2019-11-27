@@ -41,10 +41,10 @@ import {
 	SetAnimationStateOptions,
 	SetAudioStateOptions,
 	SetVideoStateOptions,
-	Vector3Like
+	Vector3Like,
+	ZeroGuidString as ZeroGuid,
 } from '../..';
 
-import { ZeroGuid } from '../../constants';
 import { log } from '../../log';
 import { observe, unobserve } from '../../utils/observe';
 import readPath from '../../utils/readPath';
