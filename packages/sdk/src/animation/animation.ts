@@ -14,7 +14,7 @@ export interface AnimationLike {
 	id: Guid;
 	/** The non-unique name of this animation */
 	name: string;
-	/** The server time (milliseconds since the UNIX epoch) when the animation was started */
+	/** The server time (in milliseconds since the UNIX epoch) when the animation was started */
 	basisTime: number;
 	/** The current playback time, based on basis time and speed */
 	time: number;
@@ -50,10 +50,38 @@ export class Animation implements AnimationLike, Patchable<AnimationLike> {
 
 	private _basisTime = 0;
 	/** @inheritdoc */
-	public get basisTime() { return this._basisTime; }
+	public get basisTime(): number {
+		if (this.isPlaying) {
+			return this._basisTime;
+		} else {
+			return Date.now() + this.time * 1000;
+		}
+	}
 	public set basisTime(val) {
-		this._basisTime = val;
-		this.animationChanged('basisTime');
+		if (this._basisTime !== val) {
+			this._basisTime = val;
+			this._time = (Date.now() - val) / 1000;
+			this.animationChanged('basisTime');
+			this.animationChanged('time');
+		}
+	}
+
+	private _time = 0;
+	/** @inheritdoc */
+	public get time(): number {
+		if (!this.isPlaying) {
+			return this._time;
+		} else {
+			return (Date.now() - this.basisTime) / 1000;
+		}
+	}
+	public set time(val) {
+		if (this._time !== val) {
+			this._time = val;
+			this._basisTime = Date.now() - val * 1000;
+			this.animationChanged('time');
+			this.animationChanged('basisTime');
+		}
 	}
 
 	private _speed = 0;
@@ -88,18 +116,29 @@ export class Animation implements AnimationLike, Patchable<AnimationLike> {
 	/** @inheritdoc */
 	public get duration() { return this._duration; }
 
-	/** @inheritdoc */
-	public get time() {
-		if (this._speed !== 0) {
-			return (Date.now() - this._basisTime) / this._speed;
-		} else {
-			return this._basisTime;
-		}
-	}
+	/** Determine if this animation is playing, based on current speed */
+	public get isPlaying() { return this.speed > 0; }
 
 	/** INTERNAL USE ONLY. Animations are created by loading prefabs with animations on them. */
 	public constructor(private context: Context, id: Guid) {
 		this._id = id;
+	}
+
+	/**
+	 * Play the animation.
+	 * @param reset If true, restart the animation from the beginning.
+	 */
+	public play(reset = false) {
+		if (!this.isPlaying) {
+			this.basisTime = Date.now()
+				+ this.context.conn.quality.latencyMs.value
+				+ (reset ? 0 : 1) * this.time * 1000;
+			this.speed = 1;
+		}
+	}
+
+	public stop() {
+
 	}
 
 	/** @hidden */
@@ -120,13 +159,15 @@ export class Animation implements AnimationLike, Patchable<AnimationLike> {
 	/** @hidden */
 	public copy(patch: Partial<AnimationLike>): this {
 		if (!patch) { return this; }
-		if (patch.name !== undefined) { this._name = patch.name; }
-		if (patch.basisTime !== undefined) { this._basisTime = patch.basisTime; }
-		if (patch.speed !== undefined) { this._speed = patch.speed; }
-		if (patch.weight !== undefined) { this._weight = patch.weight; }
-		if (patch.wrapMode) { this._wrapMode = patch.wrapMode; }
+		this.internal.observing = false;
+		if (patch.name !== undefined) { this.name = patch.name; }
+		if (patch.basisTime !== undefined) { this.basisTime = patch.basisTime; }
+		if (patch.speed !== undefined) { this.speed = patch.speed; }
+		if (patch.weight !== undefined) { this.weight = patch.weight; }
+		if (patch.wrapMode) { this.wrapMode = patch.wrapMode; }
 		if (patch.targetActors) { this._targetActors = [...patch.targetActors]; }
 		if (patch.duration !== undefined) { this._duration = patch.duration; }
+		this.internal.observing = true;
 		return this;
 	}
 
