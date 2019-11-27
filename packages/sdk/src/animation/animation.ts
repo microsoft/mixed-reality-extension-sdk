@@ -25,7 +25,7 @@ export interface AnimationLike {
 	/** What happens when the animation hits the last frame */
 	wrapMode: AnimationWrapMode;
 	/** What runtime objects are being animated */
-	targetIds: Readonly<Guid[]>;
+	targetActors: Readonly<Guid[]>;
 
 	/** The length in seconds of the animation */
 	duration: number;
@@ -80,9 +80,9 @@ export class Animation implements AnimationLike, Patchable<AnimationLike> {
 		this.animationChanged('wrapMode');
 	}
 
-	private _targetIds: Guid[] = [];
+	private _targetActors: Guid[] = [];
 	/** @inheritdoc */
-	public get targetIds() { return Object.freeze([...this._targetIds]); }
+	public get targetActors() { return Object.freeze([...this._targetActors]); }
 
 	private _duration: number;
 	/** @inheritdoc */
@@ -112,7 +112,7 @@ export class Animation implements AnimationLike, Patchable<AnimationLike> {
 			speed: this.speed,
 			weight: this.weight,
 			wrapMode: this.wrapMode,
-			targetIds: this.targetIds,
+			targetActors: this.targetActors,
 			duration: this.duration
 		};
 	}
@@ -125,7 +125,7 @@ export class Animation implements AnimationLike, Patchable<AnimationLike> {
 		if (patch.speed !== undefined) { this._speed = patch.speed; }
 		if (patch.weight !== undefined) { this._weight = patch.weight; }
 		if (patch.wrapMode) { this._wrapMode = patch.wrapMode; }
-		if (patch.targetIds) { this._targetIds = [...patch.targetIds]; }
+		if (patch.targetActors) { this._targetActors = [...patch.targetActors]; }
 		if (patch.duration !== undefined) { this._duration = patch.duration; }
 		return this;
 	}

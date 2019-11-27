@@ -133,6 +133,14 @@ export class InternalContext {
 					success = replyPayload.result.resultCode !== 'error';
 					message = replyPayload.result.message;
 
+					for (const createdAnimLike of replyPayload.animations) {
+						if (!this.animationSet.has(createdAnimLike.id)) {
+							const createdAnim = new Animation(this.context, createdAnimLike.id);
+							createdAnim.copy(createdAnimLike);
+							this.animationSet.set(createdAnimLike.id, createdAnim);
+						}
+					}
+
 					for (const createdActorLike of replyPayload.actors) {
 						const createdActor = this.actorSet[createdActorLike.id];
 						if (createdActor) {

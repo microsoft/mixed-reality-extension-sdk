@@ -30,10 +30,14 @@ import {
 	User,
 } from '.';
 import {
+	Animation,
 	Context,
 	CreateAnimationOptions,
+	Guid,
 	LookAtMode,
+	parseGuid,
 	PrimitiveDefinition,
+	ReadonlyMap,
 	SetAnimationStateOptions,
 	SetAudioStateOptions,
 	SetVideoStateOptions,
@@ -745,6 +749,32 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 		return this;
 	}
 
+	/** The list of animations that target this actor. */
+	public get animations() {
+		return [...this.context.internal.animationSet.values()]
+			.filter(anim => anim.targetActors.includes(parseGuid(this.id)))
+			.reduce(
+				(map, anim) => {
+					map.set(anim.id, anim);
+					return map;
+				},
+				new Map<Guid, Animation>()
+			) as ReadonlyMap<Guid, Animation>;
+	}
+
+	public get animationsByName() {
+		return [...this.context.internal.animationSet.values()]
+			.filter(anim => anim.targetActors.includes(parseGuid(this.id)) && anim.name)
+			.reduce(
+				(map, anim) => {
+					map.set(anim.name, anim);
+					return map;
+				},
+				new Map<string, Animation>()
+			) as ReadonlyMap<string, Animation>;
+	}
+
+	/** @hidden */
 	public copy(from: Partial<ActorLike>): this {
 		// Pause change detection while we copy the values into the actor.
 		const wasObserving = this.internal.observing;
@@ -767,11 +797,12 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 		if (from.text) { this.enableText(from.text); }
 		if (from.lookAt) { this.enableLookAt(from.lookAt.actorId, from.lookAt.mode); }
 		if (from.grabbable !== undefined) { this._grabbable = from.grabbable; }
-		
+
 		this.internal.observing = wasObserving;
 		return this;
 	}
 
+	/** @hidden */
 	public toJSON() {
 		return {
 			id: this._id,

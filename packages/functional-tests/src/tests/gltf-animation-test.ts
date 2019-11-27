@@ -35,8 +35,20 @@ export default class GltfAnimationTest extends Test {
 			}
 		});
 
-		this.prefab.setBehavior(MRE.ButtonBehavior)
+		/* this.prefab.setBehavior(MRE.ButtonBehavior)
 			.onClick(() => this.setAnimationState(this.animating = !this.animating));
+		*/
+
+		await this.prefab.created();
+		for (const anim of this.prefab.animations.values()) {
+			console.log(`animation found: "${anim.name}" (${anim.id})`);
+		}
+
+		this.prefab.setBehavior(MRE.ButtonBehavior)
+			.onClick(() => {
+				const anim = this.prefab.animationsByName.get("animation:0");
+				anim.weight = 1 - anim.weight;
+			});
 
 		await this.stoppedAsync();
 		return true;
