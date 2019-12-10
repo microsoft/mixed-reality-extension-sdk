@@ -54,7 +54,7 @@ export class Animation implements AnimationLike, Patchable<AnimationLike> {
 		if (this.isPlaying) {
 			return this._basisTime;
 		} else {
-			return Date.now() + this.time * 1000;
+			return Date.now() - Math.floor(this.time * 1000);
 		}
 	}
 	public set basisTime(val) {
@@ -78,7 +78,7 @@ export class Animation implements AnimationLike, Patchable<AnimationLike> {
 	public set time(val) {
 		if (this._time !== val) {
 			this._time = val;
-			this._basisTime = Date.now() - val * 1000;
+			this._basisTime = Date.now() - Math.floor(val * 1000);
 			this.animationChanged('time');
 			this.animationChanged('basisTime');
 		}
@@ -116,8 +116,8 @@ export class Animation implements AnimationLike, Patchable<AnimationLike> {
 	/** @inheritdoc */
 	public get duration() { return this._duration; }
 
-	/** Determine if this animation is playing, based on current speed */
-	public get isPlaying() { return this.speed > 0; }
+	/** Determine if this animation is playing, based on the animation's weight. */
+	public get isPlaying() { return this.weight > 0; }
 
 	/** INTERNAL USE ONLY. Animations are created by loading prefabs with animations on them. */
 	public constructor(private context: Context, id: Guid) {
@@ -129,16 +129,27 @@ export class Animation implements AnimationLike, Patchable<AnimationLike> {
 	 * @param reset If true, restart the animation from the beginning.
 	 */
 	public play(reset = false) {
-		if (!this.isPlaying) {
-			this.basisTime = Date.now()
-				+ this.context.conn.quality.latencyMs.value
-				+ (reset ? 0 : 1) * this.time * 1000;
-			this.speed = 1;
-		}
+		// no-op if already playing
+		if (this.isPlaying) { return; }
+
+		// Getter for basis time converts the internal _time var into the corresponding basis time,
+		// so reassigning it writes this converted time back into the internal _basisTime var.
+		this.basisTime = (reset ? Date.now() : this.basisTime);
+		this.weight = 1;
 	}
 
+	/**
+	 * Halt the running animation. Has no effect if the animation is already stopped.
+	 */
 	public stop() {
+		// no-op if already stopped
+		if (!this.isPlaying) { return; }
 
+		// Getter for time converts the internal _basisTime var into the corresponding offset time,
+		// so reassigning it writes this converted time back into the internal _time var.
+		// eslint-disable-next-line no-self-assign
+		this.time = this.time;
+		this.weight = 0;
 	}
 
 	/** @hidden */

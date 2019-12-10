@@ -47,7 +47,7 @@ export default class GltfAnimationTest extends Test {
 		this.prefab.setBehavior(MRE.ButtonBehavior)
 			.onClick(() => {
 				const anim = this.prefab.animationsByName.get("animation:0");
-				anim.weight = 1 - anim.weight;
+				anim.isPlaying ? anim.stop() : anim.play();
 			});
 
 		await this.stoppedAsync();
