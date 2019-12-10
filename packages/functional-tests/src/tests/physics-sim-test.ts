@@ -12,11 +12,12 @@ const defaultBallColor = MRE.Color3.FromInts(220, 150, 150);
 const collisionPegColor = MRE.Color3.FromInts(0, 252, 75);
 
 export default class PhysicsSimTest extends Test {
-	public expectedResultDescription = "Balls trickle through the plinko board";
+	public expectedResultDescription = "Balls trickle through the plinko board.\nClick to disable a peg.";
 	private assets: MRE.AssetContainer;
 	private interval: NodeJS.Timeout;
 	private defaultPegMat: MRE.Material;
 	private collisionPegMat: MRE.Material;
+	private disabledPegMat: MRE.Material;
 	private ballMat: MRE.Material;
 	private collRefCount: { [id: string]: number } = {};
 	private ballCount = 0;
@@ -29,6 +30,9 @@ export default class PhysicsSimTest extends Test {
 		});
 		this.collisionPegMat = this.assets.createMaterial('collisionPeg', {
 			color: collisionPegColor
+		});
+		this.disabledPegMat = this.assets.createMaterial('disabledPeg', {
+			color: new MRE.Color4(0.8, 0, 0, 0.5)
 		});
 		this.ballMat = this.assets.createMaterial('ball', {
 			color: defaultBallColor
@@ -123,6 +127,11 @@ export default class PhysicsSimTest extends Test {
 				if (this.collRefCount[peg.id] === 0) {
 					peg.appearance.material = this.defaultPegMat;
 				}
+			});
+
+			peg.setBehavior(MRE.ButtonBehavior).onClick(() => {
+				peg.collider.enabled = false;
+				peg.appearance.material = this.disabledPegMat;
 			});
 
 			position.x += spacing;
