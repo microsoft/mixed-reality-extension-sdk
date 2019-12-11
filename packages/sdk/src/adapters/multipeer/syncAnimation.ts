@@ -3,12 +3,12 @@
  * Licensed under the MIT License.
  */
 
-import { Message } from '../..';
+import { Guid, Message } from '../..';
 import * as Payloads from '../../types/network/payloads';
 
 /** @hidden */
 export class SyncAnimation {
-	public id: string;
+	public id: Guid;
 	/** Used if animation was packaged with others, i.e. part of a prefab */
 	public creatorMessageId: string;
 	/** Used only with batch creation, as definition is updated for other */

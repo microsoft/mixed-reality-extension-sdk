@@ -439,6 +439,14 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 			during: 'queue',
 			after: 'allow'
 		},
+		client: {
+			...DefaultRule.client,
+			shouldSendToUser: (message: Message<Payloads.AnimationUpdate>, userId: string, session: Session) => {
+				// TODO: don't send animation updates when the animation targets only actors
+				// the client doesn't care/know about.
+				return true;
+			}
+		},
 		session: {
 			...DefaultRule.session,
 			beforeReceiveFromApp: (
@@ -478,14 +486,6 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 			before: 'ignore',
 			during: 'queue',
 			after: 'allow'
-		},
-		client: {
-			...DefaultRule.client,
-			shouldSendToUser: (message: Message<Payloads.AnimationUpdate>, userId: string, session: Session) => {
-				// TODO: don't send animation updates when the animation targets only actors
-				// the client doesn't care/know about.
-				return true;
-			}
 		},
 		session: {
 			...DefaultRule.session,
@@ -739,6 +739,10 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 								actor: { id: spawned.id }
 							}
 						});
+					}
+					// create somewhere to store anim updates
+					for (const newAnim of message.payload.animations) {
+						session.cacheAnimationCreation(newAnim.id, message.replyToId, newAnim.duration);
 					}
 					// Allow the message to propagate to the app.
 					return message;

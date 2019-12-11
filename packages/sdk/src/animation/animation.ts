@@ -134,7 +134,9 @@ export class Animation implements AnimationLike, Patchable<AnimationLike> {
 
 		// Getter for basis time converts the internal _time var into the corresponding basis time,
 		// so reassigning it writes this converted time back into the internal _basisTime var.
-		this.basisTime = (reset ? Date.now() : this.basisTime);
+		this.basisTime = (reset ? Date.now() : this.basisTime)
+			// start slightly in the future so we don't always skip over part of the animation.
+			+ this.context.conn.quality.latencyMs.value;
 		this.weight = 1;
 	}
 

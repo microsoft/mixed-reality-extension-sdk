@@ -26,10 +26,12 @@ export class Session extends EventEmitter {
 	private _actorSet: { [id: string]: Partial<SyncActor> } = {};
 	private _assetSet: { [id: string]: Partial<SyncAsset> } = {};
 	private _assetCreatorSet: { [id: string]: AssetCreationMessage } = {};
+	/** Maps animation IDs to animation sync structs */
 	private _animationSet: Map<Guid, Partial<SyncAnimation>>
 		= new Map<Guid, Partial<SyncAnimation>>();
-	private _animationCreatorSet: Map<Guid, AnimationCreationMessage>
-		= new Map<Guid, AnimationCreationMessage>();
+	/** Maps IDs of messages that can create animations to the messages themselves */
+	private _animationCreatorSet: Map<string, AnimationCreationMessage>
+		= new Map<string, AnimationCreationMessage>();
 	private _userSet: { [id: string]: Partial<UserLike> } = {};
 	private _protocol: Protocols.Protocol;
 	private _disconnect: () => void;
@@ -44,6 +46,7 @@ export class Session extends EventEmitter {
 	public get actors() { return Object.values(this._actorSet); }
 	public get assets() { return Object.values(this._assetSet); }
 	public get assetCreators() { return Object.values(this._assetCreatorSet); }
+	public get animations() { return this._animationSet.values(); }
 	public get users() { return Object.values(this._userSet); }
 	public get actorSet() { return this._actorSet; }
 	public get assetSet() { return this._assetSet; }
@@ -394,18 +397,33 @@ export class Session extends EventEmitter {
 	}
 
 	public cacheAnimationCreationRequest(payload: AnimationCreationMessage) {
-
+		this._animationCreatorSet.set(payload.id, payload);
 	}
 
 	public cacheAnimationCreation(animId: Guid, creatorId: string, duration?: number) {
-
+		this._animationSet.set(animId, {
+			id: animId,
+			creatorMessageId: creatorId,
+			update: undefined,
+			duration
+		});
 	}
 
-	public cacheAnimationUpdate(message: Message<Payloads.AnimationUpdate>) {
+	public cacheAnimationUpdate(update: Message<Payloads.AnimationUpdate>) {
+		let syncAnim = this._animationSet.get(update.payload.animation.id);
+		if (!syncAnim) {
+			syncAnim = { id: update.payload.animation.id };
+			this._animationSet.set(syncAnim.id, syncAnim);
+		}
 
-	}
-
-	public cacheAnimationUnload(animId: Guid) {
-
+		if (syncAnim.update) {
+			// merge with previous update message
+			syncAnim.update.payload.animation = deepmerge(
+				syncAnim.update.payload.animation,
+				update.payload.animation);
+		} else {
+			// just save it
+			syncAnim.update = update;
+		}
 	}
 }
