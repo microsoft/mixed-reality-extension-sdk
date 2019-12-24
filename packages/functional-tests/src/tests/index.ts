@@ -7,6 +7,7 @@ import { TestFactory } from '../test';
 import ActorSpamTest from './actor-spam-test';
 import AltspaceVRLibraryTest from './altspacevr-library-test';
 import AltspaceVRVideoTest from './altspacevr-video-test';
+import AnimationTest from './animation-test';
 import AssetEarlyAssignmentTest from './asset-early-assignment-test';
 import AssetMutabilityTest from './asset-mutability-test';
 import AssetPreloadTest from './asset-preload-test';
@@ -15,7 +16,6 @@ import ClockSyncTest from './clock-sync-test';
 import CollisionLayerTest from './collision-layer-test';
 import FailureTest from './failure-test';
 import GltfActorSyncTest from './gltf-actor-sync-test';
-import GltfAnimationTest from './gltf-animation-test';
 import GltfConcurrencyTest from './gltf-concurrency-test';
 import GltfGenTest from './gltf-gen-test';
 import GrabTest from './grab-test';
@@ -47,6 +47,7 @@ export const Factories = {
 	'actor-spam-test': (...args) => new ActorSpamTest(...args),
 	'altspacevr-library-test': (...args) => new AltspaceVRLibraryTest(...args),
 	'altspacevr-video-test': (...args) => new AltspaceVRVideoTest(...args),
+	'animation-test': (...args) => new AnimationTest(...args),
 	'asset-early-assignment-test': (...args) => new AssetEarlyAssignmentTest(...args),
 	'asset-mutability-test': (...args) => new AssetMutabilityTest(...args),
 	'asset-preload-test': (...args) => new AssetPreloadTest(...args),
@@ -55,7 +56,6 @@ export const Factories = {
 	'collision-layer-test': (...args) => new CollisionLayerTest(...args),
 	'failure-test': (...args) => new FailureTest(...args),
 	'gltf-actor-sync-test': (...args) => new GltfActorSyncTest(...args),
-	'gltf-animation-test': (...args) => new GltfAnimationTest(...args),
 	'gltf-concurrency-test': (...args) => new GltfConcurrencyTest(...args),
 	'gltf-gen-test': (...args) => new GltfGenTest(...args),
 	'grab-test': (...args) => new GrabTest(...args),

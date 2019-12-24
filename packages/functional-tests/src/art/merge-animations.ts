@@ -50,7 +50,7 @@ async function main(args: string[]) {
 	gltf.animations = [ final ];
 
 	// pack binary into json
-	const binFile = resolve(dirname(filename), gltf.buffers[0].uri)
+	const binFile = resolve(dirname(filename), gltf.buffers[0].uri);
 	gltf.buffers[0].uri = await convertToDataUrl(binFile);
 	await unlink(binFile);
 
