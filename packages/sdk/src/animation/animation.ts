@@ -51,16 +51,16 @@ export class Animation implements AnimationLike, Patchable<AnimationLike> {
 	private _basisTime = 0;
 	/** @inheritdoc */
 	public get basisTime(): number {
-		if (this.isPlaying) {
+		if (this.isPlaying && this.speed !== 0) {
 			return this._basisTime;
 		} else {
-			return Date.now() - Math.floor(this.time * 1000);
+			return Math.max(0, Date.now() - Math.floor(this.time * 1000 / this.speed));
 		}
 	}
 	public set basisTime(val) {
 		if (this._basisTime !== val) {
-			this._basisTime = val;
-			this._time = (Date.now() - val) / 1000;
+			this._basisTime = Math.max(0, val);
+			this._time = (Date.now() - this._basisTime) * this.speed / 1000;
 			this.animationChanged('basisTime');
 			this.animationChanged('time');
 		}
@@ -69,16 +69,16 @@ export class Animation implements AnimationLike, Patchable<AnimationLike> {
 	private _time = 0;
 	/** @inheritdoc */
 	public get time(): number {
-		if (!this.isPlaying) {
+		if (!this.isPlaying || this.speed === 0) {
 			return this._time;
 		} else {
-			return (Date.now() - this.basisTime) / 1000;
+			return (Date.now() - this.basisTime) * this.speed / 1000;
 		}
 	}
 	public set time(val) {
 		if (this._time !== val) {
 			this._time = val;
-			this._basisTime = Date.now() - Math.floor(val * 1000);
+			this._basisTime = Math.max(0, Date.now() - Math.floor(this._time * 1000 / this.speed));
 			this.animationChanged('time');
 			this.animationChanged('basisTime');
 		}
@@ -88,8 +88,18 @@ export class Animation implements AnimationLike, Patchable<AnimationLike> {
 	/** @inheritdoc */
 	public get speed() { return this._speed; }
 	public set speed(val) {
+		const curTime = this.time;
 		this._speed = val;
 		this.animationChanged('speed');
+
+		// recompute stored times such that there is continuity pre- and post-speed change
+		if (this.isPlaying && this._speed !== 0) {
+			this._basisTime = Math.max(0, Date.now() - Math.floor(curTime * 1000 / this.speed));
+			this.animationChanged('basisTime');
+		} else {
+			this._time = curTime;
+			this.animationChanged('time');
+		}
 	}
 
 	private _weight = 1;
