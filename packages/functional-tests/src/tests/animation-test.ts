@@ -45,7 +45,7 @@ export default class AnimationTest extends Test {
 		const anim = clock.animationsByName.get("animation:0");
 
 		const controls: ControlDefinition[] = [
-			{ label: "Playing", action: incr => {
+			{ label: "Playing", realtime: true, action: incr => {
 				if (!incr) {
 					return anim.isPlaying.toString();
 				} else if (anim.isPlaying) {
@@ -71,6 +71,13 @@ export default class AnimationTest extends Test {
 					anim.speed -= 0.25;
 				}
 				return Math.floor(anim.speed * 100) + "%";
+			}},
+			{ label: "Wrap", action: incr => {
+				const modes = Object.values(MRE.AnimationWrapMode);
+				const curModeIndex = modes.findIndex(m => m === anim.wrapMode);
+				const newModeIndex = (curModeIndex + incr + modes.length) % modes.length;
+				anim.wrapMode = modes[newModeIndex];
+				return anim.wrapMode;
 			}}
 		];
 		this.createControls(controls, MRE.Actor.Create(this.app.context, {
@@ -79,6 +86,8 @@ export default class AnimationTest extends Test {
 				transform: { local: { position: { x: 0.6, y: 1, z: -1 } } }
 			}
 		}));
+
+		anim.finished().then(() => this.app.setOverrideText('finished'));
 
 		await this.stoppedAsync();
 		return true;

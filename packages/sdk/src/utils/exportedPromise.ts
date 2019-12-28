@@ -7,4 +7,5 @@
 export interface ExportedPromise {
 	resolve: (...args: any[]) => void;
 	reject: (reason?: any) => void;
+	original?: Promise<any>;
 }

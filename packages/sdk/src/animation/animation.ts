@@ -6,6 +6,7 @@ import { Guid } from '../types/guid';
 import { AnimationWrapMode, InternalAnimation } from '.';
 import { Patchable } from '../types/patchable';
 import { Context } from '../types/runtime';
+import { ExportedPromise } from '../utils/exportedPromise';
 import readPath from '../utils/readPath';
 
 /** A serialized animation definition */
@@ -63,6 +64,7 @@ export class Animation implements AnimationLike, Patchable<AnimationLike> {
 			this._time = (Date.now() - this._basisTime) * this.speed / 1000;
 			this.animationChanged('basisTime');
 			this.animationChanged('time');
+			this.updateTimeout();
 		}
 	}
 
@@ -81,6 +83,7 @@ export class Animation implements AnimationLike, Patchable<AnimationLike> {
 			this._basisTime = Math.max(0, Date.now() - Math.floor(this._time * 1000 / this.speed));
 			this.animationChanged('time');
 			this.animationChanged('basisTime');
+			this.updateTimeout();
 		}
 	}
 
@@ -100,14 +103,23 @@ export class Animation implements AnimationLike, Patchable<AnimationLike> {
 			this._time = curTime;
 			this.animationChanged('time');
 		}
+
+		this.updateTimeout();
 	}
 
 	private _weight = 1;
 	/** @inheritdoc */
 	public get weight() { return this._weight; }
 	public set weight(val) {
+		// Getter for time converts the internal _basisTime var into the corresponding offset time,
+		// so reassigning it writes this converted time back into the internal _time var.
+		// eslint-disable-next-line no-self-assign
+		if (val === 0) {
+			this.time = this.time;
+		}
 		this._weight = val;
 		this.animationChanged('weight');
+		this.updateTimeout();
 	}
 
 	private _wrapMode = AnimationWrapMode.Once;
@@ -116,6 +128,7 @@ export class Animation implements AnimationLike, Patchable<AnimationLike> {
 	public set wrapMode(val) {
 		this._wrapMode = val;
 		this.animationChanged('wrapMode');
+		this.updateTimeout();
 	}
 
 	private _targetActors: Guid[] = [];
@@ -135,7 +148,7 @@ export class Animation implements AnimationLike, Patchable<AnimationLike> {
 	}
 
 	/**
-	 * Play the animation.
+	 * Play the animation by setting its weight to `1`.
 	 * @param reset If true, restart the animation from the beginning.
 	 */
 	public play(reset = false) {
@@ -151,17 +164,53 @@ export class Animation implements AnimationLike, Patchable<AnimationLike> {
 	}
 
 	/**
-	 * Halt the running animation. Has no effect if the animation is already stopped.
+	 * Halt the running animation by setting its weight to `0`. Has no effect if the animation is already stopped.
 	 */
 	public stop() {
 		// no-op if already stopped
 		if (!this.isPlaying) { return; }
-
-		// Getter for time converts the internal _basisTime var into the corresponding offset time,
-		// so reassigning it writes this converted time back into the internal _time var.
-		// eslint-disable-next-line no-self-assign
-		this.time = this.time;
 		this.weight = 0;
+	}
+
+	private _finished: ExportedPromise = null;
+	/** @returns A promise that resolves when the animation completes. This only occurs if the wrap mode is set
+	 * to "Once". The promise is not resolved if the animation is stopped manually.
+	 */
+	public finished(): Promise<void> {
+		if (this._finished) {
+			return this._finished.original;
+		}
+
+		const promise = new Promise<void>((resolve, reject) => {
+			this._finished = { resolve, reject };
+		});
+		this._finished.original = promise;
+		return promise;
+	}
+
+	private timeout: NodeJS.Timeout;
+	/** Track the expected completion time of the animation, and flip everything off */
+	private updateTimeout() {
+		if (this.timeout) {
+			clearTimeout(this.timeout);
+		}
+
+		if (this.wrapMode !== AnimationWrapMode.Once || !this.isPlaying || this.speed === 0) {
+			return;
+		}
+
+		// if animation is running backward, stop one-shots when it reaches the beginning
+		const basisTime = this.basisTime;
+		const completionTime = Math.max(basisTime, basisTime + this.duration * 1000 / this.speed);
+
+		this.timeout = setTimeout(() => {
+			this.weight = 0;
+
+			if (this._finished) {
+				this._finished.resolve();
+				this._finished = null;
+			}
+		}, completionTime - Date.now())
 	}
 
 	/** @hidden */

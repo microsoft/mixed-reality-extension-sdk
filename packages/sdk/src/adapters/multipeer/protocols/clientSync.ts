@@ -214,7 +214,6 @@ export class ClientSync extends Protocols.Protocol {
 		// sync new-style animations
 		for (const anim of this.client.session.animations) {
 			if (anim.update) {
-				console.log('sending anim update to late joiner:', anim.update.payload.animation);
 				super.sendMessage(anim.update);
 			}
 		}
