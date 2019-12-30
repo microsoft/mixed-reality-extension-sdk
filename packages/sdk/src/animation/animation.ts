@@ -87,6 +87,15 @@ export class Animation implements AnimationLike, Patchable<AnimationLike> {
 		}
 	}
 
+	/** [[time]], correcting for overruns from looping animations. Is always between 0 and [[duration]]. */
+	public get normalizedTime() {
+		let time = this.time % this.duration;
+		if (time < 0) {
+			time += this.duration;
+		}
+		return time;
+	}
+
 	private _speed = 0;
 	/** @inheritdoc */
 	public get speed() { return this._speed; }
@@ -113,8 +122,9 @@ export class Animation implements AnimationLike, Patchable<AnimationLike> {
 	public set weight(val) {
 		// Getter for time converts the internal _basisTime var into the corresponding offset time,
 		// so reassigning it writes this converted time back into the internal _time var.
-		// eslint-disable-next-line no-self-assign
+		// This is needed so the paused state is stored correctly.
 		if (val === 0) {
+			// eslint-disable-next-line no-self-assign
 			this.time = this.time;
 		}
 		this._weight = val;
@@ -139,8 +149,18 @@ export class Animation implements AnimationLike, Patchable<AnimationLike> {
 	/** @inheritdoc */
 	public get duration() { return this._duration; }
 
-	/** Determine if this animation is playing, based on the animation's weight. */
+	/**
+	 * Determine if this animation is playing based on the animation's weight. Setting this property calls
+	 * [[play]] and [[stop]] internally.
+	 */
 	public get isPlaying() { return this.weight > 0; }
+	public set isPlaying(val) {
+		if (val) {
+			this.play();
+		} else {
+			this.stop();
+		}
+	}
 
 	/** INTERNAL USE ONLY. Animations are created by loading prefabs with animations on them. */
 	public constructor(private context: Context, id: Guid) {

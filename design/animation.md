@@ -24,11 +24,14 @@ To address this need, I propose the following API:
 API Design
 -----------
 
-Animations are assets. They are created explicitly by a function on asset containers (
-`AssetContainer.createAnimation`). Native animations from library or glTF actors do not create these assets, instead
-creating animation instances only (see [Instances](#instances)).
+This design introduces two new concepts: `AnimationData` which contains animation keyframes and other data needed to
+modify properties on a timeline, and `Animation`s that consume this data at runtime.
 
-When created directly, animations are created as an array of "tracks", each composed of:
+Animation data are assets. They are created explicitly by a function on asset containers (
+`AssetContainer.createAnimationData`). Native animations from library or glTF actors do not create these assets,
+instead creating animations only (see [Instances](#instances)).
+
+When created directly, animation data are created as an array of "tracks", each composed of:
 1. A generic path to a field that can be animated (see [Paths](#paths)).
 2. An array of keyframes, each composed of:
 	1. A time value.
@@ -37,19 +40,19 @@ When created directly, animations are created as an array of "tracks", each comp
 	3. An optional bezier easing function.
 
 ```ts
-type Animatible = Actor | Material | AnimationInstance;
-type AnimatibleClassName = 'actor' | 'material' | 'animationinstance';
-type AnimatibleLike = ActorLike | MaterialLike | AnimationInstanceLike;
+type Animatible = Actor | Material | Animation;
+type AnimatibleClassName = 'actor' | 'material' | 'animation';
+type AnimatibleLike = ActorLike | MaterialLike | AnimationLike;
 type AnimationProp = Vector2 | Vector3 | Quaternion | Color3 | Color4 | number | string | boolean;
 type EasingFunction = [number, number, number, number];
 
 class AssetContainer {
-	public createAnimation(name: string, options: {
+	public createAnimationData(name: string, options: {
 		targets: { [name: string]: AnimatibleClassName },
 		tracks: Track<AnimationProp>[]
-	}): Animation;
+	}): AnimationData;
 }
-class Animation {
+class AnimationData {
 	id: Readonly<string>;
 	duration: Readonly<number>;
 	targets: { [name: string]: AnimatibleClassName };
@@ -68,10 +71,27 @@ type Keyframe<T extends AnimationProp> = {
 }
 ```
 
+An example of a call creating animation data for a simple translation animation:
+
+```ts
+assets.createAnimationData({
+	targets: {
+		"actor": "actor"
+	},
+	tracks: [{
+		target: AnimateActor("actor").transform.local.position,
+		keyframes: [{
+			time: 1,
+			value: { x: 10, y: 0, z: 0 }
+		}]
+	}]
+});
+```
+
 ### Paths
 
 Paths are references to properties on an object that can be animated (Actor, Material, etc.). Paths do not reference
-properties on a *particular* object, but instead reference a generic object of a given type by index. When bound,
+properties on a *particular* object, but instead reference a generic object of a given type by name. When bound,
 the animation will be given the list of objects which it will be modifying, and these path indices refer to that
 argument. Over the wire these are represented as strings, but are easily generated in the API with helper functions.
 
@@ -85,7 +105,7 @@ class TargetPath<T> {
 		}
 	}
 	public toJSON() {
-		// convert tree into string
+		// convert tree branch into string
 	}
 }
 function AnimateActor(name: string) {
@@ -124,7 +144,7 @@ In addition to transitioning to a constant value on a property, you can also tra
 This value is re-evaluated every frame on the client, so matches exactly.
 
 ```ts
-assets.createAnimation({
+assets.createAnimationData({
 	targets: {
 		"start": "actor"
 		"end": "actor"
@@ -141,22 +161,22 @@ assets.createAnimation({
 
 ### Instances
 
-Animation instances are animations that have been bound to a particular set of actors and materials. These instances
-can be created by explicitly binding an animation (`Animation.bind(...objects)`), or may be returned during actor
+Animations are animation data that have been bound to a particular set of actors and materials. These instances
+can be created by explicitly binding an animation (`Animation.bind({...objects})`), or may be returned during actor
 creation from `Actor.CreateFromPrefab`/`Gltf`/`Library`. Unlike the asset, instances can be played, paused, set speed,
-etc. Animation instances can either be stored directly, or obtained from any of the actors/materials that participate
-in the animation. Instances participate in the patching system, so changing properties on the animation instance
-are pushed down to clients automatically.
+etc. Animations can either be stored directly, or obtained from any of the actors/materials that participate
+in the animation. Animations participate in the patching system, so changing properties on the animation are pushed
+down to clients automatically.
 
-An animation instance can be the target of other animations. This allows you to create timelines of animation instances,
-setting their `isPlaying` property after another animation finishes, or doing cross-fades by animating instance weights.
+An animation can be the target of other animations. This allows you to create timelines of animations, setting their
+`weight` properties after another animation finishes, or doing cross-fades by animating instance weights.
 
 ```ts
-class Animation {
-	bind(...args: Animatible[]): AnimationInstance;
+class AnimationData {
+	bind(args: { [name: string]: Animatible }): Animation;
 }
 
-class AnimationInstance {
+class Animation {
 	/** Generated unique ID */
 	id: Readonly<string>;
 
@@ -166,12 +186,17 @@ class AnimationInstance {
 	wrapMode: WrapMode;
 	/** When multiple animations play together, this is the relative strength of this instance */
 	weight: number;
+	/** The server time corresponding with animation time 0 */
+	basisTime: number;
 	/** The current playback time, based on start time and speed */
 	time: number;
-	/** The list of actors/materials that participate in this instance */
-	targets: Readonly<Animatible[]>;
-	/** The playing animation */
-	animation: Readonly<Animation>;
+	/** The list of animatible objects that participate in this instance */
+	targetActors: Readonly<Actor[]>;
+	targetMaterials: Readonly<Material[]>;
+	targetAnimations: Readonly<Animation[]>;
+
+	/** The keyframe data */
+	data: Readonly<AnimationData>;
 
 	/** Current play state. Setting this property is equivalent to calling play() and pause().  */
 	isPlaying: boolean;
@@ -193,11 +218,11 @@ enum WrapMode {
 interface ReadonlyMap<K,V> { }
 
 class Actor {
-	animations: ReadonlyMap<string, AnimationInstance>;
+	animations: ReadonlyMap<string, Animation>;
 }
 
-const ticktock: MRE.Animation = assets.createAnimation(...);
-const animInstance: MRE.AnimationInstance = ticktock.bind(firstBall, lastBall);
+const ticktock: MRE.AnimationData = assets.createAnimationData(...);
+const animInstance: MRE.Animation = ticktock.bind({firstBall, lastBall});
 animInstance.speed = 1.5;
 animInstance.play();
 
@@ -218,11 +243,11 @@ object, and plays it.
 class Animation {
 	public static AnimateTo(target: Animatible, options: {
 		duration: number;
-		destination: ActorLike | MaterialLike;
+		destination: AnimatibleLike;
 		easing?: EasingFunction;
-	}): AnimationInstance { }
+	}): AnimationInstance;
 }
-const anim: MRE.AnimationInstance = MRE.Animation.AnimateTo(material, {
+const anim: MRE.Animation = MRE.Animation.AnimateTo(material, {
 	duration: 1,
 	easing: MRE.Animation.Easing.Linear,
 	// each nested non-undefined property is converted to a track in a one-frame animation
@@ -233,24 +258,23 @@ const anim: MRE.AnimationInstance = MRE.Animation.AnimateTo(material, {
 Network Messaging
 ------------------
 
-1. Modify `create-asset` for creating animations.
-2. Modify `asset-loaded` for getting animation creation results back.
-3. Modify `object-spawned` to include animation instances in prefabs/library actors.
-4. New message `create-animinstance`, sent when an animation is bound to actors/materials.
-5. New message `animinstance-update`, sent when unpredictable animation instance properties are patched, i.e.
-	properties other than `time`. This includes `isPlaying`, which is set by `play()` and `pause()`.
+1. Modify `create-asset` for creating animation data.
+2. Modify `asset-loaded` for getting animation data creation results back.
+3. Modify `object-spawned` to include animations in prefabs/library actors.
+4. Modify `create-animation`, sent when an animation is bound to actors/materials.
+5. New message `animation-update`, sent when unpredictable animation instance properties are patched, i.e.
+	properties other than `time`. This includes `weight`, which is set by `play()` and `pause()`.
 
-`AnimationInstance.finished` might not require a round trip if a server-side timer can be used. Perhaps this
+`Animation.finished` might not require a round trip if a server-side timer can be used. Perhaps this
 server-side timer could also be used for "animation events"?
 
 Synchronization Concerns
 --------------------------
 
-The session needs to track animation instances (`create-animinstance`) and update them when patched
-(`animinstance-update`).
+The session needs to track animations (`create-animation`) and update them when patched (`animation-update`).
 
 The session needs to know what time the animation was started, so it can give late joiners the correct
-`AnimationInstance.time` value.
+`Animation.time` value.
 
 Unity Concerns
 ---------------
@@ -285,13 +309,15 @@ let arrow: MRE.Actor;
 let bullseye: MRE.Actor;
 
 // Animations are assets
-const arcAnim: MRE.Animation = assets.createAnimation('arc', {
-	targetCount: 1,
+const arcAnim = assets.createAnimationData('arc', {
+	targets: {
+		arrow: 'actor'
+	},
 	tracks: [
 		// animate position.x straight there
 		{
 			// Easy-to-understand autocompleting syntax for target paths
-			target: MRE.Animation.Actor(0).transform.app.position.x,
+			target: MRE.Animation.Actor('arrow').transform.app.position.x,
 			// t=0 keyframe is omitted, so start from actor's current value
 			keyframes: [{
 				time: 5,
@@ -301,7 +327,7 @@ const arcAnim: MRE.Animation = assets.createAnimation('arc', {
 		},
 		// animate position.z straight there
 		{
-			target: MRE.Animation.Actor(0).transform.app.position.z,
+			target: MRE.Animation.Actor('arrow').transform.app.position.z,
 			keyframes: [{
 				time: 5,
 				value: bullseye.transform.app.position.z,
@@ -311,7 +337,7 @@ const arcAnim: MRE.Animation = assets.createAnimation('arc', {
 		// arc position.y via a point above the midpoint between start and bullseye
 		// assume bullseye is on a level with the start point
 		{
-			target: MRE.Animation.Actor(0).transform.app.position.y,
+			target: MRE.Animation.Actor('arrow').transform.app.position.y,
 			keyframes: [{
 				time: 2.5,
 				value: 0.57 * MRE.Vector3.Distance(
@@ -328,7 +354,7 @@ const arcAnim: MRE.Animation = assets.createAnimation('arc', {
 		},
 		// rotate arrow to face direction of travel
 		{
-			target: MRE.Animation.Actor(0).transform.app.rotation,
+			target: MRE.Animation.Actor('arrow').transform.app.rotation,
 			keyframes: [{
 				time: 0,
 				value: MRE.Quaternion.FromEulerAngles(45 * MRE.DegreesToRadians, 0, 0);
@@ -340,13 +366,13 @@ const arcAnim: MRE.Animation = assets.createAnimation('arc', {
 		}
 	]
 });
-arcAnim.play(arrow);
+arcAnim.bind(arrow).play();
 ```
 
 Fade out a material over one second:
 
 ```ts
-const anim: MRE.Animation = Animation.animateTo(material, {
+const anim = Animation.animateTo(material, {
 	duration: 1,
 	easing: MRE.Animation.Easing.Linear,
 	// each nested non-undefined property is converted to a track in a two-frame animation
