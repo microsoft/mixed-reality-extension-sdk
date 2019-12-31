@@ -25,8 +25,8 @@ export interface AnimationLike {
 	weight: number;
 	/** What happens when the animation hits the last frame */
 	wrapMode: AnimationWrapMode;
-	/** What runtime objects are being animated */
-	targetActors: Readonly<Guid[]>;
+	/** The IDs of the actors targeted by this animation */
+	targetActorIds: Readonly<Guid[]>;
 
 	/** The length in seconds of the animation */
 	duration: number;
@@ -141,9 +141,12 @@ export class Animation implements AnimationLike, Patchable<AnimationLike> {
 		this.updateTimeout();
 	}
 
-	private _targetActors: Guid[] = [];
+	private _targetActorIds: Guid[] = [];
 	/** @inheritdoc */
-	public get targetActors() { return Object.freeze([...this._targetActors]); }
+	public get targetActorIds() { return Object.freeze([...this._targetActorIds]); }
+
+	/** The list of actors targeted by this animation. */
+	public get targetActors() { return this.targetActorIds.map(id => this.context.actor(id.toString())); }
 
 	private _duration: number;
 	/** @inheritdoc */
@@ -243,13 +246,14 @@ export class Animation implements AnimationLike, Patchable<AnimationLike> {
 			speed: this.speed,
 			weight: this.weight,
 			wrapMode: this.wrapMode,
-			targetActors: this.targetActors,
+			targetActorIds: this.targetActorIds,
 			duration: this.duration
 		};
 	}
 
 	/** @hidden */
 	public copy(patch: Partial<AnimationLike>): this {
+		console.log(patch);
 		if (!patch) { return this; }
 		this.internal.observing = false;
 		if (patch.name !== undefined) { this.name = patch.name; }
@@ -257,7 +261,7 @@ export class Animation implements AnimationLike, Patchable<AnimationLike> {
 		if (patch.speed !== undefined) { this.speed = patch.speed; }
 		if (patch.weight !== undefined) { this.weight = patch.weight; }
 		if (patch.wrapMode) { this.wrapMode = patch.wrapMode; }
-		if (patch.targetActors) { this._targetActors = [...patch.targetActors]; }
+		if (patch.targetActorIds) { this._targetActorIds = [...patch.targetActorIds]; }
 		if (patch.duration !== undefined) { this._duration = patch.duration; }
 		this.internal.observing = true;
 		return this;

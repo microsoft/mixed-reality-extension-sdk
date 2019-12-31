@@ -749,10 +749,10 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 		return this;
 	}
 
-	/** The list of animations that target this actor. */
+	/** The list of animations that target this actor, by ID. */
 	public get animations() {
 		return [...this.context.internal.animationSet.values()]
-			.filter(anim => anim.targetActors.includes(parseGuid(this.id)))
+			.filter(anim => anim.targetActorIds.includes(parseGuid(this.id)))
 			.reduce(
 				(map, anim) => {
 					map.set(anim.id, anim);
@@ -762,9 +762,10 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 			) as ReadonlyMap<Guid, Animation>;
 	}
 
+	/** The list of animations that target this actor, by name. */
 	public get animationsByName() {
 		return [...this.context.internal.animationSet.values()]
-			.filter(anim => anim.targetActors.includes(parseGuid(this.id)) && anim.name)
+			.filter(anim => anim.targetActorIds.includes(parseGuid(this.id)) && anim.name)
 			.reduce(
 				(map, anim) => {
 					map.set(anim.name, anim);
@@ -772,6 +773,18 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 				},
 				new Map<string, Animation>()
 			) as ReadonlyMap<string, Animation>;
+	}
+
+	/** Recursively search for the named animation from this actor. */
+	public findAnimationInChildrenByName(name: string): Animation {
+		if (this.animationsByName.has(name)) {
+			return this.animationsByName.get(name);
+		} else {
+			return this.children.reduce(
+				(val, child) => val || child.findAnimationInChildrenByName(name),
+				null as Animation
+			);
+		}
 	}
 
 	/** @hidden */
