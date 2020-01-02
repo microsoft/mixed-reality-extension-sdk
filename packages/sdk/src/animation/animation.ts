@@ -253,7 +253,6 @@ export class Animation implements AnimationLike, Patchable<AnimationLike> {
 
 	/** @hidden */
 	public copy(patch: Partial<AnimationLike>): this {
-		console.log(patch);
 		if (!patch) { return this; }
 		this.internal.observing = false;
 		if (patch.name !== undefined) { this.name = patch.name; }
