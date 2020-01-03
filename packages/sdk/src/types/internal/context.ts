@@ -24,6 +24,7 @@ import {
 	CreateAnimationOptions,
 	Guid,
 	MediaCommand,
+	parseGuid,
 	PerformanceStats,
 	SetAnimationStateOptions,
 	SetMediaStateOptions,
@@ -231,12 +232,30 @@ export class InternalContext {
 		// Resolve by-reference values now, ensuring they won't change in the
 		// time between now and when this message is actually sent.
 		options.keyframes = resolveJsonValues(options.keyframes);
-		this.protocol.sendPayload({
-			type: 'create-animation',
-			actorId,
-			animationName,
-			...options
-		} as Payloads.CreateAnimation);
+		return new Promise<Animation>((resolve, reject) => {
+			this.protocol.sendPayload({
+				type: 'create-animation',
+				actorId,
+				animationName,
+				...options
+			} as Payloads.CreateAnimation,
+			{
+				resolve: (reply: Payloads.ObjectSpawned) => {
+					if (reply.result.resultCode !== 'error') {
+						const createdAnimLike = reply.animations[0];
+						let createdAnim = this.animationSet.has(createdAnimLike.id)
+							? this.animationSet.get(createdAnimLike.id)
+							: new Animation(this.context, createdAnimLike.id);
+						createdAnim.copy(createdAnimLike);
+						this.animationSet.set(createdAnimLike.id, createdAnim);
+						resolve(createdAnim);
+					} else {
+						reject(reply.result.message);
+					}
+				},
+				reject
+			});
+		});
 	}
 
 	public setAnimationState(
@@ -247,13 +266,22 @@ export class InternalContext {
 		const actor = this.actorSet[actorId];
 		if (!actor) {
 			log.error('app', `Failed to set animation state on ${animationName}. Actor ${actorId} not found.`);
-		} else {
-			this.protocol.sendPayload({
-				type: 'set-animation-state',
-				actorId,
-				animationName,
-				state
-			} as Payloads.SetAnimationState);
+			return;
+		}
+		const anim = actor.animationsByName.get(animationName);
+		if (!anim) {
+			log.error('app', `Failed to set animation state on ${animationName}. ` +
+				`No animation with this name was found on actor ${actorId}.`);
+			return;
+		}
+		if (state.enabled !== undefined) {
+			anim.isPlaying = state.enabled;
+		}
+		if (state.speed !== undefined) {
+			anim.speed = state.speed;
+		}
+		if (state.time !== undefined) {
+			anim.time = state.time;
 		}
 	}
 

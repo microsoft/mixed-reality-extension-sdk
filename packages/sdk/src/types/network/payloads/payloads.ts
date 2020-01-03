@@ -320,7 +320,6 @@ export type SetBehavior = Payload & {
 
 /**
  * @hidden
- * @deprecated
  * App to engine. Create an animation and associate it with an actor.
  */
 export type CreateAnimation = Payload & CreateAnimationOptions & {
