@@ -336,6 +336,7 @@ export type CreateAnimation = Payload & CreateAnimationOptions & {
 export type SetAnimationState = Payload & {
 	type: 'set-animation-state';
 	actorId: string;
+	animationId?: string;
 	animationName: string;
 	state: SetAnimationStateOptions;
 };

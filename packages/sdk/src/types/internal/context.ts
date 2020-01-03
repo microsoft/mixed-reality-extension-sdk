@@ -229,6 +229,17 @@ export class InternalContext {
 			}
 		}
 
+		// generate the anim immediately
+		const createdAnim = new Animation(this.context, parseGuid(UUID()));
+		createdAnim.copy({
+			name: animationName,
+			targetActorIds: [actorId],
+			weight: options.initialState?.enabled === true ? 1 : 0,
+			speed: options.initialState?.speed,
+			time: options.initialState?.time
+		});
+		this.animationSet.set(createdAnim.id, createdAnim);
+
 		// Resolve by-reference values now, ensuring they won't change in the
 		// time between now and when this message is actually sent.
 		options.keyframes = resolveJsonValues(options.keyframes);
@@ -237,17 +248,13 @@ export class InternalContext {
 				type: 'create-animation',
 				actorId,
 				animationName,
+				animationId: createdAnim.id.toString(),
 				...options
 			} as Payloads.CreateAnimation,
 			{
 				resolve: (reply: Payloads.ObjectSpawned) => {
 					if (reply.result.resultCode !== 'error') {
-						const createdAnimLike = reply.animations[0];
-						let createdAnim = this.animationSet.has(createdAnimLike.id)
-							? this.animationSet.get(createdAnimLike.id)
-							: new Animation(this.context, createdAnimLike.id);
-						createdAnim.copy(createdAnimLike);
-						this.animationSet.set(createdAnimLike.id, createdAnim);
+						createdAnim.copy(reply.animations[0]);
 						resolve(createdAnim);
 					} else {
 						reject(reply.result.message);
@@ -265,13 +272,13 @@ export class InternalContext {
 	) {
 		const actor = this.actorSet[actorId];
 		if (!actor) {
-			log.error('app', `Failed to set animation state on ${animationName}. Actor ${actorId} not found.`);
+			log.error('app', `Failed to set animation state on "${animationName}". Actor "${actorId}" not found.`);
 			return;
 		}
 		const anim = actor.animationsByName.get(animationName);
 		if (!anim) {
-			log.error('app', `Failed to set animation state on ${animationName}. ` +
-				`No animation with this name was found on actor ${actorId}.`);
+			log.error('app', `Failed to set animation state on "${animationName}". ` +
+				`No animation with this name was found on actor "${actorId}" (${actor.name}).`);
 			return;
 		}
 		if (state.enabled !== undefined) {

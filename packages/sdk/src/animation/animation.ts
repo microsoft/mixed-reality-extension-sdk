@@ -26,7 +26,7 @@ export interface AnimationLike {
 	/** What happens when the animation hits the last frame */
 	wrapMode: AnimationWrapMode;
 	/** The IDs of the actors targeted by this animation */
-	targetActorIds: Readonly<Guid[]>;
+	targetActorIds: Readonly<string[]>;
 
 	/** The length in seconds of the animation */
 	duration: number;
@@ -141,12 +141,12 @@ export class Animation implements AnimationLike, Patchable<AnimationLike> {
 		this.updateTimeout();
 	}
 
-	private _targetActorIds: Guid[] = [];
+	private _targetActorIds: string[] = [];
 	/** @inheritdoc */
 	public get targetActorIds() { return Object.freeze([...this._targetActorIds]); }
 
 	/** The list of actors targeted by this animation. */
-	public get targetActors() { return this.targetActorIds.map(id => this.context.actor(id.toString())); }
+	public get targetActors() { return this.targetActorIds.map(id => this.context.actor(id)); }
 
 	private _duration: number;
 	/** @inheritdoc */

@@ -80,7 +80,6 @@ export default class ClockSyncTest extends Test {
 
 		// Make a handy array of all the digits.
 		const actors = [
-			tester, topBox, bottomBox,
 			meshHundredths, meshTenths, meshSeconds, mesh10Seconds, meshMinutes, mesh10Minutes, meshHours, mesh10Hours];
 
 		// Build animations.
