@@ -35,7 +35,6 @@ import {
 	CreateAnimationOptions,
 	Guid,
 	LookAtMode,
-	parseGuid,
 	PrimitiveDefinition,
 	ReadonlyMap,
 	SetAnimationStateOptions,

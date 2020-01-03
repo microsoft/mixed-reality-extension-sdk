@@ -15,7 +15,7 @@ import * as Protocols from '../../protocols';
 import * as Payloads from '../../types/network/payloads';
 
 type AssetCreationMessage = Message<Payloads.LoadAssets | Payloads.CreateAsset>;
-type AnimationCreationMessage = Message<Payloads.CreateActorCommon>;
+type AnimationCreationMessage = Message<Payloads.CreateAnimation | Payloads.CreateActorCommon>;
 
 /**
  * @hidden
@@ -46,7 +46,9 @@ export class Session extends EventEmitter {
 	public get actors() { return Object.values(this._actorSet); }
 	public get assets() { return Object.values(this._assetSet); }
 	public get assetCreators() { return Object.values(this._assetCreatorSet); }
+	public get animationSet() { return this._animationSet; }
 	public get animations() { return this._animationSet.values(); }
+	public get animationCreators() { return this._animationCreatorSet.values(); }
 	public get users() { return Object.values(this._userSet); }
 	public get actorSet() { return this._actorSet; }
 	public get assetSet() { return this._assetSet; }
@@ -401,11 +403,19 @@ export class Session extends EventEmitter {
 	}
 
 	public cacheAnimationCreation(animId: Guid, creatorId: string, duration?: number) {
+		const creator = this._animationCreatorSet.get(creatorId).payload;
+		let legacyActorId: string, legacyName: string;
+		if (creator.type === 'create-animation') {
+			legacyActorId = (creator as Payloads.CreateAnimation).actorId;
+			legacyName = (creator as Payloads.CreateAnimation).animationName;
+		}
 		this._animationSet.set(animId, {
 			id: animId,
 			creatorMessageId: creatorId,
 			update: undefined,
-			duration
+			duration,
+			legacyActorId,
+			legacyName
 		});
 	}
 

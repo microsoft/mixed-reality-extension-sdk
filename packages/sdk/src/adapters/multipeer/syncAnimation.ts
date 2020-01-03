@@ -15,4 +15,15 @@ export class SyncAnimation {
 	public update: Message<Payloads.AnimationUpdate>;
 	/** Used only for runtime instances that need to know the duration of the asset */
 	public duration?: number;
+
+	/**
+	 * @deprecated
+	 * The actor this animation is associated with. Used for backward-compatibility with clients v0.14 and earlier.
+	 */
+	public legacyActorId: string;
+	/**
+	 * @deprecated
+	 * The name of this animation. Used for backward-compatibility with clients v0.14 and earlier.
+	 */
+	public legacyName: string;
 }
