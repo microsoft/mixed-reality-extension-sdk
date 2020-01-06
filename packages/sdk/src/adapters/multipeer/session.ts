@@ -403,19 +403,11 @@ export class Session extends EventEmitter {
 	}
 
 	public cacheAnimationCreation(animId: Guid, creatorId: string, duration?: number) {
-		const creator = this._animationCreatorSet.get(creatorId).payload;
-		let legacyActorId: string, legacyName: string;
-		if (creator.type === 'create-animation') {
-			legacyActorId = (creator as Payloads.CreateAnimation).actorId;
-			legacyName = (creator as Payloads.CreateAnimation).animationName;
-		}
 		this._animationSet.set(animId, {
 			id: animId,
 			creatorMessageId: creatorId,
 			update: undefined,
-			duration,
-			legacyActorId,
-			legacyName
+			duration
 		});
 	}
 

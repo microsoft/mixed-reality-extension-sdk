@@ -446,31 +446,6 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 				// TODO: don't send animation updates when the animation targets only actors
 				// the client doesn't care/know about.
 				return true;
-			},
-			beforeQueueMessageForClient: (session, client, message: Message<Payloads.AnimationUpdate>) => {
-				// convert animation-update to set-animation-state for old clients
-				// TODO: Remove backward compat when no longer needed
-				if (semver.gte(client.version, semver.parse('0.15.0'))) {
-					return message;
-				} else {
-					const syncAnim = session.animationSet.get(message.payload.animation.id);
-					const setState: Message<Payloads.SetAnimationState> = {
-						id: message.id,
-						payload: {
-							type: 'set-animation-state',
-							actorId: syncAnim.legacyActorId || message.payload.animation.targetActorIds[0],
-							animationName: syncAnim.legacyName || message.payload.animation.name,
-							state: {
-								enabled: message.payload.animation.weight !== undefined
-									? message.payload.animation.weight > 0
-									: undefined,
-								speed: message.payload.animation.speed,
-								time: message.payload.animation.time
-							}
-						}
-					};
-					return setState;
-				}
 			}
 		},
 		session: {
