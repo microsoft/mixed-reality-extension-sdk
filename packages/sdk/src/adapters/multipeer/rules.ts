@@ -4,7 +4,6 @@
  */
 
 import deepmerge from 'deepmerge';
-import semver from 'semver';
 import { ActiveMediaInstance, Client, Session, SynchronizationStage } from '.';
 import { MediaCommand, Message, WebSocket } from '../..';
 import { log } from '../../log';

@@ -24,6 +24,7 @@ import {
 	CreateAnimationOptions,
 	Guid,
 	MediaCommand,
+	newGuid,
 	parseGuid,
 	PerformanceStats,
 	SetAnimationStateOptions,
@@ -230,7 +231,7 @@ export class InternalContext {
 		}
 
 		// generate the anim immediately
-		const createdAnim = new Animation(this.context, parseGuid(UUID()));
+		const createdAnim = new Animation(this.context, newGuid());
 		createdAnim.copy({
 			name: animationName,
 			targetActorIds: [actorId],

@@ -3,6 +3,8 @@
  * Licensed under the MIT License.
  */
 
+import UUID from 'uuid/v4';
+
 /** A string composed hexadecimal characters in groups of 8, 4, 4, 4, and 12, separated by dashes (`-`). */
 export interface Guid extends String {
 	__is_guid: never;
@@ -16,5 +18,8 @@ export function parseGuid(val: string): Guid {
 	return (val as unknown) as Guid;
 }
 
+export function newGuid(): Guid {
+	return parseGuid(UUID());
+}
 export const ZeroGuidString = '00000000-0000-0000-0000-000000000000';
 export const ZeroGuid = parseGuid(ZeroGuidString);
