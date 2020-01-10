@@ -85,6 +85,10 @@ export class MultipeerAdapter extends Adapter {
 			// Create an in-memory "connection" (If the app were running remotely, we would connect
 			// to it via WebSocket here instead)
 			const pipe = new Pipe();
+			pipe.local.statsTracker.on('incoming', bytes => pipe.remote.statsTracker.recordIncoming(bytes));
+			pipe.local.statsTracker.on('outgoing', bytes => pipe.remote.statsTracker.recordOutgoing(bytes));
+			pipe.local.on('linkQuality', quality => pipe.remote.linkConnectionQuality(quality));
+
 			// Create a new context for the connection, passing it the remote side of the pipe.
 			const context = new Context({
 				sessionId,
