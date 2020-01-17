@@ -3,7 +3,7 @@
  * Licensed under the MIT License.
  */
 
-import { ZeroGuid } from "../../constants";
+import { ZeroGuidString as ZeroGuid } from "../..";
 
 /**
  * The complete set of attach points.

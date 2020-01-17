@@ -4,6 +4,7 @@
  */
 
 import { EventEmitter } from 'events';
+import semver from 'semver';
 import UUID from 'uuid/v4';
 import { ClientExecution, ClientSync, MissingRule, Rules, Session } from '.';
 import { Connection, Message } from '../..';
@@ -39,6 +40,7 @@ export class Client extends EventEmitter {
 	private _leave: () => void;
 
 	public get id() { return this._id; }
+	public get version() { return this._version; }
 	public get order() { return this._order; }
 	public get protocol() { return this._protocol; }
 	public get session() { return this._session; }
@@ -52,7 +54,7 @@ export class Client extends EventEmitter {
 	/**
 	 * Creates a new Client instance
 	 */
-	constructor(private _conn: Connection) {
+	constructor(private _conn: Connection, private _version: semver.SemVer) {
 		super();
 		this._id = UUID();
 		this._order = Client.orderSequence++;

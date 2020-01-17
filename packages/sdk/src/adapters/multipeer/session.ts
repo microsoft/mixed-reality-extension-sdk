@@ -7,14 +7,15 @@ import deepmerge from 'deepmerge';
 import { EventEmitter } from 'events';
 import {
 	Client, InitializeActorMessage, MissingRule, Rules, SessionExecution,
-	SessionHandshake, SessionSync, SyncActor, SyncAsset
+	SessionHandshake, SessionSync, SyncActor, SyncAnimation, SyncAsset
 } from '.';
-import { Connection, EventedConnection, Message, UserLike } from '../..';
+import { Connection, EventedConnection, Guid, Message, UserLike } from '../..';
 import { log } from '../../log';
 import * as Protocols from '../../protocols';
 import * as Payloads from '../../types/network/payloads';
 
 type AssetCreationMessage = Message<Payloads.LoadAssets | Payloads.CreateAsset>;
+type AnimationCreationMessage = Message<Payloads.CreateAnimation | Payloads.CreateActorCommon>;
 
 /**
  * @hidden
@@ -25,6 +26,12 @@ export class Session extends EventEmitter {
 	private _actorSet: { [id: string]: Partial<SyncActor> } = {};
 	private _assetSet: { [id: string]: Partial<SyncAsset> } = {};
 	private _assetCreatorSet: { [id: string]: AssetCreationMessage } = {};
+	/** Maps animation IDs to animation sync structs */
+	private _animationSet: Map<Guid, Partial<SyncAnimation>>
+		= new Map<Guid, Partial<SyncAnimation>>();
+	/** Maps IDs of messages that can create animations to the messages themselves */
+	private _animationCreatorSet: Map<string, AnimationCreationMessage>
+		= new Map<string, AnimationCreationMessage>();
 	private _userSet: { [id: string]: Partial<UserLike> } = {};
 	private _protocol: Protocols.Protocol;
 	private _disconnect: () => void;
@@ -39,6 +46,9 @@ export class Session extends EventEmitter {
 	public get actors() { return Object.values(this._actorSet); }
 	public get assets() { return Object.values(this._assetSet); }
 	public get assetCreators() { return Object.values(this._assetCreatorSet); }
+	public get animationSet() { return this._animationSet; }
+	public get animations() { return this._animationSet.values(); }
+	public get animationCreators() { return this._animationCreatorSet.values(); }
 	public get users() { return Object.values(this._userSet); }
 	public get actorSet() { return this._actorSet; }
 	public get assetSet() { return this._assetSet; }
@@ -170,6 +180,11 @@ export class Session extends EventEmitter {
 			client.setAuthoritative(false);
 		}
 
+		// forward connection quality metrics
+		if (this.conn instanceof EventedConnection) {
+			this.conn.linkConnectionQuality(newAuthority.conn.quality);
+		}
+
 		// forward network stats from the authoritative peer connection to the app
 		const toApp = this.conn instanceof EventedConnection ? this.conn : null;
 		const forwardIncoming = (bytes: number) => toApp.statsTracker.recordIncoming(bytes);
@@ -237,10 +252,12 @@ export class Session extends EventEmitter {
 		this.sendToClients({ payload }, filterFn);
 	}
 
+	/** @deprecated */
 	public findAnimation(syncActor: Partial<SyncActor>, animationName: string) {
 		return (syncActor.createdAnimations || []).find(item => item.message.payload.animationName === animationName);
 	}
 
+	/** @deprecated */
 	public isAnimating(syncActor: Partial<SyncActor>): boolean {
 		if ((syncActor.createdAnimations || []).some(item => item.enabled)) {
 			return true;
@@ -378,6 +395,37 @@ export class Session extends EventEmitter {
 			for (const asset of assets) {
 				delete this.assetSet[asset.id];
 			}
+		}
+	}
+
+	public cacheAnimationCreationRequest(payload: AnimationCreationMessage) {
+		this._animationCreatorSet.set(payload.id, payload);
+	}
+
+	public cacheAnimationCreation(animId: Guid, creatorId: string, duration?: number) {
+		this._animationSet.set(animId, {
+			id: animId,
+			creatorMessageId: creatorId,
+			update: undefined,
+			duration
+		});
+	}
+
+	public cacheAnimationUpdate(update: Message<Payloads.AnimationUpdate>) {
+		let syncAnim = this._animationSet.get(update.payload.animation.id);
+		if (!syncAnim) {
+			syncAnim = { id: update.payload.animation.id };
+			this._animationSet.set(syncAnim.id, syncAnim);
+		}
+
+		if (syncAnim.update) {
+			// merge with previous update message
+			syncAnim.update.payload.animation = deepmerge(
+				syncAnim.update.payload.animation,
+				update.payload.animation);
+		} else {
+			// just save it
+			syncAnim.update = update;
 		}
 	}
 }

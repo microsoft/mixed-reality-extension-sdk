@@ -3,7 +3,7 @@
  * Licensed under the MIT License.
  */
 
-import { Connection, EventedConnection } from '.';
+import { EventedConnection } from '.';
 import { Message } from '..';
 
 /**
@@ -16,8 +16,8 @@ export class Pipe {
 	private _onLocalClose: () => void;
 	private _onRemoteClose: () => void;
 
-	public get local(): Connection { return this._local; }
-	public get remote(): Connection { return this._remote; }
+	public get local() { return this._local; }
+	public get remote() { return this._remote; }
 
 	constructor() {
 		this._local = new EventedConnection();
@@ -36,9 +36,6 @@ export class Pipe {
 		});
 		this._local.on('close', this._onLocalClose);
 		this._remote.on('close', this._onRemoteClose);
-
-		this._local.statsTracker.on('incoming', bytes => this._remote.statsTracker.recordIncoming(bytes));
-		this._local.statsTracker.on('outgoing', bytes => this._remote.statsTracker.recordOutgoing(bytes));
 	}
 
 	private onLocalClose() {

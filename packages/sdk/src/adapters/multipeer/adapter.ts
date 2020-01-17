@@ -6,6 +6,7 @@
 import * as http from 'http';
 import QueryString from 'query-string';
 import * as Restify from 'restify';
+import semver from 'semver';
 import UUID from 'uuid/v4';
 import * as WS from 'ws';
 import { Adapter, AdapterOptions, ClientHandshake, ClientStartup } from '..';
@@ -84,6 +85,10 @@ export class MultipeerAdapter extends Adapter {
 			// Create an in-memory "connection" (If the app were running remotely, we would connect
 			// to it via WebSocket here instead)
 			const pipe = new Pipe();
+			pipe.local.statsTracker.on('incoming', bytes => pipe.remote.statsTracker.recordIncoming(bytes));
+			pipe.local.statsTracker.on('outgoing', bytes => pipe.remote.statsTracker.recordOutgoing(bytes));
+			pipe.local.on('linkQuality', quality => pipe.remote.linkConnectionQuality(quality));
+
 			// Create a new context for the connection, passing it the remote side of the pipe.
 			const context = new Context({
 				sessionId,
@@ -119,6 +124,9 @@ export class MultipeerAdapter extends Adapter {
 				let sessionId = request.headers[Constants.HTTPHeaders.SessionID] as string || UUID();
 				sessionId = decodeURIComponent(sessionId);
 
+				// Read the client's version number
+				const version = semver.coerce(request.headers[Constants.HTTPHeaders.CurrentClientVersion] as string);
+
 				// Parse URL parameters.
 				const params = QueryString.parseUrl(request.url).query;
 
@@ -129,7 +137,7 @@ export class MultipeerAdapter extends Adapter {
 				const conn = new WebSocket(ws, address.ip);
 
 				// Instantiate a client for this connection.
-				const client = new Client(conn);
+				const client = new Client(conn, version);
 
 				// Join the client to the session.
 				await this.joinClientToSession(client, sessionId, params);

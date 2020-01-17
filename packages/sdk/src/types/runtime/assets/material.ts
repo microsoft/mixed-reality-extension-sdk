@@ -4,8 +4,7 @@
  */
 
 import { Asset, AssetContainer, AssetLike, Texture } from '.';
-import { Actor } from '..';
-import { ZeroGuid } from '../../../constants';
+import { Actor, ZeroGuidString as ZeroGuid } from '../../..';
 import { Color3, Color4, Color4Like, Vector2, Vector2Like } from '../../../math';
 import { observe } from '../../../utils/observe';
 import readPath from '../../../utils/readPath';

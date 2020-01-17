@@ -8,8 +8,8 @@
  */
 export interface InternalPatchable<T> {
 	observing: boolean;
-	patch: T;
-	getPatchAndReset(): T;
+	patch: Partial<T>;
+	getPatchAndReset(): Partial<T>;
 }
 
 /**

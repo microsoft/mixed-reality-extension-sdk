@@ -235,6 +235,7 @@ const CreateActorRule: Rule = {
 			message: Message<Payloads.CreateActorCommon>
 		) => {
 			session.cacheInitializeActorMessage(message);
+			session.cacheAnimationCreationRequest(message);
 			return message;
 		}
 	}
@@ -430,6 +431,35 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 	},
 
 	// ========================================================================
+	'animation-update': {
+		...DefaultRule,
+		synchronization: {
+			stage: 'sync-animations',
+			before: 'ignore',
+			during: 'queue',
+			after: 'allow'
+		},
+		client: {
+			...DefaultRule.client,
+			shouldSendToUser: (message: Message<Payloads.AnimationUpdate>, userId: string, session: Session) => {
+				// TODO: don't send animation updates when the animation targets only actors
+				// the client doesn't care/know about.
+				return true;
+			}
+		},
+		session: {
+			...DefaultRule.session,
+			beforeReceiveFromApp: (
+				session: Session,
+				message: Message<Payloads.AnimationUpdate>
+			) => {
+				session.cacheAnimationUpdate(message);
+				return message;
+			}
+		}
+	},
+
+	// ========================================================================
 	'app2engine-rpc': {
 		...DefaultRule,
 		synchronization: {
@@ -521,11 +551,15 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 				session: Session,
 				message: Message<Payloads.CreateAnimation>
 			) => {
-				const syncActor = session.actorSet[message.payload.actorId];
-				if (syncActor) {
-					const enabled = message.payload.initialState && !!message.payload.initialState.enabled;
-					syncActor.createdAnimations = syncActor.createdAnimations || [];
-					syncActor.createdAnimations.push({ message, enabled });
+				if (message.payload.animationId) {
+					session.cacheAnimationCreationRequest(message);
+				} else {
+					const syncActor = session.actorSet[message.payload.actorId];
+					if (syncActor) {
+						const enabled = message.payload.initialState && !!message.payload.initialState.enabled;
+						syncActor.createdAnimations = syncActor.createdAnimations || [];
+						syncActor.createdAnimations.push({ message, enabled });
+					}
 				}
 				return message;
 			}
@@ -709,6 +743,10 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 								actor: { id: spawned.id }
 							}
 						});
+					}
+					// create somewhere to store anim updates
+					for (const newAnim of message.payload.animations) {
+						session.cacheAnimationCreation(newAnim.id, message.replyToId, newAnim.duration);
 					}
 					// Allow the message to propagate to the app.
 					return message;

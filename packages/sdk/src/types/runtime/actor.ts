@@ -30,17 +30,20 @@ import {
 	User,
 } from '.';
 import {
+	Animation,
 	Context,
 	CreateAnimationOptions,
+	Guid,
 	LookAtMode,
 	PrimitiveDefinition,
+	ReadonlyMap,
 	SetAnimationStateOptions,
 	SetAudioStateOptions,
 	SetVideoStateOptions,
-	Vector3Like
+	Vector3Like,
+	ZeroGuidString as ZeroGuid,
 } from '../..';
 
-import { ZeroGuid } from '../../constants';
 import { log } from '../../log';
 import { observe, unobserve } from '../../utils/observe';
 import readPath from '../../utils/readPath';
@@ -636,12 +639,14 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	 * Creates an animation on the actor.
 	 * @param animationName The name of the animation.
 	 * @param options The animation keyframes, events, and other characteristics.
+	 * @returns A promise resolving to the resulting animation instance.
 	 */
 	public createAnimation(animationName: string, options: CreateAnimationOptions) {
-		this.context.internal.createAnimation(this.id, animationName, options);
+		return this.context.internal.createAnimation(this.id, animationName, options);
 	}
 
 	/**
+	 * @deprecated Set [[Animation.isPlaying]] instead.
 	 * Enables the animation on the actor. Animation will start playing immediately.
 	 * @param animationName The name of the animation.
 	 */
@@ -650,6 +655,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	}
 
 	/**
+	 * @deprecated Set [[Animation.isPlaying]] instead.
 	 * Disables the animation on the actor. Animation will stop playing immediately.
 	 * When an animation is disabled, it is also paused (its time does not move forward).
 	 * @param animationName The name of the animation.
@@ -659,6 +665,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	}
 
 	/**
+	 * @deprecated Set [[Animation.isPlaying]] instead.
 	 * Starts the animation (sets animation speed to 1).
 	 * @param animationName The name of the animation.
 	 */
@@ -667,6 +674,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	}
 
 	/**
+	 * @deprecated Set [[Animation.isPlaying]] instead.
 	 * Stops the animation (sets animation speed to zero).
 	 * @param animationName The name of the animation.
 	 */
@@ -675,6 +683,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	}
 
 	/**
+	 * @deprecated Set [[Animation.time]] instead.
 	 * Sets the animation time (units are in seconds).
 	 * @param animationName The name of the animation.
 	 * @param time The desired animation time. A negative value seeks to the end of the animation.
@@ -684,6 +693,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	}
 
 	/**
+	 * @deprecated Set properties of an [[Animation]] instance instead.
 	 * (Advanced) Sets the time, speed, and enabled state of an animation.
 	 * @param animationName The name of the animation.
 	 * @param options The time, speed and enabled state to apply. All values are optional. Only the values
@@ -745,6 +755,45 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 		return this;
 	}
 
+	/** The list of animations that target this actor, by ID. */
+	public get animations() {
+		return [...this.context.internal.animationSet.values()]
+			.filter(anim => anim.targetActorIds.includes(this.id))
+			.reduce(
+				(map, anim) => {
+					map.set(anim.id, anim);
+					return map;
+				},
+				new Map<Guid, Animation>()
+			) as ReadonlyMap<Guid, Animation>;
+	}
+
+	/** The list of animations that target this actor, by name. */
+	public get animationsByName() {
+		return [...this.context.internal.animationSet.values()]
+			.filter(anim => anim.targetActorIds.includes(this.id) && anim.name)
+			.reduce(
+				(map, anim) => {
+					map.set(anim.name, anim);
+					return map;
+				},
+				new Map<string, Animation>()
+			) as ReadonlyMap<string, Animation>;
+	}
+
+	/** Recursively search for the named animation from this actor. */
+	public findAnimationInChildrenByName(name: string): Animation {
+		if (this.animationsByName.has(name)) {
+			return this.animationsByName.get(name);
+		} else {
+			return this.children.reduce(
+				(val, child) => val || child.findAnimationInChildrenByName(name),
+				null as Animation
+			);
+		}
+	}
+
+	/** @hidden */
 	public copy(from: Partial<ActorLike>): this {
 		// Pause change detection while we copy the values into the actor.
 		const wasObserving = this.internal.observing;
@@ -767,11 +816,12 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 		if (from.text) { this.enableText(from.text); }
 		if (from.lookAt) { this.enableLookAt(from.lookAt.actorId, from.lookAt.mode); }
 		if (from.grabbable !== undefined) { this._grabbable = from.grabbable; }
-		
+
 		this.internal.observing = wasObserving;
 		return this;
 	}
 
+	/** @hidden */
 	public toJSON() {
 		return {
 			id: this._id,

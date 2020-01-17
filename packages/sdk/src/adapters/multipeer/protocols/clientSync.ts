@@ -202,15 +202,31 @@ export class ClientSync extends Protocols.Protocol {
 	 */
 	public 'stage:create-animations' = () => {
 		// Send all cached interpolate-actor and create-animation messages.
-		this.client.session.actors.map(syncActor => this.createActorInterpolations(syncActor));
-		this.client.session.actors.map(syncActor => this.createActorAnimations(syncActor));
+		for (const syncActor of this.client.session.actors) {
+			this.createActorInterpolations(syncActor);
+			this.createActorAnimations(syncActor);
+		}
+		// send all managed create-animation messages
+		for (const message of this.client.session.animationCreators) {
+			if (message.payload.type === 'create-animation') {
+				super.sendMessage(message);
+			}
+		}
 	};
 
 	/**
 	 * @hidden
 	 * Driver for the `sync-animations` synchronization stage.
 	 */
-	public 'stage:sync-animations' = async () => {
+	public 'stage:sync-animations' = () => {
+		// sync new-style animations
+		for (const anim of this.client.session.animations) {
+			if (anim.update) {
+				super.sendMessage(anim.update);
+			}
+		}
+
+		// sync legacy animations
 		const authoritativeClient = this.client.session.authoritativeClient;
 		if (!authoritativeClient) {
 			return Promise.resolve();
