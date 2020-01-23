@@ -1,4 +1,5 @@
 module.exports = {
+	"root": true,
 	"env": {
 		"es6": true,
 		"node": true
@@ -15,6 +16,7 @@ module.exports = {
 	},
 	"parser": "@typescript-eslint/parser",
 	"parserOptions": {
+		"tsconfigRootDir": __dirname,
 		"ecmaVersion": 2018,
 		"sourceType": "module",
 		"project": "./packages/*/tsconfig.json"
