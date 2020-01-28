@@ -41,7 +41,7 @@ import {
 	SetAudioStateOptions,
 	SetVideoStateOptions,
 	Vector3Like,
-	ZeroGuidString as ZeroGuid,
+	ZeroGuid,
 } from '../..';
 
 import { log } from '../../log';
@@ -59,8 +59,8 @@ import { ColliderGeometry } from './physics';
  * Describes the properties of an Actor.
  */
 export interface ActorLike {
-	id: string;
-	parentId: string;
+	id: Guid;
+	parentId: Guid;
 	name: string;
 	tag: string;
 
@@ -169,7 +169,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 		}
 	}
 
-	private constructor(private _context: Context, private _id: string) {
+	private constructor(private _context: Context, private _id: Guid) {
 		// Actor patching: Observe the transform for changed values.
 		observe({
 			target: this._transform,
@@ -189,7 +189,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	 * @hidden
 	 * TODO - get rid of this.
 	 */
-	public static alloc(context: Context, id: string): Actor {
+	public static alloc(context: Context, id: Guid): Actor {
 		return new Actor(context, id);
 	}
 
@@ -509,10 +509,10 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	 * @param lookAtMode (Optional) How to face the target. @see LookUpMode.
 	 * @param backward (Optional) If true, actor faces away from target rather than toward.
 	 */
-	public enableLookAt(actorOrActorId: Actor | string, mode?: LookAtMode, backward?: boolean) {
+	public enableLookAt(actorOrActorId: Actor | Guid, mode?: LookAtMode, backward?: boolean) {
 		// Resolve the actorId value.
 		let actorId = ZeroGuid;
-		if (typeof (actorOrActorId) === 'object' && actorOrActorId.id !== undefined) {
+		if (actorOrActorId instanceof Actor && actorOrActorId.id !== undefined) {
 			actorId = actorOrActorId.id;
 		} else if (typeof (actorOrActorId) === 'string') {
 			actorId = actorOrActorId;

@@ -2,9 +2,6 @@
  * Copyright (c) Microsoft Corporation. All rights reserved.
  * Licensed under the MIT License.
  */
-
-import UUID from 'uuid/v4';
-
 import {
 	ActionEvent,
 	Actor,
@@ -77,7 +74,7 @@ export class InternalContext {
 			...options,
 			actor: {
 				...(options && options.actor),
-				id: UUID()
+				id: newGuid()
 			},
 			type: 'create-empty'
 		} as Payloads.CreateEmpty);
@@ -91,7 +88,7 @@ export class InternalContext {
 			...options,
 			actor: {
 				...(options && options.actor),
-				id: UUID()
+				id: newGuid()
 			},
 			type: 'create-from-library'
 		} as Payloads.CreateFromLibrary);
@@ -106,7 +103,7 @@ export class InternalContext {
 			...options,
 			actor: {
 				...(options && options.actor),
-				id: UUID()
+				id: newGuid()
 			},
 			type: 'create-from-prefab'
 		} as Payloads.CreateFromPrefab);
@@ -176,7 +173,7 @@ export class InternalContext {
 		actor?: Partial<ActorLike>;
 	}): Actor {
 		// create actor locally
-		options.actor = Actor.sanitize({ ...options.actor, id: UUID() });
+		options.actor = Actor.sanitize({ ...options.actor, id: newGuid() });
 		this.updateActors(options.actor);
 		const actor = this.context.actor(options.actor.id);
 
@@ -325,7 +322,7 @@ export class InternalContext {
 			this.protocol.sendPayload({
 				type: 'interpolate-actor',
 				actorId,
-				animationName: UUID(),
+				animationName: newGuid().toString(),
 				value,
 				duration,
 				curve,
@@ -577,7 +574,7 @@ export class InternalContext {
 		}
 	}
 
-	public setAnimationStateEventRaised(actorId: string, animationName: string, state: SetAnimationStateOptions) {
+	public setAnimationStateEventRaised(actorId: Guid, animationName: string, state: SetAnimationStateOptions) {
 		const actor = this.context.actor(actorId);
 		if (actor) {
 			actor.internal.setAnimationStateEventRaised(animationName, state);
@@ -603,7 +600,7 @@ export class InternalContext {
 		this.context.emitter.emit('actor-destroyed', actor);
 	}
 
-	public destroyActor(actorId: string) {
+	public destroyActor(actorId: Guid) {
 		const actor = this.actorSet[actorId];
 		if (actor) {
 			// Tell engine to destroy the actor (will destroy all children too)
