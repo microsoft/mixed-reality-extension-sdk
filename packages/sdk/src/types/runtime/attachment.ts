@@ -3,7 +3,7 @@
  * Licensed under the MIT License.
  */
 
-import { ZeroGuidString as ZeroGuid } from "../..";
+import { Guid, ZeroGuid } from "../..";
 
 /**
  * The complete set of attach points.
@@ -52,7 +52,7 @@ export type AttachPoint
  * The characteristics of an active attachment.
  */
 export interface AttachmentLike {
-	userId: string;
+	userId: Guid;
 	attachPoint: AttachPoint;
 }
 

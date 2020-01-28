@@ -43,6 +43,6 @@ export type SyncActor = {
 	activeMediaInstances: ActiveMediaInstance[];
 	activeInterpolations: Payloads.InterpolateActor[];
 	behavior: BehaviorType;
-	grabbedBy: string;
-	exclusiveToUser: string;
+	grabbedBy: Guid;
+	exclusiveToUser: Guid;
 };

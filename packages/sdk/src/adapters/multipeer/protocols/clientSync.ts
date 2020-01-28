@@ -3,9 +3,8 @@
  * Licensed under the MIT License.
  */
 
-import UUID from 'uuid/v4';
 import { Client, ClientDesyncPreprocessor, MissingRule, Rules, SyncActor } from '..';
-import { Message } from '../../..';
+import { Guid, Message, newGuid } from '../../..';
 import { log } from '../../../log';
 import * as Protocols from '../../../protocols';
 import * as Payloads from '../../../types/network/payloads';
@@ -58,7 +57,7 @@ export class ClientSync extends Protocols.Protocol {
 	 * Handle the outgoing message according to the synchronization rules specified for this payload.
 	 */
 	public sendMessage(message: Message, promise?: ExportedPromise, timeoutSeconds?: number) {
-		message.id = message.id || UUID();
+		message.id = message.id ?? newGuid();
 		const handling = this.handlingForMessage(message);
 		switch (handling) {
 			case 'allow': {

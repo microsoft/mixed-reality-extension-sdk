@@ -42,7 +42,6 @@ import {
 	SetVideoStateOptions,
 	Vector3Like,
 	ZeroGuid,
-	ZeroGuidString,
 } from '../..';
 
 import { log } from '../../log';
@@ -70,7 +69,7 @@ export interface ActorLike {
 	 * of the User with the given ID. This value can only be set at actor creation.
 	 * Any actors parented to this actor will also be exclusive to the given user.
 	 */
-	exclusiveToUser: string;
+	exclusiveToUser: Guid;
 	subscriptions: SubscriptionType[];
 	transform: Partial<ActorTransformLike>;
 	appearance: Partial<AppearanceLike>;
@@ -97,7 +96,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 
 	private _name: string;
 	private _tag: string;
-	private _exclusiveToUser: string;
+	private _exclusiveToUser: Guid;
 	private _parentId = ZeroGuid;
 	private _subscriptions: SubscriptionType[] = [];
 	private _transform = new ActorTransform();
@@ -537,8 +536,8 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	 * @param userOrUserId The User or id of user to attach to.
 	 * @param attachPoint Where on the user to attach.
 	 */
-	public attach(userOrUserId: User | string, attachPoint: AttachPoint) {
-		const userId = typeof userOrUserId === 'string' ? userOrUserId : userOrUserId.id;
+	public attach(userOrUserId: User | Guid, attachPoint: AttachPoint) {
+		const userId = userOrUserId instanceof User ? userOrUserId.id : userOrUserId;
 		if (!this._attachment) {
 			// Actor patching: Observe the attachment for changed values.
 			this._attachment = new Attachment();
@@ -556,7 +555,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	 * If attached to a user, detach from it.
 	 */
 	public detach() {
-		this._attachment.userId = ZeroGuidString;
+		this._attachment.userId = ZeroGuid;
 		this._attachment.attachPoint = 'none';
 	}
 

@@ -3,20 +3,16 @@
  * Licensed under the MIT License.
  */
 
-import { Context, GroupMask } from '../..';
+import { Context, GroupMask, Guid } from '../..';
 import readPath from '../../utils/readPath';
 import { InternalUser } from '../internal/user';
 import { Patchable } from '../patchable';
 
 export interface UserLike {
-	id: string;
+	id: Guid;
 	name: string;
 	groups: number | GroupMask;
 	properties: { [name: string]: string };
-}
-
-export interface UserSet {
-	[id: string]: User;
 }
 
 /**
@@ -77,7 +73,7 @@ export class User implements UserLike, Patchable<UserLike> {
 	 * PUBLIC METHODS
 	 */
 
-	constructor(private _context: Context, private _id: string) {
+	constructor(private _context: Context, private _id: Guid) {
 		this._internal = new InternalUser(this, this._context.internal);
 	}
 

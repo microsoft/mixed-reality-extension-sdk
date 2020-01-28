@@ -27,7 +27,6 @@ import {
 	TriggerEvent,
 	User,
 	UserLike,
-	UserSet,
 	ZeroGuid,
 } from '../..';
 
@@ -49,7 +48,7 @@ import { MediaInstance } from '../runtime/mediaInstance';
  */
 export class InternalContext {
 	public actorSet = new Map<Guid, Actor>();
-	public userSet: UserSet = {};
+	public userSet = new Map<Guid, User>();
 	public userGroupMapping: { [id: string]: number } = { default: 1 };
 	public assetContainers = new Set<AssetContainer>();
 	public animationSet: Map<Guid, Animation> = new Map<Guid, Animation>();
@@ -510,29 +509,31 @@ export class InternalContext {
 	};
 
 	public userJoined(suser: Partial<UserLike>) {
-		if (!this.userSet[suser.id]) {
-			const user = this.userSet[suser.id] = new User(this.context, suser.id);
+		if (!this.userSet.has(suser.id)) {
+			const user = new User(this.context, suser.id);
+			this.userSet.set(suser.id, user);
 			user.copy(suser);
 			this.context.emitter.emit('user-joined', user);
 		}
 	}
 
-	public userLeft(userId: string) {
-		const user = this.userSet[userId];
+	public userLeft(userId: Guid) {
+		const user = this.userSet.get(userId);
 		if (user) {
-			delete this.userSet[userId];
+			this.userSet.delete(userId);
 			this.context.emitter.emit('user-left', user);
 		}
 	}
 
 	public updateUser(suser: Partial<UserLike>) {
-		const isNewUser = !this.userSet[suser.id];
-		const user = isNewUser ? new User(this.context, suser.id) : this.userSet[suser.id];
-		user.copy(suser);
-		this.userSet[user.id] = user;
-		if (isNewUser) {
+		let user = this.userSet.get(suser.id);
+		if (!user) {
+			user = new User(this.context, suser.id);
+			user.copy(suser);
+			this.userSet.set(user.id, user);
 			this.context.emitter.emit('user-joined', user);
 		} else {
+			user.copy(suser);
 			this.context.emitter.emit('user-updated', user);
 		}
 	}

@@ -5,9 +5,8 @@
 
 import { EventEmitter } from 'events';
 import semver from 'semver';
-import UUID from 'uuid/v4';
 import { ClientExecution, ClientSync, MissingRule, Rules, Session } from '.';
-import { Connection, Message } from '../..';
+import { Connection, Guid, Message, newGuid } from '../..';
 import { log } from '../../log';
 import * as Protocols from '../../protocols';
 import * as Payloads from '../../types/network/payloads';
@@ -30,7 +29,7 @@ export type QueuedMessage = {
 export class Client extends EventEmitter {
 	private static orderSequence = 0;
 
-	private _id: string;
+	private _id: Guid;
 	private _session: Session;
 	private _protocol: Protocols.Protocol;
 	private _order: number;
@@ -49,14 +48,14 @@ export class Client extends EventEmitter {
 	public get queuedMessages() { return this._queuedMessages; }
 	public get userExclusiveMessages() { return this._userExclusiveMessages; }
 
-	public userId: string;
+	public userId: Guid;
 
 	/**
 	 * Creates a new Client instance
 	 */
 	constructor(private _conn: Connection, private _version: semver.SemVer) {
 		super();
-		this._id = UUID();
+		this._id = newGuid();
 		this._order = Client.orderSequence++;
 		this._leave = this.leave.bind(this);
 		this._conn.on('close', this._leave);

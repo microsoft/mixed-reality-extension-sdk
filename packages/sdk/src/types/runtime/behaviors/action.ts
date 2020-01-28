@@ -4,7 +4,7 @@
  */
 
 import { ActionState } from '.';
-import { User } from '..';
+import { Guid, User } from '../../..';
 
 /**
  * The action handler function type.
@@ -22,7 +22,7 @@ interface ActionHandlers {
  */
 export class DiscreteAction {
 	private handlers: ActionHandlers = {};
-	private activeUserIds: string[] = [];
+	private activeUserIds: Guid[] = [];
 
 	/**
 	 * Add a handler for the given action state for when it is triggered.

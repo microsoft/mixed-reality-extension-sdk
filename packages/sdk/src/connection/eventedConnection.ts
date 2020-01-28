@@ -5,7 +5,7 @@
 
 import { EventEmitter } from 'events';
 import { Connection, ConnectionQuality } from '.';
-import { Message } from '..';
+import { Guid, Message } from '..';
 import { QueuedPromise } from '../utils/queuedPromise';
 import { NetworkStatsReport, NetworkStatsTracker } from './networkStats';
 
@@ -14,7 +14,7 @@ import { NetworkStatsReport, NetworkStatsTracker } from './networkStats';
  */
 export class EventedConnection extends EventEmitter implements Connection {
 	protected _quality = new ConnectionQuality();
-	private _promises: { [id: string]: QueuedPromise } = {};
+	private _promises = new Map<Guid, QueuedPromise>();
 	public statsTracker = new NetworkStatsTracker();
 
 	private queuedMessages: Message[] = [];

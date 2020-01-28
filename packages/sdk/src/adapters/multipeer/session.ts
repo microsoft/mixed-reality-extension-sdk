@@ -22,17 +22,15 @@ type AnimationCreationMessage = Message<Payloads.CreateAnimation | Payloads.Crea
  * Class for associating multiple client connections with a single app session.
  */
 export class Session extends EventEmitter {
-	private _clientSet: { [id: string]: Client } = {};
+	private _clientSet = new Map<Guid, Client>();
 	private _actorSet = new Map<Guid, Partial<SyncActor>>();
 	private _assetSet = new Map<Guid, Partial<SyncAsset>>();
-	private _assetCreatorSet: { [id: string]: AssetCreationMessage } = {};
+	private _assetCreatorSet = new Map<Guid, AssetCreationMessage>();
 	/** Maps animation IDs to animation sync structs */
-	private _animationSet: Map<Guid, Partial<SyncAnimation>>
-		= new Map<Guid, Partial<SyncAnimation>>();
+	private _animationSet = new Map<Guid, Partial<SyncAnimation>>();
 	/** Maps IDs of messages that can create animations to the messages themselves */
-	private _animationCreatorSet: Map<string, AnimationCreationMessage>
-		= new Map<string, AnimationCreationMessage>();
-	private _userSet: { [id: string]: Partial<UserLike> } = {};
+	private _animationCreatorSet = new Map<Guid, AnimationCreationMessage>();
+	private _userSet = new Map<Guid, Partial<UserLike>>();
 	private _protocol: Protocols.Protocol;
 	private _disconnect: () => void;
 
@@ -40,32 +38,30 @@ export class Session extends EventEmitter {
 	public get sessionId() { return this._sessionId; }
 	public get protocol() { return this._protocol; }
 	public get clients() {
-		return Object.values(this._clientSet).sort((a, b) => a.order - b.order);
+		return [...this._clientSet.values()].sort((a, b) => a.order - b.order);
 	}
 
-	public get actors() { return Object.values(this._actorSet); }
-	public get assets() { return Object.values(this._assetSet); }
-	public get assetCreators() { return Object.values(this._assetCreatorSet); }
+	public get actors() { return [...this._actorSet.values()]; }
+	public get assets() { return [...this._assetSet.values()]; }
+	public get assetCreators() { return [...this._assetCreatorSet.values()]; }
 	public get animationSet() { return this._animationSet; }
 	public get animations() { return this._animationSet.values(); }
 	public get animationCreators() { return this._animationCreatorSet.values(); }
-	public get users() { return Object.values(this._userSet); }
 	public get actorSet() { return this._actorSet; }
 	public get assetSet() { return this._assetSet; }
 	public get assetCreatorSet() { return this._assetCreatorSet; }
 	public get userSet() { return this._userSet; }
 
 	public get rootActors() {
-		return Object.values(this._actorSet)
-			.filter(actor => !this._actorSet.get(actor.actorId).initialization.message.payload.actor.parentId);
+		return this.actors.filter(a => !a.initialization.message.payload.actor.parentId);
 	}
 	public get authoritativeClient() { return this.clients.find(client => client.authoritative); }
 	public get peerAuthoritative() { return this._peerAuthoritative; }
 
-	public client = (clientId: string) => this._clientSet[clientId];
+	public client = (clientId: Guid) => this._clientSet.get(clientId);
 	public actor = (actorId: Guid) => this._actorSet.get(actorId);
-	public user = (userId: string) => this._userSet[userId];
-	public childrenOf = (parentId: string) => {
+	public user = (userId: Guid) => this._userSet.get(userId);
+	public childrenOf = (parentId: Guid) => {
 		return this.actors.filter(actor => actor.initialization.message.payload.actor.parentId === parentId);
 	};
 	public creatableChildrenOf = (parentId: Guid) => {
@@ -120,7 +116,7 @@ export class Session extends EventEmitter {
 	 */
 	public async join(client: Client) {
 		try {
-			this._clientSet[client.id] = client;
+			this._clientSet.set(client.id, client);
 			client.on('close', () => this.leave(client.id));
 			// Synchronize app state to the client.
 			await client.join(this);
@@ -140,10 +136,10 @@ export class Session extends EventEmitter {
 	/**
 	 * Removes the client from the session
 	 */
-	public leave(clientId: string) {
+	public leave(clientId: Guid) {
 		try {
-			const client = this._clientSet[clientId];
-			delete this._clientSet[clientId];
+			const client = this._clientSet.get(clientId);
+			this._clientSet.delete(clientId);
 			if (client) {
 				// If the client is associated with a userId, inform app the user is leaving
 				if (client.userId) {
@@ -168,12 +164,13 @@ export class Session extends EventEmitter {
 		} catch { }
 	}
 
-	private setAuthoritativeClient(clientId: string) {
-		if (!this._clientSet[clientId]) {
+	private setAuthoritativeClient(clientId: Guid) {
+		const newAuthority = this._clientSet.get(clientId);
+		if (!newAuthority) {
 			log.error('network', `[ERROR] setAuthoritativeClient: client ${clientId} does not exist.`);
+			throw new Error(`Client ${clientId} does not exist.`);
 		}
 		const oldAuthority = this.authoritativeClient;
-		const newAuthority = this._clientSet[clientId];
 
 		newAuthority.setAuthoritative(true);
 		for (const client of this.clients.filter(c => c !== newAuthority)) {
@@ -226,7 +223,7 @@ export class Session extends EventEmitter {
 
 	public preprocessFromClient(client: Client, message: Message): Message {
 		// Precaution: If we don't recognize this client, drop the message.
-		if (!this._clientSet[client.id]) {
+		if (!this._clientSet.has(client.id)) {
 			return undefined;
 		}
 		if (message.payload && message.payload.type && message.payload.type.length) {
@@ -318,17 +315,17 @@ export class Session extends EventEmitter {
 	}
 
 	public cacheAssetCreationRequest(message: AssetCreationMessage) {
-		this.assetCreatorSet[message.id] = message;
+		this.assetCreatorSet.set(message.id, message);
 	}
 
-	public cacheAssetCreation(assetId: Guid, creatorId: string, duration?: number) {
+	public cacheAssetCreation(assetId: Guid, creatorId: Guid, duration?: number) {
 		const syncAsset = {
 			id: assetId,
 			creatorMessageId: creatorId,
 			duration
 		} as Partial<SyncAsset>;
 		this.assetSet.set(assetId, syncAsset);
-		const creator = this.assetCreatorSet[creatorId];
+		const creator = this.assetCreatorSet.get(creatorId);
 
 		// Updates are cached on send, creates are cached on receive,
 		// so it's possible something was updated while it was loading.
@@ -369,7 +366,7 @@ export class Session extends EventEmitter {
 			this.assetSet.set(update.payload.asset.id, { id: update.payload.asset.id });
 		}
 		const syncAsset = this.assetSet.get(update.payload.asset.id);
-		const creator = this.assetCreatorSet[syncAsset.creatorMessageId];
+		const creator = this.assetCreatorSet.get(syncAsset.creatorMessageId);
 
 		if (creator && creator.payload.type === 'create-asset') {
 			// roll update into creation message
@@ -391,7 +388,7 @@ export class Session extends EventEmitter {
 		const creators = this.assetCreators.filter(c => c.payload.containerId === containerId);
 		for (const creator of creators) {
 			// un-cache creation message
-			delete this.assetCreatorSet[creator.id];
+			this.assetCreatorSet.delete(creator.id);
 
 			// un-cache created assets
 			const assets = this.assets.filter(a => a.creatorMessageId === creator.id);
@@ -405,7 +402,7 @@ export class Session extends EventEmitter {
 		this._animationCreatorSet.set(payload.id, payload);
 	}
 
-	public cacheAnimationCreation(animId: Guid, creatorId: string, duration?: number) {
+	public cacheAnimationCreation(animId: Guid, creatorId: Guid, duration?: number) {
 		this._animationSet.set(animId, {
 			id: animId,
 			creatorMessageId: creatorId,

@@ -154,7 +154,7 @@ export type HeartbeatReply = Payload & {
 export type AppToEngineRPC = Payload & {
 	type: 'app2engine-rpc';
 	channelName?: string;
-	userId?: string;
+	userId?: Guid;
 	procName: string;
 	args: any[];
 };
@@ -165,7 +165,7 @@ export type AppToEngineRPC = Payload & {
 export type EngineToAppRPC = Payload & {
 	type: 'engine2app-rpc';
 	channelName?: string;
-	userId?: string;
+	userId?: Guid;
 	procName: string;
 	args: any[];
 };
@@ -285,7 +285,7 @@ export type UserJoined = Payload & {
  */
 export type UserLeft = Payload & {
 	type: 'user-left';
-	userId: string;
+	userId: Guid;
 };
 
 /**
@@ -304,7 +304,7 @@ export type UserUpdate = Payload & {
  */
 export type PerformAction = Payload & {
 	type: 'perform-action';
-	userId: string;
+	userId: Guid;
 	targetId: Guid;
 	behaviorType: BehaviorType;
 	actionName: string;
@@ -389,7 +389,7 @@ export type InterpolateActor = Payload & {
  */
 export type ShowDialog = Payload & {
 	type: 'show-dialog';
-	userId: string;
+	userId: Guid;
 	text: string;
 	acceptInput?: boolean;
 };

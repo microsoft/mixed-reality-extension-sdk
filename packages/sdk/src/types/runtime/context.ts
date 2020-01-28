@@ -46,11 +46,11 @@ export class Context {
 	public get conn() { return this._conn; }
 	public get actors() { return [...this.internal.actorSet.values()]; }
 	public get rootActors() { return this.actors.filter(a => !a.parent); }
-	public get users() { return Object.keys(this.internal.userSet).map(userId => this.internal.userSet[userId]); }
+	public get users() { return [...this.internal.userSet.values()]; }
 	public get rpcChannels() { return this._rpcChannels; }
 	public get rpc() { return this._rpc; }
 	public actor = (actorId: Guid): Actor => this.internal.actorSet.get(actorId);
-	public user = (userId: string): User => this.internal.userSet[userId];
+	public user = (userId: Guid): User => this.internal.userSet.get(userId);
 
 	/**
 	 * Creates a new `Context` instance.

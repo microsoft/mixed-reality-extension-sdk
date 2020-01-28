@@ -3,7 +3,7 @@
  * Licensed under the MIT License.
  */
 
-import { Message } from '..';
+import { Guid, Message } from '..';
 import { ExponentialMovingAverage } from '../utils/exponentialMovingAverage';
 import { QueuedPromise } from '../utils/queuedPromise';
 import { TrackingClock } from '../utils/trackingClock';
@@ -34,7 +34,7 @@ export class ConnectionQuality {
  */
 export interface Connection {
 	readonly quality: ConnectionQuality;
-	readonly promises: { [id: string]: QueuedPromise };
+	readonly promises: Map<Guid, QueuedPromise>;
 
 	/** A snapshot of this connection's bandwidth usage */
 	readonly statsReport: NetworkStatsReport;

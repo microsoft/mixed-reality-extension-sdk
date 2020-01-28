@@ -3,6 +3,7 @@
  * Licensed under the MIT License.
  */
 
+import { Guid } from '../..';
 import { Payload } from './payloads';
 
 /**
@@ -13,12 +14,12 @@ export type Message<PayloadT = Payload> = {
 	/**
 	 * Unique id of this message. When sending, a new id will be assigned if not already so.
 	 */
-	id?: string;
+	id?: Guid;
 
 	/**
 	 * (Optional) If the client is replying to us, this is the id of the original message.
 	 */
-	replyToId?: string;
+	replyToId?: Guid;
 
 	/**
 	 * (Server to client) The time the server sent this message. In milliseconds.

@@ -79,7 +79,7 @@ export type Rule = {
 		 * to stop processing of the message.
 		 */
 		beforeQueueMessageForClient: (
-			session: Session, client: Client, message: any, promise: ExportedPromise) => Message;
+			session: Session, client: Client, message: Message<any>, promise: ExportedPromise) => Message;
 		/**
 		 * Called twice before a message is sent: first to determine if a message is user-dependent
 		 * (it is queued until user-join if so), and second to determine if the joined user is the
@@ -91,7 +91,7 @@ export type Rule = {
 		 * @returns `null` if the message does not depend on a user, `true` if it depends on the given
 		 * user, and `false` if it depends on a different user.
 		 */
-		shouldSendToUser: (message: any, userId: string, session: Session, client: Client) => boolean | null;
+		shouldSendToUser: (message: Message<any>, userId: Guid, session: Session, client: Client) => boolean | null;
 	};
 
 	/**
@@ -441,7 +441,7 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 		},
 		client: {
 			...DefaultRule.client,
-			shouldSendToUser: (message: Message<Payloads.AnimationUpdate>, userId: string, session: Session) => {
+			shouldSendToUser: (message: Message<Payloads.AnimationUpdate>, userId, session: Session) => {
 				// TODO: don't send animation updates when the animation targets only actors
 				// the client doesn't care/know about.
 				return true;
@@ -1116,7 +1116,7 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 		},
 		client: {
 			...DefaultRule.client,
-			shouldSendToUser: (message: Message<Payloads.ShowDialog>, userId: string) => {
+			shouldSendToUser: (message: Message<Payloads.ShowDialog>, userId) => {
 				return message.payload.userId === userId;
 			}
 		}
