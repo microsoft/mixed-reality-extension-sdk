@@ -234,7 +234,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	 * @param options.actor The initial state of the root actor.
 	 */
 	public static CreateFromPrefab(context: Context, options: {
-		prefabId: string;
+		prefabId: Guid;
 		collisionLayer?: CollisionLayer;
 		actor?: Partial<ActorLike>;
 	}): Actor;
@@ -266,7 +266,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	}): Actor;
 
 	public static CreateFromPrefab(context: Context, options: {
-		prefabId?: string;
+		prefabId?: Guid;
 		prefab?: Prefab;
 		firstPrefabFrom?: Asset[];
 		collisionLayer?: CollisionLayer;
@@ -611,7 +611,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	 * @param options Adjustments to pitch and volume, and other characteristics.
 	 */
 	public startSound(
-		soundAssetId: string,
+		soundAssetId: Guid,
 		options: SetAudioStateOptions,
 	): MediaInstance {
 		return new MediaInstance(this, soundAssetId).start(options);
@@ -623,7 +623,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	 * @param options Adjustments to pitch and volume, and other characteristics.
 	 */
 	public startVideoStream(
-		videoStreamAssetId: string,
+		videoStreamAssetId: Guid,
 		options: SetVideoStateOptions,
 	): MediaInstance {
 		return new MediaInstance(this, videoStreamAssetId).start(options);

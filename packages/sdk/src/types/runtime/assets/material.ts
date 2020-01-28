@@ -4,7 +4,7 @@
  */
 
 import { Asset, AssetContainer, AssetLike, Texture } from '.';
-import { Actor, ZeroGuidString as ZeroGuid } from '../../..';
+import { Actor, Guid, ZeroGuid } from '../../..';
 import { Color3, Color4, Color4Like, Vector2, Vector2Like } from '../../../math';
 import { observe } from '../../../utils/observe';
 import readPath from '../../../utils/readPath';
@@ -18,7 +18,7 @@ export interface MaterialLike {
 	/** The base color of this material. */
 	color: Partial<Color4Like>;
 	/** The main (albedo) texture asset ID */
-	mainTextureId: string;
+	mainTextureId: Guid;
 	/** The main texture's offset from default */
 	mainTextureOffset: Vector2Like;
 	/** The main texture's scale from default */
@@ -51,7 +51,7 @@ export enum AlphaMode {
  */
 export class Material extends Asset implements MaterialLike, Patchable<AssetLike> {
 	private _color = Color4.FromColor3(Color3.White(), 1.0);
-	private _mainTextureId: string = ZeroGuid;
+	private _mainTextureId = ZeroGuid;
 	private _mainTextureOffset = Vector2.Zero();
 	private _mainTextureScale = Vector2.One();
 	private _alphaMode = AlphaMode.Opaque;
@@ -67,16 +67,16 @@ export class Material extends Asset implements MaterialLike, Patchable<AssetLike
 
 	/** @returns A shared reference to this material's texture asset */
 	public get mainTexture() {
-		return this.container.context.internal.lookupAsset(this._mainTextureId) as Texture;
+		return this.container.context.internal.lookupAsset(this._mainTextureId).texture;
 	}
 	public set mainTexture(value) {
-		this.mainTextureId = value && value.id || ZeroGuid;
+		this.mainTextureId = value?.id ?? ZeroGuid;
 	}
 
 	/** @inheritdoc */
 	public get mainTextureId() { return this._mainTextureId; }
 	public set mainTextureId(value) {
-		if (!value || value.startsWith('0000')) {
+		if (!value) {
 			value = ZeroGuid;
 		}
 		if (!this.container.context.internal.lookupAsset(value)) {

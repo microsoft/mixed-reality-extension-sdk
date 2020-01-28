@@ -93,7 +93,7 @@ export class InternalContext {
 	}
 
 	public CreateFromPrefab(options: {
-		prefabId: string;
+		prefabId: Guid;
 		collisionLayer?: CollisionLayer;
 		actor?: Partial<ActorLike>;
 	}): Actor {
@@ -292,7 +292,7 @@ export class InternalContext {
 		mediaInstance: MediaInstance,
 		command: MediaCommand,
 		options?: SetMediaStateOptions,
-		mediaAssetId?: string,
+		mediaAssetId?: Guid,
 	) {
 		this.protocol.sendPayload({
 			type: 'set-media-state',
