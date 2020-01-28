@@ -141,7 +141,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	public get parentId() { return this._parentId; }
 	public set parentId(value) {
 		const parentActor = this.context.actor(value);
-		if (!value || value.startsWith('0000') || !parentActor) {
+		if (!value || !parentActor) {
 			value = ZeroGuid;
 		}
 		if (parentActor && parentActor.exclusiveToUser && parentActor.exclusiveToUser !== this.exclusiveToUser) {
