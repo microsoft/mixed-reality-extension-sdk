@@ -41,7 +41,7 @@ import {
 	SetAudioStateOptions,
 	SetVideoStateOptions,
 	Vector3Like,
-	ZeroGuidString as ZeroGuid,
+	ZeroGuid,
 } from '../..';
 
 import { log } from '../../log';
@@ -59,8 +59,8 @@ import { ColliderGeometry } from './physics';
  * Describes the properties of an Actor.
  */
 export interface ActorLike {
-	id: string;
-	parentId: string;
+	id: Guid;
+	parentId: Guid;
 	name: string;
 	tag: string;
 
@@ -69,7 +69,7 @@ export interface ActorLike {
 	 * of the User with the given ID. This value can only be set at actor creation.
 	 * Any actors parented to this actor will also be exclusive to the given user.
 	 */
-	exclusiveToUser: string;
+	exclusiveToUser: Guid;
 	subscriptions: SubscriptionType[];
 	transform: Partial<ActorTransformLike>;
 	appearance: Partial<AppearanceLike>;
@@ -80,13 +80,6 @@ export interface ActorLike {
 	attachment: Partial<AttachmentLike>;
 	lookAt: Partial<LookAtLike>;
 	grabbable: boolean;
-}
-
-/**
- * @hidden
- */
-export interface ActorSet {
-	[id: string]: Actor;
 }
 
 /**
@@ -103,7 +96,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 
 	private _name: string;
 	private _tag: string;
-	private _exclusiveToUser: string;
+	private _exclusiveToUser: Guid;
 	private _parentId = ZeroGuid;
 	private _subscriptions: SubscriptionType[] = [];
 	private _transform = new ActorTransform();
@@ -148,7 +141,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	public get parentId() { return this._parentId; }
 	public set parentId(value) {
 		const parentActor = this.context.actor(value);
-		if (!value || value.startsWith('0000') || !parentActor) {
+		if (!value || !parentActor) {
 			value = ZeroGuid;
 		}
 		if (parentActor && parentActor.exclusiveToUser && parentActor.exclusiveToUser !== this.exclusiveToUser) {
@@ -169,7 +162,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 		}
 	}
 
-	private constructor(private _context: Context, private _id: string) {
+	private constructor(private _context: Context, private _id: Guid) {
 		// Actor patching: Observe the transform for changed values.
 		observe({
 			target: this._transform,
@@ -189,7 +182,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	 * @hidden
 	 * TODO - get rid of this.
 	 */
-	public static alloc(context: Context, id: string): Actor {
+	public static alloc(context: Context, id: Guid): Actor {
 		return new Actor(context, id);
 	}
 
@@ -240,7 +233,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	 * @param options.actor The initial state of the root actor.
 	 */
 	public static CreateFromPrefab(context: Context, options: {
-		prefabId: string;
+		prefabId: Guid;
 		collisionLayer?: CollisionLayer;
 		actor?: Partial<ActorLike>;
 	}): Actor;
@@ -272,7 +265,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	}): Actor;
 
 	public static CreateFromPrefab(context: Context, options: {
-		prefabId?: string;
+		prefabId?: Guid;
 		prefab?: Prefab;
 		firstPrefabFrom?: Asset[];
 		collisionLayer?: CollisionLayer;
@@ -509,10 +502,10 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	 * @param lookAtMode (Optional) How to face the target. @see LookUpMode.
 	 * @param backward (Optional) If true, actor faces away from target rather than toward.
 	 */
-	public enableLookAt(actorOrActorId: Actor | string, mode?: LookAtMode, backward?: boolean) {
+	public enableLookAt(actorOrActorId: Actor | Guid, mode?: LookAtMode, backward?: boolean) {
 		// Resolve the actorId value.
 		let actorId = ZeroGuid;
-		if (typeof (actorOrActorId) === 'object' && actorOrActorId.id !== undefined) {
+		if (actorOrActorId instanceof Actor && actorOrActorId.id !== undefined) {
 			actorId = actorOrActorId.id;
 		} else if (typeof (actorOrActorId) === 'string') {
 			actorId = actorOrActorId;
@@ -543,8 +536,8 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	 * @param userOrUserId The User or id of user to attach to.
 	 * @param attachPoint Where on the user to attach.
 	 */
-	public attach(userOrUserId: User | string, attachPoint: AttachPoint) {
-		const userId = typeof userOrUserId === 'string' ? userOrUserId : userOrUserId.id;
+	public attach(userOrUserId: User | Guid, attachPoint: AttachPoint) {
+		const userId = userOrUserId instanceof User ? userOrUserId.id : userOrUserId;
 		if (!this._attachment) {
 			// Actor patching: Observe the attachment for changed values.
 			this._attachment = new Attachment();
@@ -617,7 +610,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	 * @param options Adjustments to pitch and volume, and other characteristics.
 	 */
 	public startSound(
-		soundAssetId: string,
+		soundAssetId: Guid,
 		options: SetAudioStateOptions,
 	): MediaInstance {
 		return new MediaInstance(this, soundAssetId).start(options);
@@ -629,7 +622,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	 * @param options Adjustments to pitch and volume, and other characteristics.
 	 */
 	public startVideoStream(
-		videoStreamAssetId: string,
+		videoStreamAssetId: Guid,
 		options: SetVideoStateOptions,
 	): MediaInstance {
 		return new MediaInstance(this, videoStreamAssetId).start(options);

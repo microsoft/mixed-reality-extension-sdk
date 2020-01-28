@@ -2,14 +2,10 @@
  * Copyright (c) Microsoft Corporation. All rights reserved.
  * Licensed under the MIT License.
  */
-
-import UUID from 'uuid/v4';
-
 import {
 	ActionEvent,
 	Actor,
 	ActorLike,
-	ActorSet,
 	Animation,
 	AnimationLike,
 	AnimationWrapMode,
@@ -25,15 +21,13 @@ import {
 	Guid,
 	MediaCommand,
 	newGuid,
-	parseGuid,
 	PerformanceStats,
 	SetAnimationStateOptions,
 	SetMediaStateOptions,
 	TriggerEvent,
 	User,
 	UserLike,
-	UserSet,
-	ZeroGuidString as ZeroGuid,
+	ZeroGuid,
 } from '../..';
 
 import * as Payloads from '../network/payloads';
@@ -53,8 +47,8 @@ import { MediaInstance } from '../runtime/mediaInstance';
  * @hidden
  */
 export class InternalContext {
-	public actorSet: ActorSet = {};
-	public userSet: UserSet = {};
+	public actorSet = new Map<Guid, Actor>();
+	public userSet = new Map<Guid, User>();
 	public userGroupMapping: { [id: string]: number } = { default: 1 };
 	public assetContainers = new Set<AssetContainer>();
 	public animationSet: Map<Guid, Animation> = new Map<Guid, Animation>();
@@ -77,7 +71,7 @@ export class InternalContext {
 			...options,
 			actor: {
 				...(options && options.actor),
-				id: UUID()
+				id: newGuid()
 			},
 			type: 'create-empty'
 		} as Payloads.CreateEmpty);
@@ -91,14 +85,14 @@ export class InternalContext {
 			...options,
 			actor: {
 				...(options && options.actor),
-				id: UUID()
+				id: newGuid()
 			},
 			type: 'create-from-library'
 		} as Payloads.CreateFromLibrary);
 	}
 
 	public CreateFromPrefab(options: {
-		prefabId: string;
+		prefabId: Guid;
 		collisionLayer?: CollisionLayer;
 		actor?: Partial<ActorLike>;
 	}): Actor {
@@ -106,7 +100,7 @@ export class InternalContext {
 			...options,
 			actor: {
 				...(options && options.actor),
-				id: UUID()
+				id: newGuid()
 			},
 			type: 'create-from-prefab'
 		} as Payloads.CreateFromPrefab);
@@ -144,7 +138,7 @@ export class InternalContext {
 					}
 
 					for (const createdActorLike of replyPayload.actors) {
-						const createdActor = this.actorSet[createdActorLike.id];
+						const createdActor = this.actorSet.get(createdActorLike.id);
 						if (createdActor) {
 							createdActor.internal.notifyCreated(success, replyPayload.result.message);
 						}
@@ -176,7 +170,7 @@ export class InternalContext {
 		actor?: Partial<ActorLike>;
 	}): Actor {
 		// create actor locally
-		options.actor = Actor.sanitize({ ...options.actor, id: UUID() });
+		options.actor = Actor.sanitize({ ...options.actor, id: newGuid() });
 		this.updateActors(options.actor);
 		const actor = this.context.actor(options.actor.id);
 
@@ -213,8 +207,8 @@ export class InternalContext {
 		return actor;
 	}
 
-	public createAnimation(actorId: string, animationName: string, options: CreateAnimationOptions) {
-		const actor = this.actorSet[actorId];
+	public createAnimation(actorId: Guid, animationName: string, options: CreateAnimationOptions) {
+		const actor = this.actorSet.get(actorId);
 		if (!actor) {
 			log.error('app', `Failed to create animation on ${animationName}. Actor ${actorId} not found.`);
 		}
@@ -267,11 +261,11 @@ export class InternalContext {
 	}
 
 	public setAnimationState(
-		actorId: string,
+		actorId: Guid,
 		animationName: string,
 		state: SetAnimationStateOptions
 	) {
-		const actor = this.actorSet[actorId];
+		const actor = this.actorSet.get(actorId);
 		if (!actor) {
 			log.error('app', `Failed to set animation state on "${animationName}". Actor "${actorId}" not found.`);
 			return;
@@ -297,7 +291,7 @@ export class InternalContext {
 		mediaInstance: MediaInstance,
 		command: MediaCommand,
 		options?: SetMediaStateOptions,
-		mediaAssetId?: string,
+		mediaAssetId?: Guid,
 	) {
 		this.protocol.sendPayload({
 			type: 'set-media-state',
@@ -310,12 +304,12 @@ export class InternalContext {
 	}
 
 	public animateTo(
-		actorId: string,
+		actorId: Guid,
 		value: Partial<ActorLike>,
 		duration: number,
 		curve: number[],
 	) {
-		const actor = this.actorSet[actorId];
+		const actor = this.actorSet.get(actorId);
 		if (!actor) {
 			log.error('app', `Failed animateTo. Actor ${actorId} not found.`);
 		} else if (!Array.isArray(curve) || curve.length !== 4) {
@@ -325,7 +319,7 @@ export class InternalContext {
 			this.protocol.sendPayload({
 				type: 'interpolate-actor',
 				actorId,
-				animationName: UUID(),
+				animationName: newGuid().toString(),
 				value,
 				duration,
 				curve,
@@ -454,7 +448,7 @@ export class InternalContext {
 		});
 	}
 
-	public sendDestroyActors(actorIds: string[]) {
+	public sendDestroyActors(actorIds: Guid[]) {
 		if (actorIds.length) {
 			this.protocol.sendPayload({
 				type: 'destroy-actors',
@@ -470,19 +464,19 @@ export class InternalContext {
 		if (!Array.isArray(sactors)) {
 			sactors = [sactors];
 		}
-		const newActorIds: string[] = [];
+		const newActorIds: Guid[] = [];
 		// Instantiate and store each actor.
 		sactors.forEach(sactor => {
-			const isNewActor = !this.actorSet[sactor.id];
-			const actor = isNewActor ? Actor.alloc(this.context, sactor.id) : this.actorSet[sactor.id];
-			this.actorSet[sactor.id] = actor;
+			const isNewActor = !this.actorSet.get(sactor.id);
+			const actor = isNewActor ? Actor.alloc(this.context, sactor.id) : this.actorSet.get(sactor.id);
+			this.actorSet.set(sactor.id, actor);
 			actor.copy(sactor);
 			if (isNewActor) {
 				newActorIds.push(actor.id);
 			}
 		});
 		newActorIds.forEach(actorId => {
-			const actor = this.actorSet[actorId];
+			const actor = this.actorSet.get(actorId);
 			this.context.emitter.emit('actor-created', actor);
 		});
 	}
@@ -515,36 +509,38 @@ export class InternalContext {
 	};
 
 	public userJoined(suser: Partial<UserLike>) {
-		if (!this.userSet[suser.id]) {
-			const user = this.userSet[suser.id] = new User(this.context, suser.id);
+		if (!this.userSet.has(suser.id)) {
+			const user = new User(this.context, suser.id);
+			this.userSet.set(suser.id, user);
 			user.copy(suser);
 			this.context.emitter.emit('user-joined', user);
 		}
 	}
 
-	public userLeft(userId: string) {
-		const user = this.userSet[userId];
+	public userLeft(userId: Guid) {
+		const user = this.userSet.get(userId);
 		if (user) {
-			delete this.userSet[userId];
+			this.userSet.delete(userId);
 			this.context.emitter.emit('user-left', user);
 		}
 	}
 
 	public updateUser(suser: Partial<UserLike>) {
-		const isNewUser = !this.userSet[suser.id];
-		const user = isNewUser ? new User(this.context, suser.id) : this.userSet[suser.id];
-		user.copy(suser);
-		this.userSet[user.id] = user;
-		if (isNewUser) {
+		let user = this.userSet.get(suser.id);
+		if (!user) {
+			user = new User(this.context, suser.id);
+			user.copy(suser);
+			this.userSet.set(user.id, user);
 			this.context.emitter.emit('user-joined', user);
 		} else {
+			user.copy(suser);
 			this.context.emitter.emit('user-updated', user);
 		}
 	}
 
 	public performAction(actionEvent: ActionEvent) {
 		if (actionEvent.user) {
-			const targetActor = this.actorSet[actionEvent.targetId];
+			const targetActor = this.actorSet.get(actionEvent.targetId);
 			if (targetActor) {
 				targetActor.internal.performAction(actionEvent);
 			}
@@ -552,8 +548,8 @@ export class InternalContext {
 	}
 
 	public collisionEventRaised(collisionEvent: CollisionEvent) {
-		const actor = this.actorSet[collisionEvent.colliderOwnerId];
-		const otherActor = this.actorSet[(collisionEvent.collisionData.otherActorId)];
+		const actor = this.actorSet.get(collisionEvent.colliderOwnerId);
+		const otherActor = this.actorSet.get((collisionEvent.collisionData.otherActorId));
 		if (actor && otherActor) {
 			// Update the collision data to contain the actual other actor.
 			collisionEvent.collisionData = {
@@ -568,8 +564,8 @@ export class InternalContext {
 	}
 
 	public triggerEventRaised(triggerEvent: TriggerEvent) {
-		const actor = this.actorSet[triggerEvent.colliderOwnerId];
-		const otherActor = this.actorSet[triggerEvent.otherColliderOwnerId];
+		const actor = this.actorSet.get(triggerEvent.colliderOwnerId);
+		const otherActor = this.actorSet.get(triggerEvent.otherColliderOwnerId);
 		if (actor && otherActor) {
 			actor.internal.triggerEventRaised(
 				triggerEvent.eventType,
@@ -577,17 +573,17 @@ export class InternalContext {
 		}
 	}
 
-	public setAnimationStateEventRaised(actorId: string, animationName: string, state: SetAnimationStateOptions) {
+	public setAnimationStateEventRaised(actorId: Guid, animationName: string, state: SetAnimationStateOptions) {
 		const actor = this.context.actor(actorId);
 		if (actor) {
 			actor.internal.setAnimationStateEventRaised(animationName, state);
 		}
 	}
 
-	public localDestroyActors(actorIds: string[]) {
+	public localDestroyActors(actorIds: Guid[]) {
 		for (const actorId of actorIds) {
-			if (this.actorSet[actorId]) {
-				this.localDestroyActor(this.actorSet[actorId]);
+			if (this.actorSet.has(actorId)) {
+				this.localDestroyActor(this.actorSet.get(actorId));
 			}
 		}
 	}
@@ -598,13 +594,13 @@ export class InternalContext {
 			this.localDestroyActor(child);
 		});
 		// Remove actor from _actors
-		delete this.actorSet[actor.id];
+		this.actorSet.delete(actor.id);
 		// Raise event
 		this.context.emitter.emit('actor-destroyed', actor);
 	}
 
-	public destroyActor(actorId: string) {
-		const actor = this.actorSet[actorId];
+	public destroyActor(actorId: Guid) {
+		const actor = this.actorSet.get(actorId);
 		if (actor) {
 			// Tell engine to destroy the actor (will destroy all children too)
 			this.sendDestroyActors([actorId]);
@@ -613,7 +609,7 @@ export class InternalContext {
 		}
 	}
 
-	public sendRigidBodyCommand(actorId: string, payload: Payloads.Payload) {
+	public sendRigidBodyCommand(actorId: Guid, payload: Payloads.Payload) {
 		this.protocol.sendPayload({
 			type: 'rigidbody-commands',
 			actorId,
@@ -621,8 +617,8 @@ export class InternalContext {
 		} as Payloads.RigidBodyCommands);
 	}
 
-	public setBehavior(actorId: string, newBehaviorType: BehaviorType) {
-		const actor = this.actorSet[actorId];
+	public setBehavior(actorId: Guid, newBehaviorType: BehaviorType) {
+		const actor = this.actorSet.get(actorId);
 		if (actor) {
 			this.protocol.sendPayload({
 				type: 'set-behavior',
@@ -632,12 +628,12 @@ export class InternalContext {
 		}
 	}
 
-	public lookupAsset(id: string): Asset {
+	public lookupAsset(id: Guid): Asset {
 		if (id === ZeroGuid) { return null; }
 
 		for (const c of this.assetContainers) {
-			if (c.assetsById[id]) {
-				return c.assetsById[id];
+			if (c.assetsById.has(id)) {
+				return c.assetsById.get(id);
 			}
 		}
 	}

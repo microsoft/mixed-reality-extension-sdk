@@ -5,7 +5,8 @@
 
 import { EventEmitter } from 'events';
 import { Connection, ConnectionQuality, NetworkStatsReport } from '.';
-import { Message } from '..';
+import { Guid, Message } from '..';
+import { QueuedPromise } from '../utils/queuedPromise';
 
 /**
  * @hidden
@@ -18,7 +19,7 @@ export class NullConnection extends EventEmitter implements Connection {
 	public get quality() { return this._quality; }
 
 	/** @inheritdoc */
-	public get promises() { return {}; }
+	public get promises(): Map<Guid, QueuedPromise> { return null; }
 
 	/** @inheritdoc */
 	public get statsReport(): NetworkStatsReport {

@@ -18,7 +18,7 @@ import {
 	VideoStream,
 	VideoStreamLike
 } from '.';
-import { Actor } from '..';
+import { Actor, Guid } from '../../..';
 
 /**
  * Instructions for how to load an asset.
@@ -45,7 +45,7 @@ export interface AssetLike {
 	/**
 	 * The unique id of this asset. Use this to reference this asset in actors, etc.
 	 */
-	id: string;
+	id: Guid;
 	/**
 	 * A human-readable string identifying the asset. Not required to be unique, but
 	 * can be referenced by name if it is.
@@ -72,7 +72,7 @@ export interface AssetLike {
 
 /** The base class for all asset types. */
 export abstract class Asset implements AssetLike {
-	private _id: string;
+	private _id: Guid;
 	private _name: string;
 	private _source: AssetSource;
 	private _loadedPromise: Promise<void>;

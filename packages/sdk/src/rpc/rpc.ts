@@ -4,14 +4,14 @@
  */
 /* eslint-disable max-classes-per-file */
 
-import { Context } from '..';
+import { Context, Guid } from '..';
 import { AppToEngineRPC, EngineToAppRPC } from '../types/network/payloads';
 
 /**
  * @hidden
  * Type defining an rpc handler function callback.
  */
-export type RPCHandler = (options: { userId: string }, ...args: any[]) => void;
+export type RPCHandler = (options: { userId: Guid }, ...args: any[]) => void;
 
 /**
  * RPC interface. Able to send and receive RPC calls.
@@ -40,7 +40,7 @@ export class RPC {
 		options: {
 			procName: string;
 			channelName?: string;
-			userId?: string;
+			userId?: Guid;
 		},
 		...args: any[]) {
 		this.context.internal.sendPayload({
@@ -52,7 +52,7 @@ export class RPC {
 		} as AppToEngineRPC);
 	}
 
-	public receive(procName: string, userId: string, ...args: any[]) {
+	public receive(procName: string, userId: Guid, ...args: any[]) {
 		const handler = this.handlers.get(procName);
 		if (handler) {
 			handler({ userId }, ...args);

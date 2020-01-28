@@ -25,7 +25,7 @@ export class App {
 	public assets: MRE.AssetContainer;
 
 	private firstUser: MRE.User;
-	private _connectedUsers: { [id: string]: MRE.User } = {};
+	private _connectedUsers = new Map<MRE.Guid, MRE.User>();
 	public testResults: { [name: string]: boolean } = {};
 
 	private activeTestName: string;
@@ -78,7 +78,7 @@ export class App {
 	}
 
 	private userJoined(user: MRE.User) {
-		this.connectedUsers[user.id] = user;
+		this.connectedUsers.set(user.id, user);
 		if (!this.firstUser) {
 			this.firstUser = user;
 			if (this.params.autorun === 'true' || this.params.nomenu === 'true') {
@@ -88,7 +88,7 @@ export class App {
 	}
 
 	private userLeft(user: MRE.User) {
-		delete this.connectedUsers[user.id];
+		this.connectedUsers.delete(user.id);
 		if (user === this.firstUser) {
 			this.firstUser = this.context.users[0] || null;
 			if (!this.firstUser) {

@@ -5,14 +5,18 @@
 
 import { OperationResultCode, Trace } from '..';
 import {
+	ActionState,
+	ActorLike,
 	AnimationLike,
+	BehaviorType,
 	CreateAnimationOptions,
+	Guid,
 	MediaCommand,
 	SetAnimationStateOptions,
-	SetMediaStateOptions
+	SetMediaStateOptions,
+	TransformLike,
+	UserLike,
 } from '../../..';
-import { ActorLike, TransformLike, UserLike } from '../../runtime';
-import { ActionState, BehaviorType } from '../../runtime/behaviors';
 import { OperatingModel } from '../operatingModel';
 import { AssetPayloadType } from './assets';
 import { SyncPayloadType } from './sync';
@@ -150,7 +154,7 @@ export type HeartbeatReply = Payload & {
 export type AppToEngineRPC = Payload & {
 	type: 'app2engine-rpc';
 	channelName?: string;
-	userId?: string;
+	userId?: Guid;
 	procName: string;
 	args: any[];
 };
@@ -161,7 +165,7 @@ export type AppToEngineRPC = Payload & {
 export type EngineToAppRPC = Payload & {
 	type: 'engine2app-rpc';
 	channelName?: string;
-	userId?: string;
+	userId?: Guid;
 	procName: string;
 	args: any[];
 };
@@ -227,7 +231,7 @@ export type AnimationUpdate = Payload & {
  */
 export type ActorCorrection = Payload & {
 	type: 'actor-correction';
-	actorId: string;
+	actorId: Guid;
 	appTransform: TransformLike;
 };
 
@@ -237,7 +241,7 @@ export type ActorCorrection = Payload & {
  */
 export type DestroyActors = Payload & {
 	type: 'destroy-actors';
-	actorIds: string[];
+	actorIds: Guid[];
 };
 
 /**
@@ -281,7 +285,7 @@ export type UserJoined = Payload & {
  */
 export type UserLeft = Payload & {
 	type: 'user-left';
-	userId: string;
+	userId: Guid;
 };
 
 /**
@@ -300,8 +304,8 @@ export type UserUpdate = Payload & {
  */
 export type PerformAction = Payload & {
 	type: 'perform-action';
-	userId: string;
-	targetId: string;
+	userId: Guid;
+	targetId: Guid;
 	behaviorType: BehaviorType;
 	actionName: string;
 	actionState: ActionState;
@@ -314,7 +318,7 @@ export type PerformAction = Payload & {
  */
 export type SetBehavior = Payload & {
 	type: 'set-behavior';
-	actorId: string;
+	actorId: Guid;
 	behaviorType: BehaviorType;
 };
 
@@ -324,7 +328,7 @@ export type SetBehavior = Payload & {
  */
 export type CreateAnimation = Payload & CreateAnimationOptions & {
 	type: 'create-animation';
-	actorId: string;
+	actorId: Guid;
 	animationId?: string;
 	animationName: string;
 };
@@ -336,7 +340,7 @@ export type CreateAnimation = Payload & CreateAnimationOptions & {
  */
 export type SetAnimationState = Payload & {
 	type: 'set-animation-state';
-	actorId: string;
+	actorId: Guid;
 	animationName: string;
 	state: SetAnimationStateOptions;
 };
@@ -357,12 +361,11 @@ export type SyncAnimations = Payload & {
  */
 export type SetMediaState = Payload & {
 	type: 'set-media-state';
-	id: string;
-	actorId: string;
-	mediaAssetId: string;
+	id: Guid;
+	actorId: Guid;
+	mediaAssetId: Guid;
 	mediaCommand: MediaCommand;
 	options: SetMediaStateOptions;
-
 };
 
 /**
@@ -371,7 +374,7 @@ export type SetMediaState = Payload & {
  */
 export type InterpolateActor = Payload & {
 	type: 'interpolate-actor';
-	actorId: string;
+	actorId: Guid;
 	animationName: string;
 	value: Partial<ActorLike>;
 	duration: number;
@@ -385,7 +388,7 @@ export type InterpolateActor = Payload & {
  */
 export type ShowDialog = Payload & {
 	type: 'show-dialog';
-	userId: string;
+	userId: Guid;
 	text: string;
 	acceptInput?: boolean;
 };

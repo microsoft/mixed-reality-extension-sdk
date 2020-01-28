@@ -5,6 +5,7 @@
 
 import {
 	Context,
+	Guid,
 	User
 } from '@microsoft/mixed-reality-extension-sdk';
 
@@ -17,7 +18,7 @@ type Video = { url: string; basisTime: number };
  */
 
 export class VideoPlayerManager {
-	private videos = new Map<string, Video>();
+	private videos = new Map<Guid, Video>();
 
 	constructor(private context: Context) {
 		this.context.onUserJoined(this.userJoined);
@@ -41,7 +42,7 @@ export class VideoPlayerManager {
 		}
 	};
 
-	public play(actorId: string, url: string, startTime: number) {
+	public play(actorId: Guid, url: string, startTime: number) {
 		if (!this.videos.has(actorId) || this.videos.get(actorId).url !== url) {
 			const video = { url, basisTime: startTime - Date.now() / 1000.0 };
 			this.videos.set(actorId, video);
@@ -55,7 +56,7 @@ export class VideoPlayerManager {
 		}
 	}
 
-	public stop(actorId: string) {
+	public stop(actorId: Guid) {
 		if (this.videos.has(actorId)) {
 			this.context.rpc.send({
 				procName: 'VideoPlay'

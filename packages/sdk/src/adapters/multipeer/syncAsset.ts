@@ -3,14 +3,14 @@
  * Licensed under the MIT License.
  */
 
-import { Message } from '../..';
+import { Guid, Message } from '../..';
 import * as Payloads from '../../types/network/payloads';
 
 /** @hidden */
 export class SyncAsset {
-	public id: string;
+	public id: Guid;
 	/** Used if asset was packaged with other assets */
-	public creatorMessageId: string;
+	public creatorMessageId: Guid;
 	/** Used only with batch creation, as definition is updated for other */
 	public update: Message<Payloads.AssetUpdate>;
 	/** Used only for runtime instances (like MediaInstances) that need to know the duration of the asset */

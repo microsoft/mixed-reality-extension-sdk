@@ -3,10 +3,14 @@
  * Licensed under the MIT License.
  */
 
-import UUID from 'uuid/v4';
-import { MediaCommand, SetMediaStateOptions } from '../..';
+import {
+	Actor,
+	Guid,
+	MediaCommand,
+	newGuid,
+	SetMediaStateOptions
+} from '../..';
 import { log } from '../../log';
-import { Actor } from './actor';
 
 /**
  * A MediaInstance represents an instance managing the playback of a sound or video stream,
@@ -14,12 +18,12 @@ import { Actor } from './actor';
  */
 export class MediaInstance {
 
-	public id: string;
+	public id: Guid;
 	public actor: Actor;
-	private mediaAssetId: string;
+	private mediaAssetId: Guid;
 
-	constructor(actor: Actor, mediaAssetId: string) {
-		this.id = UUID();
+	constructor(actor: Actor, mediaAssetId: Guid) {
+		this.id = newGuid();
 		this.actor = actor;
 		this.mediaAssetId = mediaAssetId;
 	}

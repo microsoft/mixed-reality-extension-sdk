@@ -4,8 +4,7 @@
  */
 
 import { EventEmitter } from 'events';
-import UUID from 'uuid/v4';
-import { Connection, Message } from '..';
+import { Connection, Guid, Message, newGuid } from '..';
 import { log } from '../log';
 import { Payload } from '../types/network/payloads';
 import { ExportedPromise } from '../utils/exportedPromise';
@@ -71,7 +70,7 @@ export class Protocol extends EventEmitter {
 	}
 
 	public sendMessage(message: Message, promise?: ExportedPromise, timeoutSeconds?: number) {
-		message.id = message.id || UUID();
+		message.id = message.id ?? newGuid();
 
 		// Run message through all the middlewares
 		const middlewares = this.middlewares.slice();
@@ -101,10 +100,10 @@ export class Protocol extends EventEmitter {
 
 		// Save the reply callback
 		if (promise) {
-			this.promises[message.id] = {
+			this.promises.set(message.id, {
 				promise,
 				timeout: setReplyTimeout()
-			};
+			});
 		}
 
 		log.verbose('network', `${this.name} send id:${message.id.substr(0, 8)}, type:${message.payload.type}`);
@@ -176,21 +175,21 @@ export class Protocol extends EventEmitter {
 	}
 
 	protected handleReplyMessage(message: Message) {
-		const queuedPromise = this.promises[message.replyToId];
+		const queuedPromise = this.promises.get(message.replyToId);
 		if (!queuedPromise) {
 			this.missingPromiseForReplyMessage(message);
 		} else {
-			delete this.promises[message.replyToId];
+			this.promises.delete(message.replyToId);
 			clearTimeout(queuedPromise.timeout);
 			queuedPromise.promise.resolve(message.payload, message);
 		}
 	}
 
-	private rejectPromiseForMessage(messageId: string, reason?: any) {
-		const queuedPromise = this.promises[messageId];
-		if (queuedPromise && queuedPromise.promise && queuedPromise.promise.reject) {
+	private rejectPromiseForMessage(messageId: Guid, reason?: any) {
+		const queuedPromise = this.promises.get(messageId);
+		if (queuedPromise?.promise?.reject) {
 			try { clearTimeout(queuedPromise.timeout); } catch { }
-			try { delete this.promises[messageId]; } catch { }
+			try { this.promises.delete(messageId); } catch { }
 			try { queuedPromise.promise.reject(reason); } catch { }
 		}
 	}
@@ -205,8 +204,8 @@ export class Protocol extends EventEmitter {
 	};
 
 	private onClose = () => {
-		Object.keys(this.promises).map(key => {
-			this.rejectPromiseForMessage(key, "Connection closed.");
-		});
+		for (const id of this.promises.keys()) {
+			this.rejectPromiseForMessage(id, "Connection closed.");
+		}
 	};
 }

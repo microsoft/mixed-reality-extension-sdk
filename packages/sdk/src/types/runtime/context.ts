@@ -4,10 +4,11 @@
  */
 
 import events from 'events';
-import UUID from 'uuid/v4';
 import {
 	Actor,
 	Connection,
+	Guid,
+	newGuid,
 	NullConnection,
 	User,
 } from '../..';
@@ -43,23 +44,20 @@ export class Context {
 
 	public get sessionId() { return this._sessionId; }
 	public get conn() { return this._conn; }
-	public get actors() { return Object.keys(this.internal.actorSet).map(actorId => this.internal.actorSet[actorId]); }
-	public get rootActors() {
-		return Object.keys(this.internal.actorSet)
-			.filter(actorId => !this.internal.actorSet[actorId].parent).map(actorId => this.internal.actorSet[actorId]);
-	}
-	public get users() { return Object.keys(this.internal.userSet).map(userId => this.internal.userSet[userId]); }
+	public get actors() { return [...this.internal.actorSet.values()]; }
+	public get rootActors() { return this.actors.filter(a => !a.parent); }
+	public get users() { return [...this.internal.userSet.values()]; }
 	public get rpcChannels() { return this._rpcChannels; }
 	public get rpc() { return this._rpc; }
-	public actor = (actorId: string): Actor => this.internal.actorSet[actorId];
-	public user = (userId: string): User => this.internal.userSet[userId];
+	public actor = (actorId: Guid): Actor => this.internal.actorSet.get(actorId);
+	public user = (userId: Guid): User => this.internal.userSet.get(userId);
 
 	/**
 	 * Creates a new `Context` instance.
 	 */
 	constructor(settings: ContextSettings) {
 		this._conn = settings.connection || new NullConnection();
-		this._sessionId = settings.sessionId || UUID();
+		this._sessionId = settings.sessionId || newGuid().toString();
 		this._internal = new InternalContext(this);
 		this._rpcChannels = new RPCChannels();
 		this._rpc = new RPC(this);

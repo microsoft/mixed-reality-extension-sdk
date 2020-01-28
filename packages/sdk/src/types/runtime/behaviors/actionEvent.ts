@@ -5,10 +5,11 @@
 
 import { ActionState, BehaviorType } from '.';
 import { User } from '..';
+import { Guid } from '../../..';
 
 export interface ActionEvent {
 	user: User;
-	targetId: string;
+	targetId: Guid;
 	behaviorType: BehaviorType;
 	actionName: string;
 	actionState: ActionState;

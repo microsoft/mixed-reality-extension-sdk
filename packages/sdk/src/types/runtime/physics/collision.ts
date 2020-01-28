@@ -3,7 +3,7 @@
  * Licensed under the MIT License.
  */
 
-import { Actor, Vector3 } from "../../..";
+import { Actor, Guid, Vector3 } from "../../..";
 
 /**
  * The collision handler to be called when a collision event occurs.
@@ -36,7 +36,7 @@ export interface ContactPoint {
  * The collision data collected when a collision occurs.
  */
 export interface CollisionData {
-	otherActorId: string;
+	otherActorId: Guid;
 	otherActor?: Actor;
 	contacts: ContactPoint[];
 	impulse: Vector3;

@@ -4,10 +4,10 @@
  */
 
 import { LookAtMode } from "../..";
-import { ZeroGuidString as ZeroGuid } from "../..";
+import { Guid, ZeroGuid } from "../..";
 
 export interface LookAtLike {
-	actorId: string;
+	actorId: Guid;
 	mode: LookAtMode;
 	backward: boolean;
 }

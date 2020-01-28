@@ -4,8 +4,14 @@
  */
 
 import { Payload } from '.';
-import { CollisionData, CollisionEventType, QuaternionLike, Vector3Like } from '../../..';
-import { TriggerEventType } from '../../runtime';
+import {
+	CollisionData,
+	CollisionEventType,
+	Guid,
+	TriggerEventType,
+	QuaternionLike,
+	Vector3Like
+} from '../../..';
 
 /**
  * @hidden
@@ -13,7 +19,7 @@ import { TriggerEventType } from '../../runtime';
  */
 export type RigidBodyCommands = Payload & {
 	type: 'rigidbody-commands';
-	actorId: string;
+	actorId: Guid;
 	commandPayloads: Payload[];
 };
 
@@ -78,7 +84,7 @@ export type RigidBodyAddRelativeTorque = Payload & {
  */
 export type CollisionEventRaised = Payload & {
 	type: 'collision-event-raised';
-	actorId: string;
+	actorId: Guid;
 	eventType: CollisionEventType;
 	collisionData: CollisionData;
 };
@@ -89,7 +95,7 @@ export type CollisionEventRaised = Payload & {
  */
 export type TriggerEventRaised = Payload & {
 	type: 'trigger-event-rasied';
-	actorId: string;
+	actorId: Guid;
 	eventType: TriggerEventType;
-	otherActorId: string;
+	otherActorId: Guid;
 };

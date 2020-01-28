@@ -69,7 +69,7 @@ export class ClientExecution extends Protocols.Protocol implements Protocols.Mid
 	}
 
 	public beforeRecv = (message: Message): Message => {
-		if (this.promises[message.replyToId]) {
+		if (this.promises.has(message.replyToId)) {
 			// If we have a queued promise for this message, let it through
 			return message;
 		} else {

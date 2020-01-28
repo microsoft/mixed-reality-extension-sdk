@@ -5,7 +5,7 @@
 
 import deepmerge from 'deepmerge';
 import { ActiveMediaInstance, Client, Session, SynchronizationStage } from '.';
-import { MediaCommand, Message, WebSocket } from '../..';
+import { Guid, MediaCommand, Message, WebSocket } from '../..';
 import { log } from '../../log';
 import * as Payloads from '../../types/network/payloads';
 import { ExportedPromise } from '../../utils/exportedPromise';
@@ -79,7 +79,7 @@ export type Rule = {
 		 * to stop processing of the message.
 		 */
 		beforeQueueMessageForClient: (
-			session: Session, client: Client, message: any, promise: ExportedPromise) => Message;
+			session: Session, client: Client, message: Message<any>, promise: ExportedPromise) => Message;
 		/**
 		 * Called twice before a message is sent: first to determine if a message is user-dependent
 		 * (it is queued until user-join if so), and second to determine if the joined user is the
@@ -91,7 +91,7 @@ export type Rule = {
 		 * @returns `null` if the message does not depend on a user, `true` if it depends on the given
 		 * user, and `false` if it depends on a different user.
 		 */
-		shouldSendToUser: (message: any, userId: string, session: Session, client: Client) => boolean | null;
+		shouldSendToUser: (message: Message<any>, userId: Guid, session: Session, client: Client) => boolean | null;
 	};
 
 	/**
@@ -224,7 +224,7 @@ const CreateActorRule: Rule = {
 	client: {
 		...DefaultRule.client,
 		shouldSendToUser: (message: Message<Payloads.CreateActorCommon>, userId, session, client) => {
-			const exclusiveUser = session.actorSet[message.payload.actor.id].exclusiveToUser;
+			const exclusiveUser = session.actorSet.get(message.payload.actor.id).exclusiveToUser;
 			return exclusiveUser ? exclusiveUser === userId : null;
 		}
 	},
@@ -297,7 +297,7 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 				client: Client,
 				message: Message<Payloads.ActorCorrection>
 			) => {
-				const syncActor = session.actorSet[message.payload.actorId];
+				const syncActor = session.actorSet.get(message.payload.actorId);
 				if (syncActor && (client.authoritative || syncActor.grabbedBy === client.id)) {
 					const correctionPayload = message.payload;
 
@@ -373,7 +373,7 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 				return message;
 			},
 			shouldSendToUser: (message: Message<Payloads.ActorUpdate>, userId, session, client) => {
-				const exclusiveUser = session.actorSet[message.payload.actor.id].exclusiveToUser;
+				const exclusiveUser = session.actorSet.get(message.payload.actor.id).exclusiveToUser;
 				return exclusiveUser ? exclusiveUser === userId : null;
 			}
 		},
@@ -391,7 +391,7 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 				client: Client,
 				message: Message<Payloads.ActorUpdate>
 			) => {
-				const syncActor = session.actorSet[message.payload.actor.id];
+				const syncActor = session.actorSet.get(message.payload.actor.id);
 				if (syncActor && (client.authoritative || syncActor.grabbedBy === client.id)) {
 					// Merge the update into the existing actor.
 					session.cacheActorUpdateMessage(message);
@@ -441,7 +441,7 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 		},
 		client: {
 			...DefaultRule.client,
-			shouldSendToUser: (message: Message<Payloads.AnimationUpdate>, userId: string, session: Session) => {
+			shouldSendToUser: (message: Message<Payloads.AnimationUpdate>, userId, session: Session) => {
 				// TODO: don't send animation updates when the animation targets only actors
 				// the client doesn't care/know about.
 				return true;
@@ -541,7 +541,7 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 		client: {
 			...DefaultRule.client,
 			shouldSendToUser: (message: Message<Payloads.CreateAnimation>, userId, session, client) => {
-				const exclusiveUser = session.actorSet[message.payload.actorId].exclusiveToUser;
+				const exclusiveUser = session.actorSet.get(message.payload.actorId).exclusiveToUser;
 				return exclusiveUser ? exclusiveUser === userId : null;
 			}
 		},
@@ -554,7 +554,7 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 				if (message.payload.animationId) {
 					session.cacheAnimationCreationRequest(message);
 				} else {
-					const syncActor = session.actorSet[message.payload.actorId];
+					const syncActor = session.actorSet.get(message.payload.actorId);
 					if (syncActor) {
 						const enabled = message.payload.initialState && !!message.payload.initialState.enabled;
 						syncActor.createdAnimations = syncActor.createdAnimations || [];
@@ -612,7 +612,7 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 				message: Message<Payloads.DestroyActors>
 			) => {
 				for (const actorId of message.payload.actorIds) {
-					delete session.actorSet[actorId];
+					session.actorSet.delete(actorId);
 				}
 				return message;
 			}
@@ -678,7 +678,7 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 		client: {
 			...DefaultRule.client,
 			shouldSendToUser: (message: Message<Payloads.InterpolateActor>, userId, session, client) => {
-				const exclusiveUser = session.actorSet[message.payload.actorId].exclusiveToUser;
+				const exclusiveUser = session.actorSet.get(message.payload.actorId).exclusiveToUser;
 				return exclusiveUser ? exclusiveUser === userId : null;
 			}
 		},
@@ -688,7 +688,7 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 				session: Session,
 				message: Message<Payloads.InterpolateActor>
 			) => {
-				const syncActor = session.actorSet[message.payload.actorId];
+				const syncActor = session.actorSet.get(message.payload.actorId);
 				if (syncActor) {
 					syncActor.activeInterpolations = syncActor.activeInterpolations || [];
 					syncActor.activeInterpolations.push(deepmerge({}, message.payload));
@@ -732,7 +732,7 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 				// Check that this is the authoritative client
 				const exclusiveUser =
 					message.payload.actors && message.payload.actors.length ?
-						session.actorSet[message.payload.actors[0].id].exclusiveToUser :
+						session.actorSet.get(message.payload.actors[0].id).exclusiveToUser :
 						undefined;
 				if (client.authoritative || client.userId && client.userId === exclusiveUser) {
 					// Create no-op creation message. Implicit sync from initialization until they're updated
@@ -775,7 +775,7 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 			) => {
 				// Store the client id of the client that is performing the grab.
 				const payload = message.payload;
-				const syncActor = session.actorSet[payload.targetId];
+				const syncActor = session.actorSet.get(payload.targetId);
 				if (syncActor && payload.actionName.toLowerCase() === 'grab' &&
 					(syncActor.grabbedBy === client.id || syncActor.grabbedBy === undefined)
 				) {
@@ -843,7 +843,7 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 		client: {
 			...DefaultRule.client,
 			shouldSendToUser: (message: Message<Payloads.RigidBodyCommands>, userId, session, client) => {
-				const exclusiveUser = session.actorSet[message.payload.actorId].exclusiveToUser;
+				const exclusiveUser = session.actorSet.get(message.payload.actorId).exclusiveToUser;
 				return exclusiveUser ? exclusiveUser === userId : null;
 			}
 		}
@@ -883,7 +883,7 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 		client: {
 			...DefaultRule.client,
 			shouldSendToUser: (message: Message<Payloads.SetAnimationState>, userId, session, client) => {
-				const exclusiveUser = session.actorSet[message.payload.actorId].exclusiveToUser;
+				const exclusiveUser = session.actorSet.get(message.payload.actorId).exclusiveToUser;
 				return exclusiveUser ? exclusiveUser === userId : null;
 			}
 		},
@@ -895,7 +895,7 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 			) => {
 				// If the app enabled or disabled the animation, update our local sync state to match.
 				if (message.payload.state.enabled !== undefined) {
-					const syncActor = session.actorSet[message.payload.actorId];
+					const syncActor = session.actorSet.get(message.payload.actorId);
 					if (syncActor) {
 						const animation = session.findAnimation(syncActor, message.payload.animationName);
 						if (animation) {
@@ -911,10 +911,10 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 				message: Message<Payloads.SetAnimationState>
 			) => {
 				// Check that this is the authoritative client
-				const exclusiveUser = session.actorSet[message.payload.actorId].exclusiveToUser;
+				const exclusiveUser = session.actorSet.get(message.payload.actorId).exclusiveToUser;
 				if (client.authoritative || client.userId && client.userId === exclusiveUser) {
 					// Check that the actor exists.
-					const syncActor = session.actorSet[message.payload.actorId];
+					const syncActor = session.actorSet.get(message.payload.actorId);
 					if (syncActor) {
 						// If the animation was disabled on the client, notify other clients and also
 						// update our local sync state.
@@ -962,7 +962,7 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 		client: {
 			...DefaultRule.client,
 			shouldSendToUser: (message: Message<Payloads.SetBehavior>, userId, session, client) => {
-				const exclusiveUser = session.actorSet[message.payload.actorId].exclusiveToUser;
+				const exclusiveUser = session.actorSet.get(message.payload.actorId).exclusiveToUser;
 				return exclusiveUser ? exclusiveUser === userId : null;
 			}
 		},
@@ -972,7 +972,7 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 				session: Session,
 				message: Message<Payloads.SetBehavior>
 			) => {
-				const syncActor = session.actorSet[message.payload.actorId];
+				const syncActor = session.actorSet.get(message.payload.actorId);
 				if (syncActor) {
 					syncActor.behavior = message.payload.behaviorType;
 				} else {
@@ -995,7 +995,7 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 		client: {
 			...DefaultRule.client,
 			shouldSendToUser: (message: Message<Payloads.SetMediaState>, userId, session, client) => {
-				const exclusiveUser = session.actorSet[message.payload.actorId].exclusiveToUser;
+				const exclusiveUser = session.actorSet.get(message.payload.actorId).exclusiveToUser;
 				return exclusiveUser ? exclusiveUser === userId : null;
 			}
 		},
@@ -1005,7 +1005,7 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 				session: Session,
 				message: Message<Payloads.SetMediaState>
 			) => {
-				const syncActor = session.actorSet[message.payload.actorId];
+				const syncActor = session.actorSet.get(message.payload.actorId);
 				if (syncActor) {
 					syncActor.activeMediaInstances = syncActor.activeMediaInstances || [];
 					let activeMediaInstance: ActiveMediaInstance;
@@ -1077,7 +1077,7 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 					}
 
 					// Look up asset duration from cached assets
-					const asset = session.assetSet[message.payload.mediaAssetId];
+					const asset = session.assetSet.get(message.payload.mediaAssetId);
 
 					if (activeMediaInstance.message.payload.options.looping === true ||
 						activeMediaInstance.message.payload.options.paused === true ||
@@ -1116,7 +1116,7 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 		},
 		client: {
 			...DefaultRule.client,
-			shouldSendToUser: (message: Message<Payloads.ShowDialog>, userId: string) => {
+			shouldSendToUser: (message: Message<Payloads.ShowDialog>, userId) => {
 				return message.payload.userId === userId;
 			}
 		}

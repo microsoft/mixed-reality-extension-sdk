@@ -4,8 +4,7 @@
  */
 
 import { CreateActorCommon, Payload } from '.';
-import { ColliderType, CollisionLayer } from '../../runtime';
-import { AssetLike, AssetSource } from '../../runtime/assets';
+import { AssetLike, AssetSource, ColliderType, CollisionLayer, Guid } from '../../..';
 
 export type CreateColliderType = ColliderType | 'none';
 
@@ -21,7 +20,7 @@ export type AssetPayloadType
 /** @hidden */
 export type LoadAssets = Payload & {
 	type: 'load-assets';
-	containerId: string;
+	containerId: Guid;
 	source: AssetSource;
 	colliderType: CreateColliderType;
 };
@@ -29,7 +28,7 @@ export type LoadAssets = Payload & {
 /** @hidden */
 export type CreateAsset = Payload & {
 	type: 'create-asset';
-	containerId: string;
+	containerId: Guid;
 	definition: AssetLike;
 };
 
@@ -49,12 +48,12 @@ export type AssetUpdate = Payload & {
 /** @hidden */
 export type CreateFromPrefab = CreateActorCommon & {
 	type: 'create-from-prefab';
-	prefabId: string;
+	prefabId: Guid;
 	collisionLayer?: CollisionLayer;
 };
 
 /** @hidden */
 export type UnloadAssets = Payload & {
 	type: 'unload-assets';
-	containerId: string;
+	containerId: Guid;
 };
