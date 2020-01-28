@@ -3,12 +3,12 @@
  * Licensed under the MIT License.
  */
 
-import { Message } from '../..';
+import { Guid, Message } from '../..';
 import * as Payloads from '../../types/network/payloads';
 
 /** @hidden */
 export class SyncAsset {
-	public id: string;
+	public id: Guid;
 	/** Used if asset was packaged with other assets */
 	public creatorMessageId: string;
 	/** Used only with batch creation, as definition is updated for other */

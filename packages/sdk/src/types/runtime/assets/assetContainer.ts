@@ -3,8 +3,6 @@
  * Licensed under the MIT License.
  */
 
-import UUID from 'uuid/v4';
-
 import {
 	Asset, AssetSource,
 	Material, MaterialLike,
@@ -14,8 +12,15 @@ import {
 	Texture, TextureLike,
 	VideoStream, VideoStreamLike
 } from '.';
-import { Context } from '..';
-import { PrimitiveDefinition, PrimitiveShape, Vector3Like } from '../../..';
+import {
+	Context,
+	Guid,
+	newGuid,
+	ReadonlyMap,
+	PrimitiveDefinition,
+	PrimitiveShape,
+	Vector3Like
+} from '../../..';
 import { log } from '../../../log';
 import resolveJsonValues from '../../../utils/resolveJsonValues';
 import * as Payloads from '../../network/payloads';
@@ -26,14 +31,14 @@ import * as Payloads from '../../network/payloads';
  * files for their assets.
  */
 export class AssetContainer {
-	private _id: string;
-	private _assets: { [id: string]: Asset } = {};
+	private _id: Guid;
+	private _assets = new Map<Guid, Asset>();
 
 	/** @hidden */
 	public get id() { return this._id; }
 
 	/** A mapping of asset IDs to assets in this container */
-	public get assetsById() { return Object.freeze({ ...this._assets }); }
+	public get assetsById() { return this._assets as ReadonlyMap<Guid, Asset>; }
 	/** A list of all assets in this container */
 	public get assets() { return Object.values(this._assets); }
 	/** A list of all materials in this container */
@@ -49,7 +54,7 @@ export class AssetContainer {
 
 	/** Create a new asset container */
 	public constructor(public context: Context) {
-		this._id = UUID();
+		this._id = newGuid();
 		context.internal.assetContainers.add(this);
 	}
 
@@ -60,7 +65,7 @@ export class AssetContainer {
 	 */
 	public createMaterial(name: string, definition: Partial<MaterialLike>): Material {
 		const mat = new Material(this, {
-			id: UUID(),
+			id: newGuid(),
 			name,
 			material: resolveJsonValues(definition)
 		});
@@ -75,7 +80,7 @@ export class AssetContainer {
 	 */
 	public createTexture(name: string, definition: Partial<TextureLike>): Texture {
 		const tex = new Texture(this, {
-			id: UUID(),
+			id: newGuid(),
 			name,
 			texture: resolveJsonValues(definition)
 		});
@@ -90,7 +95,7 @@ export class AssetContainer {
 	 */
 	public createSound(name: string, definition: Partial<SoundLike>): Sound {
 		const sound = new Sound(this, {
-			id: UUID(),
+			id: newGuid(),
 			name,
 			sound: resolveJsonValues(definition)
 		});
@@ -105,7 +110,7 @@ export class AssetContainer {
 	 */
 	public createVideoStream(name: string, definition: Partial<VideoStreamLike>): VideoStream {
 		const video = new VideoStream(this, {
-			id: UUID(),
+			id: newGuid(),
 			name,
 			videoStream: resolveJsonValues(definition)
 		});
@@ -215,7 +220,7 @@ export class AssetContainer {
 	 */
 	public createPrimitiveMesh(name: string, definition: PrimitiveDefinition): Mesh {
 		const mesh = new Mesh(this, {
-			id: UUID(),
+			id: newGuid(),
 			name,
 			mesh: {
 				primitiveDefinition: definition
@@ -257,7 +262,7 @@ export class AssetContainer {
 		for (const def of response.assets) {
 			def.source = source;
 			const asset = Asset.Parse(this, def);
-			this._assets[def.id] = asset;
+			this._assets.set(def.id, asset);
 			newAssets.push(asset);
 		}
 		return newAssets;
@@ -287,7 +292,7 @@ export class AssetContainer {
 			throw new Error("Cannot load new assets into an unloaded container!");
 		}
 
-		this._assets[asset.id] = asset;
+		this._assets.set(asset.id, asset);
 
 		const reply = await this.sendPayloadAndGetReply<Payloads.CreateAsset, Payloads.AssetsLoaded>({
 			type: 'create-asset',

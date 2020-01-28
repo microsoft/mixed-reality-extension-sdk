@@ -3,8 +3,8 @@
  * Licensed under the MIT License.
  */
 
-import { Actor, GroupMask, Material, Mesh } from '.';
-import { ZeroGuidString as ZeroGuid } from '../..';
+import { Actor, GroupMask, Mesh } from '.';
+import { Guid, ZeroGuid } from '../..';
 
 export interface AppearanceLike {
 	/**
@@ -17,12 +17,12 @@ export interface AppearanceLike {
 	/**
 	 * The ID of a previously-created [[Material]] asset.
 	 */
-	materialId: string;
+	materialId: Guid;
 
 	/**
 	 * The ID of a previously-created [[Mesh]] asset.
 	 */
-	meshId: string;
+	meshId: Guid;
 }
 
 export class Appearance implements AppearanceLike {
@@ -99,16 +99,16 @@ export class Appearance implements AppearanceLike {
 
 	/** @returns A shared reference to this actor's material, or null if this actor has no material */
 	public get material() {
-		return this.actor.context.internal.lookupAsset(this._materialId) as Material;
+		return this.actor.context.internal.lookupAsset(this._materialId)?.material;
 	}
 	public set material(value) {
-		this.materialId = value && value.id || ZeroGuid;
+		this.materialId = value?.id ?? ZeroGuid;
 	}
 
 	/** @inheritdoc */
 	public get materialId() { return this._materialId; }
 	public set materialId(value) {
-		if (!value || value.startsWith('0000')) {
+		if (!value) {
 			value = ZeroGuid;
 		}
 		if (!this.actor.context.internal.lookupAsset(value)) {
@@ -128,16 +128,16 @@ export class Appearance implements AppearanceLike {
 
 	/** @returns A shared reference to this actor's mesh, or null if this actor has no mesh */
 	public get mesh() {
-		return this.actor.context.internal.lookupAsset(this._meshId) as Mesh;
+		return this.actor.context.internal.lookupAsset(this._meshId).mesh;
 	}
 	public set mesh(value) {
-		this.meshId = value && value.id || ZeroGuid;
+		this.meshId = value?.id ?? ZeroGuid;
 	}
 
 	/** @inheritdoc */
 	public get meshId() { return this._meshId; }
 	public set meshId(value) {
-		if (!value || value.startsWith('0000')) {
+		if (!value) {
 			value = ZeroGuid;
 		}
 		if (!this.actor.context.internal.lookupAsset(value)) {

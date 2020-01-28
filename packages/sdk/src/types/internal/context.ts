@@ -28,7 +28,7 @@ import {
 	User,
 	UserLike,
 	UserSet,
-	ZeroGuidString as ZeroGuid,
+	ZeroGuid,
 } from '../..';
 
 import * as Payloads from '../network/payloads';
@@ -627,12 +627,12 @@ export class InternalContext {
 		}
 	}
 
-	public lookupAsset(id: string): Asset {
+	public lookupAsset(id: Guid): Asset {
 		if (id === ZeroGuid) { return null; }
 
 		for (const c of this.assetContainers) {
-			if (c.assetsById[id]) {
-				return c.assetsById[id];
+			if (c.assetsById.has(id)) {
+				return c.assetsById.get(id);
 			}
 		}
 	}

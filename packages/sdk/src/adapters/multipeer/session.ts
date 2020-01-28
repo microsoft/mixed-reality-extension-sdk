@@ -24,7 +24,7 @@ type AnimationCreationMessage = Message<Payloads.CreateAnimation | Payloads.Crea
 export class Session extends EventEmitter {
 	private _clientSet: { [id: string]: Client } = {};
 	private _actorSet = new Map<Guid, Partial<SyncActor>>();
-	private _assetSet: { [id: string]: Partial<SyncAsset> } = {};
+	private _assetSet = new Map<Guid, Partial<SyncAsset>>();
 	private _assetCreatorSet: { [id: string]: AssetCreationMessage } = {};
 	/** Maps animation IDs to animation sync structs */
 	private _animationSet: Map<Guid, Partial<SyncAnimation>>
@@ -321,12 +321,13 @@ export class Session extends EventEmitter {
 		this.assetCreatorSet[message.id] = message;
 	}
 
-	public cacheAssetCreation(assetId: string, creatorId: string, duration?: number) {
-		const syncAsset = this.assetSet[assetId] = {
+	public cacheAssetCreation(assetId: Guid, creatorId: string, duration?: number) {
+		const syncAsset = {
 			id: assetId,
 			creatorMessageId: creatorId,
 			duration
 		} as Partial<SyncAsset>;
+		this.assetSet.set(assetId, syncAsset);
 		const creator = this.assetCreatorSet[creatorId];
 
 		// Updates are cached on send, creates are cached on receive,
@@ -364,8 +365,10 @@ export class Session extends EventEmitter {
 	}
 
 	public cacheAssetUpdate(update: Message<Payloads.AssetUpdate>) {
-		const syncAsset = this.assetSet[update.payload.asset.id] =
-			this.assetSet[update.payload.asset.id] || { id: update.payload.asset.id };
+		if (!this.assetSet.has(update.payload.asset.id)) {
+			this.assetSet.set(update.payload.asset.id, { id: update.payload.asset.id });
+		}
+		const syncAsset = this.assetSet.get(update.payload.asset.id);
 		const creator = this.assetCreatorSet[syncAsset.creatorMessageId];
 
 		if (creator && creator.payload.type === 'create-asset') {
@@ -384,7 +387,7 @@ export class Session extends EventEmitter {
 		}
 	}
 
-	public cacheAssetUnload(containerId: string) {
+	public cacheAssetUnload(containerId: Guid) {
 		const creators = this.assetCreators.filter(c => c.payload.containerId === containerId);
 		for (const creator of creators) {
 			// un-cache creation message
@@ -393,7 +396,7 @@ export class Session extends EventEmitter {
 			// un-cache created assets
 			const assets = this.assets.filter(a => a.creatorMessageId === creator.id);
 			for (const asset of assets) {
-				delete this.assetSet[asset.id];
+				this.assetSet.delete(asset.id);
 			}
 		}
 	}

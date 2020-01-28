@@ -363,7 +363,7 @@ export type SetMediaState = Payload & {
 	type: 'set-media-state';
 	id: string;
 	actorId: Guid;
-	mediaAssetId: string;
+	mediaAssetId: Guid;
 	mediaCommand: MediaCommand;
 	options: SetMediaStateOptions;
 

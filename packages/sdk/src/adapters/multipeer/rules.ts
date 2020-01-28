@@ -1077,7 +1077,7 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 					}
 
 					// Look up asset duration from cached assets
-					const asset = session.assetSet[message.payload.mediaAssetId];
+					const asset = session.assetSet.get(message.payload.mediaAssetId);
 
 					if (activeMediaInstance.message.payload.options.looping === true ||
 						activeMediaInstance.message.payload.options.paused === true ||
