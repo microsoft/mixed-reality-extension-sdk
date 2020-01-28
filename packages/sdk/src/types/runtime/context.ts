@@ -44,15 +44,12 @@ export class Context {
 
 	public get sessionId() { return this._sessionId; }
 	public get conn() { return this._conn; }
-	public get actors() { return Object.keys(this.internal.actorSet).map(actorId => this.internal.actorSet[actorId]); }
-	public get rootActors() {
-		return Object.keys(this.internal.actorSet)
-			.filter(actorId => !this.internal.actorSet[actorId].parent).map(actorId => this.internal.actorSet[actorId]);
-	}
+	public get actors() { return [...this.internal.actorSet.values()]; }
+	public get rootActors() { return this.actors.filter(a => !a.parent); }
 	public get users() { return Object.keys(this.internal.userSet).map(userId => this.internal.userSet[userId]); }
 	public get rpcChannels() { return this._rpcChannels; }
 	public get rpc() { return this._rpc; }
-	public actor = (actorId: Guid): Actor => this.internal.actorSet[actorId];
+	public actor = (actorId: Guid): Actor => this.internal.actorSet.get(actorId);
 	public user = (userId: string): User => this.internal.userSet[userId];
 
 	/**

@@ -3,13 +3,14 @@
  * Licensed under the MIT License.
  */
 
+import { Guid } from '../../..';
 import { TriggerEventType } from "./collisionEventType";
 
 /**
  * A trigger event that has occured between physics objects.
  */
 export interface TriggerEvent {
-	colliderOwnerId: string;
+	colliderOwnerId: Guid;
 	eventType: TriggerEventType;
-	otherColliderOwnerId: string;
+	otherColliderOwnerId: Guid;
 }

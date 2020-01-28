@@ -23,7 +23,7 @@ type AnimationCreationMessage = Message<Payloads.CreateAnimation | Payloads.Crea
  */
 export class Session extends EventEmitter {
 	private _clientSet: { [id: string]: Client } = {};
-	private _actorSet: { [id: string]: Partial<SyncActor> } = {};
+	private _actorSet = new Map<Guid, Partial<SyncActor>>();
 	private _assetSet: { [id: string]: Partial<SyncAsset> } = {};
 	private _assetCreatorSet: { [id: string]: AssetCreationMessage } = {};
 	/** Maps animation IDs to animation sync structs */
@@ -57,18 +57,18 @@ export class Session extends EventEmitter {
 
 	public get rootActors() {
 		return Object.values(this._actorSet)
-			.filter(actor => !this._actorSet[actor.actorId].initialization.message.payload.actor.parentId);
+			.filter(actor => !this._actorSet.get(actor.actorId).initialization.message.payload.actor.parentId);
 	}
 	public get authoritativeClient() { return this.clients.find(client => client.authoritative); }
 	public get peerAuthoritative() { return this._peerAuthoritative; }
 
 	public client = (clientId: string) => this._clientSet[clientId];
-	public actor = (actorId: string) => this._actorSet[actorId];
+	public actor = (actorId: Guid) => this._actorSet.get(actorId);
 	public user = (userId: string) => this._userSet[userId];
 	public childrenOf = (parentId: string) => {
 		return this.actors.filter(actor => actor.initialization.message.payload.actor.parentId === parentId);
 	};
-	public creatableChildrenOf = (parentId: string) => {
+	public creatableChildrenOf = (parentId: Guid) => {
 		return this.actors.filter(actor =>
 			actor.initialization.message.payload.actor.parentId === parentId
 			&& !!actor.initialization.message.payload.type);
@@ -266,7 +266,7 @@ export class Session extends EventEmitter {
 			syncActor.initialization.message &&
 			syncActor.initialization.message.payload &&
 			syncActor.initialization.message.payload.actor) {
-			const parent = this._actorSet[syncActor.initialization.message.payload.actor.parentId];
+			const parent = this._actorSet.get(syncActor.initialization.message.payload.actor.parentId);
 			if (parent) {
 				return this.isAnimating(parent);
 			}
@@ -275,15 +275,16 @@ export class Session extends EventEmitter {
 	}
 
 	public cacheInitializeActorMessage(message: InitializeActorMessage) {
-		let syncActor = this.actorSet[message.payload.actor.id];
+		let syncActor = this.actorSet.get(message.payload.actor.id);
 		if (!syncActor) {
-			const parent = this.actorSet[message.payload.actor.parentId];
-			syncActor = this.actorSet[message.payload.actor.id] = {
+			const parent = this.actorSet.get(message.payload.actor.parentId);
+			syncActor = {
 				actorId: message.payload.actor.id,
 				exclusiveToUser: parent && parent.exclusiveToUser
 					|| message.payload.actor.exclusiveToUser,
 				initialization: deepmerge({ message }, {})
 			};
+			this.actorSet.set(message.payload.actor.id, syncActor);
 		// update reserved actor init message with something the client can use
 		} else if (syncActor.initialization.message.payload.type === 'x-reserve-actor') {
 			// send real init message, but with session's initial actor state
@@ -297,7 +298,7 @@ export class Session extends EventEmitter {
 	}
 
 	public cacheActorUpdateMessage(message: Message<Payloads.ActorUpdate>) {
-		const syncActor = this.actorSet[message.payload.actor.id];
+		const syncActor = this.actorSet.get(message.payload.actor.id);
 		if (syncActor) {
 			// Merge the update into the existing actor.
 			syncActor.initialization.message.payload.actor
@@ -340,8 +341,7 @@ export class Session extends EventEmitter {
 		}
 
 		// update end times on playing media instances with the now-known duration
-		for (const actorId of Object.keys(this.actorSet)) {
-			const syncActor = this.actorSet[actorId];
+		for (const syncActor of this.actorSet.values()) {
 			for (const activeMediaInstance of (syncActor.activeMediaInstances || [])) {
 				if (activeMediaInstance.message.payload.mediaAssetId !== assetId ||
 					activeMediaInstance.message.payload.options.looping === true ||

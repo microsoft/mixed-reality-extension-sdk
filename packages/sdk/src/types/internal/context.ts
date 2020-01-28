@@ -6,7 +6,6 @@ import {
 	ActionEvent,
 	Actor,
 	ActorLike,
-	ActorSet,
 	Animation,
 	AnimationLike,
 	AnimationWrapMode,
@@ -50,7 +49,7 @@ import { MediaInstance } from '../runtime/mediaInstance';
  * @hidden
  */
 export class InternalContext {
-	public actorSet: ActorSet = {};
+	public actorSet = new Map<Guid, Actor>();
 	public userSet: UserSet = {};
 	public userGroupMapping: { [id: string]: number } = { default: 1 };
 	public assetContainers = new Set<AssetContainer>();
@@ -141,7 +140,7 @@ export class InternalContext {
 					}
 
 					for (const createdActorLike of replyPayload.actors) {
-						const createdActor = this.actorSet[createdActorLike.id];
+						const createdActor = this.actorSet.get(createdActorLike.id);
 						if (createdActor) {
 							createdActor.internal.notifyCreated(success, replyPayload.result.message);
 						}
@@ -210,8 +209,8 @@ export class InternalContext {
 		return actor;
 	}
 
-	public createAnimation(actorId: string, animationName: string, options: CreateAnimationOptions) {
-		const actor = this.actorSet[actorId];
+	public createAnimation(actorId: Guid, animationName: string, options: CreateAnimationOptions) {
+		const actor = this.actorSet.get(actorId);
 		if (!actor) {
 			log.error('app', `Failed to create animation on ${animationName}. Actor ${actorId} not found.`);
 		}
@@ -264,11 +263,11 @@ export class InternalContext {
 	}
 
 	public setAnimationState(
-		actorId: string,
+		actorId: Guid,
 		animationName: string,
 		state: SetAnimationStateOptions
 	) {
-		const actor = this.actorSet[actorId];
+		const actor = this.actorSet.get(actorId);
 		if (!actor) {
 			log.error('app', `Failed to set animation state on "${animationName}". Actor "${actorId}" not found.`);
 			return;
@@ -307,12 +306,12 @@ export class InternalContext {
 	}
 
 	public animateTo(
-		actorId: string,
+		actorId: Guid,
 		value: Partial<ActorLike>,
 		duration: number,
 		curve: number[],
 	) {
-		const actor = this.actorSet[actorId];
+		const actor = this.actorSet.get(actorId);
 		if (!actor) {
 			log.error('app', `Failed animateTo. Actor ${actorId} not found.`);
 		} else if (!Array.isArray(curve) || curve.length !== 4) {
@@ -451,7 +450,7 @@ export class InternalContext {
 		});
 	}
 
-	public sendDestroyActors(actorIds: string[]) {
+	public sendDestroyActors(actorIds: Guid[]) {
 		if (actorIds.length) {
 			this.protocol.sendPayload({
 				type: 'destroy-actors',
@@ -467,19 +466,19 @@ export class InternalContext {
 		if (!Array.isArray(sactors)) {
 			sactors = [sactors];
 		}
-		const newActorIds: string[] = [];
+		const newActorIds: Guid[] = [];
 		// Instantiate and store each actor.
 		sactors.forEach(sactor => {
-			const isNewActor = !this.actorSet[sactor.id];
-			const actor = isNewActor ? Actor.alloc(this.context, sactor.id) : this.actorSet[sactor.id];
-			this.actorSet[sactor.id] = actor;
+			const isNewActor = !this.actorSet.get(sactor.id);
+			const actor = isNewActor ? Actor.alloc(this.context, sactor.id) : this.actorSet.get(sactor.id);
+			this.actorSet.set(sactor.id, actor);
 			actor.copy(sactor);
 			if (isNewActor) {
 				newActorIds.push(actor.id);
 			}
 		});
 		newActorIds.forEach(actorId => {
-			const actor = this.actorSet[actorId];
+			const actor = this.actorSet.get(actorId);
 			this.context.emitter.emit('actor-created', actor);
 		});
 	}
@@ -541,7 +540,7 @@ export class InternalContext {
 
 	public performAction(actionEvent: ActionEvent) {
 		if (actionEvent.user) {
-			const targetActor = this.actorSet[actionEvent.targetId];
+			const targetActor = this.actorSet.get(actionEvent.targetId);
 			if (targetActor) {
 				targetActor.internal.performAction(actionEvent);
 			}
@@ -549,8 +548,8 @@ export class InternalContext {
 	}
 
 	public collisionEventRaised(collisionEvent: CollisionEvent) {
-		const actor = this.actorSet[collisionEvent.colliderOwnerId];
-		const otherActor = this.actorSet[(collisionEvent.collisionData.otherActorId)];
+		const actor = this.actorSet.get(collisionEvent.colliderOwnerId);
+		const otherActor = this.actorSet.get((collisionEvent.collisionData.otherActorId));
 		if (actor && otherActor) {
 			// Update the collision data to contain the actual other actor.
 			collisionEvent.collisionData = {
@@ -565,8 +564,8 @@ export class InternalContext {
 	}
 
 	public triggerEventRaised(triggerEvent: TriggerEvent) {
-		const actor = this.actorSet[triggerEvent.colliderOwnerId];
-		const otherActor = this.actorSet[triggerEvent.otherColliderOwnerId];
+		const actor = this.actorSet.get(triggerEvent.colliderOwnerId);
+		const otherActor = this.actorSet.get(triggerEvent.otherColliderOwnerId);
 		if (actor && otherActor) {
 			actor.internal.triggerEventRaised(
 				triggerEvent.eventType,
@@ -581,10 +580,10 @@ export class InternalContext {
 		}
 	}
 
-	public localDestroyActors(actorIds: string[]) {
+	public localDestroyActors(actorIds: Guid[]) {
 		for (const actorId of actorIds) {
-			if (this.actorSet[actorId]) {
-				this.localDestroyActor(this.actorSet[actorId]);
+			if (this.actorSet.has(actorId)) {
+				this.localDestroyActor(this.actorSet.get(actorId));
 			}
 		}
 	}
@@ -595,13 +594,13 @@ export class InternalContext {
 			this.localDestroyActor(child);
 		});
 		// Remove actor from _actors
-		delete this.actorSet[actor.id];
+		this.actorSet.delete(actor.id);
 		// Raise event
 		this.context.emitter.emit('actor-destroyed', actor);
 	}
 
 	public destroyActor(actorId: Guid) {
-		const actor = this.actorSet[actorId];
+		const actor = this.actorSet.get(actorId);
 		if (actor) {
 			// Tell engine to destroy the actor (will destroy all children too)
 			this.sendDestroyActors([actorId]);
@@ -618,8 +617,8 @@ export class InternalContext {
 		} as Payloads.RigidBodyCommands);
 	}
 
-	public setBehavior(actorId: string, newBehaviorType: BehaviorType) {
-		const actor = this.actorSet[actorId];
+	public setBehavior(actorId: Guid, newBehaviorType: BehaviorType) {
+		const actor = this.actorSet.get(actorId);
 		if (actor) {
 			this.protocol.sendPayload({
 				type: 'set-behavior',

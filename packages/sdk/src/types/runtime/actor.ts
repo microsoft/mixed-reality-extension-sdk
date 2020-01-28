@@ -42,6 +42,7 @@ import {
 	SetVideoStateOptions,
 	Vector3Like,
 	ZeroGuid,
+	ZeroGuidString,
 } from '../..';
 
 import { log } from '../../log';
@@ -80,13 +81,6 @@ export interface ActorLike {
 	attachment: Partial<AttachmentLike>;
 	lookAt: Partial<LookAtLike>;
 	grabbable: boolean;
-}
-
-/**
- * @hidden
- */
-export interface ActorSet {
-	[id: string]: Actor;
 }
 
 /**
@@ -562,7 +556,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	 * If attached to a user, detach from it.
 	 */
 	public detach() {
-		this._attachment.userId = ZeroGuid;
+		this._attachment.userId = ZeroGuidString;
 		this._attachment.attachPoint = 'none';
 	}
 

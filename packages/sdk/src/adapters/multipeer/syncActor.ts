@@ -3,7 +3,7 @@
  * Licensed under the MIT License.
  */
 
-import { BehaviorType, Message } from '../..';
+import { BehaviorType, Guid, Message } from '../..';
 import * as Payloads from '../../types/network/payloads';
 
 /** @hidden */
@@ -37,7 +37,7 @@ export type ActiveMediaInstance = {
  * @hidden
  */
 export type SyncActor = {
-	actorId: string;
+	actorId: Guid;
 	initialization: InitializeActor;
 	createdAnimations: CreateAnimation[];
 	activeMediaInstances: ActiveMediaInstance[];
