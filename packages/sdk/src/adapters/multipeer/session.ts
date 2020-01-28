@@ -168,7 +168,7 @@ export class Session extends EventEmitter {
 		const newAuthority = this._clientSet.get(clientId);
 		if (!newAuthority) {
 			log.error('network', `[ERROR] setAuthoritativeClient: client ${clientId} does not exist.`);
-			throw new Error(`Client ${clientId} does not exist.`);
+			return;
 		}
 		const oldAuthority = this.authoritativeClient;
 
