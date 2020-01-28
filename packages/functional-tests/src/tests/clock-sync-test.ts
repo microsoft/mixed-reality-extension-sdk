@@ -104,7 +104,7 @@ export default class ClockSyncTest extends Test {
 		return true;
 	}
 
-	public createAnimatableDigit(name: string, digits: string, parentId: string): MRE.Actor {
+	public createAnimatableDigit(name: string, digits: string, parentId: MRE.Guid): MRE.Actor {
 		return MRE.Actor.Create(this.app.context, {
 			actor: {
 				name,
