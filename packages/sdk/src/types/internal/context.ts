@@ -21,7 +21,6 @@ import {
 	Guid,
 	MediaCommand,
 	newGuid,
-	parseGuid,
 	PerformanceStats,
 	SetAnimationStateOptions,
 	SetMediaStateOptions,
@@ -609,7 +608,7 @@ export class InternalContext {
 		}
 	}
 
-	public sendRigidBodyCommand(actorId: string, payload: Payloads.Payload) {
+	public sendRigidBodyCommand(actorId: Guid, payload: Payloads.Payload) {
 		this.protocol.sendPayload({
 			type: 'rigidbody-commands',
 			actorId,

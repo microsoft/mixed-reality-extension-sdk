@@ -5,14 +5,18 @@
 
 import { OperationResultCode, Trace } from '..';
 import {
+	ActionState,
+	ActorLike,
 	AnimationLike,
+	BehaviorType,
 	CreateAnimationOptions,
+	Guid,
 	MediaCommand,
 	SetAnimationStateOptions,
-	SetMediaStateOptions
+	SetMediaStateOptions,
+	TransformLike,
+	UserLike,
 } from '../../..';
-import { ActorLike, TransformLike, UserLike } from '../../runtime';
-import { ActionState, BehaviorType } from '../../runtime/behaviors';
 import { OperatingModel } from '../operatingModel';
 import { AssetPayloadType } from './assets';
 import { SyncPayloadType } from './sync';
@@ -227,7 +231,7 @@ export type AnimationUpdate = Payload & {
  */
 export type ActorCorrection = Payload & {
 	type: 'actor-correction';
-	actorId: string;
+	actorId: Guid;
 	appTransform: TransformLike;
 };
 
@@ -237,7 +241,7 @@ export type ActorCorrection = Payload & {
  */
 export type DestroyActors = Payload & {
 	type: 'destroy-actors';
-	actorIds: string[];
+	actorIds: Guid[];
 };
 
 /**
@@ -301,7 +305,7 @@ export type UserUpdate = Payload & {
 export type PerformAction = Payload & {
 	type: 'perform-action';
 	userId: string;
-	targetId: string;
+	targetId: Guid;
 	behaviorType: BehaviorType;
 	actionName: string;
 	actionState: ActionState;
@@ -314,7 +318,7 @@ export type PerformAction = Payload & {
  */
 export type SetBehavior = Payload & {
 	type: 'set-behavior';
-	actorId: string;
+	actorId: Guid;
 	behaviorType: BehaviorType;
 };
 
@@ -324,7 +328,7 @@ export type SetBehavior = Payload & {
  */
 export type CreateAnimation = Payload & CreateAnimationOptions & {
 	type: 'create-animation';
-	actorId: string;
+	actorId: Guid;
 	animationId?: string;
 	animationName: string;
 };
@@ -336,7 +340,7 @@ export type CreateAnimation = Payload & CreateAnimationOptions & {
  */
 export type SetAnimationState = Payload & {
 	type: 'set-animation-state';
-	actorId: string;
+	actorId: Guid;
 	animationName: string;
 	state: SetAnimationStateOptions;
 };
@@ -358,7 +362,7 @@ export type SyncAnimations = Payload & {
 export type SetMediaState = Payload & {
 	type: 'set-media-state';
 	id: string;
-	actorId: string;
+	actorId: Guid;
 	mediaAssetId: string;
 	mediaCommand: MediaCommand;
 	options: SetMediaStateOptions;
@@ -371,7 +375,7 @@ export type SetMediaState = Payload & {
  */
 export type InterpolateActor = Payload & {
 	type: 'interpolate-actor';
-	actorId: string;
+	actorId: Guid;
 	animationName: string;
 	value: Partial<ActorLike>;
 	duration: number;

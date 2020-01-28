@@ -4,8 +4,7 @@
  */
 
 import { CreateActorCommon, Payload } from '.';
-import { ColliderType, CollisionLayer } from '../../runtime';
-import { AssetLike, AssetSource } from '../../runtime/assets';
+import { AssetLike, AssetSource, ColliderType, CollisionLayer } from '../../..';
 
 export type CreateColliderType = ColliderType | 'none';
 
