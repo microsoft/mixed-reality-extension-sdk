@@ -361,12 +361,11 @@ export type SyncAnimations = Payload & {
  */
 export type SetMediaState = Payload & {
 	type: 'set-media-state';
-	id: string;
+	id: Guid;
 	actorId: Guid;
 	mediaAssetId: Guid;
 	mediaCommand: MediaCommand;
 	options: SetMediaStateOptions;
-
 };
 
 /**

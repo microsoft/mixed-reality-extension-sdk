@@ -18,12 +18,12 @@ import { log } from '../../log';
  */
 export class MediaInstance {
 
-	public id: string;
+	public id: Guid;
 	public actor: Actor;
 	private mediaAssetId: Guid;
 
 	constructor(actor: Actor, mediaAssetId: Guid) {
-		this.id = newGuid().toString();
+		this.id = newGuid();
 		this.actor = actor;
 		this.mediaAssetId = mediaAssetId;
 	}
