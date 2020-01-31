@@ -226,8 +226,10 @@ export class ClientSync extends Protocols.Protocol {
 			}
 		}
 
+		return Promise.resolve();
+
 		// sync legacy animations
-		const authoritativeClient = this.client.session.authoritativeClient;
+		/*const authoritativeClient = this.client.session.authoritativeClient;
 		if (!authoritativeClient) {
 			return Promise.resolve();
 		}
@@ -252,7 +254,7 @@ export class ClientSync extends Protocols.Protocol {
 					resolve();
 				}, reject
 			});
-		});
+		});*/
 	};
 
 	private createActorRecursive(actor: Partial<SyncActor>) {
