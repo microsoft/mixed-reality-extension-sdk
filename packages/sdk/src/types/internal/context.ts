@@ -393,9 +393,9 @@ export class InternalContext {
 		this.prevGeneration = this.generation;
 
 		const syncObjects = [
-			...Object.values(this.actorSet),
+			...this.actorSet.values(),
 			...this.assetsIterable(),
-			...Object.values(this.userSet),
+			...this.userSet.values(),
 			...this.animationSet.values()
 		] as Array<Patchable<any>>;
 
