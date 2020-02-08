@@ -40,7 +40,7 @@ export class AssetContainer {
 	/** A mapping of asset IDs to assets in this container */
 	public get assetsById() { return this._assets as ReadonlyMap<Guid, Asset>; }
 	/** A list of all assets in this container */
-	public get assets() { return Object.values(this._assets); }
+	public get assets() { return [...this._assets.values()]; }
 	/** A list of all materials in this container */
 	public get materials() { return this.assets.filter(a => a instanceof Material) as Material[]; }
 	/** A list of all meshes in this container */
