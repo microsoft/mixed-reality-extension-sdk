@@ -22,8 +22,7 @@ export default class GltfGenTest extends Test {
 	public async run(root: MRE.Actor): Promise<boolean> {
 		this.assets = new MRE.AssetContainer(this.app.context);
 
-		const spherePrim = new GltfGen.Sphere(0.5);
-		spherePrim.material = new GltfGen.Material({
+		const mat = new GltfGen.Material({
 			baseColorFactor: new MRE.Color4(1, 1, 1, 0.7),
 			baseColorTexture: new GltfGen.Texture({
 				source: new GltfGen.Image({
@@ -33,16 +32,25 @@ export default class GltfGenTest extends Test {
 			}),
 			alphaMode: GltfGen.AlphaMode.Blend
 		});
+
+		const sphere = new GltfGen.Node({
+			name: 'sphere',
+			mesh: new GltfGen.Mesh({ name: 'sphere', primitives: [new GltfGen.Sphere(0.5, 36, 18, mat)] }),
+			translation: new MRE.Vector3(0.8, 0, 0)
+		});
+
+		const box = new GltfGen.Node({
+			name: 'box',
+			mesh: new GltfGen.Mesh({ name: 'box', primitives: [new GltfGen.Box(1, 1, 1, mat)] }),
+			translation: new MRE.Vector3(-0.8, 0, 0)
+		});
+
 		const gltfFactory = new GltfGen.GltfFactory([new GltfGen.Scene({
-			nodes: [new GltfGen.Node({
-				mesh: new GltfGen.Mesh({
-					primitives: [spherePrim]
-				})
-			})]
+			nodes: [sphere, box]
 		})]);
 
 		MRE.Actor.CreateFromGltf(this.assets, {
-			uri: Server.registerStaticBuffer('sphere.glb', gltfFactory.generateGLTF()),
+			uri: Server.registerStaticBuffer('test.glb', gltfFactory.generateGLTF()),
 			actor: {
 				parentId: root.id,
 				transform: {
