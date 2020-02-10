@@ -19,8 +19,9 @@ export class Capsule extends MeshPrimitive {
 	 * @param capUvFraction The amount of texture space the end caps should occupy.
 	 * @param material An initial material to apply to the capsule.
 	 */
-	public constructor(radius: number, height: number, longLines = 12, latLines = 8, capUvFraction = 0.2, material: Material)
-	{
+	public constructor(
+		radius: number, height: number,	longLines = 12, latLines = 8, capUvFraction = 0.2, material: Material = null
+	) {
 		super({ material });
 		height = Math.max(height, radius * 2);
 
@@ -43,12 +44,10 @@ export class Capsule extends MeshPrimitive {
 		);
 
 		// start striping longitude lines, starting at +X
-		for (let s = 0; s <= longLines; s++)
-		{
+		for (let s = 0; s <= longLines; s++) {
 			// create end caps, starting at the ring one out from the pole
-			for (let r = 1; r <= latLines; r++)
-			{
-				let radial = radius * Math.sin(r*phi);
+			for (let r = 1; r <= latLines; r++) {
+				const radial = radius * Math.sin(r*phi);
 
 				// create verts
 				this.vertices.push(
@@ -77,40 +76,36 @@ export class Capsule extends MeshPrimitive {
 				);
 
 				// find the vertex indices of the four corners of the quad completed by the latest vertex
-				const top_s1r1 = this.vertices.length - 2, top_s1r0 = this.vertices.length - 4;
-				const bot_s1r1 = this.vertices.length - 1, bot_s1r0 = this.vertices.length - 3;
-				let top_s0r1 = top_s1r1 - 2 * latLines, top_s0r0 = top_s1r0 - 2 * latLines;
-				let bot_s0r1 = bot_s1r1 - 2 * latLines, bot_s0r0 = bot_s1r0 - 2 * latLines;
+				const topS1R1 = this.vertices.length - 2, topS1R0 = this.vertices.length - 4;
+				const botS1R1 = this.vertices.length - 1, botS1R0 = this.vertices.length - 3;
+				const topS0R1 = topS1R1 - 2 * latLines, topS0R0 = topS1R0 - 2 * latLines;
+				const botS0R1 = botS1R1 - 2 * latLines, botS0R0 = botS1R0 - 2 * latLines;
 
 				// create faces
-				if(s > 0 && r === 1)
-				{
+				if(s > 0 && r === 1) {
 					this.triangles.push(
-						topCap, top_s1r1, top_s0r1,
-						botCap, bot_s0r1, bot_s1r1
+						topCap, topS1R1, topS0R1,
+						botCap, botS0R1, botS1R1
 					);
-				}
-				else if (s > 0)
-				{
+				} else if (s > 0) {
 					this.triangles.push(
-						top_s1r0, top_s1r1, top_s0r0,
-						top_s0r0, top_s1r1, top_s0r1,
-						bot_s0r1, bot_s1r1, bot_s0r0,
-						bot_s0r0, bot_s1r1, bot_s1r0
+						topS1R0, topS1R1, topS0R0,
+						topS0R0, topS1R1, topS0R1,
+						botS0R1, botS1R1, botS0R0,
+						botS0R0, botS1R1, botS1R0
 					);
 				}
 			}
 
 			// create long sides
-			let top_s1 = this.vertices.length - 2, top_s0 = top_s1 - 2 * latLines;
-			let bot_s1 = this.vertices.length - 1, bot_s0 = bot_s1 - 2 * latLines;
+			const topS1 = this.vertices.length - 2, topS0 = topS1 - 2 * latLines;
+			const botS1 = this.vertices.length - 1, botS0 = botS1 - 2 * latLines;
 			if (s > 0) {
 				this.triangles.push(
-					top_s0, top_s1, bot_s1,
-					bot_s0, top_s0, bot_s1
+					topS0, topS1, botS1,
+					botS0, topS0, botS1
 				);
 			}
-
 		}
 	}
-};
+}

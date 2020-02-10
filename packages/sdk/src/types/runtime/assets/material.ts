@@ -3,7 +3,7 @@
  * Licensed under the MIT License.
  */
 
-import { Asset, AssetContainer, AssetLike, Texture } from '.';
+import { Asset, AssetContainer, AssetLike } from '.';
 import { Actor, Guid, ZeroGuid } from '../../..';
 import { Color3, Color4, Color4Like, Vector2, Vector2Like } from '../../../math';
 import { observe } from '../../../utils/observe';
