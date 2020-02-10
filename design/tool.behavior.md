@@ -24,20 +24,6 @@ export class ToolBehavior extends TargetBehavior {
 	public get using() { return this._using; }
 
 	/**
-	 * Add a callback to the tool behavior to receive path updates for while the tool is being used
-	 */
-	public onUsingPathReceived((path: Transform[]) => void) {
-		// Path callback registration.
-	}
-
-	/**
-	 * Remove a callback to the tool behavior to receive path updates for while the tool is being used
-	 */
-	public offUsingPathReceived((path: Transform[]) => void) {
-		// Path callback de-registration.
-	}
-
-	/**
 	 * Add a holding handler to be called when the given hover state is triggered.
 	 * @param holdingState The holding state to fire the handler on.
 	 * @param handler The handler to call when the holding state is triggered.

@@ -17,10 +17,16 @@ before sending it to all the clients to render. and a mesh to apply to this spli
  * Pen behavior class containing the target behavior actions.
  */
 export class PenBehavior extends ToolBehavior {
-	public drawpointLocalOffset: ScaledTransform;
-
 	/** @inheritdoc */
 	public get behaviorType(): BehaviorType { return 'pen'; }
+
+	public onDrawEventReceived((drawData: Partial<DrawDataLike>[]) => void) {
+		// Register for draw events.
+	}
+
+	public offDrawEventReceived((drawData: Partial<DrawDataLike>[]) => void) {
+		// Unregister for draw events.
+	}
 ```
 
 ## Network
@@ -28,8 +34,20 @@ export class PenBehavior extends ToolBehavior {
 The network messages for this behavior will use the standard behavior payloads for actions started and stopped.  The two actions supported 
 by the Pen behavior are hold (begin/end) and drawing (begin/end).
 
-In addition to the standard `PerformAction` payload, there will need to be a second message that is used for sending transform recordings
-up to the MRE app on a set frequeny cadence.  This payload may look something like this:
+In addition to the standard `PerformAction` payload, there will need to be a second message that is used for sending draw event data up to 
+the MRE app on a set frequeny cadence.  This payload may look something like this:
+
+``` ts
+/**
+ * @hidden
+ * Engine to app. Send draw data from a draw event on the client up to the app.
+ */
+export type DrawEventUpdate = Payload & {
+	type: 'draw-event-update';
+	penActorId: Guid;
+	drawData: Partial<DrawDataLike>[];
+};
+```
 
 ## Sync layer considerations
 
@@ -62,18 +80,12 @@ this.penModel = MRE.Actor.CreateFromGltf(this.assets, {
     }
 });
 
-const penBehavior = new PenBehavior();
-penBehavior.drawpointLocalOffset = {
-	local: {
-		position: { x: 0, y: 0, z: 1}
-	}
-} as ScaledTransform;
+const penBehavior = Actor.SetBehavior<PenBehavior>();
 
-penBehavior.onUsingPathReceived((path) => {
+penBehavior.onDrawEventReceived((drawData) => {
 	// Hypothetical spline generator tool in node.
+	const path = drawData.map(dd => dd.transform);
 	const spline = SplineGenerator.generateSpline(path);
 	// Generate a mesh from the spline and use it to create a new actor at the point of origin of the draw.
 });
-
-this.penModel.setBehavior(penBehavior);
 ```
