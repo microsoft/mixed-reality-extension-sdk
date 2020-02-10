@@ -3,7 +3,7 @@
  * Licensed under the MIT License.
  */
 
-import { Actor, GroupMask, Mesh } from '.';
+import { Actor, GroupMask } from '.';
 import { Guid, ZeroGuid } from '../..';
 
 export interface AppearanceLike {

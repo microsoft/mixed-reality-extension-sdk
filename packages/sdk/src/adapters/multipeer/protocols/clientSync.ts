@@ -4,7 +4,7 @@
  */
 
 import { Client, ClientDesyncPreprocessor, MissingRule, Rules, SyncActor } from '..';
-import { Guid, Message, newGuid } from '../../..';
+import { Message, newGuid } from '../../..';
 import { log } from '../../../log';
 import * as Protocols from '../../../protocols';
 import * as Payloads from '../../../types/network/payloads';

@@ -16,6 +16,7 @@ export class Sphere extends MeshPrimitive {
 	 * @param radius The radius of the generated sphere
 	 * @param longLines The number of polar vertex rings
 	 * @param latLines The number of equatorial vertex rings (not counting poles)
+	 * @param material An initial material to apply to the sphere
 	 */
 	public constructor(radius: number, longLines = 12, latLines = 8, material: Material = null) {
 		super({material});
