@@ -67,7 +67,7 @@ export class Material extends Asset implements MaterialLike, Patchable<AssetLike
 
 	/** @returns A shared reference to this material's texture asset */
 	public get mainTexture() {
-		return this.container.context.internal.lookupAsset(this._mainTextureId).texture;
+		return this.container.context.internal.lookupAsset(this._mainTextureId)?.texture;
 	}
 	public set mainTexture(value) {
 		this.mainTextureId = value?.id ?? ZeroGuid;

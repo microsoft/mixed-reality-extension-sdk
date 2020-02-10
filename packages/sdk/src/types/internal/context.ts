@@ -393,9 +393,9 @@ export class InternalContext {
 		this.prevGeneration = this.generation;
 
 		const syncObjects = [
-			...Object.values(this.actorSet),
+			...this.actorSet.values(),
 			...this.assetsIterable(),
-			...Object.values(this.userSet),
+			...this.userSet.values(),
 			...this.animationSet.values()
 		] as Array<Patchable<any>>;
 
@@ -641,7 +641,7 @@ export class InternalContext {
 	public getStats(): PerformanceStats {
 		const networkStats = this.protocol.conn.statsReport;
 		const stats: PerformanceStats = {
-			actorCount: Object.keys(this.actorSet).length,
+			actorCount: this.actorSet.size,
 			actorWithMeshCount: 0,
 			prefabCount: 0,
 			materialCount: 0,
@@ -676,7 +676,7 @@ export class InternalContext {
 		}
 		stats.texturePixelsAverage = stats.texturePixelsTotal / (stats.textureCount || 1);
 
-		for (const actor of Object.values(this.actorSet)) {
+		for (const actor of this.actorSet.values()) {
 			if (actor.appearance.activeAndEnabled && actor.appearance.mesh) {
 				stats.actorWithMeshCount += 1;
 			}

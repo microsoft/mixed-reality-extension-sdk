@@ -736,7 +736,7 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 						undefined;
 				if (client.authoritative || client.userId && client.userId === exclusiveUser) {
 					// Create no-op creation message. Implicit sync from initialization until they're updated
-					for (const spawned of message.payload.actors) {
+					for (const spawned of message.payload.actors || []) {
 						session.cacheInitializeActorMessage({
 							payload: {
 								type: 'actor-update',
@@ -745,7 +745,7 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 						});
 					}
 					// create somewhere to store anim updates
-					for (const newAnim of message.payload.animations) {
+					for (const newAnim of message.payload.animations || []) {
 						session.cacheAnimationCreation(newAnim.id, message.replyToId, newAnim.duration);
 					}
 					// Allow the message to propagate to the app.

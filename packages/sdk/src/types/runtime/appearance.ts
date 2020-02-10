@@ -128,7 +128,7 @@ export class Appearance implements AppearanceLike {
 
 	/** @returns A shared reference to this actor's mesh, or null if this actor has no mesh */
 	public get mesh() {
-		return this.actor.context.internal.lookupAsset(this._meshId).mesh;
+		return this.actor.context.internal.lookupAsset(this._meshId)?.mesh;
 	}
 	public set mesh(value) {
 		this.meshId = value?.id ?? ZeroGuid;
