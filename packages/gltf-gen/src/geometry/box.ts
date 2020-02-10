@@ -10,6 +10,13 @@ import { Vector2, Vector3 } from '@microsoft/mixed-reality-extension-sdk';
  * A MeshPrimitive prepopulated with box vertices and triangles
  */
 export class Box extends MeshPrimitive {
+	/**
+	 * Build a box geometry
+	 * @param width The size of the box along the X axis
+	 * @param height The size of the box along the Y axis
+	 * @param depth The size of the box along the Z axis
+	 * @param material An initial material to apply to the box
+	 */
 	public constructor(width: number, height: number, depth: number, material: Material = null) {
 		super({material});
 

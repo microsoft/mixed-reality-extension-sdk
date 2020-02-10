@@ -36,17 +36,23 @@ export default class GltfGenTest extends Test {
 		const sphere = new GltfGen.Node({
 			name: 'sphere',
 			mesh: new GltfGen.Mesh({ name: 'sphere', primitives: [new GltfGen.Sphere(0.5, 36, 18, mat)] }),
-			translation: new MRE.Vector3(0.8, 0, 0)
+			translation: new MRE.Vector3(1, 0, 0)
 		});
 
 		const box = new GltfGen.Node({
 			name: 'box',
-			mesh: new GltfGen.Mesh({ name: 'box', primitives: [new GltfGen.Box(1, 1, 1, mat)] }),
-			translation: new MRE.Vector3(-0.8, 0, 0)
+			mesh: new GltfGen.Mesh({ name: 'box', primitives: [new GltfGen.Box(0.9, 0.9, 0.9, mat)] }),
+			translation: new MRE.Vector3(0, 0, 0)
+		});
+
+		const capsule = new GltfGen.Node({
+			name: 'capsule',
+			mesh: new GltfGen.Mesh({ name: 'capsule', primitives: [new GltfGen.Capsule(0.3, 1, 36, 18, 0.35, mat)] }),
+			translation: new MRE.Vector3(-1, 0, 0)
 		});
 
 		const gltfFactory = new GltfGen.GltfFactory([new GltfGen.Scene({
-			nodes: [sphere, box]
+			nodes: [sphere, box, capsule]
 		})]);
 
 		MRE.Actor.CreateFromGltf(this.assets, {
