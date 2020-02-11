@@ -9,7 +9,7 @@ import validateJsonFieldName from "./validateJsonFieldName";
  * @hidden
  * Reads the value at the path in the src object and writes it to the dst object.
  */
-export default function readPath(src: any, dst: any, ...path: string[]) {
+export function readPath(src: any, dst: any, ...path: string[]) {
 	let field;
 	while (path.length) {
 		field = path.shift();

@@ -3,8 +3,7 @@
  * Licensed under the MIT License.
  */
 
-import { ColliderType } from '.';
-import { Vector3Like } from "../../..";
+import { ColliderType, Vector3Like } from "../..";
 
 /**
  * Collider parameters specific to a sphere collider.

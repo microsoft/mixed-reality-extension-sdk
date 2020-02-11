@@ -3,7 +3,7 @@
  * Licensed under the MIT License.
  */
 
-export default function safeAccessPath(obj: any, ...path: any[]): any {
+export function safeAccessPath(obj: any, ...path: any[]): any {
 	for (const part of path) {
 		if (!obj[part]) {
 			return undefined;

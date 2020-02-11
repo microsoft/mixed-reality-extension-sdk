@@ -5,7 +5,7 @@
 /* eslint-disable max-classes-per-file */
 
 import { Context, Guid } from '..';
-import { AppToEngineRPC, EngineToAppRPC } from '../types/network/payloads';
+import { Payloads } from '../internal';
 
 /**
  * @hidden
@@ -49,7 +49,7 @@ export class RPC {
 			channelName: options.channelName,
 			userId: options.userId,
 			args
-		} as AppToEngineRPC);
+		} as Payloads.AppToEngineRPC);
 	}
 
 	public receive(procName: string, userId: Guid, ...args: any[]) {
@@ -79,7 +79,7 @@ export class RPCChannels {
 		}
 	}
 
-	public receive(payload: EngineToAppRPC) {
+	public receive(payload: Payloads.EngineToAppRPC) {
 		let handler: RPC;
 		if (payload.channelName) {
 			handler = this.channelHandlers.get(payload.channelName);

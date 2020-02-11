@@ -13,10 +13,12 @@ import {
 	DiscreteAction,
 	SetAnimationStateOptions,
 	TriggerEventType
-} from '../..';
-import { ExportedPromise } from '../../utils/exportedPromise';
-import { InternalPatchable } from '../patchable';
-import { InternalCollider } from './collider';
+} from '..';
+import {
+	ExportedPromise,
+	InternalPatchable
+} from '../internal';
+import { InternalCollider } from './physics/colliderInternal';
 
 /**
  * @hidden

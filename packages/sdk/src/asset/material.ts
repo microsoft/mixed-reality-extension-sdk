@@ -3,13 +3,25 @@
  * Licensed under the MIT License.
  */
 
-import { Asset, AssetContainer, AssetLike } from '.';
-import { Actor, Guid, ZeroGuid } from '../../..';
-import { Color3, Color4, Color4Like, Vector2, Vector2Like } from '../../../math';
-import { observe } from '../../../utils/observe';
-import readPath from '../../../utils/readPath';
-import { InternalAsset } from '../../internal/asset';
-import { Patchable } from '../../patchable';
+import {
+	Actor,
+	Asset,
+	AssetContainer,
+	AssetLike,
+	Color3,
+	Color4,
+	Color4Like,
+	Guid,
+	Vector2,
+	Vector2Like,
+	ZeroGuid
+} from '..';
+import {
+	observe,
+	Patchable,
+	readPath
+} from '../internal';
+import { InternalAsset } from './assetInternal';
 
 /**
  * Describes the properties of a Material.

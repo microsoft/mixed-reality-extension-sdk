@@ -3,7 +3,7 @@
  * Licensed under the MIT License.
  */
 
-import { Actor, Guid, Vector3 } from "../../..";
+import { Actor, Guid, Vector3 } from "../..";
 
 /**
  * The collision handler to be called when a collision event occurs.

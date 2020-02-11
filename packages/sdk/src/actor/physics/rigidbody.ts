@@ -3,17 +3,15 @@
  * Licensed under the MIT License.
  */
 
-import { Actor, CollisionDetectionMode } from '.';
-import { QuaternionLike, Vector3, Vector3Like } from '../..';
 import {
-	RigidBodyAddForce,
-	RigidBodyAddForceAtPosition,
-	RigidBodyAddRelativeTorque,
-	RigidBodyAddTorque,
-	RigidBodyMovePosition,
-	RigidBodyMoveRotation,
-} from '../network/payloads';
-import { RigidBodyConstraints } from '../rigidBodyConstraints';
+	Actor,
+	CollisionDetectionMode,
+	QuaternionLike,
+	RigidBodyConstraints,
+	Vector3,
+	Vector3Like
+} from '../..';
+import { Payloads } from '../../internal';
 
 /**
  * Describes the properties of a Rigid Body
@@ -145,7 +143,7 @@ export class RigidBody implements RigidBodyLike {
 			{
 				type: 'rigidbody-move-position',
 				position,
-			} as RigidBodyMovePosition);
+			} as Payloads.RigidBodyMovePosition);
 	}
 
 	/**
@@ -158,7 +156,7 @@ export class RigidBody implements RigidBodyLike {
 			{
 				type: 'rigidbody-move-rotation',
 				rotation,
-			} as RigidBodyMoveRotation);
+			} as Payloads.RigidBodyMoveRotation);
 	}
 
 	/**
@@ -171,7 +169,7 @@ export class RigidBody implements RigidBodyLike {
 			{
 				type: 'rigidbody-add-force',
 				force,
-			} as RigidBodyAddForce);
+			} as Payloads.RigidBodyAddForce);
 	}
 
 	/**
@@ -186,7 +184,7 @@ export class RigidBody implements RigidBodyLike {
 				type: 'rigidbody-add-force-at-position',
 				force,
 				position,
-			} as RigidBodyAddForceAtPosition);
+			} as Payloads.RigidBodyAddForceAtPosition);
 	}
 
 	/**
@@ -199,7 +197,7 @@ export class RigidBody implements RigidBodyLike {
 			{
 				type: 'rigidbody-add-torque',
 				torque,
-			} as RigidBodyAddTorque);
+			} as Payloads.RigidBodyAddTorque);
 	}
 
 	/**
@@ -212,6 +210,6 @@ export class RigidBody implements RigidBodyLike {
 			{
 				type: 'rigidbody-add-relative-torque',
 				relativeTorque,
-			} as RigidBodyAddRelativeTorque);
+			} as Payloads.RigidBodyAddRelativeTorque);
 	}
 }

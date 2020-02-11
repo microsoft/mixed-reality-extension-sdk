@@ -3,8 +3,7 @@
  * Licensed under the MIT License.
  */
 
-import { Guid } from '../../..';
-import { TriggerEventType } from "./collisionEventType";
+import { Guid, TriggerEventType } from '../..';
 
 /**
  * A trigger event that has occured between physics objects.

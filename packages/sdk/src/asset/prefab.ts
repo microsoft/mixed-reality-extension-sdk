@@ -3,10 +3,9 @@
  * Licensed under the MIT License.
  */
 
-import { Asset, AssetContainer, AssetLike } from '.';
-import { Actor } from '..';
-import { InternalAsset } from '../../internal/asset';
-import { Patchable } from '../../patchable';
+import { Actor, Asset, AssetContainer, AssetLike } from '..';
+import { Patchable } from '../internal';
+import { InternalAsset } from './assetInternal';
 
 export interface PrefabLike {
 	/** The number of actors this prefab contains. */

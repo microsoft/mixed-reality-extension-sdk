@@ -5,8 +5,11 @@
 
 import events from 'events';
 import {
+	ActionHandler,
+	ActionState,
 	ActorTransform,
 	ActorTransformLike,
+	Animation,
 	Appearance,
 	AppearanceLike,
 	Asset,
@@ -14,46 +17,46 @@ import {
 	Attachment,
 	AttachmentLike,
 	AttachPoint,
+	Behavior,
 	Collider,
+	ColliderGeometry,
 	ColliderLike,
 	ColliderType,
 	CollisionLayer,
-	Light,
-	LightLike,
-	LookAt,
-	LookAtLike,
-	Prefab,
-	RigidBody,
-	RigidBodyLike,
-	Text,
-	TextLike,
-	User,
-} from '.';
-import {
-	Animation,
 	Context,
 	CreateAnimationOptions,
+	DiscreteAction,
 	Guid,
+	Light,
+	LightLike,
+	log,
+	LookAt,
+	LookAtLike,
 	LookAtMode,
+	MediaInstance,
+	Prefab,
 	PrimitiveDefinition,
 	ReadonlyMap,
+	RigidBody,
+	RigidBodyLike,
 	SetAnimationStateOptions,
 	SetAudioStateOptions,
 	SetVideoStateOptions,
+	Text,
+	TextLike,
+	User,
 	Vector3Like,
 	ZeroGuid,
-} from '../..';
-
-import { log } from '../../log';
-import { observe, unobserve } from '../../utils/observe';
-import readPath from '../../utils/readPath';
-import resolveJsonValues from '../../utils/resolveJsonValues';
-import { InternalActor } from '../internal/actor';
-import { SubscriptionType } from '../network/subscriptionType';
-import { Patchable } from '../patchable';
-import { ActionHandler, ActionState, Behavior, DiscreteAction } from './behaviors';
-import { MediaInstance } from './mediaInstance';
-import { ColliderGeometry } from './physics';
+} from '..';
+import {
+	observe,
+	Patchable,
+	readPath,
+	resolveJsonValues,
+	SubscriptionType,
+	unobserve
+} from '../internal';
+import { InternalActor } from './actorInternal';
 
 /**
  * Describes the properties of an Actor.

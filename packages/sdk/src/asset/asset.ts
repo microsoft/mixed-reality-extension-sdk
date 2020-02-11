@@ -4,7 +4,9 @@
  */
 
 import {
+	Actor,
 	AssetContainer,
+	Guid,
 	Material,
 	MaterialLike,
 	Mesh,
@@ -17,8 +19,7 @@ import {
 	TextureLike,
 	VideoStream,
 	VideoStreamLike
-} from '.';
-import { Actor, Guid } from '../../..';
+} from '..';
 
 /**
  * Instructions for how to load an asset.

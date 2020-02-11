@@ -3,7 +3,7 @@
  * Licensed under the MIT License.
  */
 
-import { Guid, ZeroGuid } from "../..";
+import { Guid, ZeroGuid } from "..";
 
 /**
  * Describes the ways in which an actor can face (point its local +Z axis toward) and track another object in the scene

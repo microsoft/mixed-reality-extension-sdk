@@ -11,7 +11,7 @@ import {
 	CollisionData,
 	CollisionHandler,
 	TriggerHandler
-} from "../runtime";
+} from "../..";
 
 /** @hidden */
 export class InternalCollider {

@@ -3,12 +3,9 @@
  * Licensed under the MIT License.
  */
 
-import { Asset, AssetContainer, AssetLike, Material } from '.';
-import { Actor } from '..';
-import { Vector2, Vector2Like } from '../../../math';
-import readPath from '../../../utils/readPath';
-import { InternalAsset } from '../../internal/asset';
-import { Patchable } from '../../patchable';
+import { Actor, Asset, AssetContainer, AssetLike, Material, Vector2, Vector2Like } from '..';
+import { Patchable, readPath } from '../internal';
+import { InternalAsset } from './assetInternal';
 
 export interface TextureLike {
 	uri: string;

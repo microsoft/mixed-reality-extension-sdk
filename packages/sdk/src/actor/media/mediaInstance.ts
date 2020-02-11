@@ -6,11 +6,11 @@
 import {
 	Actor,
 	Guid,
+	log,
 	MediaCommand,
 	newGuid,
 	SetMediaStateOptions
 } from '../..';
-import { log } from '../../log';
 
 /**
  * A MediaInstance represents an instance managing the playback of a sound or video stream,
@@ -32,6 +32,7 @@ export class MediaInstance {
 	 * @hidden
 	 */
 	public start(options: SetMediaStateOptions): MediaInstance {
+		const mi = this;
 		this.actor.context.internal.lookupAsset(this.mediaAssetId).created.then(() => {
 			this.actor.context.internal.setMediaState(
 				this, MediaCommand.Start, options, this.mediaAssetId);

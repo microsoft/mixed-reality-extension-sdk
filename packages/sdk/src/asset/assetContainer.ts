@@ -5,25 +5,25 @@
 
 import {
 	Asset, AssetSource,
-	Material, MaterialLike,
-	Mesh,
-	Prefab,
-	Sound, SoundLike,
-	Texture, TextureLike,
-	VideoStream, VideoStreamLike
-} from '.';
-import {
 	Context,
 	Guid,
+	log,
+	Material, MaterialLike,
+	Mesh,
 	newGuid,
-	ReadonlyMap,
+	Prefab,
 	PrimitiveDefinition,
 	PrimitiveShape,
-	Vector3Like
-} from '../../..';
-import { log } from '../../../log';
-import resolveJsonValues from '../../../utils/resolveJsonValues';
-import * as Payloads from '../../network/payloads';
+	ReadonlyMap,
+	Sound, SoundLike,
+	Texture, TextureLike,
+	Vector3Like,
+	VideoStream, VideoStreamLike
+} from '..';
+import {
+	Payloads,
+	resolveJsonValues
+} from '../internal';
 
 /**
  * The root object of the MRE SDK's asset system. Once you create an AssetContainer,

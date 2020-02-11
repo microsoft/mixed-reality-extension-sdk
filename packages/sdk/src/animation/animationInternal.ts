@@ -2,8 +2,8 @@
  * Copyright (c) Microsoft Corporation. All rights reserved.
  * Licensed under the MIT License.
  */
-import { Animation, AnimationLike } from '.';
-import { InternalPatchable } from '../types/patchable';
+import { Animation, AnimationLike } from '..';
+import { InternalPatchable } from '../internal';
 
 /** @hidden */
 export class InternalAnimation implements InternalPatchable<AnimationLike> {

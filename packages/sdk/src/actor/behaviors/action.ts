@@ -3,8 +3,7 @@
  * Licensed under the MIT License.
  */
 
-import { ActionState } from '.';
-import { Guid, User } from '../../..';
+import { ActionState, Guid, User } from '../../..';
 
 /**
  * The action handler function type.

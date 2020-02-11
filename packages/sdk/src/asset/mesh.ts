@@ -3,11 +3,17 @@
  * Licensed under the MIT License.
  */
 
-import { Asset, AssetContainer, AssetLike } from '.';
-import { Actor } from '..';
-import { PrimitiveDefinition, Vector3, Vector3Like } from '../../..';
-import { InternalAsset } from '../../internal/asset';
-import { Patchable } from '../../patchable';
+import {
+	Actor,
+	Asset,
+	AssetContainer,
+	AssetLike,
+	PrimitiveDefinition,
+	Vector3,
+	Vector3Like,
+} from '..';
+import { Patchable } from '../internal';
+import { InternalAsset } from './assetInternal';
 
 /** Describes the properties of a mesh */
 export interface MeshLike {

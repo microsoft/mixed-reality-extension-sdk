@@ -5,7 +5,7 @@
 
 /* eslint-disable max-classes-per-file */
 
-import { Asset, AssetContainer } from '.';
+import { Asset, AssetContainer } from '..';
 
 /** @hidden */
 export class AssetContainerIterator implements Iterator<Asset> {

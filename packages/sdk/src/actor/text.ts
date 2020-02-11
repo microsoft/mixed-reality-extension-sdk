@@ -3,7 +3,7 @@
  * Licensed under the MIT License.
  */
 
-import { Color3, Color3Like } from '../..';
+import { Color3, Color3Like } from '..';
 
 export enum TextAnchorLocation {
 	TopLeft = 'top-left',

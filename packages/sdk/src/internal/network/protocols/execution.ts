@@ -29,7 +29,7 @@ import { Sync } from './sync';
  * @hidden
  * Class to handle operational messages with a client.
  */
-export class ExecutionProtocol extends Protocol {
+export class Execution extends Protocol {
 	constructor(private context: Context) {
 		super(context.conn);
 		// Behave like a server-side endpoint (send heartbeats, measure connection quality)

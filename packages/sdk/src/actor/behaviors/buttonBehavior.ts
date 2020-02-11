@@ -3,8 +3,14 @@
  * Licensed under the MIT License.
  */
 
-import { ActionHandler, ActionState, BehaviorType, DiscreteAction, TargetBehavior } from '.';
-import { User } from '..';
+import {
+	ActionHandler,
+	ActionState,
+	BehaviorType,
+	DiscreteAction,
+	TargetBehavior,
+	User
+} from '../..';
 
 /**
  * Button behavior class containing the target behavior actions.

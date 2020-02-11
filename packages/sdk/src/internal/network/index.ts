@@ -6,8 +6,8 @@
 export * from './adapters';
 export * from './connection';
 import * as Payloads from './payloads';
-export { Payloads };
-export * from './protocols';
+import * as Protocols from './protocols';
+export { Payloads, Protocols };
 
 export * from './message';
 export * from './operatingModel';

@@ -3,7 +3,7 @@
  * Licensed under the MIT License.
  */
 
-import { ScaledTransform, ScaledTransformLike, Transform, TransformLike } from "./transform";
+import { ScaledTransform, ScaledTransformLike, Transform, TransformLike } from "..";
 
 export interface ActorTransformLike {
 	app: Partial<TransformLike>;

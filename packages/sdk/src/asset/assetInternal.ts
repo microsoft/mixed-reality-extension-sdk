@@ -3,8 +3,8 @@
  * Licensed under the MIT License.
  */
 
-import { Asset, AssetLike } from '../..';
-import { InternalPatchable } from '../patchable';
+import { Asset, AssetLike } from '..';
+import { InternalPatchable } from '../internal';
 
 /**
  * @hidden

@@ -3,10 +3,16 @@
  * Licensed under the MIT License.
  */
 
-import { Actor, ColliderGeometry } from '.';
-import { InternalCollider } from '../internal/collider';
-import { CollisionHandler, TriggerHandler } from './physics';
-import { ColliderEventType, CollisionEventType, TriggerEventType } from './physics/collisionEventType';
+import {
+	Actor,
+	ColliderEventType,
+	ColliderGeometry,
+	CollisionEventType,
+	CollisionHandler,
+	TriggerEventType,
+	TriggerHandler
+} from '../..';
+import { InternalCollider } from './colliderInternal';
 
 /**
  * Controls what the assigned actors will collide with.

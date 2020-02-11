@@ -3,8 +3,7 @@
  * Licensed under the MIT License.
  */
 
-import { CollisionData, CollisionEventType } from ".";
-import { Guid } from '../../..';
+import { CollisionData, CollisionEventType, Guid } from '../..';
 
 /**
  * A collision event that has occured between physics objects.

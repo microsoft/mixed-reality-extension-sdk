@@ -4,17 +4,9 @@
  */
 
 import events from 'events';
-import {
-	Actor,
-	Connection,
-	Guid,
-	newGuid,
-	NullConnection,
-	User,
-} from '../..';
-import { RPC, RPCChannels } from '../../rpc';
-import { InternalContext } from '../internal/context';
-import * as Payloads from '../network/payloads';
+import { Actor, Guid, newGuid, RPC, RPCChannels, User, } from '..';
+import { Connection, NullConnection, Payloads } from '../internal';
+import { InternalContext } from './contextInternal';
 
 /**
  * Settings used to configure a `Context` instance.

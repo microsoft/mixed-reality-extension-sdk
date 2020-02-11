@@ -19,7 +19,9 @@ import {
 	Context,
 	CreateAnimationOptions,
 	Guid,
+	log,
 	MediaCommand,
+	MediaInstance,
 	newGuid,
 	PerformanceStats,
 	SetAnimationStateOptions,
@@ -28,20 +30,16 @@ import {
 	User,
 	UserLike,
 	ZeroGuid,
-} from '../..';
-
-import * as Payloads from '../network/payloads';
-
-import { log } from '../../log';
-import * as Protocols from '../../protocols';
-import { Execution } from '../../protocols/execution';
-import { Handshake } from '../../protocols/handshake';
-import { ExportedPromise } from '../../utils/exportedPromise';
-import resolveJsonValues from '../../utils/resolveJsonValues';
-import safeGet from '../../utils/safeAccessPath';
-import { OperatingModel } from '../network/operatingModel';
-import { Patchable } from '../patchable';
-import { MediaInstance } from '../runtime/mediaInstance';
+} from '..';
+import {
+	ExportedPromise,
+	OperatingModel,
+	Patchable,
+	Payloads,
+	Protocols,
+	resolveJsonValues,
+	safeAccessPath as safeGet,
+} from '../internal';
 
 /**
  * @hidden
@@ -332,11 +330,11 @@ export class InternalContext {
 		try {
 			// Startup the handshake protocol.
 			const handshake = this.protocol =
-				new Handshake(this.context.conn, this.context.sessionId, OperatingModel.ServerAuthoritative);
+				new Protocols.Handshake(this.context.conn, this.context.sessionId, OperatingModel.ServerAuthoritative);
 			await handshake.run();
 
 			// Switch to execution protocol.
-			const execution = this.protocol = new Execution(this.context);
+			const execution = this.protocol = new Protocols.Execution(this.context);
 
 			execution.on('protocol.update-actors', this.updateActors.bind(this));
 			execution.on('protocol.destroy-actors', this.localDestroyActors.bind(this));

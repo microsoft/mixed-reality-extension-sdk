@@ -13,7 +13,7 @@ import { Protocol } from './protocol';
  * @hidden
  * Class to manage the handshake process with a client.
  */
-export class HandshakeProtocol extends Protocol {
+export class Handshake extends Protocol {
 	public syncRequest: Payloads.SyncRequest;
 
 	constructor(conn: Connection, private sessionId: string, private operatingModel: OperatingModel) {
