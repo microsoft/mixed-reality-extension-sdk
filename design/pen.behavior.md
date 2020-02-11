@@ -29,6 +29,16 @@ export class PenBehavior extends ToolBehavior {
 	}
 ```
 
+### Draw Data
+
+``` ts
+export interface DrawDataLike {
+	transform: Transform;
+	// Potentially additional data to come, such as:
+	pressure: number;
+}
+```
+
 ## Network
 
 The network messages for this behavior will use the standard behavior payloads for actions started and stopped.  The two actions supported 
