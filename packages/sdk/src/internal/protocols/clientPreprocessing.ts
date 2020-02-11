@@ -3,15 +3,13 @@
  * Licensed under the MIT License.
  */
 
-import { Middleware, Protocol } from '.';
-import { Message } from '..';
-import { HeartbeatReply } from '../types/network/payloads';
+import { Message, Payloads, Protocols } from '../../internal';
 
 /**
  * @hidden
  */
-export class ClientPreprocessing implements Middleware {
-	constructor(private protocol: Protocol) {
+export class ClientPreprocessing implements Protocols.Middleware {
+	constructor(private protocol: Protocols.Protocol) {
 		this.beforeRecv = this.beforeRecv.bind(this);
 	}
 
@@ -28,7 +26,7 @@ export class ClientPreprocessing implements Middleware {
 				replyToId: message.id,
 				payload: {
 					type: 'heartbeat-reply',
-				} as HeartbeatReply,
+				} as Payloads.HeartbeatReply,
 			});
 			message = undefined;
 		}

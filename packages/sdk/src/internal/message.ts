@@ -3,14 +3,14 @@
  * Licensed under the MIT License.
  */
 
-import { Guid } from '../..';
-import { Payload } from './payloads';
+import { Guid } from '..';
+import { Payloads } from '../internal';
 
 /**
  * @hidden
  * A message sent over the network.
  */
-export type Message<PayloadT = Payload> = {
+export type Message<PayloadT = Payloads.Payload> = {
 	/**
 	 * Unique id of this message. When sending, a new id will be assigned if not already so.
 	 */

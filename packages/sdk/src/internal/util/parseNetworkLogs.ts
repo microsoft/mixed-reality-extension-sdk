@@ -8,7 +8,7 @@ import { resolve } from 'path';
 import { promisify } from 'util';
 const readFile = promisify(readFileNodeAsync);
 
-import safeAccessPath from './safeAccessPath';
+import { safeAccessPath } from '../../internal';
 
 /* eslint-disable no-console */
 

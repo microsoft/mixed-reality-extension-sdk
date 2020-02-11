@@ -3,7 +3,7 @@
  * Licensed under the MIT License.
  */
 
-import { Actor } from "../types/runtime";
+import { Actor } from "../..";
 
 /** @hidden */
 export default function VisitActor(actor: Actor, callback: (actor: Actor) => void) {

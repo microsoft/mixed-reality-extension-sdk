@@ -4,8 +4,8 @@
  */
 
 import semver from 'semver';
-import * as Constants from '../constants';
-import { log } from '../log';
+import { Constants } from '../../internal';
+import { log } from '../..';
 
 /*
  * Current SDK Version - Read from package.json.

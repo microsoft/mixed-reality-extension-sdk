@@ -3,7 +3,7 @@
  * Licensed under the MIT License.
  */
 
-import { ActionState, BehaviorType, Guid, User } from '../../..';
+import { ActionState, BehaviorType, Guid, User } from '../..';
 
 export interface ActionEvent {
 	user: User;

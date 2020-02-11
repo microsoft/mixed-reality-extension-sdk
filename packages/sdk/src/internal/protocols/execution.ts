@@ -3,37 +3,18 @@
  * Licensed under the MIT License.
  */
 
-import { Protocol, ServerPreprocessing } from '.';
-import { ActionEvent, CollisionEvent, Context, Message, TriggerEvent, WebSocket } from '..';
-import {
-	ActorUpdate,
-	CollisionEventRaised,
-	DestroyActors,
-	EngineToAppRPC,
-	MultiOperationResult,
-	ObjectSpawned,
-	OperationResult,
-	PerformAction,
-	SetAnimationState,
-	SyncRequest,
-	Traces,
-	TriggerEventRaised,
-	UserJoined,
-	UserLeft,
-	UserUpdate,
-} from '../types/network/payloads';
-import { log } from './../log';
-import { Sync } from './sync';
+import { ActionEvent, CollisionEvent, Context, log, TriggerEvent, } from '../..';
+import { Message, Payloads, Protocols, WebSocket } from '../../internal';
 
 /**
  * @hidden
  * Class to handle operational messages with a client.
  */
-export class Execution extends Protocol {
+export class Execution extends Protocols.Protocol {
 	constructor(private context: Context) {
 		super(context.conn);
 		// Behave like a server-side endpoint (send heartbeats, measure connection quality)
-		this.use(new ServerPreprocessing());
+		this.use(new Protocols.ServerPreprocessing());
 	}
 
 	/** @override */
@@ -42,28 +23,28 @@ export class Execution extends Protocol {
 	}
 
 	/** @private */
-	public 'recv-engine2app-rpc' = (payload: EngineToAppRPC) => {
+	public 'recv-engine2app-rpc' = (payload: Payloads.EngineToAppRPC) => {
 		this.emit('protocol.receive-rpc', payload);
 	};
 
 	/** @private */
-	public 'recv-object-spawned' = (payload: ObjectSpawned) => {
+	public 'recv-object-spawned' = (payload: Payloads.ObjectSpawned) => {
 		this.emit('protocol.update-actors', payload.actors);
 		this.emit('protocol.update-animations', payload.animations);
 	};
 
 	/** @private */
-	public 'recv-actor-update' = (payload: ActorUpdate) => {
+	public 'recv-actor-update' = (payload: Payloads.ActorUpdate) => {
 		this.emit('protocol.update-actors', [payload.actor]);
 	};
 
 	/** @private */
-	public 'recv-destroy-actors' = (payload: DestroyActors) => {
+	public 'recv-destroy-actors' = (payload: Payloads.DestroyActors) => {
 		this.emit('protocol.destroy-actors', payload.actorIds);
 	};
 
 	/** @private */
-	public 'recv-operation-result' = (operationResult: OperationResult) => {
+	public 'recv-operation-result' = (operationResult: Payloads.OperationResult) => {
 		log.log('network', operationResult.resultCode, operationResult.message);
 		if (Array.isArray(operationResult.traces)) {
 			operationResult.traces.forEach(trace => {
@@ -73,19 +54,19 @@ export class Execution extends Protocol {
 	};
 
 	/** @private */
-	public 'recv-multi-operation-result' = (multiOperationResult: MultiOperationResult) => {
+	public 'recv-multi-operation-result' = (multiOperationResult: Payloads.MultiOperationResult) => {
 		throw new Error("Not implemented");
 	};
 
 	/** @private */
-	public 'recv-traces' = (payload: Traces) => {
+	public 'recv-traces' = (payload: Payloads.Traces) => {
 		payload.traces.forEach(trace => {
 			log.log('client', trace.severity, trace.message);
 		});
 	};
 
 	/** @private */
-	public 'recv-user-joined' = (payload: UserJoined) => {
+	public 'recv-user-joined' = (payload: Payloads.UserJoined) => {
 
 		const props = payload.user.properties = payload.user.properties || {};
 		props.host = props.host || 'unspecified';
@@ -99,28 +80,28 @@ export class Execution extends Protocol {
 	};
 
 	/** @private */
-	public 'recv-user-left' = (payload: UserLeft) => {
+	public 'recv-user-left' = (payload: Payloads.UserLeft) => {
 		this.emit('protocol.user-left', payload.userId);
 	};
 
 	/** @private */
-	public 'recv-user-update' = (payload: UserUpdate) => {
+	public 'recv-user-update' = (payload: Payloads.UserUpdate) => {
 		this.emit('protocol.update-user', payload.user);
 	};
 
 	/** @private */
-	public 'recv-sync-request' = async (payload: SyncRequest) => {
+	public 'recv-sync-request' = async (payload: Payloads.SyncRequest) => {
 		// Switch over to the Sync protocol to handle this request
 		this.stopListening();
 
-		const sync = new Sync(this.conn);
+		const sync = new Protocols.Sync(this.conn);
 		await sync.run(); // Allow exception to propagate.
 
 		this.startListening();
 	};
 
 	/** @private */
-	public 'recv-perform-action' = (payload: PerformAction) => {
+	public 'recv-perform-action' = (payload: Payloads.PerformAction) => {
 		this.emit('protocol.perform-action', {
 			user: this.context.user(payload.userId),
 			targetId: payload.targetId,
@@ -131,7 +112,7 @@ export class Execution extends Protocol {
 	};
 
 	/** @private */
-	public 'recv-collision-event-raised' = (payload: CollisionEventRaised) => {
+	public 'recv-collision-event-raised' = (payload: Payloads.CollisionEventRaised) => {
 		this.emit('protocol.collision-event-raised', {
 			colliderOwnerId: payload.actorId,
 			eventType: payload.eventType,
@@ -140,7 +121,7 @@ export class Execution extends Protocol {
 	};
 
 	/** @private */
-	public 'recv-trigger-event-raised' = (payload: TriggerEventRaised) => {
+	public 'recv-trigger-event-raised' = (payload: Payloads.TriggerEventRaised) => {
 		this.emit('protocol.trigger-event-raised', {
 			colliderOwnerId: payload.actorId,
 			eventType: payload.eventType,
@@ -149,7 +130,7 @@ export class Execution extends Protocol {
 	};
 
 	/** @private */
-	public 'recv-set-animation-state' = (payload: SetAnimationState) => {
+	public 'recv-set-animation-state' = (payload: Payloads.SetAnimationState) => {
 		this.emit('protocol.set-animation-state',
 			payload.actorId,
 			payload.animationName,

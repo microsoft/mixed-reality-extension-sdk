@@ -4,19 +4,23 @@
  */
 
 import { EventEmitter } from 'events';
-import { Connection, Guid, Message, newGuid } from '..';
-import { log } from '../log';
-import { Payload } from '../types/network/payloads';
-import { ExportedPromise } from '../utils/exportedPromise';
-import filterEmpty from '../utils/filterEmpty';
-import { Middleware } from './middleware';
+
+import { Guid, log, newGuid } from '../..';
+import {
+	Connection,
+	ExportedPromise,
+	filterEmpty,
+	Message,
+	Payloads,
+	Protocols
+} from '../../internal';
 
 /**
  * @hidden
  * Class to handle sending and receiving messages with a client.
  */
 export class Protocol extends EventEmitter {
-	private middlewares: Middleware[] = [];
+	private middlewares: Protocols.Middleware[] = [];
 
 	private promise: Promise<void>;
 	private promiseResolve: (value?: void | PromiseLike<void>) => void;
@@ -49,7 +53,7 @@ export class Protocol extends EventEmitter {
 		return this.promise;
 	}
 
-	public use(middleware: Middleware) {
+	public use(middleware: Protocols.Middleware) {
 		this.middlewares.push(middleware);
 	}
 
@@ -65,7 +69,7 @@ export class Protocol extends EventEmitter {
 		log.debug('network', `${this.name} stopped listening`);
 	}
 
-	public sendPayload(payload: Partial<Payload>, promise?: ExportedPromise) {
+	public sendPayload(payload: Partial<Payloads.Payload>, promise?: ExportedPromise) {
 		this.sendMessage({ payload }, promise);
 	}
 
@@ -140,7 +144,7 @@ export class Protocol extends EventEmitter {
 		}
 	}
 
-	public recvPayload(payload: Partial<Payload>) {
+	public recvPayload(payload: Partial<Payloads.Payload>) {
 		if (payload && payload.type && payload.type.length) {
 			const handler = (this as any)[`recv-${payload.type}`] || (() => {
 				log.error('network', `[ERROR] ${this.name} has no handler for payload ${payload.type}!`);

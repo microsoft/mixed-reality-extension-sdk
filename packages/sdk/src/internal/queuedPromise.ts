@@ -3,7 +3,7 @@
  * Licensed under the MIT License.
  */
 
-import { ExportedPromise } from './exportedPromise';
+import { ExportedPromise } from '../internal';
 
 /** @hidden */
 export interface QueuedPromise {

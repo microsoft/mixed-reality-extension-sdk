@@ -32,7 +32,6 @@ export class MediaInstance {
 	 * @hidden
 	 */
 	public start(options: SetMediaStateOptions): MediaInstance {
-		const mi = this;
 		this.actor.context.internal.lookupAsset(this.mediaAssetId).created.then(() => {
 			this.actor.context.internal.setMediaState(
 				this, MediaCommand.Start, options, this.mediaAssetId);

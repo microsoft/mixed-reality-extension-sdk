@@ -3,8 +3,7 @@
  * Licensed under the MIT License.
  */
 
-import { Message } from '..';
-import { ExportedPromise } from '../utils/exportedPromise';
+import { ExportedPromise, Message } from '../../internal';
 
 /**
  * @hidden

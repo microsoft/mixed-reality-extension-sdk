@@ -3,8 +3,7 @@
  * Licensed under the MIT License.
  */
 
-import { Protocol } from '.';
-import * as Payloads from '../types/network/payloads';
+import { Payloads, Protocols } from '../../internal';
 
 const MS_PER_S = 1e3;
 const MS_PER_NS = 1e-6;
@@ -17,7 +16,7 @@ export class Heartbeat {
 	 * Creates a new Heartbeat instance.
 	 * @param protocol The parent protocol object.
 	 */
-	constructor(private protocol: Protocol) {
+	constructor(private protocol: Protocols.Protocol) {
 	}
 
 	/**

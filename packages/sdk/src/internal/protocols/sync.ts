@@ -3,20 +3,17 @@
  * Licensed under the MIT License.
  */
 
-import { ServerPreprocessing } from '.';
-import { Connection } from '..';
-import * as Payloads from '../types/network/payloads';
-import { Protocol } from './protocol';
+import { Connection, Payloads, Protocols } from '../../internal';
 
 /**
  * @hidden
  * Class to manage the join process with a client.
  */
-export class Sync extends Protocol {
+export class Sync extends Protocols.Protocol {
 	constructor(conn: Connection) {
 		super(conn);
 		// Behave like a server-side endpoint (send heartbeats, measure connection quality)
-		this.use(new ServerPreprocessing());
+		this.use(new Protocols.ServerPreprocessing());
 	}
 
 	/** @override */

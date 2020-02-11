@@ -3,14 +3,12 @@
  * Licensed under the MIT License.
  */
 
-import { Middleware } from '.';
-import { Message } from '..';
-import { ExportedPromise } from '../utils/exportedPromise';
+import { ExportedPromise, Message, Protocols } from '../../internal';
 
 /**
  * @hidden
  */
-export class ServerPreprocessing implements Middleware {
+export class ServerPreprocessing implements Protocols.Middleware {
 	constructor() {
 		this.beforeSend = this.beforeSend.bind(this);
 	}

@@ -3,7 +3,7 @@
  * Licensed under the MIT License.
  */
 
-import validateJsonFieldName from "./validateJsonFieldName";
+import { validateJsonFieldName } from "../../internal";
 
 /**
  * @hidden
