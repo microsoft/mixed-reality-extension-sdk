@@ -26,7 +26,7 @@ const MinimumSupportedClientVersion = semver.coerce('0.15');
  * @param info 'ws' request information
  * @param cb 'ws' verification callback
  */
-export default function verifyClient(
+export function verifyClient(
 	info: any, cb: (verified: boolean, code?: number, message?: string) => any): any {
 	// Look for the upgrade request.
 	const req = info.req || {};

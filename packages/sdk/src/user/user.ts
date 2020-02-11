@@ -3,10 +3,9 @@
  * Licensed under the MIT License.
  */
 
-import { Context, GroupMask, Guid } from '../..';
-import readPath from '../../utils/readPath';
-import { InternalUser } from '../internal/user';
-import { Patchable } from '../patchable';
+import { Context, GroupMask, Guid } from '..';
+import { Patchable, readPath, } from '../internal';
+import { InternalUser } from './userinternal';
 
 export interface UserLike {
 	id: Guid;

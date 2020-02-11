@@ -8,7 +8,7 @@
  * Verifies that `key` isn't an invalid key name. Useful for detecting when we're leaking private
  * fields into network payloads.
  */
-export default function validateJsonFieldName(key: string) {
+export function validateJsonFieldName(key: string) {
 	// Uncomment to validate JSON payloads
 	/*
 	if (key.startsWith('_')) {

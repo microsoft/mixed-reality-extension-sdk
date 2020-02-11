@@ -3,11 +3,11 @@
  * Licensed under the MIT License.
  */
 
-import * as Restify from 'restify';
-import { Adapter, MultipeerAdapter } from '.';
-import { log } from './log';
-
 import { resolve as urlResolve } from 'url';
+import * as Restify from 'restify';
+
+import { log } from '..';
+import { Adapter, MultipeerAdapter } from '../internal';
 
 const BUFFER_KEYWORD = 'buffers';
 

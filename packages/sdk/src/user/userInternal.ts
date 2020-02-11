@@ -3,10 +3,9 @@
  * Licensed under the MIT License.
  */
 
-import { DialogResponse, User, UserLike } from '../..';
-import * as Payloads from '../network/payloads';
-import { InternalPatchable } from '../patchable';
-import { InternalContext } from './context';
+import { DialogResponse, User, UserLike } from '..';
+import { InternalPatchable, Payloads } from '../internal';
+import { InternalContext } from '../core/contextInternal';
 
 /**
  * @hidden

@@ -2,7 +2,7 @@
  * Copyright (c) Microsoft Corporation. All rights reserved.
  * Licensed under the MIT License.
  */
-import { Context } from '.';
+import { Context } from '..';
 
 /**
  * A set of user group IDs. User groups are used to selectively enable several different
