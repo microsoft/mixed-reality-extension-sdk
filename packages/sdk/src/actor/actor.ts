@@ -56,7 +56,7 @@ import {
 	SubscriptionType,
 	unobserve
 } from '../internal';
-import { InternalActor } from './actorInternal';
+import { ActorInternal } from './actorInternal';
 
 /**
  * Describes the properties of an Actor.
@@ -89,7 +89,7 @@ export interface ActorLike {
  * An actor represents an object instantiated on the host.
  */
 export class Actor implements ActorLike, Patchable<ActorLike> {
-	private _internal = new InternalActor(this);
+	private _internal = new ActorInternal(this);
 	/** @hidden */
 	public get internal() { return this._internal; }
 

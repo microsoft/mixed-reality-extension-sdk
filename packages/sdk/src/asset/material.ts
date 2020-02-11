@@ -21,7 +21,7 @@ import {
 	Patchable,
 	readPath
 } from '../internal';
-import { InternalAsset } from './assetInternal';
+import { AssetInternal } from './assetInternal';
 
 /**
  * Describes the properties of a Material.
@@ -68,7 +68,7 @@ export class Material extends Asset implements MaterialLike, Patchable<AssetLike
 	private _mainTextureScale = Vector2.One();
 	private _alphaMode = AlphaMode.Opaque;
 	private _alphaCutoff = 0.5;
-	private _internal = new InternalAsset(this);
+	private _internal = new AssetInternal(this);
 
 	/** @hidden */
 	public get internal() { return this._internal; }

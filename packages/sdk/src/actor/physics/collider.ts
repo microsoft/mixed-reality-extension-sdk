@@ -12,7 +12,7 @@ import {
 	TriggerEventType,
 	TriggerHandler
 } from '../..';
-import { InternalCollider } from './colliderInternal';
+import { ColliderInternal } from './colliderInternal';
 
 /**
  * Controls what the assigned actors will collide with.
@@ -57,7 +57,7 @@ export interface ColliderLike {
 export class Collider implements ColliderLike {
 	public $DoNotObserve = ['_internal'];
 
-	private _internal: InternalCollider;
+	private _internal: ColliderInternal;
 
 	public enabled = true;
 	public isTrigger = false;
@@ -87,7 +87,7 @@ export class Collider implements ColliderLike {
 				throw new Error("Must provide valid collider params containing a valid shape");
 			}
 
-			this._internal = new InternalCollider(this, $owner);
+			this._internal = new ColliderInternal(this, $owner);
 			if (from.geometry !== undefined) { this.geometry = from.geometry; }
 			if (from.enabled !== undefined) { this.enabled = from.enabled; }
 			if (from.isTrigger !== undefined) { this.isTrigger = from.isTrigger; }

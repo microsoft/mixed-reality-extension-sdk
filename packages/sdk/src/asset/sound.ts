@@ -5,7 +5,7 @@
 
 import { Actor, Asset, AssetContainer, AssetLike } from '..';
 import { Patchable } from '../internal';
-import { InternalAsset } from './assetInternal';
+import { AssetInternal } from './assetInternal';
 
 export interface SoundLike {
 	uri: string;
@@ -15,7 +15,7 @@ export interface SoundLike {
 export class Sound extends Asset implements SoundLike, Patchable<AssetLike> {
 	private _uri: string;
 	private _duration = 0;
-	private _internal = new InternalAsset(this);
+	private _internal = new AssetInternal(this);
 
 	/** @hidden */
 	public get internal() { return this._internal; }

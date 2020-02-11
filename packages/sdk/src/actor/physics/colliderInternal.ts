@@ -14,7 +14,7 @@ import {
 } from "../..";
 
 /** @hidden */
-export class InternalCollider {
+export class ColliderInternal {
 	private _eventHandlers = new EventEmitter();
 	private _eventSubCount = 0;
 
@@ -45,7 +45,7 @@ export class InternalCollider {
 	}
 
 	/** @hidden */
-	public copyHandlers(other: InternalCollider): void {
+	public copyHandlers(other: ColliderInternal): void {
 		for (const event of other._eventHandlers.eventNames()) {
 			for (const handler of other._eventHandlers.listeners(event)) {
 				this._eventHandlers.on(event, handler as (...args: any[]) => void);

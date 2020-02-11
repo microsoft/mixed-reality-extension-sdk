@@ -6,7 +6,7 @@ import { Animation, AnimationLike } from '..';
 import { InternalPatchable } from '../internal';
 
 /** @hidden */
-export class InternalAnimation implements InternalPatchable<AnimationLike> {
+export class AnimationInternal implements InternalPatchable<AnimationLike> {
 	public observing = true;
 	public patch: Partial<AnimationLike>;
 

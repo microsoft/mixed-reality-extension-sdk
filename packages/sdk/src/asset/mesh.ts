@@ -13,7 +13,7 @@ import {
 	Vector3Like,
 } from '..';
 import { Patchable } from '../internal';
-import { InternalAsset } from './assetInternal';
+import { AssetInternal } from './assetInternal';
 
 /** Describes the properties of a mesh */
 export interface MeshLike {
@@ -32,7 +32,7 @@ export interface MeshLike {
 
 /** Represents a mesh on an actor */
 export class Mesh extends Asset implements MeshLike, Patchable<AssetLike> {
-	private _internal = new InternalAsset(this);
+	private _internal = new AssetInternal(this);
 	private _vertexCount: number;
 	private _triangleCount: number;
 	private _dimensions: Vector3 = new Vector3();

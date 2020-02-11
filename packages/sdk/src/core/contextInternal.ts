@@ -44,7 +44,7 @@ import {
 /**
  * @hidden
  */
-export class InternalContext {
+export class ContextInternal {
 	public actorSet = new Map<Guid, Actor>();
 	public userSet = new Map<Guid, User>();
 	public userGroupMapping: { [id: string]: number } = { default: 1 };

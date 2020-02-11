@@ -6,7 +6,7 @@
 import events from 'events';
 import { Actor, Guid, newGuid, RPC, RPCChannels, User, } from '..';
 import { Connection, NullConnection, Payloads } from '../internal';
-import { InternalContext } from './contextInternal';
+import { ContextInternal } from './contextInternal';
 
 /**
  * Settings used to configure a `Context` instance.
@@ -21,7 +21,7 @@ export interface ContextSettings {
  * This includes Actors, Users, Assets, and other state.
  */
 export class Context {
-	private _internal: InternalContext;
+	private _internal: ContextInternal;
 	/** @hidden */
 	public get internal() { return this._internal; }
 
@@ -50,7 +50,7 @@ export class Context {
 	constructor(settings: ContextSettings) {
 		this._conn = settings.connection || new NullConnection();
 		this._sessionId = settings.sessionId || newGuid().toString();
-		this._internal = new InternalContext(this);
+		this._internal = new ContextInternal(this);
 		this._rpcChannels = new RPCChannels();
 		this._rpc = new RPC(this);
 		this.rpcChannels.setChannelHandler(null, this._rpc);

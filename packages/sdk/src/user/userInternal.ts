@@ -5,17 +5,17 @@
 
 import { DialogResponse, User, UserLike } from '..';
 import { InternalPatchable, Payloads } from '../internal';
-import { InternalContext } from '../core/contextInternal';
+import { ContextInternal } from '../core/contextInternal';
 
 /**
  * @hidden
  */
-export class InternalUser implements InternalPatchable<UserLike> {
+export class UserInternal implements InternalPatchable<UserLike> {
 	public __rpc: any;
 	public observing = true;
 	public patch: UserLike;
 
-	constructor(public user: User, public context: InternalContext) {
+	constructor(public user: User, public context: ContextInternal) {
 	}
 
 	public getPatchAndReset(): UserLike {

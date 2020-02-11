@@ -9,7 +9,7 @@ import { InternalPatchable } from '../internal';
 /**
  * @hidden
  */
-export class InternalAsset implements InternalPatchable<AssetLike> {
+export class AssetInternal implements InternalPatchable<AssetLike> {
 	public observing = true;
 	public patch: AssetLike;
 

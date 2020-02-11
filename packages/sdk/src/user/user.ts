@@ -5,7 +5,7 @@
 
 import { Context, GroupMask, Guid } from '..';
 import { Patchable, readPath, } from '../internal';
-import { InternalUser } from './userinternal';
+import { UserInternal } from './userinternal';
 
 export interface UserLike {
 	id: Guid;
@@ -25,7 +25,7 @@ export type DialogResponse = {
 };
 
 export class User implements UserLike, Patchable<UserLike> {
-	private _internal: InternalUser;
+	private _internal: UserInternal;
 	/** @hidden */
 	public get internal() { return this._internal; }
 
@@ -73,7 +73,7 @@ export class User implements UserLike, Patchable<UserLike> {
 	 */
 
 	constructor(private _context: Context, private _id: Guid) {
-		this._internal = new InternalUser(this, this._context.internal);
+		this._internal = new UserInternal(this, this._context.internal);
 	}
 
 	/**

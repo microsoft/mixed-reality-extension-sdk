@@ -5,7 +5,7 @@
 
 import { Actor, Asset, AssetContainer, AssetLike } from '..';
 import { Patchable } from '../internal';
-import { InternalAsset } from './assetInternal';
+import { AssetInternal } from './assetInternal';
 
 export interface PrefabLike {
 	/** The number of actors this prefab contains. */
@@ -14,7 +14,7 @@ export interface PrefabLike {
 
 export class Prefab extends Asset implements PrefabLike, Patchable<AssetLike> {
 	private _actorCount: number;
-	private _internal = new InternalAsset(this);
+	private _internal = new AssetInternal(this);
 
 	/** @hidden */
 	public get internal() { return this._internal; }

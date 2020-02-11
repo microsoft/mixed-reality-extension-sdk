@@ -5,7 +5,7 @@
 
 import { Actor, Asset, AssetContainer, AssetLike, Material, Vector2, Vector2Like } from '..';
 import { Patchable, readPath } from '../internal';
-import { InternalAsset } from './assetInternal';
+import { AssetInternal } from './assetInternal';
 
 export interface TextureLike {
 	uri: string;
@@ -29,7 +29,7 @@ export class Texture extends Asset implements TextureLike, Patchable<AssetLike> 
 	private _resolution = Vector2.One();
 	private _wrapU = TextureWrapMode.Repeat;
 	private _wrapV = TextureWrapMode.Repeat;
-	private _internal = new InternalAsset(this);
+	private _internal = new AssetInternal(this);
 
 	/** @hidden */
 	public get internal() { return this._internal; }

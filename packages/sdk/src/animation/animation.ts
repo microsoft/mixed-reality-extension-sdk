@@ -12,7 +12,7 @@ import {
 	Patchable,
 	readPath
 } from '../internal';
-import { InternalAnimation } from './animationInternal';
+import { AnimationInternal } from './animationInternal';
 
 /** A serialized animation definition */
 export interface AnimationLike {
@@ -40,7 +40,7 @@ export interface AnimationLike {
 /** A runtime animation */
 export class Animation implements AnimationLike, Patchable<AnimationLike> {
 	/** @hidden */
-	public internal = new InternalAnimation(this);
+	public internal = new AnimationInternal(this);
 
 	private _id: Guid;
 	/** @inheritdoc */

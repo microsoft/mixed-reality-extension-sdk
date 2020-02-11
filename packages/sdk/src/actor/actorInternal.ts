@@ -18,19 +18,19 @@ import {
 	ExportedPromise,
 	InternalPatchable
 } from '../internal';
-import { InternalCollider } from './physics/colliderInternal';
+import { ColliderInternal } from './physics/colliderInternal';
 
 /**
  * @hidden
  */
-export class InternalActor implements InternalPatchable<ActorLike> {
+export class ActorInternal implements InternalPatchable<ActorLike> {
 	public observing = true;
 	public patch: ActorLike;
 	public behavior: Behavior;
 	public createdPromises: ExportedPromise[];
 	public created: { success: boolean; reason?: any };
 
-	public get collider(): InternalCollider {
+	public get collider(): ColliderInternal {
 		return this.actor.collider ? this.actor.collider.internal : undefined;
 	}
 
