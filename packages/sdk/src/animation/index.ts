@@ -4,11 +4,10 @@
  */
 
 export * from './animation';
-export * from './animationWrapMode';
-export * from './animationKeyframe';
+export * from './animationEaseCurves';
 export * from './animationEvent';
+export * from './animationKeyframe';
 export * from './animationState';
+export * from './animationWrapMode';
 export * from './createAnimationOptions';
 export * from './setAnimationStateOptions';
-export * from './animationEaseCurves';
-export * from './internalAnimation';
