@@ -13,12 +13,22 @@ before sending it to all the clients to render. and a mesh to apply to this spli
 
 ### Behavior
 ``` ts
+export interface PenBehaviorInitOptions {
+	drawOriginActorId: Guid;
+}
+
 /**
  * Pen behavior class containing the target behavior actions.
  */
 export class PenBehavior extends ToolBehavior {
+	public drawOriginActorId: Guid;
+
 	/** @inheritdoc */
 	public get behaviorType(): BehaviorType { return 'pen'; }
+
+	public constructor(initOptions?: PenBehaviorInitOptions) {
+		if (initOptions.drawOriginalActorId)
+	}
 
 	public onDrawEventReceived((drawData: Partial<DrawDataLike>[]) => void) {
 		// Register for draw events.
@@ -44,20 +54,8 @@ export interface DrawDataLike {
 The network messages for this behavior will use the standard behavior payloads for actions started and stopped.  The two actions supported 
 by the Pen behavior are hold (begin/end) and drawing (begin/end).
 
-In addition to the standard `PerformAction` payload, there will need to be a second message that is used for sending draw event data up to 
-the MRE app on a set frequeny cadence.  This payload may look something like this:
-
-``` ts
-/**
- * @hidden
- * Engine to app. Send draw data from a draw event on the client up to the app.
- */
-export type DrawEventUpdate = Payload & {
-	type: 'draw-event-update';
-	penActorId: Guid;
-	drawData: Partial<DrawDataLike>[];
-};
-```
+In addition to the standard `PerformAction` start and stop payload, there will be a third `PerformAction` type for `perfoming` which will
+contain the draw data in the optional action data of the `PerformAction` payload.
 
 ## Sync layer considerations
 
