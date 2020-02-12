@@ -5,7 +5,6 @@
 
 export * from './protocols';
 
-export * from './adapter';
 export * from './client';
 export * from './clientDesyncPreprocessor';
 export * from './rules';

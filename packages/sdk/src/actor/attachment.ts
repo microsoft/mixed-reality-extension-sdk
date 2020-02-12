@@ -3,7 +3,7 @@
  * Licensed under the MIT License.
  */
 
-import { Guid, ZeroGuid } from "../..";
+import { Guid, ZeroGuid } from "..";
 
 /**
  * The complete set of attach points.

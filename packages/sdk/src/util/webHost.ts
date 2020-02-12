@@ -6,8 +6,8 @@
 import { resolve as urlResolve } from 'url';
 import * as Restify from 'restify';
 
-import { log } from '..';
-import { Adapter, MultipeerAdapter } from '../internal';
+import { log, MultipeerAdapter } from '..';
+import { Adapter } from '../internal';
 
 const BUFFER_KEYWORD = 'buffers';
 

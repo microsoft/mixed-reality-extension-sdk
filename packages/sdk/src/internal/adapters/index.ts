@@ -4,5 +4,4 @@
  */
 
 export * from './adapter';
-export * from './websocket';
 export * from './multipeer';

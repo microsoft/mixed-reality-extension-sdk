@@ -14,7 +14,7 @@ import {
 	Context,
 	log,
 	ParameterSet
-} from '../../..';
+} from '..';
 import {
 	Adapter,
 	AdapterOptions,
@@ -26,7 +26,7 @@ import {
 	Session,
 	verifyClient,
 	WebSocket
-} from '../../../internal';
+} from '../internal';
 
 const forwarded: (res: http.IncomingMessage, headers: http.IncomingHttpHeaders) => {ip: string; port: number}
 	= require('forwarded-for'); /* eslint-disable-line @typescript-eslint/no-var-requires */

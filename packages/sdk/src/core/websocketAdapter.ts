@@ -9,8 +9,8 @@ import * as Restify from 'restify';
 import UUID from 'uuid/v4';
 import * as WS from 'ws';
 
-import { Context, log } from '../../..';
-import { Adapter, AdapterOptions, Constants, verifyClient, WebSocket } from '../../../internal';
+import { Context, log } from '..';
+import { Adapter, AdapterOptions, Constants, verifyClient, WebSocket } from '../internal';
 
 const forwarded: (res: http.IncomingMessage, headers: http.IncomingHttpHeaders) => {ip: string; port: number}
 	= require('forwarded-for'); /* eslint-disable-line @typescript-eslint/no-var-requires */
