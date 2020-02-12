@@ -36,6 +36,7 @@ export type PayloadType
 	| 'app2engine-rpc'
 	| 'collision-event-raised'
 	| 'create-animation'
+	| 'create-animation-2'
 	| 'create-empty'
 	| 'create-from-library'
 	| 'destroy-actors'
@@ -330,8 +331,8 @@ export type SetBehavior = Payload & {
  */
 export type CreateAnimation2 = Payload & {
 	type: 'create-animation-2';
-	animationDataId: Guid;
-	bindings: { [name: string]: Guid };
+	animation: AnimationLike;
+	targets: { [placeholder: string]: Guid };
 };
 
 /**

@@ -4,28 +4,22 @@
  */
 import {
 	Actor,
+	AnimatibleName,
 	Animation,
+	AnimationLike,
 	AnimationProp,
 	Asset,
 	AssetContainer,
 	AssetLike,
 	EaseCurve,
+	Guid,
 	Material,
 	TargetPath,
 } from '..';
 import {
-	Patchable
+	Patchable,
 } from '../internal';
 import { AssetInternal } from '../asset/assetInternal';
-
-/* eslint-disable no-shadow */
-/** The names of types that support animation */
-export enum AnimatibleName {
-	Actor = 'actor',
-	Animation = 'animation',
-	Material = 'material'
-}
-/* eslint-enable no-shadow */
 
 /** The types that support animation */
 export type Animatible = Actor | Animation | Material;
@@ -65,30 +59,6 @@ export class AnimationData extends Asset implements AnimationDataLike, Patchable
 	/** @inheritdoc */
 	public get tracks() { return this._tracks; }
 
-	/** The length of the animation data. */
-	public get duration() {
-		return this.tracks.reduce((trackMax, track) =>
-			Math.max(trackMax, track.keyframes.reduce((kfMax, kf) =>
-				Math.max(kfMax, kf.time), 0)), 0);
-	}
-
-	/** The names and types of the animation's targets. */
-	public get targets() {
-		return this.tracks
-			// get root objects
-			.map(t => t.target.toString().split('/')[0])
-			// that are unique in the list
-			.filter((target, i, arr) => arr.indexOf(target) === i)
-			// and add their types/names to an object
-			.reduce((obj, id) => {
-				const [typeName, name] = id.split(':');
-				if (/^actor|animation|material$/u.test(typeName)) {
-					obj[name] = typeName as AnimatibleName;
-				}
-				return obj;
-			}, {} as {[name: string]: AnimatibleName});
-	}
-
 	/** @inheritdoc */
 	public get animationData(): AnimationData { return this; }
 
@@ -103,8 +73,69 @@ export class AnimationData extends Asset implements AnimationDataLike, Patchable
 		this.copy(def);
 	}
 
-	public bind(targets: { [name: string]: Animatible }) {
+	/** The length of the animation data. */
+	public duration() {
+		return this.tracks.reduce((trackMax, track) =>
+			Math.max(trackMax, track.keyframes.reduce((kfMax, kf) =>
+				Math.max(kfMax, kf.time), 0)), 0);
+	}
 
+	/** The placeholders and types of the animation's targets. */
+	public targets() {
+		return this.tracks
+			// get root objects
+			.map(t => t.target.toString().split('/')[0])
+			// that are unique in the list
+			.filter((target, i, arr) => arr.indexOf(target) === i)
+			// and add their types/names to an object
+			.reduce((obj, id) => {
+				const [typeName, placeholder] = id.split(':');
+				if (/^actor|animation|material$/u.test(typeName)) {
+					obj[placeholder] = typeName as AnimatibleName;
+				}
+				return obj;
+			}, {} as {[placeholder: string]: AnimatibleName});
+	}
+
+	/**
+	 * Bind this animation data to one or more targets to create an [[Animation]].
+	 * @param targets A map of placeholder names to real objects. The names and types must match those in [[targets]].
+	 * @param initialState Initial properties for the new animation.
+	 */
+	public bind(
+		targets: { [placeholder: string]: Animatible },
+		initialState?: Partial<AnimationLike>
+	): Promise<Animation> {
+		// validate names and types
+		const dataTargets = this.targets();
+		const dataPlaceholders = new Set(Object.keys(dataTargets));
+		const targetIds: { [placeholder: string]: Guid } = {};
+
+		for (const placeholder in targets) {
+			if (!dataPlaceholders.has(placeholder)) {
+				throw new Error(`Animation data "${this.name || this.id}" has no reference ` +
+					`to placeholder "${placeholder}".`);
+			} else if (
+				dataTargets[placeholder] === AnimatibleName.Actor && !(targets[placeholder] instanceof Actor) ||
+				dataTargets[placeholder] === AnimatibleName.Animation && !(targets[placeholder] instanceof Animation) ||
+				dataTargets[placeholder] === AnimatibleName.Material && !(targets[placeholder] instanceof Material)
+			) {
+				throw new Error(`Placeholder "${placeholder}" for animation data "${this.name || this.id}" ` +
+					`must be of type ${dataTargets[placeholder]}, got "${targets[placeholder].constructor.name}".`);
+			}
+
+			dataPlaceholders.delete(placeholder);
+
+			targetIds[placeholder] = targets[placeholder].id;
+		}
+
+		// check for missing placeholders
+		if (dataPlaceholders.size > 0) {
+			throw new Error(`Attempting to bind animation data "${this.name || this.id} without definitions ` +
+				`for the required placeholders "${[...dataPlaceholders].join('", "')}".`);
+		}
+
+		return this.container.context.internal.createAnimationFromData(this.id, targetIds, initialState);
 	}
 
 	/** @hidden */

@@ -268,7 +268,8 @@ export class AssetContainer {
 			colliderType
 		} as Payloads.LoadAssets;
 
-		const response = await this.sendPayloadAndGetReply<Payloads.LoadAssets, Payloads.AssetsLoaded>(payload);
+		const response = await this.context.internal
+			.sendPayloadAndGetReply<Payloads.LoadAssets, Payloads.AssetsLoaded>(payload);
 		if (response.failureMessage) {
 			throw new Error(response.failureMessage);
 		}
@@ -309,7 +310,7 @@ export class AssetContainer {
 
 		this._assets.set(asset.id, asset);
 
-		const reply = await this.sendPayloadAndGetReply<Payloads.CreateAsset, Payloads.AssetsLoaded>({
+		const reply = await this.context.internal.sendPayloadAndGetReply<Payloads.CreateAsset, Payloads.AssetsLoaded>({
 			type: 'create-asset',
 			containerId: this.id,
 			definition: resolveJsonValues(asset)
@@ -320,13 +321,5 @@ export class AssetContainer {
 		}
 
 		asset.copy(reply.assets[0]);
-	}
-
-	private sendPayloadAndGetReply<T extends Payloads.Payload, U extends Payloads.Payload>(payload: T): Promise<U> {
-		return new Promise<U>((resolve, reject) => {
-			this.context.internal.protocol.sendPayload(
-				payload, { resolve, reject }
-			);
-		});
 	}
 }

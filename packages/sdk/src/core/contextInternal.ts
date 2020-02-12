@@ -285,6 +285,40 @@ export class ContextInternal {
 		}
 	}
 
+	public async createAnimationFromData(
+		dataId: Guid,
+		targets: { [placeholder: string]: Guid },
+		initialState?: Partial<AnimationLike>
+	): Promise<Animation> {
+		// generate the anim immediately
+		const data = this.lookupAsset(dataId)?.animationData;
+		if (!data) {
+			throw new Error(`No animation data with id "${dataId}" found.`);
+		}
+
+		const createdAnim = new Animation(this.context, newGuid());
+		createdAnim.copy({
+			name: data.name,
+			...initialState,
+			dataId,
+			targetIds: Object.values(targets),
+		});
+		this.animationSet.set(createdAnim.id, createdAnim);
+
+		const reply = await this.sendPayloadAndGetReply<Payloads.CreateAnimation2, Payloads.ObjectSpawned>({
+			type: 'create-animation-2',
+			animation: createdAnim.toJSON(),
+			targets
+		});
+
+		if (reply.result.resultCode !== 'error') {
+			createdAnim.copy(reply.animations[0]);
+			return createdAnim;
+		} else {
+			throw new Error(reply.result.message);
+		}
+	}
+
 	public setMediaState(
 		mediaInstance: MediaInstance,
 		command: MediaCommand,
@@ -496,6 +530,14 @@ export class ContextInternal {
 
 	public sendPayload(payload: Payloads.Payload, promise?: ExportedPromise): void {
 		this.protocol.sendPayload(payload, promise);
+	}
+
+	public sendPayloadAndGetReply<T extends Payloads.Payload, U extends Payloads.Payload>(payload: T): Promise<U> {
+		return new Promise<U>((resolve, reject) => {
+			this.protocol.sendPayload(
+				payload, { resolve, reject }
+			);
+		});
 	}
 
 	public receiveRPC(payload: Payloads.EngineToAppRPC) {

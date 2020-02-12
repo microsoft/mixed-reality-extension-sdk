@@ -124,7 +124,7 @@ export class Animation implements AnimationLike, Patchable<AnimationLike> {
 		this.updateTimeout();
 	}
 
-	private _weight = 1;
+	private _weight = 0;
 	/** @inheritdoc */
 	public get weight() { return this._weight; }
 	public set weight(val) {

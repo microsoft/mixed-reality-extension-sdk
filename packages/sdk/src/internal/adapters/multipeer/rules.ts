@@ -574,6 +574,27 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 	},
 
 	// ========================================================================
+	'create-animation-2': {
+		...DefaultRule,
+		synchronization: {
+			stage: 'create-animations',
+			before: 'ignore',
+			during: 'allow',
+			after: 'allow'
+		},
+		session: {
+			...DefaultRule.session,
+			beforeReceiveFromApp: (
+				session: Session,
+				message: Message<Payloads.CreateAnimation>
+			) => {
+				session.cacheAnimationCreationRequest(message);
+				return message;
+			}
+		}
+	},
+
+	// ========================================================================
 	'create-asset': {
 		...DefaultRule,
 		synchronization: {
