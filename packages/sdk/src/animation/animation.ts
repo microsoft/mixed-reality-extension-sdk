@@ -30,8 +30,11 @@ export interface AnimationLike {
 	weight: number;
 	/** What happens when the animation hits the last frame */
 	wrapMode: AnimationWrapMode;
-	/** The IDs of the actors targeted by this animation */
-	targetActorIds: Readonly<Guid[]>;
+
+	/** The ID of the AnimationData bound to this animation */
+	dataId: Readonly<Guid>;
+	/** The IDs of the objects targeted by this animation */
+	targetIds: Readonly<Guid[]>;
 
 	/** The length in seconds of the animation */
 	duration: number;
@@ -146,12 +149,22 @@ export class Animation implements AnimationLike, Patchable<AnimationLike> {
 		this.updateTimeout();
 	}
 
-	private _targetActorIds: Guid[] = [];
+	private _dataId: Guid;
 	/** @inheritdoc */
-	public get targetActorIds() { return Object.freeze([...this._targetActorIds]); }
+	public get dataId() { return this._dataId; }
+	/** The keyframe data bound to this animation */
+	public get data() { return this.context.asset(this._dataId)?.animationData; }
+
+	private _targetIds: Guid[] = [];
+	/** @inheritdoc */
+	public get targetIds() { return Object.freeze([...this._targetIds]); }
 
 	/** The list of actors targeted by this animation. */
-	public get targetActors() { return this.targetActorIds.map(id => this.context.actor(id)); }
+	public get targetActors() { return this.targetIds.map(id => this.context.actor(id)).filter(a => !!a); }
+	/** The list of animations targeted by this animation. */
+	public get targetAnimations() { return this.targetIds.map(id => this.context.animation(id)).filter(a => !!a); }
+	/** The list of materials targeted by this animation. */
+	public get targetMaterials() { return this.targetIds.map(id => this.context.asset(id)?.material).filter(a => !!a); }
 
 	private _duration: number;
 	/** @inheritdoc */
@@ -251,7 +264,8 @@ export class Animation implements AnimationLike, Patchable<AnimationLike> {
 			speed: this.speed,
 			weight: this.weight,
 			wrapMode: this.wrapMode,
-			targetActorIds: this.targetActorIds,
+			dataId: this.dataId,
+			targetIds: this.targetIds,
 			duration: this.duration
 		};
 	}
@@ -265,7 +279,8 @@ export class Animation implements AnimationLike, Patchable<AnimationLike> {
 		if (patch.speed !== undefined) { this.speed = patch.speed; }
 		if (patch.weight !== undefined) { this.weight = patch.weight; }
 		if (patch.wrapMode) { this.wrapMode = patch.wrapMode; }
-		if (patch.targetActorIds) { this._targetActorIds = [...patch.targetActorIds]; }
+		if (patch.dataId) { this._dataId = patch.dataId as Guid; }
+		if (patch.targetIds) { this._targetIds = [...patch.targetIds]; }
 		if (patch.duration !== undefined) { this._duration = patch.duration; }
 		this.internal.observing = true;
 		return this;

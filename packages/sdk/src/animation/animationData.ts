@@ -4,11 +4,13 @@
  */
 import {
 	Actor,
+	Animation,
 	AnimationProp,
 	Asset,
 	AssetContainer,
 	AssetLike,
 	EaseCurve,
+	Material,
 	TargetPath,
 } from '..';
 import {
@@ -17,11 +19,14 @@ import {
 import { AssetInternal } from '../asset/assetInternal';
 
 /** The names of types that support animation */
-export enum Animatible {
+export enum AnimatibleName {
 	Actor = 'actor', /* eslint-disable-line no-shadow */
 	Animation = 'animation',
 	Material = 'material'
 }
+
+/** The types that support animation */
+export type Animatible = Actor | Animation | Material;
 
 /** The timeline of values for an animation target property */
 export type Track<T extends AnimationProp> = {
@@ -76,10 +81,10 @@ export class AnimationData extends Asset implements AnimationDataLike, Patchable
 			.reduce((obj, id) => {
 				const [typeName, name] = id.split(':');
 				if (/^actor|animation|material$/u.test(typeName)) {
-					obj[name] = typeName as Animatible;
+					obj[name] = typeName as AnimatibleName;
 				}
 				return obj;
-			}, {} as {[name: string]: Animatible});
+			}, {} as {[name: string]: AnimatibleName});
 	}
 
 	/** @inheritdoc */
@@ -96,6 +101,9 @@ export class AnimationData extends Asset implements AnimationDataLike, Patchable
 		this.copy(def);
 	}
 
+	public bind(targets: { [name: string]: Animatible }) {
+
+	}
 
 	/** @hidden */
 	public copy(from: Partial<AssetLike>): this {

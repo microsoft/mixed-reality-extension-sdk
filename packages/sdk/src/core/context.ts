@@ -4,7 +4,7 @@
  */
 
 import events from 'events';
-import { Actor, Guid, newGuid, RPC, RPCChannels, User, } from '..';
+import { Actor, Animation, Asset, Guid, newGuid, RPC, RPCChannels, User, } from '..';
 import { Connection, NullConnection, Payloads } from '../internal';
 import { ContextInternal } from './contextInternal';
 
@@ -41,8 +41,10 @@ export class Context {
 	public get users() { return [...this.internal.userSet.values()]; }
 	public get rpcChannels() { return this._rpcChannels; }
 	public get rpc() { return this._rpc; }
-	public actor = (actorId: Guid): Actor => this.internal.actorSet.get(actorId);
-	public user = (userId: Guid): User => this.internal.userSet.get(userId);
+	public actor = (actorId: Guid) => this.internal.actorSet.get(actorId);
+	public animation = (animId: Guid) => this.internal.animationSet.get(animId);
+	public asset = (assetId: Guid) => this.internal.lookupAsset(assetId);
+	public user = (userId: Guid) => this.internal.userSet.get(userId);
 
 	/**
 	 * Creates a new `Context` instance.

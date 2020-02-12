@@ -326,6 +326,16 @@ export type SetBehavior = Payload & {
 
 /**
  * @hidden
+ * App to engine. Bind anim keyframe data to a set of objects. Returns an object-spawned message.
+ */
+export type CreateAnimation2 = Payload & {
+	type: 'create-animation-2';
+	animationDataId: Guid;
+	bindings: { [name: string]: Guid };
+};
+
+/**
+ * @hidden
  * App to engine. Create an animation and associate it with an actor.
  */
 export type CreateAnimation = Payload & CreateAnimationOptions & {
