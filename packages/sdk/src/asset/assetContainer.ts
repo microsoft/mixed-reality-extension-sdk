@@ -4,13 +4,13 @@
  */
 
 import {
+	AnimationData, AnimationDataLike,
 	Asset, AssetSource,
 	Context,
-	Guid,
+	Guid, newGuid,
 	log,
 	Material, MaterialLike,
 	Mesh,
-	newGuid,
 	Prefab,
 	PrimitiveDefinition,
 	PrimitiveShape,
@@ -116,6 +116,21 @@ export class AssetContainer {
 		});
 		video.setLoadedPromise(this.sendCreateAsset(video));
 		return video;
+	}
+
+	/**
+	 * Preload unbound animation keyframe data for later use.
+	 * @param name The name of this animation
+	 * @param data The keyframe data
+	 */
+	public createAnimationData(name: string, data: AnimationDataLike) {
+		const animData = new AnimationData(this, {
+			id: newGuid(),
+			name,
+			animationData: data
+		});
+		animData.setLoadedPromise(this.sendCreateAsset(animData));
+		return animData;
 	}
 
 	/**

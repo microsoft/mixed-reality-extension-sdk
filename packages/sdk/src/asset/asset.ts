@@ -5,6 +5,8 @@
 
 import {
 	Actor,
+	AnimationData,
+	AnimationDataLike,
 	AssetContainer,
 	Guid,
 	Material,
@@ -57,6 +59,8 @@ export interface AssetLike {
 	 */
 	source?: AssetSource;
 
+	/** Only populated when this asset is animation data. An asset will only have one of these types specified. */
+	animationData?: Partial<AnimationDataLike>;
 	/** Only populated when this asset is a prefab. An asset will have only one of these types specified. */
 	prefab?: Partial<PrefabLike>;
 	/** Only populated when this asset is a mesh. An asset will have only one of these types specified. */
@@ -87,6 +91,8 @@ export abstract class Asset implements AssetLike {
 	/** @inheritdoc */
 	public get source() { return this._source; }
 
+	/** @inheritdoc */
+	public get animationData(): AnimationData { return null; }
 	/** @inheritdoc */
 	public get prefab(): Prefab { return null; }
 	/** @inheritdoc */
@@ -121,7 +127,7 @@ export abstract class Asset implements AssetLike {
 	}
 
 	/** @hidden */
-	public breakReference(ref: Actor | Asset): void { }
+	public abstract breakReference(ref: Actor | Asset): void;
 
 	/** @hidden */
 	public breakAllReferences() {
@@ -156,7 +162,9 @@ export abstract class Asset implements AssetLike {
 
 	/** @hidden */
 	public static Parse(container: AssetContainer, def: AssetLike): Asset {
-		if (def.prefab) {
+		if (def.animationData) {
+			return new AnimationData(container, def);
+		} else if (def.prefab) {
 			return new Prefab(container, def);
 		} else if (def.mesh) {
 			return new Mesh(container, def);
