@@ -8,8 +8,7 @@ The `PenBehavior` will be an extension of the `ToolBehavior`.
 ## Architecture
 
 There will be a new `PenBehavior` that extends the `ToolBehavior` that will have the ability to generate a wet ink effect along the use 
-path on the client and provide the use path to the MRE app for generating a spline curve asset that could have a mesh to applied to it
-before sending it to all the clients to render. and a mesh to apply to this spline curve.
+path on the client.
 
 ### Behavior
 ``` ts

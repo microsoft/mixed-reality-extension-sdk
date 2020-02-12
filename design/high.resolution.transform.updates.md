@@ -12,7 +12,7 @@ containing the full high resolution path that occured for the actor during the 1
 
 ``` ts
 /**
- * Add a callback to the tool behavior to receive path updates for while the tool is being used
+ * Add a callback to the actor to receive path updates for while the tool is being used
  */
 public onHighResTransfromUpdate((path: Transform[]) => void) {
     // Path callback registration.
@@ -20,7 +20,7 @@ public onHighResTransfromUpdate((path: Transform[]) => void) {
 }
 
 /**
- * Remove a callback to the tool behavior to receive path updates for while the tool is being used
+ * Remove a callback to the actor to receive path updates for while the tool is being used
  */
 public offHighResTransfromUpdate((path: Transform[]) => void) {
     // Path callback de-registration.
