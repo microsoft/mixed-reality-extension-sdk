@@ -754,7 +754,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	/** The list of animations that target this actor, by ID. */
 	public get animations() {
 		return [...this.context.internal.animationSet.values()]
-			.filter(anim => anim.targetActorIds.includes(this.id))
+			.filter(anim => anim.targetIds.includes(this.id))
 			.reduce(
 				(map, anim) => {
 					map.set(anim.id, anim);
@@ -767,7 +767,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	/** The list of animations that target this actor, by name. */
 	public get animationsByName() {
 		return [...this.context.internal.animationSet.values()]
-			.filter(anim => anim.targetActorIds.includes(this.id) && anim.name)
+			.filter(anim => anim.targetIds.includes(this.id) && anim.name)
 			.reduce(
 				(map, anim) => {
 					map.set(anim.name, anim);

@@ -18,12 +18,14 @@ import {
 } from '../internal';
 import { AssetInternal } from '../asset/assetInternal';
 
+/* eslint-disable no-shadow */
 /** The names of types that support animation */
 export enum AnimatibleName {
-	Actor = 'actor', /* eslint-disable-line no-shadow */
+	Actor = 'actor',
 	Animation = 'animation',
 	Material = 'material'
 }
+/* eslint-enable no-shadow */
 
 /** The types that support animation */
 export type Animatible = Actor | Animation | Material;

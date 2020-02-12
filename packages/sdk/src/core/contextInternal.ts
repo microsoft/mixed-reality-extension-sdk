@@ -226,7 +226,7 @@ export class ContextInternal {
 		const createdAnim = new Animation(this.context, newGuid());
 		createdAnim.copy({
 			name: animationName,
-			targetActorIds: [actorId],
+			targetIds: [actorId],
 			weight: options.initialState?.enabled === true ? 1 : 0,
 			speed: options.initialState?.speed,
 			time: options.initialState?.time

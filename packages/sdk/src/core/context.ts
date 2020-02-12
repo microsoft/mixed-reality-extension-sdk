@@ -4,7 +4,7 @@
  */
 
 import events from 'events';
-import { Actor, Animation, Asset, Guid, newGuid, RPC, RPCChannels, User, } from '..';
+import { Actor, Guid, newGuid, RPC, RPCChannels, User, } from '..';
 import { Connection, NullConnection, Payloads } from '../internal';
 import { ContextInternal } from './contextInternal';
 
