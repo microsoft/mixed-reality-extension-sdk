@@ -3,6 +3,7 @@
  * Licensed under the MIT License.
  */
 import {
+	Actor,
 	Animatible,
 	AnimationProp,
 	AnimationWrapMode,
@@ -10,6 +11,7 @@ import {
 	Context,
 	EaseCurve,
 	Guid,
+	Material,
 	Track
 } from '..';
 import {
@@ -19,6 +21,7 @@ import {
 	readPath
 } from '../internal';
 import { AnimationInternal } from './animationInternal';
+import { AnimatibleName } from './targetPaths';
 
 /** Options for [[Animation.AnimateTo]]. */
 export type AnimateToOptions<T extends Animatible> = {
@@ -321,10 +324,18 @@ export class Animation implements AnimationLike, Patchable<AnimationLike> {
 		object: T,
 		options: AnimateToOptions<T>
 	): Promise<Animation> {
+		const tracks = [];
+		const typeString = object instanceof Actor ? AnimatibleName.Actor :
+			object instanceof Animation ? AnimatibleName.Animation :
+			object instanceof Material ? AnimatibleName.Material :
+			null;
+		if (!typeString) {
+			throw new Error(`Attempting to animate non-animatible object`);
+		}
+
 		// recursively search for fields with destinations
 		// NOTE: This is all untyped because JS doesn't support types at runtime.
 		// The function definition guarantees correct types anyway, so shouldn't be a problem.
-		const tracks = [];
 		(function buildTracksRecursively(target: any, path: string) {
 			for (const field in target) {
 				if (typeof target[field] === 'object') {
@@ -342,11 +353,12 @@ export class Animation implements AnimationLike, Patchable<AnimationLike> {
 					});
 				}
 			}
-		})(options.destination, `actor:target`);
+		})(options.destination, `${typeString}:target`);
+		console.log('tracks:', JSON.stringify(tracks));
 
 		// create the animation data
 		const ac = new AssetContainer(context);
-		const data = await ac.createAnimationData('temp', {
+		const data = ac.createAnimationData('temp', {
 			// force type assumptions
 			tracks: (tracks as unknown) as Array<Track<AnimationProp>>
 		});
