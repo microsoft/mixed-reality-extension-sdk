@@ -3,7 +3,6 @@
  * Licensed under the MIT License.
  */
 
- // TODO: fix to '.' after merge
 import { ActionHandler, ActionState, BehaviorType, DiscreteAction, TargetBehavior } from '.';
 
 export class ToolBehavior<ToolDataT> extends TargetBehavior {

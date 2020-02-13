@@ -4,7 +4,11 @@
  */
 
 import {
+	Actionable,
 	ActionEvent,
+	Actor,
+	ActorLike,
+	Behavior,
 	CollisionData,
 	CollisionEventType,
 	SetAnimationStateOptions,
@@ -15,8 +19,6 @@ import {
 	InternalPatchable
 } from '../internal';
 import { ColliderInternal } from './physics/colliderInternal';
-import { ActorLike, Actor } from './actor';
-import { Behavior, Actionable } from './behaviors';
 
 /**
  * @hidden
