@@ -4,3 +4,5 @@
  */
 
 export * from './sphere';
+export * from './box';
+export * from './capsule';
