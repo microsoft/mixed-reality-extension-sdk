@@ -13,4 +13,5 @@ export interface ActionEvent {
 	behaviorType: BehaviorType;
 	actionName: string;
 	actionState: ActionState;
+	actionData?: any;
 }

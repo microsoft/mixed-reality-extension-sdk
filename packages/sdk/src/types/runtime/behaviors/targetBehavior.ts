@@ -10,7 +10,7 @@ import { User } from '..';
  * Target behavior class containing the target behavior actions.
  */
 export class TargetBehavior extends Behavior {
-	private _target: DiscreteAction = new DiscreteAction();
+	private _target: DiscreteAction<void> = new DiscreteAction();
 
 	/** @inheritdoc */
 	public get behaviorType(): BehaviorType { return 'target'; }
@@ -23,7 +23,7 @@ export class TargetBehavior extends Behavior {
 	 * @param handler The handler to call when the target state is triggered.
 	 * @return This target behavior.
 	 */
-	public onTarget(targetState: 'enter' | 'exit', handler: ActionHandler): this {
+	public onTarget(targetState: 'enter' | 'exit', handler: ActionHandler<void>): this {
 		const actionState: ActionState = (targetState === 'enter') ? 'started' : 'stopped';
 		this._target.on(actionState, handler);
 		return this;

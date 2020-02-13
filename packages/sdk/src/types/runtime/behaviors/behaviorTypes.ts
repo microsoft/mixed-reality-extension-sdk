@@ -11,4 +11,6 @@ export type BehaviorType
 	= 'none'
 	| 'target'
 	| 'button'
+	| 'tool'
+	| 'pen'
 	;

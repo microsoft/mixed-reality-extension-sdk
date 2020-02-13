@@ -24,18 +24,7 @@ export class PenBehavior extends ToolBehavior {
 
 	/** @inheritdoc */
 	public get behaviorType(): BehaviorType { return 'pen'; }
-
-	public constructor(initOptions?: PenBehaviorInitOptions) {
-		if (initOptions.drawOriginalActorId)
-	}
-
-	public onDrawEventReceived((drawData: Partial<DrawDataLike>[]) => void) {
-		// Register for draw events.
-	}
-
-	public offDrawEventReceived((drawData: Partial<DrawDataLike>[]) => void) {
-		// Unregister for draw events.
-	}
+}	
 ```
 
 ### Draw Data

@@ -10,9 +10,9 @@ import { User } from '..';
  * Button behavior class containing the target behavior actions.
  */
 export class ButtonBehavior extends TargetBehavior {
-	private _hover: DiscreteAction = new DiscreteAction();
-	private _click: DiscreteAction = new DiscreteAction();
-	private _button: DiscreteAction = new DiscreteAction();
+	private _hover: DiscreteAction<void> = new DiscreteAction();
+	private _click: DiscreteAction<void> = new DiscreteAction();
+	private _button: DiscreteAction<void> = new DiscreteAction();
 
 	/** @inheritdoc */
 	public get behaviorType(): BehaviorType { return 'button'; }
@@ -27,7 +27,7 @@ export class ButtonBehavior extends TargetBehavior {
 	 * @param handler The handler to call when the hover state is triggered.
 	 * @return This button behavior.
 	 */
-	public onHover(hoverState: 'enter' | 'exit', handler: ActionHandler): this {
+	public onHover(hoverState: 'enter' | 'exit', handler: ActionHandler<void>): this {
 		const actionState: ActionState = (hoverState === 'enter') ? 'started' : 'stopped';
 		this._hover.on(actionState, handler);
 		return this;
@@ -38,7 +38,7 @@ export class ButtonBehavior extends TargetBehavior {
 	 * @param handler The handler to call when the click state is triggered.
 	 * @return This button behavior.
 	 */
-	public onClick(handler: ActionHandler): this {
+	public onClick(handler: ActionHandler<void>): this {
 		this._click.on('started', handler);
 		return this;
 	}
@@ -49,7 +49,7 @@ export class ButtonBehavior extends TargetBehavior {
 	 * @param handler The handler to call when the click state is triggered.
 	 * @return This button behavior.
 	 */
-	public onButton(buttonState: 'pressed' | 'released', handler: ActionHandler): this {
+	public onButton(buttonState: 'pressed' | 'released', handler: ActionHandler<void>): this {
 		const actionState: ActionState = (buttonState === 'pressed') ? 'started' : 'stopped';
 		this._button.on(actionState, handler);
 		return this;

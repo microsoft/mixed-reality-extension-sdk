@@ -14,7 +14,8 @@ action is being performed on the client.
 ### Action State
 ``` ts
 export type ActionState
-	= 'started'
+    = 'started'
+    | 'performing'
 	| 'stopped'
 	;
 ```
