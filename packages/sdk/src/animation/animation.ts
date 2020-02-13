@@ -3,16 +3,29 @@
  * Licensed under the MIT License.
  */
 import {
+	Animatible,
 	AnimationWrapMode,
 	Context,
+	EaseCurve,
 	Guid,
 } from '..';
 import {
 	ExportedPromise,
+	Like,
 	Patchable,
 	readPath
 } from '../internal';
 import { AnimationInternal } from './animationInternal';
+
+/** Options for [[Animation.AnimateTo]]. */
+export type AnimateToOptions<T extends Animatible> = {
+	/** The amount of time in seconds it takes to reach the [[destination]] value. */
+	duration: number;
+	/** A collection of property values that should be animated, and the desired final values. */
+	destination: Partial<Like<T>>;
+	/** How the values should approach their destinations. Defaults to [[AnimationEaseCurves.Linear]]. */
+	easing?: EaseCurve;
+}
 
 /** A serialized animation definition */
 export interface AnimationLike {
@@ -292,5 +305,20 @@ export class Animation implements AnimationLike, Patchable<AnimationLike> {
 			this.internal.patch = this.internal.patch ?? {} as Partial<AnimationLike>;
 			readPath(this, this.internal.patch, ...path);
 		}
+	}
+
+	/**
+	 * Animate an object's properties to a desired final state.
+	 * @param object The object to animate. Must be either an [[Actor]], an [[Animation]], or a [[Material]].
+	 * @param options How the object should animate.
+	 */
+	public static async AnimateTo<T extends Animatible>(object: T, options: AnimateToOptions<T>): Promise<Animation> {
+		// find which properties to animate
+
+		// generate a track for each property
+			// generate a single keyframe for the destination
+
+		// create the animation data
+		// bind to the object and play
 	}
 }
