@@ -3,7 +3,8 @@
  * Licensed under the MIT License.
  */
 
-import { ActionState, BehaviorType, DiscreteAction, User } from '../..';
+import { ActionState, BehaviorType, Actionable } from '.';
+import { User } from '../../user';
 
 /**
  * Abstract class that serves as the base class for all behaviors.

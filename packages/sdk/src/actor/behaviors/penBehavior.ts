@@ -3,9 +3,9 @@
  * Licensed under the MIT License.
  */
 
-import { BehaviorType } from "../..";
-import { ToolBehavior } from "./toolBehavior";
-import { TargetBehavior, TransformLike } from "../../types/runtime";
+import { BehaviorType, ToolBehavior } from ".";
+import { TransformLike } from "../..";
+
 
 export interface DrawData {
 	transform: TransformLike;

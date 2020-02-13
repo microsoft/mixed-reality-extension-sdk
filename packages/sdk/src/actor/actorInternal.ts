@@ -5,12 +5,8 @@
 
 import {
 	ActionEvent,
-	Actor,
-	ActorLike,
-	Behavior,
 	CollisionData,
 	CollisionEventType,
-	DiscreteAction,
 	SetAnimationStateOptions,
 	TriggerEventType
 } from '..';
@@ -19,7 +15,8 @@ import {
 	InternalPatchable
 } from '../internal';
 import { ColliderInternal } from './physics/colliderInternal';
-import { Actionable } from '../types/runtime';
+import { ActorLike, Actor } from './actor';
+import { Behavior, Actionable } from './behaviors';
 
 /**
  * @hidden

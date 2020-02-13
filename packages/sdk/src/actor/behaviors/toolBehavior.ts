@@ -4,7 +4,7 @@
  */
 
  // TODO: fix to '.' after merge
-import { ActionHandler, ActionState, BehaviorType, DiscreteAction, TargetBehavior } from "../../types/runtime/behaviors";
+import { ActionHandler, ActionState, BehaviorType, DiscreteAction, TargetBehavior } from '.';
 
 export class ToolBehavior<ToolDataT> extends TargetBehavior {
 	private _holding: DiscreteAction<ToolDataT> = new DiscreteAction();
