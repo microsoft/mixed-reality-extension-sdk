@@ -2,12 +2,17 @@
  * Copyright (c) Microsoft Corporation. All rights reserved.
  * Licensed under the MIT License.
  */
-import { Guid } from '../types/guid';
-import { AnimationWrapMode, InternalAnimation } from '.';
-import { Patchable } from '../types/patchable';
-import { Context } from '../types/runtime';
-import { ExportedPromise } from '../utils/exportedPromise';
-import readPath from '../utils/readPath';
+import {
+	AnimationWrapMode,
+	Context,
+	Guid,
+} from '..';
+import {
+	ExportedPromise,
+	Patchable,
+	readPath
+} from '../internal';
+import { AnimationInternal } from './animationInternal';
 
 /** A serialized animation definition */
 export interface AnimationLike {
@@ -35,7 +40,7 @@ export interface AnimationLike {
 /** A runtime animation */
 export class Animation implements AnimationLike, Patchable<AnimationLike> {
 	/** @hidden */
-	public internal = new InternalAnimation(this);
+	public internal = new AnimationInternal(this);
 
 	private _id: Guid;
 	/** @inheritdoc */

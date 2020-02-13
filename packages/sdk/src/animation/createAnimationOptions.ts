@@ -8,7 +8,7 @@ import {
 	AnimationKeyframe,
 	AnimationWrapMode,
 	SetAnimationStateOptions
-} from '.';
+} from '..';
 
 /**
  * Parameters to the `actor.createAnimation` call.
