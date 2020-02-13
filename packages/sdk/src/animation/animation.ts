@@ -4,10 +4,13 @@
  */
 import {
 	Animatible,
+	AnimationProp,
 	AnimationWrapMode,
+	AssetContainer,
 	Context,
 	EaseCurve,
 	Guid,
+	Track
 } from '..';
 import {
 	ExportedPromise,
@@ -309,16 +312,49 @@ export class Animation implements AnimationLike, Patchable<AnimationLike> {
 
 	/**
 	 * Animate an object's properties to a desired final state.
+	 * @param context A valid MRE context.
 	 * @param object The object to animate. Must be either an [[Actor]], an [[Animation]], or a [[Material]].
 	 * @param options How the object should animate.
 	 */
-	public static async AnimateTo<T extends Animatible>(object: T, options: AnimateToOptions<T>): Promise<Animation> {
-		// find which properties to animate
-
-		// generate a track for each property
-			// generate a single keyframe for the destination
+	public static async AnimateTo<T extends Animatible>(
+		context: Context,
+		object: T,
+		options: AnimateToOptions<T>
+	): Promise<Animation> {
+		// recursively search for fields with destinations
+		// NOTE: This is all untyped because JS doesn't support types at runtime.
+		// The function definition guarantees correct types anyway, so shouldn't be a problem.
+		const tracks = [];
+		(function buildTracksRecursively(target: any, path: string) {
+			for (const field in target) {
+				if (typeof target[field] === 'object') {
+					buildTracksRecursively(target[field], `${path}/${field}`);
+				} else {
+					// generate a track for each property
+					tracks.push({
+						target: path,
+						// generate a single keyframe for the destination
+						keyframes: [{
+							time: options.duration,
+							value: target[field],
+							easing: options.easing
+						}]
+					});
+				}
+			}
+		})(options.destination, `actor:target`);
 
 		// create the animation data
-		// bind to the object and play
+		const ac = new AssetContainer(context);
+		const data = await ac.createAnimationData('temp', {
+			// force type assumptions
+			tracks: (tracks as unknown) as Array<Track<AnimationProp>>
+		});
+
+		// bind to the object and play immediately
+		const anim = await data.bind({ target: object }, { weight: 1, wrapMode: AnimationWrapMode.Once });
+		anim.finished().then(() => ac.unload());
+
+		return anim;
 	}
 }

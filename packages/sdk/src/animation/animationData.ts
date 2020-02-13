@@ -38,9 +38,9 @@ export type Keyframe<T extends AnimationProp> = {
 	time: number;
 	/** The property's value at this instant, or a reference to another property. */
 	value: T | TargetPath<T>;
-	/** Whether [[value]] is relative to 0 or to the target's current property value. */
+	/** Whether [[value]] is relative to 0 or to the target's current property value. Defaults to false. */
 	relative?: boolean;
-	/** How the value approaches this frame's value. */
+	/** How the value approaches this frame's value. Defaults to linear. */
 	easing?: EaseCurve;
 }
 
