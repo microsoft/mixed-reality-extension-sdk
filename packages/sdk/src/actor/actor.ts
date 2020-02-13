@@ -24,7 +24,6 @@ import {
 	ColliderType,
 	CollisionLayer,
 	Context,
-	CreateAnimationOptions,
 	DiscreteAction,
 	Guid,
 	Light,
@@ -39,7 +38,6 @@ import {
 	ReadonlyMap,
 	RigidBody,
 	RigidBodyLike,
-	SetAnimationStateOptions,
 	SetAudioStateOptions,
 	SetVideoStateOptions,
 	Text,
@@ -632,86 +630,6 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	}
 
 	/**
-	 * Creates an animation on the actor.
-	 * @param animationName The name of the animation.
-	 * @param options The animation keyframes, events, and other characteristics.
-	 * @returns A promise resolving to the resulting animation instance.
-	 */
-	public createAnimation(animationName: string, options: CreateAnimationOptions) {
-		return this.context.internal.createAnimation(this.id, animationName, options);
-	}
-
-	/**
-	 * @deprecated Set [[Animation.isPlaying]] instead.
-	 * Enables the animation on the actor. Animation will start playing immediately.
-	 * @param animationName The name of the animation.
-	 */
-	public enableAnimation(animationName: string) {
-		this.setAnimationState(animationName, { enabled: true });
-	}
-
-	/**
-	 * @deprecated Set [[Animation.isPlaying]] instead.
-	 * Disables the animation on the actor. Animation will stop playing immediately.
-	 * When an animation is disabled, it is also paused (its time does not move forward).
-	 * @param animationName The name of the animation.
-	 */
-	public disableAnimation(animationName: string) {
-		this.setAnimationState(animationName, { enabled: false });
-	}
-
-	/**
-	 * @deprecated Set [[Animation.isPlaying]] instead.
-	 * Starts the animation (sets animation speed to 1).
-	 * @param animationName The name of the animation.
-	 */
-	public resumeAnimation(animationName: string) {
-		this.setAnimationState(animationName, { enabled: true });
-	}
-
-	/**
-	 * @deprecated Set [[Animation.isPlaying]] instead.
-	 * Stops the animation (sets animation speed to zero).
-	 * @param animationName The name of the animation.
-	 */
-	public pauseAnimation(animationName: string) {
-		this.setAnimationState(animationName, { enabled: false });
-	}
-
-	/**
-	 * @deprecated Set [[Animation.time]] instead.
-	 * Sets the animation time (units are in seconds).
-	 * @param animationName The name of the animation.
-	 * @param time The desired animation time. A negative value seeks to the end of the animation.
-	 */
-	public setAnimationTime(animationName: string, time: number) {
-		this.setAnimationState(animationName, { time });
-	}
-
-	/**
-	 * @deprecated Set properties of an [[Animation]] instance instead.
-	 * (Advanced) Sets the time, speed, and enabled state of an animation.
-	 * @param animationName The name of the animation.
-	 * @param options The time, speed and enabled state to apply. All values are optional. Only the values
-	 * provided will be applied.
-	 */
-	public setAnimationState(animationName: string, state: SetAnimationStateOptions) {
-		return this.context.internal.setAnimationState(this.id, animationName, state);
-	}
-
-	/**
-	 * Animate actor properties to the given value, following the specified animation curve. Actor transform
-	 * is the only animatable property at the moment. Other properties such as light color may become animatable
-	 * in the future.
-	 * @param value The desired final state of the animation.
-	 * @param duration The length of the interpolation (in seconds).
-	 * @param curve The cubic-bezier curve parameters. @see AnimationEaseCurves for predefined values.
-	 */
-	public animateTo(value: Partial<ActorLike>, duration: number, curve: number[]) {
-		this.context.internal.animateTo(this.id, value, duration, curve);
-	}
-
-	/**
 	 * Finds child actors matching `name`.
 	 * @param name The name of the actors to find.
 	 * @param recurse Whether or not to search recursively.
@@ -727,28 +645,6 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 		}
 
 		return namedChildren;
-	}
-
-	/**
-	 * Actor Events
-	 */
-
-	/**
-	 * Set an event handler for the animation-disabled event.
-	 * @param handler The handler to call when an animation reaches the end or is otherwise disabled.
-	 */
-	public onAnimationDisabled(handler: (animationName: string) => any): this {
-		this.emitter.addListener('animation-disabled', handler);
-		return this;
-	}
-
-	/**
-	 * Set an event handler for the animation-enabled event.
-	 * @param handler The handler to call when an animation moves from the disabled to enabled state.
-	 */
-	public onAnimationEnabled(handler: (animationName: string) => any): this {
-		this.emitter.addListener('animation-enabled', handler);
-		return this;
 	}
 
 	/** The list of animations that target this actor, by ID. */

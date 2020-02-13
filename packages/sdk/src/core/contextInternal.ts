@@ -8,7 +8,6 @@ import {
 	ActorLike,
 	Animation,
 	AnimationLike,
-	AnimationWrapMode,
 	Asset,
 	AssetContainer,
 	AssetContainerIterable,
@@ -17,14 +16,12 @@ import {
 	CollisionEvent,
 	CollisionLayer,
 	Context,
-	CreateAnimationOptions,
 	Guid,
 	log,
 	MediaCommand,
 	MediaInstance,
 	newGuid,
 	PerformanceStats,
-	SetAnimationStateOptions,
 	SetMediaStateOptions,
 	TriggerEvent,
 	User,
@@ -37,8 +34,6 @@ import {
 	Patchable,
 	Payloads,
 	Protocols,
-	resolveJsonValues,
-	safeAccessPath as safeGet,
 } from '../internal';
 
 /**
@@ -205,86 +200,6 @@ export class ContextInternal {
 		return actor;
 	}
 
-	public createAnimation(actorId: Guid, animationName: string, options: CreateAnimationOptions) {
-		const actor = this.actorSet.get(actorId);
-		if (!actor) {
-			log.error('app', `Failed to create animation on ${animationName}. Actor ${actorId} not found.`);
-		}
-		options = {
-			wrapMode: AnimationWrapMode.Once,
-			...options
-		};
-
-		// Transform animations must be specified in local space
-		for (const frame of options.keyframes) {
-			if (frame.value.transform && !safeGet(frame.value, 'transform', 'local')) {
-				throw new Error("Transform animations must be specified in local space");
-			}
-		}
-
-		// generate the anim immediately
-		const createdAnim = new Animation(this.context, newGuid());
-		createdAnim.copy({
-			name: animationName,
-			targetIds: [actorId],
-			weight: options.initialState?.enabled === true ? 1 : 0,
-			speed: options.initialState?.speed,
-			time: options.initialState?.time
-		});
-		this.animationSet.set(createdAnim.id, createdAnim);
-
-		// Resolve by-reference values now, ensuring they won't change in the
-		// time between now and when this message is actually sent.
-		options.keyframes = resolveJsonValues(options.keyframes);
-		return new Promise<Animation>((resolve, reject) => {
-			this.protocol.sendPayload({
-				type: 'create-animation',
-				actorId,
-				animationName,
-				animationId: createdAnim.id.toString(),
-				...options
-			} as Payloads.CreateAnimation,
-			{
-				resolve: (reply: Payloads.ObjectSpawned) => {
-					if (reply.result.resultCode !== 'error') {
-						createdAnim.copy(reply.animations[0]);
-						resolve(createdAnim);
-					} else {
-						reject(reply.result.message);
-					}
-				},
-				reject
-			});
-		});
-	}
-
-	public setAnimationState(
-		actorId: Guid,
-		animationName: string,
-		state: SetAnimationStateOptions
-	) {
-		const actor = this.actorSet.get(actorId);
-		if (!actor) {
-			log.error('app', `Failed to set animation state on "${animationName}". Actor "${actorId}" not found.`);
-			return;
-		}
-		const anim = actor.animationsByName.get(animationName);
-		if (!anim) {
-			log.error('app', `Failed to set animation state on "${animationName}". ` +
-				`No animation with this name was found on actor "${actorId}" (${actor.name}).`);
-			return;
-		}
-		if (state.enabled !== undefined) {
-			anim.isPlaying = state.enabled;
-		}
-		if (state.speed !== undefined) {
-			anim.speed = state.speed;
-		}
-		if (state.time !== undefined) {
-			anim.time = state.time;
-		}
-	}
-
 	public async createAnimationFromData(
 		dataId: Guid,
 		targets: { [placeholder: string]: Guid },
@@ -335,31 +250,6 @@ export class ContextInternal {
 		} as Payloads.SetMediaState);
 	}
 
-	public animateTo(
-		actorId: Guid,
-		value: Partial<ActorLike>,
-		duration: number,
-		curve: number[],
-	) {
-		const actor = this.actorSet.get(actorId);
-		if (!actor) {
-			log.error('app', `Failed animateTo. Actor ${actorId} not found.`);
-		} else if (!Array.isArray(curve) || curve.length !== 4) {
-			log.error('app', '`curve` parameter must be an array of four numbers. ' +
-				'Try passing one of the predefined curves from `AnimationEaseCurves`');
-		} else {
-			this.protocol.sendPayload({
-				type: 'interpolate-actor',
-				actorId,
-				animationName: newGuid().toString(),
-				value,
-				duration,
-				curve,
-				enabled: true
-			} as Payloads.InterpolateActor);
-		}
-	}
-
 	public async startListening() {
 		try {
 			// Startup the handshake protocol.
@@ -379,7 +269,6 @@ export class ContextInternal {
 			execution.on('protocol.receive-rpc', this.receiveRPC.bind(this));
 			execution.on('protocol.collision-event-raised', this.collisionEventRaised.bind(this));
 			execution.on('protocol.trigger-event-raised', this.triggerEventRaised.bind(this));
-			execution.on('protocol.set-animation-state', this.setAnimationStateEventRaised.bind(this));
 			execution.on('protocol.update-animations', this.updateAnimations.bind(this));
 
 			// Startup the execution protocol
@@ -610,13 +499,6 @@ export class ContextInternal {
 			actor.internal.triggerEventRaised(
 				triggerEvent.eventType,
 				otherActor);
-		}
-	}
-
-	public setAnimationStateEventRaised(actorId: Guid, animationName: string, state: SetAnimationStateOptions) {
-		const actor = this.context.actor(actorId);
-		if (actor) {
-			actor.internal.setAnimationStateEventRaised(animationName, state);
 		}
 	}
 

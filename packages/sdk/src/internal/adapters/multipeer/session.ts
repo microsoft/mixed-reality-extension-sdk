@@ -6,7 +6,7 @@
 import deepmerge from 'deepmerge';
 import { EventEmitter } from 'events';
 
-import { Guid, log, UserLike } from '../../..';
+import { AnimationLike, Guid, log, UserLike } from '../../..';
 import {
 	Client,
 	Connection,
@@ -26,7 +26,7 @@ import {
 } from '../../../internal';
 
 type AssetCreationMessage = Message<Payloads.LoadAssets | Payloads.CreateAsset>;
-type AnimationCreationMessage = Message<Payloads.CreateAnimation | Payloads.CreateActorCommon>;
+type AnimationCreationMessage = Message<Payloads.CreateAnimation2 | Payloads.CreateActorCommon>;
 
 /**
  * @hidden
@@ -260,25 +260,17 @@ export class Session extends EventEmitter {
 		this.sendToClients({ payload }, filterFn);
 	}
 
-	/** @deprecated */
-	public findAnimation(syncActor: Partial<SyncActor>, animationName: string) {
-		return (syncActor.createdAnimations || []).find(item => item.message.payload.animationName === animationName);
-	}
-
-	/** @deprecated */
 	public isAnimating(syncActor: Partial<SyncActor>): boolean {
-		if ((syncActor.createdAnimations || []).some(item => item.enabled)) {
+		const actorAnims = [...this.animationSet.values()]
+			.filter(syncAnim => syncAnim.targetIds.includes(syncActor.actorId) && syncAnim.active);
+		if (actorAnims.length > 0) {
 			return true;
 		}
-		if (syncActor.initialization &&
-			syncActor.initialization.message &&
-			syncActor.initialization.message.payload &&
-			syncActor.initialization.message.payload.actor) {
-			const parent = this._actorSet.get(syncActor.initialization.message.payload.actor.parentId);
-			if (parent) {
-				return this.isAnimating(parent);
-			}
+		const parent = this._actorSet.get(syncActor.initialization?.message?.payload?.actor?.parentId);
+		if (parent) {
+			return this.isAnimating(parent);
 		}
+
 		return false;
 	}
 
@@ -413,12 +405,14 @@ export class Session extends EventEmitter {
 		this._animationCreatorSet.set(payload.id, payload);
 	}
 
-	public cacheAnimationCreation(animId: Guid, creatorId: Guid, duration?: number) {
-		this._animationSet.set(animId, {
-			id: animId,
+	public cacheAnimationCreation(creatorId: Guid, def: Partial<AnimationLike>) {
+		this._animationSet.set(def.id, {
+			id: def.id,
 			creatorMessageId: creatorId,
+			targetIds: [...def.targetIds],
 			update: undefined,
-			duration
+			duration: def.duration,
+			active: def.weight > 0 && def.speed !== 0
 		});
 	}
 
@@ -438,5 +432,8 @@ export class Session extends EventEmitter {
 			// just save it
 			syncAnim.update = update;
 		}
+
+		syncAnim.active = syncAnim.update.payload.animation.weight > 0 &&
+			syncAnim.update.payload.animation.speed !== 0;
 	}
 }

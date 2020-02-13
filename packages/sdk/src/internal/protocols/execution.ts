@@ -128,12 +128,4 @@ export class Execution extends Protocols.Protocol {
 			otherColliderOwnerId: payload.otherActorId
 		} as TriggerEvent);
 	};
-
-	/** @private */
-	public 'recv-set-animation-state' = (payload: Payloads.SetAnimationState) => {
-		this.emit('protocol.set-animation-state',
-			payload.actorId,
-			payload.animationName,
-			payload.state);
-	};
 }

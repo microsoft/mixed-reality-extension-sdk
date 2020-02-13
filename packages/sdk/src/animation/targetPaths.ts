@@ -8,8 +8,6 @@ import {
 	Color3,
 	Color4,
 	Quaternion,
-	ScaledTransform,
-	Transform,
 	Vector2,
 	Vector3,
 } from '..';
@@ -25,7 +23,7 @@ export enum AnimatibleName {
 export type AnimationProp = Vector2 | Vector3 | Quaternion | Color3 | Color4 | number | string | boolean;
 
 /** A reference to a property on an object. Do not create these directly, but instead call [[ActorPath]]. */
-export abstract class TargetPath<T = AnimationProp> {
+export abstract class TargetPath<T extends AnimationProp> {
 	public constructor(protected id: string) { }
 	public toJSON() { return this.toString(); }
 	public toString() { return this.id; }
@@ -57,12 +55,12 @@ class Vector3TargetPath extends TargetPath<Vector3> {
 
 class QuaternionTargetPath extends TargetPath<Quaternion> { }
 
-class TransformTargetPath extends TargetPath<Transform> {
+class TransformTargetPath extends TargetPath<never> {
 	public get position() { return new Vector3TargetPath(this.id + '/position'); }
 	public get rotation() { return new QuaternionTargetPath(this.id + '/rotation'); }
 }
 
-class ScaledTransformTargetPath extends TargetPath<ScaledTransform> {
+class ScaledTransformTargetPath extends TargetPath<never> {
 	public get position() { return new Vector3TargetPath(this.id + '/position'); }
 	public get rotation() { return new QuaternionTargetPath(this.id + '/rotation'); }
 	public get scale() { return new Vector3TargetPath(this.id + '/scale'); }
