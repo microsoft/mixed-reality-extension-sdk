@@ -17,6 +17,7 @@ import {
 	TargetPath,
 } from '..';
 import {
+	Like,
 	Patchable,
 } from '../internal';
 import { AssetInternal } from '../asset/assetInternal';
@@ -37,7 +38,7 @@ export type Keyframe<T extends AnimationProp> = {
 	/** The time in seconds from the start of the animation.  */
 	time: number;
 	/** The property's value at this instant, or a reference to another property. */
-	value: T | TargetPath<T>;
+	value: Like<T> | TargetPath<T>;
 	/** Whether [[value]] is relative to 0 or to the target's current property value. Defaults to false. */
 	relative?: boolean;
 	/** How the value approaches this frame's value. Defaults to linear. */

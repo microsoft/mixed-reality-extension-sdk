@@ -67,8 +67,8 @@ class ScaledTransformTargetPath extends TargetPath<never> {
 }
 
 class ActorTransformTargetPath extends TargetPath<never> {
-	public get local() { return new TransformTargetPath(this.id + '/local'); }
-	public get app() { return new ScaledTransformTargetPath(this.id + '/app'); }
+	public get local() { return new ScaledTransformTargetPath(this.id + '/local'); }
+	public get app() { return new TransformTargetPath(this.id + '/app'); }
 }
 
 class ActorTargetPath extends TargetPath<never> {

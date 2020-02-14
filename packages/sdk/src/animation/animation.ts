@@ -5,6 +5,7 @@
 import {
 	Actor,
 	Animatible,
+	AnimatibleName,
 	AnimationProp,
 	AnimationWrapMode,
 	AssetContainer,
@@ -21,7 +22,6 @@ import {
 	readPath
 } from '../internal';
 import { AnimationInternal } from './animationInternal';
-import { AnimatibleName } from './targetPaths';
 
 /** Options for [[Animation.AnimateTo]]. */
 export type AnimateToOptions<T extends Animatible> = {
@@ -325,7 +325,8 @@ export class Animation implements AnimationLike, Patchable<AnimationLike> {
 		options: AnimateToOptions<T>
 	): Promise<Animation> {
 		const tracks = [];
-		const typeString = object instanceof Actor ? AnimatibleName.Actor :
+		const typeString =
+			object instanceof Actor ? AnimatibleName.Actor :
 			object instanceof Animation ? AnimatibleName.Animation :
 			object instanceof Material ? AnimatibleName.Material :
 			null;
