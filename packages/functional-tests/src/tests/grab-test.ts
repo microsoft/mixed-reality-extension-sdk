@@ -153,7 +153,7 @@ export default class GrabTest extends Test {
 			}, {
 				time: 0.2,
 				value: { x: this.SCALE, y: this.SCALE, z: this.SCALE }
-			}] as Array<MRE.Keyframe<MRE.Vector3>>
-		}]
+			}]
+		} as MRE.Track<MRE.Vector3>]
 	};
 }

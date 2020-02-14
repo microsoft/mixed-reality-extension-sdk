@@ -211,8 +211,8 @@ export default class SoundTest extends Test {
 				}, {
 					time: 1 * duration,
 					value: MRE.Quaternion.RotationAxis(axis, start + Math.PI * 4 / 2)
-				}] as Array<MRE.Keyframe<MRE.Quaternion>>
-			}]
+				}]
+			} as MRE.Track<MRE.Quaternion>]
 		};
 	}
 }

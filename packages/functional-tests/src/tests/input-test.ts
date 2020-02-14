@@ -146,6 +146,6 @@ export default class InputTest extends Test {
 				time: 0.3,
 				value: { x: 0.5, y: 0.5, z: 0.5 }
 			}]
-		}]
+		} as MRE.Track<MRE.Vector3>]
 	};
 }

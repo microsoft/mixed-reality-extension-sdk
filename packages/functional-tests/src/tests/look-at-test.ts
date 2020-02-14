@@ -16,8 +16,8 @@ const circleAnimData: MRE.AnimationDataLike = {
 			{ time: 2, value: { x: 0, y: 2, z: -0.5 } },
 			{ time: 3, value: { x: -1, y: 1, z: -0.5 } },
 			{ time: 4, value: { x: 0, y: 0, z: -0.5 } }
-		] as Array<MRE.Keyframe<MRE.Vector3>>
-	}]
+		]
+	} as MRE.Track<MRE.Vector3>]
 };
 
 export default class LookAtTest extends Test {

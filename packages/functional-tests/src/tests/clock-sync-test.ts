@@ -165,16 +165,11 @@ export default class ClockSyncTest extends Test {
 			}
 		}
 
-		const data = this.assets.createAnimationData(mesh.name + "Anim", {
+		this.assets.createAnimationData(mesh.name + "Anim", {
 			tracks: [{
 				target: MRE.ActorPath('target').transform.local.position,
 				keyframes
 			}]
-		});
-
-		data.bind({ 'target': mesh }, {
-			name: data.name,
-			wrapMode: MRE.AnimationWrapMode.Loop
-		});
+		}).bind({ 'target': mesh }, { wrapMode: MRE.AnimationWrapMode.Loop });
 	}
 }
