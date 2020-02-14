@@ -7,13 +7,18 @@ import * as MRE from '@microsoft/mixed-reality-extension-sdk';
 
 import { Test } from '../test';
 
-const circleKeyframes = [
-	{ time: 0, value: { transform: { local: { position: { x: 0, y: 0, z: -0.5 } } } } },
-	{ time: 1, value: { transform: { local: { position: { x: 1, y: 1, z: -0.5 } } } } },
-	{ time: 2, value: { transform: { local: { position: { x: 0, y: 2, z: -0.5 } } } } },
-	{ time: 3, value: { transform: { local: { position: { x: -1, y: 1, z: -0.5 } } } } },
-	{ time: 4, value: { transform: { local: { position: { x: 0, y: 0, z: -0.5 } } } } }
-] as MRE.AnimationKeyframe[];
+const circleAnimData: MRE.AnimationDataLike = {
+	tracks: [{
+		target: MRE.ActorPath("target").transform.local.position,
+		keyframes: [
+			{ time: 0, value: { x: 0, y: 0, z: -0.5 } },
+			{ time: 1, value: { x: 1, y: 1, z: -0.5 } },
+			{ time: 2, value: { x: 0, y: 2, z: -0.5 } },
+			{ time: 3, value: { x: -1, y: 1, z: -0.5 } },
+			{ time: 4, value: { x: 0, y: 0, z: -0.5 } }
+		] as Array<MRE.Keyframe<MRE.Vector3>>
+	}]
+};
 
 export default class LookAtTest extends Test {
 	public expectedResultDescription = "No swivel, XY swivel, Y swivel";
@@ -63,11 +68,8 @@ export default class LookAtTest extends Test {
 				}
 			}
 		});
-		tester.createAnimation('circle', {
-			wrapMode: MRE.AnimationWrapMode.Loop,
-			keyframes: circleKeyframes
-		});
-		tester.enableAnimation('circle');
+		this.assets.createAnimationData('circle', circleAnimData)
+			.bind({target: tester}, { weight: 1, wrapMode: MRE.AnimationWrapMode.Loop });
 
 		this.interval = setInterval(() => {
 			const modes = [MRE.LookAtMode.TargetXY, MRE.LookAtMode.TargetY, MRE.LookAtMode.None];

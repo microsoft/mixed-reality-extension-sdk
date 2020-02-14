@@ -127,7 +127,7 @@ export default class ClockSyncTest extends Test {
 		lineHeight: number,
 		scale: number) {
 
-		const keyframes: MRE.Keyframe<MRE.Vector3>[] = [];
+		const keyframes: Array<MRE.Keyframe<MRE.Vector3>> = [];
 
 		// test: set to 0.01 to speed up 100x
 		const timeScale = 1.0;

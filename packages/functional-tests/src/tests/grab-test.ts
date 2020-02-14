@@ -62,10 +62,8 @@ export default class GrabTest extends Test {
 		});
 
 		// Create some animations on the cube.
-		const onClickAnim = this.assets.createAnimationData('OnClick', { tracks: [{
-			target: MRE.ActorPath("target").transform.local.scale,
-			keyframes: this.clickAnimationData
-		}]}).bind({ target: this.model });
+		this.assets.createAnimationData('OnClick', this.clickAnimationData)
+			.bind({ target: this.model });
 
 		// Set up cursor interaction. We add the input behavior ButtonBehavior to the cube.
 		// Button behaviors have two pairs of events: hover start/stop, and click start/stop.
@@ -143,14 +141,19 @@ export default class GrabTest extends Test {
 		}
 	}
 
-	private clickAnimationData: MRE.Keyframe<MRE.Vector3>[] = [{
-		time: 0,
-		value: { x: this.SCALE, y: this.SCALE, z: this.SCALE }
-	}, {
-		time: 0.1,
-		value: { x: this.SCALE + 0.1, y: this.SCALE + 0.1, z: this.SCALE + 0.1 }
-	}, {
-		time: 0.2,
-		value: { x: this.SCALE, y: this.SCALE, z: this.SCALE }
-	}];
+	private clickAnimationData: MRE.AnimationDataLike = {
+		tracks: [{
+			target: MRE.ActorPath("target").transform.local.scale,
+			keyframes: [{
+				time: 0,
+				value: { x: this.SCALE, y: this.SCALE, z: this.SCALE }
+			}, {
+				time: 0.1,
+				value: { x: this.SCALE + 0.1, y: this.SCALE + 0.1, z: this.SCALE + 0.1 }
+			}, {
+				time: 0.2,
+				value: { x: this.SCALE, y: this.SCALE, z: this.SCALE }
+			}] as Array<MRE.Keyframe<MRE.Vector3>>
+		}]
+	};
 }

@@ -95,12 +95,12 @@ export default class CollisionLayerTest extends Test {
 		const ballAnim = this.assets.animationData.find(ad => ad.name === 'swing')
 			|| this.assets.createAnimationData('swing', {
 				tracks: [{
-					target: MRE.ActorPath('target').transform.local.position,
+					target: MRE.ActorPath('target').transform.local.position.x,
 					keyframes: [
-						{ time: 0, value: { x: 0.25 } },
-						{ time: 0.5, value: { x: -0.25 } },
-						{ time: 1, value: { x: 0.25 } }]
-				}]
+						{ time: 0, value: 0.25 },
+						{ time: 0.5, value: -0.25 },
+						{ time: 1, value: 0.25 }]
+				} as MRE.Track<number>]
 			});
 
 		const box = MRE.Actor.Create(this.app.context, {

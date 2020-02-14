@@ -60,9 +60,9 @@ export default class InputTest extends Test {
 		});
 
 		// Create some animations on the cube.
-		const growAnim = this.assets.createAnimationData('Grow', this.growAnimationData)
+		this.assets.createAnimationData('Grow', this.growAnimationData)
 			.bind({target: this.model});
-		const spinAnim = this.assets.createAnimationData('Spin', this.generateSpinData(0.5, MRE.Vector3.Up()))
+		this.assets.createAnimationData('Spin', this.generateSpinData(0.5, MRE.Vector3.Up()))
 			.bind({target: this.model});
 
 		// Set up cursor interaction. We add the input behavior ButtonBehavior to the cube.
