@@ -119,18 +119,16 @@ export default class InputTest extends Test {
 		return {
 			tracks: [{
 				target: MRE.ActorPath("target").transform.local.rotation,
+				relative: true,
 				keyframes: [{
 					time: 0 * duration,
-					value: MRE.Quaternion.RotationAxis(axis, 0),
-					relative: true
+					value: MRE.Quaternion.RotationAxis(axis, 0)
 				}, {
 					time: 0.5 * duration,
-					value: MRE.Quaternion.RotationAxis(axis, Math.PI / 2),
-					relative: true
+					value: MRE.Quaternion.RotationAxis(axis, Math.PI / 2)
 				}, {
 					time: 1 * duration,
-					value: MRE.Quaternion.RotationAxis(axis, Math.PI),
-					relative: true
+					value: MRE.Quaternion.RotationAxis(axis, Math.PI)
 				}]
 			} as MRE.Track<MRE.Quaternion>]
 		};
