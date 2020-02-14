@@ -94,12 +94,12 @@ export default class ClockSyncTest extends Test {
 		this.buildDigitAnimation(mesh10Hours, -4.25, yOffset, 10 * 60 * 60, 3, 2.4, lineHeight, textScale);
 
 		// Start the animations.
-		actors.forEach(actor => actor.enableAnimation('anim'));
+		actors.forEach(actor => actor.animationsByName.get(actor.name + "Anim").play());
 
 		await this.stoppedAsync();
 
 		// Stop the animations.
-		actors.forEach(actor => actor.disableAnimation('anim'));
+		actors.forEach(actor => actor.animationsByName.get(actor.name + "Anim").play());
 
 		return true;
 	}
@@ -127,7 +127,7 @@ export default class ClockSyncTest extends Test {
 		lineHeight: number,
 		scale: number) {
 
-		const keyframes: MRE.AnimationKeyframe[] = [];
+		const keyframes: MRE.Keyframe<MRE.Vector3>[] = [];
 
 		// test: set to 0.01 to speed up 100x
 		const timeScale = 1.0;
@@ -139,16 +139,9 @@ export default class ClockSyncTest extends Test {
 		// which only inserts a start key, as the animation then snaps back to start at the rollover time
 		for (let i = 0; i <= digits; ++i) {
 			const value = {
-				transform: {
-					local: {
-						position: {
-							x: (xOffset) * scale,
-							y: (yOffset + i * lineHeight) * scale,
-							z: 0,
-						},
-						scale: { x: scale, y: scale, z: scale }
-					}
-				}
+				x: (xOffset) * scale,
+				y: (yOffset + i * lineHeight) * scale,
+				z: 0,
 			};
 
 			let frameNumber = i;
@@ -172,10 +165,16 @@ export default class ClockSyncTest extends Test {
 			}
 		}
 
-		mesh.createAnimation(
-			'anim', {
-				wrapMode: MRE.AnimationWrapMode.Loop,
+		const data = this.assets.createAnimationData(mesh.name + "Anim", {
+			tracks: [{
+				target: MRE.ActorPath('target').transform.local.position,
 				keyframes
-			});
+			}]
+		});
+
+		data.bind({ 'target': mesh }, {
+			name: data.name,
+			wrapMode: MRE.AnimationWrapMode.Loop
+		});
 	}
 }
