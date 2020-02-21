@@ -3,17 +3,19 @@
  * Licensed under the MIT License.
  */
 
-import { Payloads, Protocols, Session } from '../../../../internal';
+import { Payloads, Session } from '../../../../internal';
+// break import cycle
+import { Protocol, ClientPreprocessing } from '../../../protocols';
 
 /**
  * @hidden
  * Protocol for handling handshake with the app instance (Session is a client of App)
  */
-export class SessionHandshake extends Protocols.Protocol {
+export class SessionHandshake extends Protocol {
 	constructor(session: Session) {
 		super(session.conn);
 		// Behave like a client-side endpoint (record latency, respond to heartbeats).
-		this.use(new Protocols.ClientPreprocessing(this));
+		this.use(new ClientPreprocessing(this));
 	}
 
 	/** @override */

@@ -6,13 +6,14 @@
 import { EventEmitter } from 'events';
 import { Guid } from '../..';
 import {
-	Connection,
 	ConnectionQuality,
 	Message,
 	NetworkStatsReport,
 	NetworkStatsTracker,
 	QueuedPromise
 } from '../../internal';
+// break import cycle
+import { Connection } from './connection';
 
 /**
  * @hidden

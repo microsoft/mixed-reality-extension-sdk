@@ -8,9 +8,10 @@ import {
 	ActionState,
 	BehaviorType,
 	DiscreteAction,
-	TargetBehavior,
 	User
 } from '../..';
+ // break import cycle
+import { TargetBehavior } from './targetBehavior';
 
 /**
  * Button behavior class containing the target behavior actions.
