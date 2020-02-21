@@ -10,7 +10,7 @@ import {
 	DiscreteAction,
 	User
 } from '../..';
- // break import cycle
+// break import cycle
 import { TargetBehavior } from './targetBehavior';
 
 /**
