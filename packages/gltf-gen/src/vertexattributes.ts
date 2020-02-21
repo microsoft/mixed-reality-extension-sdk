@@ -229,7 +229,7 @@ export class ColorAttribute extends VertexAttribute {
 		buffer.writeUInt8(Math.floor(v.color0.y * 255), offset + 1 * this.elementByteSize);
 		buffer.writeUInt8(Math.floor(v.color0.z * 255), offset + 2 * this.elementByteSize);
 
-		this._min.minimizeInPlace(v.position);
-		this._max.maximizeInPlace(v.position);
+		this._min.minimizeInPlace(v.color0);
+		this._max.maximizeInPlace(v.color0);
 	}
 }
