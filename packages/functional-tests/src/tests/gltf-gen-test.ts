@@ -51,8 +51,21 @@ export default class GltfGenTest extends Test {
 			translation: new MRE.Vector3(-1, 0, 0)
 		});
 
+		const quad = new GltfGen.Node({
+			name: 'quad',
+			mesh: new GltfGen.Mesh({ name: 'quad', primitives: [new GltfGen.Quad(2, 2, mat)] }),
+			translation: new MRE.Vector3(0, 0, -1)
+		});
+
+		const plane = new GltfGen.Node({
+			name: 'plane',
+			mesh: new GltfGen.Mesh({ name: 'plane', primitives: [new GltfGen.Plane(2, 2, 10, 10, mat)] }),
+			translation: new MRE.Vector3(0, -1, 0),
+			rotation: MRE.Quaternion.FromEulerAngles(Math.PI / 2, 0, 0)
+		});
+
 		const gltfFactory = new GltfGen.GltfFactory([new GltfGen.Scene({
-			nodes: [sphere, box, capsule]
+			nodes: [box, capsule, plane, quad, sphere]
 		})]);
 
 		MRE.Actor.CreateFromGltf(this.assets, {
