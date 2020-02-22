@@ -3,18 +3,20 @@
  * Licensed under the MIT License.
  */
 
-import { Message, Protocols, Session } from '../../../../internal';
+import { Message, Session } from '../../../../internal';
+// break import cycle
+import { Middleware, Protocol, ClientPreprocessing } from '../../../protocols';
 
 /**
  * @hidden
  * Class for routing messages from the app over to the session
  */
-export class SessionExecution extends Protocols.Protocol implements Protocols.Middleware {
+export class SessionExecution extends Protocol implements Middleware {
 	constructor(private session: Session) {
 		super(session.conn);
 		this.beforeRecv = this.beforeRecv.bind(this);
 		// Behave like a client-side endpoint (record latency, respond to heartbeats).
-		this.use(new Protocols.ClientPreprocessing(this));
+		this.use(new ClientPreprocessing(this));
 		// Use middleware to take incoming messages from the app and pipe them to the session.
 		this.use(this);
 	}

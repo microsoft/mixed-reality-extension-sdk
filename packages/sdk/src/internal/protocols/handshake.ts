@@ -3,19 +3,22 @@
  * Licensed under the MIT License.
  */
 
-import { Connection, OperatingModel, Payloads, Protocols } from '../../internal';
+import { Connection, OperatingModel, Payloads } from '../../internal';
+// break import cycle
+import { Protocol } from './protocol';
+import { ServerPreprocessing } from './serverPreprocessing';
 
 /**
  * @hidden
  * Class to manage the handshake process with a client.
  */
-export class Handshake extends Protocols.Protocol {
+export class Handshake extends Protocol {
 	public syncRequest: Payloads.SyncRequest;
 
 	constructor(conn: Connection, private sessionId: string, private operatingModel: OperatingModel) {
 		super(conn);
 		// Behave like a server-side endpoint (send heartbeats, measure connection quality)
-		this.use(new Protocols.ServerPreprocessing());
+		this.use(new ServerPreprocessing());
 	}
 
 	/** @private */

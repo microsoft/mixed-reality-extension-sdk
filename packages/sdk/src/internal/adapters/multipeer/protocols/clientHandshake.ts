@@ -9,14 +9,15 @@ import {
 	Message,
 	MissingRule,
 	OperatingModel,
-	Protocols,
 	Rules
 } from '../../..';
+// break import cycle
+import { Handshake } from '../../../protocols';
 
 /**
  * @hidden
  */
-export class ClientHandshake extends Protocols.Handshake {
+export class ClientHandshake extends Handshake {
 	/** @override */
 	public get name(): string { return `${this.constructor.name} client ${this.client.id.substr(0, 8)}`; }
 
