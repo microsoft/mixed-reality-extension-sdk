@@ -41,10 +41,11 @@ export class Plane extends MeshPrimitive {
 				}));
 
 				if (u > 0 && v > 0) {
-					const io = this.triangles.length - 1;
-					const topLeft = io - vSegments - 1;
+					const io = this.vertices.length - 1;
+					// (vSegments - 1) verts per stripe
+					const topLeft = io - vSegments - 2;
 					const topRight = io - 1;
-					const bottomLeft = io - vSegments;
+					const bottomLeft = io - vSegments - 1;
 					const bottomRight = io;
 					this.triangles.push(topLeft, bottomLeft, bottomRight, topLeft, bottomRight, topRight);
 				}
