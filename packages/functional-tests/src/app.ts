@@ -113,12 +113,6 @@ export class App {
 				}
 				return this.runPromise = this.runTestHelper(user);
 			})
-			.then(() => {
-				if (this.playPauseButton) {
-					this.playPauseButton.appearance.material.color.set(0, 1, 0, 1);
-					this.playPauseText.text.contents = "Start";
-				}
-			})
 			// and log unexpected errors
 			.catch(err => console.log(err));
 	}
@@ -129,6 +123,13 @@ export class App {
 
 		const test = this.activeTest = this.activeTestFactory(this, this.baseUrl, user);
 		this.setOverrideText(test.expectedResultDescription);
+
+		this.testRoot = MRE.Actor.Create(this.context, {
+			actor: {
+				name: 'testRoot',
+				exclusiveToUser: this.exclusiveUser && this.exclusiveUser.id || undefined
+			}
+		});
 
 		let success: boolean;
 		try {
@@ -149,20 +150,22 @@ export class App {
 		if (success) {
 			this.setOverrideText(null);
 		}
-
-		test.cleanup();
-
-		// Delete all actors
-		destroyActors(this.context.rootActors.filter(x =>
-			!this.runnerActors.includes(x) && !this.sharedActors.includes(x)));
 	}
 
 	private async stopTest() {
 		if (this.activeTest !== null) {
 			this.activeTest.stop();
 			await this.runPromise;
+			this.activeTest.cleanup();
 			this.activeTest = null;
 			this.runPromise = null;
+
+			// Delete all actors
+			this.testRoot?.destroy();
+			this.testRoot = null;
+
+			this.playPauseButton?.appearance.material.color.set(0, 1, 0, 1);
+			if (this.playPauseText) { this.playPauseText.text.contents = "Start"; }
 		}
 	}
 
@@ -193,17 +196,6 @@ export class App {
 
 		const wasRunning = !!this.activeTest;
 		await this.stopTest();
-
-		if (this.testRoot) {
-			this.testRoot.destroy();
-		}
-
-		this.testRoot = MRE.Actor.Create(this.context, {
-			actor: {
-				name: 'testRoot',
-				exclusiveToUser: this.exclusiveUser && this.exclusiveUser.id || undefined
-			}
-		});
 
 		if (wasRunning) {
 			this.runTest(user);
@@ -306,13 +298,6 @@ export class App {
 			}
 		});
 
-		this.testRoot = MRE.Actor.Create(this.context, {
-			actor: {
-				name: 'testRoot',
-				exclusiveToUser: this.exclusiveUser && this.exclusiveUser.id || undefined
-			}
-		});
-
 		if (this.params.nomenu === 'true') {
 			this.runnerActors = [this.contextLabel];
 			return;
@@ -363,7 +348,7 @@ export class App {
 				if (this.activeTest === null) {
 					this.runTest(user);
 				} else {
-					this.stopTest().catch(() => { });
+					this.stopTest().catch(err => MRE.log.error('app', err));
 				}
 			});
 
