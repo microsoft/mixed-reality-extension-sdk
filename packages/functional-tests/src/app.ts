@@ -37,7 +37,6 @@ export class App {
 	private playPauseButton: MRE.Actor;
 	private playPauseText: MRE.Actor;
 	private runnerActors: MRE.Actor[];
-	private sharedActors: MRE.Actor[];
 	private backgroundMaterial: MRE.Material;
 
 	private testRoot: MRE.Actor;
@@ -164,8 +163,10 @@ export class App {
 			this.testRoot?.destroy();
 			this.testRoot = null;
 
-			this.playPauseButton?.appearance.material.color.set(0, 1, 0, 1);
-			if (this.playPauseText) { this.playPauseText.text.contents = "Start"; }
+			if (this.playPauseButton) {
+				this.playPauseButton.appearance.material.color.set(0, 1, 0, 1);
+				this.playPauseText.text.contents = "Start";
+			}
 		}
 	}
 
@@ -243,7 +244,7 @@ export class App {
 		this.exclusiveUserToggle.setBehavior(MRE.ButtonBehavior)
 			.onButton('released', user => this.toggleExclusiveUser(user));
 
-		const floor = MRE.Actor.Create(this.context, {
+		MRE.Actor.Create(this.context, {
 			actor: {
 				name: 'floor',
 				appearance: {
@@ -259,7 +260,7 @@ export class App {
 			}
 		});
 
-		const wall = MRE.Actor.Create(this.context, {
+		MRE.Actor.Create(this.context, {
 			actor: {
 				name: 'wall',
 				appearance: {
@@ -274,8 +275,6 @@ export class App {
 				collider: { geometry: { shape: MRE.ColliderType.Auto } }
 			}
 		});
-
-		this.sharedActors = [this.exclusiveUserToggle, label, wall, floor];
 	}
 
 	private setupRunner() {
@@ -304,10 +303,10 @@ export class App {
 		}
 
 		// start or stop the active test
-		const ppMat = this.assets.createMaterial('pp', {
-			color: MRE.Color3.Green().toJSON()
-		});
-		const ppMesh = this.assets.createBoxMesh('playpause', 0.7, 0.3, 0.1);
+		const ppMat = this.assets.materials.find(m => m.name === 'ppMat') ||
+			this.assets.createMaterial('ppMat', { color: MRE.Color3.Green() });
+		const ppMesh = this.assets.materials.find(m => m.name === 'ppMesh') ||
+			this.assets.createBoxMesh('ppMesh', 0.7, 0.3, 0.1);
 
 		this.playPauseButton = MRE.Actor.Create(this.context, {
 			actor: {
