@@ -6,11 +6,12 @@
 import {
 	ActionHandler,
 	ActionState,
-	Behavior,
 	BehaviorType,
 	DiscreteAction,
 	User
 } from '../..';
+// break import cycle
+import { Behavior } from './behavior';
 
 /**
  * Target behavior class containing the target behavior actions.

@@ -3,6 +3,8 @@
  * Licensed under the MIT License.
  */
 
-export * from './sphere';
 export * from './box';
 export * from './capsule';
+export * from './plane';
+export * from './quad';
+export * from './sphere';

@@ -4,17 +4,21 @@
  */
 
 import { ActionEvent, CollisionEvent, Context, log, TriggerEvent, } from '../..';
-import { Message, Payloads, Protocols, WebSocket } from '../../internal';
+import { Message, Payloads, WebSocket } from '../../internal';
+// break import cycle
+import { Protocol } from './protocol';
+import { ServerPreprocessing } from './serverPreprocessing';
+import { Sync } from './sync';
 
 /**
  * @hidden
  * Class to handle operational messages with a client.
  */
-export class Execution extends Protocols.Protocol {
+export class Execution extends Protocol {
 	constructor(private context: Context) {
 		super(context.conn);
 		// Behave like a server-side endpoint (send heartbeats, measure connection quality)
-		this.use(new Protocols.ServerPreprocessing());
+		this.use(new ServerPreprocessing());
 	}
 
 	/** @override */
@@ -94,7 +98,7 @@ export class Execution extends Protocols.Protocol {
 		// Switch over to the Sync protocol to handle this request
 		this.stopListening();
 
-		const sync = new Protocols.Sync(this.conn);
+		const sync = new Sync(this.conn);
 		await sync.run(); // Allow exception to propagate.
 
 		this.startListening();

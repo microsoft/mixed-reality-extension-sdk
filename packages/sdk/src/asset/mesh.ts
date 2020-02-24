@@ -5,7 +5,6 @@
 
 import {
 	Actor,
-	Asset,
 	AssetContainer,
 	AssetLike,
 	PrimitiveDefinition,
@@ -14,6 +13,8 @@ import {
 } from '..';
 import { Patchable } from '../internal';
 import { AssetInternal } from './assetInternal';
+// break import cycle
+import { Asset } from './asset';
 
 /** Describes the properties of a mesh */
 export interface MeshLike {
