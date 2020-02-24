@@ -99,7 +99,6 @@ export class PositionAttribute extends VertexAttribute {
 	}
 
 	public writeToBuffer(v: Vertex, buffer: Buffer, offset: number): void {
-
 		buffer.writeFloatLE(v.position.x, offset + 0 * this.elementByteSize);
 		buffer.writeFloatLE(v.position.y, offset + 1 * this.elementByteSize);
 		buffer.writeFloatLE(v.position.z, offset + 2 * this.elementByteSize);
@@ -111,11 +110,6 @@ export class PositionAttribute extends VertexAttribute {
 
 /** @hidden */
 export class NormalAttribute extends VertexAttribute {
-	protected _min: Vector3;
-	protected _max: Vector3;
-	public get min(): Vector3 { return this._min; }
-	public get max(): Vector3 { return this._max; }
-
 	public get attributeName(): string { return 'NORMAL'; }
 
 	constructor() {
@@ -123,29 +117,17 @@ export class NormalAttribute extends VertexAttribute {
 		this.resetMinMax();
 	}
 
-	public resetMinMax(): void {
-		this._min = new Vector3(Infinity, Infinity, Infinity);
-		this._max = new Vector3(-Infinity, -Infinity, -Infinity);
-	}
+	public resetMinMax(): void { }
 
 	public writeToBuffer(v: Vertex, buffer: Buffer, offset: number): void {
-
 		buffer.writeFloatLE(v.normal.x, offset + 0 * this.elementByteSize);
 		buffer.writeFloatLE(v.normal.y, offset + 1 * this.elementByteSize);
 		buffer.writeFloatLE(v.normal.z, offset + 2 * this.elementByteSize);
-
-		this._min.minimizeInPlace(v.normal);
-		this._max.maximizeInPlace(v.normal);
 	}
 }
 
 /** @hidden */
 export class TangentAttribute extends VertexAttribute {
-	protected _min: Vector4;
-	protected _max: Vector4;
-	public get min(): Vector4 { return this._min; }
-	public get max(): Vector4 { return this._max; }
-
 	public get attributeName(): string { return 'TANGENT'; }
 
 	constructor() {
@@ -153,30 +135,19 @@ export class TangentAttribute extends VertexAttribute {
 		this.resetMinMax();
 	}
 
-	public resetMinMax(): void {
-		this._min = new Vector4(Infinity, Infinity, Infinity, Infinity);
-		this._max = new Vector4(-Infinity, -Infinity, -Infinity, -Infinity);
-	}
+	public resetMinMax(): void { }
 
 	public writeToBuffer(v: Vertex, buffer: Buffer, offset: number): void {
-
 		buffer.writeFloatLE(v.tangent.x, offset + 0 * this.elementByteSize);
 		buffer.writeFloatLE(v.tangent.y, offset + 1 * this.elementByteSize);
 		buffer.writeFloatLE(v.tangent.z, offset + 2 * this.elementByteSize);
 		buffer.writeFloatLE(v.tangent.w, offset + 3 * this.elementByteSize);
-
-		this._min.minimizeInPlace(v.tangent);
-		this._max.maximizeInPlace(v.tangent);
 	}
 }
 
 /** @hidden */
 export class TexCoordAttribute extends VertexAttribute {
 	private index: number;
-	protected _min: Vector2;
-	protected _max: Vector2;
-	public get min(): Vector2 { return this._min; }
-	public get max(): Vector2 { return this._max; }
 
 	public get attributeName(): string { return 'TEXCOORD_' + this.index; }
 
@@ -186,50 +157,34 @@ export class TexCoordAttribute extends VertexAttribute {
 		this.resetMinMax();
 	}
 
-	public resetMinMax(): void {
-		this._min = new Vector2(Infinity, Infinity);
-		this._max = new Vector2(-Infinity, -Infinity);
-	}
+	public resetMinMax(): void { }
 
 	public writeToBuffer(v: Vertex, buffer: Buffer, offset: number): void {
 		const vec = this.index === 1 ? v.texCoord1 : v.texCoord0;
 
 		buffer.writeFloatLE(vec.x, offset + 0 * this.elementByteSize);
 		buffer.writeFloatLE(vec.y, offset + 1 * this.elementByteSize);
-
-		this._min = Vector2.Minimize(this._min, vec);
-		this._max = Vector2.Maximize(this._max, vec);
 	}
 }
 
 /** @hidden */
 export class ColorAttribute extends VertexAttribute {
 	private index: number;
-	protected _min: Vector3;
-	protected _max: Vector3;
-	public get min(): Vector3 { return this._min; }
-	public get max(): Vector3 { return this._max; }
 
 	public get attributeName(): string { return 'COLOR_' + this.index; }
 
 	constructor(index: number) {
-		super(AccessorComponentType.UByte, AccessorType.Vec3);
+		super(AccessorComponentType.UByte, AccessorType.Vec4);
 		this.index = index;
 		this.resetMinMax();
 	}
 
-	public resetMinMax(): void {
-		this._min = new Vector3(Infinity, Infinity, Infinity);
-		this._max = new Vector3(-Infinity, -Infinity, -Infinity);
-	}
+	public resetMinMax(): void { }
 
 	public writeToBuffer(v: Vertex, buffer: Buffer, offset: number): void {
-
-		buffer.writeUInt8(Math.floor(v.color0.x * 255), offset + 0 * this.elementByteSize);
-		buffer.writeUInt8(Math.floor(v.color0.y * 255), offset + 1 * this.elementByteSize);
-		buffer.writeUInt8(Math.floor(v.color0.z * 255), offset + 2 * this.elementByteSize);
-
-		this._min.minimizeInPlace(v.color0);
-		this._max.maximizeInPlace(v.color0);
+		buffer.writeUInt8(Math.floor(v.color0.r * 255), offset + 0 * this.elementByteSize);
+		buffer.writeUInt8(Math.floor(v.color0.g * 255), offset + 1 * this.elementByteSize);
+		buffer.writeUInt8(Math.floor(v.color0.b * 255), offset + 2 * this.elementByteSize);
+		buffer.writeUInt8(Math.floor(v.color0.a * 255), offset + 3 * this.elementByteSize);
 	}
 }

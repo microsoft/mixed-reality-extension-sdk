@@ -3,9 +3,11 @@
  * Licensed under the MIT License.
  */
 
-import { Actor, Asset, AssetContainer, AssetLike, Material, Vector2, Vector2Like } from '..';
+import { Actor, AssetContainer, AssetLike, Material, Vector2, Vector2Like } from '..';
 import { Patchable, readPath } from '../internal';
 import { AssetInternal } from './assetInternal';
+// break import cycle
+import { Asset } from './asset';
 
 export interface TextureLike {
 	uri: string;

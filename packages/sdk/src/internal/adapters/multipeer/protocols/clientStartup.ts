@@ -9,18 +9,19 @@ import {
 	Message,
 	MissingRule,
 	Payloads,
-	Protocols,
 	Rules
 } from '../../..';
+// break import cycle
+import { Heartbeat, Protocol, ServerPreprocessing } from '../../../protocols';
 
-export class ClientStartup extends Protocols.Protocol {
+export class ClientStartup extends Protocol {
 	/** @override */
 	public get name(): string { return `${this.constructor.name} client ${this.client.id.substr(0, 8)}`; }
 
 	constructor(private client: Client, syncRequest: Payloads.SyncRequest) {
 		super(client.conn);
 		// Behave like a server-side endpoint (send heartbeats, measure connection quality).
-		this.use(new Protocols.ServerPreprocessing());
+		this.use(new ServerPreprocessing());
 		// If we've already received the 'sync-request' payload, process it now.
 		if (syncRequest) {
 			setImmediate(async () => {
@@ -45,7 +46,7 @@ export class ClientStartup extends Protocols.Protocol {
 
 	private async performStartup(payload: Payloads.SyncRequest) {
 		// Do a quick measurement of connection latency.
-		const heartbeat = new Protocols.Heartbeat(this);
+		const heartbeat = new Heartbeat(this);
 		await heartbeat.runIterations(10); // Allow exceptions to propagate out.
 		this.resolve();
 	}

@@ -30,7 +30,7 @@ export class WebHost {
 		baseUrl?: string;
 		port?: string | number;
 	} = {}) {
-		const pjson = require('../package.json'); /* eslint-disable-line @typescript-eslint/no-var-requires */
+		const pjson = require('../../package.json'); /* eslint-disable-line @typescript-eslint/no-var-requires */
 		log.info('app', `Node: ${process.version}`);
 		log.info('app', `${pjson.name}: v${pjson.version}`);
 

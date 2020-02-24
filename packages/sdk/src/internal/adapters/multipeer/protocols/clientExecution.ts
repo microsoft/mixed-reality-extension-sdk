@@ -9,16 +9,17 @@ import {
 	ExportedPromise,
 	Message,
 	MissingRule,
-	Protocols,
 	Rules
 } from '../../..';
+// break import cycle
+import { Heartbeat, Middleware, Protocol, ServerPreprocessing } from '../../../protocols';
 
 /**
  * @hidden
  * Class for routing messages between the client and the session
  */
-export class ClientExecution extends Protocols.Protocol implements Protocols.Middleware {
-	private heartbeat: Protocols.Heartbeat;
+export class ClientExecution extends Protocol implements Middleware {
+	private heartbeat: Heartbeat;
 	private heartbeatTimer: NodeJS.Timer;
 
 	/** @override */
@@ -26,10 +27,10 @@ export class ClientExecution extends Protocols.Protocol implements Protocols.Mid
 
 	constructor(private client: Client) {
 		super(client.conn);
-		this.heartbeat = new Protocols.Heartbeat(this);
+		this.heartbeat = new Heartbeat(this);
 		this.beforeRecv = this.beforeRecv.bind(this);
 		// Behave like a server-side endpoint (send heartbeats, measure connection quality)
-		this.use(new Protocols.ServerPreprocessing());
+		this.use(new ServerPreprocessing());
 		// Filter user-exclusive actors
 		this.use(new ClientDesyncPreprocessor(client));
 		// Use middleware to pipe client messages to the session.

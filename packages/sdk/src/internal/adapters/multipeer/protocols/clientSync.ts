@@ -14,10 +14,11 @@ import {
 	Message,
 	MissingRule,
 	Payloads,
-	Protocols,
 	Rules,
 	SyncActor
 } from '../../../../internal';
+// break import cycle
+import { Protocol, ServerPreprocessing } from '../../../protocols';
 
 /**
  * @hidden
@@ -36,7 +37,7 @@ export type SynchronizationStage =
  * @hidden
  * Synchronizes application state with a client.
  */
-export class ClientSync extends Protocols.Protocol {
+export class ClientSync extends Protocol {
 	private inProgressStages: SynchronizationStage[] = [];
 	private completedStages: SynchronizationStage[] = [];
 
@@ -56,7 +57,7 @@ export class ClientSync extends Protocols.Protocol {
 	constructor(private client: Client) {
 		super(client.conn);
 		// Behave like a server-side endpoint (send heartbeats, measure connection quality)
-		this.use(new Protocols.ServerPreprocessing());
+		this.use(new ServerPreprocessing());
 		// Queue up user-exclusive messages until the user has joined
 		this.use(new ClientDesyncPreprocessor(client));
 	}
