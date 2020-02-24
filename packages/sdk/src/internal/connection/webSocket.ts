@@ -6,7 +6,9 @@
 import * as WS from 'ws';
 
 import { log } from '../..';
-import { EventedConnection, filterEmpty, Message, validateJsonFieldName } from '../../internal';
+import { filterEmpty, Message, validateJsonFieldName } from '../../internal';
+// break import cycle
+import { EventedConnection } from './eventedConnection';
 
 /**
  * An implementation of the Connection interface that wraps a WebSocket.
