@@ -7,7 +7,7 @@ import * as MRE from '@microsoft/mixed-reality-extension-sdk';
 import { Test } from '../test';
 
 export default class AssetEarlyAssignmentTest extends Test {
-	public expectedResultDescription = "Assign asset properties before initialization is finished";
+	public expectedResultDescription = "Colored & textured sphere";
 	private assets: MRE.AssetContainer;
 
 	public async run(root: MRE.Actor): Promise<boolean> {
