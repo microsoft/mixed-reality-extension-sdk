@@ -3,6 +3,7 @@
  * Licensed under the MIT License.
  */
 
+export * from './boxAlignment';
 export * from './gridLayout';
 export * from './guid';
 export * from './log';

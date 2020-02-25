@@ -2,29 +2,7 @@
  * Copyright (c) Microsoft Corporation. All rights reserved.
  * Licensed under the MIT License.
  */
-import { Actor, Vector3 } from '..';
-
-/** Describes a relative position in a [[GridLayout]]. */
-export enum BoxAlignment {
-	/** Position above and to the left of the anchor. */
-	TopLeft = 'top-left',
-	/** Position directly above the anchor. */
-	TopCenter = 'top-center',
-	/** Position above and to the right of the anchor. */
-	TopRight = 'top-right',
-	/** Position directly left of the anchor. */
-	MiddleLeft = 'middle-left',
-	/** Position directly on top of the anchor. */
-	MiddleCenter = 'middle-center',
-	/** Position directly right of the anchor. */
-	MiddleRight = 'middle-right',
-	/** Position below and to the left of the anchor. */
-	BottomLeft = 'bottom-left',
-	/** Position directly below the anchor. */
-	BottomCenter = 'bottom-center',
-	/** Position below and to the right of the anchor. */
-	BottomRight = 'bottom-right',
-}
+import { Actor, BoxAlignment, InvertBoxAlignment, Vector3 } from '..';
 
 /** Options for [[GridLayout.addCell]]. */
 export interface AddCellOptions {
@@ -42,13 +20,14 @@ export interface AddCellOptions {
 	alignment?: BoxAlignment;
 }
 
+const sum = (sum: number, x: number) => sum + x;
+const max = (max: number, x: number) => Math.max(max, x);
+
 /**
  * Lay out actors in a grid in app space. Assign actors to the grid with [[addCell]],
  * and apply updates with [[applyLayout]].
  */
 export class GridLayout {
-	private columns: number[] = [];
-	private rows: number[] = [];
 	private contents: AddCellOptions[] = [];
 
 	/**
@@ -64,22 +43,41 @@ export class GridLayout {
 	) { }
 
 	/** The number of columns in this grid. */
-	public columnCount() { return this.columns.length; }
-	/** THe number of rows in this grid. */
-	public rowCount() { return this.rows.length; }
+	public columnCount() {
+		return this.contents.map(c => c.column).reduce(max, -1) + 1;
+	}
+
+	/** The number of rows in this grid. */
+	public rowCount() {
+		return this.contents.map(c => c.row).reduce(max, -1) + 1;
+	}
+
 	/** The width of the full grid. */
-	public gridWidth() { return this.columns.reduce((sum, x) => sum + x, 0); }
+	public gridWidth() {
+		const colCount = this.columnCount();
+		let width = 0;
+		for (let i = 0; i < colCount; i++) {
+			width += this.columnWidth(i);
+		}
+		return width;
+	}
+
 	/** The height of the full grid. */
-	public gridHeight() { return this.rows.reduce((sum, x) => sum + x, 0); }
+	public gridHeight() {
+		const rowCount = this.rowCount();
+		let height = 0;
+		for (let i = 0; i < rowCount; i++) {
+			height += this.rowHeight(i);
+		}
+		return height;
+	}
 
 	/**
 	 * The width of a particular column.
 	 * @param i The column index.
 	 */
 	public columnWidth(i: number) {
-		return this.contents
-			.filter(c => c.column === i)
-			.reduce((max, c) => Math.max(max, c.width), 0);
+		return this.contents.filter(c => c.column === i).map(c => c.width).reduce(max, 0);
 	}
 
 	/**
@@ -87,9 +85,23 @@ export class GridLayout {
 	 * @param i The row index.
 	 */
 	public rowHeight(i: number) {
-		return this.contents
-			.filter(c => c.row === i)
-			.reduce((max, c) => Math.max(max, c.height), 0);
+		return this.contents.filter(c => c.row === i).map(c => c.height).reduce(max, 0);
+	}
+
+	/** The widths of every column. */
+	public columnWidths() {
+		return this.contents.reduce((arr, c) => {
+			arr[c.column] = Math.max(arr[c.column] ?? 0, c.width);
+			return arr;
+		}, [] as number[]);
+	}
+
+	/** The heights of every row. */
+	public rowHeights() {
+		return this.contents.reduce((arr, c) => {
+			arr[c.row] = Math.max(arr[c.row] ?? 0, c.height);
+			return arr;
+		}, [] as number[]);
 	}
 
 	/**
@@ -109,20 +121,24 @@ export class GridLayout {
 
 	/** Recompute the positions of all actors in the grid. */
 	public applyLayout() {
+		const colWidths = this.columnWidths();
+		const rowHeights = this.rowHeights();
 		const gridAlign = GridLayout.getOffsetFromAlignment(
-			this.gridAlignment, this.gridWidth(), this.gridHeight())
-			.multiplyByFloats(-1, -1, -1);
+			InvertBoxAlignment(this.gridAlignment),
+			colWidths.reduce(sum, 0),
+			rowHeights.reduce(sum, 0))
+			.negate();
 
 		for (const cell of this.contents) {
 			const cellPosition = new Vector3(
-				this.columns.slice(0, cell.column).reduce((sum, x) => sum + x, 0),
-				-this.rows.slice(0, cell.row).reduce((sum, x) => sum + x, 0),
-				0
-			);
+				colWidths.slice(0, cell.column).reduce(sum, 0),
+				-rowHeights.slice(0, cell.row).reduce(sum, 0),
+				cell.contents.transform.local.position.z);
 			const cellAlign = GridLayout.getOffsetFromAlignment(
 				cell.alignment ?? this.defaultCellAlignment,
-				this.columns[cell.column], this.rows[cell.row]
+				colWidths[cell.column], rowHeights[cell.row]
 			);
+
 			cell.contents.transform.local.position = gridAlign.add(cellPosition).add(cellAlign);
 		}
 	}
@@ -135,7 +151,7 @@ export class GridLayout {
 			case BoxAlignment.TopRight:
 			case BoxAlignment.MiddleRight:
 			case BoxAlignment.BottomRight:
-				offset.x = 0;
+				offset.x = 1;
 				break;
 			case BoxAlignment.TopCenter:
 			case BoxAlignment.MiddleCenter:
@@ -143,14 +159,14 @@ export class GridLayout {
 				offset.x = 0.5;
 				break;
 			default:
-				offset.x = 1;
+				offset.x = 0;
 		}
 		// set vertical alignment
 		switch (anchor) {
 			case BoxAlignment.BottomLeft:
 			case BoxAlignment.BottomCenter:
 			case BoxAlignment.BottomRight:
-				offset.y = 0;
+				offset.y = -1;
 				break;
 			case BoxAlignment.MiddleLeft:
 			case BoxAlignment.MiddleCenter:
@@ -158,7 +174,7 @@ export class GridLayout {
 				offset.y = -0.5;
 				break;
 			default:
-				offset.y = -1;
+				offset.y = 0;
 		}
 
 		return offset.multiplyByFloats(width, height, 1);
