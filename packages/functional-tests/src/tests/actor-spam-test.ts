@@ -34,7 +34,8 @@ export default class ActorSpamTest extends Test {
 				text: {
 					contents: '25 actors',
 					height: 0.1,
-					anchor: MRE.TextAnchorLocation.BottomCenter
+					anchor: MRE.TextAnchorLocation.BottomCenter,
+					color: MRE.Color3.Teal()
 				}
 			}
 		});
@@ -57,7 +58,8 @@ export default class ActorSpamTest extends Test {
 				text: {
 					contents: '50 actors',
 					height: 0.1,
-					anchor: MRE.TextAnchorLocation.BottomCenter
+					anchor: MRE.TextAnchorLocation.BottomCenter,
+					color: MRE.Color3.Teal()
 				}
 			}
 		});
@@ -80,7 +82,8 @@ export default class ActorSpamTest extends Test {
 				text: {
 					contents: '100 actors',
 					height: 0.1,
-					anchor: MRE.TextAnchorLocation.BottomCenter
+					anchor: MRE.TextAnchorLocation.BottomCenter,
+					color: MRE.Color3.Teal()
 				}
 			}
 		});
@@ -103,7 +106,8 @@ export default class ActorSpamTest extends Test {
 				text: {
 					contents: '200 actors',
 					height: 0.1,
-					anchor: MRE.TextAnchorLocation.BottomCenter
+					anchor: MRE.TextAnchorLocation.BottomCenter,
+					color: MRE.Color3.Teal()
 				}
 			}
 		});
@@ -128,24 +132,22 @@ export default class ActorSpamTest extends Test {
 				transform: { local: { position: { y: 1, z: -1 } } }
 			}
 		});
+		const grid = new MRE.GridLayout(this.spamRoot, MRE.BoxAlignment.BottomCenter);
 
 		const spacing = 2 / (25 - 1);
 		for (let i = 0; i < count; i++) {
-			MRE.Actor.Create(this.app.context, {
-				actor: {
+			grid.addCell({
+				row: Math.floor(i / 25),
+				column: i % 25,
+				width: spacing,
+				height: spacing,
+				contents: MRE.Actor.Create(this.app.context, { actor: {
 					name: 'ball',
 					parentId: this.spamRoot.id,
-					appearance: { meshId: ball.id },
-					transform: {
-						local: {
-							position: {
-								x: -1 + spacing * (i % 25),
-								y: 0 - spacing * Math.floor(i / 25)
-							}
-						}
-					}
-				}
+					appearance: { meshId: ball.id }
+				}})
 			});
 		}
+		grid.applyLayout();
 	}
 }

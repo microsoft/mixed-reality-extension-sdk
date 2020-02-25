@@ -12,7 +12,6 @@ export default class AssetEarlyAssignmentTest extends Test {
 
 	public async run(root: MRE.Actor): Promise<boolean> {
 		this.assets = new MRE.AssetContainer(this.app.context);
-		this.app.setOverrideText("Colored & textured sphere");
 
 		const tex = this.assets.createTexture('uvgrid', {
 			uri: `${this.baseUrl}/uv-grid.png`
