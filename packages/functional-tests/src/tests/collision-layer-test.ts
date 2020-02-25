@@ -21,8 +21,7 @@ export default class CollisionLayerTest extends Test {
 		this.assets = new MRE.AssetContainer(this.app.context);
 
 		const layers = Object.values(MRE.CollisionLayer);
-		const layout = new MRE.GridLayout(root)
-		// 5, 5, 0.2, 0.5
+		const layout = new MRE.GridLayout(root);
 
 		MRE.Actor.Create(this.app.context, {
 			actor: {

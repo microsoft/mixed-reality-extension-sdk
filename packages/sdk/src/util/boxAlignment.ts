@@ -25,6 +25,7 @@ export enum BoxAlignment {
 	BottomRight = 'bottom-right',
 }
 
+/** Invert a [[BoxAlignment]] value around the anchor (e.g. TopLeft to BottomRight). */
 export function InvertBoxAlignment(align: BoxAlignment) {
 	switch (align) {
 		case BoxAlignment.TopLeft: return BoxAlignment.BottomRight;
