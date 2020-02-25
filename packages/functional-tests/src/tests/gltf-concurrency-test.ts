@@ -44,7 +44,9 @@ export default class GltfConcurrencyTest extends Test {
 				transform: { local: { position: { x: 0.66, y: 0.0, z: -0.5 } } }
 			}
 		});
-		runner.enableAnimation('animation:0');
+		runner.created().then(() =>
+			runner.animationsByName.get('animation:0').play()
+		);
 
 		if (gearboxAssets) {
 			MRE.Actor.CreateFromPrefab(this.app.context, {

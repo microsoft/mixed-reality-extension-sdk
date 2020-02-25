@@ -56,4 +56,4 @@ export type Like<T> =
 	T extends Vector3Like ? Vector3Like :
 	T extends Vector2Like ? Vector2Like :
 	T extends VideoStreamLike ? VideoStreamLike :
-	never;
+	T;

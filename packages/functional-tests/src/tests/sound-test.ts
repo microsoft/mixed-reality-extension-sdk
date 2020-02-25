@@ -155,11 +155,10 @@ export default class SoundTest extends Test {
 				}
 			}
 		});
-		dopplerButton.createAnimation(
-			'flyaround', {
-				keyframes: this.generateSpinKeyframes(2.0, MRE.Vector3.Up()),
-				wrapMode: MRE.AnimationWrapMode.Loop
-			});
+		const spinAnim = await this.assets.createAnimationData(
+			'flyaround',
+			this.generateSpinKeyframes(2.0, MRE.Vector3.Up())
+		).bind({target: dopplerButton}, {wrapMode: MRE.AnimationWrapMode.Loop});
 
 		const dopplerAsset = this.assets.createSound(
 			'truck',
@@ -178,10 +177,10 @@ export default class SoundTest extends Test {
 		const cycleDopplerSoundState = () => {
 			if (this._dopplerSoundState === 0) {
 				dopplerSoundInstance.resume();
-				dopplerButton.enableAnimation('flyaround');
+				spinAnim.play();
 
 			} else if (this._dopplerSoundState === 1) {
-				dopplerButton.disableAnimation('flyaround');
+				spinAnim.stop();
 				dopplerSoundInstance.pause();
 			}
 			this._dopplerSoundState = (this._dopplerSoundState + 1) % 2;
@@ -193,22 +192,27 @@ export default class SoundTest extends Test {
 		return true;
 	}
 
-	private generateSpinKeyframes(duration: number, axis: MRE.Vector3, start = 0): MRE.AnimationKeyframe[] {
-		return [{
-			time: 0 * duration,
-			value: { transform: { local: { rotation: MRE.Quaternion.RotationAxis(axis, start) } } }
-		}, {
-			time: 0.25 * duration,
-			value: { transform: { local: { rotation: MRE.Quaternion.RotationAxis(axis, start + Math.PI * 1 / 2) } } }
-		}, {
-			time: 0.5 * duration,
-			value: { transform: { local: { rotation: MRE.Quaternion.RotationAxis(axis, start + Math.PI * 2 / 2) } } }
-		}, {
-			time: 0.75 * duration,
-			value: { transform: { local: { rotation: MRE.Quaternion.RotationAxis(axis, start + Math.PI * 3 / 2) } } }
-		}, {
-			time: 1 * duration,
-			value: { transform: { local: { rotation: MRE.Quaternion.RotationAxis(axis, start + Math.PI * 4 / 2) } } }
-		}];
+	private generateSpinKeyframes(duration: number, axis: MRE.Vector3, start = 0): MRE.AnimationDataLike {
+		return {
+			tracks: [{
+				target: MRE.ActorPath("target").transform.local.rotation,
+				keyframes: [{
+					time: 0 * duration,
+					value: MRE.Quaternion.RotationAxis(axis, start)
+				}, {
+					time: 0.25 * duration,
+					value: MRE.Quaternion.RotationAxis(axis, start + Math.PI * 1 / 2)
+				}, {
+					time: 0.5 * duration,
+					value: MRE.Quaternion.RotationAxis(axis, start + Math.PI * 2 / 2)
+				}, {
+					time: 0.75 * duration,
+					value: MRE.Quaternion.RotationAxis(axis, start + Math.PI * 3 / 2)
+				}, {
+					time: 1 * duration,
+					value: MRE.Quaternion.RotationAxis(axis, start + Math.PI * 4 / 2)
+				}]
+			} as MRE.Track<MRE.Quaternion>]
+		};
 	}
 }

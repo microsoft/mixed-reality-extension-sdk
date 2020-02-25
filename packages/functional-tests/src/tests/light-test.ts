@@ -6,7 +6,6 @@
 import * as MRE from '@microsoft/mixed-reality-extension-sdk';
 
 import { Test } from '../test';
-import delay from '../utils/delay';
 
 export default class LightTest extends Test {
 	public expectedResultDescription = "Different types of lights";
@@ -47,15 +46,11 @@ export default class LightTest extends Test {
 					props['monkey'].transform.app.position,
 					new MRE.Vector3(0, -Math.PI / 8, 0));
 				sphere.light.color = randomColor();
-				sphere.animateTo({
-					transform: {
-						local: {
-							position,
-							rotation
-						}
-					}
-				}, time, MRE.AnimationEaseCurves.EaseInOutSine);
-				await delay(time * 1000);
+				await MRE.Animation.AnimateTo(this.app.context, sphere, {
+					destination: { transform: { local: { position, rotation } } },
+					duration: time,
+					easing: MRE.AnimationEaseCurves.EaseInOutSine
+				});
 			}
 		};
 
