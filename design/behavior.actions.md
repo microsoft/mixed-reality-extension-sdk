@@ -1,10 +1,18 @@
 # Behavior Actions
 
 Behaviors are high level concepts that are made up of one or more actions.  These actions make up the interactions
-that the user makes with the given behavior.  These actions are broken up in to three states: `started` and `stopped`.
+that the user makes with the given behavior.  These actions are broken up in to three states: `started`, `performing` and `stopped`.
 
-- `started` - Fired once when the action is first beginning to be performed.
-- `stopped` - Fired once when the action is stopped being performed.
+- `started` - The state of the initial frame that an action has started..
+- `performing` - The state of all frames after `started` while the action is being performed.
+- `stopped` - The state of the frame after the action has been stopped and all other frames after until started again.
+
+These actions result in events being raised from the runtime to the SDK for app developers code to listen to.  These events are based 
+off of the threee action states above as such:
+
+- `started` - Fired once when the action has first transitioned to started.
+- `performing` - Fired during synchronization updates while the action is being performed.  This is an optional event that is exposed only on behaviors that provide them.
+- `stopped` - Fired once when the action has first transitioned to the stopped state.
 
 **Proposed**: In addition, there is an optional update event that can be registered to the action for getting updates while that
 action is being performed on the client.
