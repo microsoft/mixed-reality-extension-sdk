@@ -12,9 +12,6 @@ export class ToolBehavior<ToolDataT> extends TargetBehavior {
 	/** @inheritdoc */
 	public get behaviorType(): BehaviorType { return 'tool'; }
 
-	public get holding() { return this._holding; }
-	public get using() { return this._using; }
-
 	/**
 	 * Add a holding handler to be called when the given hover state is triggered.
 	 * @param holdingState The holding state to fire the handler on.
