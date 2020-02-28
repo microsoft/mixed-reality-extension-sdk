@@ -17,9 +17,9 @@ import { TargetBehavior } from './targetBehavior';
  * Button behavior class containing the target behavior actions.
  */
 export class ButtonBehavior extends TargetBehavior {
-	private _hover: DiscreteAction<void> = new DiscreteAction();
-	private _click: DiscreteAction<void> = new DiscreteAction();
-	private _button: DiscreteAction<void> = new DiscreteAction();
+	private _hover: DiscreteAction = new DiscreteAction();
+	private _click: DiscreteAction = new DiscreteAction();
+	private _button: DiscreteAction = new DiscreteAction();
 
 	/** @inheritdoc */
 	public get behaviorType(): BehaviorType { return 'button'; }

@@ -3,8 +3,8 @@
  * Licensed under the MIT License.
  */
 
-import { BehaviorType, ToolBehavior } from ".";
-import { TransformLike } from "../..";
+import { BehaviorType, ToolBehavior } from '.';
+import { TransformLike } from '../..';
 
 
 export interface DrawData {

@@ -17,7 +17,7 @@ import { Behavior } from './behavior';
  * Target behavior class containing the target behavior actions.
  */
 export class TargetBehavior extends Behavior {
-	private _target: DiscreteAction<void> = new DiscreteAction();
+	private _target: DiscreteAction = new DiscreteAction();
 
 	/** @inheritdoc */
 	public get behaviorType(): BehaviorType { return 'target'; }

@@ -17,7 +17,7 @@ export interface Actionable {
 	_performAction(user: User, actionState: ActionState, actionData?: any): boolean;
 }
 
-interface ActionHandlers<ActionDataT> {
+interface ActionHandlers<ActionDataT = void> {
 	'started'?: ActionHandler<ActionDataT>;
 	'stopped'?: ActionHandler<ActionDataT>;
 	'performing'?: ActionHandler<ActionDataT>;
@@ -27,7 +27,7 @@ interface ActionHandlers<ActionDataT> {
  * Class that represents a discrete action that can be in one of two states,
  * started or stopped for each user. @see ActionState
  */
-export class DiscreteAction<ActionDataT> implements Actionable {
+export class DiscreteAction<ActionDataT = void> implements Actionable {
 	private handlers: ActionHandlers<ActionDataT> = {};
 	private activeUserIds: Guid[] = [];
 

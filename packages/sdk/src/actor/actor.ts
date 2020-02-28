@@ -111,7 +111,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	private _attachment: Attachment;
 	private _lookAt: LookAt;
 	private _grabbable = false;
-	private _grab: DiscreteAction<void>;
+	private _grab: DiscreteAction;
 
 	private get grab() { this._grab = this._grab || new DiscreteAction(); return this._grab; }
 
