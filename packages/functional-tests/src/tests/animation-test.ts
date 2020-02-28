@@ -6,7 +6,6 @@
 import * as MRE from '@microsoft/mixed-reality-extension-sdk';
 
 import { Test } from '../test';
-import { TableLayout } from '../utils/tableLayout';
 
 interface ControlDefinition {
 	label: string;
@@ -95,13 +94,18 @@ export default class AnimationTest extends Test {
 
 	private createControls(controls: ControlDefinition[], parent: MRE.Actor) {
 		const arrowMesh = this.assets.createCylinderMesh('arrow', 0.01, 0.08, 'z', 3);
-		const layout = new TableLayout(controls.length, 3, 0.25, 0.3);
+		const layout = new MRE.PlanarGridLayout(parent);
 
 		let i = 0;
 		const realtimeLabels = [] as ControlDefinition[];
 		for (const controlDef of controls) {
-			const label = controlDef.labelActor = layout.setCellContents(i, 1, MRE.Actor.Create(this.app.context, {
-				actor: {
+			let label: MRE.Actor, more: MRE.Actor, less: MRE.Actor;
+			layout.addCell({
+				row: i,
+				column: 1,
+				width: 0.3,
+				height: 0.25,
+				contents: label = MRE.Actor.Create(this.app.context, { actor: {
 					name: `${controlDef.label}-label`,
 					parentId: parent.id,
 					text: {
@@ -111,28 +115,39 @@ export default class AnimationTest extends Test {
 						justify: MRE.TextJustify.Center,
 						color: MRE.Color3.FromInts(255, 200, 255)
 					}
-				}
-			}));
+				}})
+			});
+			controlDef.labelActor = label;
 
-			const less = layout.setCellContents(i, 0, MRE.Actor.Create(this.app.context, {
-				actor: {
+			layout.addCell({
+				row: i,
+				column: 0,
+				width: 0.3,
+				height: 0.25,
+				contents: less = MRE.Actor.Create(this.app.context, { actor: {
 					name: `${controlDef.label}-less`,
 					parentId: parent.id,
 					appearance: { meshId: arrowMesh.id },
 					collider: { geometry: { shape: MRE.ColliderType.Auto } },
 					transform: { local: { rotation: MRE.Quaternion.FromEulerAngles(0, 0, Math.PI * 1.5) } }
-				}
-			}));
+				}})
+			});
 
-			const more = layout.setCellContents(i, 2, MRE.Actor.Create(this.app.context, {
-				actor: {
-					name: `${controlDef.label}-more`,
-					parentId: parent.id,
-					appearance: { meshId: arrowMesh.id },
-					collider: { geometry: { shape: MRE.ColliderType.Auto } },
-					transform: { local: { rotation: MRE.Quaternion.FromEulerAngles(0, 0, Math.PI * 0.5) } }
-				}
-			}));
+			layout.addCell({
+				row: i,
+				column: 2,
+				width: 0.3,
+				height: 0.25,
+				contents: more = MRE.Actor.Create(this.app.context, {
+					actor: {
+						name: `${controlDef.label}-more`,
+						parentId: parent.id,
+						appearance: { meshId: arrowMesh.id },
+						collider: { geometry: { shape: MRE.ColliderType.Auto } },
+						transform: { local: { rotation: MRE.Quaternion.FromEulerAngles(0, 0, Math.PI * 0.5) } }
+					}
+				})
+			});
 
 			if (controlDef.realtime) { realtimeLabels.push(controlDef) }
 
@@ -151,6 +166,7 @@ export default class AnimationTest extends Test {
 
 			i++;
 		}
+		layout.applyLayout();
 
 		setInterval(() => {
 			for (const rt of realtimeLabels) {

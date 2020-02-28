@@ -7,7 +7,6 @@ import * as MRE from '@microsoft/mixed-reality-extension-sdk';
 
 import { Test } from '../test';
 import { LeftRightSwing } from '../utils/animations';
-import { TableLayout } from '../utils/tableLayout';
 
 export default class CollisionLayerTest extends Test {
 	public expectedResultDescription = "Observe different collision layer interactions";
@@ -22,7 +21,7 @@ export default class CollisionLayerTest extends Test {
 		this.assets = new MRE.AssetContainer(this.app.context);
 
 		const layers = Object.values(MRE.CollisionLayer);
-		const tableLayout = new TableLayout(5, 5, 0.2, 0.5);
+		const layout = new MRE.PlanarGridLayout(root);
 
 		MRE.Actor.Create(this.app.context, {
 			actor: {
@@ -36,47 +35,61 @@ export default class CollisionLayerTest extends Test {
 			}
 		});
 
-		// place column headers
+		// loop over each collision layer value
 		for (let i = 0; i < layers.length; i++) {
-			tableLayout.setCellContents(0, 1 + i, MRE.Actor.Create(this.app.context, {
-				actor: {
+			// create column headers
+			layout.addCell({
+				row: 0,
+				column: 1 + i,
+				width: 0.5,
+				height: 0.2,
+				contents: MRE.Actor.Create(this.app.context, { actor: {
 					name: `${layers[i]}ColLabel`,
 					parentId: root.id,
 					text: {
 						contents: layers[i],
 						height: 0.1,
-						anchor: MRE.TextAnchorLocation.MiddleCenter
+						anchor: MRE.TextAnchorLocation.MiddleCenter,
+						color: MRE.Color3.Teal()
 					}
-				}
-			}));
-		}
+				}})
+			});
 
-		// loop over each collision layer value
-		for (let i = 0; i < layers.length; i++) {
-			// create label
-			tableLayout.setCellContents(1 + i, 0, MRE.Actor.Create(this.app.context, {
-				actor: {
+			// create row headers
+			layout.addCell({
+				row: 1 + i,
+				column: 0,
+				width: 0.5,
+				height: 0.2,
+				contents: MRE.Actor.Create(this.app.context, { actor: {
 					name: `${layers[i]}RowLabel`,
 					parentId: root.id,
 					text: {
 						contents: layers[i],
+						height: 0.1,
 						anchor: MRE.TextAnchorLocation.MiddleCenter,
-						height: 0.1
+						color: MRE.Color3.Teal()
 					}
-				}
-			}));
+				}})
+			});
 
 			// loop over each type of collider that could hit the first
 			for (let j = 0; j < layers.length; j++) {
-				const widgetRoot = tableLayout.setCellContents(1 + i, 1 + j, MRE.Actor.Create(this.app.context, {
-					actor: {
+				let widgetRoot: MRE.Actor;
+				layout.addCell({
+					row: 1 + i,
+					column: 1 + j,
+					width: 0.5,
+					height: 0.2,
+					contents: widgetRoot = MRE.Actor.Create(this.app.context, { actor: {
 						name: `${layers[i]}/${layers[j]}`,
 						parentId: root.id
-					}
-				}));
+					}})
+				});
 				this.createWidget(widgetRoot, layers[i], layers[j]);
 			}
 		}
+		layout.applyLayout();
 
 		await this.stoppedAsync();
 		return true;
