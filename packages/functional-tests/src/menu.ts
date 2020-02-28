@@ -66,7 +66,7 @@ export class Menu {
 			this.breadcrumbs.reduce((submenu, choice) => submenu[choice].action as MenuItem[], MenuItems);
 
 		this.behaviors.forEach((behavior, i) => {
-			let handler: MRE.ActionHandler;
+			let handler: MRE.ActionHandler<void>;
 			let label: string;
 			let buttonMat: MRE.Material;
 

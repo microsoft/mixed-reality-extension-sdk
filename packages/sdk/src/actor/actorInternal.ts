@@ -4,13 +4,13 @@
  */
 
 import {
+	Actionable,
 	ActionEvent,
 	Actor,
 	ActorLike,
 	Behavior,
 	CollisionData,
 	CollisionEventType,
-	DiscreteAction,
 	SetAnimationStateOptions,
 	TriggerEventType
 } from '..';
@@ -41,11 +41,11 @@ export class ActorInternal implements InternalPatchable<ActorLike> {
 		const behavior = (this.behavior && this.behavior.behaviorType === actionEvent.behaviorType)
 			? this.behavior : undefined;
 		if (behavior && behavior._supportsAction(actionEvent.actionName)) {
-			behavior._performAction(actionEvent.actionName, actionEvent.actionState, actionEvent.user);
+			behavior._performAction(actionEvent.actionName, actionEvent.actionState, actionEvent.user, actionEvent.actionData);
 		} else {
-			const action = (this.actor as any)[actionEvent.actionName.toLowerCase()] as DiscreteAction;
+			const action = (this.actor as any)[actionEvent.actionName.toLowerCase()] as Actionable;
 			if (action) {
-				action._setState(actionEvent.user, actionEvent.actionState);
+				action._performAction(actionEvent.user, actionEvent.actionState, actionEvent.actionData);
 			}
 		}
 	}
