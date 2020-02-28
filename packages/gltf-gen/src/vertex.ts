@@ -3,7 +3,7 @@
  * Licensed under the MIT License.
  */
 
-import { Vector2, Vector3, Vector4 } from '@microsoft/mixed-reality-extension-sdk';
+import { Color4, Vector2, Vector3, Vector4 } from '@microsoft/mixed-reality-extension-sdk';
 import {
 	ColorAttribute,
 	NormalAttribute,
@@ -16,6 +16,7 @@ import {
 type Attribute2 = Vector2 | [number, number];
 type Attribute3 = Vector3 | [number, number, number];
 type Attribute4 = Vector4 | [number, number, number, number];
+type AttributeColor4 = Color4 | [number, number, number, number];
 
 export interface VertexLike {
 	position?: Attribute3;
@@ -23,7 +24,7 @@ export interface VertexLike {
 	tangent?: Attribute4;
 	texCoord0?: Attribute2;
 	texCoord1?: Attribute2;
-	color0?: Attribute3;
+	color0?: AttributeColor4;
 }
 
 export class Vertex implements VertexLike {
@@ -32,7 +33,7 @@ export class Vertex implements VertexLike {
 	public tangent: Vector4;
 	public texCoord0: Vector2;
 	public texCoord1: Vector2;
-	public color0: Vector3;
+	public color0: Color4;
 
 	constructor(init: VertexLike = {}) {
 		if (init.position) {
@@ -61,9 +62,9 @@ export class Vertex implements VertexLike {
 				new Vector2(init.texCoord1[0], init.texCoord1[1]);
 		}
 		if (init.color0) {
-			this.color0 = init.color0 instanceof Vector3 ?
+			this.color0 = init.color0 instanceof Color4 ?
 				init.color0 :
-				new Vector3(init.color0[0], init.color0[1], init.color0[2]);
+				new Color4(init.color0[0], init.color0[1], init.color0[2], init.color0[3]);
 		}
 	}
 

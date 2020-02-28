@@ -3,9 +3,11 @@
  * Licensed under the MIT License.
  */
 
-import { Actor, Asset, AssetContainer, AssetLike } from '..';
+import { Actor, AssetContainer, AssetLike } from '..';
 import { Patchable } from '../internal';
 import { AssetInternal } from './assetInternal';
+// break import cycle
+import { Asset } from './asset';
 
 export interface VideoStreamLike {
 	uri: string;

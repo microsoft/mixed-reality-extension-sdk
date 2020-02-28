@@ -10,7 +10,7 @@ import { log } from '../..';
 /*
  * Current SDK Version - Read from package.json.
  */
-const CurrentSDKVersion = semver.coerce(require('../../package.json').version);
+const CurrentSDKVersion = semver.coerce(require('../../../package.json').version);
 
 /*
  * Minimum Supported Client Library version

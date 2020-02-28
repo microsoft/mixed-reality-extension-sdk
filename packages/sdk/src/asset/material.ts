@@ -5,7 +5,6 @@
 
 import {
 	Actor,
-	Asset,
 	AssetContainer,
 	AssetLike,
 	Color3,
@@ -22,6 +21,8 @@ import {
 	readPath
 } from '../internal';
 import { AssetInternal } from './assetInternal';
+// break import cycle
+import { Asset } from './asset';
 
 /**
  * Describes the properties of a Material.

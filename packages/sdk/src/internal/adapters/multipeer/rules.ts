@@ -689,10 +689,10 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 				message: Message<Payloads.ObjectSpawned>
 			) => {
 				// Check that this is the authoritative client
-				const exclusiveUser =
-					message.payload.actors && message.payload.actors.length ?
-						session.actorSet.get(message.payload.actors[0].id).exclusiveToUser :
-						undefined;
+				const actors = message.payload.actors;
+				const exclusiveUser = actors?.length > 0 && session.actorSet.has(actors[0]?.id) ?
+					session.actorSet.get(actors[0].id).exclusiveToUser :
+					undefined;
 				if (client.authoritative || client.userId && client.userId === exclusiveUser) {
 					// Create no-op creation message. Implicit sync from initialization until they're updated
 					for (const spawned of message.payload.actors || []) {

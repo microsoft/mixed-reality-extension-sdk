@@ -19,6 +19,7 @@ import GltfActorSyncTest from './gltf-actor-sync-test';
 import GltfConcurrencyTest from './gltf-concurrency-test';
 import GltfGenTest from './gltf-gen-test';
 import GrabTest from './grab-test';
+import GridTest from './grid-test';
 import InputTest from './input-test';
 import InterpolationTest from './interpolation-test';
 import LibraryFailTest from './library-fail-test';
@@ -59,6 +60,7 @@ export const Factories = {
 	'gltf-concurrency-test': (...args) => new GltfConcurrencyTest(...args),
 	'gltf-gen-test': (...args) => new GltfGenTest(...args),
 	'grab-test': (...args) => new GrabTest(...args),
+	'grid-test': (...args) => new GridTest(...args),
 	'input-test': (...args) => new InputTest(...args),
 	'interpolation-test': (...args) => new InterpolationTest(...args),
 	'library-fail-test': (...args) => new LibraryFailTest(...args),

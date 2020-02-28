@@ -7,12 +7,11 @@ import * as MRE from '@microsoft/mixed-reality-extension-sdk';
 import { Test } from '../test';
 
 export default class AssetEarlyAssignmentTest extends Test {
-	public expectedResultDescription = "Assign asset properties before initialization is finished";
+	public expectedResultDescription = "Colored & textured sphere";
 	private assets: MRE.AssetContainer;
 
 	public async run(root: MRE.Actor): Promise<boolean> {
 		this.assets = new MRE.AssetContainer(this.app.context);
-		this.app.setOverrideText("Colored & textured sphere");
 
 		const tex = this.assets.createTexture('uvgrid', {
 			uri: `${this.baseUrl}/uv-grid.png`

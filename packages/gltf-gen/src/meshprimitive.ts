@@ -172,8 +172,8 @@ export class MeshPrimitive implements MeshPrimitiveLike {
 			data.writeUInt8(0, i);
 		}
 
-		accessor.min = attr.min.asArray();
-		accessor.max = attr.max.asArray();
+		accessor.min = attr.min?.asArray();
+		accessor.max = attr.max?.asArray();
 
 		document.bufferViews.push(bufferView);
 		document.accessors.push(accessor);
