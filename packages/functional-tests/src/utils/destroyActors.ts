@@ -10,7 +10,7 @@ export default function destroyActors(actors: Actor | Actor[]): Actor[] {
 		actors = [actors];
 	}
 	for (const actor of actors) {
-		actor.destroy();
+		actor?.destroy();
 	}
 	return [];
 }
