@@ -44,31 +44,31 @@ export class PlanarGridLayout {
 	) { }
 
 	/** The number of columns in this grid. */
-	public columnCount() {
+	public getColumnCount() {
 		return this.contents.map(c => c.column).reduce(maxFn, -1) + 1;
 	}
 
 	/** The number of rows in this grid. */
-	public rowCount() {
+	public getRowCount() {
 		return this.contents.map(c => c.row).reduce(maxFn, -1) + 1;
 	}
 
 	/** The width of the full grid. */
-	public gridWidth() {
-		const colCount = this.columnCount();
+	public getGridWidth() {
+		const colCount = this.getColumnCount();
 		let width = 0;
 		for (let i = 0; i < colCount; i++) {
-			width += this.columnWidth(i);
+			width += this.getColumnWidth(i);
 		}
 		return width;
 	}
 
 	/** The height of the full grid. */
-	public gridHeight() {
-		const rowCount = this.rowCount();
+	public getGridHeight() {
+		const rowCount = this.getRowCount();
 		let height = 0;
 		for (let i = 0; i < rowCount; i++) {
-			height += this.rowHeight(i);
+			height += this.getRowHeight(i);
 		}
 		return height;
 	}
@@ -77,7 +77,7 @@ export class PlanarGridLayout {
 	 * The width of a particular column.
 	 * @param i The column index.
 	 */
-	public columnWidth(i: number) {
+	public getColumnWidth(i: number) {
 		return this.contents.filter(c => c.column === i).map(c => c.width).reduce(maxFn, 0);
 	}
 
@@ -85,12 +85,12 @@ export class PlanarGridLayout {
 	 * The height of a particular row.
 	 * @param i The row index.
 	 */
-	public rowHeight(i: number) {
+	public getRowHeight(i: number) {
 		return this.contents.filter(c => c.row === i).map(c => c.height).reduce(maxFn, 0);
 	}
 
 	/** The widths of every column. */
-	public columnWidths() {
+	public getColumnWidths() {
 		return this.contents.reduce((arr, c) => {
 			arr[c.column] = Math.max(arr[c.column] ?? 0, c.width);
 			return arr;
@@ -98,7 +98,7 @@ export class PlanarGridLayout {
 	}
 
 	/** The heights of every row. */
-	public rowHeights() {
+	public getRowHeights() {
 		return this.contents.reduce((arr, c) => {
 			arr[c.row] = Math.max(arr[c.row] ?? 0, c.height);
 			return arr;
@@ -122,8 +122,8 @@ export class PlanarGridLayout {
 
 	/** Recompute the positions of all actors in the grid. */
 	public applyLayout(animateDuration = 0, animateCurve = AnimationEaseCurves.EaseOutQuadratic) {
-		const colWidths = this.columnWidths();
-		const rowHeights = this.rowHeights();
+		const colWidths = this.getColumnWidths();
+		const rowHeights = this.getRowHeights();
 		const gridAlign = PlanarGridLayout.getOffsetFromAlignment(
 			InvertBoxAlignment(this.gridAlignment),
 			colWidths.reduce(sumFn, 0),

@@ -34,7 +34,7 @@ export default class GridTest extends Test {
 			}});
 			button.setBehavior(MRE.ButtonBehavior).onClick(() => {
 				buttonGrid.gridAlignment = alignment;
-				buttonGrid.applyLayout();
+				buttonGrid.applyLayout(0.5);
 			});
 			buttonGrid.addCell({
 				row: Math.floor(i / 3),
@@ -47,6 +47,7 @@ export default class GridTest extends Test {
 			const label = MRE.Actor.Create(this.app.context, { actor: {
 				name: "label",
 				parentId: anchor.id,
+				transform: { local: { position: { z: -0.16 } } },
 				text: {
 					contents: GridTest.ShortName(alignment),
 					height: 0.05,
