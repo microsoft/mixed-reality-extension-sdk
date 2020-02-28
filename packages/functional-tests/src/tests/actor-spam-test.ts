@@ -132,7 +132,7 @@ export default class ActorSpamTest extends Test {
 				transform: { local: { position: { y: 1, z: -1 } } }
 			}
 		});
-		const grid = new MRE.GridLayout(this.spamRoot, MRE.BoxAlignment.BottomCenter);
+		const grid = new MRE.PlanarGridLayout(this.spamRoot, MRE.BoxAlignment.BottomCenter);
 
 		const spacing = 2 / (25 - 1);
 		for (let i = 0; i < count; i++) {

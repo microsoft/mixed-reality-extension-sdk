@@ -21,7 +21,7 @@ export default class CollisionLayerTest extends Test {
 		this.assets = new MRE.AssetContainer(this.app.context);
 
 		const layers = Object.values(MRE.CollisionLayer);
-		const layout = new MRE.GridLayout(root);
+		const layout = new MRE.PlanarGridLayout(root);
 
 		MRE.Actor.Create(this.app.context, {
 			actor: {
@@ -34,11 +34,6 @@ export default class CollisionLayerTest extends Test {
 				collider: { geometry: { shape: MRE.ColliderType.Auto }, layer: MRE.CollisionLayer.Navigation }
 			}
 		});
-
-		// place column headers
-		for (let i = 0; i < layers.length; i++) {
-
-		}
 
 		// loop over each collision layer value
 		for (let i = 0; i < layers.length; i++) {

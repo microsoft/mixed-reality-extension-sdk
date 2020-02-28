@@ -23,7 +23,7 @@ export default class GridTest extends Test {
 		}});
 
 		// create button grid
-		const buttonGrid = new MRE.GridLayout(anchor);
+		const buttonGrid = new MRE.PlanarGridLayout(anchor);
 		for (let i = 0; i < 9; i++) {
 			const alignment = Object.values(MRE.BoxAlignment)[i];
 			const button = MRE.Actor.Create(this.app.context, { actor: {

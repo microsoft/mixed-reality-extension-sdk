@@ -4,8 +4,8 @@
  */
 
 export * from './boxAlignment';
-export * from './gridLayout';
 export * from './guid';
 export * from './log';
+export * from './planarGridLayout';
 export * from './readonlyMap';
 export * from './webHost';

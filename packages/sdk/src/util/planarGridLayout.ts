@@ -2,7 +2,7 @@
  * Copyright (c) Microsoft Corporation. All rights reserved.
  * Licensed under the MIT License.
  */
-import { Actor, BoxAlignment, InvertBoxAlignment, Vector3 } from '..';
+import { Actor, AnimationEaseCurves, BoxAlignment, InvertBoxAlignment, Vector3 } from '..';
 
 /** Options for [[GridLayout.addCell]]. */
 export interface AddCellOptions {
@@ -20,14 +20,14 @@ export interface AddCellOptions {
 	alignment?: BoxAlignment;
 }
 
-const sum = (sum: number, x: number) => sum + x;
-const max = (max: number, x: number) => Math.max(max, x);
+const sumFn = (sum: number, x: number) => sum + x;
+const maxFn = (max: number, x: number) => Math.max(max, x);
 
 /**
- * Lay out actors in a grid in app space. Assign actors to the grid with [[addCell]],
+ * Lay out actors in a grid along the root actor's local XY plane. Assign actors to the grid with [[addCell]],
  * and apply updates with [[applyLayout]].
  */
-export class GridLayout {
+export class PlanarGridLayout {
 	private contents: AddCellOptions[] = [];
 
 	/**
@@ -35,6 +35,7 @@ export class GridLayout {
 	 * @param anchor The grid's anchor actor, the point to which the grid is aligned.
 	 * @param gridAlignment How the grid should be aligned to its anchor, where [[BoxAlignment.TopLeft]] will place
 	 * the grid above and to the left of the anchor, and the lower right corner will touch the anchor.
+	 * @param defaultCellAlignment How cells should be aligned by default.
 	 */
 	public constructor(
 		private anchor: Actor,
@@ -44,12 +45,12 @@ export class GridLayout {
 
 	/** The number of columns in this grid. */
 	public columnCount() {
-		return this.contents.map(c => c.column).reduce(max, -1) + 1;
+		return this.contents.map(c => c.column).reduce(maxFn, -1) + 1;
 	}
 
 	/** The number of rows in this grid. */
 	public rowCount() {
-		return this.contents.map(c => c.row).reduce(max, -1) + 1;
+		return this.contents.map(c => c.row).reduce(maxFn, -1) + 1;
 	}
 
 	/** The width of the full grid. */
@@ -77,7 +78,7 @@ export class GridLayout {
 	 * @param i The column index.
 	 */
 	public columnWidth(i: number) {
-		return this.contents.filter(c => c.column === i).map(c => c.width).reduce(max, 0);
+		return this.contents.filter(c => c.column === i).map(c => c.width).reduce(maxFn, 0);
 	}
 
 	/**
@@ -85,7 +86,7 @@ export class GridLayout {
 	 * @param i The row index.
 	 */
 	public rowHeight(i: number) {
-		return this.contents.filter(c => c.row === i).map(c => c.height).reduce(max, 0);
+		return this.contents.filter(c => c.row === i).map(c => c.height).reduce(maxFn, 0);
 	}
 
 	/** The widths of every column. */
@@ -120,26 +121,33 @@ export class GridLayout {
 	}
 
 	/** Recompute the positions of all actors in the grid. */
-	public applyLayout() {
+	public applyLayout(animateDuration = 0, animateCurve = AnimationEaseCurves.EaseOutQuadratic) {
 		const colWidths = this.columnWidths();
 		const rowHeights = this.rowHeights();
-		const gridAlign = GridLayout.getOffsetFromAlignment(
+		const gridAlign = PlanarGridLayout.getOffsetFromAlignment(
 			InvertBoxAlignment(this.gridAlignment),
-			colWidths.reduce(sum, 0),
-			rowHeights.reduce(sum, 0))
+			colWidths.reduce(sumFn, 0),
+			rowHeights.reduce(sumFn, 0))
 			.negate();
 
 		for (const cell of this.contents) {
 			const cellPosition = new Vector3(
-				colWidths.slice(0, cell.column).reduce(sum, 0),
-				-rowHeights.slice(0, cell.row).reduce(sum, 0),
+				colWidths.slice(0, cell.column).reduce(sumFn, 0),
+				-rowHeights.slice(0, cell.row).reduce(sumFn, 0),
 				cell.contents.transform.local.position.z);
-			const cellAlign = GridLayout.getOffsetFromAlignment(
+			const cellAlign = PlanarGridLayout.getOffsetFromAlignment(
 				cell.alignment ?? this.defaultCellAlignment,
 				colWidths[cell.column], rowHeights[cell.row]
 			);
 
-			cell.contents.transform.local.position = gridAlign.add(cellPosition).add(cellAlign);
+			const destination = gridAlign.add(cellPosition).add(cellAlign);
+			if (animateDuration > 0) {
+				cell.contents.animateTo(
+					{ transform: { local: { position: destination } } },
+					animateDuration, animateCurve);
+			} else {
+				cell.contents.transform.local.position = destination;
+			}
 		}
 	}
 

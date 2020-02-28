@@ -94,7 +94,7 @@ export default class AnimationTest extends Test {
 
 	private createControls(controls: ControlDefinition[], parent: MRE.Actor) {
 		const arrowMesh = this.assets.createCylinderMesh('arrow', 0.01, 0.08, 'z', 3);
-		const layout = new MRE.GridLayout(parent);
+		const layout = new MRE.PlanarGridLayout(parent);
 
 		let i = 0;
 		const realtimeLabels = [] as ControlDefinition[];
@@ -131,7 +131,7 @@ export default class AnimationTest extends Test {
 					collider: { geometry: { shape: MRE.ColliderType.Auto } },
 					transform: { local: { rotation: MRE.Quaternion.FromEulerAngles(0, 0, Math.PI * 1.5) } }
 				}})
-			 });
+			});
 
 			layout.addCell({
 				row: i,
