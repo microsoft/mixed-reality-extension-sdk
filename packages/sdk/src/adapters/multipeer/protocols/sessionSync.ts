@@ -27,5 +27,5 @@ export class SessionSync extends Protocols.Protocol {
 	/** @private */
 	public 'recv-sync-complete' = (payload: Payloads.SyncComplete) => {
 		this.resolve();
-	}
+	};
 }

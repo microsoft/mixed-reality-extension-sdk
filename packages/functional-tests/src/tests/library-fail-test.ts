@@ -9,7 +9,8 @@ export default class LibraryFailTest extends Test {
 	public expectedResultDescription = "Fails";
 
 	public async run(): Promise<boolean> {
-		MRE.Actor.CreateFromLibrary(this.app.context, { resourceId: 'artifact:abdc' });
+		const actor = MRE.Actor.CreateFromLibrary(this.app.context, { resourceId: 'artifact:abdc' });
+		await actor.created();
 		return true;
 	}
 }

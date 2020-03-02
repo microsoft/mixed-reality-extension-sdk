@@ -10,26 +10,26 @@ import { Serializable } from './serializable';
 import { Texture } from './texture';
 
 export interface MaterialLike {
-	name?: string,
-	baseColorTexture?: Texture,
-	baseColorTexCoord?: number,
-	baseColorFactor?: Color4,
-	metallicRoughnessTexture?: Texture,
-	metallicRoughnessTexCoord?: number,
-	metallicFactor?: number,
-	roughnessFactor?: number,
-	normalTexture?: Texture,
-	normalTexCoord?: number,
-	normalTexScale?: number,
-	occlusionTexture?: Texture,
-	occlusionTexCoord?: number,
-	occlusionTexStrength?: number,
-	emissiveTexture?: Texture,
-	emissiveTexCoord?: number,
-	emissiveFactor?: Color3,
-	alphaMode?: AlphaMode,
-	alphaCutoff?: number,
-	doubleSided?: boolean
+	name?: string;
+	baseColorTexture?: Texture;
+	baseColorTexCoord?: number;
+	baseColorFactor?: Color4;
+	metallicRoughnessTexture?: Texture;
+	metallicRoughnessTexCoord?: number;
+	metallicFactor?: number;
+	roughnessFactor?: number;
+	normalTexture?: Texture;
+	normalTexCoord?: number;
+	normalTexScale?: number;
+	occlusionTexture?: Texture;
+	occlusionTexCoord?: number;
+	occlusionTexStrength?: number;
+	emissiveTexture?: Texture;
+	emissiveTexCoord?: number;
+	emissiveFactor?: Color3;
+	alphaMode?: AlphaMode;
+	alphaCutoff?: number;
+	doubleSided?: boolean;
 }
 
 export class Material extends Serializable implements MaterialLike {

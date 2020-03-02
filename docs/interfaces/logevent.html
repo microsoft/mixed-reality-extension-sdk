@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>CapsuleColliderGeometry | Mixed Reality Extension SDK</title>
+	<title>LogEvent | Mixed Reality Extension SDK</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -52,10 +52,10 @@
 					<a href="../index.html">Globals</a>
 				</li>
 				<li>
-					<a href="capsulecollidergeometry.html">CapsuleColliderGeometry</a>
+					<a href="logevent.html">LogEvent</a>
 				</li>
 			</ul>
-			<h1>Interface CapsuleColliderGeometry</h1>
+			<h1>Interface LogEvent</h1>
 		</div>
 	</div>
 </header>
@@ -66,7 +66,7 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">CapsuleColliderGeometry</span>
+						<span class="target">LogEvent</span>
 					</li>
 				</ul>
 			</section>
@@ -77,9 +77,11 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="capsulecollidergeometry.html#center" class="tsd-kind-icon">center</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="capsulecollidergeometry.html#shape" class="tsd-kind-icon">shape</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="capsulecollidergeometry.html#size" class="tsd-kind-icon">size</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="logevent.html#client" class="tsd-kind-icon">client</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="logevent.html#direction" class="tsd-kind-icon">direction</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="logevent.html#input" class="tsd-kind-icon">input</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="logevent.html#networkcontents" class="tsd-kind-icon">network<wbr>Contents</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="logevent.html#timestamp" class="tsd-kind-icon">timestamp</a></li>
 							</ul>
 						</section>
 					</div>
@@ -88,32 +90,52 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="center" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> center</h3>
-					<div class="tsd-signature tsd-kind-icon">center<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Readonly</span><span class="tsd-signature-symbol">&lt;</span><a href="vector3like.html" class="tsd-signature-type">Vector3Like</a><span class="tsd-signature-symbol">&gt;</span></div>
+					<a name="client" class="tsd-anchor"></a>
+					<h3>client</h3>
+					<div class="tsd-signature tsd-kind-icon">client<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/88bc2f5/packages/sdk/src/types/runtime/physics/colliderGeometry.ts#L28">types/runtime/physics/colliderGeometry.ts:28</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/711ebd3/packages/sdk/src/utils/parseNetworkLogs.ts#L18">src/utils/parseNetworkLogs.ts:18</a></li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="shape" class="tsd-anchor"></a>
-					<h3>shape</h3>
-					<div class="tsd-signature tsd-kind-icon">shape<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">"capsule"</span></div>
+					<a name="direction" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> direction</h3>
+					<div class="tsd-signature tsd-kind-icon">direction<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">"to"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"from"</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/88bc2f5/packages/sdk/src/types/runtime/physics/colliderGeometry.ts#L27">types/runtime/physics/colliderGeometry.ts:27</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/711ebd3/packages/sdk/src/utils/parseNetworkLogs.ts#L19">src/utils/parseNetworkLogs.ts:19</a></li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="size" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> size</h3>
-					<div class="tsd-signature tsd-kind-icon">size<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Readonly</span><span class="tsd-signature-symbol">&lt;</span><a href="vector3like.html" class="tsd-signature-type">Vector3Like</a><span class="tsd-signature-symbol">&gt;</span></div>
+					<a name="input" class="tsd-anchor"></a>
+					<h3>input</h3>
+					<div class="tsd-signature tsd-kind-icon">input<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/88bc2f5/packages/sdk/src/types/runtime/physics/colliderGeometry.ts#L29">types/runtime/physics/colliderGeometry.ts:29</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/711ebd3/packages/sdk/src/utils/parseNetworkLogs.ts#L16">src/utils/parseNetworkLogs.ts:16</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="networkcontents" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> network<wbr>Contents</h3>
+					<div class="tsd-signature tsd-kind-icon">network<wbr>Contents<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/711ebd3/packages/sdk/src/utils/parseNetworkLogs.ts#L20">src/utils/parseNetworkLogs.ts:20</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="timestamp" class="tsd-anchor"></a>
+					<h3>timestamp</h3>
+					<div class="tsd-signature tsd-kind-icon">timestamp<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Date</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/711ebd3/packages/sdk/src/utils/parseNetworkLogs.ts#L17">src/utils/parseNetworkLogs.ts:17</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -132,16 +154,22 @@
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-interface">
-						<a href="capsulecollidergeometry.html" class="tsd-kind-icon">Capsule<wbr>Collider<wbr>Geometry</a>
+						<a href="logevent.html" class="tsd-kind-icon">Log<wbr>Event</a>
 						<ul>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="capsulecollidergeometry.html#center" class="tsd-kind-icon">center</a>
+								<a href="logevent.html#client" class="tsd-kind-icon">client</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="capsulecollidergeometry.html#shape" class="tsd-kind-icon">shape</a>
+								<a href="logevent.html#direction" class="tsd-kind-icon">direction</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="capsulecollidergeometry.html#size" class="tsd-kind-icon">size</a>
+								<a href="logevent.html#input" class="tsd-kind-icon">input</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="logevent.html#networkcontents" class="tsd-kind-icon">network<wbr>Contents</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="logevent.html#timestamp" class="tsd-kind-icon">timestamp</a>
 							</li>
 						</ul>
 					</li>

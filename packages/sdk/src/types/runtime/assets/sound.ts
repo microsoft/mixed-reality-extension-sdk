@@ -5,7 +5,6 @@
 
 import { Asset, AssetContainer, AssetLike } from '.';
 import { Actor } from '..';
-import readPath from '../../../utils/readPath';
 import { InternalAsset } from '../../internal/asset';
 import { Patchable } from '../../patchable';
 
@@ -15,11 +14,9 @@ export interface SoundLike {
 }
 
 export class Sound extends Asset implements SoundLike, Patchable<AssetLike> {
-	// tslint:disable:variable-name
 	private _uri: string;
 	private _duration = 0;
 	private _internal = new InternalAsset(this);
-	// tslint:enable:variable-name
 
 	/** @hidden */
 	public get internal() { return this._internal; }
@@ -53,13 +50,13 @@ export class Sound extends Asset implements SoundLike, Patchable<AssetLike> {
 		const wasObserving = this.internal.observing;
 		this.internal.observing = false;
 
-		// tslint:disable:curly
 		super.copy(from);
-		if (from.sound && from.sound.uri)
+		if (from.sound && from.sound.uri) {
 			this._uri = from.sound.uri;
-		if (from.sound && from.sound.duration !== undefined)
+		}
+		if (from.sound && from.sound.duration !== undefined) {
 			this._duration = from.sound.duration;
-		// tslint:enable:curly
+		}
 
 		this.internal.observing = wasObserving;
 		return this;
@@ -78,7 +75,7 @@ export class Sound extends Asset implements SoundLike, Patchable<AssetLike> {
 
 	/** @hidden */
 	public breakReference(ref: Actor | Asset) {
-		if (!(ref instanceof Actor)) return;
+		if (!(ref instanceof Actor)) { return; }
 
 		// TODO: Destroy all SoundInstances playing this Sound
 	}

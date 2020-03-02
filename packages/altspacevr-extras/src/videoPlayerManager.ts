@@ -39,7 +39,7 @@ export class VideoPlayerManager {
 				startTime: video.basisTime + Date.now() / 1000.0
 			});
 		}
-	}
+	};
 
 	public play(actorId: string, url: string, startTime: number) {
 		if (!this.videos.has(actorId) || this.videos.get(actorId).url !== url) {

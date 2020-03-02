@@ -44,22 +44,23 @@ export class Execution extends Protocol {
 	/** @private */
 	public 'recv-engine2app-rpc' = (payload: EngineToAppRPC) => {
 		this.emit('protocol.receive-rpc', payload);
-	}
+	};
 
 	/** @private */
 	public 'recv-object-spawned' = (payload: ObjectSpawned) => {
 		this.emit('protocol.update-actors', payload.actors);
-	}
+		this.emit('protocol.update-animations', payload.animations);
+	};
 
 	/** @private */
 	public 'recv-actor-update' = (payload: ActorUpdate) => {
 		this.emit('protocol.update-actors', [payload.actor]);
-	}
+	};
 
 	/** @private */
 	public 'recv-destroy-actors' = (payload: DestroyActors) => {
 		this.emit('protocol.destroy-actors', payload.actorIds);
-	}
+	};
 
 	/** @private */
 	public 'recv-operation-result' = (operationResult: OperationResult) => {
@@ -69,19 +70,19 @@ export class Execution extends Protocol {
 				log.log('network', trace.severity, trace.message);
 			});
 		}
-	}
+	};
 
 	/** @private */
 	public 'recv-multi-operation-result' = (multiOperationResult: MultiOperationResult) => {
 		throw new Error("Not implemented");
-	}
+	};
 
 	/** @private */
 	public 'recv-traces' = (payload: Traces) => {
 		payload.traces.forEach(trace => {
 			log.log('client', trace.severity, trace.message);
 		});
-	}
+	};
 
 	/** @private */
 	public 'recv-user-joined' = (payload: UserJoined) => {
@@ -95,17 +96,17 @@ export class Execution extends Protocol {
 		}
 
 		this.emit('protocol.user-joined', payload.user);
-	}
+	};
 
 	/** @private */
 	public 'recv-user-left' = (payload: UserLeft) => {
 		this.emit('protocol.user-left', payload.userId);
-	}
+	};
 
 	/** @private */
 	public 'recv-user-update' = (payload: UserUpdate) => {
 		this.emit('protocol.update-user', payload.user);
-	}
+	};
 
 	/** @private */
 	public 'recv-sync-request' = async (payload: SyncRequest) => {
@@ -116,7 +117,7 @@ export class Execution extends Protocol {
 		await sync.run(); // Allow exception to propagate.
 
 		this.startListening();
-	}
+	};
 
 	/** @private */
 	public 'recv-perform-action' = (payload: PerformAction) => {
@@ -127,7 +128,7 @@ export class Execution extends Protocol {
 			actionName: payload.actionName,
 			actionState: payload.actionState
 		} as ActionEvent);
-	}
+	};
 
 	/** @private */
 	public 'recv-collision-event-raised' = (payload: CollisionEventRaised) => {
@@ -136,7 +137,7 @@ export class Execution extends Protocol {
 			eventType: payload.eventType,
 			collisionData: payload.collisionData
 		} as CollisionEvent);
-	}
+	};
 
 	/** @private */
 	public 'recv-trigger-event-raised' = (payload: TriggerEventRaised) => {
@@ -145,7 +146,7 @@ export class Execution extends Protocol {
 			eventType: payload.eventType,
 			otherColliderOwnerId: payload.otherActorId
 		} as TriggerEvent);
-	}
+	};
 
 	/** @private */
 	public 'recv-set-animation-state' = (payload: SetAnimationState) => {
@@ -153,5 +154,5 @@ export class Execution extends Protocol {
 			payload.actorId,
 			payload.animationName,
 			payload.state);
-	}
+	};
 }

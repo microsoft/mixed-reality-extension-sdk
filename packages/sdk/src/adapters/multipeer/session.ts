@@ -7,28 +7,34 @@ import deepmerge from 'deepmerge';
 import { EventEmitter } from 'events';
 import {
 	Client, InitializeActorMessage, MissingRule, Rules, SessionExecution,
-	SessionHandshake, SessionSync, SyncActor, SyncAsset
+	SessionHandshake, SessionSync, SyncActor, SyncAnimation, SyncAsset
 } from '.';
-import { Connection, EventedConnection, Message, UserLike } from '../..';
+import { Connection, EventedConnection, Guid, Message, UserLike } from '../..';
 import { log } from '../../log';
 import * as Protocols from '../../protocols';
 import * as Payloads from '../../types/network/payloads';
 
 type AssetCreationMessage = Message<Payloads.LoadAssets | Payloads.CreateAsset>;
+type AnimationCreationMessage = Message<Payloads.CreateAnimation | Payloads.CreateActorCommon>;
 
 /**
  * @hidden
  * Class for associating multiple client connections with a single app session.
  */
 export class Session extends EventEmitter {
-	// tslint:disable:variable-name
 	private _clientSet: { [id: string]: Client } = {};
 	private _actorSet: { [id: string]: Partial<SyncActor> } = {};
 	private _assetSet: { [id: string]: Partial<SyncAsset> } = {};
 	private _assetCreatorSet: { [id: string]: AssetCreationMessage } = {};
+	/** Maps animation IDs to animation sync structs */
+	private _animationSet: Map<Guid, Partial<SyncAnimation>>
+		= new Map<Guid, Partial<SyncAnimation>>();
+	/** Maps IDs of messages that can create animations to the messages themselves */
+	private _animationCreatorSet: Map<string, AnimationCreationMessage>
+		= new Map<string, AnimationCreationMessage>();
 	private _userSet: { [id: string]: Partial<UserLike> } = {};
 	private _protocol: Protocols.Protocol;
-	// tslint:enable:variable-name
+	private _disconnect: () => void;
 
 	public get conn() { return this._conn; }
 	public get sessionId() { return this._sessionId; }
@@ -40,6 +46,9 @@ export class Session extends EventEmitter {
 	public get actors() { return Object.values(this._actorSet); }
 	public get assets() { return Object.values(this._assetSet); }
 	public get assetCreators() { return Object.values(this._assetCreatorSet); }
+	public get animationSet() { return this._animationSet; }
+	public get animations() { return this._animationSet.values(); }
+	public get animationCreators() { return this._animationCreatorSet.values(); }
 	public get users() { return Object.values(this._userSet); }
 	public get actorSet() { return this._actorSet; }
 	public get assetSet() { return this._assetSet; }
@@ -58,25 +67,23 @@ export class Session extends EventEmitter {
 	public user = (userId: string) => this._userSet[userId];
 	public childrenOf = (parentId: string) => {
 		return this.actors.filter(actor => actor.initialization.message.payload.actor.parentId === parentId);
-	}
+	};
 	public creatableChildrenOf = (parentId: string) => {
 		return this.actors.filter(actor =>
 			actor.initialization.message.payload.actor.parentId === parentId
 			&& !!actor.initialization.message.payload.type);
-	}
+	};
 
 	/**
 	 * Creates a new Session instance
 	 */
-	// tslint:disable-next-line:variable-name
 	constructor(private _conn: Connection, private _sessionId: string, private _peerAuthoritative: boolean) {
 		super();
 		this.recvFromClient = this.recvFromClient.bind(this);
 		this.recvFromApp = this.recvFromApp.bind(this);
-		this.disconnect = this.disconnect.bind(this);
-		this.leave = this.leave.bind(this);
-		this._conn.on('close', this.disconnect);
-		this._conn.on('error', this.disconnect);
+		this._disconnect = this.disconnect.bind(this);
+		this._conn.on('close', this._disconnect);
+		this._conn.on('error', this._disconnect);
 	}
 
 	/**
@@ -101,8 +108,8 @@ export class Session extends EventEmitter {
 
 	public disconnect() {
 		try {
-			this._conn.off('close', this.disconnect);
-			this._conn.off('error', this.disconnect);
+			this._conn.off('close', this._disconnect);
+			this._conn.off('error', this._disconnect);
 			this._conn.close();
 			this.emit('close');
 		} catch { }
@@ -163,7 +170,6 @@ export class Session extends EventEmitter {
 
 	private setAuthoritativeClient(clientId: string) {
 		if (!this._clientSet[clientId]) {
-			// tslint:disable-next-line:no-console
 			log.error('network', `[ERROR] setAuthoritativeClient: client ${clientId} does not exist.`);
 		}
 		const oldAuthority = this.authoritativeClient;
@@ -172,6 +178,11 @@ export class Session extends EventEmitter {
 		newAuthority.setAuthoritative(true);
 		for (const client of this.clients.filter(c => c !== newAuthority)) {
 			client.setAuthoritative(false);
+		}
+
+		// forward connection quality metrics
+		if (this.conn instanceof EventedConnection) {
+			this.conn.linkConnectionQuality(newAuthority.conn.quality);
 		}
 
 		// forward network stats from the authoritative peer connection to the app
@@ -198,14 +209,14 @@ export class Session extends EventEmitter {
 		if (message) {
 			this.sendToApp(message);
 		}
-	}
+	};
 
 	private recvFromApp = (message: Message) => {
 		message = this.preprocessFromApp(message);
 		if (message) {
 			this.sendToClients(message);
 		}
-	}
+	};
 
 	public preprocessFromApp(message: Message): Message {
 		const rule = Rules[message.payload.type] || MissingRule;
@@ -241,10 +252,12 @@ export class Session extends EventEmitter {
 		this.sendToClients({ payload }, filterFn);
 	}
 
+	/** @deprecated */
 	public findAnimation(syncActor: Partial<SyncActor>, animationName: string) {
 		return (syncActor.createdAnimations || []).find(item => item.message.payload.animationName === animationName);
 	}
 
+	/** @deprecated */
 	public isAnimating(syncActor: Partial<SyncActor>): boolean {
 		if ((syncActor.createdAnimations || []).some(item => item.enabled)) {
 			return true;
@@ -382,6 +395,37 @@ export class Session extends EventEmitter {
 			for (const asset of assets) {
 				delete this.assetSet[asset.id];
 			}
+		}
+	}
+
+	public cacheAnimationCreationRequest(payload: AnimationCreationMessage) {
+		this._animationCreatorSet.set(payload.id, payload);
+	}
+
+	public cacheAnimationCreation(animId: Guid, creatorId: string, duration?: number) {
+		this._animationSet.set(animId, {
+			id: animId,
+			creatorMessageId: creatorId,
+			update: undefined,
+			duration
+		});
+	}
+
+	public cacheAnimationUpdate(update: Message<Payloads.AnimationUpdate>) {
+		let syncAnim = this._animationSet.get(update.payload.animation.id);
+		if (!syncAnim) {
+			syncAnim = { id: update.payload.animation.id };
+			this._animationSet.set(syncAnim.id, syncAnim);
+		}
+
+		if (syncAnim.update) {
+			// merge with previous update message
+			syncAnim.update.payload.animation = deepmerge(
+				syncAnim.update.payload.animation,
+				update.payload.animation);
+		} else {
+			// just save it
+			syncAnim.update = update;
 		}
 	}
 }

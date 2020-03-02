@@ -25,9 +25,7 @@ export class Light implements LightLike {
 	// spot-only:
 	public spotAngle = Math.PI / 4;
 
-	// tslint:disable:variable-name
 	private _color: Color3;
-	// tslint:enable:variable-name
 
 	public get color() { return this._color; }
 	public set color(value: Partial<Color3>) { this._color.copy(value); }
@@ -41,13 +39,13 @@ export class Light implements LightLike {
 	}
 
 	public copy(from: Partial<LightLike>): this {
-		if (!from) return this;
-		if (from.enabled !== undefined) this.enabled = from.enabled;
-		if (from.type !== undefined) this.type = from.type;
-		if (from.color !== undefined) this.color.copy(from.color);
-		if (from.range !== undefined) this.range = from.range;
-		if (from.intensity !== undefined) this.intensity = from.intensity;
-		if (from.spotAngle !== undefined) this.spotAngle = from.spotAngle;
+		if (!from) { return this; }
+		if (from.enabled !== undefined) { this.enabled = from.enabled; }
+		if (from.type !== undefined) { this.type = from.type; }
+		if (from.color !== undefined) { this.color.copy(from.color); }
+		if (from.range !== undefined) { this.range = from.range; }
+		if (from.intensity !== undefined) { this.intensity = from.intensity; }
+		if (from.spotAngle !== undefined) { this.spotAngle = from.spotAngle; }
 		return this;
 	}
 

@@ -15,7 +15,7 @@
     "node"
   ],
   "engines": {
-    "node": ">=8.12.0",
+    "node": ">=10.13.0",
     "npm": ">=6.4.1"
   },
   "bugs": {
@@ -27,10 +27,8 @@
   },
   "scripts": {
     "clean": "tsc --build --clean",
-    "build": "tsc --build && npm run lint",
+    "build": "tsc --build && eslint --ext .ts src",
     "build-docs": "typedoc --externalPattern \"**/node_modules/**\" --excludeExternals --excludeNotExported --excludeProtected --excludePrivate --hideGenerator --mode file --name \"Mixed Reality Extension SDK\" --readme none --out ../../docs ./src",
-    "lint": "tslint -p ./tsconfig.json -c ../tslint.json",
-    "lint-docs": "tslint -p ./tsconfig.json -c ../tslint.docs.json",
     "prepublishOnly": "npm run build"
   },
   "devDependencies": {
@@ -41,9 +39,11 @@
     "@types/semver": "^5.5.0",
     "@types/uuid": "^3.4.3",
     "@types/ws": "^6.0.1",
-    "tslint": "5.11.0",
-    "typedoc": "^0.15.0",
-    "typescript": "3.0.3"
+    "@typescript-eslint/eslint-plugin": "^2.6.1",
+    "@typescript-eslint/parser": "^2.6.1",
+    "eslint": "^6.6.0",
+    "typedoc": "^0.16.8",
+    "typescript": "^3.7.2"
   },
   "dependencies": {
     "@types/node": "^10.3.1",

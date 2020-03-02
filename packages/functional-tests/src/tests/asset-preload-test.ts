@@ -61,7 +61,7 @@ export default class AssetPreloadTest extends Test {
 				if (this.head || this.sphere) { await delay(1000); }
 
 				this.app.setOverrideText("Instantiating prefabs");
-				await this.setup();
+				this.setup();
 				this.app.setOverrideText("Prefab instantiated");
 				break;
 
@@ -94,7 +94,7 @@ export default class AssetPreloadTest extends Test {
 		this.state = (this.state + 1) % 5;
 	}
 
-	private async setup() {
+	private setup() {
 		this.uvgridMat.mainTexture = this.uvgridTex;
 		this.head = MRE.Actor.CreateFromPrefab(this.app.context, {
 			prefabId: this.monkeyPrefab.id,
@@ -120,7 +120,7 @@ export default class AssetPreloadTest extends Test {
 						position: { x: 0.5, y: 1, z: -1 }
 					}
 				},
-				collider: { geometry: { shape: 'auto' } }
+				collider: { geometry: { shape: MRE.ColliderType.Auto } }
 			}
 		});
 

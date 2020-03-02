@@ -2,12 +2,10 @@
  * Copyright (c) Microsoft Corporation. All rights reserved.
  * Licensed under the MIT License.
  */
-
+/* eslint-disable max-classes-per-file */
 import { Vector2, Vector3, Vector4 } from '@microsoft/mixed-reality-extension-sdk';
 import { AccessorComponentType, AccessorType } from './enums';
 import { Vertex } from './vertex';
-
-// tslint:disable:max-classes-per-file
 
 /** @hidden */
 export abstract class VertexAttribute {
@@ -15,10 +13,8 @@ export abstract class VertexAttribute {
 	public multiType: AccessorType = AccessorType.Scalar;
 	public abstract get attributeName(): string;
 
-	// tslint:disable:variable-name
 	protected _min: Vector2 | Vector3 | Vector4;
 	protected _max: Vector2 | Vector3 | Vector4;
-	// tslint:enable:variable-name
 	public get min(): Vector2 | Vector3 | Vector4 { return this._min; }
 	public get max(): Vector2 | Vector3 | Vector4 { return this._max; }
 
@@ -85,10 +81,8 @@ export abstract class VertexAttribute {
 
 /** @hidden */
 export class PositionAttribute extends VertexAttribute {
-	// tslint:disable:variable-name
 	protected _min: Vector3;
 	protected _max: Vector3;
-	// tslint:enable:variable-name
 	public get min(): Vector3 { return this._min; }
 	public get max(): Vector3 { return this._max; }
 
@@ -117,10 +111,8 @@ export class PositionAttribute extends VertexAttribute {
 
 /** @hidden */
 export class NormalAttribute extends VertexAttribute {
-	// tslint:disable:variable-name
 	protected _min: Vector3;
 	protected _max: Vector3;
-	// tslint:enable:variable-name
 	public get min(): Vector3 { return this._min; }
 	public get max(): Vector3 { return this._max; }
 
@@ -149,10 +141,8 @@ export class NormalAttribute extends VertexAttribute {
 
 /** @hidden */
 export class TangentAttribute extends VertexAttribute {
-	// tslint:disable:variable-name
 	protected _min: Vector4;
 	protected _max: Vector4;
-	// tslint:enable:variable-name
 	public get min(): Vector4 { return this._min; }
 	public get max(): Vector4 { return this._max; }
 
@@ -183,10 +173,8 @@ export class TangentAttribute extends VertexAttribute {
 /** @hidden */
 export class TexCoordAttribute extends VertexAttribute {
 	private index: number;
-	// tslint:disable:variable-name
 	protected _min: Vector2;
 	protected _max: Vector2;
-	// tslint:enable:variable-name
 	public get min(): Vector2 { return this._min; }
 	public get max(): Vector2 { return this._max; }
 
@@ -217,10 +205,8 @@ export class TexCoordAttribute extends VertexAttribute {
 /** @hidden */
 export class ColorAttribute extends VertexAttribute {
 	private index: number;
-	// tslint:disable:variable-name
 	protected _min: Vector3;
 	protected _max: Vector3;
-	// tslint:enable:variable-name
 	public get min(): Vector3 { return this._min; }
 	public get max(): Vector3 { return this._max; }
 

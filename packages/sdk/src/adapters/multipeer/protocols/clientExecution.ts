@@ -78,5 +78,5 @@ export class ClientExecution extends Protocols.Protocol implements Protocols.Mid
 			// Cancel the message
 			return undefined;
 		}
-	}
+	};
 }

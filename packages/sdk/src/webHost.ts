@@ -8,7 +8,7 @@ import QueryString from 'query-string';
 import * as Restify from 'restify';
 import { resolve as urlResolve } from 'url';
 import * as WS from 'ws';
-import { Adapter, MultipeerAdapter } from '.';
+import { Adapter, MultipeerAdapter } from './adapters';
 import { log } from './log';
 import verifyClient from './utils/verifyClient';
 
@@ -16,7 +16,7 @@ export type WebSocketUpgradeRequestHandler = (ws: WS, request: http.IncomingMess
 export type WebSocketRoute = string | RegExp;
 
 const BUFFER_KEYWORD = 'buffers';
-const BUFFER_REGEX = new RegExp(`^/${BUFFER_KEYWORD}/(.+)$`);
+const BUFFER_REGEX = new RegExp(`^/${BUFFER_KEYWORD}/(.+)$`, 'u');
 
 /**
  * Configuration options for a WebHost instance.
@@ -55,12 +55,10 @@ export type WebHostOptions = {
  * Sets up an HTTP server, and generates an MRE context for your app to use.
  */
 export class WebHost {
-	// tslint:disable: variable-name
 	private _server: Restify.Server;
 	private wss: WS.Server;
 	private bufferMap: { [path: string]: Buffer } = {};
 	private webSocketRouteMap = new Map<WebSocketRoute, WebSocketUpgradeRequestHandler>();
-	// tslint:enable: variable-name
 
 	public get server() { return this._server; }
 	public get adapter() { return this.options.adapter; }
@@ -68,7 +66,7 @@ export class WebHost {
 	public get baseUrl() { return this.options.baseUrl; }
 
 	public constructor(private options?: WebHostOptions) {
-		const pjson = require('../package.json');
+		const pjson = require('../package.json'); /* eslint-disable-line @typescript-eslint/no-var-requires */
 		log.info('app', `Node: ${process.version}`);
 		log.info('app', `${pjson.name}: v${pjson.version}`);
 
@@ -95,20 +93,6 @@ export class WebHost {
 		if (this.options.adapter) {
 			this.addAdapter(this.options.mreRoute, this.adapter);
 		}
-
-		// Start the web server, enable WebSockets, start serving static files, and start handling WebSocket connections.
-		this._server = Restify.createServer({ name: this.constructor.name });
-		this.wss = new WS.Server({ server: this.server });
-		this.server.listen(this.options.port, () => {
-			this.options.baseUrl = this.options.baseUrl || this.server.url.replace(/\[::\]/, '127.0.0.1');
-			log.info('app', `${this.server.name} listening on ${JSON.stringify(this.server.address())}`);
-			log.info('app', `baseUrl: ${this.baseUrl}`);
-			log.info('app', `baseDir: ${this.baseDir}`);
-			if (!!this.baseDir) {
-				serveStaticFiles();
-			}
-			handleWebSocketUpgrades();
-		});
 
 		const serveStaticFiles = () => {
 			this.server.get('/*',
@@ -140,6 +124,21 @@ export class WebHost {
 				ws.close(1000, "No handler registered for this route.");
 			});
 		};
+
+		// Start the web server, enable WebSockets, start serving static files,
+		// and start handling WebSocket connections.
+		this._server = Restify.createServer({ name: this.constructor.name });
+		this.wss = new WS.Server({ server: this.server });
+		this.server.listen(this.options.port, () => {
+			this.options.baseUrl = this.options.baseUrl || this.server.url.replace(/\[::\]/u, '127.0.0.1');
+			log.info('app', `${this.server.name} listening on ${JSON.stringify(this.server.address())}`);
+			log.info('app', `baseUrl: ${this.baseUrl}`);
+			log.info('app', `baseDir: ${this.baseDir}`);
+			if (this.baseDir) {
+				serveStaticFiles();
+			}
+			handleWebSocketUpgrades();
+		});
 	}
 
 	private serveStaticBuffers(req: Restify.Request, res: Restify.Response, next: Restify.Next) {
@@ -174,7 +173,7 @@ export class WebHost {
 	 * @param handler The method to call when a new WebSocket connection is made with the matching route.
 	 */
 	public addWebSocketRoute(route: WebSocketRoute, handler: WebSocketUpgradeRequestHandler) {
-		if (!!handler) {
+		if (handler) {
 			this.webSocketRouteMap.set(route, handler);
 		} else {
 			this.webSocketRouteMap.delete(route);

@@ -72,12 +72,10 @@ export interface AssetLike {
 
 /** The base class for all asset types. */
 export abstract class Asset implements AssetLike {
-	// tslint:disable:variable-name
 	private _id: string;
 	private _name: string;
 	private _source: AssetSource;
 	private _loadedPromise: Promise<void>;
-	// tslint:enable:variable-name
 
 	/** @inheritdoc */
 	public get id() { return this._id; }
@@ -148,11 +146,9 @@ export abstract class Asset implements AssetLike {
 
 	/** @hidden */
 	public copy(from: Partial<AssetLike>): this {
-		// tslint:disable:curly
-		if (from.id) this._id = from.id;
-		if (from.name) this._name = from.name;
-		if (from.source) this._source = from.source;
-		// tslint:enable:curly
+		if (from.id) { this._id = from.id; }
+		if (from.name) { this._name = from.name; }
+		if (from.source) { this._source = from.source; }
 
 		return this;
 	}

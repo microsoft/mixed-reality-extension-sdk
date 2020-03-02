@@ -24,6 +24,18 @@ export default class CollisionLayerTest extends Test {
 		const layers = Object.values(MRE.CollisionLayer);
 		const tableLayout = new TableLayout(5, 5, 0.2, 0.5);
 
+		MRE.Actor.Create(this.app.context, {
+			actor: {
+				name: 'platform',
+				parentId: root.id,
+				transform: { local: { position: { x: 2 } } },
+				appearance: {
+					meshId: this.assets.createBoxMesh('platformBox', 1, 0.1, 1).id
+				},
+				collider: { geometry: { shape: MRE.ColliderType.Auto }, layer: MRE.CollisionLayer.Navigation }
+			}
+		});
+
 		// place column headers
 		for (let i = 0; i < layers.length; i++) {
 			tableLayout.setCellContents(0, 1 + i, MRE.Actor.Create(this.app.context, {
@@ -71,15 +83,15 @@ export default class CollisionLayerTest extends Test {
 	}
 
 	private createWidget(root: MRE.Actor, layer1: MRE.CollisionLayer, layer2: MRE.CollisionLayer) {
-		const ballMesh = this.assets.meshes[0]
+		const ballMesh = this.assets.meshes.find(m => m.name === 'ball')
 			|| this.assets.createSphereMesh('ball', 0.05);
-		const boxMesh = this.assets.meshes[1]
+		const boxMesh = this.assets.meshes.find(m => m.name === 'box')
 			|| this.assets.createBoxMesh('box', 0.1, 0.1, 0.1);
-		const ballMat = this.assets.materials[0]
+		const ballMat = this.assets.materials.find(m => m.name === 'ball')
 			|| this.assets.createMaterial('ball', { color: MRE.Color3.LightGray() });
-		const boxDefaultMat = this.assets.materials[1]
+		const boxDefaultMat = this.assets.materials.find(m => m.name === 'boxDefault')
 			|| this.assets.createMaterial('boxDefault', { color: MRE.Color3.LightGray().toColor4(0.5) });
-		const boxHitMat = this.assets.materials[2]
+		const boxHitMat = this.assets.materials.find(m => m.name === 'boxHit')
 			|| this.assets.createMaterial('boxHit', { color: MRE.Color3.Red().toColor4(0.5) });
 
 		const box = MRE.Actor.Create(this.app.context, {
@@ -91,7 +103,7 @@ export default class CollisionLayerTest extends Test {
 					materialId: boxDefaultMat.id
 				},
 				collider: {
-					geometry: { shape: 'auto' },
+					geometry: { shape: MRE.ColliderType.Auto },
 					isTrigger: true,
 					layer: layer1
 				}
@@ -113,7 +125,7 @@ export default class CollisionLayerTest extends Test {
 					materialId: ballMat.id
 				},
 				collider: {
-					geometry: { shape: 'auto' },
+					geometry: { shape: MRE.ColliderType.Auto },
 					layer: layer2
 				},
 				rigidBody: {

@@ -51,7 +51,6 @@ export interface ColliderLike {
 export class Collider implements ColliderLike {
 	public $DoNotObserve = ['_internal'];
 
-	// tslint:disable-next-line:variable-name
 	private _internal: InternalCollider;
 
 	public enabled = true;
@@ -83,10 +82,10 @@ export class Collider implements ColliderLike {
 			}
 
 			this._internal = new InternalCollider(this, $owner);
-			if (from.geometry !== undefined) this.geometry = from.geometry;
-			if (from.enabled !== undefined) this.enabled = from.enabled;
-			if (from.isTrigger !== undefined) this.isTrigger = from.isTrigger;
-			if (from.layer !== undefined) this.layer = from.layer;
+			if (from.geometry !== undefined) { this.geometry = from.geometry; }
+			if (from.enabled !== undefined) { this.enabled = from.enabled; }
+			if (from.isTrigger !== undefined) { this.isTrigger = from.isTrigger; }
+			if (from.layer !== undefined) { this.layer = from.layer; }
 		} else {
 			throw new Error("Must provide a valid collider-like to initialize from.");
 		}

@@ -3,30 +3,6 @@
  * Licensed under the MIT License.
  */
 
-/**
- * @hidden
- * Installs "watchers" for leaf properties in the target object, and calls the supplied callback
- * when they change and passing the entire path to the leaf, e.g.: ["transform", "position", "z"]
- */
-export function observe(options: {
-	target: any,
-	targetName: string,
-	notifyChanged: (...path: string[]) => void,
-	triggerNotificationsNow?: boolean
-}) {
-	observeLeafProperties(options.target, [options.targetName], options.notifyChanged, options.triggerNotificationsNow);
-}
-
-/**
- * @hidden
- * Uninstalls "watchers" for leaf properties in the target object, and removes the attached callbacks from
- * the target object.
- * @param target The target object to unobserve.
- */
-export function unobserve(target: any) {
-	unobserveLeafProperties(target);
-}
-
 function observeLeafProperties(
 	target: any, path: string[], notifyChanged: (...path: string[]) => void, triggerNotificationsNow: boolean) {
 	const names = Object.getOwnPropertyNames(target)
@@ -41,12 +17,11 @@ function observeLeafProperties(
 			continue;
 		}
 		// Get the public name of this field by removing leading underscores.
-		const publicName = name.replace(/^_+/, '');
+		const publicName = name.replace(/^_+/u, '');
 		// If the property is a simple type, then hook it.
 		const type = typeof target[name];
 		if (type === 'number' || type === 'string' || type === 'boolean') {
 			// Create a non-enumerable backing property to hold the field value.
-			// tslint:disable-next-line:variable-name
 			const __name = `__observed_${name}`;
 			Object.defineProperty(target, __name, {
 				configurable: true,
@@ -90,7 +65,7 @@ function unobserveLeafProperties(target: any) {
 		}
 
 		// Get the original name of this field by removing the prefixed '__observed_'.
-		const originalName = name.replace(/^__observed_/, '');
+		const originalName = name.replace(/^__observed_/u, '');
 		// If the property is a simple type, then un-hook it.
 		const type = typeof target[name];
 		if (type === 'number' || type === 'string' || type === 'boolean') {
@@ -108,4 +83,28 @@ function unobserveLeafProperties(target: any) {
 			unobserveLeafProperties(target[name]);
 		}
 	}
+}
+
+/**
+ * @hidden
+ * Installs "watchers" for leaf properties in the target object, and calls the supplied callback
+ * when they change and passing the entire path to the leaf, e.g.: ["transform", "position", "z"]
+ */
+export function observe(options: {
+	target: any;
+	targetName: string;
+	notifyChanged: (...path: string[]) => void;
+	triggerNotificationsNow?: boolean;
+}) {
+	observeLeafProperties(options.target, [options.targetName], options.notifyChanged, options.triggerNotificationsNow);
+}
+
+/**
+ * @hidden
+ * Uninstalls "watchers" for leaf properties in the target object, and removes the attached callbacks from
+ * the target object.
+ * @param target The target object to unobserve.
+ */
+export function unobserve(target: any) {
+	unobserveLeafProperties(target);
 }

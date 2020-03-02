@@ -40,9 +40,7 @@ export interface TextLike {
 }
 
 export class Text implements TextLike {
-	// tslint:disable:variable-name
 	private _color: Color3;
-	// tslint:enable:variable-name
 
 	/**
 	 * Whether or not to draw the text
@@ -83,15 +81,15 @@ export class Text implements TextLike {
 	}
 
 	public copy(from: Partial<TextLike>): this {
-		if (!from) return this;
-		if (from.enabled !== undefined) this.enabled = from.enabled;
-		if (from.contents !== undefined) this.contents = from.contents;
-		if (from.height !== undefined) this.height = from.height;
-		if (from.pixelsPerLine !== undefined) this.pixelsPerLine = from.pixelsPerLine;
-		if (from.anchor !== undefined) this.anchor = from.anchor;
-		if (from.justify !== undefined) this.justify = from.justify;
-		if (from.font !== undefined) this.font = from.font;
-		if (from.color !== undefined) this.color = from.color;
+		if (!from) { return this; }
+		if (from.enabled !== undefined) { this.enabled = from.enabled; }
+		if (from.contents !== undefined) { this.contents = from.contents; }
+		if (from.height !== undefined) { this.height = from.height; }
+		if (from.pixelsPerLine !== undefined) { this.pixelsPerLine = from.pixelsPerLine; }
+		if (from.anchor !== undefined) { this.anchor = from.anchor; }
+		if (from.justify !== undefined) { this.justify = from.justify; }
+		if (from.font !== undefined) { this.font = from.font; }
+		if (from.color !== undefined) { this.color = from.color; }
 		return this;
 	}
 

@@ -4,7 +4,7 @@
  */
 
 import { Actor, GroupMask, Material, Mesh } from '.';
-import { ZeroGuid } from '../../constants';
+import { ZeroGuidString as ZeroGuid } from '../..';
 
 export interface AppearanceLike {
 	/**
@@ -29,12 +29,10 @@ export class Appearance implements AppearanceLike {
 	/** @hidden */
 	public $DoNotObserve = ['actor', '_enabledFor'];
 
-	// tslint:disable:variable-name
 	private _enabled = GroupMask.ALL_PACKED; // authoritative
 	private _enabledFor: GroupMask; // cached object, synced with _enabledPacked
 	private _materialId = ZeroGuid;
 	private _meshId = ZeroGuid;
-	// tslint:enable:variable-name
 
 	/**
 	 * This actor's visibility preference, independent of its parent. See [[Appearance.activeAndEnabled]] for
@@ -117,7 +115,7 @@ export class Appearance implements AppearanceLike {
 			value = ZeroGuid; // throw?
 		}
 
-		if (value === this._materialId) return;
+		if (value === this._materialId) { return; }
 
 		if (this.material) {
 			this.material.clearReference(this.actor);
@@ -146,7 +144,7 @@ export class Appearance implements AppearanceLike {
 			value = ZeroGuid; // throw?
 		}
 
-		if (value === this._meshId) return;
+		if (value === this._meshId) { return; }
 
 		if (this.mesh) {
 			this.mesh.clearReference(this.actor);
@@ -160,9 +158,9 @@ export class Appearance implements AppearanceLike {
 	constructor(private actor: Actor) { }
 
 	public copy(from: Partial<AppearanceLike>): this {
-		if (!from) return this;
-		if (from.materialId !== undefined) this.materialId = from.materialId;
-		if (from.meshId !== undefined) this.meshId = from.meshId;
+		if (!from) { return this; }
+		if (from.materialId !== undefined) { this.materialId = from.materialId; }
+		if (from.meshId !== undefined) { this.meshId = from.meshId; }
 		if (typeof from.enabled === 'number') {
 			// redirect masks that got into the enabled field
 			this.enabledPacked = from.enabled;

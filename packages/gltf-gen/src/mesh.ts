@@ -7,7 +7,10 @@ import GLTF from './gen/gltf';
 import { MeshPrimitive } from './meshprimitive';
 import { Serializable } from './serializable';
 
-export interface MeshLike { name?: string, primitives?: MeshPrimitive[] }
+export interface MeshLike {
+	name?: string;
+	primitives?: MeshPrimitive[];
+}
 
 export class Mesh extends Serializable implements MeshLike {
 	public name: string;

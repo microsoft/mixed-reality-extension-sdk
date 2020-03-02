@@ -3,7 +3,7 @@
  * Licensed under the MIT License.
  */
 
-import { Connection, EventedConnection } from '.';
+import { EventedConnection } from '.';
 import { Message } from '..';
 
 /**
@@ -11,19 +11,19 @@ import { Message } from '..';
  * Class representing two connected endpoints, allowing them to send and receive to and from one another
  */
 export class Pipe {
-	// tslint:disable:variable-name
 	private _local: EventedConnection;
 	private _remote: EventedConnection;
-	// tslint:enable:variable-name
+	private _onLocalClose: () => void;
+	private _onRemoteClose: () => void;
 
-	public get local(): Connection { return this._local; }
-	public get remote(): Connection { return this._remote; }
+	public get local() { return this._local; }
+	public get remote() { return this._remote; }
 
 	constructor() {
 		this._local = new EventedConnection();
 		this._remote = new EventedConnection();
-		this.onLocalClose = this.onLocalClose.bind(this);
-		this.onRemoteClose = this.onRemoteClose.bind(this);
+		this._onLocalClose = this.onLocalClose.bind(this);
+		this._onRemoteClose = this.onRemoteClose.bind(this);
 		this._local.on('send', (message: Message) => {
 			process.nextTick(() => {
 				this._remote.recv({ ...message });
@@ -34,22 +34,19 @@ export class Pipe {
 				this._local.recv({ ...message });
 			});
 		});
-		this._local.on('close', this.onLocalClose);
-		this._remote.on('close', this.onRemoteClose);
-
-		this._local.statsTracker.on('incoming', bytes => this._remote.statsTracker.recordIncoming(bytes));
-		this._local.statsTracker.on('outgoing', bytes => this._remote.statsTracker.recordOutgoing(bytes));
+		this._local.on('close', this._onLocalClose);
+		this._remote.on('close', this._onRemoteClose);
 	}
 
 	private onLocalClose() {
-		this._local.off('close', this.onLocalClose);
+		this._local.off('close', this._onLocalClose);
 		process.nextTick(() => {
 			this._remote.close();
 		});
 	}
 
 	private onRemoteClose() {
-		this._remote.off('close', this.onRemoteClose);
+		this._remote.off('close', this._onRemoteClose);
 		process.nextTick(() => {
 			this._local.close();
 		});

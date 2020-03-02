@@ -54,7 +54,7 @@ export default class UserMaskTest extends Test {
 			}
 		});
 		this.updateLabels();
-		this.app.context.onUserLeft(_ => this.updateLabels());
+		this.app.context.onUserLeft(() => this.updateLabels());
 
 		// create icons
 		const redIcon = MRE.Actor.Create(this.app.context, {
@@ -66,7 +66,7 @@ export default class UserMaskTest extends Test {
 					meshId: this.assets.createBoxMesh('box', 0.5, 0.5, 0.5).id,
 					materialId: red.id
 				},
-				collider: { geometry: { shape: 'auto' } },
+				collider: { geometry: { shape: MRE.ColliderType.Auto } },
 				transform: {
 					app: { position: { y: 1 } }
 				}
@@ -82,7 +82,7 @@ export default class UserMaskTest extends Test {
 					meshId: this.assets.createSphereMesh('sphere', 0.3).id,
 					materialId: blue.id
 				},
-				collider: { geometry: { shape: 'auto' } },
+				collider: { geometry: { shape: MRE.ColliderType.Auto } },
 				transform: {
 					app: { position: { y: 1 } }
 				}

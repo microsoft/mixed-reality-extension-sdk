@@ -341,3 +341,5 @@ lerna-debug.log
 
 # ignore functional-tests logs folder
 packages/functional-tests/logs/
+
+*.tsbuildinfo

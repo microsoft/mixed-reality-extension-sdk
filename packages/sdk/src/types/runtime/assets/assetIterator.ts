@@ -3,15 +3,9 @@
  * Licensed under the MIT License.
  */
 
+/* eslint-disable max-classes-per-file */
+
 import { Asset, AssetContainer } from '.';
-
-// tslint:disable:max-classes-per-file
-
-/** @hidden */
-export class AssetContainerIterable implements Iterable<Asset> {
-	public constructor(private containers: AssetContainer[]) {}
-	public [Symbol.iterator] = () => new AssetContainerIterator(this.containers);
-}
 
 /** @hidden */
 export class AssetContainerIterator implements Iterator<Asset> {
@@ -37,4 +31,10 @@ export class AssetContainerIterator implements Iterator<Asset> {
 			value: asset
 		};
 	}
+}
+
+/** @hidden */
+export class AssetContainerIterable implements Iterable<Asset> {
+	public constructor(private containers: AssetContainer[]) {}
+	public [Symbol.iterator] = () => new AssetContainerIterator(this.containers);
 }

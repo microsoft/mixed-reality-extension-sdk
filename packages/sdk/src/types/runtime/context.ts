@@ -28,7 +28,6 @@ export interface ContextSettings {
  * This includes Actors, Users, Assets, and other state.
  */
 export class Context {
-	// tslint:disable:variable-name
 	private _internal: InternalContext;
 	/** @hidden */
 	public get internal() { return this._internal; }
@@ -41,8 +40,6 @@ export class Context {
 	private _conn: Connection;
 	private _rpcChannels: RPCChannels;
 	private _rpc: RPC;
-
-	// tslint:enable:variable-name
 
 	public get sessionId() { return this._sessionId; }
 	public get conn() { return this._conn; }
@@ -60,7 +57,6 @@ export class Context {
 	/**
 	 * Creates a new `Context` instance.
 	 */
-	// tslint:disable-next-line:member-ordering
 	constructor(settings: ContextSettings) {
 		this._conn = settings.connection || new NullConnection();
 		this._sessionId = settings.sessionId || UUID();

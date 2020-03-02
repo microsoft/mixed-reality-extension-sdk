@@ -4,9 +4,14 @@
  */
 
 import { OperationResultCode, Trace } from '..';
-import { CreateAnimationOptions, MediaCommand, SetAnimationStateOptions, SetMediaStateOptions } from '../../..';
-import { PrimitiveDefinition } from '../../primitiveTypes';
-import { ActorLike, ColliderType, TransformLike, UserLike } from '../../runtime';
+import {
+	AnimationLike,
+	CreateAnimationOptions,
+	MediaCommand,
+	SetAnimationStateOptions,
+	SetMediaStateOptions
+} from '../../..';
+import { ActorLike, TransformLike, UserLike } from '../../runtime';
 import { ActionState, BehaviorType } from '../../runtime/behaviors';
 import { OperatingModel } from '../operatingModel';
 import { AssetPayloadType } from './assets';
@@ -21,6 +26,7 @@ export type PayloadType
 	| SyncPayloadType
 	| 'actor-correction'
 	| 'actor-update'
+	| 'animation-update'
 	| 'app2engine-rpc'
 	| 'collision-event-raised'
 	| 'create-animation'
@@ -128,6 +134,7 @@ export type HandshakeComplete = Payload & {
  */
 export type Heartbeat = Payload & {
 	type: 'heartbeat';
+	serverTime: number;
 };
 
 /**
@@ -192,6 +199,7 @@ export type CreateEmpty = CreateActorCommon & {
 export type ObjectSpawned = Payload & {
 	type: 'object-spawned';
 	actors: Array<Partial<ActorLike>>;
+	animations: Array<Partial<AnimationLike>>;
 	result: OperationResult;
 };
 
@@ -202,6 +210,15 @@ export type ObjectSpawned = Payload & {
 export type ActorUpdate = Payload & {
 	type: 'actor-update';
 	actor: Partial<ActorLike>;
+};
+
+/**
+ * @hidden
+ * Bi-directional. Change properties of an animation object (sparsely populated).
+ */
+export type AnimationUpdate = Payload & {
+	type: 'animation-update';
+	animation: Partial<AnimationLike>;
 };
 
 /**
@@ -308,11 +325,13 @@ export type SetBehavior = Payload & {
 export type CreateAnimation = Payload & CreateAnimationOptions & {
 	type: 'create-animation';
 	actorId: string;
+	animationId?: string;
 	animationName: string;
 };
 
 /**
  * @hidden
+ * @deprecated
  * App to engine. Sets animation state.
  */
 export type SetAnimationState = Payload & {
@@ -324,6 +343,7 @@ export type SetAnimationState = Payload & {
 
 /**
  * @hidden
+ * @deprecated
  * Bidirectional. Sync animation state.
  */
 export type SyncAnimations = Payload & {

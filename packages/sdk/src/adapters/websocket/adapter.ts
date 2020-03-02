@@ -12,8 +12,8 @@ import { Context, WebSocket } from '../..';
 import * as Constants from '../../constants';
 import { log } from './../../log';
 
-// tslint:disable-next-line:no-var-requires
-const forwarded = require('forwarded-for');
+const forwarded: (res: http.IncomingMessage, headers: http.IncomingHttpHeaders) => {ip: string; port: number}
+	= require('forwarded-for'); /* eslint-disable-line @typescript-eslint/no-var-requires */
 
 /**
  * The `WebSocketAdapter` is appropriate to use when the host environment has an authoritative simluation, and that

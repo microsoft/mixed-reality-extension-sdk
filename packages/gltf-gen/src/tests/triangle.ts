@@ -12,7 +12,7 @@ export default class Triangle implements Test {
 	public shouldPrintJson = true;
 	public shouldPrintBuffer = true;
 
-	public async run(): Promise<Buffer> {
+	public run() {
 		const prim = new GltfGen.MeshPrimitive({
 			vertices: [
 				new GltfGen.Vertex({ position: [0, 0, 0], texCoord0: [0, 0] }),
@@ -22,6 +22,6 @@ export default class Triangle implements Test {
 			triangles: [0, 1, 2]
 		});
 
-		return await GltfGen.GltfFactory.FromSinglePrimitive(prim).generateGLTF();
+		return GltfGen.GltfFactory.FromSinglePrimitive(prim).generateGLTF();
 	}
 }

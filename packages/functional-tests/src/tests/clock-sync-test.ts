@@ -39,7 +39,7 @@ export default class ClockSyncTest extends Test {
 
 		const mesh = this.assets.createBoxMesh('box', boxWidth, boxHeight, 0.2);
 
-		const topBox = MRE.Actor.Create(this.app.context, {
+		MRE.Actor.Create(this.app.context, {
 			actor: {
 				parentId: tester.id,
 				appearance: {
@@ -52,7 +52,7 @@ export default class ClockSyncTest extends Test {
 				}
 			}
 		});
-		const bottomBox = MRE.Actor.Create(this.app.context, {
+		MRE.Actor.Create(this.app.context, {
 			actor: {
 				parentId: tester.id,
 				appearance: {
@@ -80,7 +80,6 @@ export default class ClockSyncTest extends Test {
 
 		// Make a handy array of all the digits.
 		const actors = [
-			tester, topBox, bottomBox,
 			meshHundredths, meshTenths, meshSeconds, mesh10Seconds, meshMinutes, mesh10Minutes, meshHours, mesh10Hours];
 
 		// Build animations.

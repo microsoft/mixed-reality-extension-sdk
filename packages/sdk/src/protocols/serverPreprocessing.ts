@@ -19,5 +19,5 @@ export class ServerPreprocessing implements Middleware {
 	public beforeSend = (message: Message, promise?: ExportedPromise): Message => {
 		message.serverTimeMs = message.serverTimeMs || Date.now();
 		return message;
-	}
+	};
 }

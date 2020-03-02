@@ -5,6 +5,7 @@
 
 import * as http from 'http';
 import QueryString from 'query-string';
+import semver from 'semver';
 import UUID from 'uuid/v4';
 import * as WS from 'ws';
 import { Adapter, ClientHandshake, ClientStartup } from '..';
@@ -14,8 +15,8 @@ import { log } from './../../log';
 import { Client } from './client';
 import { Session } from './session';
 
-// tslint:disable-next-line:no-var-requires
-const forwarded = require('forwarded-for');
+const forwarded: (res: http.IncomingMessage, headers: http.IncomingHttpHeaders) => {ip: string; port: number}
+	= require('forwarded-for'); /* eslint-disable-line @typescript-eslint/no-var-requires */
 
 /**
  * Multi-peer adapter options
@@ -68,6 +69,9 @@ export class MultipeerAdapter extends Adapter {
 			let sessionId = request.headers[Constants.HTTPHeaders.SessionID] as string || UUID();
 			sessionId = decodeURIComponent(sessionId);
 
+			// Read the client's version number
+			const version = semver.coerce(request.headers[Constants.HTTPHeaders.CurrentClientVersion] as string);
+
 			// Parse URL parameters.
 			const params = QueryString.parseUrl(request.url).query;
 
@@ -78,7 +82,7 @@ export class MultipeerAdapter extends Adapter {
 			const conn = new WebSocket(ws, address.ip);
 
 			// Instantiate a client for this connection.
-			const client = new Client(conn);
+			const client = new Client(conn, version);
 
 			// Join the client to the session.
 			await this.joinClientToSession(client, sessionId, params);
@@ -94,6 +98,10 @@ export class MultipeerAdapter extends Adapter {
 			// Create an in-memory "connection" (If the app were running remotely, we would connect
 			// to it via WebSocket here instead)
 			const pipe = new Pipe();
+			pipe.local.statsTracker.on('incoming', bytes => pipe.remote.statsTracker.recordIncoming(bytes));
+			pipe.local.statsTracker.on('outgoing', bytes => pipe.remote.statsTracker.recordOutgoing(bytes));
+			pipe.local.on('linkQuality', quality => pipe.remote.linkConnectionQuality(quality));
+
 			// Create a new context for the connection, passing it the remote side of the pipe.
 			const context = new Context({
 				sessionId,
@@ -105,8 +113,7 @@ export class MultipeerAdapter extends Adapter {
 			session = this.sessions[sessionId] = new Session(
 				pipe.local, sessionId, this.options.peerAuthoritative);
 			// Handle session close.
-			const $this = this;
-			session.on('close', () => delete $this.sessions[sessionId]);
+			session.on('close', () => delete this.sessions[sessionId]);
 			// Connect the session to the context.
 			await session.connect(); // Allow exceptions to propagate.
 			// Pass the new context to the app.

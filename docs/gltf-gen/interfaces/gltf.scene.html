@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>SphereColliderGeometry | Mixed Reality Extension SDK</title>
+	<title>Scene | glTF Generator</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -22,7 +22,7 @@
 						<li class="state loading">Preparing search index...</li>
 						<li class="state failure">The search index is not available</li>
 					</ul>
-					<a href="../index.html" class="title">Mixed Reality Extension SDK</a>
+					<a href="../index.html" class="title">glTF Generator</a>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -52,10 +52,13 @@
 					<a href="../index.html">Globals</a>
 				</li>
 				<li>
-					<a href="spherecollidergeometry.html">SphereColliderGeometry</a>
+					<a href="../modules/gltf.html">GLTF</a>
+				</li>
+				<li>
+					<a href="gltf.scene.html">Scene</a>
 				</li>
 			</ul>
-			<h1>Interface SphereColliderGeometry</h1>
+			<h1>Interface Scene</h1>
 		</div>
 	</div>
 </header>
@@ -65,7 +68,7 @@
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>Collider parameters specific to a sphere collider.</p>
+						<p>The root nodes of a scene.</p>
 					</div>
 				</div>
 			</section>
@@ -73,9 +76,18 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">SphereColliderGeometry</span>
+						<span class="target">Scene</span>
 					</li>
 				</ul>
+			</section>
+			<section class="tsd-panel tsd-kind-interface tsd-parent-kind-module">
+				<h3 class="tsd-before-signature">Indexable</h3>
+				<div class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">[</span>k: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">]: </span><span class="tsd-signature-type">any</span></div>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>The root nodes of a scene.</p>
+					</div>
+				</div>
 			</section>
 			<section class="tsd-panel-group tsd-index-group">
 				<h2>Index</h2>
@@ -84,9 +96,10 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="spherecollidergeometry.html#center" class="tsd-kind-icon">center</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="spherecollidergeometry.html#radius" class="tsd-kind-icon">radius</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="spherecollidergeometry.html#shape" class="tsd-kind-icon">shape</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="gltf.scene.html#extensions" class="tsd-kind-icon">extensions</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="gltf.scene.html#extras" class="tsd-kind-icon">extras</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="gltf.scene.html#name" class="tsd-kind-icon">name</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="gltf.scene.html#nodes" class="tsd-kind-icon">nodes</a></li>
 							</ul>
 						</section>
 					</div>
@@ -95,34 +108,49 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="center" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> center</h3>
-					<div class="tsd-signature tsd-kind-icon">center<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Readonly</span><span class="tsd-signature-symbol">&lt;</span><a href="vector3like.html" class="tsd-signature-type">Vector3Like</a><span class="tsd-signature-symbol">&gt;</span></div>
+					<a name="extensions" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> extensions</h3>
+					<div class="tsd-signature tsd-kind-icon">extensions<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/88bc2f5/packages/sdk/src/types/runtime/physics/colliderGeometry.ts#L13">types/runtime/physics/colliderGeometry.ts:13</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/711ebd3/packages/gltf-gen/src/gen/gltf.ts#L574">gen/gltf.ts:574</a></li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="radius" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> radius</h3>
-					<div class="tsd-signature tsd-kind-icon">radius<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+					<a name="extras" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> extras</h3>
+					<div class="tsd-signature tsd-kind-icon">extras<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/88bc2f5/packages/sdk/src/types/runtime/physics/colliderGeometry.ts#L14">types/runtime/physics/colliderGeometry.ts:14</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/711ebd3/packages/gltf-gen/src/gen/gltf.ts#L575">gen/gltf.ts:575</a></li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="shape" class="tsd-anchor"></a>
-					<h3>shape</h3>
-					<div class="tsd-signature tsd-kind-icon">shape<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">"sphere"</span></div>
+					<a name="name" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> name</h3>
+					<div class="tsd-signature tsd-kind-icon">name<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/88bc2f5/packages/sdk/src/types/runtime/physics/colliderGeometry.ts#L12">types/runtime/physics/colliderGeometry.ts:12</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/711ebd3/packages/gltf-gen/src/gen/gltf.ts#L573">gen/gltf.ts:573</a></li>
 						</ul>
 					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="nodes" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> nodes</h3>
+					<div class="tsd-signature tsd-kind-icon">nodes<span class="tsd-signature-symbol">:</span> <a href="../modules/gltf.html#gltfid" class="tsd-signature-type">GlTfId</a><span class="tsd-signature-symbol">[]</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/711ebd3/packages/gltf-gen/src/gen/gltf.ts#L572">gen/gltf.ts:572</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The indices of each root node.</p>
+						</div>
+					</div>
 				</section>
 			</section>
 		</div>
@@ -132,28 +160,118 @@
 					<li class="globals  ">
 						<a href="../index.html"><em>Globals</em></a>
 					</li>
+					<li class="current tsd-kind-module">
+						<a href="../modules/gltf.html">GLTF</a>
+					</li>
 				</ul>
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="gltf.accessor.html" class="tsd-kind-icon">Accessor</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="gltf.accessorsparse.html" class="tsd-kind-icon">Accessor<wbr>Sparse</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="gltf.accessorsparseindices.html" class="tsd-kind-icon">Accessor<wbr>Sparse<wbr>Indices</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="gltf.accessorsparsevalues.html" class="tsd-kind-icon">Accessor<wbr>Sparse<wbr>Values</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="gltf.animation.html" class="tsd-kind-icon">Animation</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="gltf.animationchannel.html" class="tsd-kind-icon">Animation<wbr>Channel</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="gltf.animationchanneltarget.html" class="tsd-kind-icon">Animation<wbr>Channel<wbr>Target</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="gltf.animationsampler.html" class="tsd-kind-icon">Animation<wbr>Sampler</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="gltf.asset.html" class="tsd-kind-icon">Asset</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="gltf.buffer.html" class="tsd-kind-icon">Buffer</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="gltf.bufferview.html" class="tsd-kind-icon">Buffer<wbr>View</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="gltf.camera.html" class="tsd-kind-icon">Camera</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="gltf.cameraorthographic.html" class="tsd-kind-icon">Camera<wbr>Orthographic</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="gltf.cameraperspective.html" class="tsd-kind-icon">Camera<wbr>Perspective</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="gltf.gltf-1.html" class="tsd-kind-icon">Gl<wbr>Tf</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="gltf.image.html" class="tsd-kind-icon">Image</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="gltf.material.html" class="tsd-kind-icon">Material</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="gltf.materialnormaltextureinfo.html" class="tsd-kind-icon">Material<wbr>Normal<wbr>Texture<wbr>Info</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="gltf.materialocclusiontextureinfo.html" class="tsd-kind-icon">Material<wbr>Occlusion<wbr>Texture<wbr>Info</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="gltf.materialpbrmetallicroughness.html" class="tsd-kind-icon">Material<wbr>Pbr<wbr>Metallic<wbr>Roughness</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="gltf.mesh.html" class="tsd-kind-icon">Mesh</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="gltf.meshprimitive.html" class="tsd-kind-icon">Mesh<wbr>Primitive</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="gltf.node.html" class="tsd-kind-icon">Node</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="gltf.sampler.html" class="tsd-kind-icon">Sampler</a>
+					</li>
 				</ul>
 				<ul class="current">
-					<li class="current tsd-kind-interface">
-						<a href="spherecollidergeometry.html" class="tsd-kind-icon">Sphere<wbr>Collider<wbr>Geometry</a>
+					<li class="current tsd-kind-interface tsd-parent-kind-module">
+						<a href="gltf.scene.html" class="tsd-kind-icon">Scene</a>
 						<ul>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="spherecollidergeometry.html#center" class="tsd-kind-icon">center</a>
+								<a href="gltf.scene.html#extensions" class="tsd-kind-icon">extensions</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="spherecollidergeometry.html#radius" class="tsd-kind-icon">radius</a>
+								<a href="gltf.scene.html#extras" class="tsd-kind-icon">extras</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="spherecollidergeometry.html#shape" class="tsd-kind-icon">shape</a>
+								<a href="gltf.scene.html#name" class="tsd-kind-icon">name</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="gltf.scene.html#nodes" class="tsd-kind-icon">nodes</a>
 							</li>
 						</ul>
 					</li>
 				</ul>
 				<ul class="after-current">
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="gltf.skin.html" class="tsd-kind-icon">Skin</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="gltf.texture.html" class="tsd-kind-icon">Texture</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="gltf.textureinfo.html" class="tsd-kind-icon">Texture<wbr>Info</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-module">
+						<a href="../modules/gltf.html#gltfid" class="tsd-kind-icon">Gl<wbr>TfId</a>
+					</li>
 				</ul>
 			</nav>
 		</div>

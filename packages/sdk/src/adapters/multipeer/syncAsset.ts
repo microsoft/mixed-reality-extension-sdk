@@ -6,6 +6,7 @@
 import { Message } from '../..';
 import * as Payloads from '../../types/network/payloads';
 
+/** @hidden */
 export class SyncAsset {
 	public id: string;
 	/** Used if asset was packaged with other assets */

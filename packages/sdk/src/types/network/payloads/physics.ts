@@ -4,7 +4,7 @@
  */
 
 import { Payload } from '.';
-import { CollisionData, CollisionEventType, QuaternionLike, Vector3Like,  } from '../../..';
+import { CollisionData, CollisionEventType, QuaternionLike, Vector3Like } from '../../..';
 import { TriggerEventType } from '../../runtime';
 
 /**

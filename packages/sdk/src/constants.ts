@@ -3,10 +3,6 @@
  * Licensed under the MIT License.
  */
 
-// tslint:disable:variable-name
-
-export const ZeroGuid = '00000000-0000-0000-0000-000000000000';
-
 /** @hidden */
 export const HTTPHeaders = {
 	SessionID: 'x-ms-mixed-reality-extension-sessionid',

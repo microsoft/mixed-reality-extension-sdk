@@ -55,7 +55,7 @@ export default class PrimitivesTest extends Test {
 							appearance: {
 								meshId: this.assets.createBoxMesh(`box${i++}`, x, y, z).id
 							},
-							collider: { geometry: { shape: 'auto' } },
+							collider: { geometry: { shape: MRE.ColliderType.Auto } },
 							transform: {
 								local: {
 									position: { x: x * 4 - 0.8, y: y * 4 + 0., z: z * 4 - 0.5 }
@@ -73,7 +73,7 @@ export default class PrimitivesTest extends Test {
 				appearance: {
 					meshId: this.assets.createSphereMesh('sphere', 0.4, 8, 4).id
 				},
-				collider: { geometry: { shape: 'auto' } },
+				collider: { geometry: { shape: MRE.ColliderType.Auto } },
 				transform: {
 					local: {
 						position: { x: -1, y: 1, z: 0 }
@@ -89,7 +89,7 @@ export default class PrimitivesTest extends Test {
 				appearance: {
 					meshId: this.assets.createCapsuleMesh('capsule1', 0.7, 0.3, 'y', 8, 4).id
 				},
-				collider: { geometry: { shape: 'auto' } },
+				collider: { geometry: { shape: MRE.ColliderType.Auto } },
 				transform: {
 					local: {
 						position: { x: 1, y: 1, z: 0 }
@@ -105,7 +105,7 @@ export default class PrimitivesTest extends Test {
 				appearance: {
 					meshId: this.assets.createCapsuleMesh('capsule2', 0.35, 0.15, 'x', 8, 4).id
 				},
-				collider: { geometry: { shape: 'auto' } },
+				collider: { geometry: { shape: MRE.ColliderType.Auto } },
 				transform: {
 					local: {
 						position: { x: 1, y: 2.0, z: 0 }
@@ -121,7 +121,7 @@ export default class PrimitivesTest extends Test {
 				appearance: {
 					meshId: this.assets.createCapsuleMesh('capsule3', 0.7, 0.3, 'z', 8, 4).id
 				},
-				collider: { geometry: { shape: 'auto' } },
+				collider: { geometry: { shape: MRE.ColliderType.Auto } },
 				transform: {
 					local: {
 						position: { x: 1 }
@@ -137,7 +137,7 @@ export default class PrimitivesTest extends Test {
 				appearance: {
 					meshId: this.assets.createCylinderMesh('cylinder1', 1.3, 0.3, 'y', 8).id
 				},
-				collider: { geometry: { shape: 'auto' } },
+				collider: { geometry: { shape: MRE.ColliderType.Auto } },
 				transform: {
 					local: {
 						position: { x: 2, y: 1, z: 0 }
@@ -153,7 +153,7 @@ export default class PrimitivesTest extends Test {
 				appearance: {
 					meshId: this.assets.createCylinderMesh('cylinder2', 0.65, 0.15, 'x', 8).id
 				},
-				collider: { geometry: { shape: 'auto' } },
+				collider: { geometry: { shape: MRE.ColliderType.Auto } },
 				transform: {
 					local: {
 						position: { x: 2, y: 2.0, z: 0 }
@@ -169,7 +169,7 @@ export default class PrimitivesTest extends Test {
 				appearance: {
 					meshId: this.assets.createCylinderMesh('cylinder3', 1.3, 0.3, 'z', 8).id
 				},
-				collider: { geometry: { shape: 'auto' } },
+				collider: { geometry: { shape: MRE.ColliderType.Auto } },
 				transform: {
 					local: {
 						position: { x: 2 }
@@ -185,7 +185,7 @@ export default class PrimitivesTest extends Test {
 				appearance: {
 					meshId: this.assets.createPlaneMesh('plane', 1, 1, 1, 4).id
 				},
-				collider: { geometry: { shape: 'auto' } },
+				collider: { geometry: { shape: MRE.ColliderType.Auto } },
 				transform: {
 					local: {
 						position: { x: -2, y: 0.0, z: 0 }
@@ -201,7 +201,7 @@ export default class PrimitivesTest extends Test {
 				appearance: {
 					meshId: this.assets.createSphereMesh('innerSphere', -0.4, 12, 8).id
 				},
-				collider: { geometry: { shape: 'auto' } },
+				collider: { geometry: { shape: MRE.ColliderType.Auto } },
 				transform: {
 					local: {
 						position: { x: -1 }
@@ -214,10 +214,10 @@ export default class PrimitivesTest extends Test {
 			if (actor) {
 				const buttonBehavior = actor.setBehavior(MRE.ButtonBehavior);
 				// Trigger the grow/shrink animations on hover.
-				buttonBehavior.onHover('enter', _ => {
+				buttonBehavior.onHover('enter', () => {
 					this.app.setOverrideText(actor.name);
 				});
-				buttonBehavior.onHover('exit', _ => {
+				buttonBehavior.onHover('exit', () => {
 					this.app.setOverrideText(null);
 				});
 			}

@@ -30,7 +30,6 @@ export type DialogResponse = {
 };
 
 export class User implements UserLike, Patchable<UserLike> {
-	// tslint:disable:variable-name
 	private _internal: InternalUser;
 	/** @hidden */
 	public get internal() { return this._internal; }
@@ -38,7 +37,6 @@ export class User implements UserLike, Patchable<UserLike> {
 	private _name: string;
 	private _properties: { [name: string]: string };
 	private _groups: GroupMask;
-	// tslint:enable:variable-name
 
 	public get context() { return this._context; }
 	public get id() { return this._id; }
@@ -79,7 +77,6 @@ export class User implements UserLike, Patchable<UserLike> {
 	 * PUBLIC METHODS
 	 */
 
-	// tslint:disable-next-line:variable-name
 	constructor(private _context: Context, private _id: string) {
 		this._internal = new InternalUser(this, this._context.internal);
 	}
@@ -98,10 +95,10 @@ export class User implements UserLike, Patchable<UserLike> {
 		const wasObserving = this.internal.observing;
 		this.internal.observing = false;
 
-		if (!from) return this;
-		if (from.id !== undefined) this._id = from.id;
-		if (from.name !== undefined) this._name = from.name;
-		if (from.properties !== undefined) this._properties = from.properties;
+		if (!from) { return this; }
+		if (from.id !== undefined) { this._id = from.id; }
+		if (from.name !== undefined) { this._name = from.name; }
+		if (from.properties !== undefined) { this._properties = from.properties; }
 		if (from.groups !== undefined) {
 			if (typeof from.groups === 'number') {
 				this.groups.setPacked(from.groups);

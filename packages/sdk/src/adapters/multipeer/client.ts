@@ -4,8 +4,9 @@
  */
 
 import { EventEmitter } from 'events';
+import semver from 'semver';
 import UUID from 'uuid/v4';
-import { ClientExecution, ClientHandshake, ClientSync, MissingRule, Rules, Session } from '.';
+import { ClientExecution, ClientSync, MissingRule, Rules, Session } from '.';
 import { Connection, Message } from '../..';
 import { log } from '../../log';
 import * as Protocols from '../../protocols';
@@ -29,7 +30,6 @@ export type QueuedMessage = {
 export class Client extends EventEmitter {
 	private static orderSequence = 0;
 
-	// tslint:disable:variable-name
 	private _id: string;
 	private _session: Session;
 	private _protocol: Protocols.Protocol;
@@ -37,9 +37,10 @@ export class Client extends EventEmitter {
 	private _queuedMessages: QueuedMessage[] = [];
 	private _userExclusiveMessages: QueuedMessage[] = [];
 	private _authoritative = false;
-	// tslint:enable:variable-name
+	private _leave: () => void;
 
 	public get id() { return this._id; }
+	public get version() { return this._version; }
 	public get order() { return this._order; }
 	public get protocol() { return this._protocol; }
 	public get session() { return this._session; }
@@ -53,14 +54,13 @@ export class Client extends EventEmitter {
 	/**
 	 * Creates a new Client instance
 	 */
-	// tslint:disable-next-line:variable-name
-	constructor(private _conn: Connection) {
+	constructor(private _conn: Connection, private _version: semver.SemVer) {
 		super();
 		this._id = UUID();
 		this._order = Client.orderSequence++;
-		this.leave = this.leave.bind(this);
-		this._conn.on('close', this.leave);
-		this._conn.on('error', this.leave);
+		this._leave = this.leave.bind(this);
+		this._conn.on('close', this._leave);
+		this._conn.on('error', this._leave);
 	}
 
 	public setAuthoritative(value: boolean) {
@@ -96,8 +96,8 @@ export class Client extends EventEmitter {
 				this._protocol.stopListening();
 				this._protocol = undefined;
 			}
-			this._conn.off('close', this.leave);
-			this._conn.off('error', this.leave);
+			this._conn.off('close', this._leave);
+			this._conn.off('error', this._leave);
 			this._conn.close();
 			this._session = undefined;
 			this.emit('close');
@@ -112,7 +112,6 @@ export class Client extends EventEmitter {
 		if (this.protocol) {
 			this.protocol.sendMessage(message, promise);
 		} else {
-			// tslint:disable-next-line:no-console
 			log.error('network', `[ERROR] No protocol for message send: ${message.payload.type}`);
 		}
 	}
@@ -121,7 +120,6 @@ export class Client extends EventEmitter {
 		if (this.protocol) {
 			this.protocol.sendPayload(payload, promise);
 		} else {
-			// tslint:disable-next-line:no-console
 			log.error('network', `[ERROR] No protocol for payload send: ${payload.type}`);
 		}
 	}
@@ -131,8 +129,8 @@ export class Client extends EventEmitter {
 		const beforeQueueMessageForClient = rule.client.beforeQueueMessageForClient || (() => message);
 		message = beforeQueueMessageForClient(this.session, this, message, promise);
 		if (message) {
-			// tslint:disable-next-line:max-line-length
-			log.verbose('network', `Client ${this.id.substr(0, 8)} queue id:${message.id.substr(0, 8)}, type:${message.payload.type}`);
+			log.verbose('network',
+				`Client ${this.id.substr(0, 8)} queue id:${message.id.substr(0, 8)}, type:${message.payload.type}`);
 			log.verbose('network-content', JSON.stringify(message, (key, value) => filterEmpty(value)));
 			this.queuedMessages.push({ message, promise, timeoutSeconds });
 		}

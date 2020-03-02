@@ -5,8 +5,6 @@
 
 import { Arc2, Orientation, Vector2 } from '.';
 
-// tslint:disable:member-ordering variable-name one-variable-per-declaration trailing-comma no-bitwise
-
 /**
  * Represents a 2D path made up of multiple 2D points
  */

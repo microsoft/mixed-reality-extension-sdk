@@ -6,7 +6,7 @@
 /**
  * The trigger events that can be raised on a collider.
  */
-export type TriggerEventType =  'trigger-enter' | 'trigger-exit';
+export type TriggerEventType = 'trigger-enter' | 'trigger-exit';
 
 /**
  * The collision events that can be raised on a collider.

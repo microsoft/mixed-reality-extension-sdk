@@ -13,11 +13,9 @@ import { NetworkStatsReport, NetworkStatsTracker } from './networkStats';
  * @hidden
  */
 export class EventedConnection extends EventEmitter implements Connection {
-	// tslint:disable:variable-name
-	private _quality = new ConnectionQuality();
+	protected _quality = new ConnectionQuality();
 	private _promises: { [id: string]: QueuedPromise } = {};
 	public statsTracker = new NetworkStatsTracker();
-	// tslint:enable:variable-name
 
 	private queuedMessages: Message[] = [];
 	private timeout: NodeJS.Timer;
@@ -31,6 +29,15 @@ export class EventedConnection extends EventEmitter implements Connection {
 	/** @inheritdoc */
 	public get statsReport(): NetworkStatsReport {
 		return this.statsTracker.reportStats();
+	}
+
+	/**
+	 * @hidden
+	 * Replace this connection's quality tracker
+	 */
+	public linkConnectionQuality(quality: ConnectionQuality) {
+		this._quality = quality;
+		this.emit('linkQuality', quality);
 	}
 
 	// Bug in Node: EventEmitter doesn't alias this method
@@ -51,6 +58,7 @@ export class EventedConnection extends EventEmitter implements Connection {
 
 	/** @inheritdoc */
 	public recv(message: Message): void {
+		/* eslint-disable @typescript-eslint/no-use-before-define */
 		const hasListeners = () => !!this.listeners('recv').length;
 		const checkAndLoop = () => {
 			this.timeout = undefined;
@@ -73,5 +81,6 @@ export class EventedConnection extends EventEmitter implements Connection {
 			this.queuedMessages.push(message);
 			setRetryLoop();
 		}
+		/* eslint-enable @typescript-eslint/no-use-before-define */
 	}
 }
