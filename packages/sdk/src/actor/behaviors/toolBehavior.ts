@@ -4,6 +4,7 @@
  */
 
 import { ActionHandler, ActionState, BehaviorType, DiscreteAction } from '../..';
+// break import cycle
 import { TargetBehavior } from './targetBehavior';
 
 export class ToolBehavior<ToolDataT> extends TargetBehavior {

@@ -3,6 +3,7 @@
  * Licensed under the MIT License.
  */
 import { BehaviorType, TransformLike } from '../..';
+// break import cycle
 import { ToolBehavior } from './toolBehavior';
 
 
