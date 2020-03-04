@@ -8,6 +8,7 @@ import {
 	AssetContainer,
 	AssetLike,
 	Color3,
+	Color3Like,
 	Color4,
 	Color4Like,
 	Guid,
@@ -30,6 +31,8 @@ import { Asset } from './asset';
 export interface MaterialLike {
 	/** The base color of this material. */
 	color: Partial<Color4Like>;
+	/** The lighting-independent color of this material. */
+	emissiveColor: Partial<Color3Like>;
 	/** The main (albedo) texture asset ID */
 	mainTextureId: Guid;
 	/** The main texture's offset from default */
@@ -64,6 +67,7 @@ export enum AlphaMode {
  */
 export class Material extends Asset implements MaterialLike, Patchable<AssetLike> {
 	private _color = Color4.FromColor3(Color3.White(), 1.0);
+	private _emissiveColor = Color3.Black();
 	private _mainTextureId = ZeroGuid;
 	private _mainTextureOffset = Vector2.Zero();
 	private _mainTextureScale = Vector2.One();
@@ -77,6 +81,10 @@ export class Material extends Asset implements MaterialLike, Patchable<AssetLike
 	/** @inheritdoc */
 	public get color() { return this._color; }
 	public set color(value) { if (value) { this._color.copy(value); } }
+
+	/** @inheritdoc */
+	public get emissiveColor() { return this._emissiveColor; }
+	public set emissiveColor(value) { if (value) { this._emissiveColor.copy(value); } }
 
 	/** @returns A shared reference to this material's texture asset */
 	public get mainTexture() {
@@ -145,6 +153,11 @@ export class Material extends Asset implements MaterialLike, Patchable<AssetLike
 			notifyChanged: (...path: string[]) => this.materialChanged(...path)
 		});
 		observe({
+			target: this._emissiveColor,
+			targetName: 'emissiveColor',
+			notifyChanged: (...path: string[]) => this.materialChanged(...path)
+		});
+		observe({
 			target: this._mainTextureOffset,
 			targetName: 'mainTextureOffset',
 			notifyChanged: (...path: string[]) => this.materialChanged(...path)
@@ -169,6 +182,9 @@ export class Material extends Asset implements MaterialLike, Patchable<AssetLike
 		if (from.material) {
 			if (from.material.color) {
 				this.color.copy(from.material.color);
+			}
+			if (from.material.emissiveColor) {
+				this.emissiveColor.copy(from.material.emissiveColor);
 			}
 			if (from.material.mainTextureOffset) {
 				this.mainTextureOffset.copy(from.material.mainTextureOffset);
@@ -197,6 +213,7 @@ export class Material extends Asset implements MaterialLike, Patchable<AssetLike
 			...super.toJSON(),
 			material: {
 				color: this.color.toJSON(),
+				emissiveColor: this.emissiveColor.toJSON(),
 				mainTextureId: this.mainTextureId,
 				mainTextureOffset: this.mainTextureOffset.toJSON(),
 				mainTextureScale: this.mainTextureScale.toJSON(),
