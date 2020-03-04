@@ -41,7 +41,7 @@ export default class AnimationTest extends Test {
 		});
 
 		await clock.created();
-		const anim = clock.animationsByName.get("animation:0");
+		const anim = clock.targetingAnimationsByName.get("animation:0");
 
 		const controls: ControlDefinition[] = [
 			{ label: "Playing", realtime: true, action: incr => {

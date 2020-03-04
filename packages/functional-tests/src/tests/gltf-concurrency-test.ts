@@ -45,7 +45,7 @@ export default class GltfConcurrencyTest extends Test {
 			}
 		});
 		runner.created().then(() =>
-			runner.animationsByName.get('animation:0').play()
+			runner.targetingAnimationsByName.get('animation:0').play()
 		);
 
 		if (gearboxAssets) {

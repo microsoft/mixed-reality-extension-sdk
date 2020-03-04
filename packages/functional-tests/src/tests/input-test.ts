@@ -92,8 +92,8 @@ export default class InputTest extends Test {
 	}
 
 	private cycleState() {
-		const growAnim = this.model.animationsByName.get('Grow');
-		const spinAnim = this.model.animationsByName.get('Spin');
+		const growAnim = this.model.targetingAnimationsByName.get('Grow');
+		const spinAnim = this.model.targetingAnimationsByName.get('Spin');
 		switch (this.state) {
 			case 0:
 				growAnim.speed = -1;

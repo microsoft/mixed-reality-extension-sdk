@@ -648,8 +648,8 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	}
 
 	/** The list of animations that target this actor, by ID. */
-	public get animations() {
-		return [...this.context.internal.animationSet.values()]
+	public get targetingAnimations() {
+		return this.context.animations
 			.filter(anim => anim.targetIds.includes(this.id))
 			.reduce(
 				(map, anim) => {
@@ -661,8 +661,8 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	}
 
 	/** The list of animations that target this actor, by name. */
-	public get animationsByName() {
-		return [...this.context.internal.animationSet.values()]
+	public get targetingAnimationsByName() {
+		return this.context.animations
 			.filter(anim => anim.targetIds.includes(this.id) && anim.name)
 			.reduce(
 				(map, anim) => {
@@ -675,8 +675,9 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 
 	/** Recursively search for the named animation from this actor. */
 	public findAnimationInChildrenByName(name: string): Animation {
-		if (this.animationsByName.has(name)) {
-			return this.animationsByName.get(name);
+		const namedAnims = this.targetingAnimationsByName;
+		if (namedAnims.has(name)) {
+			return namedAnims.get(name);
 		} else {
 			return this.children.reduce(
 				(val, child) => val || child.findAnimationInChildrenByName(name),

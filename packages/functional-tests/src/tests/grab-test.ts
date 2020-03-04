@@ -125,11 +125,11 @@ export default class GrabTest extends Test {
 			case 3:
 				if (this.clickCount % 2 === 0) {
 
-					this.model.animationsByName.get('OnClick').play();
+					this.model.targetingAnimationsByName.get('OnClick').play();
 					this.model.grabbable = false;
 					this.app.setOverrideText("Click to make monkey grabbable again.");
 				} else {
-					this.model.animationsByName.get('OnClick').play();
+					this.model.targetingAnimationsByName.get('OnClick').play();
 					this.model.grabbable = true;
 					this.state = 0;
 					this.cycleState();

@@ -36,15 +36,25 @@ export class Context {
 
 	public get sessionId() { return this._sessionId; }
 	public get conn() { return this._conn; }
+	/** The list of all actors in the MRE. */
 	public get actors() { return [...this.internal.actorSet.values()]; }
+	/** The list of actors with no parents, i.e. root actors. */
 	public get rootActors() { return this.actors.filter(a => !a.parent); }
+	/** The list of all animations. */
+	public get animations() { return [...this.internal.animationSet.values()]; }
+	/** THe list of all users. */
 	public get users() { return [...this.internal.userSet.values()]; }
 	public get rpcChannels() { return this._rpcChannels; }
 	public get rpc() { return this._rpc; }
-	public actor = (actorId: Guid) => this.internal.actorSet.get(actorId);
-	public animation = (animId: Guid) => this.internal.animationSet.get(animId);
-	public asset = (assetId: Guid) => this.internal.lookupAsset(assetId);
-	public user = (userId: Guid) => this.internal.userSet.get(userId);
+
+	/** Get an actor by ID. */
+	public actor(actorId: Guid) { return this.internal.actorSet.get(actorId); }
+	/** Get an animation by ID. */
+	public animation(animId: Guid) { return this.internal.animationSet.get(animId); }
+	/** Get an asset by ID (from any asset container). */
+	public asset(assetId: Guid) { return this.internal.lookupAsset(assetId); }
+	/** Get a user by ID. */
+	public user(userId: Guid) { return this.internal.userSet.get(userId); }
 
 	/**
 	 * Creates a new `Context` instance.

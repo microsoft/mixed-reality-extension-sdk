@@ -202,6 +202,32 @@ export class Animation implements AnimationLike, Patchable<AnimationLike> {
 		}
 	}
 
+	/** The list of other animations that target this animation, by ID. */
+	public get targetingAnimations() {
+		return this.context.animations
+			.filter(anim => anim.targetIds.includes(this.id))
+			.reduce(
+				(map, anim) => {
+					map.set(anim.id, anim);
+					return map;
+				},
+				new Map<Guid, Animation>()
+			) as ReadonlyMap<Guid, Animation>;
+	}
+
+	/** The list of other animations that target this animation, by name. */
+	public get targetingAnimationsByName() {
+		return this.context.animations
+			.filter(anim => anim.targetIds.includes(this.id) && anim.name)
+			.reduce(
+				(map, anim) => {
+					map.set(anim.name, anim);
+					return map;
+				},
+				new Map<string, Animation>()
+			) as ReadonlyMap<string, Animation>;
+	}
+
 	/** INTERNAL USE ONLY. Animations are created by loading prefabs with animations on them. */
 	public constructor(private context: Context, id: Guid) {
 		this._id = id;

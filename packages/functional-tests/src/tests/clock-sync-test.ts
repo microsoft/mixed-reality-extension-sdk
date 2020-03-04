@@ -94,12 +94,12 @@ export default class ClockSyncTest extends Test {
 		this.buildDigitAnimation(mesh10Hours, -4.25, yOffset, 10 * 60 * 60, 3, 2.4, lineHeight, textScale);
 
 		// Start the animations.
-		actors.forEach(actor => actor.animationsByName.get(actor.name + "Anim").play());
+		actors.forEach(actor => actor.targetingAnimationsByName.get(actor.name + "Anim").play());
 
 		await this.stoppedAsync();
 
 		// Stop the animations.
-		actors.forEach(actor => actor.animationsByName.get(actor.name + "Anim").play());
+		actors.forEach(actor => actor.targetingAnimationsByName.get(actor.name + "Anim").play());
 
 		return true;
 	}
