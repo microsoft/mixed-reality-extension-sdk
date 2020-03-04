@@ -2,9 +2,8 @@
  * Copyright (c) Microsoft Corporation. All rights reserved.
  * Licensed under the MIT License.
  */
-
-import { BehaviorType, ToolBehavior } from '.';
-import { TransformLike } from '../..';
+import { BehaviorType, TransformLike } from '../..';
+import { ToolBehavior } from './toolBehavior';
 
 
 export interface DrawData {

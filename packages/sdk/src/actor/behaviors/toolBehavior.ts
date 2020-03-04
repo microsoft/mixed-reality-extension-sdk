@@ -3,7 +3,8 @@
  * Licensed under the MIT License.
  */
 
-import { ActionHandler, ActionState, BehaviorType, DiscreteAction, TargetBehavior } from '.';
+import { ActionHandler, ActionState, BehaviorType, DiscreteAction } from '../..';
+import { TargetBehavior } from './targetBehavior';
 
 export class ToolBehavior<ToolDataT> extends TargetBehavior {
 	private _holding: DiscreteAction<ToolDataT> = new DiscreteAction();
@@ -19,7 +20,7 @@ export class ToolBehavior<ToolDataT> extends TargetBehavior {
 	 * @return This tool behavior.
 	 */
 	public onHolding(holdingState: 'picked-up' | 'holding' | 'dropped', handler: ActionHandler<ToolDataT>): this {
-		const actionState: ActionState = 
+		const actionState: ActionState =
 			(holdingState === 'picked-up') ? 'started' : (holdingState === 'holding') ? 'performing' : 'stopped';
 		this._holding.on(actionState, handler);
 		return this;
@@ -32,7 +33,7 @@ export class ToolBehavior<ToolDataT> extends TargetBehavior {
 	 * @return This tool behavior.
 	 */
 	public onUsing(usingState: 'started' | 'using' | 'stopped', handler: ActionHandler<ToolDataT>): this {
-		const actionState: ActionState = 
+		const actionState: ActionState =
 			(usingState === 'started') ? 'started' : (usingState === 'using') ? 'performing' : 'stopped';
 		this._using.on(actionState, handler);
 		return this;
