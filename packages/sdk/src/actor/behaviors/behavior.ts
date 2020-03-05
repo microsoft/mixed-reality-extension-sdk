@@ -3,8 +3,7 @@
  * Licensed under the MIT License.
  */
 
-import { ActionState, BehaviorType, Actionable } from '.';
-import { User } from '../../user';
+import { ActionState, BehaviorType, DiscreteAction, User } from '../..';
 
 /**
  * Abstract class that serves as the base class for all behaviors.
@@ -20,15 +19,15 @@ export abstract class Behavior {
 	 */
 
 	public _supportsAction(actionName: string): boolean {
-		const action = (this as any)[actionName.toLowerCase()] as Actionable;
+		const action = (this as any)[actionName.toLowerCase()] as DiscreteAction;
 		return action !== undefined;
 	}
 
 	/** @hidden */
-	public _performAction(actionName: string, actionState: ActionState, user: User, actionData: any): void {
-		const action = (this as any)[actionName.toLowerCase()] as Actionable;
+	public _performAction(actionName: string, actionState: ActionState, user: User): void {
+		const action = (this as any)[actionName.toLowerCase()] as DiscreteAction;
 		if (action) {
-			action._performAction(user, actionState, actionData);
+			action._setState(user, actionState);
 		}
 	}
 }

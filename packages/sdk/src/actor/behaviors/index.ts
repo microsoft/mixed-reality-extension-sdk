@@ -9,6 +9,4 @@ export * from './actionStates';
 export * from './behavior';
 export * from './behaviorTypes';
 export * from './buttonBehavior';
-export * from './penBehavior';
 export * from './targetBehavior';
-export * from './toolBehavior';
