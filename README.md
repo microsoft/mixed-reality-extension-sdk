@@ -18,8 +18,9 @@ The easiest way to start with the MRE SDK is to head over to the
 https://github.com/Microsoft/mixed-reality-extension-sdk-samples) repo, and
 build a sample.
 
-If you want to build the actual SDK itself, jump to [Build and Run section of
-this document](#How-to-Build-and-Deploy-the-SDK-functional-tests)
+If you want to build the actual SDK itself, or want to build the functional test 
+showcase MRE, jump to [Build and Run section of this 
+document](#How-to-Build-and-Deploy-the-SDK-and-functional-tests)
 
 To see the APIs, jump to [SDK documentation](
 https://microsoft.github.io/mixed-reality-extension-sdk/)
@@ -28,6 +29,8 @@ If you have made a game or application in Unity3D, and you want it to support
 MREs, or you want to debug into the client runtime code itself, go to the [
 Mixed Reality Extension Unity](
 https://github.com/microsoft/mixed-reality-extension-unity) repository.
+ 
+Other resources are on [AltspaceVR's developer page](https://developer.altvr.com/get-started/)
  
 
 ## Overview
@@ -39,10 +42,9 @@ rendering, and input handling.
 * Hides the complexity of multi-user synchronization and prediction, so
 developers focus on adding content, not debugging networking code.
 * Designed to be secure for users, tolerate high latency, minimize server
-activity, and seamlessly blend with the [AltspaceVR](https://altvr.com/)
-host app's native content.
-* Quick to start: Clone this repo (or the samples repo), deploy an MRE
-locally, and see the extension running in the host app within minutes.
+activity, and seamlessly blend with the host app's native content.
+* Quick to start: Clone the [samples repo](https://github.com/Microsoft/mixed-reality-extension-sdk-samples), deploy an MRE
+locally, and see the extension running in [AltspaceVR](https://altvr.com/) or other host apps within minutes.
 * We welcome contributions. Please see [CONTRIBUTING.md](CONTRIBUTING.md)
 if you are interested in helping out.
 
@@ -51,66 +53,58 @@ if you are interested in helping out.
 The SDK enables you to create extensions that can
 * Modify the scene graph by loading glTF assets and scene files, instantiating
 primitives or the host app's built-in assets, or programmatically build meshes.
-* Create or load keyframe animations.
+* Create actors with 3d meshes (static or skinned), realtime lights and text objects
+* Create, load, and trigger keyframe animations, sounds, music, textures
 * Assign rigid body properties, physics forces, collision geometry, and have
 objects collide naturally with the host app world, or with other extensions.
-* Apply input behaviors and register event handlers on the behaviors.
+* Filter actors and behaviors to groups of users, or even have single-user actors
+* Apply click detection behaviors and register event handlers on the behaviors.
+* Attach actors to host app's avatars
+* Make actors grabbable and clickable when held
 
 ## Current State
 Developer Preview
 
-
 ## Limitations
-This is an early developer preview, so there will be rough edges and bugs.
+The MRE SDK has been in developer preview in AltspaceVR since December 2018, 
+and while the API surface is fairly stable, internals are regularly refactored.
+We strive to maintain backwards compatibility when possible, but until we ship
+the 1.0 release, there will be occasional breaking changes, which will require
+MRE redeploys.
 
-We would love for you to experiment with this SDK by deploying locally or using
-[ngrok](https://ngrok.com/) to invite friends to join while you test. However,
-during the developer preview phase we don't recommending deploying your app to
-cloud services. Until we reach the Feature Complete milestone, and in parallel
-with the AltspaceVR integration, there will be occasional breaking changes,
-which will require server redeploys.
-
-The SDK also does not have a feature rich set of APIs yet. We have focused on
+The SDK does not have a feature rich set of APIs yet. We have focused on
 the networking and synchronization, rather than adding more APIs. Expect this
-to improve over time.
+to improve over time. Our 
 
-The SDK should deploy anywhere Node.js works.
-
+The SDK deploys anywhere Node.js works.
 
 ## Goal
 We want to deliver a feature-rich set of APIs, enabling creation of high
 quality, rich 3d experiences. There are many features we want to add, including
-* User masking - hide actors and disable behaviors for a subset of users
-* streaming and single-shot sound playback
-* Additional input behaviors, such as grab&throw
-* 2D UI layout system with standard UI controls
-* Particle system
-* Realtime lighting
 * Rigid body constraints
 * Input latency improvements
 * Protocol optimization
+* 2D UI layout system with common UI controls
+
+However, our highest priority is reliability, predictability, and ease of use,
+and as a consequence we spend much more time making sure we have a solid,
+flexible infrastructureare than adding shiny new features.
 
 
 ## Major known Issues
-* Rigid body physics state syncronization is somewhat jittery 
-* Users can't reliably directly interact with rigid body objects.
-* Text alignment is backwards.
+* Rigid body physics state syncronization is jittery.
+* Users can't reliably directly collide with rigid body objects, except by grabbing.
 * A number of client-side errors don't get send to the node log, which makes
 debugging hard. This includes glTF loading errors and using the wrong name
 when playing animations.
 
 
 ## Roadmap
-We prioritize quality over dates, but a reasonable guess would be
-* December 2018 - inital public preview released.
-* January/Febraury 2019 - regular beta updates. Occasional breaking changes.
-* March 2019 - 1.0 release. At this point we expect the protocol to be stable
-enough to not require any server redeploys.
-* Ongoing - We expect to continuously roll out new features, well beyond the 
-1.0 release.
+We are working towards 1.0 release. Please look at our [project 
+page](https://github.com/microsoft/mixed-reality-extension-sdk/projects/1)
+for remaining work.
 
-
-## How to Build and Deploy the SDK functional tests
+## How to Build and Deploy the SDK and functional tests
 From command prompt:
 * `git clone http://github.com/microsoft/mixed-reality-extension-sdk`
 * `cd mixed-reality-extension-sdk`
@@ -125,7 +119,7 @@ little if there are no changes)
 ## Testing an MRE In AltspaceVR
 * In [AltspaceVR](https://altvr.com/), go to your personal home
 * Make sure you are signed in properly, not a guest
-* Activate the Space Editor
+* Activate the World Editor
 * Click Basics group
 * Click on SDKApp
 * For the URL field, please enter the URL `ws://localhost:3901`

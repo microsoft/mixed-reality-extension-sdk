@@ -5,6 +5,5 @@
 
 export type ActionState
 	= 'started'
-	| 'performing'
 	| 'stopped'
 	;

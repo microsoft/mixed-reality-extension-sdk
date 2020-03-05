@@ -583,7 +583,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	 * @param grabState The grab state to fire the handler on.
 	 * @param handler The handler to call when the grab state has changed.
 	 */
-	public onGrab(grabState: 'begin' | 'end', handler: ActionHandler<void>) {
+	public onGrab(grabState: 'begin' | 'end', handler: ActionHandler) {
 		const actionState: ActionState = (grabState === 'begin') ? 'started' : 'stopped';
 		this.grab.on(actionState, handler);
 	}
