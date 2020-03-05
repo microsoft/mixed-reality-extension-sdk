@@ -8,7 +8,6 @@ import {
 	Animation,
 	AnimationLike,
 	AnimationProp,
-	Asset,
 	AssetContainer,
 	AssetLike,
 	EaseCurve,
@@ -21,6 +20,8 @@ import {
 	Patchable,
 } from '../internal';
 import { AssetInternal } from '../asset/assetInternal';
+// break import cycle
+import { Asset } from '../asset/asset';
 
 /** The types that support animation */
 export type Animatible = Actor | Animation | Material;

@@ -25,68 +25,116 @@ export default class AnimationTest extends Test {
 
 	public async run(root: MRE.Actor): Promise<boolean> {
 		this.assets = new MRE.AssetContainer(this.app.context);
+		const clockAssets = await this.assets.loadGltf(`${this.baseUrl}/clock.gltf`, 'box');
 
-		const clock = MRE.Actor.CreateFromGltf(this.assets, {
-			uri: `${this.baseUrl}/clock.gltf`,
-			colliderType: 'box',
+		const nativeClock = MRE.Actor.CreateFromPrefab(this.app.context, {
+			firstPrefabFrom: clockAssets,
 			actor: {
+				name: "nativeClock",
 				parentId: root.id,
 				transform: {
 					local: {
-						position: { x: -0.6, y: 1, z: -1 },
-						rotation: MRE.Quaternion.FromEulerAngles(Math.PI / 2, Math.PI, 0)
+						position: { x: -0.6, y: 0.5, z: -1 },
+						rotation: MRE.Quaternion.FromEulerAngles(Math.PI / 2, Math.PI, 0),
+						scale: { x: 0.5, y: 0.5, z: 0.5 }
 					}
 				}
 			}
 		});
+		MRE.Actor.Create(this.app.context, { actor: {
+			name: "label",
+			parentId: nativeClock.id,
+			transform: {
+				local: {
+					position: { x: 0.8 },
+					rotation: MRE.Quaternion.FromEulerAngles(Math.PI / 2, 0, -Math.PI / 2)
+				}
+			},
+			text: {
+				contents: "Native",
+				height: 0.2,
+				anchor: MRE.TextAnchorLocation.MiddleCenter
+			}
+		}});
 
-		await clock.created();
-		const anim = clock.targetingAnimationsByName.get("animation:0");
+		const mreClock = MRE.Actor.CreateFromPrefab(this.app.context, {
+			firstPrefabFrom: clockAssets,
+			actor: {
+				name: "mreClock",
+				parentId: root.id,
+				transform: {
+					local: {
+						position: { x: -0.6, y: 1.2, z: -1 },
+						rotation: MRE.Quaternion.FromEulerAngles(Math.PI / 2, Math.PI, 0),
+						scale: { x: 0.5, y: 0.5, z: 0.5 }
+					}
+				}
+			}
+		});
+		MRE.Actor.Create(this.app.context, { actor: {
+			name: "label",
+			parentId: mreClock.id,
+			transform: {
+				local: {
+					position: { x: 0.8 },
+					rotation: MRE.Quaternion.FromEulerAngles(Math.PI / 2, 0, -Math.PI / 2)
+				}
+			},
+			text: {
+				contents: "MRE",
+				height: 0.2,
+				anchor: MRE.TextAnchorLocation.MiddleCenter
+			}
+		}});
+
+		await Promise.all([mreClock.created(), nativeClock.created()]);
+		const nativeAnim = nativeClock.targetingAnimationsByName.get("animation:0");
 
 		const controls: ControlDefinition[] = [
 			{ label: "Playing", realtime: true, action: incr => {
 				if (!incr) {
-					return anim.isPlaying.toString();
-				} else if (anim.isPlaying) {
-					anim.stop();
+					return nativeAnim.isPlaying.toString();
+				} else if (nativeAnim.isPlaying) {
+					nativeAnim.stop();
 					return "false";
 				} else {
-					anim.play();
+					nativeAnim.play();
 					return "true";
 				}
 			} },
 			{ label: "Time", realtime: true, action: incr => {
 				if (incr > 0) {
-					anim.time += 1;
+					nativeAnim.time += 1;
 				} else if (incr < 0) {
-					anim.time -= 1;
+					nativeAnim.time -= 1;
 				}
-				return anim.time.toFixed(3);
+				return nativeAnim.time.toFixed(3);
 			}},
 			{ label: "Speed", action: incr => {
 				if (incr > 0) {
-					anim.speed += 0.25;
+					nativeAnim.speed += 0.25;
 				} else if (incr < 0) {
-					anim.speed -= 0.25;
+					nativeAnim.speed -= 0.25;
 				}
-				return Math.floor(anim.speed * 100) + "%";
+				return Math.floor(nativeAnim.speed * 100) + "%";
 			}},
 			{ label: "Wrap", action: incr => {
 				const modes = Object.values(MRE.AnimationWrapMode);
-				const curModeIndex = modes.findIndex(m => m === anim.wrapMode);
+				const curModeIndex = modes.findIndex(m => m === nativeAnim.wrapMode);
 				const newModeIndex = (curModeIndex + incr + modes.length) % modes.length;
-				anim.wrapMode = modes[newModeIndex];
-				return anim.wrapMode;
+				nativeAnim.wrapMode = modes[newModeIndex];
+				return nativeAnim.wrapMode;
 			}}
 		];
 		this.createControls(controls, MRE.Actor.Create(this.app.context, {
 			actor: {
 				name: 'controlsParent',
+				parentId: root.id,
 				transform: { local: { position: { x: 0.6, y: 1, z: -1 } } }
 			}
 		}));
 
-		anim.finished().then(() => this.app.setOverrideText('finished'));
+		nativeAnim.finished().then(() => this.app.setOverrideText('finished'));
 
 		await this.stoppedAsync();
 		return true;
