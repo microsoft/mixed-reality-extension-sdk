@@ -22,15 +22,13 @@ export class TargetBehavior extends Behavior {
 	/** @inheritdoc */
 	public get behaviorType(): BehaviorType { return 'target'; }
 
-	public get target() { return this._target; }
-
 	/**
 	 * Add a target handler to be called when the given target state is triggered.
 	 * @param targetState The target state to fire the handler on.
 	 * @param handler The handler to call when the target state is triggered.
 	 * @return This target behavior.
 	 */
-	public onTarget(targetState: 'enter' | 'exit', handler: ActionHandler): this {
+	public onTarget(targetState: 'enter' | 'exit', handler: ActionHandler<void>): this {
 		const actionState: ActionState = (targetState === 'enter') ? 'started' : 'stopped';
 		this._target.on(actionState, handler);
 		return this;
