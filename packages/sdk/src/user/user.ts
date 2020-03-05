@@ -5,7 +5,7 @@
 
 import { Context, GroupMask, Guid } from '..';
 import { Patchable, readPath, } from '../internal';
-import { UserInternal } from './userinternal';
+import { UserInternal } from './userInternal';
 
 export interface UserLike {
 	id: Guid;
