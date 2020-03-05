@@ -8,27 +8,19 @@ import { ActionState, Guid, User } from '../..';
 /**
  * The action handler function type.
  */
-export type ActionHandler<ActionDataT> = (user: User, actionData?: ActionDataT) => void;
+export type ActionHandler = (user: User) => void;
 
-/**
- * @hidden
- */
-export interface Actionable {
-	_performAction(user: User, actionState: ActionState, actionData?: any): boolean;
-}
-
-interface ActionHandlers<ActionDataT = void> {
-	'started'?: ActionHandler<ActionDataT>;
-	'stopped'?: ActionHandler<ActionDataT>;
-	'performing'?: ActionHandler<ActionDataT>;
+interface ActionHandlers {
+	'started'?: ActionHandler;
+	'stopped'?: ActionHandler;
 }
 
 /**
  * Class that represents a discrete action that can be in one of two states,
  * started or stopped for each user. @see ActionState
  */
-export class DiscreteAction<ActionDataT = void> implements Actionable {
-	private handlers: ActionHandlers<ActionDataT> = {};
+export class DiscreteAction {
+	private handlers: ActionHandlers = {};
 	private activeUserIds: Guid[] = [];
 
 	/**
@@ -36,7 +28,7 @@ export class DiscreteAction<ActionDataT = void> implements Actionable {
 	 * @param actionState The action state that the handle should be assigned to.
 	 * @param handler The handler to call when the action state is triggered.
 	 */
-	public on(actionState: ActionState, handler: ActionHandler<ActionDataT>): this {
+	public on(actionState: ActionState, handler: ActionHandler): this {
 		this.handlers[actionState] = handler;
 		return this;
 	}
@@ -48,7 +40,7 @@ export class DiscreteAction<ActionDataT = void> implements Actionable {
 	 */
 	public getState(user: User): ActionState {
 		return this.activeUserIds.find(id => id === user.id) ?
-			'performing' : 'stopped';
+			'started' : 'stopped';
 	}
 
 	/**
@@ -72,18 +64,18 @@ export class DiscreteAction<ActionDataT = void> implements Actionable {
 	 */
 
 	/** @hidden */
-	public _performAction(user: User, actionState: ActionState, actionData?: any): boolean {
+	public _setState(user: User, actionState: ActionState): boolean {
 		const currentState = this.activeUserIds.find(id => id === user.id) || 'stopped';
 		if (currentState !== actionState) {
 			if (actionState === 'started') {
 				this.activeUserIds.push(user.id);
-			} else if (actionState === 'stopped') {
+			} else {
 				this.activeUserIds = this.activeUserIds.filter(id => id === user.id);
 			}
 
 			const handler = this.handlers[actionState];
 			if (handler) {
-				handler(user, actionData);
+				handler(user);
 			}
 
 			return true;
