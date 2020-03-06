@@ -353,9 +353,9 @@ export class Animation implements AnimationLike, Patchable<AnimationLike> {
 		const tracks = [];
 		const typeString =
 			object instanceof Actor ? AnimatibleName.Actor :
-			object instanceof Animation ? AnimatibleName.Animation :
-			object instanceof Material ? AnimatibleName.Material :
-			null;
+				object instanceof Animation ? AnimatibleName.Animation :
+					object instanceof Material ? AnimatibleName.Material :
+						null;
 		if (!typeString) {
 			throw new Error(`Attempting to animate non-animatible object`);
 		}
@@ -381,7 +381,6 @@ export class Animation implements AnimationLike, Patchable<AnimationLike> {
 				}
 			}
 		})(options.destination, `${typeString}:target`);
-		console.log('tracks:', JSON.stringify(tracks));
 
 		// create the animation data
 		const ac = new AssetContainer(context);

@@ -8,9 +8,13 @@ import * as MRE from '@microsoft/mixed-reality-extension-sdk';
 import { Test } from '../test';
 
 interface ControlDefinition {
+	/** Decorative label for the control */
 	label: string;
+	/** Changes a property, and returns a result string */
 	action: (incr: number) => string;
+	/** Whether the control should be updated on a timer */
 	realtime?: boolean;
+	/** The actor who's text needs to be updated */
 	labelActor?: MRE.Actor;
 }
 
@@ -88,42 +92,45 @@ export default class AnimationTest extends Test {
 		}});
 
 		await Promise.all([mreClock.created(), nativeClock.created()]);
-		const nativeAnim = nativeClock.targetingAnimationsByName.get("animation:0");
+		const anims = [
+			nativeClock.targetingAnimationsByName.get("animation:0"),
+			await this.animateClock(mreClock)
+		];
 
 		const controls: ControlDefinition[] = [
 			{ label: "Playing", realtime: true, action: incr => {
 				if (!incr) {
-					return nativeAnim.isPlaying.toString();
-				} else if (nativeAnim.isPlaying) {
-					nativeAnim.stop();
+					return anims[0].isPlaying.toString();
+				} else if (anims.every(a => a.isPlaying)) {
+					for (const a of anims) { a.stop(); }
 					return "false";
 				} else {
-					nativeAnim.play();
+					for (const a of anims) { a.play(); }
 					return "true";
 				}
 			} },
 			{ label: "Time", realtime: true, action: incr => {
 				if (incr > 0) {
-					nativeAnim.time += 1;
+					for (const a of anims) { a.time += 1; }
 				} else if (incr < 0) {
-					nativeAnim.time -= 1;
+					for (const a of anims) { a.time -= 1; }
 				}
-				return nativeAnim.time.toFixed(3);
+				return anims[0].time.toFixed(3);
 			}},
 			{ label: "Speed", action: incr => {
 				if (incr > 0) {
-					nativeAnim.speed += 0.25;
+					for (const a of anims) { a.speed += 0.25; }
 				} else if (incr < 0) {
-					nativeAnim.speed -= 0.25;
+					for (const a of anims) { a.speed -= 0.25; }
 				}
-				return Math.floor(nativeAnim.speed * 100) + "%";
+				return Math.floor(anims[0].speed * 100) + "%";
 			}},
 			{ label: "Wrap", action: incr => {
 				const modes = Object.values(MRE.AnimationWrapMode);
-				const curModeIndex = modes.findIndex(m => m === nativeAnim.wrapMode);
+				const curModeIndex = modes.findIndex(m => m === anims[0].wrapMode);
 				const newModeIndex = (curModeIndex + incr + modes.length) % modes.length;
-				nativeAnim.wrapMode = modes[newModeIndex];
-				return nativeAnim.wrapMode;
+				for (const a of anims) { a.wrapMode = modes[newModeIndex]; }
+				return modes[newModeIndex];
 			}}
 		];
 		this.createControls(controls, MRE.Actor.Create(this.app.context, {
@@ -134,7 +141,7 @@ export default class AnimationTest extends Test {
 			}
 		}));
 
-		nativeAnim.finished().then(() => this.app.setOverrideText('finished'));
+		Promise.all(anims.map(a => a.finished())).then(() => this.app.setOverrideText('finished'));
 
 		await this.stoppedAsync();
 		return true;
@@ -222,4 +229,49 @@ export default class AnimationTest extends Test {
 			}
 		}, 250);
 	}
+
+	private animateClock(gltf: MRE.Actor): Promise<MRE.Animation> {
+		const clock = gltf.children.find(c => c.name === "Clock");
+		const bigHand = clock.children.find(c => c.name === "BigHand");
+		const bigHandMat = bigHand.appearance.material;
+		const littleHand = clock.children.find(c => c.name === "LittleHand");
+		const littleHandMat = littleHand.appearance.material;
+
+		const animData = this.assets.createAnimationData("ClockSpin", ClockAnimData);
+		return animData.bind({ bigHand, littleHand });
+	}
+}
+
+const ClockAnimData: MRE.AnimationDataLike = {
+	tracks: [{
+		target: MRE.ActorPath("bigHand").transform.local.rotation,
+		keyframes: GenerateSpinData(60, 1)
+	}, {
+		target: MRE.ActorPath("littleHand").transform.local.rotation,
+		keyframes: GenerateSpinData(60, 60)
+	}]
+}
+
+function GenerateSpinData(duration: number, repetitions: number): MRE.Keyframe<MRE.Quaternion>[] {
+	const spinDuration = duration / repetitions;
+	const frames: MRE.Keyframe<MRE.Quaternion>[] = [];
+	for (let rep = 0; rep < repetitions; rep++) {
+		frames.push({
+			time: spinDuration * (rep),
+			value: MRE.Quaternion.FromEulerAngles(0, 0, 0)
+		}, {
+			time: spinDuration * (rep + 1 / 3),
+			value: MRE.Quaternion.FromEulerAngles(0, 2 * Math.PI / 3, 0)
+		}, {
+			time: spinDuration * (rep + 2 / 3),
+			value: MRE.Quaternion.FromEulerAngles(0, 4 * Math.PI / 3, 0)
+		});
+	}
+
+	frames.push({
+		time: duration,
+		value: MRE.Quaternion.FromEulerAngles(0, 2 * Math.PI * repetitions % 1, 0)
+	});
+
+	return frames;
 }
