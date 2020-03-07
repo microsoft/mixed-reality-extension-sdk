@@ -28,11 +28,11 @@ export abstract class TargetPath<T extends AnimationProp> {
 	public toJSON() { return this.toString(); }
 	public toString() { return this.id; }
 	public get baseType() {
-		if (this.id.startsWith('actor')) {
+		if (this.id.startsWith('actor:')) {
 			return AnimatibleName.Actor;
-		} else if (this.id.startsWith('animation')) {
+		} else if (this.id.startsWith('animation:')) {
 			return AnimatibleName.Animation;
-		} else if (this.id.startsWith('material')) {
+		} else if (this.id.startsWith('material:')) {
 			return AnimatibleName.Material;
 		} else {
 			throw new Error(`Target path ${this.id} doesn't target a valid object!`);

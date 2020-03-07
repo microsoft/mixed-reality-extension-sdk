@@ -7,6 +7,41 @@ import * as MRE from '@microsoft/mixed-reality-extension-sdk';
 
 import { Test } from '../test';
 
+function GenerateSpinData(duration: number, repetitions: number): Array<MRE.Keyframe<MRE.Quaternion>> {
+	const spinDuration = duration / repetitions;
+	const frames: Array<MRE.Keyframe<MRE.Quaternion>> = [];
+	for (let rep = 0; rep < repetitions; rep++) {
+		frames.push({
+			time: spinDuration * (rep),
+			value: MRE.Quaternion.FromEulerAngles(0, 0, 0)
+		}, {
+			time: spinDuration * (rep + 1 / 3),
+			value: MRE.Quaternion.FromEulerAngles(0, 2 * Math.PI / 3, 0)
+		}, {
+			time: spinDuration * (rep + 2 / 3),
+			value: MRE.Quaternion.FromEulerAngles(0, 4 * Math.PI / 3, 0)
+		});
+	}
+
+	frames.push({
+		time: duration,
+		value: MRE.Quaternion.FromEulerAngles(0, 2 * Math.PI * repetitions % 1, 0)
+	});
+
+	return frames;
+}
+
+const ClockAnimData: MRE.AnimationDataLike = {
+	tracks: [{
+		target: MRE.ActorPath("bigHand").transform.local.rotation,
+		keyframes: GenerateSpinData(60, 1)
+	}, {
+		target: MRE.ActorPath("littleHand").transform.local.rotation,
+		keyframes: GenerateSpinData(60, 60)
+	}]
+}
+
+/** Defines an animation control field */
 interface ControlDefinition {
 	/** Decorative label for the control */
 	label: string;
@@ -92,6 +127,7 @@ export default class AnimationTest extends Test {
 		}});
 
 		await Promise.all([mreClock.created(), nativeClock.created()]);
+
 		const anims = [
 			nativeClock.targetingAnimationsByName.get("animation:0"),
 			await this.animateClock(mreClock)
@@ -230,48 +266,14 @@ export default class AnimationTest extends Test {
 		}, 250);
 	}
 
-	private animateClock(gltf: MRE.Actor): Promise<MRE.Animation> {
+	private animateClock(gltf: MRE.Actor) {
 		const clock = gltf.children.find(c => c.name === "Clock");
 		const bigHand = clock.children.find(c => c.name === "BigHand");
-		const bigHandMat = bigHand.appearance.material;
+		// const bigHandMat = bigHand.appearance.material;
 		const littleHand = clock.children.find(c => c.name === "LittleHand");
-		const littleHandMat = littleHand.appearance.material;
+		// const littleHandMat = littleHand.appearance.material;
 
 		const animData = this.assets.createAnimationData("ClockSpin", ClockAnimData);
 		return animData.bind({ bigHand, littleHand });
 	}
-}
-
-const ClockAnimData: MRE.AnimationDataLike = {
-	tracks: [{
-		target: MRE.ActorPath("bigHand").transform.local.rotation,
-		keyframes: GenerateSpinData(60, 1)
-	}, {
-		target: MRE.ActorPath("littleHand").transform.local.rotation,
-		keyframes: GenerateSpinData(60, 60)
-	}]
-}
-
-function GenerateSpinData(duration: number, repetitions: number): MRE.Keyframe<MRE.Quaternion>[] {
-	const spinDuration = duration / repetitions;
-	const frames: MRE.Keyframe<MRE.Quaternion>[] = [];
-	for (let rep = 0; rep < repetitions; rep++) {
-		frames.push({
-			time: spinDuration * (rep),
-			value: MRE.Quaternion.FromEulerAngles(0, 0, 0)
-		}, {
-			time: spinDuration * (rep + 1 / 3),
-			value: MRE.Quaternion.FromEulerAngles(0, 2 * Math.PI / 3, 0)
-		}, {
-			time: spinDuration * (rep + 2 / 3),
-			value: MRE.Quaternion.FromEulerAngles(0, 4 * Math.PI / 3, 0)
-		});
-	}
-
-	frames.push({
-		time: duration,
-		value: MRE.Quaternion.FromEulerAngles(0, 2 * Math.PI * repetitions % 1, 0)
-	});
-
-	return frames;
 }

@@ -304,8 +304,8 @@ export class Animation implements AnimationLike, Patchable<AnimationLike> {
 		return {
 			id: this.id,
 			name: this.name,
-			basisTime: this.basisTime,
-			time: this.time,
+			basisTime: this._basisTime,
+			time: this._time,
 			speed: this.speed,
 			weight: this.weight,
 			wrapMode: this.wrapMode,
