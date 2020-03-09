@@ -9,6 +9,7 @@ import {
 	AssetContainer,
 	AssetLike,
 	Color3,
+	Color3Like,
 	Color4,
 	Color4Like,
 	Guid,
@@ -37,6 +38,14 @@ export interface MaterialLike {
 	mainTextureOffset: Vector2Like;
 	/** The main texture's scale from default */
 	mainTextureScale: Vector2Like;
+	/** The lighting-independent color of this material. */
+	emissiveColor: Partial<Color3Like>;
+	/** The emissive (unlit) texture asset ID */
+	emissiveTextureId: Guid;
+	/** The emissive texture's offset from default */
+	emissiveTextureOffset: Vector2Like;
+	/** The emissive texture's scale from default */
+	emissiveTextureScale: Vector2Like;
 	/** How the color/texture's alpha channel should be handled */
 	alphaMode: AlphaMode;
 	/** Visibility threshold in masked alpha mode */
@@ -68,6 +77,10 @@ export class Material extends Asset implements MaterialLike, Patchable<AssetLike
 	private _mainTextureId = ZeroGuid;
 	private _mainTextureOffset = Vector2.Zero();
 	private _mainTextureScale = Vector2.One();
+	private _emissiveColor = Color3.Black();
+	private _emissiveTextureId = ZeroGuid;
+	private _emissiveTextureOffset = Vector2.Zero();
+	private _emissiveTextureScale = Vector2.One();
 	private _alphaMode = AlphaMode.Opaque;
 	private _alphaCutoff = 0.5;
 	private _internal = new AssetInternal(this);
@@ -116,6 +129,48 @@ export class Material extends Asset implements MaterialLike, Patchable<AssetLike
 	/** @inheritdoc */
 	public get mainTextureScale() { return this._mainTextureScale; }
 	public set mainTextureScale(value) { if (value) { this._mainTextureScale.copy(value); } }
+
+	/** @inheritdoc */
+	public get emissiveColor() { return this._emissiveColor; }
+	public set emissiveColor(value) { if (value) { this._emissiveColor.copy(value); } }
+
+	/** @returns A shared reference to this material's texture asset */
+	public get emissiveTexture() {
+		return this.container.context.internal.lookupAsset(this._emissiveTextureId)?.texture;
+	}
+	public set emissiveTexture(value) {
+		this.emissiveTextureId = value?.id ?? ZeroGuid;
+	}
+
+	/** @inheritdoc */
+	public get emissiveTextureId() { return this._emissiveTextureId; }
+	public set emissiveTextureId(value) {
+		if (!value) {
+			value = ZeroGuid;
+		}
+		if (!this.container.context.internal.lookupAsset(value)) {
+			value = ZeroGuid; // throw?
+		}
+
+		if (value === this._emissiveTextureId) { return; }
+
+		if (this.emissiveTexture) {
+			this.emissiveTexture.clearReference(this);
+		}
+		this._emissiveTextureId = value;
+		if (this.emissiveTexture) {
+			this.emissiveTexture.addReference(this);
+		}
+		this.materialChanged('emissiveTextureId');
+	}
+
+	/** @inheritdoc */
+	public get emissiveTextureOffset() { return this._emissiveTextureOffset; }
+	public set emissiveTextureOffset(value) { if (value) { this._emissiveTextureOffset.copy(value); } }
+
+	/** @inheritdoc */
+	public get emissiveTextureScale() { return this._emissiveTextureScale; }
+	public set emissiveTextureScale(value) { if (value) { this._emissiveTextureScale.copy(value); } }
 
 	/** @inheritdoc */
 	public get alphaMode() { return this._alphaMode; }
@@ -181,6 +236,21 @@ export class Material extends Asset implements MaterialLike, Patchable<AssetLike
 			targetName: 'mainTextureScale',
 			notifyChanged: (...path: string[]) => this.materialChanged(...path)
 		});
+		observe({
+			target: this._emissiveColor,
+			targetName: 'emissiveColor',
+			notifyChanged: (...path: string[]) => this.materialChanged(...path)
+		});
+		observe({
+			target: this._emissiveTextureOffset,
+			targetName: 'emissiveTextureOffset',
+			notifyChanged: (...path: string[]) => this.materialChanged(...path)
+		});
+		observe({
+			target: this._emissiveTextureScale,
+			targetName: 'emissiveTextureScale',
+			notifyChanged: (...path: string[]) => this.materialChanged(...path)
+		});
 	}
 
 	public copy(from: Partial<AssetLike>): this {
@@ -206,6 +276,18 @@ export class Material extends Asset implements MaterialLike, Patchable<AssetLike
 			if (from.material.mainTextureId) {
 				this.mainTextureId = from.material.mainTextureId;
 			}
+			if (from.material.emissiveColor) {
+				this.emissiveColor.copy(from.material.emissiveColor);
+			}
+			if (from.material.emissiveTextureOffset) {
+				this.emissiveTextureOffset.copy(from.material.emissiveTextureOffset);
+			}
+			if (from.material.emissiveTextureScale) {
+				this.emissiveTextureScale.copy(from.material.emissiveTextureScale);
+			}
+			if (from.material.emissiveTextureId) {
+				this.emissiveTextureId = from.material.emissiveTextureId;
+			}
 			if (from.material.alphaMode) {
 				this.alphaMode = from.material.alphaMode;
 			}
@@ -227,6 +309,10 @@ export class Material extends Asset implements MaterialLike, Patchable<AssetLike
 				mainTextureId: this.mainTextureId,
 				mainTextureOffset: this.mainTextureOffset.toJSON(),
 				mainTextureScale: this.mainTextureScale.toJSON(),
+				emissiveColor: this.emissiveColor.toJSON(),
+				emissiveTextureId: this.emissiveTextureId,
+				emissiveTextureOffset: this.emissiveTextureOffset.toJSON(),
+				emissiveTextureScale: this.emissiveTextureScale.toJSON(),
 				alphaMode: this.alphaMode,
 				alphaCutoff: this.alphaCutoff
 			}

@@ -117,6 +117,8 @@ export class Texture extends Asset implements TextureLike, Patchable<AssetLike> 
 		if (!(ref instanceof Material)) { return; }
 		if (ref.mainTexture === this) {
 			ref.mainTexture = null;
+		} else if (ref.emissiveTexture === this) {
+			ref.emissiveTexture = null;
 		}
 	}
 }
