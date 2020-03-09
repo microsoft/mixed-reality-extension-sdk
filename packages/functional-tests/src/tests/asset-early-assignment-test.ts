@@ -7,7 +7,7 @@ import * as MRE from '@microsoft/mixed-reality-extension-sdk';
 import { Test } from '../test';
 
 export default class AssetEarlyAssignmentTest extends Test {
-	public expectedResultDescription = "Colored & textured sphere";
+	public expectedResultDescription = "Unlit colored & textured sphere";
 	private assets: MRE.AssetContainer;
 
 	public async run(root: MRE.Actor): Promise<boolean> {
@@ -18,8 +18,9 @@ export default class AssetEarlyAssignmentTest extends Test {
 		});
 
 		const mat = this.assets.createMaterial('blue', {
-			color: MRE.Color3.Blue(),
-			mainTextureId: tex.id
+			color: MRE.Color3.Black(),
+			emissiveColor: MRE.Color3.Blue(),
+			emissiveTextureId: tex.id
 		});
 
 		const mesh = this.assets.createSphereMesh('sphere', 0.5);
