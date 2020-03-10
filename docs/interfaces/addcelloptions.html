@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>UserSet | Mixed Reality Extension SDK</title>
+	<title>AddCellOptions | Mixed Reality Extension SDK</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -52,27 +52,141 @@
 					<a href="../index.html">Globals</a>
 				</li>
 				<li>
-					<a href="userset.html">UserSet</a>
+					<a href="addcelloptions.html">AddCellOptions</a>
 				</li>
 			</ul>
-			<h1>Interface UserSet</h1>
+			<h1>Interface AddCellOptions</h1>
 		</div>
 	</div>
 </header>
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Options for [[GridLayout.addCell]].</p>
+					</div>
+				</div>
+			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">UserSet</span>
+						<span class="target">AddCellOptions</span>
 					</li>
 				</ul>
 			</section>
-			<section class="tsd-panel tsd-kind-interface">
-				<h3 class="tsd-before-signature">Indexable</h3>
-				<div class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">[</span>id: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">]: </span><a href="../classes/user.html" class="tsd-signature-type">User</a></div>
+			<section class="tsd-panel-group tsd-index-group">
+				<h2>Index</h2>
+				<section class="tsd-panel tsd-index-panel">
+					<div class="tsd-index-content">
+						<section class="tsd-index-section ">
+							<h3>Properties</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="addcelloptions.html#alignment" class="tsd-kind-icon">alignment</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="addcelloptions.html#column" class="tsd-kind-icon">column</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="addcelloptions.html#contents" class="tsd-kind-icon">contents</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="addcelloptions.html#height" class="tsd-kind-icon">height</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="addcelloptions.html#row" class="tsd-kind-icon">row</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="addcelloptions.html#width" class="tsd-kind-icon">width</a></li>
+							</ul>
+						</section>
+					</div>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Properties</h2>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="alignment" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> alignment</h3>
+					<div class="tsd-signature tsd-kind-icon">alignment<span class="tsd-signature-symbol">:</span> <a href="../enums/boxalignment.html" class="tsd-signature-type">BoxAlignment</a></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/2966fc5/packages/sdk/src/util/planarGridLayout.ts#L20">src/util/planarGridLayout.ts:20</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Where the actor should be placed within the cell box. Defaults to [[GridLayout.defaultCellAlignment]].</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="column" class="tsd-anchor"></a>
+					<h3>column</h3>
+					<div class="tsd-signature tsd-kind-icon">column<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/2966fc5/packages/sdk/src/util/planarGridLayout.ts#L14">src/util/planarGridLayout.ts:14</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The column index, with 0 on the left.</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="contents" class="tsd-anchor"></a>
+					<h3>contents</h3>
+					<div class="tsd-signature tsd-kind-icon">contents<span class="tsd-signature-symbol">:</span> <a href="../classes/actor.html" class="tsd-signature-type">Actor</a></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/2966fc5/packages/sdk/src/util/planarGridLayout.ts#L10">src/util/planarGridLayout.ts:10</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The actor to be placed in the grid cell. Must be parented to the grid root.</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="height" class="tsd-anchor"></a>
+					<h3>height</h3>
+					<div class="tsd-signature tsd-kind-icon">height<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/2966fc5/packages/sdk/src/util/planarGridLayout.ts#L18">src/util/planarGridLayout.ts:18</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The height of this cell for layout purposes. Should include any desired padding.</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="row" class="tsd-anchor"></a>
+					<h3>row</h3>
+					<div class="tsd-signature tsd-kind-icon">row<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/2966fc5/packages/sdk/src/util/planarGridLayout.ts#L12">src/util/planarGridLayout.ts:12</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The row index, with 0 at the top.</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="width" class="tsd-anchor"></a>
+					<h3>width</h3>
+					<div class="tsd-signature tsd-kind-icon">width<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/2966fc5/packages/sdk/src/util/planarGridLayout.ts#L16">src/util/planarGridLayout.ts:16</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The width of this cell for layout purposes. Should include any desired padding.</p>
+						</div>
+					</div>
+				</section>
 			</section>
 		</div>
 		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
@@ -88,7 +202,27 @@
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-interface">
-						<a href="userset.html" class="tsd-kind-icon">User<wbr>Set</a>
+						<a href="addcelloptions.html" class="tsd-kind-icon">Add<wbr>Cell<wbr>Options</a>
+						<ul>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="addcelloptions.html#alignment" class="tsd-kind-icon">alignment</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="addcelloptions.html#column" class="tsd-kind-icon">column</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="addcelloptions.html#contents" class="tsd-kind-icon">contents</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="addcelloptions.html#height" class="tsd-kind-icon">height</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="addcelloptions.html#row" class="tsd-kind-icon">row</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="addcelloptions.html#width" class="tsd-kind-icon">width</a>
+							</li>
+						</ul>
 					</li>
 				</ul>
 				<ul class="after-current">
