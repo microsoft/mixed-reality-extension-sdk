@@ -126,6 +126,12 @@ export class AssetContainer {
 	 * @param data The keyframe data
 	 */
 	public createAnimationData(name: string, data: AnimationDataLike) {
+		const validationIssues = AnimationData.Validate(data);
+		if (validationIssues) {
+			throw new Error("Cannot create animation data from bad data:\n"
+				+ validationIssues.map(s => '- ' + s).join('\n'));
+		}
+
 		const animData = new AnimationData(this, {
 			id: newGuid(),
 			name,

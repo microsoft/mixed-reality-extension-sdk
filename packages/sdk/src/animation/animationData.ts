@@ -174,4 +174,17 @@ export class AnimationData extends Asset implements AnimationDataLike, Patchable
 		if (!(ref instanceof Actor)) { return; }
 		// TODO: break/destroy animations when this data is unloaded
 	}
+
+	/**
+	 * Returns a list of problems with the data, or null if no problems.
+	 * @hidden
+	 */
+	public static Validate(data: AnimationDataLike) {
+		const ret: string[] = [];
+		// TODO: validate data
+		for (const t of data.tracks) {
+
+		}
+		return ret.length > 0 ? ret : null;
+	}
 }
