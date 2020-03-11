@@ -180,11 +180,30 @@ export class AnimationData extends Asset implements AnimationDataLike, Patchable
 	 * @hidden
 	 */
 	public static Validate(data: AnimationDataLike) {
-		const ret: string[] = [];
-		// TODO: validate data
-		for (const t of data.tracks) {
+		const errors: string[] = [];
 
+		// make sure data has at least one track
+		if (data.tracks.length === 0) {
+			errors.push("Data must contain at least one track");
 		}
-		return ret.length > 0 ? ret : null;
+
+		for (let ti = 0; ti < data.tracks.length; ti++) {
+			const t = data.tracks[ti];
+
+			// make sure keyframes are in order by time
+			for (let ki = 0; ki < t.keyframes.length; ki++) {
+				const k = t.keyframes[ki];
+
+				if (ki === 0) {
+					if (k.time < 0) {
+						errors.push(`Track ${ti} keyframe ${ki} time cannot be less than 0`);
+					}
+				} else if (k.time <= t.keyframes[ki - 1].time) {
+					errors.push(`Track ${ti} keyframe ${ki} is out of sequence`);
+				}
+			}
+		}
+
+		return errors.length > 0 ? errors : null;
 	}
 }
