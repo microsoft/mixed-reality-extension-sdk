@@ -187,6 +187,10 @@ export class AnimationData extends Asset implements AnimationDataLike, Patchable
 			errors.push("Data must contain at least one track");
 		}
 
+		const avgTrackLen =
+			data.tracks.reduce((sum, t) => sum + t.keyframes[t.keyframes.length - 1].time, 0)
+			/ data.tracks.length;
+
 		for (let ti = 0; ti < data.tracks.length; ti++) {
 			const t = data.tracks[ti];
 
@@ -201,6 +205,19 @@ export class AnimationData extends Asset implements AnimationDataLike, Patchable
 				} else if (k.time <= t.keyframes[ki - 1].time) {
 					errors.push(`Track ${ti} keyframe ${ki} is out of sequence`);
 				}
+
+				if (k.easing) {
+					if (k.easing[0] < 0 || k.easing[0] > 1) {
+						errors.push(`Track ${ti} keyframe ${ki} easing[0] must be between 0 and 1`);
+					}
+					if (k.easing[2] < 0 || k.easing[2] > 1) {
+						errors.push(`Track ${ti} keyframe ${ki} easing[2] must be between 0 and 1`);
+					}
+				}
+			}
+
+			if (t.keyframes[t.keyframes.length - 1].time !== avgTrackLen) {
+				errors.push(`Track ${ti} is a different length from the others`);
 			}
 		}
 

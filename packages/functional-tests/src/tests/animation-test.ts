@@ -274,6 +274,6 @@ export default class AnimationTest extends Test {
 		// const littleHandMat = littleHand.appearance.material;
 
 		const animData = this.assets.createAnimationData("ClockSpin", ClockAnimData);
-		return animData.bind({ bigHand, littleHand });
+		return animData.bind({ bigHand, littleHand }, { wrapMode: MRE.AnimationWrapMode.Loop });
 	}
 }

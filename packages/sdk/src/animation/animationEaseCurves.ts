@@ -8,10 +8,9 @@
  * Create your own at http://cubic-bezier.com.
  * Note: Curves that end with "Back" include some overshoot.
  */
-
 export type EaseCurve = [number, number, number, number];
 
-export const AnimationEaseCurves = {
+export const AnimationEaseCurves: { [name: string]: EaseCurve } = {
 	// Linear: Move at constant speed.
 	Linear: [0, 0, 1, 1],
 	// Ease-in curves (each curve is progressively more dissimilar from Linear)
@@ -41,4 +40,4 @@ export const AnimationEaseCurves = {
 	EaseInOutExponential: [1, 0, 0, 1],
 	EaseInOutCircular: [0.785, 0.135, 0.15, 0.86],
 	EaseInOutBack: [0.68, -0.55, 0.265, 1.55],
-} as { [name: string]: EaseCurve };
+};
