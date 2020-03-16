@@ -11,6 +11,7 @@ import {
 	log,
 	Material, MaterialLike,
 	Mesh,
+	MreValidationError,
 	Prefab,
 	PrimitiveDefinition,
 	PrimitiveShape,
@@ -124,11 +125,12 @@ export class AssetContainer {
 	 * Preload unbound animation keyframe data for later use.
 	 * @param name The name of this animation
 	 * @param data The keyframe data
+	 * @throws [[MreValidationError]] If the provided animation data is malformed. See the error message for details.
 	 */
 	public createAnimationData(name: string, data: AnimationDataLike) {
 		const validationIssues = AnimationData.Validate(data);
 		if (validationIssues) {
-			throw new Error("Cannot create animation data from bad data:\n"
+			throw new MreValidationError("Cannot create animation data from bad data:\n"
 				+ validationIssues.map(s => '- ' + s).join('\n'));
 		}
 

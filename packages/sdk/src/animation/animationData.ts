@@ -102,6 +102,8 @@ export class AnimationData extends Asset implements AnimationDataLike, Patchable
 	 * Bind this animation data to one or more targets to create an [[Animation]].
 	 * @param targets A map of placeholder names to real objects. The names and types must match those in [[targets]].
 	 * @param initialState Initial properties for the new animation.
+	 * @throws [[MreValidationError]] If the provided `targets` argument does not exactly match in contents and types
+	 * to what the data expects. See [[targets]].
 	 */
 	public bind(
 		targets: { [placeholder: string]: Animatible },
