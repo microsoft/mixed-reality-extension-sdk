@@ -123,7 +123,7 @@ export class Animation implements AnimationLike, Patchable<AnimationLike> {
 		return time;
 	}
 
-	private _speed = 0;
+	private _speed = 1;
 	/** @inheritdoc */
 	public get speed() { return this._speed; }
 	public set speed(val) {
@@ -241,12 +241,15 @@ export class Animation implements AnimationLike, Patchable<AnimationLike> {
 		// no-op if already playing
 		if (this.isPlaying) { return; }
 
+		console.log(`Playing ${this.name}:`, this.toJSON());
 		// Getter for basis time converts the internal _time var into the corresponding basis time,
 		// so reassigning it writes this converted time back into the internal _basisTime var.
 		this.basisTime = (reset ? Date.now() : this.basisTime)
 			// start slightly in the future so we don't always skip over part of the animation.
 			+ this.context.conn.quality.latencyMs.value / 1000;
+		console.log('After basis set:', this.toJSON());
 		this.weight = 1;
+		console.log('After weight set:', this.toJSON());
 	}
 
 	/**
@@ -320,7 +323,8 @@ export class Animation implements AnimationLike, Patchable<AnimationLike> {
 		if (!patch) { return this; }
 		this.internal.observing = false;
 		if (patch.name !== undefined) { this.name = patch.name; }
-		if (patch.basisTime !== undefined) { this.basisTime = patch.basisTime; }
+		if (patch.basisTime !== undefined) { this._basisTime = patch.basisTime; }
+		if (patch.time !== undefined) { this._time = patch.time; }
 		if (patch.speed !== undefined) { this.speed = patch.speed; }
 		if (patch.weight !== undefined) { this.weight = patch.weight; }
 		if (patch.wrapMode) { this.wrapMode = patch.wrapMode; }
