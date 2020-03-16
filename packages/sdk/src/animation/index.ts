@@ -3,6 +3,7 @@
  * Licensed under the MIT License.
  */
 
+export * from './animatible';
 export * from './animation';
 export * from './animationData';
 export * from './animationEaseCurves';

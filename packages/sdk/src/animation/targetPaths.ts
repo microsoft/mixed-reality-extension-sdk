@@ -5,19 +5,13 @@
 /* eslint-disable max-classes-per-file */
 
 import {
+	getAnimatibleNameFromTargetPath,
 	Color3,
 	Color4,
 	Quaternion,
 	Vector2,
 	Vector3,
 } from '..';
-
-/** The names of types that support animation */
-export enum AnimatibleName {
-	Actor = 'actor',
-	Animation = 'animation',
-	Material = 'material'
-}
 
 /** The types that are acceptable targets of animations. */
 export type AnimationProp = Vector2 | Vector3 | Quaternion | Color3 | Color4 | number | string | boolean;
@@ -27,17 +21,7 @@ export abstract class TargetPath<T extends AnimationProp> {
 	public constructor(protected id: string) { }
 	public toJSON() { return this.toString(); }
 	public toString() { return this.id; }
-	public get baseType() {
-		if (this.id.startsWith('actor:')) {
-			return AnimatibleName.Actor;
-		} else if (this.id.startsWith('animation:')) {
-			return AnimatibleName.Animation;
-		} else if (this.id.startsWith('material:')) {
-			return AnimatibleName.Material;
-		} else {
-			throw new Error(`Target path ${this.id} doesn't target a valid object!`);
-		}
-	}
+	public get baseType() { return getAnimatibleNameFromTargetPath(this.id); }
 	public get baseName() {
 		const baseObj = this.id.split('/')[0];
 		const name = baseObj.split(':')[1];

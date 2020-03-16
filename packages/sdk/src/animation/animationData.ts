@@ -4,7 +4,10 @@
  */
 import {
 	Actor,
+	Animatible,
 	AnimatibleName,
+	getAnimatibleName,
+	getAnimatibleNameFromTargetPath,
 	Animation,
 	AnimationLike,
 	AnimationProp,
@@ -13,6 +16,7 @@ import {
 	EaseCurve,
 	Guid,
 	Material,
+	MreValidationError,
 	TargetPath,
 } from '..';
 import {
@@ -22,9 +26,6 @@ import {
 import { AssetInternal } from '../asset/assetInternal';
 // break import cycle
 import { Asset } from '../asset/asset';
-
-/** The types that support animation */
-export type Animatible = Actor | Animation | Material;
 
 /** The timeline of values for an animation target property */
 export type Track<T extends AnimationProp> = {
@@ -69,7 +70,7 @@ export class AnimationData extends Asset implements AnimationDataLike, Patchable
 		super(container, def);
 
 		if (!def.animationData) {
-			throw new Error("Cannot construct mesh from non-animation data definition");
+			throw new Error("Cannot construct animation data from non-animation data definition");
 		}
 
 		this.copy(def);
@@ -91,10 +92,8 @@ export class AnimationData extends Asset implements AnimationDataLike, Patchable
 			.filter((target, i, arr) => arr.indexOf(target) === i)
 			// and add their types/names to an object
 			.reduce((obj, id) => {
-				const [typeName, placeholder] = id.split(':');
-				if (/^actor|animation|material$/u.test(typeName)) {
-					obj[placeholder] = typeName as AnimatibleName;
-				}
+				const placeholder = id.split(':')[1];
+				obj[placeholder] = getAnimatibleNameFromTargetPath(id);
 				return obj;
 			}, {} as {[placeholder: string]: AnimatibleName});
 	}
@@ -115,14 +114,10 @@ export class AnimationData extends Asset implements AnimationDataLike, Patchable
 
 		for (const placeholder in targets) {
 			if (!dataPlaceholders.has(placeholder)) {
-				throw new Error(`Animation data "${this.name || this.id}" has no reference ` +
+				throw new MreValidationError(`Animation data "${this.name || this.id}" has no reference ` +
 					`to placeholder "${placeholder}".`);
-			} else if (
-				dataTargets[placeholder] === AnimatibleName.Actor && !(targets[placeholder] instanceof Actor) ||
-				dataTargets[placeholder] === AnimatibleName.Animation && !(targets[placeholder] instanceof Animation) ||
-				dataTargets[placeholder] === AnimatibleName.Material && !(targets[placeholder] instanceof Material)
-			) {
-				throw new Error(`Placeholder "${placeholder}" for animation data "${this.name || this.id}" ` +
+			} else if (getAnimatibleName(targets[placeholder]) !== dataTargets[placeholder]) {
+				throw new MreValidationError(`Placeholder "${placeholder}" for animation data "${this.name || this.id}" ` +
 					`must be of type ${dataTargets[placeholder]}, got "${targets[placeholder].constructor.name}".`);
 			}
 
@@ -133,7 +128,7 @@ export class AnimationData extends Asset implements AnimationDataLike, Patchable
 
 		// check for missing placeholders
 		if (dataPlaceholders.size > 0) {
-			throw new Error(`Attempting to bind animation data "${this.name || this.id} without definitions ` +
+			throw new MreValidationError(`Attempting to bind animation data "${this.name || this.id} without definitions ` +
 				`for the required placeholders "${[...dataPlaceholders].join('", "')}".`);
 		}
 

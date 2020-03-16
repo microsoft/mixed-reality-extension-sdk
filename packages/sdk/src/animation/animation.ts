@@ -5,14 +5,13 @@
 import {
 	Actor,
 	Animatible,
-	AnimatibleName,
+	getAnimatibleName,
 	AnimationProp,
 	AnimationWrapMode,
 	AssetContainer,
 	Context,
 	EaseCurve,
 	Guid,
-	Material,
 	Track
 } from '..';
 import {
@@ -355,11 +354,7 @@ export class Animation implements AnimationLike, Patchable<AnimationLike> {
 		options: AnimateToOptions<T>
 	): Promise<Animation> {
 		const tracks = [];
-		const typeString =
-			object instanceof Actor ? AnimatibleName.Actor :
-				object instanceof Animation ? AnimatibleName.Animation :
-					object instanceof Material ? AnimatibleName.Material :
-						null;
+		const typeString = getAnimatibleName(object);
 		if (!typeString) {
 			throw new Error(`Attempting to animate non-animatible object`);
 		}
