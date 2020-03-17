@@ -332,7 +332,6 @@ export class ContextInternal {
 					actor: patch as ActorLike
 				} as Payloads.ActorUpdate);
 			} else if (patchable instanceof Animation) {
-				console.log(`Patching animation ${patchable.name}:`, patch);
 				this.protocol.sendPayload({
 					type: 'animation-update',
 					animation: patch as Partial<AnimationLike>

@@ -3,7 +3,6 @@
  * Licensed under the MIT License.
  */
 import {
-	Actor,
 	Animatible,
 	getAnimatibleName,
 	AnimationProp,
@@ -80,8 +79,10 @@ export class Animation implements AnimationLike, Patchable<AnimationLike> {
 	public get basisTime(): number {
 		if (this.isPlaying && this.speed !== 0) {
 			return this._basisTime;
-		} else {
+		} else if (this.speed !== 0) {
 			return Math.max(0, Date.now() - Math.floor(this.time * 1000 / this.speed));
+		} else {
+			return 0;
 		}
 	}
 	public set basisTime(val) {
@@ -106,7 +107,11 @@ export class Animation implements AnimationLike, Patchable<AnimationLike> {
 	public set time(val) {
 		if (this._time !== val) {
 			this._time = val;
-			this._basisTime = Math.max(0, Date.now() - Math.floor(this._time * 1000 / this.speed));
+			if (this.speed !== 0) {
+				this._basisTime = Math.max(0, Date.now() - Math.floor(this._time * 1000 / this.speed));
+			} else {
+				this._basisTime = 0;
+			}
 			this.animationChanged('time');
 			this.animationChanged('basisTime');
 			this.updateTimeout();
@@ -240,15 +245,12 @@ export class Animation implements AnimationLike, Patchable<AnimationLike> {
 		// no-op if already playing
 		if (this.isPlaying) { return; }
 
-		console.log(`Playing ${this.name}:`, this.toJSON());
 		// Getter for basis time converts the internal _time var into the corresponding basis time,
 		// so reassigning it writes this converted time back into the internal _basisTime var.
 		this.basisTime = (reset ? Date.now() : this.basisTime)
 			// start slightly in the future so we don't always skip over part of the animation.
-			+ this.context.conn.quality.latencyMs.value / 1000;
-		console.log('After basis set:', this.toJSON());
+			+ Math.floor(this.context.conn.quality.latencyMs.value / 1000);
 		this.weight = 1;
-		console.log('After weight set:', this.toJSON());
 	}
 
 	/**

@@ -15,7 +15,6 @@ import {
 	AssetLike,
 	EaseCurve,
 	Guid,
-	Material,
 	MreValidationError,
 	TargetPath,
 } from '..';
@@ -119,8 +118,9 @@ export class AnimationData extends Asset implements AnimationDataLike, Patchable
 				throw new MreValidationError(`Animation data "${this.name || this.id}" has no reference ` +
 					`to placeholder "${placeholder}".`);
 			} else if (getAnimatibleName(targets[placeholder]) !== dataTargets[placeholder]) {
-				throw new MreValidationError(`Placeholder "${placeholder}" for animation data "${this.name || this.id}" ` +
-					`must be of type ${dataTargets[placeholder]}, got "${targets[placeholder].constructor.name}".`);
+				throw new MreValidationError(`Placeholder "${placeholder}" for animation data ` +
+					`"${this.name || this.id}" must be of type ${dataTargets[placeholder]}, ` +
+					`got "${targets[placeholder].constructor.name}".`);
 			}
 
 			dataPlaceholders.delete(placeholder);
@@ -130,8 +130,8 @@ export class AnimationData extends Asset implements AnimationDataLike, Patchable
 
 		// check for missing placeholders
 		if (dataPlaceholders.size > 0) {
-			throw new MreValidationError(`Attempting to bind animation data "${this.name || this.id} without definitions ` +
-				`for the required placeholders "${[...dataPlaceholders].join('", "')}".`);
+			throw new MreValidationError(`Attempting to bind animation data "${this.name || this.id} ` +
+				`without definitions for the required placeholders "${[...dataPlaceholders].join('", "')}".`);
 		}
 
 		return this.container.context.internal.createAnimationFromData(this.id, targetIds, initialState);

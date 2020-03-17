@@ -3,7 +3,7 @@
  * Licensed under the MIT License.
  */
 
-import { Actor, Animation, Material, TargetPath } from '..';
+import { Actor, Animation, Material } from '..';
 
 /** The types that support animation */
 export type Animatible = Actor | Animation | Material;
