@@ -25,7 +25,7 @@ function GenerateSpinData(duration: number, repetitions: number): Array<MRE.Keyf
 
 	frames.push({
 		time: duration,
-		value: MRE.Quaternion.FromEulerAngles(0, 2 * Math.PI * repetitions % 1, 0)
+		value: MRE.Quaternion.FromEulerAngles(0, 2 * Math.PI * (repetitions % 1), 0)
 	});
 
 	return frames;
@@ -34,10 +34,12 @@ function GenerateSpinData(duration: number, repetitions: number): Array<MRE.Keyf
 const ClockAnimData: MRE.AnimationDataLike = {
 	tracks: [{
 		target: MRE.ActorPath("bigHand").transform.local.rotation,
-		keyframes: GenerateSpinData(60, 1)
+		keyframes: GenerateSpinData(60, 1),
+		easing: MRE.AnimationEaseCurves.Linear
 	}, {
 		target: MRE.ActorPath("littleHand").transform.local.rotation,
-		keyframes: GenerateSpinData(60, 60)
+		keyframes: GenerateSpinData(60, 60),
+		easing: MRE.AnimationEaseCurves.Linear
 	}]
 }
 

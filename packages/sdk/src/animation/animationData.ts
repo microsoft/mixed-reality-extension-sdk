@@ -26,6 +26,16 @@ import { AssetInternal } from '../asset/assetInternal';
 // break import cycle
 import { Asset } from '../asset/asset';
 
+/** The value of an animation property at a moment in time */
+export type Keyframe<T extends AnimationProp> = {
+	/** The time in seconds from the start of the animation.  */
+	time: number;
+	/** The property's value at this instant, or a reference to another property. */
+	value: Like<T> | TargetPath<T>;
+	/** How the value approaches this frame's value. Defaults to the track's easing values. */
+	easing?: EaseCurve;
+}
+
 /** The timeline of values for an animation target property */
 export type Track<T extends AnimationProp> = {
 	/** A path to the property to animate */
@@ -34,15 +44,7 @@ export type Track<T extends AnimationProp> = {
 	keyframes: Array<Keyframe<T>>;
 	/** Whether the keyframe values are relative to 0 or to the target's current property value. Defaults to false. */
 	relative?: boolean;
-}
-
-/** The value of an animation property at a moment in time */
-export type Keyframe<T extends AnimationProp> = {
-	/** The time in seconds from the start of the animation.  */
-	time: number;
-	/** The property's value at this instant, or a reference to another property. */
-	value: Like<T> | TargetPath<T>;
-	/** How the value approaches this frame's value. Defaults to linear. */
+	/** Controls between-frame interpolation. Defaults to [[AnimationEaseCurves.Step]]. */
 	easing?: EaseCurve;
 }
 
