@@ -55,7 +55,7 @@ interface ControlDefinition {
 	labelActor?: MRE.Actor;
 }
 
-export default class AnimationTest extends Test {
+export default class AnimationNativeTest extends Test {
 	public expectedResultDescription = "Tweak an animation";
 
 	private assets: MRE.AssetContainer;

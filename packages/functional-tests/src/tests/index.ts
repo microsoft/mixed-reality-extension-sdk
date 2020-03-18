@@ -7,7 +7,8 @@ import { TestFactory } from '../test';
 import ActorSpamTest from './actor-spam-test';
 import AltspaceVRLibraryTest from './altspacevr-library-test';
 import AltspaceVRVideoTest from './altspacevr-video-test';
-import AnimationTest from './animation-test';
+import AnimationNativeTest from './animation-native-test';
+import AnimationScaleTest from './animation-scale-test';
 import AssetEarlyAssignmentTest from './asset-early-assignment-test';
 import AssetMutabilityTest from './asset-mutability-test';
 import AssetPreloadTest from './asset-preload-test';
@@ -48,7 +49,8 @@ export const Factories = {
 	'actor-spam-test': (...args) => new ActorSpamTest(...args),
 	'altspacevr-library-test': (...args) => new AltspaceVRLibraryTest(...args),
 	'altspacevr-video-test': (...args) => new AltspaceVRVideoTest(...args),
-	'animation-test': (...args) => new AnimationTest(...args),
+	'animation-native-test': (...args) => new AnimationNativeTest(...args),
+	'animation-scale-test': (...args) => new AnimationScaleTest(...args),
 	'asset-early-assignment-test': (...args) => new AssetEarlyAssignmentTest(...args),
 	'asset-mutability-test': (...args) => new AssetMutabilityTest(...args),
 	'asset-preload-test': (...args) => new AssetPreloadTest(...args),

@@ -44,9 +44,7 @@ class TransformTargetPath extends TargetPath<never> {
 	public get rotation() { return new QuaternionTargetPath(this.id + '/rotation'); }
 }
 
-class ScaledTransformTargetPath extends TargetPath<never> {
-	public get position() { return new Vector3TargetPath(this.id + '/position'); }
-	public get rotation() { return new QuaternionTargetPath(this.id + '/rotation'); }
+class ScaledTransformTargetPath extends TransformTargetPath {
 	public get scale() { return new Vector3TargetPath(this.id + '/scale'); }
 }
 
