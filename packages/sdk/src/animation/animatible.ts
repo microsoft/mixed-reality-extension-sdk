@@ -8,12 +8,14 @@ import { Actor, Animation, Material } from '..';
 /** The types that support animation */
 export type Animatible = Actor | Animation | Material;
 
+/* eslint-disable no-shadow */
 /** The names of types that support animation */
 export enum AnimatibleName {
 	Actor = 'actor',
 	Animation = 'animation',
 	Material = 'material'
 }
+/* eslint-enable no-shadow */
 
 /**
  * Get an object's animation type.
