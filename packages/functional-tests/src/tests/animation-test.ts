@@ -18,8 +18,10 @@ export default class AnimationTest extends Test {
 	public expectedResultDescription = "Tweak an animation";
 
 	private assets: MRE.AssetContainer;
+	private timeout: NodeJS.Timeout;
 
 	public cleanup() {
+		clearInterval(this.timeout);
 		this.assets.unload();
 	}
 
@@ -82,6 +84,7 @@ export default class AnimationTest extends Test {
 		this.createControls(controls, MRE.Actor.Create(this.app.context, {
 			actor: {
 				name: 'controlsParent',
+				parentId: root.id,
 				transform: { local: { position: { x: 0.6, y: 1, z: -1 } } }
 			}
 		}));
@@ -168,7 +171,7 @@ export default class AnimationTest extends Test {
 		}
 		layout.applyLayout();
 
-		setInterval(() => {
+		this.timeout = setInterval(() => {
 			for (const rt of realtimeLabels) {
 				rt.labelActor.text.contents = `${rt.label}:\n${rt.action(0)}`;
 			}
