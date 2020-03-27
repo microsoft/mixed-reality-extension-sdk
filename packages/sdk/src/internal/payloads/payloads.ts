@@ -7,9 +7,11 @@ import {
 	ActionState,
 	ActorLike,
 	AnimationLike,
+	AssetLike,
 	BehaviorType,
 	CreateAnimationOptions,
 	Guid,
+	parseGuid,
 	MediaCommand,
 	SetAnimationStateOptions,
 	SetMediaStateOptions,
@@ -405,3 +407,63 @@ export type DialogResponse = Payload & {
 	submitted: boolean;
 	text?: string;
 };
+
+/**
+ * @hidden
+ * Sanitize network input
+ * @param payload A payload fresh from the websocket
+ */
+export function processPayload(payload: Partial<any>) {
+	if (!payload) { return payload; }
+
+	// payload guids
+	if (payload.actorId) { payload.actorId = parseGuid(payload.actorId); }
+	if (payload.containerId) { payload.containerId = parseGuid(payload.containerId); }
+	if (payload.id) { payload.id = parseGuid(payload.id); }
+	if (payload.mediaAssetId) { payload.mediaAssetId = parseGuid(payload.mediaAssetId); }
+	if (payload.otherActorId) { payload.otherActorId = parseGuid(payload.otherActorId); }
+	if (payload.prefabId) { payload.prefabId = parseGuid(payload.prefabId); }
+	if (payload.targetId) { payload.targetId = parseGuid(payload.targetId); }
+	if (payload.userId) { payload.userId = parseGuid(payload.userId); }
+	if (payload.actorIds) {
+		payload.actorIds = (payload.actorIds as Guid[]).map(id => parseGuid(id));
+	}
+
+	// actor guids
+	const actorLike: Partial<ActorLike> = payload.actor || payload.type === 'interpolate-actor' && payload.value;
+	const actorsLike: Array<Partial<ActorLike>> = actorLike ? [actorLike] : payload.actors;
+	for (const actor of actorsLike ?? []) {
+		if (actor.id) { actor.id = parseGuid(actor.id); }
+		if (actor.parentId) { actor.parentId = parseGuid(actor.parentId); }
+		if (actor.appearance?.materialId) { actor.appearance.materialId = parseGuid(actor.appearance.materialId); }
+		if (actor.appearance?.meshId) { actor.appearance.meshId = parseGuid(actor.appearance.meshId); }
+		if (actor.attachment?.userId) { actor.attachment.userId = parseGuid(actor.attachment.userId); }
+		if (actor.lookAt?.actorId) { actor.lookAt.actorId = parseGuid(actor.lookAt.actorId); }
+	}
+
+	// animation guids
+	const animations: Array<Partial<AnimationLike>> = payload.animation ? [payload.animation] : payload.animations;
+	for (const anim of animations ?? []) {
+		if (anim.id) { anim.id = parseGuid(anim.id); }
+		if (anim.targetActorIds) { anim.targetActorIds = anim.targetActorIds.map(id => parseGuid(id)); }
+	}
+
+	// asset guids
+	const assets: Array<Partial<AssetLike>> =
+		payload.type === 'create-asset' ? payload.definition :
+			payload.asset ? [payload.asset] : payload.assets;
+	for (const asset of assets ?? []) {
+		if (asset.id) { asset.id = parseGuid(asset.id); }
+		if (asset.material?.mainTextureId) {
+			asset.material.mainTextureId = parseGuid(asset.material.mainTextureId);
+		}
+		if (asset.material?.emissiveTextureId) {
+			asset.material.emissiveTextureId = parseGuid(asset.material.emissiveTextureId);
+		}
+	}
+
+	// user guids
+	if (payload.user?.id) { payload.user.id = parseGuid(payload.user.id); }
+
+	return payload;
+}

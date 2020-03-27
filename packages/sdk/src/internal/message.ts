@@ -42,7 +42,7 @@ export type Message<PayloadT = Payloads.Payload> = {
  * Convert a JSON network message into a Message
  * @param json
  */
-export function parseMessage(json: string) {
+export function processMessage(json: string) {
 	const msg = JSON.parse(json) as Message<any>;
 
 	// sanitize message GUIDs
@@ -50,17 +50,7 @@ export function parseMessage(json: string) {
 	if (msg.replyToId) { msg.replyToId = parseGuid(msg.replyToId); }
 
 	// sanitize payload GUIDs
-	if (msg.payload?.actorId) { msg.payload.actorId = parseGuid(msg.payload.actorId); }
-	if (msg.payload?.containerId) { msg.payload.containerId = parseGuid(msg.payload.containerId); }
-	if (msg.payload?.id) { msg.payload.id = parseGuid(msg.payload.id); }
-	if (msg.payload?.mediaAssetId) { msg.payload.mediaAssetId = parseGuid(msg.payload.mediaAssetId); }
-	if (msg.payload?.otherActorId) { msg.payload.otherActorId = parseGuid(msg.payload.otherActorId); }
-	if (msg.payload?.prefabId) { msg.payload.prefabId = parseGuid(msg.payload.prefabId); }
-	if (msg.payload?.targetId) { msg.payload.targetId = parseGuid(msg.payload.targetId); }
-	if (msg.payload?.userId) { msg.payload.userId = parseGuid(msg.payload.userId); }
-	if (msg.payload?.actorIds) {
-		msg.payload.actorIds = (msg.payload.actorIds as Guid[]).map(id => parseGuid(id));
-	}
+	msg.payload = Payloads.processPayload(msg.payload);
 
 	return msg;
 }
