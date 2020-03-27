@@ -11,11 +11,11 @@ export interface Guid extends String {
 }
 
 /** Convert a string to a Guid */
-export function parseGuid(val: string): Guid {
-	if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/u.test(val)) {
+export function parseGuid(val: string | Guid): Guid {
+	if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/iu.test(val.toString())) {
 		throw new Error(`Not a valid GUID: <${val}>`);
 	}
-	return (val as unknown) as Guid;
+	return (val.toLowerCase() as unknown) as Guid;
 }
 
 export function newGuid(): Guid {

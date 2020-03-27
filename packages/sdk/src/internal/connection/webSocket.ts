@@ -6,7 +6,7 @@
 import * as WS from 'ws';
 
 import { log } from '../..';
-import { filterEmpty, Message, validateJsonFieldName } from '../../internal';
+import { filterEmpty, Message, parseMessage, validateJsonFieldName } from '../../internal';
 // break import cycle
 import { EventedConnection } from './eventedConnection';
 
@@ -28,7 +28,7 @@ export class WebSocket extends EventedConnection {
 
 			let message: Message = null;
 			try {
-				message = JSON.parse(json as string);
+				message = parseMessage(json as string);
 			} catch (e) {
 				log.error('network', e);
 			}
