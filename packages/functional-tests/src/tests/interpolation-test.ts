@@ -68,11 +68,12 @@ export default class InterpolationTest extends Test {
 			const easeIndex = Math.floor(Math.random() * easeCurveKeys.length);
 			const easeCurveKey = easeCurveKeys[easeIndex];
 			// Interpolate object's rotation and scale.
-			await MRE.Animation.AnimateTo(this.app.context, cube, {
+			const anim = await MRE.Animation.AnimateTo(this.app.context, cube, {
 				destination: { transform: { local: { rotation, scale } } },
 				duration: 1.0,
 				easing: MRE.AnimationEaseCurves[easeCurveKey]
 			});
+			await anim.finished();
 		}
 
 		return true;

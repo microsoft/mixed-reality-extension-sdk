@@ -361,23 +361,30 @@ export class Animation implements AnimationLike, Patchable<AnimationLike> {
 			throw new Error(`Attempting to animate non-animatible object`);
 		}
 
-		// recursively search for fields with destinations
-		// NOTE: This is all untyped because JS doesn't support types at runtime.
-		// The function definition guarantees correct types anyway, so shouldn't be a problem.
+		/** Should this object be sent whole instead of by properties */
+		function isCompleteObject(obj: any) {
+			return (obj.x !== undefined && obj.y !== undefined && obj.z !== undefined)
+				|| (obj.r !== undefined && obj.g !== undefined && obj.b !== undefined);
+		}
+
+		/** Recursively search for fields with destinations.
+		* NOTE: This is all untyped because JS doesn't support types at runtime.
+		* The function definition guarantees correct types anyway, so shouldn't be a problem.
+		*/
 		(function buildTracksRecursively(target: any, path: string) {
 			for (const field in target) {
-				if (typeof target[field] === 'object') {
+				if (typeof target[field] === 'object' && !isCompleteObject(target[field])) {
 					buildTracksRecursively(target[field], `${path}/${field}`);
 				} else {
 					// generate a track for each property
 					tracks.push({
-						target: path,
+						target: `${path}/${field}`,
 						// generate a single keyframe for the destination
 						keyframes: [{
 							time: options.duration,
-							value: target[field],
-							easing: options.easing
-						}]
+							value: target[field]
+						}],
+						easing: options.easing
 					});
 				}
 			}
@@ -391,7 +398,11 @@ export class Animation implements AnimationLike, Patchable<AnimationLike> {
 		});
 
 		// bind to the object and play immediately
-		const anim = await data.bind({ target: object }, { weight: 1, wrapMode: AnimationWrapMode.Once });
+		const anim = await data.bind({ target: object }, {
+			basisTime: Date.now(),
+			weight: 1,
+			wrapMode: AnimationWrapMode.Once
+		});
 		anim.finished().then(() => ac.unload());
 
 		return anim;
