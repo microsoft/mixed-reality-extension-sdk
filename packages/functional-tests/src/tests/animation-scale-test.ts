@@ -62,15 +62,16 @@ export default class AnimationNativeTest extends Test {
 	}
 
 	private createCube(root: MRE.Actor, position: MRE.Vector3Like) {
-		const container = MRE.Actor.Create(this.app.context, { actor: {
-			name: "Container",
-			parentId: root.id,
-			transform: { local: { position } }
-		}});
 		const cube = MRE.Actor.Create(this.app.context, { actor: {
 			name: "Cube",
-			parentId: container.id,
-			appearance: { meshId: this.boxMesh.id }
+			parentId: root.id,
+			appearance: { meshId: this.boxMesh.id },
+			transform: {
+				local: {
+					position,
+					rotation: { y: Math.random() * Math.PI * 2 }
+				}
+			},
 		}});
 
 		return cube;
@@ -82,11 +83,13 @@ export default class AnimationNativeTest extends Test {
 			tracks.push({
 				target: MRE.ActorPath(`cube${i}`).transform.local.position.y,
 				keyframes: BounceHeightKeyframes,
-				easing: MRE.AnimationEaseCurves.EaseOutQuadratic
+				easing: MRE.AnimationEaseCurves.EaseOutQuadratic,
+				relative: true
 			}, {
 				target: MRE.ActorPath(`cube${i}`).transform.local.rotation,
 				keyframes: BounceRotKeyframes,
-				easing: MRE.AnimationEaseCurves.Linear
+				easing: MRE.AnimationEaseCurves.Linear,
+				relative: true
 			}, {
 				target: MRE.ActorPath(`cube${i}`).transform.local.scale,
 				keyframes: BounceScaleKeyframes,
