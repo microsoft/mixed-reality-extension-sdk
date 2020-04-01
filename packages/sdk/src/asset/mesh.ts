@@ -3,13 +3,12 @@
  * Licensed under the MIT License.
  */
 
+import { Vector3, Vector3Like } from '@microsoft/mixed-reality-extension-shared';
 import {
 	Actor,
 	AssetContainer,
 	AssetLike,
 	PrimitiveDefinition,
-	Vector3,
-	Vector3Like,
 } from '..';
 import { Patchable } from '../internal';
 import { AssetInternal } from './assetInternal';

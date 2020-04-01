@@ -3,7 +3,8 @@
  * Licensed under the MIT License.
  */
 
-import { Actor, Guid, Vector3 } from "../..";
+import { Vector3 } from '@microsoft/mixed-reality-extension-shared';
+import { Actor, Guid } from "../..";
 
 /**
  * The collision handler to be called when a collision event occurs.

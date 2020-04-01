@@ -4,7 +4,7 @@
  */
 /* eslint-disable max-classes-per-file */
 
-import { Quaternion, QuaternionLike, Vector3, Vector3Like } from '..';
+import { Quaternion, QuaternionLike, Vector3, Vector3Like } from '@microsoft/mixed-reality-extension-shared';
 
 export interface TransformLike {
 	position: Partial<Vector3Like>;

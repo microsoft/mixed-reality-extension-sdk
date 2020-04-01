@@ -4,6 +4,7 @@
  */
 
 import events from 'events';
+import { Vector3Like } from '@microsoft/mixed-reality-extension-shared';
 import {
 	ActionHandler,
 	ActionState,
@@ -45,7 +46,6 @@ import {
 	Text,
 	TextLike,
 	User,
-	Vector3Like,
 	ZeroGuid,
 } from '..';
 import {

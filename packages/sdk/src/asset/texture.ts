@@ -3,7 +3,8 @@
  * Licensed under the MIT License.
  */
 
-import { Actor, AssetContainer, AssetLike, Material, Vector2, Vector2Like } from '..';
+import { Vector2, Vector2Like } from '@microsoft/mixed-reality-extension-shared';
+import { Actor, AssetContainer, AssetLike, Material } from '..';
 import { Patchable, readPath } from '../internal';
 import { AssetInternal } from './assetInternal';
 // break import cycle

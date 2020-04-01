@@ -3,7 +3,8 @@
  * Licensed under the MIT License.
  */
 
-import { ColliderType, Vector3Like } from "../..";
+import { Vector3Like } from '@microsoft/mixed-reality-extension-shared';
+import { ColliderType } from "../..";
 
 /**
  * Collider parameters specific to a sphere collider.

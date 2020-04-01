@@ -3,6 +3,7 @@
  * Licensed under the MIT License.
  */
 
+import { Vector3Like } from '@microsoft/mixed-reality-extension-shared';
 import {
 	Asset, AssetSource,
 	Context,
@@ -17,7 +18,6 @@ import {
 	ReadonlyMap,
 	Sound, SoundLike,
 	Texture, TextureLike,
-	Vector3Like,
 	VideoStream, VideoStreamLike
 } from '..';
 import {

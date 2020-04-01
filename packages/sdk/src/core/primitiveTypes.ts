@@ -3,7 +3,7 @@
  * Licensed under the MIT License.
  */
 
-import { Vector3Like } from '..';
+import { Vector3Like } from '@microsoft/mixed-reality-extension-shared';
 
 /**
  * Describes the general shape of a primitive. Specifics are described in a [[PrimitiveDefinition]] object.

@@ -3,13 +3,11 @@
  * Licensed under the MIT License.
  */
 
+import { Vector3, Vector3Like, QuaternionLike } from '@microsoft/mixed-reality-extension-shared';
 import {
 	Actor,
 	CollisionDetectionMode,
-	QuaternionLike,
 	RigidBodyConstraints,
-	Vector3,
-	Vector3Like
 } from '../..';
 import { Payloads } from '../../internal';
 

@@ -3,14 +3,13 @@
  * Licensed under the MIT License.
  */
 
+import { Vector3Like, QuaternionLike } from '@microsoft/mixed-reality-extension-shared';
 import { Payloads } from '../../internal';
 import {
 	CollisionData,
 	CollisionEventType,
 	Guid,
 	TriggerEventType,
-	QuaternionLike,
-	Vector3Like
 } from '../..';
 
 /**

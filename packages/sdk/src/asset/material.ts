@@ -4,16 +4,18 @@
  */
 
 import {
-	Actor,
-	AssetContainer,
-	AssetLike,
 	Color3,
 	Color3Like,
 	Color4,
 	Color4Like,
-	Guid,
 	Vector2,
 	Vector2Like,
+} from '@microsoft/mixed-reality-extension-shared';
+import {
+	Actor,
+	AssetContainer,
+	AssetLike,
+	Guid,
 	ZeroGuid
 } from '..';
 import {

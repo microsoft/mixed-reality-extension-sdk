@@ -2,7 +2,8 @@
  * Copyright (c) Microsoft Corporation. All rights reserved.
  * Licensed under the MIT License.
  */
-import { Actor, AnimationEaseCurves, BoxAlignment, InvertBoxAlignment, Vector3 } from '..';
+import { Vector3 } from '@microsoft/mixed-reality-extension-shared';
+import { Actor, AnimationEaseCurves, BoxAlignment, InvertBoxAlignment } from '..';
 
 /** Options for [[GridLayout.addCell]]. */
 export interface AddCellOptions {
