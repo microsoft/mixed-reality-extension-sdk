@@ -4,7 +4,7 @@
  */
 
 import { Material, MeshPrimitive, Vertex } from '..';
-import { Vector2, Vector3 } from '@microsoft/mixed-reality-extension-sdk';
+import { Vector2, Vector3 } from '@microsoft/mixed-reality-extension-shared';
 
 /**
  * A MeshPrimitive prepopulated with capsule vertices and triangles

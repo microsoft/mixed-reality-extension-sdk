@@ -3,7 +3,7 @@
  * Licensed under the MIT License.
  */
 /* eslint-disable max-classes-per-file */
-import { Vector2, Vector3, Vector4 } from '@microsoft/mixed-reality-extension-sdk';
+import { Vector2, Vector3, Vector4 } from '@microsoft/mixed-reality-extension-shared';
 import { AccessorComponentType, AccessorType } from './enums';
 import { Vertex } from './vertex';
 

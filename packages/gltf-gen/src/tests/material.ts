@@ -3,7 +3,7 @@
  * Licensed under the MIT License.
  */
 
-import { Color4 } from '@microsoft/mixed-reality-extension-sdk';
+import { Color4 } from '@microsoft/mixed-reality-extension-shared';
 import { Test } from '.';
 import * as GltfGen from '..';
 

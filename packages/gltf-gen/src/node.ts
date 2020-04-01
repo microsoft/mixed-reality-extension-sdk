@@ -3,7 +3,7 @@
  * Licensed under the MIT License.
  */
 
-import { Matrix, Quaternion, Vector3 } from '@microsoft/mixed-reality-extension-sdk';
+import { Matrix, Quaternion, Vector3 } from '@microsoft/mixed-reality-extension-shared';
 import GLTF from './gen/gltf';
 import { Mesh } from './mesh';
 import { Serializable } from './serializable';

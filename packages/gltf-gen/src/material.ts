@@ -3,7 +3,7 @@
  * Licensed under the MIT License.
  */
 
-import { Color3, Color4 } from '@microsoft/mixed-reality-extension-sdk';
+import { Color3, Color4 } from '@microsoft/mixed-reality-extension-shared';
 import { AlphaMode } from './enums';
 import GLTF from './gen/gltf';
 import { Serializable } from './serializable';
