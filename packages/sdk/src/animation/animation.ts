@@ -53,7 +53,10 @@ export interface AnimationLike {
 	/** The IDs of the objects targeted by this animation */
 	targetIds: Readonly<Guid[]>;
 
-	/** The length in seconds of the animation */
+	/**
+	 * The length in seconds of the animation. Only populated for animations without data.
+	 * See [[dataId]] and [[AnimationData.duration]].
+	 */
 	duration: number;
 }
 
@@ -120,9 +123,10 @@ export class Animation implements AnimationLike, Patchable<AnimationLike> {
 
 	/** [[time]], correcting for overruns from looping animations. Is always between 0 and [[duration]]. */
 	public get normalizedTime() {
-		let time = this.time % this.duration;
+		const dur = this._duration || this.data?.duration() || 0;
+		let time = this.time % dur;
 		if (time < 0) {
-			time += this.duration;
+			time += dur;
 		}
 		return time;
 	}
@@ -240,14 +244,16 @@ export class Animation implements AnimationLike, Patchable<AnimationLike> {
 	/**
 	 * Play the animation by setting its weight to `1`.
 	 * @param reset If true, restart the animation from the beginning.
+	 * Defaults to `true` when `wrapMode` is `Once`, and `false` otherwise.
 	 */
-	public play(reset = false) {
+	public play(reset: boolean = null) {
 		// no-op if already playing
 		if (this.isPlaying) { return; }
 
+		const realReset = reset === true || reset === null && this.wrapMode === AnimationWrapMode.Once;
 		// Getter for basis time converts the internal _time var into the corresponding basis time,
 		// so reassigning it writes this converted time back into the internal _basisTime var.
-		this.basisTime = (reset ? Date.now() : this.basisTime)
+		this.basisTime = (realReset ? Date.now() : this.basisTime)
 			// start slightly in the future so we don't always skip over part of the animation.
 			+ Math.floor(this.context.conn.quality.latencyMs.value / 1000);
 		this.weight = 1;
@@ -285,21 +291,23 @@ export class Animation implements AnimationLike, Patchable<AnimationLike> {
 			clearTimeout(this.timeout);
 		}
 
-		if (this.wrapMode !== AnimationWrapMode.Once || !this.isPlaying || this.speed === 0) {
+		const dur = this._duration || this.data?.duration() || 0;
+		if (this.wrapMode !== AnimationWrapMode.Once || !this.isPlaying || this.speed === 0 || !dur) {
 			return;
 		}
 
 		// if animation is running backward, stop one-shots when it reaches the beginning
 		const basisTime = this.basisTime;
-		const completionTime = Math.max(basisTime, basisTime + this.duration * 1000 / this.speed);
+		const completionTime = Math.max(basisTime, basisTime + dur * 1000 / this.speed);
 
 		this.timeout = setTimeout(() => {
-			this.weight = 0;
+			this.stop();
 
 			if (this._finished) {
 				this._finished.resolve();
 				this._finished = null;
 			}
+			this.timeout = null;
 		}, completionTime - Date.now())
 	}
 
@@ -324,8 +332,8 @@ export class Animation implements AnimationLike, Patchable<AnimationLike> {
 		if (!patch) { return this; }
 		this.internal.observing = false;
 		if (patch.name !== undefined) { this.name = patch.name; }
-		if (patch.basisTime !== undefined) { this._basisTime = patch.basisTime; }
-		if (patch.time !== undefined) { this._time = patch.time; }
+		if (patch.basisTime !== undefined) { this.basisTime = patch.basisTime; }
+		if (patch.time !== undefined) { this.time = patch.time; }
 		if (patch.speed !== undefined) { this.speed = patch.speed; }
 		if (patch.weight !== undefined) { this.weight = patch.weight; }
 		if (patch.wrapMode) { this.wrapMode = patch.wrapMode; }
