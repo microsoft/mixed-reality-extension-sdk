@@ -1,14 +1,14 @@
 {
-	"out": "../../docs",
-	"externalPattern": "**/node_modules/**/*",
+	"inputFiles": ["./src"],
+	"out": "../../docs/common",
+	"externalPattern": "**/node_modules/**",
 	"excludeExternals": true,
 	"excludeNotExported": true,
 	"excludeProtected": true,
 	"excludePrivate": true,
 	"hideGenerator": true,
 	"ignoreCompilerErrors": true,
-	"disableOutputCheck": true,
 	"mode": "file",
-	"name": "Mixed Reality Extension SDK",
+	"name": "Mixed Reality Extension Common Components",
 	"readme": "none"
 }
