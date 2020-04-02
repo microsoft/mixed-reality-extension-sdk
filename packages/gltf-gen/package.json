@@ -30,7 +30,7 @@
     "test": "npm run build && node built/tests/index.js",
     "clean": "tsc --build --clean",
     "build": "tsc --build && eslint --ext .ts src",
-    "build-docs": "typedoc --ignoreCompilerErrors --externalPattern \"**/node_modules/**\" --excludeExternals --excludeNotExported --excludeProtected --excludePrivate --hideGenerator --mode file --name \"glTF Generator\" --readme none --out ../../docs/gltf-gen ./src",
+    "build-docs": "typedoc",
     "prepublishOnly": "tsc --build"
   },
   "devDependencies": {

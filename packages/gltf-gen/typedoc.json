@@ -1,0 +1,14 @@
+{
+	"inputFiles": ["./src"],
+	"out": "../../docs/gltf-gen",
+	"externalPattern": "**/node_modules/**",
+	"excludeExternals": true,
+	"excludeNotExported": true,
+	"excludeProtected": true,
+	"excludePrivate": true,
+	"hideGenerator": true,
+	"ignoreCompilerErrors": true,
+	"mode": "file",
+	"name": "glTF Generator",
+	"readme": "none"
+}

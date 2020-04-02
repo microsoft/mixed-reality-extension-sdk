@@ -1,0 +1,18 @@
+{
+	"inputFiles": ["./src"],
+	"out": "../../docs",
+	"includeDeclarations": true,
+	"externalPattern": [
+		"node_modules/**/*",
+		"!node_modules/@microsoft/mixed-reality-extension-common/**/*.d.ts"
+	],
+	"excludeExternals": true,
+	"excludeNotExported": true,
+	"excludeProtected": true,
+	"excludePrivate": true,
+	"hideGenerator": true,
+	"ignoreCompilerErrors": true,
+	"mode": "file",
+	"name": "Mixed Reality Extension SDK",
+	"readme": "none"
+}
