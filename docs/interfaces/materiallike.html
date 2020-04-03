@@ -93,6 +93,10 @@
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="materiallike.html#alphacutoff" class="tsd-kind-icon">alpha<wbr>Cutoff</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="materiallike.html#alphamode" class="tsd-kind-icon">alpha<wbr>Mode</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="materiallike.html#color" class="tsd-kind-icon">color</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="materiallike.html#emissivecolor" class="tsd-kind-icon">emissive<wbr>Color</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="materiallike.html#emissivetextureid" class="tsd-kind-icon">emissive<wbr>Texture<wbr>Id</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="materiallike.html#emissivetextureoffset" class="tsd-kind-icon">emissive<wbr>Texture<wbr>Offset</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="materiallike.html#emissivetexturescale" class="tsd-kind-icon">emissive<wbr>Texture<wbr>Scale</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="materiallike.html#maintextureid" class="tsd-kind-icon">main<wbr>Texture<wbr>Id</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="materiallike.html#maintextureoffset" class="tsd-kind-icon">main<wbr>Texture<wbr>Offset</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="materiallike.html#maintexturescale" class="tsd-kind-icon">main<wbr>Texture<wbr>Scale</a></li>
@@ -109,7 +113,7 @@
 					<div class="tsd-signature tsd-kind-icon">alpha<wbr>Cutoff<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/711ebd3/packages/sdk/src/types/runtime/assets/material.ts#L29">src/types/runtime/assets/material.ts:29</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/eb0ccbd/packages/sdk/src/asset/material.ts#L51">src/asset/material.ts:51</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -124,7 +128,7 @@
 					<div class="tsd-signature tsd-kind-icon">alpha<wbr>Mode<span class="tsd-signature-symbol">:</span> <a href="../enums/alphamode.html" class="tsd-signature-type">AlphaMode</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/711ebd3/packages/sdk/src/types/runtime/assets/material.ts#L27">src/types/runtime/assets/material.ts:27</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/eb0ccbd/packages/sdk/src/asset/material.ts#L49">src/asset/material.ts:49</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -139,7 +143,7 @@
 					<div class="tsd-signature tsd-kind-icon">color<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="color4like.html" class="tsd-signature-type">Color4Like</a><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/711ebd3/packages/sdk/src/types/runtime/assets/material.ts#L19">src/types/runtime/assets/material.ts:19</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/eb0ccbd/packages/sdk/src/asset/material.ts#L33">src/asset/material.ts:33</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -149,12 +153,72 @@
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="maintextureid" class="tsd-anchor"></a>
-					<h3>main<wbr>Texture<wbr>Id</h3>
-					<div class="tsd-signature tsd-kind-icon">main<wbr>Texture<wbr>Id<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<a name="emissivecolor" class="tsd-anchor"></a>
+					<h3>emissive<wbr>Color</h3>
+					<div class="tsd-signature tsd-kind-icon">emissive<wbr>Color<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="color3like.html" class="tsd-signature-type">Color3Like</a><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/711ebd3/packages/sdk/src/types/runtime/assets/material.ts#L21">src/types/runtime/assets/material.ts:21</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/eb0ccbd/packages/sdk/src/asset/material.ts#L41">src/asset/material.ts:41</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The lighting-independent color of this material.</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="emissivetextureid" class="tsd-anchor"></a>
+					<h3>emissive<wbr>Texture<wbr>Id</h3>
+					<div class="tsd-signature tsd-kind-icon">emissive<wbr>Texture<wbr>Id<span class="tsd-signature-symbol">:</span> <a href="guid.html" class="tsd-signature-type">Guid</a></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/eb0ccbd/packages/sdk/src/asset/material.ts#L43">src/asset/material.ts:43</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The emissive (unlit) texture asset ID</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="emissivetextureoffset" class="tsd-anchor"></a>
+					<h3>emissive<wbr>Texture<wbr>Offset</h3>
+					<div class="tsd-signature tsd-kind-icon">emissive<wbr>Texture<wbr>Offset<span class="tsd-signature-symbol">:</span> <a href="vector2like.html" class="tsd-signature-type">Vector2Like</a></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/eb0ccbd/packages/sdk/src/asset/material.ts#L45">src/asset/material.ts:45</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The emissive texture&#39;s offset from default</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="emissivetexturescale" class="tsd-anchor"></a>
+					<h3>emissive<wbr>Texture<wbr>Scale</h3>
+					<div class="tsd-signature tsd-kind-icon">emissive<wbr>Texture<wbr>Scale<span class="tsd-signature-symbol">:</span> <a href="vector2like.html" class="tsd-signature-type">Vector2Like</a></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/eb0ccbd/packages/sdk/src/asset/material.ts#L47">src/asset/material.ts:47</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The emissive texture&#39;s scale from default</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="maintextureid" class="tsd-anchor"></a>
+					<h3>main<wbr>Texture<wbr>Id</h3>
+					<div class="tsd-signature tsd-kind-icon">main<wbr>Texture<wbr>Id<span class="tsd-signature-symbol">:</span> <a href="guid.html" class="tsd-signature-type">Guid</a></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/eb0ccbd/packages/sdk/src/asset/material.ts#L35">src/asset/material.ts:35</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -169,7 +233,7 @@
 					<div class="tsd-signature tsd-kind-icon">main<wbr>Texture<wbr>Offset<span class="tsd-signature-symbol">:</span> <a href="vector2like.html" class="tsd-signature-type">Vector2Like</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/711ebd3/packages/sdk/src/types/runtime/assets/material.ts#L23">src/types/runtime/assets/material.ts:23</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/eb0ccbd/packages/sdk/src/asset/material.ts#L37">src/asset/material.ts:37</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -184,7 +248,7 @@
 					<div class="tsd-signature tsd-kind-icon">main<wbr>Texture<wbr>Scale<span class="tsd-signature-symbol">:</span> <a href="vector2like.html" class="tsd-signature-type">Vector2Like</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/711ebd3/packages/sdk/src/types/runtime/assets/material.ts#L25">src/types/runtime/assets/material.ts:25</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/eb0ccbd/packages/sdk/src/asset/material.ts#L39">src/asset/material.ts:39</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -218,6 +282,18 @@
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
 								<a href="materiallike.html#color" class="tsd-kind-icon">color</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="materiallike.html#emissivecolor" class="tsd-kind-icon">emissive<wbr>Color</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="materiallike.html#emissivetextureid" class="tsd-kind-icon">emissive<wbr>Texture<wbr>Id</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="materiallike.html#emissivetextureoffset" class="tsd-kind-icon">emissive<wbr>Texture<wbr>Offset</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="materiallike.html#emissivetexturescale" class="tsd-kind-icon">emissive<wbr>Texture<wbr>Scale</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
 								<a href="materiallike.html#maintextureid" class="tsd-kind-icon">main<wbr>Texture<wbr>Id</a>
