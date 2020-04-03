@@ -1,0 +1,44 @@
+{
+  "name": "@microsoft/mixed-reality-extension-common",
+  "version": "0.16.1",
+  "description": "Common components of the Mixed Reality Extension SDK.",
+  "main": "built/index.js",
+  "types": "built/index.d.ts",
+  "author": "Microsoft Corporation",
+  "license": "MIT",
+  "keywords": [
+    "mixed reality",
+    "virtual reality",
+    "vr",
+    "altspacevr",
+    "sdk",
+    "node"
+  ],
+  "engines": {
+    "node": ">=10.13.0",
+    "npm": ">=6.4.1"
+  },
+  "bugs": {
+    "url": "https://github.com/Microsoft/mixed-reality-extension-sdk/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Microsoft/mixed-reality-extension-sdk.git"
+  },
+  "scripts": {
+    "clean": "tsc --build --clean",
+		"build": "tsc --build && eslint --ext .ts src",
+		"build-docs": "typedoc ./src",
+    "prepublishOnly": "npm run build"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^2.6.1",
+    "@typescript-eslint/parser": "^2.6.1",
+    "eslint": "^6.6.0",
+    "typedoc": "^0.16.8",
+    "typescript": "^3.7.2"
+  },
+  "dependencies": {
+    "@types/node": "^10.3.1"
+  }
+}
