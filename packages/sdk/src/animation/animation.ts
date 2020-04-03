@@ -251,11 +251,18 @@ export class Animation implements AnimationLike, Patchable<AnimationLike> {
 		if (this.isPlaying) { return; }
 
 		const realReset = reset === true || reset === null && this.wrapMode === AnimationWrapMode.Once;
-		// Getter for basis time converts the internal _time var into the corresponding basis time,
-		// so reassigning it writes this converted time back into the internal _basisTime var.
-		this.basisTime = (realReset ? Date.now() : this.basisTime)
-			// start slightly in the future so we don't always skip over part of the animation.
-			+ Math.floor(this.context.conn.quality.latencyMs.value / 1000);
+
+		// can't compute basis time with a zero speed, just leave it where it was
+		if (this.speed === 0 && realReset) {
+			this.time = 0;
+		} else if (this.speed !== 0) {
+			// Getter for basis time converts the internal _time var into the corresponding basis time,
+			// so reassigning it writes this converted time back into the internal _basisTime var.
+			this.basisTime = (realReset ? Date.now() : this.basisTime)
+				// start slightly in the future so we don't always skip over part of the animation.
+				+ Math.floor(this.context.conn.quality.latencyMs.value / 1000);
+		}
+
 		this.weight = 1;
 	}
 
@@ -301,7 +308,9 @@ export class Animation implements AnimationLike, Patchable<AnimationLike> {
 		const completionTime = Math.max(basisTime, basisTime + dur * 1000 / this.speed);
 
 		this.timeout = setTimeout(() => {
+			// stop the animation, and make sure it lands exactly on the last frame
 			this.stop();
+			this.time = this.duration || this.data.duration();
 
 			if (this._finished) {
 				this._finished.resolve();
