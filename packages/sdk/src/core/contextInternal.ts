@@ -219,6 +219,7 @@ export class ContextInternal {
 			targetIds: Object.values(targets),
 		});
 		this.animationSet.set(createdAnim.id, createdAnim);
+		data.addReference(createdAnim);
 
 		const reply = await this.sendPayloadAndGetReply<Payloads.CreateAnimation2, Payloads.ObjectSpawned>({
 			type: 'create-animation-2',
@@ -515,8 +516,17 @@ export class ContextInternal {
 		(actor.children || []).forEach(child => {
 			this.localDestroyActor(child);
 		});
+
 		// Remove actor from _actors
 		this.actorSet.delete(actor.id);
+
+		// Check targeting animations for orphans
+		for (const anim of actor.targetingAnimations.values()) {
+			if (anim.isOrphan()) {
+				anim.delete();
+			}
+		}
+
 		// Raise event
 		this.context.emitter.emit('actor-destroyed', actor);
 	}
@@ -528,6 +538,26 @@ export class ContextInternal {
 			this.sendDestroyActors([actorId]);
 			// Clean up the actor locally
 			this.localDestroyActor(actor);
+		}
+	}
+
+	public destroyAnimation(animationId: Guid, cascadeIds: Guid[] = []) {
+		const shouldSendDestroyMessage = cascadeIds.length === 0;
+		cascadeIds.push(animationId);
+
+		const anim = this.animationSet.get(animationId);
+		this.animationSet.delete(animationId);
+		for (const targetingAnim of anim.targetingAnimations.values()) {
+			if (targetingAnim.isOrphan()) {
+				this.destroyAnimation(targetingAnim.id, cascadeIds);
+			}
+		}
+
+		if (shouldSendDestroyMessage) {
+			this.protocol.sendPayload({
+				type: 'destroy-animations',
+				animationIds: cascadeIds
+			} as Partial<Payloads.DestroyAnimations>);
 		}
 	}
 

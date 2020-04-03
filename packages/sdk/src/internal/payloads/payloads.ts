@@ -37,6 +37,7 @@ export type PayloadType
 	| 'create-empty'
 	| 'create-from-library'
 	| 'destroy-actors'
+	| 'destroy-animations'
 	| 'dialog-response'
 	| 'engine2app-rpc'
 	| 'handshake'
@@ -363,3 +364,12 @@ export type DialogResponse = Payload & {
 	submitted: boolean;
 	text?: string;
 };
+
+/**
+ * @hidden
+ * App to engine.
+ */
+export type DestroyAnimations = Payload & {
+	type: 'destroy-animations';
+	animationIds: Guid[];
+}

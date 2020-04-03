@@ -291,6 +291,27 @@ export class Animation implements AnimationLike, Patchable<AnimationLike> {
 		return promise;
 	}
 
+	/**
+	 * Tells whether this animation is an orphan, i.e. its data has been unloaded, or it has no live targets.
+	 * @returns Whether this animation is an orphan.
+	 */
+	public isOrphan() {
+		// anim is unregistered
+		return this.context.animation(this.id) === null ||
+			// data is unloaded
+			(this.dataId && !this.data) ||
+			// all targets are destroyed/unloaded/unregistered
+			this.targetIds.every(id =>
+				this.context.actor(id) === null &&
+				this.context.asset(id) === null &&
+				this.context.animation(id) === null);
+	}
+
+	/** Destroy this animation. */
+	public delete() {
+		this.context.internal.destroyAnimation(this.id);
+	}
+
 	private timeout: NodeJS.Timeout;
 	/** Track the expected completion time of the animation, and flip everything off */
 	private updateTimeout() {

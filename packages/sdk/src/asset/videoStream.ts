@@ -3,7 +3,7 @@
  * Licensed under the MIT License.
  */
 
-import { Actor, AssetContainer, AssetLike } from '..';
+import { AssetContainer, AssetLike, AssetUserType } from '..';
 import { Patchable } from '../internal';
 import { AssetInternal } from './assetInternal';
 // break import cycle
@@ -80,7 +80,7 @@ export class VideoStream extends Asset implements VideoStreamLike, Patchable<Ass
 	}
 
 	/** @hidden */
-	public breakReference(ref: Actor | Asset) {
+	public breakReference(ref: AssetUserType) {
 		// TODO: destroy all media instances
 	}
 }

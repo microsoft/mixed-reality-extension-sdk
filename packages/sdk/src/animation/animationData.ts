@@ -3,7 +3,6 @@
  * Licensed under the MIT License.
  */
 import {
-	Actor,
 	Animatible,
 	AnimatibleName,
 	getAnimatibleName,
@@ -13,6 +12,7 @@ import {
 	AnimationProp,
 	AssetContainer,
 	AssetLike,
+	AssetUserType,
 	EaseCurve,
 	Guid,
 	MreValidationError,
@@ -169,9 +169,13 @@ export class AnimationData extends Asset implements AnimationDataLike, Patchable
 	}
 
 	/** @hidden */
-	public breakReference(ref: Actor | Asset) {
-		if (!(ref instanceof Actor)) { return; }
-		// TODO: break/destroy animations when this data is unloaded
+	public breakReference(ref: AssetUserType) {
+		if (!(ref instanceof Animation)) { return; }
+
+		// animations don't work without data, so deregister if the data is unloaded
+		if (ref.dataId === this.id) {
+			this.container.context.internal.animationSet.delete(ref.id);
+		}
 	}
 
 	/**

@@ -5,6 +5,7 @@
 
 import {
 	Actor,
+	Animation,
 	AnimationData,
 	AnimationDataLike,
 	AssetContainer,
@@ -75,6 +76,9 @@ export interface AssetLike {
 	videoStream?: Partial<VideoStreamLike>;
 }
 
+/** @hidden */
+export type AssetUserType = Actor | Animation | Asset;
+
 /** The base class for all asset types. */
 export abstract class Asset implements AssetLike {
 	private _id: Guid;
@@ -108,7 +112,7 @@ export abstract class Asset implements AssetLike {
 	public get created() { return this._loadedPromise; }
 
 	/** Stores which actors/assets refer to this asset */
-	protected references = new Set<Actor | Asset>();
+	protected references = new Set<AssetUserType>();
 
 	protected constructor(public container: AssetContainer, def: Partial<AssetLike>) {
 		this._id = def.id;
@@ -117,17 +121,17 @@ export abstract class Asset implements AssetLike {
 	}
 
 	/** @hidden */
-	public addReference(ref: Actor | Asset) {
+	public addReference(ref: AssetUserType) {
 		this.references.add(ref);
 	}
 
 	/** @hidden */
-	public clearReference(ref: Actor | Asset) {
+	public clearReference(ref: AssetUserType) {
 		this.references.delete(ref);
 	}
 
 	/** @hidden */
-	public abstract breakReference(ref: Actor | Asset): void;
+	public abstract breakReference(ref: AssetUserType): void;
 
 	/** @hidden */
 	public breakAllReferences() {

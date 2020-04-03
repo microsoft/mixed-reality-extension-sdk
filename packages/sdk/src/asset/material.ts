@@ -8,6 +8,7 @@ import {
 	Animation,
 	AssetContainer,
 	AssetLike,
+	AssetUserType,
 	Color3,
 	Color3Like,
 	Color4,
@@ -328,10 +329,11 @@ export class Material extends Asset implements MaterialLike, Patchable<AssetLike
 	}
 
 	/** @hidden */
-	public breakReference(ref: Actor | Asset) {
-		if (!(ref instanceof Actor)) { return; }
-		if (ref.appearance.material === this) {
+	public breakReference(ref: AssetUserType) {
+		if (ref instanceof Actor && ref.appearance.material === this) {
 			ref.appearance.material = null;
+		} else if (ref instanceof Animation && ref.isOrphan()) {
+			ref.delete();
 		}
 	}
 }
