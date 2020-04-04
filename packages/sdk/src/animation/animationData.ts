@@ -174,7 +174,7 @@ export class AnimationData extends Asset implements AnimationDataLike, Patchable
 
 		// animations don't work without data, so deregister if the data is unloaded
 		if (ref.dataId === this.id) {
-			this.container.context.internal.animationSet.delete(ref.id);
+			this.container.context.internal.destroyAnimation(ref.id);
 		}
 	}
 

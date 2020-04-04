@@ -523,7 +523,7 @@ export class ContextInternal {
 		// Check targeting animations for orphans
 		for (const anim of actor.targetingAnimations.values()) {
 			if (anim.isOrphan()) {
-				anim.delete();
+				this.destroyAnimation(anim.id);
 			}
 		}
 

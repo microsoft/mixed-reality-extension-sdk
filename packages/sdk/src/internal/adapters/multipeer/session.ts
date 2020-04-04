@@ -436,4 +436,12 @@ export class Session extends EventEmitter {
 		syncAnim.active = syncAnim.update.payload.animation.weight > 0 &&
 			syncAnim.update.payload.animation.speed !== 0;
 	}
+
+	public cacheAnimationUnload(message: Message<Payloads.DestroyAnimations>) {
+		for (const id of message.payload.animationIds) {
+			const syncAnim = this._animationSet.get(id);
+			this._animationCreatorSet.delete(syncAnim.creatorMessageId);
+			this._animationSet.delete(id);
+		}
+	}
 }
