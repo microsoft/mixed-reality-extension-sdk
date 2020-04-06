@@ -55,6 +55,7 @@ export interface ColliderLike {
  * A collider represents the abstraction of a physics collider object on the host.
  */
 export class Collider implements ColliderLike {
+	/** @hidden */
 	public $DoNotObserve = ['_internal'];
 
 	private _internal: ColliderInternal;
