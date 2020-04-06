@@ -185,7 +185,7 @@ export class Material extends Asset implements MaterialLike, Patchable<AssetLike
 	public get material(): Material { return this; }
 
 	/** The list of animations that target this actor, by ID. */
-	public get targetingAnimations() {
+	/* public get targetingAnimations() {
 		return this.container.context.animations
 			.filter(anim => anim.targetIds.includes(this.id))
 			.reduce(
@@ -195,10 +195,10 @@ export class Material extends Asset implements MaterialLike, Patchable<AssetLike
 				},
 				new Map<Guid, Animation>()
 			) as ReadonlyMap<Guid, Animation>;
-	}
+	}*/
 
 	/** The list of animations that target this actor, by name. */
-	public get targetingAnimationsByName() {
+	/* public get targetingAnimationsByName() {
 		return this.container.context.animations
 			.filter(anim => anim.targetIds.includes(this.id) && anim.name)
 			.reduce(
@@ -208,7 +208,7 @@ export class Material extends Asset implements MaterialLike, Patchable<AssetLike
 				},
 				new Map<string, Animation>()
 			) as ReadonlyMap<string, Animation>;
-	}
+	}*/
 
 	/** INTERNAL USE ONLY. To create a new material from scratch, use [[AssetManager.createMaterial]]. */
 	public constructor(container: AssetContainer, def: AssetLike) {

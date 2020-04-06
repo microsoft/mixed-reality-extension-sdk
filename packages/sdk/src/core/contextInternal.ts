@@ -547,11 +547,11 @@ export class ContextInternal {
 
 		const anim = this.animationSet.get(animationId);
 		this.animationSet.delete(animationId);
-		for (const targetingAnim of anim.targetingAnimations.values()) {
+		/*for (const targetingAnim of anim.targetingAnimations.values()) {
 			if (targetingAnim.isOrphan()) {
 				this.destroyAnimation(targetingAnim.id, cascadeIds);
 			}
-		}
+		}*/
 
 		if (shouldSendDestroyMessage) {
 			this.protocol.sendPayload({
