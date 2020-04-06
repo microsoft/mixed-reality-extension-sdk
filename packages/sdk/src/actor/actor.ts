@@ -25,6 +25,7 @@ import {
 	CollisionLayer,
 	Context,
 	DiscreteAction,
+	EaseCurve,
 	Guid,
 	Light,
 	LightLike,
@@ -627,6 +628,21 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 		options: SetVideoStateOptions,
 	): MediaInstance {
 		return new MediaInstance(this, videoStreamAssetId).start(options);
+	}
+
+	/**
+	 * @deprecated
+	 * Use [[Animation.AnimateTo]] instead.
+	 * @param value The desired final state of the actor.
+	 * @param duration The length of the interpolation (in seconds).
+	 * @param curve The cubic-bezier curve parameters. @see AnimationEaseCurves for predefined values.
+	 */
+	public animateTo(value: Partial<ActorLike>, duration: number, curve: number[]) {
+		Animation.AnimateTo(this.context, this as Actor, {
+			duration,
+			destination: value,
+			easing: curve as EaseCurve
+		});
 	}
 
 	/**
