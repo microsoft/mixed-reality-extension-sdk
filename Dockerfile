@@ -3,6 +3,7 @@ WORKDIR /opt/mre
 
 COPY package*.json lerna.json ./
 COPY packages/altspacevr-extras/package*.json ./packages/altspacevr-extras/
+COPY packages/common/package*.json ./packages/common/
 COPY packages/functional-tests/package*.json ./packages/functional-tests/
 COPY packages/gltf-gen/package*.json ./packages/gltf-gen/
 COPY packages/sdk/package*.json ./packages/sdk/

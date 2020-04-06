@@ -28,7 +28,7 @@
   "scripts": {
     "clean": "tsc --build --clean",
     "build": "tsc --build && eslint --ext .ts src",
-    "build-docs": "typedoc --externalPattern \"**/node_modules/**\" --excludeExternals --excludeNotExported --excludeProtected --excludePrivate --hideGenerator --mode file --name \"Mixed Reality Extension SDK\" --readme none --out ../../docs ./src",
+    "build-docs": "typedoc --includeDeclarations --excludeExternals --excludeNotExported --excludeProtected --excludePrivate --hideGenerator --ignoreCompilerErrors --disableOutputCheck --mode file --name \"Mixed Reality Extension SDK\" --readme none --out \"../../docs\" \"./node_modules/@microsoft/mixed-reality-extension-common/built\" ./src",
     "prepublishOnly": "npm run build"
   },
   "devDependencies": {
@@ -46,6 +46,7 @@
     "typescript": "^3.7.2"
   },
   "dependencies": {
+		"@microsoft/mixed-reality-extension-common": "^0.16.1",
     "@types/node": "^10.3.1",
     "debug": "^4.1.0",
     "deepmerge": "^2.1.1",

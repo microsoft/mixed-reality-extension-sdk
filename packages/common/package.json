@@ -1,6 +1,6 @@
 {
   "name": "@microsoft/mixed-reality-extension-common",
-  "version": "0.1.0",
+  "version": "0.16.1",
   "description": "Common components of the Mixed Reality Extension SDK.",
   "main": "built/index.js",
   "types": "built/index.d.ts",
@@ -28,7 +28,7 @@
   "scripts": {
     "clean": "tsc --build --clean",
     "build": "tsc --build && eslint --ext .ts src",
-    "build-docs": "typedoc ./src",
+    "build-docs": "typedoc --includeDeclarations --excludeExternals --excludeNotExported --excludeProtected --excludePrivate --hideGenerator --ignoreCompilerErrors --disableOutputCheck --mode file --name \"Mixed Reality Extension Common Definitions\" --readme none --out \"../../docs/common\" ./src",
     "prepublishOnly": "npm run build"
   },
   "devDependencies": {
