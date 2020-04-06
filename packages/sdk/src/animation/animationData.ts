@@ -30,7 +30,7 @@ export type Keyframe<T extends AnimationProp> = {
 	/** The time in seconds from the start of the animation.  */
 	time: number;
 	/** The property's value at this instant, or a reference to another property. */
-	value: Like<T> | TargetPath<T>;
+	value: Like<T> /*| TargetPath<T>*/;
 	/** How the value approaches this frame's value. Defaults to the track's easing values. */
 	easing?: EaseCurve;
 }

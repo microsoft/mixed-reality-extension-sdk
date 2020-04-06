@@ -187,11 +187,17 @@ export class Animation implements AnimationLike, Patchable<AnimationLike> {
 	public get targetIds() { return Object.freeze([...this._targetIds]); }
 
 	/** The list of actors targeted by this animation. */
-	public get targetActors() { return this.targetIds.map(id => this.context.actor(id)).filter(a => !!a); }
+	public get targetActors() {
+		return this.targetIds.map(id => this.context.actor(id)).filter(a => !!a);
+	}
 	/** The list of animations targeted by this animation. */
-	public get targetAnimations() { return this.targetIds.map(id => this.context.animation(id)).filter(a => !!a); }
+	/* public get targetAnimations() {
+		return this.targetIds.map(id => this.context.animation(id)).filter(a => !!a);
+	}*/
 	/** The list of materials targeted by this animation. */
-	public get targetMaterials() { return this.targetIds.map(id => this.context.asset(id)?.material).filter(a => !!a); }
+	/* public get targetMaterials() {
+		return this.targetIds.map(id => this.context.asset(id)?.material).filter(a => !!a);
+	}*/
 
 	private _duration: number;
 	/** @inheritdoc */
@@ -211,7 +217,7 @@ export class Animation implements AnimationLike, Patchable<AnimationLike> {
 	}
 
 	/** The list of other animations that target this animation, by ID. */
-	public get targetingAnimations() {
+	/* public get targetingAnimations() {
 		return this.context.animations
 			.filter(anim => anim.targetIds.includes(this.id))
 			.reduce(
@@ -221,10 +227,10 @@ export class Animation implements AnimationLike, Patchable<AnimationLike> {
 				},
 				new Map<Guid, Animation>()
 			) as ReadonlyMap<Guid, Animation>;
-	}
+	}*/
 
 	/** The list of other animations that target this animation, by name. */
-	public get targetingAnimationsByName() {
+	/* public get targetingAnimationsByName() {
 		return this.context.animations
 			.filter(anim => anim.targetIds.includes(this.id) && anim.name)
 			.reduce(
@@ -234,7 +240,7 @@ export class Animation implements AnimationLike, Patchable<AnimationLike> {
 				},
 				new Map<string, Animation>()
 			) as ReadonlyMap<string, Animation>;
-	}
+	}*/
 
 	/** INTERNAL USE ONLY. Animations are created by loading prefabs with animations on them. */
 	public constructor(private context: Context, id: Guid) {
@@ -302,9 +308,9 @@ export class Animation implements AnimationLike, Patchable<AnimationLike> {
 			(this.dataId && !this.data) ||
 			// all targets are destroyed/unloaded/unregistered
 			this.targetIds.every(id =>
-				this.context.actor(id) === null &&
+				this.context.actor(id) === null /*&&
 				this.context.asset(id) === null &&
-				this.context.animation(id) === null);
+				this.context.animation(id) === null*/);
 	}
 
 	/** Destroy this animation. */
