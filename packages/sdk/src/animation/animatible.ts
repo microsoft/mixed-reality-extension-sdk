@@ -34,16 +34,3 @@ export function getAnimatibleName(obj: any) {
 		return null;
 	}
 }
-
-/**
- * Get an animation type from a target path.
- * @param target A target path string.
- * @returns An [[AnimatibleName]] value, or null if the argument is not a target path.
- * @hidden
- */
-export function getAnimatibleNameFromTargetPath(targetPath: string) {
-	for (const type of Object.values(AnimatibleName)) {
-		if (targetPath.startsWith(type)) { return type; }
-	}
-	return null;
-}

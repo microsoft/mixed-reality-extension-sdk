@@ -5,13 +5,14 @@
 /* eslint-disable max-classes-per-file */
 
 import {
-	getAnimatibleNameFromTargetPath,
 	Color3,
 	Color4,
 	Quaternion,
 	Vector2,
 	Vector3,
 } from '..';
+// break import cycle
+import { AnimatibleName } from './animatible';
 
 /** The types that are acceptable targets of animations. */
 export type AnimationProp = Vector2 | Vector3 | Quaternion | Color3 | Color4 | number | string | boolean;
@@ -21,11 +22,21 @@ export abstract class TargetPath<T extends AnimationProp> {
 	public constructor(protected id: string) { }
 	public toJSON() { return this.toString(); }
 	public toString() { return this.id; }
-	public get baseType() { return getAnimatibleNameFromTargetPath(this.id); }
-	public get baseName() {
-		const baseObj = this.id.split('/')[0];
-		const name = baseObj.split(':')[1];
-		return name;
+	public get baseType() { return TargetPath.Parse(this.id)?.[0]; }
+	public get baseName() { return TargetPath.Parse(this.id)?.[1]; }
+
+	private static pathRe = new RegExp(`^(${Object.values(AnimatibleName).join('|')}):([^/]+)/(.*)$`, 'ui');
+	/**
+	 * Break a target path into semantic pieces.
+	 * @param path The path string to parse.
+	 * @returns An array containing the type string, the placeholder name, and the relative path, or null.
+	 */
+	public static Parse(path: string): [AnimatibleName, string, string] {
+		const match = TargetPath.pathRe.exec(path);
+		if (match) {
+			return [match[1] as AnimatibleName, match[2], match[3]];
+		}
+		else { return null; }
 	}
 }
 

@@ -6,7 +6,6 @@ import {
 	Animatible,
 	AnimatibleName,
 	getAnimatibleName,
-	getAnimatibleNameFromTargetPath,
 	Animation,
 	AnimationLike,
 	AnimationProp,
@@ -87,14 +86,21 @@ export class AnimationData extends Asset implements AnimationDataLike, Patchable
 	/** The placeholders and types of the animation's targets. */
 	public targets() {
 		return this.tracks
-			// get root objects
-			.map(t => t.target.toString().split('/')[0])
+			// track targets (both direct and value targets)
+			.reduce((paths, t) => {
+				paths.push(
+					t.target.toString().split('/')[0],
+					...t.keyframes
+						.map(k => TargetPath.Parse(k.value.toString())?.slice(0, 2)?.join(':'))
+						.filter(val => !!val));
+				return paths;
+			}, [])
 			// that are unique in the list
 			.filter((target, i, arr) => arr.indexOf(target) === i)
 			// and add their types/names to an object
 			.reduce((obj, id) => {
-				const placeholder = id.split(':')[1];
-				obj[placeholder] = getAnimatibleNameFromTargetPath(id);
+				const [type, placeholder] = id.split(':');
+				obj[placeholder] = type;
 				return obj;
 			}, {} as {[placeholder: string]: AnimatibleName});
 	}
@@ -141,20 +147,10 @@ export class AnimationData extends Asset implements AnimationDataLike, Patchable
 
 	/** @hidden */
 	public copy(from: Partial<AssetLike>): this {
-		if (!from) {
-			return this;
-		}
-
-		// Pause change detection while we copy the values into the actor.
-		const wasObserving = this.internal.observing;
-		this.internal.observing = false;
-
 		super.copy(from);
-		if (!this._tracks && from.animationData?.tracks) {
+		if (!this._tracks && from?.animationData?.tracks) {
 			this._tracks = [...from.animationData?.tracks];
 		}
-
-		this.internal.observing = wasObserving;
 		return this;
 	}
 
@@ -214,6 +210,10 @@ export class AnimationData extends Asset implements AnimationDataLike, Patchable
 					if (k.easing[2] < 0 || k.easing[2] > 1) {
 						errors.push(`Track ${ti} keyframe ${ki} easing[2] must be between 0 and 1`);
 					}
+				}
+
+				if (k.value instanceof TargetPath && t.relative) {
+					errors.push(`Relative track ${ti} cannot contain keyframe ${ki}'s realtime value`);
 				}
 			}
 
