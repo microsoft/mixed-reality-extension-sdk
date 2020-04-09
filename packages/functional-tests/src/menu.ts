@@ -35,7 +35,7 @@ export class Menu {
 	private buttonMesh: MRE.Mesh;
 
 	private breadcrumbs: number[] = [];
-	private otherActors: MRE.Actor[];
+	private backActors: MRE.Actor[];
 	private handler: SelectionHandler;
 
 	private get context() { return this.app.context; }
@@ -56,12 +56,12 @@ export class Menu {
 		this.breadcrumbs.pop();
 	}
 
-	public show(root = false) {
+	public show() {
 		if (!this.buttons) {
 			this.setup();
 		}
 
-		const menu = root || !this.breadcrumbs.length ?
+		const menu = !this.breadcrumbs.length ?
 			MenuItems :
 			this.breadcrumbs.reduce((submenu, choice) => submenu[choice].action as MenuItem[], MenuItems);
 
@@ -95,16 +95,37 @@ export class Menu {
 						if (Array.isArray(test.action)) {
 							arr.push(...test.action);
 						} else {
-							return sum || !!this.app.testResults[test.label];
+							return sum && this.app.testResults[test.label] === true;
+						}
+					}, true);
+				const anyTestFails = (menu[i].action as MenuItem[])
+					.reduce((sum, test, j, arr) => {
+						if (Array.isArray(test.action)) {
+							arr.push(...test.action);
+						} else {
+							return sum || this.app.testResults[test.label] === false;
 						}
 					}, false);
-				buttonMat = allTestsPass ? this.successMat : null;
+				buttonMat = allTestsPass ? this.successMat : (anyTestFails ? this.failureMat : null);
 			}
 
 			this.buttons[i].appearance.material = buttonMat;
 			this.labels[i].text.contents = label;
 			behavior.onButton('released', handler);
 		});
+
+		// hide back button on root menu
+		if (this.breadcrumbs.length === 0) {
+			for (const a of this.backActors) {
+				a.appearance.enabled = false;
+				if (a.text) { a.text.enabled = false; }
+			}
+		} else {
+			for (const a of this.backActors) {
+				a.appearance.enabled = true;
+				if (a.text) { a.text.enabled = true; }
+			}
+		}
 	}
 
 	private setup() {
@@ -153,7 +174,7 @@ export class Menu {
 					parentId: control.id,
 					transform: {
 						local: {
-							position: { x: buttonWidth * 1.2, z: 0.05 }
+							position: { x: buttonWidth * 0.8, z: 0.05 }
 						},
 					},
 					text: {
@@ -187,7 +208,7 @@ export class Menu {
 				parentId: backButton.id,
 				transform: {
 					local: {
-						position: { x: buttonWidth * 1.2, z: 0.05 }
+						position: { x: buttonWidth * 0.8, z: 0.05 }
 					},
 				},
 				text: {
@@ -204,15 +225,15 @@ export class Menu {
 				this.show();
 			});
 
-		this.otherActors = [backButton, backLabel];
+		this.backActors = [backButton, backLabel];
 	}
 
 	private destroy() {
 		destroyActors(this.buttons);
-		destroyActors(this.otherActors);
+		destroyActors(this.backActors);
 		this.buttons = null;
 		this.behaviors = null;
 		this.labels = null;
-		this.otherActors = null;
+		this.backActors = null;
 	}
 }
