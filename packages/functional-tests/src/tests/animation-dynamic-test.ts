@@ -83,10 +83,9 @@ export default class AnimationDynamicTest extends Test {
 			appearance: { meshId: ballMesh.id }
 		}});
 
-		const anim = await animData.bind(
+		animData.bind(
 			{ target: ball, anchor1, anchor2, anchor3 },
-			{ wrapMode: MRE.AnimationWrapMode.Loop});
-		anim.play();
+			{ isPlaying: true, wrapMode: MRE.AnimationWrapMode.Loop});
 
 		await this.stoppedAsync();
 		return true;

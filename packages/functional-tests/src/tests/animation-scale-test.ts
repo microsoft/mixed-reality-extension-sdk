@@ -54,8 +54,7 @@ export default class AnimationNativeTest extends Test {
 
 		// create anim
 		const animData = this.assets.createAnimationData("bounce", { tracks: this.createAnimTracks(10) });
-		const anim = await animData.bind(targets, { wrapMode: MRE.AnimationWrapMode.Loop });
-		anim.play();
+		animData.bind(targets, { isPlaying: true, wrapMode: MRE.AnimationWrapMode.Loop });
 
 		await this.stoppedAsync();
 		return true;

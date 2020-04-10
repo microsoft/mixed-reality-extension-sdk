@@ -371,12 +371,13 @@ export class Animation implements AnimationLike, Patchable<AnimationLike> {
 		if (!patch) { return this; }
 		this.internal.observing = false;
 		if (patch.name !== undefined) { this.name = patch.name; }
+		if (patch.wrapMode) { this.wrapMode = patch.wrapMode; }
+		if (patch.speed !== undefined) { this.speed = patch.speed; }
+		if (patch.isPlaying !== undefined) { this.isPlaying = patch.isPlaying; }
+		if (patch.weight !== undefined) { this.weight = patch.weight; }
 		if (patch.basisTime !== undefined) { this.basisTime = patch.basisTime; }
 		if (patch.time !== undefined) { this.time = patch.time; }
-		if (patch.speed !== undefined) { this.speed = patch.speed; }
-		if (patch.weight !== undefined) { this.weight = patch.weight; }
-		if (patch.wrapMode) { this.wrapMode = patch.wrapMode; }
-		// isPlaying deliberately omitted
+
 		if (patch.dataId) { this._dataId = patch.dataId as Guid; }
 		if (patch.targetIds) { this._targetIds = [...patch.targetIds]; }
 		if (patch.duration !== undefined) { this._duration = patch.duration; }
@@ -402,7 +403,7 @@ export class Animation implements AnimationLike, Patchable<AnimationLike> {
 		context: Context,
 		object: T,
 		options: AnimateToOptions<T>
-	): Promise<Animation> {
+	): Promise<void> {
 		const tracks = [];
 		const typeString = getAnimatibleName(object);
 		if (!typeString) {
@@ -451,8 +452,7 @@ export class Animation implements AnimationLike, Patchable<AnimationLike> {
 			weight: 1,
 			wrapMode: AnimationWrapMode.Once
 		});
-		anim.finished().then(() => ac.unload());
-
-		return anim;
+		await anim.finished();
+		ac.unload();
 	}
 }

@@ -137,15 +137,10 @@ export default class AnimationSyncTest extends Test {
 
 		const controls: ControlDefinition[] = [
 			{ label: "Playing", realtime: true, action: incr => {
-				if (!incr) {
-					return anims[0].isPlaying.toString();
-				} else if (anims.every(a => a.isPlaying)) {
-					for (const a of anims) { a.stop(); }
-					return "false";
-				} else {
-					for (const a of anims) { a.play(); }
-					return "true";
+				if (incr !== 0) {
+					for (const a of anims) { a.isPlaying = !a.isPlaying; }
 				}
+				return anims[0].isPlaying.toString();
 			} },
 			{ label: "Time", realtime: true, action: incr => {
 				if (incr > 0) {

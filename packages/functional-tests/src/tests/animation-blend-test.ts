@@ -67,17 +67,12 @@ export default class AnimationSyncTest extends Test {
 		}});
 
 		// create two animations, 180 degrees out of phase, targeting the same object (ball2)
-		const [anim1, anim2] = await Promise.all([
-			anim.bind(
-				{ target1: ball1, target2: ball2 },
-				{ wrapMode: MRE.AnimationWrapMode.PingPong }),
-			anim.bind(
-				{ target1: ball3, target2: ball2 },
-				{ wrapMode: MRE.AnimationWrapMode.PingPong, time: anim.duration() })
-		]);
-
-		anim1.play();
-		anim2.play();
+		anim.bind(
+			{ target1: ball1, target2: ball2 },
+			{ isPlaying: true, wrapMode: MRE.AnimationWrapMode.PingPong });
+		anim.bind(
+			{ target1: ball3, target2: ball2 },
+			{ isPlaying: true, wrapMode: MRE.AnimationWrapMode.PingPong, time: anim.duration() });
 
 		await this.stoppedAsync();
 		return true;

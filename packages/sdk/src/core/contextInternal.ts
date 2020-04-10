@@ -545,7 +545,7 @@ export class ContextInternal {
 		const shouldSendDestroyMessage = cascadeIds.length === 0;
 		cascadeIds.push(animationId);
 
-		const anim = this.animationSet.get(animationId);
+		/*const anim = this.animationSet.get(animationId);*/
 		this.animationSet.delete(animationId);
 		/*for (const targetingAnim of anim.targetingAnimations.values()) {
 			if (targetingAnim.isOrphan()) {
