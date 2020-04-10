@@ -35,8 +35,7 @@ export abstract class TargetPath<T extends AnimationProp> {
 		const match = TargetPath.pathRe.exec(path);
 		if (match) {
 			return [match[1] as AnimatibleName, match[2], match[3]];
-		}
-		else { return null; }
+		} else { return null; }
 	}
 }
 

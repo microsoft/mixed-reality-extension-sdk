@@ -8,8 +8,8 @@ import ActorSpamTest from './actor-spam-test';
 import AltspaceVRLibraryTest from './altspacevr-library-test';
 import AltspaceVRVideoTest from './altspacevr-video-test';
 import AnimationDynamicTest from './animation-dynamic-test';
-import AnimationNativeTest from './animation-native-test';
 import AnimationScaleTest from './animation-scale-test';
+import AnimationSyncTest from './animation-sync-test';
 import AssetEarlyAssignmentTest from './asset-early-assignment-test';
 import AssetMutabilityTest from './asset-mutability-test';
 import AssetPreloadTest from './asset-preload-test';
@@ -51,8 +51,8 @@ export const Factories = {
 	'altspacevr-library': (...args) => new AltspaceVRLibraryTest(...args),
 	'altspacevr-video': (...args) => new AltspaceVRVideoTest(...args),
 	'animation-dynamic': (...args) => new AnimationDynamicTest(...args),
-	'animation-native': (...args) => new AnimationNativeTest(...args),
 	'animation-scale': (...args) => new AnimationScaleTest(...args),
+	'animation-sync': (...args) => new AnimationSyncTest(...args),
 	'asset-early-assignment': (...args) => new AssetEarlyAssignmentTest(...args),
 	'asset-mutability': (...args) => new AssetMutabilityTest(...args),
 	'asset-preload': (...args) => new AssetPreloadTest(...args),
