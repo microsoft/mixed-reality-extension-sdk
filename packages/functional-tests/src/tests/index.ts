@@ -7,6 +7,7 @@ import { TestFactory } from '../test';
 import ActorSpamTest from './actor-spam-test';
 import AltspaceVRLibraryTest from './altspacevr-library-test';
 import AltspaceVRVideoTest from './altspacevr-video-test';
+import AnimationBlendTest from './animation-blend-test';
 import AnimationDynamicTest from './animation-dynamic-test';
 import AnimationScaleTest from './animation-scale-test';
 import AnimationSyncTest from './animation-sync-test';
@@ -50,6 +51,7 @@ export const Factories = {
 	'actor-spam': (...args) => new ActorSpamTest(...args),
 	'altspacevr-library': (...args) => new AltspaceVRLibraryTest(...args),
 	'altspacevr-video': (...args) => new AltspaceVRVideoTest(...args),
+	'animation-blend': (...args) => new AnimationBlendTest(...args),
 	'animation-dynamic': (...args) => new AnimationDynamicTest(...args),
 	'animation-scale': (...args) => new AnimationScaleTest(...args),
 	'animation-sync': (...args) => new AnimationSyncTest(...args),
