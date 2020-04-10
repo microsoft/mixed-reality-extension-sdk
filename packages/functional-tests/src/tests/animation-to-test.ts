@@ -7,7 +7,7 @@ import * as MRE from '@microsoft/mixed-reality-extension-sdk';
 
 import { Test } from '../test';
 
-export default class InterpolationTest extends Test {
+export default class AnimationToTest extends Test {
 	public expectedResultDescription = "Lerping scale and rotation";
 	private assets: MRE.AssetContainer;
 
