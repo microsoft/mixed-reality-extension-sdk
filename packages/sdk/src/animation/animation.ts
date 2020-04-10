@@ -47,6 +47,8 @@ export interface AnimationLike {
 	weight: number;
 	/** What happens when the animation hits the last frame */
 	wrapMode: AnimationWrapMode;
+	/** Convenience property for calling [[play]] or [[stop]] */
+	isPlaying: boolean;
 
 	/** The ID of the AnimationData bound to this animation */
 	dataId: Readonly<Guid>;
@@ -357,6 +359,7 @@ export class Animation implements AnimationLike, Patchable<AnimationLike> {
 			speed: this.speed,
 			weight: this.weight,
 			wrapMode: this.wrapMode,
+			isPlaying: this.isPlaying,
 			dataId: this.dataId,
 			targetIds: this.targetIds,
 			duration: this.duration
@@ -373,6 +376,7 @@ export class Animation implements AnimationLike, Patchable<AnimationLike> {
 		if (patch.speed !== undefined) { this.speed = patch.speed; }
 		if (patch.weight !== undefined) { this.weight = patch.weight; }
 		if (patch.wrapMode) { this.wrapMode = patch.wrapMode; }
+		// isPlaying deliberately omitted
 		if (patch.dataId) { this._dataId = patch.dataId as Guid; }
 		if (patch.targetIds) { this._targetIds = [...patch.targetIds]; }
 		if (patch.duration !== undefined) { this._duration = patch.duration; }
