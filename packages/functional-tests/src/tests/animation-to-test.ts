@@ -64,14 +64,13 @@ export default class AnimationToTest extends Test {
 			const scalar = 0.3 + 0.7 * Math.random();
 			const scale = new MRE.Vector3(scalar, scalar, scalar);
 			// Random ease curve.
-			const easeCurveKeys = Object.keys(MRE.AnimationEaseCurves);
-			const easeIndex = Math.floor(Math.random() * easeCurveKeys.length);
-			const easeCurveKey = easeCurveKeys[easeIndex];
+			const easeCurveValues = Object.values(MRE.AnimationEaseCurves);
+			const easing = easeCurveValues[Math.floor(Math.random() * easeCurveValues.length)];
 			// Interpolate object's rotation and scale.
 			await MRE.Animation.AnimateTo(this.app.context, cube, {
 				destination: { transform: { local: { rotation, scale } } },
-				duration: 1.0,
-				easing: MRE.AnimationEaseCurves[easeCurveKey]
+				duration: 2.0,
+				easing: easing
 			});
 		}
 

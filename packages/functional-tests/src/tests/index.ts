@@ -9,6 +9,7 @@ import AltspaceVRLibraryTest from './altspacevr-library-test';
 import AltspaceVRVideoTest from './altspacevr-video-test';
 import AnimationBlendTest from './animation-blend-test';
 import AnimationDynamicTest from './animation-dynamic-test';
+import AnimationRelativeTest from './animation-relative-test';
 import AnimationScaleTest from './animation-scale-test';
 import AnimationSyncTest from './animation-sync-test';
 import AnimationToTest from './animation-to-test';
@@ -53,6 +54,7 @@ export const Factories = {
 	'altspacevr-video': (...args) => new AltspaceVRVideoTest(...args),
 	'animation-blend': (...args) => new AnimationBlendTest(...args),
 	'animation-dynamic': (...args) => new AnimationDynamicTest(...args),
+	'animation-relative': (...args) => new AnimationRelativeTest(...args),
 	'animation-scale': (...args) => new AnimationScaleTest(...args),
 	'animation-sync': (...args) => new AnimationSyncTest(...args),
 	'animation-to': (...args) => new AnimationToTest(...args),

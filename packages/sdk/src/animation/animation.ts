@@ -5,6 +5,7 @@
 import {
 	Animatible,
 	getAnimatibleName,
+	AnimationEaseCurves,
 	AnimationProp,
 	AnimationWrapMode,
 	AssetContainer,
@@ -433,7 +434,7 @@ export class Animation implements AnimationLike, Patchable<AnimationLike> {
 							time: options.duration,
 							value: target[field]
 						}],
-						easing: options.easing
+						easing: options.easing !== undefined ? options.easing : AnimationEaseCurves.Linear
 					});
 				}
 			}
@@ -448,8 +449,7 @@ export class Animation implements AnimationLike, Patchable<AnimationLike> {
 
 		// bind to the object and play immediately
 		const anim = await data.bind({ target: object }, {
-			basisTime: Date.now(),
-			weight: 1,
+			isPlaying: true,
 			wrapMode: AnimationWrapMode.Once
 		});
 		await anim.finished();
