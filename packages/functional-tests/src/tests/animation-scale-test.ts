@@ -8,10 +8,10 @@ import * as MRE from '@microsoft/mixed-reality-extension-sdk';
 import { Test } from '../test';
 
 const BounceHeightKeyframes: Array<MRE.Keyframe<number>> = [
-	{ time: 0, value: -0.1 },
-	{ time: 0.5, value: 1 },
-	{ time: 0.85, value: 0, easing: MRE.AnimationEaseCurves.EaseInQuadratic },
-	{ time: 1, value: -0.1 }];
+	{ time: 0, value: 0 },
+	{ time: 0.5, value: 1.1 },
+	{ time: 0.85, value: 0.1, easing: MRE.AnimationEaseCurves.EaseInQuadratic },
+	{ time: 1, value: 0 }];
 const BounceRotKeyframes: Array<MRE.Keyframe<MRE.Quaternion>> = [
 	{ time: 0, value: MRE.Quaternion.Identity() },
 	{ time: 0.33, value: MRE.Quaternion.FromEulerAngles(0, 2 * Math.PI / 3, 0) },
@@ -40,16 +40,16 @@ export default class AnimationNativeTest extends Test {
 
 		// create cubes
 		const targets: { [placeholder: string]: MRE.Actor } = {
-			cube0: this.createCube(root, { x: -0.5, y: 0.15, z: -0.5 }),
-			cube1: this.createCube(root, { x: 0, y: 0.15, z: -0.5 }),
-			cube2: this.createCube(root, { x: 0.5, y: 0.15, z: -0.5 }),
-			cube3: this.createCube(root, { x: -0.75, y: 0.15, z: -1 }),
-			cube4: this.createCube(root, { x: -0.25, y: 0.15, z: -1 }),
-			cube5: this.createCube(root, { x: 0.25, y: 0.15, z: -1 }),
-			cube6: this.createCube(root, { x: 0.75, y: 0.15, z: -1 }),
-			cube7: this.createCube(root, { x: -0.5, y: 0.15, z: -1.5 }),
-			cube8: this.createCube(root, { x: 0, y: 0.15, z: -1.5 }),
-			cube9: this.createCube(root, { x: 0.5, y: 0.15, z: -1.5 }),
+			cube0: this.createCube(root, { x: -0.5, y: 0.05, z: -0.5 }),
+			cube1: this.createCube(root, { x: 0, y: 0.05, z: -0.5 }),
+			cube2: this.createCube(root, { x: 0.5, y: 0.05, z: -0.5 }),
+			cube3: this.createCube(root, { x: -0.75, y: 0.05, z: -1 }),
+			cube4: this.createCube(root, { x: -0.25, y: 0.05, z: -1 }),
+			cube5: this.createCube(root, { x: 0.25, y: 0.05, z: -1 }),
+			cube6: this.createCube(root, { x: 0.75, y: 0.05, z: -1 }),
+			cube7: this.createCube(root, { x: -0.5, y: 0.05, z: -1.5 }),
+			cube8: this.createCube(root, { x: 0, y: 0.05, z: -1.5 }),
+			cube9: this.createCube(root, { x: 0.5, y: 0.05, z: -1.5 }),
 		};
 
 		// create anim
