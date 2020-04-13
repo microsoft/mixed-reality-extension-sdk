@@ -22,3 +22,5 @@ export * from './viewport';
 export * from './plane';
 export * from './math.scalar';
 export * from './tools';
+export * from './path2';
+export * from './path3';
