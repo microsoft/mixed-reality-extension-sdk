@@ -15,7 +15,7 @@ export const AnimationEaseCurves = {
 	// Linear: Move at constant speed.
 	Linear: [0, 0, 1, 1] as EaseCurve,
 	// Step: Do not interpolate.
-	Step: null as EaseCurve,
+	Step: [0, 0, 0, 0] as EaseCurve,
 	// Ease-in curves (each curve is progressively more dissimilar from Linear)
 	EaseInSine: [0.47, 0, 0.745, 0.715] as EaseCurve,
 	EaseInQuadratic: [0.55, 0.085, 0.68, 0.53] as EaseCurve,
