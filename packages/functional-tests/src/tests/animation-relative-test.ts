@@ -11,20 +11,13 @@ const AnimData: MRE.AnimationDataLike = { tracks: [{
 	target: MRE.ActorPath("target").transform.local.rotation,
 	relative: true,
 	easing: MRE.AnimationEaseCurves.Linear,
-	keyframes: [{
-		time: 0,
-		value: MRE.Quaternion.Identity()
-	}, {
-		time: 1,
-		value: MRE.Quaternion.Identity()
-	}, {
-		time: 2,
-		value: MRE.Quaternion.FromEulerAngles(0, 0, -Math.PI / 2)
-	}]
+	keyframes: [
+		{ time: 1, value: MRE.Quaternion.FromEulerAngles(0, 0, -Math.PI / 2) }
+	]
 }]};
 
 export default class AnimationRelativeTest extends Test {
-	public expectedResultDescription = "Two animations targeting one object should cancel.";
+	public expectedResultDescription = "Should spin smoothly";
 
 	private assets: MRE.AssetContainer;
 
@@ -35,10 +28,10 @@ export default class AnimationRelativeTest extends Test {
 	public async run(root: MRE.Actor): Promise<boolean> {
 		this.assets = new MRE.AssetContainer(this.app.context);
 		const animData = this.assets.createAnimationData('anim', AnimData);
-		const mesh = this.assets.createBoxMesh('mesh', 0.3, 0.15, 0.15);
+		const mesh = this.assets.createBoxMesh('mesh', 1, 0.5, 0.1);
 
 		const target = MRE.Actor.Create(this.app.context, { actor: {
-			name: 'target',
+			name: "target",
 			parentId: root.id,
 			appearance: { meshId: mesh.id },
 			transform: { local: { position: { y: 1, z: -1 }}}
