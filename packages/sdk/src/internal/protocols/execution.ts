@@ -116,6 +116,11 @@ export class Execution extends Protocol {
 	};
 
 	/** @private */
+	public 'recv-physicsbridge-transforms-update' = (payload: Payloads.PhysicsBridgeUpdate) => {
+		this.emit('protocol.physicsbridge-update-transforms', [payload.transforms]);
+	};
+
+	/** @private */
 	public 'recv-collision-event-raised' = (payload: Payloads.CollisionEventRaised) => {
 		this.emit('protocol.collision-event-raised', {
 			colliderOwnerId: payload.actorId,
