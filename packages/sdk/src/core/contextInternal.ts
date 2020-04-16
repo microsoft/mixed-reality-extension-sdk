@@ -35,6 +35,7 @@ import {
 	Payloads,
 	Protocols,
 } from '../internal';
+import { PhysicsBridgeTransformUpdate } from '../actor/physics/physicsBridge';
 
 /**
  * @hidden
@@ -267,6 +268,7 @@ export class ContextInternal {
 			execution.on('protocol.user-left', this.userLeft.bind(this));
 			execution.on('protocol.update-user', this.updateUser.bind(this));
 			execution.on('protocol.perform-action', this.performAction.bind(this));
+			execution.on('protocol.physicsbridge-update-transforms', this.updatePhysicsBridgeTransforms.bind(this));
 			execution.on('protocol.receive-rpc', this.receiveRPC.bind(this));
 			execution.on('protocol.collision-event-raised', this.collisionEventRaised.bind(this));
 			execution.on('protocol.trigger-event-raised', this.triggerEventRaised.bind(this));
@@ -401,6 +403,12 @@ export class ContextInternal {
 			const actor = this.actorSet.get(actorId);
 			this.context.emitter.emit('actor-created', actor);
 		});
+	}
+
+	public updatePhysicsBridgeTransforms(transforms: Partial<PhysicsBridgeTransformUpdate>) {
+		if (!transforms)
+			return;
+		this.context.emitter.emit('physicsbridge-transforms-update', transforms);
 	}
 
 	public updateAnimations(animPatches: Array<Partial<AnimationLike>>) {

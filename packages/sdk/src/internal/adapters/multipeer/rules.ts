@@ -777,6 +777,53 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 	},
 
 	// ========================================================================
+	'physicsbridge-transforms-update': {
+		...DefaultRule,
+		synchronization: {
+			stage: 'always',
+			before: 'ignore',
+			during: 'queue',
+			after: 'allow'
+		},
+		client: {
+			...DefaultRule.client,
+			beforeQueueMessageForClient: (
+				session: Session,
+				client: Client,
+				message: Message<Payloads.PhysicsBridgeUpdate>,
+				promise: ExportedPromise
+			) => {
+				
+				return message;
+			},
+			shouldSendToUser: (message: Message<Payloads.ActorUpdate>, userId, session, client) => {
+				
+				return true;
+			}
+		},
+		session: {
+			...DefaultRule.session,
+			beforeReceiveFromApp: (
+				session: Session,
+				message: Message<Payloads.ActorUpdate>
+			) => {
+				
+				return message;
+			},
+			beforeReceiveFromClient: (
+				session: Session,
+				client: Client,
+				message: Message<Payloads.ActorUpdate>
+			) => {
+				
+				session.sendPayloadToClients(message.payload, (value) => value.id !== client.id);
+
+				return message;
+			}
+		}
+	},
+
+	// ========================================================================
 	'rigidbody-add-force': {
 		...DefaultRule,
 		synchronization: {
