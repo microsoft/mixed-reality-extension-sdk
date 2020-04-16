@@ -51,6 +51,7 @@ export type PayloadType
 	| 'object-spawned'
 	| 'operation-result'
 	| 'perform-action'
+	| 'physicsbridge-transforms-update'
 	| 'rigidbody-add-force'
 	| 'rigidbody-add-force-at-position'
 	| 'rigidbody-add-relative-torque'
