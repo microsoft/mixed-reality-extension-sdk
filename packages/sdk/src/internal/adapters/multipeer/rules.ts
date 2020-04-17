@@ -462,6 +462,16 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 			) => {
 				session.cacheAnimationUpdate(message);
 				return message;
+			},
+			beforeReceiveFromClient: (
+				session: Session,
+				client: Client,
+				message: Message<Payloads.AnimationUpdate>
+			) => {
+				if (client.authoritative) {
+					session.cacheAnimationUpdate(message);
+					return message;
+				}
 			}
 		}
 	},

@@ -407,7 +407,10 @@ export class ContextInternal {
 		if (!animPatches) { return; }
 		const newAnims: Animation[] = [];
 		for (const patch of animPatches) {
-			if (this.animationSet.has(patch.id)) { continue; }
+			if (this.animationSet.has(patch.id)) {
+				this.animationSet.get(patch.id).copy(patch);
+				continue;
+			}
 			const newAnim = new Animation(this.context, patch.id);
 			this.animationSet.set(newAnim.id, newAnim);
 			newAnim.copy(patch);

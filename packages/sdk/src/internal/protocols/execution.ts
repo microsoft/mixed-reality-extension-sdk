@@ -132,4 +132,9 @@ export class Execution extends Protocol {
 			otherColliderOwnerId: payload.otherActorId
 		} as TriggerEvent);
 	};
+
+	/** @private */
+	public 'recv-animation-update' = (payload: Payloads.AnimationUpdate) => {
+		this.emit('protocol.update-animations', [payload.animation]);
+	};
 }

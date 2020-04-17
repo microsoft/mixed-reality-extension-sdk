@@ -97,7 +97,6 @@ export class Animation implements AnimationLike, Patchable<AnimationLike> {
 			this._time = (Date.now() - this._basisTime) * this.speed / 1000;
 			this.animationChanged('basisTime');
 			this.animationChanged('time');
-			this.updateTimeout();
 		}
 	}
 
@@ -120,7 +119,6 @@ export class Animation implements AnimationLike, Patchable<AnimationLike> {
 			}
 			this.animationChanged('time');
 			this.animationChanged('basisTime');
-			this.updateTimeout();
 		}
 	}
 
@@ -150,8 +148,6 @@ export class Animation implements AnimationLike, Patchable<AnimationLike> {
 			this._time = curTime;
 			this.animationChanged('time');
 		}
-
-		this.updateTimeout();
 	}
 
 	private _weight = 0;
@@ -167,7 +163,6 @@ export class Animation implements AnimationLike, Patchable<AnimationLike> {
 		}
 		this._weight = val;
 		this.animationChanged('weight');
-		this.updateTimeout();
 	}
 
 	private _wrapMode = AnimationWrapMode.Once;
@@ -176,7 +171,6 @@ export class Animation implements AnimationLike, Patchable<AnimationLike> {
 	public set wrapMode(val) {
 		this._wrapMode = val;
 		this.animationChanged('wrapMode');
-		this.updateTimeout();
 	}
 
 	private _dataId: Guid;
@@ -321,35 +315,6 @@ export class Animation implements AnimationLike, Patchable<AnimationLike> {
 		this.context.internal.destroyAnimation(this.id);
 	}
 
-	private timeout: NodeJS.Timeout;
-	/** Track the expected completion time of the animation, and flip everything off */
-	private updateTimeout() {
-		if (this.timeout) {
-			clearTimeout(this.timeout);
-		}
-
-		const dur = this._duration || this.data?.duration() || 0;
-		if (this.wrapMode !== AnimationWrapMode.Once || !this.isPlaying || this.speed === 0 || !dur) {
-			return;
-		}
-
-		// if animation is running backward, stop one-shots when it reaches the beginning
-		const basisTime = this.basisTime;
-		const completionTime = Math.max(basisTime, basisTime + dur * 1000 / this.speed);
-
-		this.timeout = setTimeout(() => {
-			// stop the animation, and make sure it lands exactly on the last frame
-			this.stop();
-			this.time = this.duration || this.data.duration();
-
-			if (this._finished) {
-				this._finished.resolve();
-				this._finished = null;
-			}
-			this.timeout = null;
-		}, completionTime - Date.now())
-	}
-
 	/** @hidden */
 	public toJSON(): AnimationLike {
 		return {
@@ -383,6 +348,11 @@ export class Animation implements AnimationLike, Patchable<AnimationLike> {
 		if (patch.targetIds) { this._targetIds = [...patch.targetIds]; }
 		if (patch.duration !== undefined) { this._duration = patch.duration; }
 		this.internal.observing = true;
+
+		if (patch.weight === 0 && this._finished) {
+			this._finished.resolve();
+		}
+
 		return this;
 	}
 
