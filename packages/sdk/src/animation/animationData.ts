@@ -43,7 +43,7 @@ export type Track<T extends AnimationProp> = {
 	keyframes: Array<Keyframe<T>>;
 	/** Whether the keyframe values are relative to 0 or to the target's current property value. Defaults to false. */
 	relative?: boolean;
-	/** Controls between-frame interpolation. Defaults to [[AnimationEaseCurves.Step]]. */
+	/** Controls between-frame interpolation. Defaults to [[AnimationEaseCurves.Linear]]. */
 	easing?: EaseCurve;
 }
 

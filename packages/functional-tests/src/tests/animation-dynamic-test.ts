@@ -28,7 +28,7 @@ const RealtimeAnimData: MRE.AnimationDataLike = {
 };
 
 export default class AnimationDynamicTest extends Test {
-	public expectedResultDescription = "Ball should bounce between boxes as they move";
+	public expectedResultDescription = "Ball should bounce between boxes as they are moved";
 	private assets: MRE.AssetContainer;
 
 	public cleanup() {

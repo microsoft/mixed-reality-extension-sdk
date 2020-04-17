@@ -69,7 +69,7 @@ export default class LookAtTest extends Test {
 			}
 		});
 		this.assets.createAnimationData('circle', circleAnimData)
-			.bind({target: tester}, { weight: 1, wrapMode: MRE.AnimationWrapMode.Loop });
+			.bind({target: tester}, { isPlaying: true, wrapMode: MRE.AnimationWrapMode.Loop });
 
 		this.interval = setInterval(() => {
 			const modes = [MRE.LookAtMode.TargetXY, MRE.LookAtMode.TargetY, MRE.LookAtMode.None];

@@ -24,7 +24,7 @@ const BounceScaleKeyframes: Array<MRE.Keyframe<MRE.Vector3>> = [
 	{ time: 1, value: { x: 1.33, y: 0.667, z: 1.33 } },
 ];
 
-export default class AnimationNativeTest extends Test {
+export default class AnimationScaleTest extends Test {
 	public expectedResultDescription = "Animate multiple properties of multiple actors";
 
 	private assets: MRE.AssetContainer;

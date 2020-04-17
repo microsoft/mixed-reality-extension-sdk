@@ -155,9 +155,16 @@ export default class CollisionLayerTest extends Test {
 				}
 			}
 		});
-		ballAnim.bind({ target: ball }, {
-			weight: 1,
-			wrapMode: MRE.AnimationWrapMode.Loop
-		});
+		const anim = this.app.context.animations[0];
+		ballAnim.bind({ target: ball },
+			!anim ? {
+				wrapMode: MRE.AnimationWrapMode.Loop,
+				isPlaying: true
+			} : {
+				wrapMode: MRE.AnimationWrapMode.Loop,
+				basisTime: anim.basisTime,
+				time: anim.time,
+				weight: anim.weight
+			});
 	}
 }

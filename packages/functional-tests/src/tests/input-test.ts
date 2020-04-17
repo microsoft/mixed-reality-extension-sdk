@@ -96,17 +96,19 @@ export default class InputTest extends Test {
 		const spinAnim = this.model.targetingAnimationsByName.get('Spin');
 		switch (this.state) {
 			case 0:
+				growAnim.time = growAnim.data.duration();
 				growAnim.speed = -1;
 				growAnim.play();
 				this.app.setOverrideText("Please Hover");
 				break;
 			case 1:
+				growAnim.time = 0;
 				growAnim.speed = 1;
 				growAnim.play();
 				this.app.setOverrideText("Please Click");
 				break;
 			case 2:
-				spinAnim.play();
+				spinAnim.play(true);
 				this.spinCount++;
 				this.app.setOverrideText("Please Unhover");
 				break;

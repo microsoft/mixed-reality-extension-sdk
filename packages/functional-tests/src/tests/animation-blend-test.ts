@@ -29,7 +29,7 @@ const AnimData: MRE.AnimationDataLike = { tracks: [{
 	}]
 }]};
 
-export default class AnimationSyncTest extends Test {
+export default class AnimationBlendTest extends Test {
 	public expectedResultDescription = "Two animations targeting one object should cancel.";
 
 	private assets: MRE.AssetContainer;

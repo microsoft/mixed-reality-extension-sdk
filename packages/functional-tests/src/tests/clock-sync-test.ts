@@ -111,7 +111,8 @@ export default class ClockSyncTest extends Test {
 				parentId,
 				text: {
 					contents: digits,
-					anchor: MRE.TextAnchorLocation.TopCenter
+					anchor: MRE.TextAnchorLocation.TopCenter,
+					height: 0.15
 				}
 			}
 		});
