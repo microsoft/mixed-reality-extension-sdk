@@ -44,6 +44,7 @@ export class Session extends EventEmitter {
 	private _userSet = new Map<Guid, Partial<UserLike>>();
 	private _protocol: Protocols.Protocol;
 	private _disconnect: () => void;
+	private actorLastUpdate = new Map<Guid, number>();
 
 	public get conn() { return this._conn; }
 	public get sessionId() { return this._sessionId; }
@@ -442,6 +443,17 @@ export class Session extends EventEmitter {
 			const syncAnim = this._animationSet.get(id);
 			this._animationCreatorSet.delete(syncAnim.creatorMessageId);
 			this._animationSet.delete(id);
+		}
+	}
+
+	public shouldProcessActorUpdate(message: Message<Payloads.ActorUpdate>) {
+		const lastUpdate = this.actorLastUpdate.get(message.payload.actor.id);
+		const time = Date.now();
+		if (!lastUpdate || lastUpdate < time - 1000) {
+			this.actorLastUpdate.set(message.payload.actor.id, time);
+			return true;
+		} else {
+			return false;
 		}
 	}
 }

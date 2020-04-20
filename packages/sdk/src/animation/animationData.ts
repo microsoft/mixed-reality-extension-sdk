@@ -14,7 +14,7 @@ import {
 	AssetUserType,
 	EaseCurve,
 	Guid,
-	MreValidationError,
+	MreArgumentError,
 	TargetPath,
 } from '..';
 import {
@@ -123,10 +123,10 @@ export class AnimationData extends Asset implements AnimationDataLike, Patchable
 
 		for (const placeholder in targets) {
 			if (!dataPlaceholders.has(placeholder)) {
-				throw new MreValidationError(`Animation data "${this.name || this.id}" has no reference ` +
+				throw new MreArgumentError(`Animation data "${this.name || this.id}" has no reference ` +
 					`to placeholder "${placeholder}".`);
 			} else if (getAnimatibleName(targets[placeholder]) !== dataTargets[placeholder]) {
-				throw new MreValidationError(`Placeholder "${placeholder}" for animation data ` +
+				throw new MreArgumentError(`Placeholder "${placeholder}" for animation data ` +
 					`"${this.name || this.id}" must be of type ${dataTargets[placeholder]}, ` +
 					`got "${targets[placeholder].constructor.name}".`);
 			}
@@ -138,7 +138,7 @@ export class AnimationData extends Asset implements AnimationDataLike, Patchable
 
 		// check for missing placeholders
 		if (dataPlaceholders.size > 0) {
-			throw new MreValidationError(`Attempting to bind animation data "${this.name || this.id} ` +
+			throw new MreArgumentError(`Attempting to bind animation data "${this.name || this.id} ` +
 				`without definitions for the required placeholders "${[...dataPlaceholders].join('", "')}".`);
 		}
 

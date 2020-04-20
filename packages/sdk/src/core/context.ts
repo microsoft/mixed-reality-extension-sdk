@@ -42,7 +42,7 @@ export class Context {
 	public get rootActors() { return this.actors.filter(a => !a.parent); }
 	/** The list of all animations. */
 	public get animations() { return [...this.internal.animationSet.values()]; }
-	/** THe list of all users. */
+	/** The list of all users. */
 	public get users() { return [...this.internal.userSet.values()]; }
 	public get rpcChannels() { return this._rpcChannels; }
 	public get rpc() { return this._rpc; }

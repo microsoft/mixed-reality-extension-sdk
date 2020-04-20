@@ -632,15 +632,6 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 
 	/**
 	 * @deprecated
-	 * Use [[AssetContainer.createAnimationData]] and [[AnimationData.bind]] instead.
-	 */
-	public createAnimation(animationName: string, options: any) {
-		throw new Error('Actor.createAnimation has been removed. Use AssetContainer.createAnimationData ' +
-			'and AnimationData.bind instead.');
-	}
-
-	/**
-	 * @deprecated
 	 * Use [[Animation.AnimateTo]] instead.
 	 * @param value The desired final state of the actor.
 	 * @param duration The length of the interpolation (in seconds).
