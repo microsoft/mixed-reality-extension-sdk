@@ -638,8 +638,8 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	 * @param curve The cubic-bezier curve parameters. @see AnimationEaseCurves for predefined values.
 	 */
 	public animateTo(value: Partial<ActorLike>, duration: number, curve: number[]) {
-		// added this in because it's easy. not so for createAnimation above.
-		Animation.AnimateTo(this.context, this as Actor, {
+		// added this in because it's easy. not so for createAnimation.
+		return Animation.AnimateTo(this.context, this as Actor, {
 			duration,
 			destination: value,
 			easing: curve as EaseCurve

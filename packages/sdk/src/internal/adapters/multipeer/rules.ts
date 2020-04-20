@@ -429,8 +429,6 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 						Object.keys(message.payload.actor.rigidBody) &&
 						subscriptions.includes('rigidbody')) {
 						shouldSendToApp = true;
-					} else if (session.shouldProcessActorUpdate(message)) {
-						shouldSendToApp = true;
 					}
 
 					return shouldSendToApp ? message : undefined;

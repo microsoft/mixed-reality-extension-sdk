@@ -445,15 +445,4 @@ export class Session extends EventEmitter {
 			this._animationSet.delete(id);
 		}
 	}
-
-	public shouldProcessActorUpdate(message: Message<Payloads.ActorUpdate>) {
-		const lastUpdate = this.actorLastUpdate.get(message.payload.actor.id);
-		const time = Date.now();
-		if (!lastUpdate || lastUpdate < time - 1000) {
-			this.actorLastUpdate.set(message.payload.actor.id, time);
-			return true;
-		} else {
-			return false;
-		}
-	}
 }
