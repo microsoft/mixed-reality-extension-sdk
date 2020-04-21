@@ -3,7 +3,7 @@
  * Licensed under the MIT License.
  */
 
-import { Actor, AssetContainer, AssetLike, Material, Vector2, Vector2Like } from '..';
+import { AssetContainer, AssetLike, AssetUserType, Material, Vector2, Vector2Like } from '..';
 import { Patchable, readPath } from '../internal';
 import { AssetInternal } from './assetInternal';
 // break import cycle
@@ -113,7 +113,7 @@ export class Texture extends Asset implements TextureLike, Patchable<AssetLike> 
 	}
 
 	/** @hidden */
-	public breakReference(ref: Actor | Asset) {
+	public breakReference(ref: AssetUserType) {
 		if (!(ref instanceof Material)) { return; }
 		if (ref.mainTexture === this) {
 			ref.mainTexture = null;

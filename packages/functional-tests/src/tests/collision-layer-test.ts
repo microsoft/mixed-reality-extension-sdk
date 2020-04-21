@@ -6,7 +6,6 @@
 import * as MRE from '@microsoft/mixed-reality-extension-sdk';
 
 import { Test } from '../test';
-import { LeftRightSwing } from '../utils/animations';
 
 export default class CollisionLayerTest extends Test {
 	public expectedResultDescription = "Observe different collision layer interactions";
@@ -106,6 +105,16 @@ export default class CollisionLayerTest extends Test {
 			|| this.assets.createMaterial('boxDefault', { color: MRE.Color3.LightGray().toColor4(0.5) });
 		const boxHitMat = this.assets.materials.find(m => m.name === 'boxHit')
 			|| this.assets.createMaterial('boxHit', { color: MRE.Color3.Red().toColor4(0.5) });
+		const ballAnim = this.assets.animationData.find(ad => ad.name === 'swing')
+			|| this.assets.createAnimationData('swing', {
+				tracks: [{
+					target: MRE.ActorPath('target').transform.local.position.x,
+					keyframes: [
+						{ time: 0, value: 0.25 },
+						{ time: 0.5, value: -0.25 },
+						{ time: 1, value: 0.25 }]
+				} as MRE.Track<number>]
+			});
 
 		const box = MRE.Actor.Create(this.app.context, {
 			actor: {
@@ -146,13 +155,16 @@ export default class CollisionLayerTest extends Test {
 				}
 			}
 		});
-		ball.createAnimation('swing', {
-			keyframes: LeftRightSwing,
-			wrapMode: MRE.AnimationWrapMode.Loop,
-			initialState: {
-				time: 0,
-				enabled: true
-			}
-		});
+		const anim = this.app.context.animations[0];
+		ballAnim.bind({ target: ball },
+			!anim ? {
+				wrapMode: MRE.AnimationWrapMode.Loop,
+				isPlaying: true
+			} : {
+				wrapMode: MRE.AnimationWrapMode.Loop,
+				basisTime: anim.basisTime,
+				time: anim.time,
+				weight: anim.weight
+			});
 	}
 }

@@ -8,7 +8,6 @@ import {
 	ActorLike,
 	Animation,
 	AnimationLike,
-	AnimationWrapMode,
 	Asset,
 	AssetContainer,
 	AssetContainerIterable,
@@ -17,14 +16,12 @@ import {
 	CollisionEvent,
 	CollisionLayer,
 	Context,
-	CreateAnimationOptions,
 	Guid,
 	log,
 	MediaCommand,
 	MediaInstance,
 	newGuid,
 	PerformanceStats,
-	SetAnimationStateOptions,
 	SetMediaStateOptions,
 	TriggerEvent,
 	User,
@@ -37,8 +34,6 @@ import {
 	Patchable,
 	Payloads,
 	Protocols,
-	resolveJsonValues,
-	safeAccessPath as safeGet,
 } from '../internal';
 
 /**
@@ -205,83 +200,38 @@ export class ContextInternal {
 		return actor;
 	}
 
-	public createAnimation(actorId: Guid, animationName: string, options: CreateAnimationOptions) {
-		const actor = this.actorSet.get(actorId);
-		if (!actor) {
-			log.error('app', `Failed to create animation on ${animationName}. Actor ${actorId} not found.`);
-		}
-		options = {
-			wrapMode: AnimationWrapMode.Once,
-			...options
-		};
-
-		// Transform animations must be specified in local space
-		for (const frame of options.keyframes) {
-			if (frame.value.transform && !safeGet(frame.value, 'transform', 'local')) {
-				throw new Error("Transform animations must be specified in local space");
-			}
-		}
-
+	public async createAnimationFromData(
+		dataId: Guid,
+		targets: { [placeholder: string]: Guid },
+		initialState?: Partial<AnimationLike>
+	): Promise<Animation> {
 		// generate the anim immediately
+		const data = this.lookupAsset(dataId)?.animationData;
+		if (!data) {
+			throw new Error(`No animation data with id "${dataId}" found.`);
+		}
+
 		const createdAnim = new Animation(this.context, newGuid());
 		createdAnim.copy({
-			name: animationName,
-			targetActorIds: [actorId],
-			weight: options.initialState?.enabled === true ? 1 : 0,
-			speed: options.initialState?.speed,
-			time: options.initialState?.time
+			name: data.name,
+			...initialState,
+			dataId,
+			targetIds: Object.values(targets),
 		});
 		this.animationSet.set(createdAnim.id, createdAnim);
+		data.addReference(createdAnim);
 
-		// Resolve by-reference values now, ensuring they won't change in the
-		// time between now and when this message is actually sent.
-		options.keyframes = resolveJsonValues(options.keyframes);
-		return new Promise<Animation>((resolve, reject) => {
-			this.protocol.sendPayload({
-				type: 'create-animation',
-				actorId,
-				animationName,
-				animationId: createdAnim.id.toString(),
-				...options
-			} as Payloads.CreateAnimation,
-			{
-				resolve: (reply: Payloads.ObjectSpawned) => {
-					if (reply.result.resultCode !== 'error') {
-						createdAnim.copy(reply.animations[0]);
-						resolve(createdAnim);
-					} else {
-						reject(reply.result.message);
-					}
-				},
-				reject
-			});
+		const reply = await this.sendPayloadAndGetReply<Payloads.CreateAnimation2, Payloads.ObjectSpawned>({
+			type: 'create-animation-2',
+			animation: createdAnim.toJSON(),
+			targets
 		});
-	}
 
-	public setAnimationState(
-		actorId: Guid,
-		animationName: string,
-		state: SetAnimationStateOptions
-	) {
-		const actor = this.actorSet.get(actorId);
-		if (!actor) {
-			log.error('app', `Failed to set animation state on "${animationName}". Actor "${actorId}" not found.`);
-			return;
-		}
-		const anim = actor.animationsByName.get(animationName);
-		if (!anim) {
-			log.error('app', `Failed to set animation state on "${animationName}". ` +
-				`No animation with this name was found on actor "${actorId}" (${actor.name}).`);
-			return;
-		}
-		if (state.enabled !== undefined) {
-			anim.isPlaying = state.enabled;
-		}
-		if (state.speed !== undefined) {
-			anim.speed = state.speed;
-		}
-		if (state.time !== undefined) {
-			anim.time = state.time;
+		if (reply.result.resultCode !== 'error') {
+			createdAnim.copy(reply.animations[0]);
+			return createdAnim;
+		} else {
+			throw new Error(reply.result.message);
 		}
 	}
 
@@ -299,31 +249,6 @@ export class ContextInternal {
 			mediaCommand: command,
 			options
 		} as Payloads.SetMediaState);
-	}
-
-	public animateTo(
-		actorId: Guid,
-		value: Partial<ActorLike>,
-		duration: number,
-		curve: number[],
-	) {
-		const actor = this.actorSet.get(actorId);
-		if (!actor) {
-			log.error('app', `Failed animateTo. Actor ${actorId} not found.`);
-		} else if (!Array.isArray(curve) || curve.length !== 4) {
-			log.error('app', '`curve` parameter must be an array of four numbers. ' +
-				'Try passing one of the predefined curves from `AnimationEaseCurves`');
-		} else {
-			this.protocol.sendPayload({
-				type: 'interpolate-actor',
-				actorId,
-				animationName: newGuid().toString(),
-				value,
-				duration,
-				curve,
-				enabled: true
-			} as Payloads.InterpolateActor);
-		}
 	}
 
 	public async startListening() {
@@ -345,7 +270,6 @@ export class ContextInternal {
 			execution.on('protocol.receive-rpc', this.receiveRPC.bind(this));
 			execution.on('protocol.collision-event-raised', this.collisionEventRaised.bind(this));
 			execution.on('protocol.trigger-event-raised', this.triggerEventRaised.bind(this));
-			execution.on('protocol.set-animation-state', this.setAnimationStateEventRaised.bind(this));
 			execution.on('protocol.update-animations', this.updateAnimations.bind(this));
 
 			// Startup the execution protocol
@@ -483,7 +407,10 @@ export class ContextInternal {
 		if (!animPatches) { return; }
 		const newAnims: Animation[] = [];
 		for (const patch of animPatches) {
-			if (this.animationSet.has(patch.id)) { continue; }
+			if (this.animationSet.has(patch.id)) {
+				this.animationSet.get(patch.id).copy(patch);
+				continue;
+			}
 			const newAnim = new Animation(this.context, patch.id);
 			this.animationSet.set(newAnim.id, newAnim);
 			newAnim.copy(patch);
@@ -496,6 +423,14 @@ export class ContextInternal {
 
 	public sendPayload(payload: Payloads.Payload, promise?: ExportedPromise): void {
 		this.protocol.sendPayload(payload, promise);
+	}
+
+	public sendPayloadAndGetReply<T extends Payloads.Payload, U extends Payloads.Payload>(payload: T): Promise<U> {
+		return new Promise<U>((resolve, reject) => {
+			this.protocol.sendPayload(
+				payload, { resolve, reject }
+			);
+		});
 	}
 
 	public receiveRPC(payload: Payloads.EngineToAppRPC) {
@@ -571,13 +506,6 @@ export class ContextInternal {
 		}
 	}
 
-	public setAnimationStateEventRaised(actorId: Guid, animationName: string, state: SetAnimationStateOptions) {
-		const actor = this.context.actor(actorId);
-		if (actor) {
-			actor.internal.setAnimationStateEventRaised(animationName, state);
-		}
-	}
-
 	public localDestroyActors(actorIds: Guid[]) {
 		for (const actorId of actorIds) {
 			if (this.actorSet.has(actorId)) {
@@ -591,8 +519,17 @@ export class ContextInternal {
 		(actor.children || []).forEach(child => {
 			this.localDestroyActor(child);
 		});
+
 		// Remove actor from _actors
 		this.actorSet.delete(actor.id);
+
+		// Check targeting animations for orphans
+		for (const anim of actor.targetingAnimations.values()) {
+			if (anim.isOrphan()) {
+				this.destroyAnimation(anim.id);
+			}
+		}
+
 		// Raise event
 		this.context.emitter.emit('actor-destroyed', actor);
 	}
@@ -604,6 +541,26 @@ export class ContextInternal {
 			this.sendDestroyActors([actorId]);
 			// Clean up the actor locally
 			this.localDestroyActor(actor);
+		}
+	}
+
+	public destroyAnimation(animationId: Guid, cascadeIds: Guid[] = []) {
+		const shouldSendDestroyMessage = cascadeIds.length === 0;
+		cascadeIds.push(animationId);
+
+		/*const anim = this.animationSet.get(animationId);*/
+		this.animationSet.delete(animationId);
+		/*for (const targetingAnim of anim.targetingAnimations.values()) {
+			if (targetingAnim.isOrphan()) {
+				this.destroyAnimation(targetingAnim.id, cascadeIds);
+			}
+		}*/
+
+		if (shouldSendDestroyMessage) {
+			this.protocol.sendPayload({
+				type: 'destroy-animations',
+				animationIds: cascadeIds
+			} as Partial<Payloads.DestroyAnimations>);
 		}
 	}
 

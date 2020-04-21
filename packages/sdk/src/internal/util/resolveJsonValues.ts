@@ -9,7 +9,7 @@
  * call it and replace the value with the return value.
  */
 export function resolveJsonValues(obj: any) {
-	if (typeof obj === 'object') {
+	if (typeof obj === 'object' && obj !== null) {
 		if (typeof obj.toJSON === 'function') {
 			obj = obj.toJSON();
 		}

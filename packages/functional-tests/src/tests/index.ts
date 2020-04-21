@@ -7,7 +7,12 @@ import { TestFactory } from '../test';
 import ActorSpamTest from './actor-spam-test';
 import AltspaceVRLibraryTest from './altspacevr-library-test';
 import AltspaceVRVideoTest from './altspacevr-video-test';
-import AnimationTest from './animation-test';
+import AnimationBlendTest from './animation-blend-test';
+import AnimationDynamicTest from './animation-dynamic-test';
+import AnimationRelativeTest from './animation-relative-test';
+import AnimationScaleTest from './animation-scale-test';
+import AnimationSyncTest from './animation-sync-test';
+import AnimationToTest from './animation-to-test';
 import AssetEarlyAssignmentTest from './asset-early-assignment-test';
 import AssetMutabilityTest from './asset-mutability-test';
 import AssetPreloadTest from './asset-preload-test';
@@ -21,7 +26,6 @@ import GltfGenTest from './gltf-gen-test';
 import GrabTest from './grab-test';
 import GridTest from './grid-test';
 import InputTest from './input-test';
-import InterpolationTest from './interpolation-test';
 import LibraryFailTest from './library-fail-test';
 import LightTest from './light-test';
 import LookAtTest from './look-at-test';
@@ -48,7 +52,12 @@ export const Factories = {
 	'actor-spam': (...args) => new ActorSpamTest(...args),
 	'altspacevr-library': (...args) => new AltspaceVRLibraryTest(...args),
 	'altspacevr-video': (...args) => new AltspaceVRVideoTest(...args),
-	'animation': (...args) => new AnimationTest(...args),
+	'animation-blend': (...args) => new AnimationBlendTest(...args),
+	'animation-dynamic': (...args) => new AnimationDynamicTest(...args),
+	'animation-relative': (...args) => new AnimationRelativeTest(...args),
+	'animation-scale': (...args) => new AnimationScaleTest(...args),
+	'animation-sync': (...args) => new AnimationSyncTest(...args),
+	'animation-to': (...args) => new AnimationToTest(...args),
 	'asset-early-assignment': (...args) => new AssetEarlyAssignmentTest(...args),
 	'asset-mutability': (...args) => new AssetMutabilityTest(...args),
 	'asset-preload': (...args) => new AssetPreloadTest(...args),
@@ -62,7 +71,6 @@ export const Factories = {
 	'grab': (...args) => new GrabTest(...args),
 	'grid': (...args) => new GridTest(...args),
 	'input': (...args) => new InputTest(...args),
-	'interpolation': (...args) => new InterpolationTest(...args),
 	'library-fail': (...args) => new LibraryFailTest(...args),
 	'light': (...args) => new LightTest(...args),
 	'look-at': (...args) => new LookAtTest(...args),

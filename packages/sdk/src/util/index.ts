@@ -4,6 +4,7 @@
  */
 
 export * from './boxAlignment';
+export * from './errors';
 export * from './guid';
 export * from './log';
 export * from './planarGridLayout';
