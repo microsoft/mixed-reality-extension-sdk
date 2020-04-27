@@ -5,6 +5,9 @@
 			"path": "./packages/sdk"
 		},
 		{
+			"path": "./packages/common"
+		},
+		{
 			"path": "./packages/gltf-gen"
 		},
 		{

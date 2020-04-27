@@ -98,6 +98,7 @@
 						<section class="tsd-index-section ">
 							<h3>Accessors</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="assetcontainer.html#animationdata" class="tsd-kind-icon">animation<wbr>Data</a></li>
 								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="assetcontainer.html#assets" class="tsd-kind-icon">assets</a></li>
 								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="assetcontainer.html#assetsbyid" class="tsd-kind-icon">assets<wbr>ById</a></li>
 								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="assetcontainer.html#materials" class="tsd-kind-icon">materials</a></li>
@@ -110,6 +111,7 @@
 						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="assetcontainer.html#createanimationdata" class="tsd-kind-icon">create<wbr>Animation<wbr>Data</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="assetcontainer.html#createboxmesh" class="tsd-kind-icon">create<wbr>Box<wbr>Mesh</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="assetcontainer.html#createcapsulemesh" class="tsd-kind-icon">create<wbr>Capsule<wbr>Mesh</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="assetcontainer.html#createcylindermesh" class="tsd-kind-icon">create<wbr>Cylinder<wbr>Mesh</a></li>
@@ -139,7 +141,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/711ebd3/packages/sdk/src/types/runtime/assets/assetContainer.ts#L48">src/types/runtime/assets/assetContainer.ts:48</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/26e0348/packages/sdk/src/asset/assetContainer.ts#L56">src/asset/assetContainer.ts:56</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -166,13 +168,35 @@
 					<div class="tsd-signature tsd-kind-icon">context<span class="tsd-signature-symbol">:</span> <a href="context.html" class="tsd-signature-type">Context</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/711ebd3/packages/sdk/src/types/runtime/assets/assetContainer.ts#L51">src/types/runtime/assets/assetContainer.ts:51</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/26e0348/packages/sdk/src/asset/assetContainer.ts#L59">src/asset/assetContainer.ts:59</a></li>
 						</ul>
 					</aside>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Accessors</h2>
+				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
+					<a name="animationdata" class="tsd-anchor"></a>
+					<h3>animation<wbr>Data</h3>
+					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> animationData<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="animationdata.html" class="tsd-signature-type">AnimationData</a><span class="tsd-signature-symbol">[]</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/26e0348/packages/sdk/src/asset/assetContainer.ts#L46">src/asset/assetContainer.ts:46</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>A list of all animation data in this container</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <a href="animationdata.html" class="tsd-signature-type">AnimationData</a><span class="tsd-signature-symbol">[]</span></h4>
+						</li>
+					</ul>
+				</section>
 				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
 					<a name="assets" class="tsd-anchor"></a>
 					<h3>assets</h3>
@@ -183,7 +207,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/711ebd3/packages/sdk/src/types/runtime/assets/assetContainer.ts#L38">src/types/runtime/assets/assetContainer.ts:38</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/26e0348/packages/sdk/src/asset/assetContainer.ts#L44">src/asset/assetContainer.ts:44</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -199,13 +223,13 @@
 					<a name="assetsbyid" class="tsd-anchor"></a>
 					<h3>assets<wbr>ById</h3>
 					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> assetsById<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">{}</span></li>
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> assetsById<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/readonlymap.html" class="tsd-signature-type">ReadonlyMap</a><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/guid.html" class="tsd-signature-type">Guid</a><span class="tsd-signature-symbol">, </span><a href="asset.html" class="tsd-signature-type">Asset</a><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/711ebd3/packages/sdk/src/types/runtime/assets/assetContainer.ts#L36">src/types/runtime/assets/assetContainer.ts:36</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/26e0348/packages/sdk/src/asset/assetContainer.ts#L42">src/asset/assetContainer.ts:42</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -213,9 +237,7 @@
 									<p>A mapping of asset IDs to assets in this container</p>
 								</div>
 							</div>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-symbol">{}</span></h4>
-							<ul class="tsd-parameters">
-							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="../interfaces/readonlymap.html" class="tsd-signature-type">ReadonlyMap</a><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/guid.html" class="tsd-signature-type">Guid</a><span class="tsd-signature-symbol">, </span><a href="asset.html" class="tsd-signature-type">Asset</a><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -229,7 +251,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/711ebd3/packages/sdk/src/types/runtime/assets/assetContainer.ts#L40">src/types/runtime/assets/assetContainer.ts:40</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/26e0348/packages/sdk/src/asset/assetContainer.ts#L48">src/asset/assetContainer.ts:48</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -251,7 +273,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/711ebd3/packages/sdk/src/types/runtime/assets/assetContainer.ts#L42">src/types/runtime/assets/assetContainer.ts:42</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/26e0348/packages/sdk/src/asset/assetContainer.ts#L50">src/asset/assetContainer.ts:50</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -273,7 +295,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/711ebd3/packages/sdk/src/types/runtime/assets/assetContainer.ts#L44">src/types/runtime/assets/assetContainer.ts:44</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/26e0348/packages/sdk/src/asset/assetContainer.ts#L52">src/asset/assetContainer.ts:52</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -295,7 +317,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/711ebd3/packages/sdk/src/types/runtime/assets/assetContainer.ts#L46">src/types/runtime/assets/assetContainer.ts:46</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/26e0348/packages/sdk/src/asset/assetContainer.ts#L54">src/asset/assetContainer.ts:54</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -317,7 +339,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/711ebd3/packages/sdk/src/types/runtime/assets/assetContainer.ts#L48">src/types/runtime/assets/assetContainer.ts:48</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/26e0348/packages/sdk/src/asset/assetContainer.ts#L56">src/asset/assetContainer.ts:56</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -333,6 +355,48 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Methods</h2>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="createanimationdata" class="tsd-anchor"></a>
+					<h3>create<wbr>Animation<wbr>Data</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">create<wbr>Animation<wbr>Data<span class="tsd-signature-symbol">(</span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, data<span class="tsd-signature-symbol">: </span><a href="../interfaces/animationdatalike.html" class="tsd-signature-type">AnimationDataLike</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="animationdata.html" class="tsd-signature-type">AnimationData</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/26e0348/packages/sdk/src/asset/assetContainer.ts#L130">src/asset/assetContainer.ts:130</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Preload unbound animation keyframe data for later use.</p>
+								</div>
+								<dl class="tsd-comment-tags">
+									<dt>throws</dt>
+									<dd><p>[[MreValidationError]] If the provided animation data is malformed. See the error message for details.</p>
+									</dd>
+								</dl>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>name: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The name of this animation</p>
+									</div>
+								</li>
+								<li>
+									<h5>data: <a href="../interfaces/animationdatalike.html" class="tsd-signature-type">AnimationDataLike</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The keyframe data</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="animationdata.html" class="tsd-signature-type">AnimationData</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
 					<a name="createboxmesh" class="tsd-anchor"></a>
 					<h3>create<wbr>Box<wbr>Mesh</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -342,7 +406,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/711ebd3/packages/sdk/src/types/runtime/assets/assetContainer.ts#L139">src/types/runtime/assets/assetContainer.ts:139</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/26e0348/packages/sdk/src/asset/assetContainer.ts#L169">src/asset/assetContainer.ts:169</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -391,7 +455,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/711ebd3/packages/sdk/src/types/runtime/assets/assetContainer.ts#L155">src/types/runtime/assets/assetContainer.ts:155</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/26e0348/packages/sdk/src/asset/assetContainer.ts#L185">src/asset/assetContainer.ts:185</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -452,7 +516,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/711ebd3/packages/sdk/src/types/runtime/assets/assetContainer.ts#L181">src/types/runtime/assets/assetContainer.ts:181</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/26e0348/packages/sdk/src/asset/assetContainer.ts#L211">src/asset/assetContainer.ts:211</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -507,7 +571,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/711ebd3/packages/sdk/src/types/runtime/assets/assetContainer.ts#L61">src/types/runtime/assets/assetContainer.ts:61</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/26e0348/packages/sdk/src/asset/assetContainer.ts#L69">src/asset/assetContainer.ts:69</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -544,7 +608,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/711ebd3/packages/sdk/src/types/runtime/assets/assetContainer.ts#L202">src/types/runtime/assets/assetContainer.ts:202</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/26e0348/packages/sdk/src/asset/assetContainer.ts#L232">src/asset/assetContainer.ts:232</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -599,7 +663,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/711ebd3/packages/sdk/src/types/runtime/assets/assetContainer.ts#L216">src/types/runtime/assets/assetContainer.ts:216</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/26e0348/packages/sdk/src/asset/assetContainer.ts#L246">src/asset/assetContainer.ts:246</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -636,7 +700,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/711ebd3/packages/sdk/src/types/runtime/assets/assetContainer.ts#L91">src/types/runtime/assets/assetContainer.ts:91</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/26e0348/packages/sdk/src/asset/assetContainer.ts#L99">src/asset/assetContainer.ts:99</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -673,7 +737,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/711ebd3/packages/sdk/src/types/runtime/assets/assetContainer.ts#L123">src/types/runtime/assets/assetContainer.ts:123</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/26e0348/packages/sdk/src/asset/assetContainer.ts#L153">src/asset/assetContainer.ts:153</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -722,7 +786,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/711ebd3/packages/sdk/src/types/runtime/assets/assetContainer.ts#L76">src/types/runtime/assets/assetContainer.ts:76</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/26e0348/packages/sdk/src/asset/assetContainer.ts#L84">src/asset/assetContainer.ts:84</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -759,7 +823,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/711ebd3/packages/sdk/src/types/runtime/assets/assetContainer.ts#L106">src/types/runtime/assets/assetContainer.ts:106</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/26e0348/packages/sdk/src/asset/assetContainer.ts#L114">src/asset/assetContainer.ts:114</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -796,7 +860,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/711ebd3/packages/sdk/src/types/runtime/assets/assetContainer.ts#L234">src/types/runtime/assets/assetContainer.ts:234</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/26e0348/packages/sdk/src/asset/assetContainer.ts#L264">src/asset/assetContainer.ts:264</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -834,7 +898,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/711ebd3/packages/sdk/src/types/runtime/assets/assetContainer.ts#L267">src/types/runtime/assets/assetContainer.ts:267</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/26e0348/packages/sdk/src/asset/assetContainer.ts#L298">src/asset/assetContainer.ts:298</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -870,6 +934,9 @@
 								<a href="assetcontainer.html#context" class="tsd-kind-icon">context</a>
 							</li>
 							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
+								<a href="assetcontainer.html#animationdata" class="tsd-kind-icon">animation<wbr>Data</a>
+							</li>
+							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
 								<a href="assetcontainer.html#assets" class="tsd-kind-icon">assets</a>
 							</li>
 							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
@@ -889,6 +956,9 @@
 							</li>
 							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
 								<a href="assetcontainer.html#textures" class="tsd-kind-icon">textures</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="assetcontainer.html#createanimationdata" class="tsd-kind-icon">create<wbr>Animation<wbr>Data</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="assetcontainer.html#createboxmesh" class="tsd-kind-icon">create<wbr>Box<wbr>Mesh</a>

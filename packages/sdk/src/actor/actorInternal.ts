@@ -11,6 +11,7 @@ import {
 	Behavior,
 	CollisionData,
 	CollisionEventType,
+	DiscreteAction,
 	SetAnimationStateOptions,
 	TriggerEventType
 } from '..';
@@ -59,18 +60,6 @@ export class ActorInternal implements InternalPatchable<ActorLike> {
 	public triggerEventRaised(triggerEventType: TriggerEventType, otherActor: Actor) {
 		if (this.collider) {
 			this.collider.eventReceived(triggerEventType, otherActor);
-		}
-	}
-
-	public setAnimationStateEventRaised(animationName: string, state: SetAnimationStateOptions) {
-		if (this.actor) {
-			if (state.enabled !== undefined) {
-				if (state.enabled) {
-					this.actor.emitter.emit('animation-enabled', animationName);
-				} else {
-					this.actor.emitter.emit('animation-disabled', animationName);
-				}
-			}
 		}
 	}
 

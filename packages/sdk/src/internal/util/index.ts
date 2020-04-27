@@ -6,6 +6,7 @@
 export * from './deterministicGuids';
 export * from './exponentialMovingAverage';
 export * from './filterEmpty';
+export * from './like';
 export * from './observe';
 export * from './readPath';
 export * from './resolveJsonValues';

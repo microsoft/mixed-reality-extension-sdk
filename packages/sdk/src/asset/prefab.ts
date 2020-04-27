@@ -3,7 +3,7 @@
  * Licensed under the MIT License.
  */
 
-import { Actor, AssetContainer, AssetLike } from '..';
+import { Actor, AssetContainer, AssetLike, AssetUserType } from '..';
 import { Patchable } from '../internal';
 import { AssetInternal } from './assetInternal';
 // break import cycle
@@ -67,7 +67,7 @@ export class Prefab extends Asset implements PrefabLike, Patchable<AssetLike> {
 	}
 
 	/** @hidden */
-	public breakReference(ref: Actor | Asset) {
+	public breakReference(ref: AssetUserType) {
 		if (!(ref instanceof Actor)) { return; }
 	}
 }

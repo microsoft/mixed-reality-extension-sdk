@@ -63,8 +63,8 @@
 			"type": "process",
 			"command": "node",
 			"args": [
-				"node_modules/eslint/bin/eslint.js", 
-				"--ext", ".ts", 
+				"node_modules/eslint/bin/eslint.js",
+				"--ext", ".ts",
 				"packages/functional-tests"],
 			"problemMatcher": "$eslint-stylish",
 			"group": "build"
@@ -87,8 +87,8 @@
 			"type": "process",
 			"command": "node",
 			"args": [
-				"node_modules/eslint/bin/eslint.js", 
-				"--ext", ".ts", 
+				"node_modules/eslint/bin/eslint.js",
+				"--ext", ".ts",
 				"packages/altspacevr-extras"],
 			"problemMatcher": "$eslint-stylish",
 			"group": "build"
@@ -111,8 +111,8 @@
 			"type": "process",
 			"command": "node",
 			"args": [
-				"node_modules/eslint/bin/eslint.js", 
-				"--ext", ".ts", 
+				"node_modules/eslint/bin/eslint.js",
+				"--ext", ".ts",
 				"packages/gltf-gen"],
 			"problemMatcher": "$eslint-stylish",
 			"group": "build"
@@ -120,6 +120,29 @@
 		{
 			"label": "Build+Lint GltfGen",
 			"dependsOn": ["Build GltfGen", "Lint GltfGen"],
+			"problemMatcher": [],
+			"group": "build"
+		},{
+			"label": "Build Common",
+			"type": "typescript",
+			"tsconfig": "packages/common/tsconfig.json",
+			"problemMatcher": "$tsc",
+			"group": "build"
+		},
+		{
+			"label": "Lint Common",
+			"type": "process",
+			"command": "node",
+			"args": [
+				"node_modules/eslint/bin/eslint.js",
+				"--ext", ".ts",
+				"packages/common"],
+			"problemMatcher": "$eslint-stylish",
+			"group": "build"
+		},
+		{
+			"label": "Build+Lint Common",
+			"dependsOn": ["Build Common", "Lint Common"],
 			"problemMatcher": [],
 			"group": "build"
 		},
