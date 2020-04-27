@@ -73,6 +73,7 @@ export interface ActorLike {
 	 * Any actors parented to this actor will also be exclusive to the given user.
 	 */
 	exclusiveToUser: Guid;
+	owner: Guid;
 	subscriptions: SubscriptionType[];
 	transform: Partial<ActorTransformLike>;
 	appearance: Partial<AppearanceLike>;
@@ -100,6 +101,9 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	private _name: string;
 	private _tag: string;
 	private _exclusiveToUser: Guid;
+
+	private _owner: Guid;
+
 	private _parentId = ZeroGuid;
 	private _subscriptions: SubscriptionType[] = [];
 	private _transform = new ActorTransform();
@@ -127,6 +131,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 
 	/** @inheritdoc */
 	public get exclusiveToUser() { return this._exclusiveToUser; }
+	public get owner() { return this._owner; }
 	public get subscriptions() { return this._subscriptions; }
 	public get transform() { return this._transform; }
 	public set transform(value) { this._transform.copy(value); }
@@ -803,6 +808,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 		if (from.exclusiveToUser || from.parentId) {
 			this._exclusiveToUser = this.parent && this.parent.exclusiveToUser || from.exclusiveToUser;
 		}
+		if (from.owner) { this._owner = from.owner; }
 		if (from.transform) { this._transform.copy(from.transform); }
 		if (from.attachment) { this.attach(from.attachment.userId, from.attachment.attachPoint); }
 		if (from.appearance) { this._appearance.copy(from.appearance); }
@@ -825,6 +831,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 			name: this._name,
 			tag: this._tag,
 			exclusiveToUser: this._exclusiveToUser,
+			owner: this._owner,
 			transform: this._transform.toJSON(),
 			appearance: this._appearance.toJSON(),
 			attachment: this._attachment ? this._attachment.toJSON() : undefined,
