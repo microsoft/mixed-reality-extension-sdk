@@ -23,9 +23,18 @@ export enum TextJustify {
 	Right = 'right',
 }
 
+/** Available text font types. If a type is unsupported by the MRE client, [[Default]] will be used. */
 export enum TextFontFamily {
+	/** The default engine font */
+	Default = 'default',
+	/** A font with serif strokes */
 	Serif = 'serif',
+	/** A font without serif strokes */
 	SansSerif = 'sans-serif',
+	/** A font where all characters are the same width */
+	Monospace = 'monospace',
+	/** A handwritten font */
+	Cursive = 'cursive'
 }
 
 export interface TextLike {
