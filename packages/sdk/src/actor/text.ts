@@ -78,7 +78,7 @@ export class Text implements TextLike {
 	/**
 	 * The font family to use to draw the text
 	 */
-	public font: TextFontFamily = TextFontFamily.SansSerif;
+	public font: TextFontFamily = TextFontFamily.Default;
 	/**
 	 * The text's color
 	 */
