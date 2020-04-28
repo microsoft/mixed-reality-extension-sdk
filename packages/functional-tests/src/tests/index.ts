@@ -29,6 +29,8 @@ import InputTest from './input-test';
 import LibraryFailTest from './library-fail-test';
 import LightTest from './light-test';
 import LookAtTest from './look-at-test';
+import PhysicsBounceTest from './physics-bounce-test';
+import PhysicsFrictionTest from './physics-friction-test';
 import PhysicsSimTest from './physics-sim-test';
 import PhysicsCollisionTest from './physics-collision'
 import PhysichFreeFallTest from './physics-free-fall'
@@ -77,6 +79,8 @@ export const Factories = {
 	'library-fail': (...args) => new LibraryFailTest(...args),
 	'light': (...args) => new LightTest(...args),
 	'look-at': (...args) => new LookAtTest(...args),
+	'physics-bounce': (...args) => new PhysicsBounceTest(...args),
+	'physics-firction': (...args) => new PhysicsFrictionTest(...args),
 	'physics-sim': (...args) => new PhysicsSimTest(...args),
 	'physics-free-fall': (...args) => new PhysichFreeFallTest(...args),
 	'physics-collision': (...args) => new PhysicsCollisionTest(...args),
