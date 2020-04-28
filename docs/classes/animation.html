@@ -98,14 +98,16 @@
 							<h3>Accessors</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="animation.html#basistime" class="tsd-kind-icon">basis<wbr>Time</a></li>
+								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="animation.html#data" class="tsd-kind-icon">data</a></li>
+								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="animation.html#dataid" class="tsd-kind-icon">data<wbr>Id</a></li>
 								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="animation.html#duration" class="tsd-kind-icon">duration</a></li>
 								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="animation.html#id" class="tsd-kind-icon">id</a></li>
 								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="animation.html#isplaying" class="tsd-kind-icon">is<wbr>Playing</a></li>
 								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="animation.html#name" class="tsd-kind-icon">name</a></li>
 								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="animation.html#normalizedtime" class="tsd-kind-icon">normalized<wbr>Time</a></li>
 								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="animation.html#speed" class="tsd-kind-icon">speed</a></li>
-								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="animation.html#targetactorids" class="tsd-kind-icon">target<wbr>Actor<wbr>Ids</a></li>
 								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="animation.html#targetactors" class="tsd-kind-icon">target<wbr>Actors</a></li>
+								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="animation.html#targetids" class="tsd-kind-icon">target<wbr>Ids</a></li>
 								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="animation.html#time" class="tsd-kind-icon">time</a></li>
 								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="animation.html#weight" class="tsd-kind-icon">weight</a></li>
 								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="animation.html#wrapmode" class="tsd-kind-icon">wrap<wbr>Mode</a></li>
@@ -114,9 +116,12 @@
 						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="animation.html#delete" class="tsd-kind-icon">delete</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="animation.html#finished" class="tsd-kind-icon">finished</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="animation.html#isorphan" class="tsd-kind-icon">is<wbr>Orphan</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="animation.html#play" class="tsd-kind-icon">play</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="animation.html#stop" class="tsd-kind-icon">stop</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-static"><a href="animation.html#animateto" class="tsd-kind-icon">Animate<wbr>To</a></li>
 							</ul>
 						</section>
 					</div>
@@ -134,7 +139,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/eb0ccbd/packages/sdk/src/animation/animation.ts#L171">src/animation/animation.ts:171</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/26e0348/packages/sdk/src/animation/animation.ts#L214">src/animation/animation.ts:214</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -169,7 +174,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/eb0ccbd/packages/sdk/src/animation/animation.ts#L59">src/animation/animation.ts:59</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/26e0348/packages/sdk/src/animation/animation.ts#L85">src/animation/animation.ts:85</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -186,7 +191,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/eb0ccbd/packages/sdk/src/animation/animation.ts#L66">src/animation/animation.ts:66</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/26e0348/packages/sdk/src/animation/animation.ts#L94">src/animation/animation.ts:94</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -205,6 +210,54 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
+					<a name="data" class="tsd-anchor"></a>
+					<h3>data</h3>
+					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> data<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="animationdata.html" class="tsd-signature-type">AnimationData</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/26e0348/packages/sdk/src/animation/animation.ts#L180">src/animation/animation.ts:180</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>The keyframe data bound to this animation</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <a href="animationdata.html" class="tsd-signature-type">AnimationData</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
+					<a name="dataid" class="tsd-anchor"></a>
+					<h3>data<wbr>Id</h3>
+					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> dataId<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/guid.html" class="tsd-signature-type">Guid</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/26e0348/packages/sdk/src/animation/animation.ts#L178">src/animation/animation.ts:178</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>The ID of the AnimationData bound to this animation</p>
+								</div>
+								<dl class="tsd-comment-tags">
+									<dt>inheritdoc</dt>
+									<dd></dd>
+								</dl>
+							</div>
+							<h4 class="tsd-returns-title">Returns <a href="../interfaces/guid.html" class="tsd-signature-type">Guid</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
 					<a name="duration" class="tsd-anchor"></a>
 					<h3>duration</h3>
 					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class">
@@ -214,12 +267,13 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/eb0ccbd/packages/sdk/src/animation/animation.ts#L158">src/animation/animation.ts:158</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/26e0348/packages/sdk/src/animation/animation.ts#L201">src/animation/animation.ts:201</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>The length in seconds of the animation</p>
+									<p>The length in seconds of the animation. Only populated for animations without data.
+									See <a href="animation.html#dataid">dataId</a> and <a href="animationdata.html#duration">AnimationData.duration</a>.</p>
 								</div>
 								<dl class="tsd-comment-tags">
 									<dt>inheritdoc</dt>
@@ -240,7 +294,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/eb0ccbd/packages/sdk/src/animation/animation.ts#L47">src/animation/animation.ts:47</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/26e0348/packages/sdk/src/animation/animation.ts#L73">src/animation/animation.ts:73</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -267,7 +321,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/eb0ccbd/packages/sdk/src/animation/animation.ts#L164">src/animation/animation.ts:164</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/26e0348/packages/sdk/src/animation/animation.ts#L207">src/animation/animation.ts:207</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -281,7 +335,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/eb0ccbd/packages/sdk/src/animation/animation.ts#L165">src/animation/animation.ts:165</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/26e0348/packages/sdk/src/animation/animation.ts#L208">src/animation/animation.ts:208</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -311,7 +365,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/eb0ccbd/packages/sdk/src/animation/animation.ts#L51">src/animation/animation.ts:51</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/26e0348/packages/sdk/src/animation/animation.ts#L77">src/animation/animation.ts:77</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -328,7 +382,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/eb0ccbd/packages/sdk/src/animation/animation.ts#L52">src/animation/animation.ts:52</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/26e0348/packages/sdk/src/animation/animation.ts#L78">src/animation/animation.ts:78</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -356,7 +410,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/eb0ccbd/packages/sdk/src/animation/animation.ts#L96">src/animation/animation.ts:96</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/26e0348/packages/sdk/src/animation/animation.ts#L126">src/animation/animation.ts:126</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -379,7 +433,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/eb0ccbd/packages/sdk/src/animation/animation.ts#L106">src/animation/animation.ts:106</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/26e0348/packages/sdk/src/animation/animation.ts#L137">src/animation/animation.ts:137</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -396,7 +450,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/eb0ccbd/packages/sdk/src/animation/animation.ts#L107">src/animation/animation.ts:107</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/26e0348/packages/sdk/src/animation/animation.ts#L138">src/animation/animation.ts:138</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -415,32 +469,6 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
-					<a name="targetactorids" class="tsd-anchor"></a>
-					<h3>target<wbr>Actor<wbr>Ids</h3>
-					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> targetActorIds<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">ReadonlyArray</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/guid.html" class="tsd-signature-type">Guid</a><span class="tsd-signature-symbol">&gt;</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/eb0ccbd/packages/sdk/src/animation/animation.ts#L151">src/animation/animation.ts:151</a></li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>The IDs of the actors targeted by this animation</p>
-								</div>
-								<dl class="tsd-comment-tags">
-									<dt>inheritdoc</dt>
-									<dd></dd>
-								</dl>
-							</div>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">ReadonlyArray</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/guid.html" class="tsd-signature-type">Guid</a><span class="tsd-signature-symbol">&gt;</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
 					<a name="targetactors" class="tsd-anchor"></a>
 					<h3>target<wbr>Actors</h3>
 					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class">
@@ -450,7 +478,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/eb0ccbd/packages/sdk/src/animation/animation.ts#L154">src/animation/animation.ts:154</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/26e0348/packages/sdk/src/animation/animation.ts#L187">src/animation/animation.ts:187</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -459,6 +487,32 @@
 								</div>
 							</div>
 							<h4 class="tsd-returns-title">Returns <a href="actor.html" class="tsd-signature-type">Actor</a><span class="tsd-signature-symbol">[]</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
+					<a name="targetids" class="tsd-anchor"></a>
+					<h3>target<wbr>Ids</h3>
+					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> targetIds<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">ReadonlyArray</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/guid.html" class="tsd-signature-type">Guid</a><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/26e0348/packages/sdk/src/animation/animation.ts#L184">src/animation/animation.ts:184</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>The IDs of the objects targeted by this animation</p>
+								</div>
+								<dl class="tsd-comment-tags">
+									<dt>inheritdoc</dt>
+									<dd></dd>
+								</dl>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">ReadonlyArray</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/guid.html" class="tsd-signature-type">Guid</a><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -473,7 +527,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/eb0ccbd/packages/sdk/src/animation/animation.ts#L78">src/animation/animation.ts:78</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/26e0348/packages/sdk/src/animation/animation.ts#L105">src/animation/animation.ts:105</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -490,7 +544,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/eb0ccbd/packages/sdk/src/animation/animation.ts#L85">src/animation/animation.ts:85</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/26e0348/packages/sdk/src/animation/animation.ts#L112">src/animation/animation.ts:112</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -519,7 +573,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/eb0ccbd/packages/sdk/src/animation/animation.ts#L126">src/animation/animation.ts:126</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/26e0348/packages/sdk/src/animation/animation.ts#L155">src/animation/animation.ts:155</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -536,7 +590,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/eb0ccbd/packages/sdk/src/animation/animation.ts#L127">src/animation/animation.ts:127</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/26e0348/packages/sdk/src/animation/animation.ts#L156">src/animation/animation.ts:156</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -565,7 +619,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/eb0ccbd/packages/sdk/src/animation/animation.ts#L142">src/animation/animation.ts:142</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/26e0348/packages/sdk/src/animation/animation.ts#L170">src/animation/animation.ts:170</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -582,7 +636,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/eb0ccbd/packages/sdk/src/animation/animation.ts#L143">src/animation/animation.ts:143</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/26e0348/packages/sdk/src/animation/animation.ts#L171">src/animation/animation.ts:171</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -604,6 +658,28 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Methods</h2>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="delete" class="tsd-anchor"></a>
+					<h3>delete</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">delete<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/26e0348/packages/sdk/src/animation/animation.ts#L314">src/animation/animation.ts:314</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Destroy this animation.</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
 					<a name="finished" class="tsd-anchor"></a>
 					<h3>finished</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -613,7 +689,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/eb0ccbd/packages/sdk/src/animation/animation.ts#L207">src/animation/animation.ts:207</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/26e0348/packages/sdk/src/animation/animation.ts#L285">src/animation/animation.ts:285</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -621,6 +697,29 @@
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
 							<p>A promise that resolves when the animation completes. This only occurs if the wrap mode is set
 							to &quot;Once&quot;. The promise is not resolved if the animation is stopped manually.</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="isorphan" class="tsd-anchor"></a>
+					<h3>is<wbr>Orphan</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">is<wbr>Orphan<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/26e0348/packages/sdk/src/animation/animation.ts#L301">src/animation/animation.ts:301</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Tells whether this animation is an orphan, i.e. its data has been unloaded, or it has no live targets.</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+							<p>Whether this animation is an orphan.</p>
 						</li>
 					</ul>
 				</section>
@@ -634,7 +733,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/eb0ccbd/packages/sdk/src/animation/animation.ts#L182">src/animation/animation.ts:182</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/26e0348/packages/sdk/src/animation/animation.ts#L252">src/animation/animation.ts:252</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -645,9 +744,10 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> reset: <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> = false</span></h5>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> reset: <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> = null</span></h5>
 									<div class="tsd-comment tsd-typography">
-										<p>If true, restart the animation from the beginning.</p>
+										<p>If true, restart the animation from the beginning.
+										Defaults to <code>true</code> when <code>wrapMode</code> is <code>Once</code>, and <code>false</code> otherwise.</p>
 									</div>
 								</li>
 							</ul>
@@ -665,7 +765,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/eb0ccbd/packages/sdk/src/animation/animation.ts#L197">src/animation/animation.ts:197</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/26e0348/packages/sdk/src/animation/animation.ts#L275">src/animation/animation.ts:275</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -674,6 +774,55 @@
 								</div>
 							</div>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-static">
+					<a name="animateto" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> Animate<wbr>To</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-static">
+						<li class="tsd-signature tsd-kind-icon">Animate<wbr>To&lt;T&gt;<span class="tsd-signature-symbol">(</span>context<span class="tsd-signature-symbol">: </span><a href="context.html" class="tsd-signature-type">Context</a>, object<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span>, options<span class="tsd-signature-symbol">: </span><a href="../index.html#animatetooptions" class="tsd-signature-type">AnimateToOptions</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/26e0348/packages/sdk/src/animation/animation.ts#L373">src/animation/animation.ts:373</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Animate an object&#39;s properties to a desired final state.</p>
+								</div>
+							</div>
+							<h4 class="tsd-type-parameters-title">Type parameters</h4>
+							<ul class="tsd-type-parameters">
+								<li>
+									<h4>T<span class="tsd-signature-symbol">: </span><a href="../index.html#animatible" class="tsd-signature-type">Animatible</a></h4>
+								</li>
+							</ul>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>context: <a href="context.html" class="tsd-signature-type">Context</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>A valid MRE context.</p>
+									</div>
+								</li>
+								<li>
+									<h5>object: <span class="tsd-signature-type">T</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The object to animate. Must be either an <a href="../enums/animatiblename.html#actor">Actor</a>, an <a href="animation.html">Animation</a>, or a <a href="material.html">Material</a>.</p>
+									</div>
+								</li>
+								<li>
+									<h5>options: <a href="../index.html#animatetooptions" class="tsd-signature-type">AnimateToOptions</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>How the object should animate.</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -701,6 +850,12 @@
 								<a href="animation.html#basistime" class="tsd-kind-icon">basis<wbr>Time</a>
 							</li>
 							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
+								<a href="animation.html#data" class="tsd-kind-icon">data</a>
+							</li>
+							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
+								<a href="animation.html#dataid" class="tsd-kind-icon">data<wbr>Id</a>
+							</li>
+							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
 								<a href="animation.html#duration" class="tsd-kind-icon">duration</a>
 							</li>
 							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
@@ -719,10 +874,10 @@
 								<a href="animation.html#speed" class="tsd-kind-icon">speed</a>
 							</li>
 							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
-								<a href="animation.html#targetactorids" class="tsd-kind-icon">target<wbr>Actor<wbr>Ids</a>
+								<a href="animation.html#targetactors" class="tsd-kind-icon">target<wbr>Actors</a>
 							</li>
 							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
-								<a href="animation.html#targetactors" class="tsd-kind-icon">target<wbr>Actors</a>
+								<a href="animation.html#targetids" class="tsd-kind-icon">target<wbr>Ids</a>
 							</li>
 							<li class=" tsd-kind-accessor tsd-parent-kind-class">
 								<a href="animation.html#time" class="tsd-kind-icon">time</a>
@@ -734,13 +889,22 @@
 								<a href="animation.html#wrapmode" class="tsd-kind-icon">wrap<wbr>Mode</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="animation.html#delete" class="tsd-kind-icon">delete</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="animation.html#finished" class="tsd-kind-icon">finished</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="animation.html#isorphan" class="tsd-kind-icon">is<wbr>Orphan</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="animation.html#play" class="tsd-kind-icon">play</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="animation.html#stop" class="tsd-kind-icon">stop</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-static">
+								<a href="animation.html#animateto" class="tsd-kind-icon">Animate<wbr>To</a>
 							</li>
 						</ul>
 					</li>

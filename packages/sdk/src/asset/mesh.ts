@@ -7,6 +7,7 @@ import {
 	Actor,
 	AssetContainer,
 	AssetLike,
+	AssetUserType,
 	PrimitiveDefinition,
 	Vector3,
 	Vector3Like,
@@ -103,7 +104,7 @@ export class Mesh extends Asset implements MeshLike, Patchable<AssetLike> {
 	}
 
 	/** @hidden */
-	public breakReference(ref: Actor | Asset) {
+	public breakReference(ref: AssetUserType) {
 		if (!(ref instanceof Actor)) { return; }
 
 		if (ref.appearance.mesh === this) {

@@ -73,6 +73,7 @@
 			<section class="tsd-panel">
 				<h3>Implemented by</h3>
 				<ul class="tsd-hierarchy">
+					<li><a href="../classes/animationdata.html" class="tsd-signature-type">AnimationData</a></li>
 					<li><a href="../classes/asset.html" class="tsd-signature-type">Asset</a></li>
 					<li><a href="../classes/material.html" class="tsd-signature-type">Material</a></li>
 					<li><a href="../classes/mesh.html" class="tsd-signature-type">Mesh</a></li>
@@ -89,6 +90,7 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="assetlike.html#animationdata" class="tsd-kind-icon">animation<wbr>Data</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="assetlike.html#id" class="tsd-kind-icon">id</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="assetlike.html#material" class="tsd-kind-icon">material</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="assetlike.html#mesh" class="tsd-kind-icon">mesh</a></li>
@@ -106,12 +108,27 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="animationdata" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> animation<wbr>Data</h3>
+					<div class="tsd-signature tsd-kind-icon">animation<wbr>Data<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="animationdatalike.html" class="tsd-signature-type">AnimationDataLike</a><span class="tsd-signature-symbol">&gt;</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/26e0348/packages/sdk/src/asset/asset.ts#L64">src/asset/asset.ts:64</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Only populated when this asset is animation data. An asset will only have one of these types specified.</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="id" class="tsd-anchor"></a>
 					<h3>id</h3>
 					<div class="tsd-signature tsd-kind-icon">id<span class="tsd-signature-symbol">:</span> <a href="guid.html" class="tsd-signature-type">Guid</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/eb0ccbd/packages/sdk/src/asset/asset.ts#L49">src/asset/asset.ts:49</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/26e0348/packages/sdk/src/asset/asset.ts#L52">src/asset/asset.ts:52</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -126,7 +143,7 @@
 					<div class="tsd-signature tsd-kind-icon">material<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="materiallike.html" class="tsd-signature-type">MaterialLike</a><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/eb0ccbd/packages/sdk/src/asset/asset.ts#L65">src/asset/asset.ts:65</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/26e0348/packages/sdk/src/asset/asset.ts#L70">src/asset/asset.ts:70</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -141,7 +158,7 @@
 					<div class="tsd-signature tsd-kind-icon">mesh<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="meshlike.html" class="tsd-signature-type">MeshLike</a><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/eb0ccbd/packages/sdk/src/asset/asset.ts#L63">src/asset/asset.ts:63</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/26e0348/packages/sdk/src/asset/asset.ts#L68">src/asset/asset.ts:68</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -156,7 +173,7 @@
 					<div class="tsd-signature tsd-kind-icon">name<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/eb0ccbd/packages/sdk/src/asset/asset.ts#L54">src/asset/asset.ts:54</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/26e0348/packages/sdk/src/asset/asset.ts#L57">src/asset/asset.ts:57</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -172,7 +189,7 @@
 					<div class="tsd-signature tsd-kind-icon">prefab<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="prefablike.html" class="tsd-signature-type">PrefabLike</a><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/eb0ccbd/packages/sdk/src/asset/asset.ts#L61">src/asset/asset.ts:61</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/26e0348/packages/sdk/src/asset/asset.ts#L66">src/asset/asset.ts:66</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -187,7 +204,7 @@
 					<div class="tsd-signature tsd-kind-icon">sound<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="soundlike.html" class="tsd-signature-type">SoundLike</a><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/eb0ccbd/packages/sdk/src/asset/asset.ts#L69">src/asset/asset.ts:69</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/26e0348/packages/sdk/src/asset/asset.ts#L74">src/asset/asset.ts:74</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -202,7 +219,7 @@
 					<div class="tsd-signature tsd-kind-icon">source<span class="tsd-signature-symbol">:</span> <a href="assetsource.html" class="tsd-signature-type">AssetSource</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/eb0ccbd/packages/sdk/src/asset/asset.ts#L58">src/asset/asset.ts:58</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/26e0348/packages/sdk/src/asset/asset.ts#L61">src/asset/asset.ts:61</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -217,7 +234,7 @@
 					<div class="tsd-signature tsd-kind-icon">texture<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="texturelike.html" class="tsd-signature-type">TextureLike</a><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/eb0ccbd/packages/sdk/src/asset/asset.ts#L67">src/asset/asset.ts:67</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/26e0348/packages/sdk/src/asset/asset.ts#L72">src/asset/asset.ts:72</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -232,7 +249,7 @@
 					<div class="tsd-signature tsd-kind-icon">video<wbr>Stream<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="videostreamlike.html" class="tsd-signature-type">VideoStreamLike</a><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/eb0ccbd/packages/sdk/src/asset/asset.ts#L71">src/asset/asset.ts:71</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/26e0348/packages/sdk/src/asset/asset.ts#L76">src/asset/asset.ts:76</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -258,6 +275,9 @@
 					<li class="current tsd-kind-interface">
 						<a href="assetlike.html" class="tsd-kind-icon">Asset<wbr>Like</a>
 						<ul>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="assetlike.html#animationdata" class="tsd-kind-icon">animation<wbr>Data</a>
+							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
 								<a href="assetlike.html#id" class="tsd-kind-icon">id</a>
 							</li>
