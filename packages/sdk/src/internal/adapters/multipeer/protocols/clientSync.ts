@@ -210,10 +210,20 @@ export class ClientSync extends Protocol {
 	 * Driver for the `create-animations` synchronization stage.
 	 */
 	public 'stage:create-animations' = () => {
-		// send all managed create-animation messages
+		// Send all create-animation calls. The other animation creators were sent in create-actors.
 		for (const message of this.client.session.animationCreators) {
 			if (message.payload.type === 'create-animation-2') {
-				super.sendMessage(message);
+				const createMessage = message as Message<Payloads.CreateAnimation2>;
+				const updateMessage = this.client.session.animationSet.get(createMessage.payload.animation.id).update;
+
+				// merge lastest state into initial state for create
+				super.sendMessage({ ...createMessage,
+					payload: { ...createMessage.payload,
+						animation: { ...createMessage.payload.animation,
+							...updateMessage?.payload.animation
+						}
+					}
+				} as Message<Payloads.CreateAnimation2>);
 			}
 		}
 	};
@@ -225,7 +235,9 @@ export class ClientSync extends Protocol {
 	public 'stage:sync-animations' = () => {
 		// sync new-style animations
 		for (const anim of this.client.session.animations) {
-			if (anim.update) {
+			const createMessage = this.client.session.animationCreatorSet.get(anim.id);
+			// direct animation updates are merged into the create call, skip here
+			if (anim.update && createMessage.payload.type !== 'create-animation-2') {
 				super.sendMessage(anim.update);
 			}
 		}
