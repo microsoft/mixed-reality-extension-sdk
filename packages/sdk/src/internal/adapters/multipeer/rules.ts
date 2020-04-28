@@ -305,7 +305,8 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 				message: Message<Payloads.ActorCorrection>
 			) => {
 				const syncActor = session.actorSet.get(message.payload.actorId);
-				if (syncActor && ((client.authoritative && !syncActor.grabbedBy) || (syncActor.grabbedBy === client.id))) {
+				if (syncActor && ((client.authoritative && !syncActor.grabbedBy)
+					|| (syncActor.grabbedBy === client.id))) {
 					const correctionPayload = message.payload;
 
 					// Synthesize an actor update message and add in the transform from the correction payload.
@@ -399,7 +400,8 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 				message: Message<Payloads.ActorUpdate>
 			) => {
 				const syncActor = session.actorSet.get(message.payload.actor.id);
-				if (syncActor && ((client.authoritative && !syncActor.grabbedBy) || (syncActor.grabbedBy === client.id))) {
+				if (syncActor && ((client.authoritative && !syncActor.grabbedBy) ||
+					(syncActor.grabbedBy === client.id))) {
 					// Merge the update into the existing actor.
 					session.cacheActorUpdateMessage(message);
 
