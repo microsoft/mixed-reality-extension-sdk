@@ -210,14 +210,9 @@ export class ClientSync extends Protocol {
 	 * Driver for the `create-animations` synchronization stage.
 	 */
 	public 'stage:create-animations' = () => {
-		// Send all cached interpolate-actor and create-animation messages.
-		for (const syncActor of this.client.session.actors) {
-			this.createActorInterpolations(syncActor);
-			this.createActorAnimations(syncActor);
-		}
 		// send all managed create-animation messages
 		for (const message of this.client.session.animationCreators) {
-			if (message.payload.type === 'create-animation') {
+			if (message.payload.type === 'create-animation-2') {
 				super.sendMessage(message);
 			}
 		}
@@ -234,35 +229,7 @@ export class ClientSync extends Protocol {
 				super.sendMessage(anim.update);
 			}
 		}
-
-		// sync legacy animations
-		const authoritativeClient = this.client.session.authoritativeClient;
-		if (!authoritativeClient) {
-			return Promise.resolve();
-		}
-		return new Promise<void>((resolve, reject) => {
-			// Request the current state of all animations from the authoritative client.
-			// TODO: Improve this (don't rely on a peer).
-			authoritativeClient.sendPayload({
-				type: 'sync-animations',
-			} as Payloads.SyncAnimations, {
-				resolve: (payload: Payloads.SyncAnimations) => {
-					// We've received the sync-animations payload from the authoritative
-					// client, now pass it to the joining client.
-					for (const animationState of payload.animationStates) {
-						// Account for latency on the authoritative peer's connection.
-						animationState.state.time += authoritativeClient.conn.quality.latencyMs.value / 2000;
-						// Account for latency on the joining peer's connection.
-						animationState.state.time += this.conn.quality.latencyMs.value / 2000;
-					}
-					// Pass with an empty reply handler to account for an edge case that will go away once
-					// animation synchronization is refactored.
-					super.sendPayload(payload);
-					resolve();
-				}, reject
-			});
-		});
-	};
+	}
 
 	private createActorRecursive(actor: Partial<SyncActor>) {
 		// Start creating this actor and its creatable children.
@@ -316,33 +283,6 @@ export class ClientSync extends Protocol {
 				}
 				return this.sendMessage(activeMediaInstance.message);
 			});
-	}
-
-	private createActorAnimations(actor: Partial<SyncActor>) {
-		(actor.createdAnimations || [])
-			.map(createdAnimation => this.sendMessage(createdAnimation.message));
-	}
-
-	private createActorInterpolations(actor: Partial<SyncActor>) {
-		for (let activeInterpolation of actor.activeInterpolations || []) {
-			// Don't start the interpolations on the new client. They will be started in the syncAnimations phase.
-			activeInterpolation = {
-				...activeInterpolation,
-				enabled: false
-			};
-			super.sendPayload(activeInterpolation);
-		}
-	}
-
-	private sendAndExpectResponse(message: Message) {
-		return new Promise<void>((resolve, reject) => {
-			super.sendMessage(message, {
-				resolve: (replyPayload: any, replyMessage: Message) => {
-					this.client.session.conn.send(replyMessage);
-					resolve(replyPayload);
-				}, reject
-			});
-		});
 	}
 
 	public async sendQueuedMessages() {

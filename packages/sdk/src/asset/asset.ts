@@ -5,6 +5,9 @@
 
 import {
 	Actor,
+	Animation,
+	AnimationData,
+	AnimationDataLike,
 	AssetContainer,
 	Guid,
 	Material,
@@ -57,6 +60,8 @@ export interface AssetLike {
 	 */
 	source?: AssetSource;
 
+	/** Only populated when this asset is animation data. An asset will only have one of these types specified. */
+	animationData?: Partial<AnimationDataLike>;
 	/** Only populated when this asset is a prefab. An asset will have only one of these types specified. */
 	prefab?: Partial<PrefabLike>;
 	/** Only populated when this asset is a mesh. An asset will have only one of these types specified. */
@@ -70,6 +75,9 @@ export interface AssetLike {
 	/** Only populated when this asset is a video stream. An asset will have only one of these types specified. */
 	videoStream?: Partial<VideoStreamLike>;
 }
+
+/** @hidden */
+export type AssetUserType = Actor | Animation | Asset;
 
 /** The base class for all asset types. */
 export abstract class Asset implements AssetLike {
@@ -88,6 +96,8 @@ export abstract class Asset implements AssetLike {
 	public get source() { return this._source; }
 
 	/** @inheritdoc */
+	public get animationData(): AnimationData { return null; }
+	/** @inheritdoc */
 	public get prefab(): Prefab { return null; }
 	/** @inheritdoc */
 	public get mesh(): Mesh { return null; }
@@ -102,7 +112,7 @@ export abstract class Asset implements AssetLike {
 	public get created() { return this._loadedPromise; }
 
 	/** Stores which actors/assets refer to this asset */
-	protected references = new Set<Actor | Asset>();
+	protected references = new Set<AssetUserType>();
 
 	protected constructor(public container: AssetContainer, def: Partial<AssetLike>) {
 		this._id = def.id;
@@ -111,17 +121,17 @@ export abstract class Asset implements AssetLike {
 	}
 
 	/** @hidden */
-	public addReference(ref: Actor | Asset) {
+	public addReference(ref: AssetUserType) {
 		this.references.add(ref);
 	}
 
 	/** @hidden */
-	public clearReference(ref: Actor | Asset) {
+	public clearReference(ref: AssetUserType) {
 		this.references.delete(ref);
 	}
 
 	/** @hidden */
-	public breakReference(ref: Actor | Asset): void { }
+	public abstract breakReference(ref: AssetUserType): void;
 
 	/** @hidden */
 	public breakAllReferences() {
@@ -156,7 +166,9 @@ export abstract class Asset implements AssetLike {
 
 	/** @hidden */
 	public static Parse(container: AssetContainer, def: AssetLike): Asset {
-		if (def.prefab) {
+		if (def.animationData) {
+			return new AnimationData(container, def);
+		} else if (def.prefab) {
 			return new Prefab(container, def);
 		} else if (def.mesh) {
 			return new Mesh(container, def);

@@ -139,10 +139,7 @@ export class Execution extends Protocol {
 	};
 
 	/** @private */
-	public 'recv-set-animation-state' = (payload: Payloads.SetAnimationState) => {
-		this.emit('protocol.set-animation-state',
-			payload.actorId,
-			payload.animationName,
-			payload.state);
+	public 'recv-animation-update' = (payload: Payloads.AnimationUpdate) => {
+		this.emit('protocol.update-animations', [payload.animation]);
 	};
 }

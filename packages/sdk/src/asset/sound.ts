@@ -3,7 +3,7 @@
  * Licensed under the MIT License.
  */
 
-import { Actor, AssetContainer, AssetLike } from '..';
+import { Actor, AssetContainer, AssetLike, AssetUserType } from '..';
 import { Patchable } from '../internal';
 import { AssetInternal } from './assetInternal';
 // break import cycle
@@ -75,7 +75,7 @@ export class Sound extends Asset implements SoundLike, Patchable<AssetLike> {
 	}
 
 	/** @hidden */
-	public breakReference(ref: Actor | Asset) {
+	public breakReference(ref: AssetUserType) {
 		if (!(ref instanceof Actor)) { return; }
 
 		// TODO: Destroy all SoundInstances playing this Sound

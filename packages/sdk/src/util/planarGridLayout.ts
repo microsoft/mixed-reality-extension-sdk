@@ -2,7 +2,7 @@
  * Copyright (c) Microsoft Corporation. All rights reserved.
  * Licensed under the MIT License.
  */
-import { Actor, AnimationEaseCurves, BoxAlignment, InvertBoxAlignment, Vector3 } from '..';
+import { Actor, Animation, AnimationEaseCurves, BoxAlignment, InvertBoxAlignment, Vector3 } from '..';
 
 /** Options for [[GridLayout.addCell]]. */
 export interface AddCellOptions {
@@ -142,9 +142,15 @@ export class PlanarGridLayout {
 
 			const destination = gridAlign.add(cellPosition).add(cellAlign);
 			if (animateDuration > 0) {
-				cell.contents.animateTo(
-					{ transform: { local: { position: destination } } },
-					animateDuration, animateCurve);
+				Animation.AnimateTo(
+					cell.contents.context,
+					cell.contents,
+					{
+						destination: { transform: { local: { position: destination } } },
+						duration: animateDuration,
+						easing: animateCurve
+					}
+				);
 			} else {
 				cell.contents.transform.local.position = destination;
 			}

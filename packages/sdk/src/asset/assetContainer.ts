@@ -4,13 +4,14 @@
  */
 
 import {
+	AnimationData, AnimationDataLike,
 	Asset, AssetSource,
 	Context,
-	Guid,
+	Guid, newGuid,
 	log,
 	Material, MaterialLike,
 	Mesh,
-	newGuid,
+	MreArgumentError,
 	Prefab,
 	PrimitiveDefinition,
 	PrimitiveShape,
@@ -41,6 +42,8 @@ export class AssetContainer {
 	public get assetsById() { return this._assets as ReadonlyMap<Guid, Asset>; }
 	/** A list of all assets in this container */
 	public get assets() { return [...this._assets.values()]; }
+	/** A list of all animation data in this container */
+	public get animationData() { return this.assets.filter(a => a instanceof AnimationData) as AnimationData[]; }
 	/** A list of all materials in this container */
 	public get materials() { return this.assets.filter(a => a instanceof Material) as Material[]; }
 	/** A list of all meshes in this container */
@@ -116,6 +119,28 @@ export class AssetContainer {
 		});
 		video.setLoadedPromise(this.sendCreateAsset(video));
 		return video;
+	}
+
+	/**
+	 * Preload unbound animation keyframe data for later use.
+	 * @param name The name of this animation
+	 * @param data The keyframe data
+	 * @throws [[MreValidationError]] If the provided animation data is malformed. See the error message for details.
+	 */
+	public createAnimationData(name: string, data: AnimationDataLike) {
+		const validationIssues = AnimationData.Validate(data);
+		if (validationIssues) {
+			throw new MreArgumentError("Cannot create animation data from bad data:\n"
+				+ validationIssues.map(s => '- ' + s).join('\n'));
+		}
+
+		const animData = new AnimationData(this, {
+			id: newGuid(),
+			name,
+			animationData: data
+		});
+		animData.setLoadedPromise(this.sendCreateAsset(animData));
+		return animData;
 	}
 
 	/**
@@ -253,7 +278,8 @@ export class AssetContainer {
 			colliderType
 		} as Payloads.LoadAssets;
 
-		const response = await this.sendPayloadAndGetReply<Payloads.LoadAssets, Payloads.AssetsLoaded>(payload);
+		const response = await this.context.internal
+			.sendPayloadAndGetReply<Payloads.LoadAssets, Payloads.AssetsLoaded>(payload);
 		if (response.failureMessage) {
 			throw new Error(response.failureMessage);
 		}
@@ -294,7 +320,7 @@ export class AssetContainer {
 
 		this._assets.set(asset.id, asset);
 
-		const reply = await this.sendPayloadAndGetReply<Payloads.CreateAsset, Payloads.AssetsLoaded>({
+		const reply = await this.context.internal.sendPayloadAndGetReply<Payloads.CreateAsset, Payloads.AssetsLoaded>({
 			type: 'create-asset',
 			containerId: this.id,
 			definition: resolveJsonValues(asset)
@@ -305,13 +331,5 @@ export class AssetContainer {
 		}
 
 		asset.copy(reply.assets[0]);
-	}
-
-	private sendPayloadAndGetReply<T extends Payloads.Payload, U extends Payloads.Payload>(payload: T): Promise<U> {
-		return new Promise<U>((resolve, reject) => {
-			this.context.internal.protocol.sendPayload(
-				payload, { resolve, reject }
-			);
-		});
 	}
 }

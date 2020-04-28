@@ -60,25 +60,10 @@ export default class InputTest extends Test {
 		});
 
 		// Create some animations on the cube.
-		this.model.createAnimation(
-			'GrowIn', {
-				keyframes: this.growAnimationData
-			});
-
-		this.model.createAnimation(
-			'ShrinkOut', {
-				keyframes: this.shrinkAnimationData
-			});
-
-		this.model.createAnimation(
-			'Spin1', {
-				keyframes: this.generateSpinKeyframes(0.5, MRE.Vector3.Up()),
-			});
-
-		this.model.createAnimation(
-			'Spin2', {
-				keyframes: this.generateSpinKeyframes(0.5, MRE.Vector3.Up(), Math.PI),
-			});
+		this.assets.createAnimationData('Grow', this.growAnimationData)
+			.bind({target: this.model});
+		this.assets.createAnimationData('Spin', this.generateSpinData(0.5, MRE.Vector3.Up()))
+			.bind({target: this.model});
 
 		// Set up cursor interaction. We add the input behavior ButtonBehavior to the cube.
 		// Button behaviors have two pairs of events: hover start/stop, and click start/stop.
@@ -107,21 +92,23 @@ export default class InputTest extends Test {
 	}
 
 	private cycleState() {
+		const growAnim = this.model.targetingAnimationsByName.get('Grow');
+		const spinAnim = this.model.targetingAnimationsByName.get('Spin');
 		switch (this.state) {
 			case 0:
-				this.model.enableAnimation('ShrinkOut');
+				growAnim.time = growAnim.data.duration();
+				growAnim.speed = -1;
+				growAnim.play();
 				this.app.setOverrideText("Please Hover");
 				break;
 			case 1:
-				this.model.enableAnimation('GrowIn');
+				growAnim.time = 0;
+				growAnim.speed = 1;
+				growAnim.play();
 				this.app.setOverrideText("Please Click");
 				break;
 			case 2:
-				if (this.spinCount % 2 === 0) {
-					this.model.enableAnimation('Spin1');
-				} else {
-					this.model.enableAnimation('Spin2');
-				}
+				spinAnim.play(true);
 				this.spinCount++;
 				this.app.setOverrideText("Please Unhover");
 				break;
@@ -130,33 +117,35 @@ export default class InputTest extends Test {
 		}
 	}
 
-	private generateSpinKeyframes(duration: number, axis: MRE.Vector3, start = 0): MRE.AnimationKeyframe[] {
-		return [{
-			time: 0 * duration,
-			value: { transform: { local: { rotation: MRE.Quaternion.RotationAxis(axis, start) } } }
-		}, {
-			time: 0.5 * duration,
-			value: { transform: { local: { rotation: MRE.Quaternion.RotationAxis(axis, start + Math.PI / 2) } } }
-		}, {
-			time: 1 * duration,
-			value: { transform: { local: { rotation: MRE.Quaternion.RotationAxis(axis, start + Math.PI) } } }
-		}];
+	private generateSpinData(duration: number, axis: MRE.Vector3): MRE.AnimationDataLike {
+		return {
+			tracks: [{
+				target: MRE.ActorPath("target").transform.local.rotation,
+				relative: true,
+				keyframes: [{
+					time: 0 * duration,
+					value: MRE.Quaternion.RotationAxis(axis, 0)
+				}, {
+					time: 0.5 * duration,
+					value: MRE.Quaternion.RotationAxis(axis, Math.PI / 2)
+				}, {
+					time: 1 * duration,
+					value: MRE.Quaternion.RotationAxis(axis, Math.PI)
+				}]
+			} as MRE.Track<MRE.Quaternion>]
+		};
 	}
 
-	private growAnimationData: MRE.AnimationKeyframe[] = [{
-		time: 0,
-		value: { transform: { local: { scale: { x: 0.4, y: 0.4, z: 0.4 } } } }
-	}, {
-		time: 0.3,
-		value: { transform: { local: { scale: { x: 0.5, y: 0.5, z: 0.5 } } } }
-	}];
-
-	private shrinkAnimationData: MRE.AnimationKeyframe[] = [{
-		time: 0,
-		value: { transform: { local: { scale: { x: 0.5, y: 0.5, z: 0.5 } } } }
-	}, {
-		time: 0.3,
-		value: { transform: { local: { scale: { x: 0.4, y: 0.4, z: 0.4 } } } }
-	}];
-
+	private growAnimationData: MRE.AnimationDataLike = {
+		tracks: [{
+			target: MRE.ActorPath("target").transform.local.scale,
+			keyframes: [{
+				time: 0,
+				value: { x: 0.4, y: 0.4, z: 0.4 }
+			}, {
+				time: 0.3,
+				value: { x: 0.5, y: 0.5, z: 0.5 }
+			}]
+		} as MRE.Track<MRE.Vector3>]
+	};
 }

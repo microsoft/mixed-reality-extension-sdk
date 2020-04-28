@@ -6,9 +6,8 @@
 import * as MRE from '@microsoft/mixed-reality-extension-sdk';
 
 import { Test } from '../test';
-import delay from '../utils/delay';
 
-export default class InterpolationTest extends Test {
+export default class AnimationToTest extends Test {
 	public expectedResultDescription = "Lerping scale and rotation";
 	private assets: MRE.AssetContainer;
 
@@ -65,14 +64,14 @@ export default class InterpolationTest extends Test {
 			const scalar = 0.3 + 0.7 * Math.random();
 			const scale = new MRE.Vector3(scalar, scalar, scalar);
 			// Random ease curve.
-			const easeCurveKeys = Object.keys(MRE.AnimationEaseCurves);
-			const easeIndex = Math.floor(Math.random() * easeCurveKeys.length);
-			const easeCurveKey = easeCurveKeys[easeIndex];
+			const easeCurveValues = Object.values(MRE.AnimationEaseCurves);
+			const easing = easeCurveValues[Math.floor(Math.random() * easeCurveValues.length)];
 			// Interpolate object's rotation and scale.
-			cube.animateTo(
-				{ transform: { local: { rotation, scale } } },
-				1.0, (MRE.AnimationEaseCurves as any)[easeCurveKey]);
-			await delay(1000);
+			await MRE.Animation.AnimateTo(this.app.context, cube, {
+				destination: { transform: { local: { rotation, scale } } },
+				duration: 2.0,
+				easing: easing
+			});
 		}
 
 		return true;
