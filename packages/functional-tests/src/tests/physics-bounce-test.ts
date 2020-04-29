@@ -53,16 +53,18 @@ export default class PhysicsBounceTest extends Test {
 					anchor: MRE.TextAnchorLocation.MiddleLeft,
 					height: .2
 				},
-				collider: { geometry: { shape: MRE.ColliderType.Auto }, 
-					bounciness: 0.8, dynamicFriction: 0.0, staticFriction: 0.0 }
+				collider: {
+					geometry: { shape: MRE.ColliderType.Auto },
+					bounciness: 0.8, dynamicFriction: 0.0, staticFriction: 0.0
+				}
 			}
 		});
 	}
 
 	private spawnBallOrBox(root: MRE.Actor, width: number, height: number, radius = 0.1, killTimeout = 20000) {
 		const isSphere = (Math.random() > 0.5);
-		const ballOrBoxID = ((isSphere)?(this.assets.createSphereMesh('ball', radius).id):
-			(this.assets.createBoxMesh('box', 1.5*radius, 1.8*radius, 2.1*radius).id));
+		const ballOrBoxID = ((isSphere) ? (this.assets.createSphereMesh('ball', radius).id) :
+			(this.assets.createBoxMesh('box', 1.5 * radius, 1.8 * radius, 2.1 * radius).id));
 		// create ball or box
 		const ballOrBox = MRE.Actor.Create(this.app.context, {
 			actor: {
@@ -72,19 +74,27 @@ export default class PhysicsBounceTest extends Test {
 					materialId: this.ballboxMat.id
 				},
 				transform: {
-					local: { position: { x: -width / 2 + width * Math.random(), 
-						y: height, z: -(-0.1 + 0.2*Math.random()) } }
+					local: {
+						position: {
+							x: -width / 2 + width * Math.random(),
+							y: height, z: -(-0.1 + 0.2 * Math.random())
+						}
+					}
 				},
 				rigidBody: {
 					mass: 3,
 					// give the box or spere some initial velocities
-					angularVelocity: { x: 10*Math.random() - 5.0, y: 10.0*Math.random()-5.0, 
-						z: 10*Math.random()-5.0},
-					velocity: {x: 0.0, y: 5*Math.random() - 2.5, z: -3.0*Math.random()},
+					angularVelocity: {
+						x: 10 * Math.random() - 5.0, y: 10.0 * Math.random() - 5.0,
+						z: 10 * Math.random() - 5.0
+					},
+					velocity: { x: 0.0, y: 5 * Math.random() - 2.5, z: -3.0 * Math.random() },
 					constraints: [MRE.RigidBodyConstraints.None]
 				},
-				collider: { geometry: { shape: MRE.ColliderType.Auto }, 
-					bounciness: 0.8, dynamicFriction: 0.0, staticFriction: 0.0 }
+				collider: {
+					geometry: { shape: MRE.ColliderType.Auto },
+					bounciness: 0.8, dynamicFriction: 0.0, staticFriction: 0.0
+				}
 			}
 		});
 
