@@ -7,7 +7,7 @@ import * as MRE from '@microsoft/mixed-reality-extension-sdk';
 
 import { Test } from '../test';
 
-const defaultBallColor = MRE.Color3.FromInts(220, 150, 150);
+const defaultBoxColor = MRE.Color3.FromInts(220, 150, 150);
 
 export default class PhysicsFrictionTest extends Test {
 	public expectedResultDescription = "Boxes slide with different frictions.";
@@ -19,13 +19,13 @@ export default class PhysicsFrictionTest extends Test {
 	public async run(root: MRE.Actor): Promise<boolean> {
 		this.assets = new MRE.AssetContainer(this.app.context);
 
-		this.boxMat = this.assets.createMaterial('ball', {
-			color: defaultBallColor
+		this.boxMat = this.assets.createMaterial('box', {
+			color: defaultBoxColor
 		});
 
 		this.createSlopePlane(root, 2, 1.25);
 
-		this.interval = setInterval(() => this.spawnBallOrBox(root, 1.5, 1.5), 500);
+		this.interval = setInterval(() => this.spawnBox(root, 1.5, 1.5), 500);
 
 		await this.stoppedAsync();
 		return true;
@@ -37,7 +37,7 @@ export default class PhysicsFrictionTest extends Test {
 	}
 
 	private createSlopePlane(root: MRE.Actor, width: number, height: number) {
-		// Create the ball count text objects
+		// Create a box as a slope for sliding 
 		const box = this.assets.createBoxMesh('box', 2.5, 0.05, 2.5).id;
 		this.slopePlane = MRE.Actor.Create(this.app.context, {
 			actor: {
@@ -61,11 +61,11 @@ export default class PhysicsFrictionTest extends Test {
 		});
 	}
 
-	private spawnBallOrBox(root: MRE.Actor, width: number, height: number, radius = 0.1, killTimeout = 5000) {
+	private spawnBox(root: MRE.Actor, width: number, height: number, radius = 0.1, killTimeout = 5000) {
 		const boxId = this.assets.createBoxMesh('box', 1.5*radius, 1.8*radius, 2.1*radius).id;
 		// boxes for the slope and with the same dynamic and static friction
 		const friction = 0.7*Math.random();
-		const ballOrBox = MRE.Actor.Create(this.app.context, {
+		const box = MRE.Actor.Create(this.app.context, {
 			actor: {
 				parentId: root.id,
 				appearance: {
@@ -89,7 +89,7 @@ export default class PhysicsFrictionTest extends Test {
 		});
 
 		setTimeout(() => {
-			ballOrBox.destroy();
+			box.destroy();
 		}, killTimeout);
 	}
 }
