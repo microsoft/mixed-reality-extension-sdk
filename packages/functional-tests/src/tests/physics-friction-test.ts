@@ -7,21 +7,21 @@ import * as MRE from '@microsoft/mixed-reality-extension-sdk';
 
 import { Test } from '../test';
 
-const defaultBoxColor = MRE.Color3.FromInts(220, 150, 150);
-
 export default class PhysicsFrictionTest extends Test {
 	public expectedResultDescription = "Boxes slide with different frictions.";
 	private assets: MRE.AssetContainer;
 	private interval: NodeJS.Timeout;
-	private boxMat: MRE.Material;
+	private materials: MRE.Material[] = [];
 	private slopePlane: MRE.Actor;
 
 	public async run(root: MRE.Actor): Promise<boolean> {
 		this.assets = new MRE.AssetContainer(this.app.context);
 
-		this.boxMat = this.assets.createMaterial('box', {
-			color: defaultBoxColor
-		});
+		this.materials.push(this.assets.createMaterial('mat1', { color: MRE.Color3.FromHexString('#2b7881').toColor4() }));
+		this.materials.push(this.assets.createMaterial('mat2', { color: MRE.Color3.FromHexString('#11948b').toColor4() }));
+		this.materials.push(this.assets.createMaterial('mat3', { color: MRE.Color3.FromHexString('#664a72').toColor4() }));
+		this.materials.push(this.assets.createMaterial('mat4', { color: MRE.Color3.FromHexString('#89133d').toColor4() }));
+		this.materials.push(this.assets.createMaterial('mat5', { color: MRE.Color3.FromHexString('#c7518e').toColor4() }));
 
 		this.createSlopePlane(root, 2, 1.25);
 
@@ -37,25 +37,19 @@ export default class PhysicsFrictionTest extends Test {
 	}
 
 	private createSlopePlane(root: MRE.Actor, width: number, height: number) {
-		// Create a box as a slope for sliding 
-		const box = this.assets.createBoxMesh('box', 2.5, 0.05, 2.5).id;
+		// Create a box as a slope for sliding
+		const box = this.assets.createBoxMesh('box', 2.5, 0.05, 2.5);
 		this.slopePlane = MRE.Actor.Create(this.app.context, {
 			actor: {
 				parentId: root.id,
 				appearance: {
-					meshId: box,
-					materialId: this.boxMat.id
+					meshId: box.id
 				},
 				transform: {
 					app: {
 						position: { x: 0.0, y: 0.5, z: -0.8 },
 						rotation: { x: 0.966, y: 0.0, z: 0.0, w: 0.259 }
 					} // 30 degree around Y
-				},
-				text: {
-					contents: `Boxes with different frictions`,
-					anchor: MRE.TextAnchorLocation.MiddleLeft,
-					height: .2
 				},
 				collider: {
 					geometry: { shape: MRE.ColliderType.Auto },
@@ -74,7 +68,7 @@ export default class PhysicsFrictionTest extends Test {
 				parentId: root.id,
 				appearance: {
 					meshId: boxId,
-					materialId: this.boxMat.id
+					materialId: this.materials[Math.floor(Math.random() * this.materials.length)].id
 				},
 				transform: {
 					local: {

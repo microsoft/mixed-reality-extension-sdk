@@ -7,21 +7,21 @@ import * as MRE from '@microsoft/mixed-reality-extension-sdk';
 
 import { Test } from '../test';
 
-const defaultBallColor = MRE.Color3.FromInts(220, 150, 150);
-
 export default class PhysicsBounceTest extends Test {
 	public expectedResultDescription = "Balls and boxes hit the ground and bounce.";
 	private assets: MRE.AssetContainer;
 	private interval: NodeJS.Timeout;
-	private ballboxMat: MRE.Material;
+	private materials: MRE.Material[] = [];
 	private bouncePlane: MRE.Actor;
 
 	public async run(root: MRE.Actor): Promise<boolean> {
 		this.assets = new MRE.AssetContainer(this.app.context);
 
-		this.ballboxMat = this.assets.createMaterial('ball', {
-			color: defaultBallColor
-		});
+		this.materials.push(this.assets.createMaterial('mat1', { color: MRE.Color3.FromHexString('#ff0000').toColor4() }));
+		this.materials.push(this.assets.createMaterial('mat2', { color: MRE.Color3.FromHexString('#ff7700').toColor4() }));
+		this.materials.push(this.assets.createMaterial('mat3', { color: MRE.Color3.FromHexString('#ffbd00').toColor4() }));
+		this.materials.push(this.assets.createMaterial('mat4', { color: MRE.Color3.FromHexString('#fcff00').toColor4() }));
+		this.materials.push(this.assets.createMaterial('mat5', { color: MRE.Color3.FromHexString('#abf300').toColor4() }));
 
 		this.createBouncePlane(root, 2, 1.25);
 
@@ -42,16 +42,10 @@ export default class PhysicsBounceTest extends Test {
 			actor: {
 				parentId: root.id,
 				appearance: {
-					meshId: box,
-					materialId: this.ballboxMat.id
+					meshId: box
 				},
 				transform: {
 					app: { position: { x: 0.0, y: 0.0, z: -1.0 } }
-				},
-				text: {
-					contents: `Bouncing balls and boxes`,
-					anchor: MRE.TextAnchorLocation.MiddleLeft,
-					height: .2
 				},
 				collider: {
 					geometry: { shape: MRE.ColliderType.Auto },
@@ -71,7 +65,7 @@ export default class PhysicsBounceTest extends Test {
 				parentId: root.id,
 				appearance: {
 					meshId: ballOrBoxID,
-					materialId: this.ballboxMat.id
+					materialId: this.materials[Math.floor(Math.random() * this.materials.length)].id
 				},
 				transform: {
 					local: {
