@@ -46,6 +46,9 @@ export enum CollisionLayer {
 export interface ColliderLike {
 	enabled: boolean;
 	isTrigger: boolean;
+	bounciness: number;
+	staticFriction: number;
+	dynamicFriction: number;
 	layer: CollisionLayer;
 	geometry: ColliderGeometry;
 	eventSubscriptions: ColliderEventType[];
@@ -62,6 +65,9 @@ export class Collider implements ColliderLike {
 
 	public enabled = true;
 	public isTrigger = false;
+	public bounciness = 0.0;
+	public staticFriction = 0.0;
+	public dynamicFriction = 0.0;
 	public layer = CollisionLayer.Default;
 	public geometry: Readonly<ColliderGeometry>;
 
@@ -92,7 +98,11 @@ export class Collider implements ColliderLike {
 			if (from.geometry !== undefined) { this.geometry = from.geometry; }
 			if (from.enabled !== undefined) { this.enabled = from.enabled; }
 			if (from.isTrigger !== undefined) { this.isTrigger = from.isTrigger; }
+			if (from.bounciness !== undefined) { this.bounciness = from.bounciness; }
+			if (from.staticFriction !== undefined) {this.staticFriction = from.staticFriction; }
+			if (from.dynamicFriction !== undefined) {this.dynamicFriction = from.dynamicFriction; }
 			if (from.layer !== undefined) { this.layer = from.layer; }
+			
 		} else {
 			throw new Error("Must provide a valid collider-like to initialize from.");
 		}
@@ -141,6 +151,9 @@ export class Collider implements ColliderLike {
 		return {
 			enabled: this.enabled,
 			isTrigger: this.isTrigger,
+			bounciness: this.bounciness,
+			staticFriction: this.staticFriction,
+			dynamicFriction: this.dynamicFriction,
 			layer: this.layer,
 			geometry: this.geometry,
 			eventSubscriptions: this.eventSubscriptions
