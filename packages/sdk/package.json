@@ -34,8 +34,9 @@
   "devDependencies": {
     "@types/debug": "^0.0.31",
     "@types/deepmerge": "^2.1.0",
+    "@types/etag": "^1.8.0",
     "@types/query-string": "^6.1.1",
-    "@types/restify": "^7.2.0",
+    "@types/restify": "^8.4.2",
     "@types/semver": "^5.5.0",
     "@types/uuid": "^3.4.3",
     "@types/ws": "^6.0.1",
@@ -50,6 +51,7 @@
     "@types/node": "^10.3.1",
     "debug": "^4.1.0",
     "deepmerge": "^2.1.1",
+    "etag": "^1.8.1",
     "forwarded-for": "^1.1.0",
     "query-string": "^6.2.0",
     "restify": "^8.5.1",

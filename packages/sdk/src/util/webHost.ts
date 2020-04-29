@@ -5,11 +5,19 @@
 
 import { resolve as urlResolve } from 'url';
 import * as Restify from 'restify';
+//import './restify.plugins.serveStaticFiles';
+import etag from 'etag';
 
 import { log, MultipeerAdapter } from '..';
 import { Adapter } from '../internal';
 
 const BUFFER_KEYWORD = 'buffers';
+
+type StaticBufferInfo = {
+	buffer: Buffer;
+	etag: string;
+	contentType: string;
+};
 
 /**
  * Sets up an HTTP server, and generates an MRE context for your app to use.
@@ -23,7 +31,7 @@ export class WebHost {
 	public get baseDir() { return this._baseDir; }
 	public get baseUrl() { return this._baseUrl; }
 
-	private bufferMap: { [path: string]: Buffer } = {};
+	private bufferMap: { [path: string]: StaticBufferInfo } = {};
 
 	public constructor(options: {
 		baseDir?: string;
@@ -67,11 +75,8 @@ export class WebHost {
 			// host static binaries
 			(req, res, next) => this.serveStaticBuffers(req, res, next),
 			// host static files
-			Restify.plugins.serveStatic({
-				directory: this._baseDir,
-				default: 'index.html'
-			}
-			));
+			Restify.plugins.serveStaticFiles(this._baseDir, { etag: true }),
+			Restify.plugins.conditionalRequest());
 	}
 
 	private readonly bufferRegex = new RegExp(`^/${BUFFER_KEYWORD}/(.+)$`, 'u');
@@ -87,7 +92,11 @@ export class WebHost {
 		}
 
 		// if so, serve binary
-		res.sendRaw(200, this.bufferMap[procPath]);
+		const info = this.bufferMap[procPath];
+
+		res.contentType = info.contentType;
+		res.setHeader('ETag', info.etag);
+		res.sendRaw(200, info.buffer);
 		next();
 	}
 
@@ -95,10 +104,15 @@ export class WebHost {
 	 * Serve arbitrary binary blobs from a URL
 	 * @param filename A unique string ID for the blob
 	 * @param blob A binary blob
+	 * @param contentType The MIME type that identifies this blob
 	 * @returns The URL to fetch the provided blob
 	 */
-	public registerStaticBuffer(filename: string, blob: Buffer): string {
-		this.bufferMap[filename] = blob;
+	public registerStaticBuffer(filename: string, blob: Buffer, contentType = 'application/octet-stream'): string {
+		this.bufferMap[filename] = {
+			buffer: blob,
+			etag: etag(blob),
+			contentType
+		};
 		return urlResolve(this._baseUrl, `${BUFFER_KEYWORD}/${filename}`);
 	}
 }
