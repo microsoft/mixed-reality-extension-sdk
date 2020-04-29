@@ -65,7 +65,7 @@ export default class PhysicsFrictionTest extends Test {
 		const boxId = this.assets.createBoxMesh('box', 1.5*radius, 1.8*radius, 2.1*radius).id;
 		// boxes for the slope and with the same dynamic and static friction
 		const friction = 0.7*Math.random();
-		const ballOrBall = MRE.Actor.Create(this.app.context, {
+		const ballOrBox = MRE.Actor.Create(this.app.context, {
 			actor: {
 				parentId: root.id,
 				appearance: {
@@ -89,7 +89,7 @@ export default class PhysicsFrictionTest extends Test {
 		});
 
 		setTimeout(() => {
-			ballOrBall.destroy();
+			ballOrBox.destroy();
 		}, killTimeout);
 	}
 }

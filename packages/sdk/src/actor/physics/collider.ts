@@ -13,7 +13,6 @@ import {
 	TriggerHandler
 } from '../..';
 import { ColliderInternal } from './colliderInternal';
-import { float } from '@microsoft/mixed-reality-extension-common/src/math/types';
 
 /**
  * Controls what the assigned actors will collide with.
@@ -47,9 +46,9 @@ export enum CollisionLayer {
 export interface ColliderLike {
 	enabled: boolean;
 	isTrigger: boolean;
-	bounciness: float;
-	staticFriction: float;
-	dynamicFriction: float;
+	bounciness: number;
+	staticFriction: number;
+	dynamicFriction: number;
 	layer: CollisionLayer;
 	geometry: ColliderGeometry;
 	eventSubscriptions: ColliderEventType[];

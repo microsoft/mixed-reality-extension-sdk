@@ -64,7 +64,7 @@ export default class PhysicsBounceTest extends Test {
 		const ballOrBoxID = ((isSphere)?(this.assets.createSphereMesh('ball', radius).id):
 			(this.assets.createBoxMesh('box', 1.5*radius, 1.8*radius, 2.1*radius).id));
 		// create ball or box
-		const ballOrBall = MRE.Actor.Create(this.app.context, {
+		const ballOrBox = MRE.Actor.Create(this.app.context, {
 			actor: {
 				parentId: root.id,
 				appearance: {
@@ -89,7 +89,7 @@ export default class PhysicsBounceTest extends Test {
 		});
 
 		setTimeout(() => {
-			ballOrBall.destroy();
+			ballOrBox.destroy();
 		}, killTimeout);
 	}
 }
