@@ -75,7 +75,7 @@ export class WebHost {
 			// host static binaries
 			(req, res, next) => this.serveStaticBuffers(req, res, next),
 			// host static files
-			Restify.plugins.serveStaticFiles(this._baseDir, { etag: true }),
+			Restify.plugins.serveStaticFiles(this._baseDir, { index: 'index.html', etag: true }),
 			Restify.plugins.conditionalRequest());
 	}
 

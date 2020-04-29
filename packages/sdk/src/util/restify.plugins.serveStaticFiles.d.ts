@@ -13,6 +13,7 @@ declare module "restify" {
 			maxAge?: number;
 			etag?: boolean;
 			setHeaders?: (res: Restify.Response, path: string, stat: Stat) => void;
+			index?: string[] | string | boolean;
 		}
 
 		function serveStaticFiles(directory: string, opts?: ServeStaticFilesOptions): Restify.RequestHandler;
