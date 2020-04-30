@@ -14,7 +14,7 @@ export default class PhysicsFreeFallTest extends Test {
 
 	public async run(root: MRE.Actor): Promise<boolean> {
 		this.assets = new MRE.AssetContainer(this.app.context);
-		
+
 		this.redMat = this.assets.createMaterial('redBall', {
 			color: MRE.Color3.Red()
 		});
@@ -22,15 +22,13 @@ export default class PhysicsFreeFallTest extends Test {
 			color: MRE.Color3.Blue()
 		});
 
-		if (this.app.context.users.length > 0)
-		{
+		if (this.app.context.users.length > 0) {
 			const userId = this.app.context.users[0].id;
 			this.createLabel(root, "RED", MRE.Color3.Red(), userId);
 			this.spawnBall(root, -0.5, 3.0, this.redMat, userId);
 		}
 
-		if (this.app.context.users.length > 1)
-		{
+		if (this.app.context.users.length > 1) {
 			const userId = this.app.context.users[1].id;
 			this.createLabel(root, "BLUE", MRE.Color3.Blue(), userId);
 			this.spawnBall(root, +0.5, 3.0, this.blueMat, userId);
@@ -38,15 +36,15 @@ export default class PhysicsFreeFallTest extends Test {
 
 		await this.stoppedAsync();
 		return true;
-    }
-    
-    private createLabel(root: MRE.Actor, text: string, col: MRE.Color3, userId: MRE.Guid) {
+	}
 
-        const label = MRE.Actor.Create(this.app.context, {
+	private createLabel(root: MRE.Actor, text: string, col: MRE.Color3, userId: MRE.Guid) {
+
+		MRE.Actor.Create(this.app.context, {
 			actor: {
-                name: 'label',
-                parentId: root.id,
-                exclusiveToUser: userId,
+				name: 'label',
+				parentId: root.id,
+				exclusiveToUser: userId,
 				transform: { local: { position: { y: 1.5 } } },
 				text: {
 					contents: text,
@@ -55,14 +53,14 @@ export default class PhysicsFreeFallTest extends Test {
 					color: col
 				}
 			}
-        });
-    }
+		});
+	}
 
-	private spawnBall(root: MRE.Actor, width: number, height: number, mat: MRE.Material, userId: MRE.Guid, 
+	private spawnBall(root: MRE.Actor, width: number, height: number, mat: MRE.Material, userId: MRE.Guid,
 		ballRadius = 0.07, killTimeout = 5000) {
 		const ball = MRE.Actor.Create(this.app.context, {
 			actor: {
-                owner: userId,
+				owner: userId,
 				parentId: root.id,
 				name: "ball",
 				appearance: {
@@ -77,7 +75,7 @@ export default class PhysicsFreeFallTest extends Test {
 				},
 				collider: { geometry: { shape: MRE.ColliderType.Auto } }
 			}
-        });
+		});
 
 		setTimeout(() => {
 			// We need to disable rendering and move the ball before destroying it so that if it is currently
