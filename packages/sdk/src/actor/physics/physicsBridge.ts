@@ -11,9 +11,8 @@ export interface PhysicsBridgeTransformInfo {
     transform: Partial<TransformLike>;
 }
 
- export interface PhysicsBridgeTransformUpdate {
+export interface PhysicsBridgeTransformUpdate {
     id: Guid;
     time: number;
     transforms: Array<Partial<PhysicsBridgeTransformInfo>>;
- }
- 
+}
