@@ -80,7 +80,11 @@ export const Factories = {
 	'light': (...args) => new LightTest(...args),
 	'look-at': (...args) => new LookAtTest(...args),
 	'physics-bounce': (...args) => new PhysicsBounceTest(...args),
+<<<<<<< HEAD
 	'physics-friction': (...args) => new PhysicsFrictionTest(...args),
+=======
+	'physics-firction': (...args) => new PhysicsFrictionTest(...args),
+>>>>>>> d3efe3d341d3b62096cae1bb53d503957d0f15c5
 	'physics-sim': (...args) => new PhysicsSimTest(...args),
 	'physics-free-fall': (...args) => new PhysichFreeFallTest(...args),
 	'physics-collision': (...args) => new PhysicsCollisionTest(...args),

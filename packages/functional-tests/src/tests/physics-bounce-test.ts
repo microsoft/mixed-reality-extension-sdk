@@ -4,18 +4,31 @@
  */
 
 import * as MRE from '@microsoft/mixed-reality-extension-sdk';
+<<<<<<< HEAD
 import { Test } from '../test';
 
+=======
+
+import { Test } from '../test';
+
+const defaultBallColor = MRE.Color3.FromInts(220, 150, 150);
+
+>>>>>>> d3efe3d341d3b62096cae1bb53d503957d0f15c5
 export default class PhysicsBounceTest extends Test {
 	public expectedResultDescription = "Balls and boxes hit the ground and bounce.";
 	private assets: MRE.AssetContainer;
 	private interval: NodeJS.Timeout;
+<<<<<<< HEAD
 	private materials: MRE.Material[] = [];
+=======
+	private ballboxMat: MRE.Material;
+>>>>>>> d3efe3d341d3b62096cae1bb53d503957d0f15c5
 	private bouncePlane: MRE.Actor;
 
 	public async run(root: MRE.Actor): Promise<boolean> {
 		this.assets = new MRE.AssetContainer(this.app.context);
 
+<<<<<<< HEAD
 		this.materials.push(this.assets.createMaterial('mat1',
 			{ color: MRE.Color3.FromHexString('#ff0000').toColor4() }));
 		this.materials.push(this.assets.createMaterial('mat2',
@@ -26,6 +39,11 @@ export default class PhysicsBounceTest extends Test {
 			{ color: MRE.Color3.FromHexString('#fcff00').toColor4() }));
 		this.materials.push(this.assets.createMaterial('mat5',
 			{ color: MRE.Color3.FromHexString('#abf300').toColor4() }));
+=======
+		this.ballboxMat = this.assets.createMaterial('ball', {
+			color: defaultBallColor
+		});
+>>>>>>> d3efe3d341d3b62096cae1bb53d503957d0f15c5
 
 		this.createBouncePlane(root, 2, 1.25);
 
@@ -46,29 +64,52 @@ export default class PhysicsBounceTest extends Test {
 			actor: {
 				parentId: root.id,
 				appearance: {
+<<<<<<< HEAD
 					meshId: box
+=======
+					meshId: box,
+					materialId: this.ballboxMat.id
+>>>>>>> d3efe3d341d3b62096cae1bb53d503957d0f15c5
 				},
 				transform: {
 					app: { position: { x: 0.0, y: 0.0, z: -1.0 } }
 				},
+<<<<<<< HEAD
 				collider: {
 					geometry: { shape: MRE.ColliderType.Auto },
 					bounciness: 0.8, dynamicFriction: 0.0, staticFriction: 0.0
 				}
+=======
+				text: {
+					contents: `Bouncing balls and boxes`,
+					anchor: MRE.TextAnchorLocation.MiddleLeft,
+					height: .2
+				},
+				collider: { geometry: { shape: MRE.ColliderType.Auto }, 
+					bounciness: 0.8, dynamicFriction: 0.0, staticFriction: 0.0 }
+>>>>>>> d3efe3d341d3b62096cae1bb53d503957d0f15c5
 			}
 		});
 	}
 
 	private spawnBallOrBox(root: MRE.Actor, width: number, height: number, radius = 0.1, killTimeout = 20000) {
 		const isSphere = (Math.random() > 0.5);
+<<<<<<< HEAD
 		const ballOrBoxID = ((isSphere) ? (this.assets.createSphereMesh('ball', radius).id) :
 			(this.assets.createBoxMesh('box', 1.5 * radius, 1.8 * radius, 2.1 * radius).id));
 		// create ball or box
 		const ballOrBox = MRE.Actor.Create(this.app.context, {
+=======
+		const ballOrBoxID = ((isSphere)?(this.assets.createSphereMesh('ball', radius).id):
+			(this.assets.createBoxMesh('box', 1.5*radius, 1.8*radius, 2.1*radius).id));
+		// create ball or box
+		const ballOrBall = MRE.Actor.Create(this.app.context, {
+>>>>>>> d3efe3d341d3b62096cae1bb53d503957d0f15c5
 			actor: {
 				parentId: root.id,
 				appearance: {
 					meshId: ballOrBoxID,
+<<<<<<< HEAD
 					materialId: this.materials[Math.floor(Math.random() * this.materials.length)].id
 				},
 				transform: {
@@ -78,10 +119,18 @@ export default class PhysicsBounceTest extends Test {
 							y: height, z: -(-0.1 + 0.2 * Math.random())
 						}
 					}
+=======
+					materialId: this.ballboxMat.id
+				},
+				transform: {
+					local: { position: { x: -width / 2 + width * Math.random(), 
+						y: height, z: -(-0.1 + 0.2*Math.random()) } }
+>>>>>>> d3efe3d341d3b62096cae1bb53d503957d0f15c5
 				},
 				rigidBody: {
 					mass: 3,
 					// give the box or spere some initial velocities
+<<<<<<< HEAD
 					angularVelocity: {
 						x: 10 * Math.random() - 5.0, y: 10.0 * Math.random() - 5.0,
 						z: 10 * Math.random() - 5.0
@@ -93,11 +142,24 @@ export default class PhysicsBounceTest extends Test {
 					geometry: { shape: MRE.ColliderType.Auto },
 					bounciness: 0.8, dynamicFriction: 0.0, staticFriction: 0.0
 				}
+=======
+					angularVelocity: { x: 10*Math.random() - 5.0, y: 10.0*Math.random()-5.0, 
+						z: 10*Math.random()-5.0},
+					velocity: {x: 0.0, y: 5*Math.random() - 2.5, z: -3.0*Math.random()},
+					constraints: [MRE.RigidBodyConstraints.None]
+				},
+				collider: { geometry: { shape: MRE.ColliderType.Auto }, 
+					bounciness: 0.8, dynamicFriction: 0.0, staticFriction: 0.0 }
+>>>>>>> d3efe3d341d3b62096cae1bb53d503957d0f15c5
 			}
 		});
 
 		setTimeout(() => {
+<<<<<<< HEAD
 			ballOrBox.destroy();
+=======
+			ballOrBall.destroy();
+>>>>>>> d3efe3d341d3b62096cae1bb53d503957d0f15c5
 		}, killTimeout);
 	}
 }
