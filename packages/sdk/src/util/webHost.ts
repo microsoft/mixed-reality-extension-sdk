@@ -5,7 +5,6 @@
 
 import { resolve as urlResolve } from 'url';
 import * as Restify from 'restify';
-//import './restify.plugins.serveStaticFiles';
 import etag from 'etag';
 
 import { log, MultipeerAdapter } from '..';

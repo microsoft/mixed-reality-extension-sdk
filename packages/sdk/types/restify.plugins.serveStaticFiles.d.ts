@@ -4,7 +4,7 @@
  */
 
 import * as Restify from 'restify';
-import { Stat } from 'fs';
+import { Stats } from 'fs';
 
 // TODO: File a pull request adding this to @types/restify
 declare module "restify" {
@@ -12,7 +12,7 @@ declare module "restify" {
 		interface ServeStaticFilesOptions {
 			maxAge?: number;
 			etag?: boolean;
-			setHeaders?: (res: Restify.Response, path: string, stat: Stat) => void;
+			setHeaders?: (res: Restify.Response, path: string, stat: Stats) => void;
 			index?: string[] | string | boolean;
 		}
 
