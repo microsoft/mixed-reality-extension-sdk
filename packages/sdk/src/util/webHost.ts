@@ -10,8 +10,6 @@ import etag from 'etag';
 import { log, MultipeerAdapter } from '..';
 import { Adapter } from '../internal';
 
-const BUFFER_KEYWORD = 'buffers';
-
 type StaticBufferInfo = {
 	buffer: Buffer;
 	etag: string;
@@ -70,34 +68,33 @@ export class WebHost {
 	}
 
 	private serveStaticFiles(server: Restify.Server) {
-		server.get('/*',
-			// host static binaries
-			(req, res, next) => this.serveStaticBuffers(req, res, next),
-			// host static files
-			Restify.plugins.serveStaticFiles(this._baseDir, { index: 'index.html', etag: true }),
-			Restify.plugins.conditionalRequest());
+		server.get(`/buffers/:name`,
+			this.checkStaticBuffers,
+			Restify.plugins.conditionalRequest(),
+			this.serveStaticBuffers);
+		server.get('/*', Restify.plugins.serveStaticFiles(this._baseDir));
 	}
 
-	private readonly bufferRegex = new RegExp(`^/${BUFFER_KEYWORD}/(.+)$`, 'u');
-
-	private serveStaticBuffers(req: Restify.Request, res: Restify.Response, next: Restify.Next) {
-		// grab path part of URL
-		const matches = this.bufferRegex.exec(req.url);
-		const procPath = matches && matches[1] || null;
-
-		// see if there's a handler registered for it
-		if (!procPath || !this.bufferMap[procPath]) {
-			return next();
+	private checkStaticBuffers = (req: Restify.Request, res: Restify.Response, next: Restify.Next) => {
+		const info = this.bufferMap[req.params.name];
+		if (info) {
+			res.setHeader('ETag', info.etag);
+			next();
+		} else {
+			next(new Error(`No buffer registered under name ${req.params.name}`));
 		}
+	};
 
-		// if so, serve binary
-		const info = this.bufferMap[procPath];
-
-		res.contentType = info.contentType;
-		res.setHeader('ETag', info.etag);
-		res.sendRaw(200, info.buffer);
-		next();
-	}
+	private serveStaticBuffers = (req: Restify.Request, res: Restify.Response, next: Restify.Next) => {
+		const info = this.bufferMap[req.params.name];
+		if (info) {
+			res.contentType = info.contentType;
+			res.sendRaw(200, info.buffer);
+			next();
+		} else {
+			next(new Error(`No buffer registered under name ${req.params.name}`));
+		}
+	};
 
 	/**
 	 * Serve arbitrary binary blobs from a URL
@@ -112,6 +109,6 @@ export class WebHost {
 			etag: etag(blob),
 			contentType
 		};
-		return urlResolve(this._baseUrl, `${BUFFER_KEYWORD}/${filename}`);
+		return urlResolve(this._baseUrl, `buffers/${filename}`);
 	}
 }

@@ -14,6 +14,7 @@ declare module "restify" {
 			etag?: boolean;
 			setHeaders?: (res: Restify.Response, path: string, stat: Stats) => void;
 			index?: string[] | string | boolean;
+			acceptRanges?: boolean;
 		}
 
 		function serveStaticFiles(directory: string, opts?: ServeStaticFilesOptions): Restify.RequestHandler;
