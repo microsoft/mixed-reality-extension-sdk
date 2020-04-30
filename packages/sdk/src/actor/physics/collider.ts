@@ -47,15 +47,9 @@ export enum CollisionLayer {
 export interface ColliderLike {
 	enabled: boolean;
 	isTrigger: boolean;
-<<<<<<< HEAD
-	bounciness: number;
-	staticFriction: number;
-	dynamicFriction: number;
-=======
 	bounciness: float;
 	staticFriction: float;
 	dynamicFriction: float;
->>>>>>> d3efe3d341d3b62096cae1bb53d503957d0f15c5
 	layer: CollisionLayer;
 	geometry: ColliderGeometry;
 	eventSubscriptions: ColliderEventType[];
@@ -106,17 +100,10 @@ export class Collider implements ColliderLike {
 			if (from.enabled !== undefined) { this.enabled = from.enabled; }
 			if (from.isTrigger !== undefined) { this.isTrigger = from.isTrigger; }
 			if (from.bounciness !== undefined) { this.bounciness = from.bounciness; }
-<<<<<<< HEAD
-			if (from.staticFriction !== undefined) { this.staticFriction = from.staticFriction; }
-			if (from.dynamicFriction !== undefined) { this.dynamicFriction = from.dynamicFriction; }
-			if (from.layer !== undefined) { this.layer = from.layer; }
-
-=======
 			if (from.staticFriction !== undefined) {this.staticFriction = from.staticFriction; }
 			if (from.dynamicFriction !== undefined) {this.dynamicFriction = from.dynamicFriction; }
 			if (from.layer !== undefined) { this.layer = from.layer; }
 			
->>>>>>> d3efe3d341d3b62096cae1bb53d503957d0f15c5
 		} else {
 			throw new Error("Must provide a valid collider-like to initialize from.");
 		}
