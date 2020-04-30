@@ -59,6 +59,7 @@ export class Session extends EventEmitter {
 	public get animationSet() { return this._animationSet; }
 	public get animations() { return this._animationSet.values(); }
 	public get animationCreators() { return this._animationCreatorSet.values(); }
+	public get animationCreatorSet() { return this._animationCreatorSet; }
 	public get actorSet() { return this._actorSet; }
 	public get assetSet() { return this._assetSet; }
 	public get assetCreatorSet() { return this._assetCreatorSet; }

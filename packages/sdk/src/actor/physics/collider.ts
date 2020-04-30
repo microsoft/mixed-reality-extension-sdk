@@ -100,10 +100,10 @@ export class Collider implements ColliderLike {
 			if (from.enabled !== undefined) { this.enabled = from.enabled; }
 			if (from.isTrigger !== undefined) { this.isTrigger = from.isTrigger; }
 			if (from.bounciness !== undefined) { this.bounciness = from.bounciness; }
-			if (from.staticFriction !== undefined) {this.staticFriction = from.staticFriction; }
-			if (from.dynamicFriction !== undefined) {this.dynamicFriction = from.dynamicFriction; }
+			if (from.staticFriction !== undefined) { this.staticFriction = from.staticFriction; }
+			if (from.dynamicFriction !== undefined) { this.dynamicFriction = from.dynamicFriction; }
 			if (from.layer !== undefined) { this.layer = from.layer; }
-			
+
 		} else {
 			throw new Error("Must provide a valid collider-like to initialize from.");
 		}
