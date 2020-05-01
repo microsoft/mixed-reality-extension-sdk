@@ -20,13 +20,13 @@ export abstract class Behavior {
 	 */
 
 	public _supportsAction(actionName: string): boolean {
-		const action = (this as any)[actionName.toLowerCase()] as Actionable;
+		const action = (this as any)[`_${actionName.toLowerCase()}`] as Actionable;
 		return action !== undefined;
 	}
 
 	/** @hidden */
 	public _performAction(actionName: string, actionState: ActionState, user: User, actionData: any): void {
-		const action = (this as any)[actionName.toLowerCase()] as Actionable;
+		const action = (this as any)[`_${actionName.toLowerCase()}`] as Actionable;
 		if (action) {
 			action._performAction(user, actionState, actionData);
 		}
