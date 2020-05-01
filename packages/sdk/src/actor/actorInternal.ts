@@ -11,8 +11,6 @@ import {
 	Behavior,
 	CollisionData,
 	CollisionEventType,
-	DiscreteAction,
-	SetAnimationStateOptions,
 	TriggerEventType
 } from '..';
 import {

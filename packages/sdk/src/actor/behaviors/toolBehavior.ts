@@ -5,7 +5,7 @@
 
 import { ActionHandler, ActionState, BehaviorType, DiscreteAction, TargetBehavior } from '.';
 
-export class ToolBehavior<ToolDataT> extends TargetBehavior {
+export abstract class ToolBehavior<ToolDataT> extends TargetBehavior {
 	private _holding: DiscreteAction<ToolDataT> = new DiscreteAction();
 	private _using: DiscreteAction<ToolDataT> = new DiscreteAction();
 
