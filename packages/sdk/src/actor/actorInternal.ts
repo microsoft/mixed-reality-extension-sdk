@@ -40,7 +40,11 @@ export class ActorInternal implements InternalPatchable<ActorLike> {
 		const behavior = (this.behavior && this.behavior.behaviorType === actionEvent.behaviorType)
 			? this.behavior : undefined;
 		if (behavior && behavior._supportsAction(actionEvent.actionName)) {
-			behavior._performAction(actionEvent.actionName, actionEvent.actionState, actionEvent.user, actionEvent.actionData);
+			behavior._performAction(
+				actionEvent.actionName, 
+				actionEvent.actionState, 
+				actionEvent.user, 
+				actionEvent.actionData);
 		} else {
 			const action = (this.actor as any)[`_${actionEvent.actionName.toLowerCase()}`] as Actionable;
 			if (action) {

@@ -28,7 +28,7 @@ export class TargetBehavior extends Behavior {
 	 * @param handler The handler to call when the target state is triggered.
 	 * @return This target behavior.
 	 */
-	public onTarget(targetState: 'enter' | 'exit', handler: ActionHandler<void>): this {
+	public onTarget(targetState: 'enter' | 'exit', handler: ActionHandler): this {
 		const actionState: ActionState = (targetState === 'enter') ? 'started' : 'stopped';
 		this._target.on(actionState, handler);
 		return this;

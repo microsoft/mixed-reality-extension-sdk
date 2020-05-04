@@ -8,7 +8,7 @@ import { ActionState, Guid, User } from '../..';
 /**
  * The action handler function type.
  */
-export type ActionHandler<ActionDataT> = (user: User, actionData?: ActionDataT) => void;
+export type ActionHandler<ActionDataT = void> = (user: User, actionData?: ActionDataT) => void;
 
 /**
  * @hidden

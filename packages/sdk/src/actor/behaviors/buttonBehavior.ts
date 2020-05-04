@@ -30,7 +30,7 @@ export class ButtonBehavior extends TargetBehavior {
 	 * @param handler The handler to call when the hover state is triggered.
 	 * @return This button behavior.
 	 */
-	public onHover(hoverState: 'enter' | 'exit', handler: ActionHandler<void>): this {
+	public onHover(hoverState: 'enter' | 'exit', handler: ActionHandler): this {
 		const actionState: ActionState = (hoverState === 'enter') ? 'started' : 'stopped';
 		this._hover.on(actionState, handler);
 		return this;
@@ -41,7 +41,7 @@ export class ButtonBehavior extends TargetBehavior {
 	 * @param handler The handler to call when the click state is triggered.
 	 * @return This button behavior.
 	 */
-	public onClick(handler: ActionHandler<void>): this {
+	public onClick(handler: ActionHandler): this {
 		this._click.on('started', handler);
 		return this;
 	}
@@ -52,7 +52,7 @@ export class ButtonBehavior extends TargetBehavior {
 	 * @param handler The handler to call when the click state is triggered.
 	 * @return This button behavior.
 	 */
-	public onButton(buttonState: 'pressed' | 'released', handler: ActionHandler<void>): this {
+	public onButton(buttonState: 'pressed' | 'released', handler: ActionHandler): this {
 		const actionState: ActionState = (buttonState === 'pressed') ? 'started' : 'stopped';
 		this._button.on(actionState, handler);
 		return this;
