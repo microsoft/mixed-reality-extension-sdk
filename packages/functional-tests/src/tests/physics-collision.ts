@@ -24,6 +24,7 @@ export default class PhysicsCollisionTest extends Test {
 
 	constructor(bounciness: number, protected app: App, protected baseUrl: string, protected user: User) {
 		super(app, baseUrl, user);
+		this.testBounciness = bounciness;
 	}
 
 	public async run(root: MRE.Actor): Promise<boolean> {
@@ -87,7 +88,7 @@ export default class PhysicsCollisionTest extends Test {
 				rigidBody: {
 					mass: 3,
 				},
-				collider: { geometry: { shape: MRE.ColliderType.Auto }, bounciness: 0.8 }
+				collider: { geometry: { shape: MRE.ColliderType.Auto }, bounciness: this.testBounciness }
 			}
 		});
 
