@@ -12,14 +12,19 @@ import {
 } from '../..';
 // break import cycle
 import { TargetBehavior } from './targetBehavior';
+import { TransformLike } from '../transform';
+
+interface ButtonEventData {
+	points: TransformLike[];
+}
 
 /**
  * Button behavior class containing the target behavior actions.
  */
 export class ButtonBehavior extends TargetBehavior {
-	private _hover: DiscreteAction = new DiscreteAction();
-	private _click: DiscreteAction = new DiscreteAction();
-	private _button: DiscreteAction = new DiscreteAction();
+	private _hover: DiscreteAction<ButtonEventData> = new DiscreteAction();
+	private _click: DiscreteAction<ButtonEventData> = new DiscreteAction();
+	private _button: DiscreteAction<ButtonEventData> = new DiscreteAction();
 
 	/** @inheritdoc */
 	public get behaviorType(): BehaviorType { return 'button'; }
@@ -30,8 +35,8 @@ export class ButtonBehavior extends TargetBehavior {
 	 * @param handler The handler to call when the hover state is triggered.
 	 * @return This button behavior.
 	 */
-	public onHover(hoverState: 'enter' | 'exit', handler: ActionHandler): this {
-		const actionState: ActionState = (hoverState === 'enter') ? 'started' : 'stopped';
+	public onHover(hoverState: 'enter' | 'hovering' | 'exit', handler: ActionHandler<ButtonEventData>): this {
+		const actionState: ActionState = (hoverState === 'enter') ? 'started' : (hoverState === 'hovering') ? 'performing' : 'stopped';
 		this._hover.on(actionState, handler);
 		return this;
 	}
@@ -41,7 +46,7 @@ export class ButtonBehavior extends TargetBehavior {
 	 * @param handler The handler to call when the click state is triggered.
 	 * @return This button behavior.
 	 */
-	public onClick(handler: ActionHandler): this {
+	public onClick(handler: ActionHandler<ButtonEventData>): this {
 		this._click.on('started', handler);
 		return this;
 	}
@@ -52,8 +57,8 @@ export class ButtonBehavior extends TargetBehavior {
 	 * @param handler The handler to call when the click state is triggered.
 	 * @return This button behavior.
 	 */
-	public onButton(buttonState: 'pressed' | 'released', handler: ActionHandler): this {
-		const actionState: ActionState = (buttonState === 'pressed') ? 'started' : 'stopped';
+	public onButton(buttonState: 'pressed' | 'holding' | 'released', handler: ActionHandler<ButtonEventData>): this {
+		const actionState: ActionState = (buttonState === 'pressed') ? 'started' : (buttonState === 'holding') ? 'performing' : 'stopped';
 		this._button.on(actionState, handler);
 		return this;
 	}
