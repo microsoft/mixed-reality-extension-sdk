@@ -7,7 +7,12 @@
 import * as MRE from '@microsoft/mixed-reality-extension-sdk';
 
 import { Test } from '../test';
+import { App } from '../app';
+import { User } from '@microsoft/mixed-reality-extension-sdk';
+
 export default class PhysicsCollisionTest extends Test {
+
+	private testBounciness: number;
 
 	private assets: MRE.AssetContainer;
 
@@ -16,6 +21,11 @@ export default class PhysicsCollisionTest extends Test {
 
 	private redMat: MRE.Material;
 	private blueMat: MRE.Material;
+
+	constructor(bounciness: number, protected app: App, protected baseUrl: string, protected user: User) {
+		super(app, baseUrl, user);
+		this.testBounciness = bounciness;
+	}
 
 	public async run(root: MRE.Actor): Promise<boolean> {
 		this.assets = new MRE.AssetContainer(this.app.context);
@@ -78,7 +88,7 @@ export default class PhysicsCollisionTest extends Test {
 				rigidBody: {
 					mass: 3,
 				},
-				collider: { geometry: { shape: MRE.ColliderType.Auto } }
+				collider: { geometry: { shape: MRE.ColliderType.Auto }, bounciness: this.testBounciness }
 			}
 		});
 
@@ -87,12 +97,7 @@ export default class PhysicsCollisionTest extends Test {
 		}, 1000);
 
 		setTimeout(() => {
-			// We need to disable rendering and move the ball before destroying it so that if it is currently
-			// colliding with a peg, it will exit collision first for the ref counting to work properly.  Then
-			// we can destroy it after another second to process the move on the client.
-			ball.appearance.enabled = false;
-			ball.transform.app.position = new MRE.Vector3(0, -10, 0);
-			setTimeout(() => ball.destroy(), 1000);
+			ball.destroy();
 		}, killTimeout);
 	}
 }
