@@ -17,11 +17,16 @@ export default class PhysicsFrictionTest extends Test {
 	public async run(root: MRE.Actor): Promise<boolean> {
 		this.assets = new MRE.AssetContainer(this.app.context);
 
-		this.materials.push(this.assets.createMaterial('mat1', { color: MRE.Color3.FromHexString('#2b7881').toColor4() }));
-		this.materials.push(this.assets.createMaterial('mat2', { color: MRE.Color3.FromHexString('#11948b').toColor4() }));
-		this.materials.push(this.assets.createMaterial('mat3', { color: MRE.Color3.FromHexString('#664a72').toColor4() }));
-		this.materials.push(this.assets.createMaterial('mat4', { color: MRE.Color3.FromHexString('#89133d').toColor4() }));
-		this.materials.push(this.assets.createMaterial('mat5', { color: MRE.Color3.FromHexString('#c7518e').toColor4() }));
+		this.materials.push(this.assets.createMaterial('mat1', 
+			{ color: MRE.Color3.FromHexString('#2b7881').toColor4() }));
+		this.materials.push(this.assets.createMaterial('mat2', 
+			{ color: MRE.Color3.FromHexString('#11948b').toColor4() }));
+		this.materials.push(this.assets.createMaterial('mat3', 
+			{ color: MRE.Color3.FromHexString('#664a72').toColor4() }));
+		this.materials.push(this.assets.createMaterial('mat4', 
+			{ color: MRE.Color3.FromHexString('#89133d').toColor4() }));
+		this.materials.push(this.assets.createMaterial('mat5', 
+			{ color: MRE.Color3.FromHexString('#c7518e').toColor4() }));
 
 		this.createSlopePlane(root, 2, 1.25);
 

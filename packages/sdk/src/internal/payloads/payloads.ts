@@ -307,6 +307,7 @@ export type PerformAction = Payload & {
 	behaviorType: BehaviorType;
 	actionName: string;
 	actionState: ActionState;
+	actionData?: any;
 };
 
 /**
