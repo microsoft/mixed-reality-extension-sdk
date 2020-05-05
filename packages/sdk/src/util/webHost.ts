@@ -5,6 +5,7 @@
 
 import { resolve as urlResolve } from 'url';
 import * as Restify from 'restify';
+import { NotFoundError } from 'restify-errors';
 import etag from 'etag';
 
 import { log, MultipeerAdapter } from '..';
@@ -81,7 +82,7 @@ export class WebHost {
 			res.setHeader('ETag', info.etag);
 			next();
 		} else {
-			next(new Error(`No buffer registered under name ${req.params.name}`));
+			next(new NotFoundError(`No buffer registered under name ${req.params.name}`));
 		}
 	};
 
@@ -92,7 +93,7 @@ export class WebHost {
 			res.sendRaw(200, info.buffer);
 			next();
 		} else {
-			next(new Error(`No buffer registered under name ${req.params.name}`));
+			next(new NotFoundError(`No buffer registered under name ${req.params.name}`));
 		}
 	};
 

@@ -32,6 +32,7 @@
     "parseLogs": "node ./packages/sdk/built/utils/parseNetworkLogs.js"
   },
   "devDependencies": {
+    "@types/restify-errors": "^4.3.3",
     "@typescript-eslint/eslint-plugin": "^2.6.1",
     "@typescript-eslint/parser": "^2.6.1",
     "eslint": "^6.6.0",
@@ -40,6 +41,7 @@
     "typescript": "^3.7.2"
   },
   "dependencies": {
+    "restify-errors": "^8.0.2",
     "tslint": "^5.20.1"
   }
 }
