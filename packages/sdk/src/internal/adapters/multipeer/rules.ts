@@ -1049,7 +1049,7 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 
 					if (activeMediaInstance.message.payload.options.looping === true ||
 						activeMediaInstance.message.payload.options.paused === true ||
-						(asset === undefined || asset.duration === undefined)) {
+						(asset === undefined || asset.duration === undefined || asset.duration === 0)) {
 						// media instance current will last forever
 						activeMediaInstance.expirationTime = undefined;
 					} else {
