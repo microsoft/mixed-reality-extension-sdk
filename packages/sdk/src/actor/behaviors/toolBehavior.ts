@@ -3,14 +3,11 @@
  * Licensed under the MIT License.
  */
 
-import { ActionHandler, ActionState, BehaviorType, DiscreteAction, TargetBehavior } from '.';
+import { ActionHandler, ActionState, DiscreteAction, TargetBehavior } from '.';
 
 export abstract class ToolBehavior<ToolDataT> extends TargetBehavior {
 	private _holding: DiscreteAction<ToolDataT> = new DiscreteAction();
 	private _using: DiscreteAction<ToolDataT> = new DiscreteAction();
-
-	/** @inheritdoc */
-	public get behaviorType(): BehaviorType { return 'tool'; }
 
 	/**
 	 * Add a holding handler to be called when the given hover state is triggered.
