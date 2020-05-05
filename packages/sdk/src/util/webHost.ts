@@ -5,11 +5,17 @@
 
 import { resolve as urlResolve } from 'url';
 import * as Restify from 'restify';
+import { NotFoundError } from 'restify-errors';
+import etag from 'etag';
 
 import { log, MultipeerAdapter } from '..';
 import { Adapter } from '../internal';
 
-const BUFFER_KEYWORD = 'buffers';
+type StaticBufferInfo = {
+	buffer: Buffer;
+	etag: string;
+	contentType: string;
+};
 
 /**
  * Sets up an HTTP server, and generates an MRE context for your app to use.
@@ -23,7 +29,7 @@ export class WebHost {
 	public get baseDir() { return this._baseDir; }
 	public get baseUrl() { return this._baseUrl; }
 
-	private bufferMap: { [path: string]: Buffer } = {};
+	private bufferMap: { [path: string]: StaticBufferInfo } = {};
 
 	public constructor(options: {
 		baseDir?: string;
@@ -63,42 +69,47 @@ export class WebHost {
 	}
 
 	private serveStaticFiles(server: Restify.Server) {
-		server.get('/*',
-			// host static binaries
-			(req, res, next) => this.serveStaticBuffers(req, res, next),
-			// host static files
-			Restify.plugins.serveStatic({
-				directory: this._baseDir,
-				default: 'index.html'
-			}
-			));
+		server.get(`/buffers/:name`,
+			this.checkStaticBuffers,
+			Restify.plugins.conditionalRequest(),
+			this.serveStaticBuffers);
+		server.get('/*', Restify.plugins.serveStaticFiles(this._baseDir));
 	}
 
-	private readonly bufferRegex = new RegExp(`^/${BUFFER_KEYWORD}/(.+)$`, 'u');
-
-	private serveStaticBuffers(req: Restify.Request, res: Restify.Response, next: Restify.Next) {
-		// grab path part of URL
-		const matches = this.bufferRegex.exec(req.url);
-		const procPath = matches && matches[1] || null;
-
-		// see if there's a handler registered for it
-		if (!procPath || !this.bufferMap[procPath]) {
-			return next();
+	private checkStaticBuffers = (req: Restify.Request, res: Restify.Response, next: Restify.Next) => {
+		const info = this.bufferMap[req.params.name];
+		if (info) {
+			res.setHeader('ETag', info.etag);
+			next();
+		} else {
+			next(new NotFoundError(`No buffer registered under name ${req.params.name}`));
 		}
+	};
 
-		// if so, serve binary
-		res.sendRaw(200, this.bufferMap[procPath]);
-		next();
-	}
+	private serveStaticBuffers = (req: Restify.Request, res: Restify.Response, next: Restify.Next) => {
+		const info = this.bufferMap[req.params.name];
+		if (info) {
+			res.contentType = info.contentType;
+			res.sendRaw(200, info.buffer);
+			next();
+		} else {
+			next(new NotFoundError(`No buffer registered under name ${req.params.name}`));
+		}
+	};
 
 	/**
 	 * Serve arbitrary binary blobs from a URL
 	 * @param filename A unique string ID for the blob
 	 * @param blob A binary blob
+	 * @param contentType The MIME type that identifies this blob
 	 * @returns The URL to fetch the provided blob
 	 */
-	public registerStaticBuffer(filename: string, blob: Buffer): string {
-		this.bufferMap[filename] = blob;
-		return urlResolve(this._baseUrl, `${BUFFER_KEYWORD}/${filename}`);
+	public registerStaticBuffer(filename: string, blob: Buffer, contentType = 'application/octet-stream'): string {
+		this.bufferMap[filename] = {
+			buffer: blob,
+			etag: etag(blob),
+			contentType
+		};
+		return urlResolve(this._baseUrl, `buffers/${filename}`);
 	}
 }
