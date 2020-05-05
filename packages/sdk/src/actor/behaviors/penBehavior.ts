@@ -3,7 +3,7 @@
  * Licensed under the MIT License.
  */
 
-import { BehaviorType, ToolBehavior } from '.';
+import { ToolBehavior } from '.';
 import { TransformLike } from '../..';
 
 
