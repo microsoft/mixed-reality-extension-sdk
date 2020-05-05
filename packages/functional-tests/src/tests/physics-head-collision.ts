@@ -8,7 +8,12 @@ import * as MRE from '@microsoft/mixed-reality-extension-sdk';
 
 import { Test } from '../test';
 import { Vector3Like } from '@microsoft/mixed-reality-extension-sdk';
+import { App } from '../app';
+import { User } from '@microsoft/mixed-reality-extension-sdk';
+
 export default class PhysicsHeadCollisionTest extends Test {
+
+	private testBounciness: number;
 
 	private assets: MRE.AssetContainer;
 
@@ -17,6 +22,11 @@ export default class PhysicsHeadCollisionTest extends Test {
 
 	private redMat: MRE.Material;
 	private blueMat: MRE.Material;
+
+	constructor(bounciness: number, protected app: App, protected baseUrl: string, protected user: User) {
+		super(app, baseUrl, user);
+		this.testBounciness = bounciness;
+	}
 
 	public async run(root: MRE.Actor): Promise<boolean> {
 		this.assets = new MRE.AssetContainer(this.app.context);
@@ -79,7 +89,7 @@ export default class PhysicsHeadCollisionTest extends Test {
 				rigidBody: {
 					mass: 3,
 				},
-				collider: { geometry: { shape: MRE.ColliderType.Auto } }
+				collider: { geometry: { shape: MRE.ColliderType.Auto }, bounciness: this.testBounciness }
 			}
 		});
 
