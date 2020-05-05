@@ -12,7 +12,7 @@ import { User } from '@microsoft/mixed-reality-extension-sdk';
 
 export default class PhysicsCollisionTest extends Test {
 
-	public testBounciness: number;
+	private testBounciness: number;
 
 	private assets: MRE.AssetContainer;
 
