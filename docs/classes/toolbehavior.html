@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>TargetBehavior | Mixed Reality Extension SDK</title>
+	<title>ToolBehavior | Mixed Reality Extension SDK</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -52,37 +52,35 @@
 					<a href="../index.html">Globals</a>
 				</li>
 				<li>
-					<a href="targetbehavior.html">TargetBehavior</a>
+					<a href="toolbehavior.html">ToolBehavior</a>
 				</li>
 			</ul>
-			<h1>Class TargetBehavior</h1>
+			<h1>Class ToolBehavior&lt;ToolDataT&gt;</h1>
 		</div>
 	</div>
 </header>
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
-			<section class="tsd-panel tsd-comment">
-				<div class="tsd-comment tsd-typography">
-					<div class="lead">
-						<p>Target behavior class containing the target behavior actions.</p>
-					</div>
-				</div>
+			<section class="tsd-panel tsd-type-parameters">
+				<h3>Type parameters</h3>
+				<ul class="tsd-type-parameters">
+					<li>
+						<h4>ToolDataT</h4>
+					</li>
+				</ul>
 			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<a href="behavior.html" class="tsd-signature-type">Behavior</a>
+						<a href="targetbehavior.html" class="tsd-signature-type">TargetBehavior</a>
 						<ul class="tsd-hierarchy">
 							<li>
-								<span class="target">TargetBehavior</span>
+								<span class="target">ToolBehavior</span>
 								<ul class="tsd-hierarchy">
 									<li>
-										<a href="buttonbehavior.html" class="tsd-signature-type">ButtonBehavior</a>
-									</li>
-									<li>
-										<a href="toolbehavior.html" class="tsd-signature-type">ToolBehavior</a>
+										<a href="penbehavior.html" class="tsd-signature-type">PenBehavior</a>
 									</li>
 								</ul>
 							</li>
@@ -94,34 +92,37 @@
 				<h2>Index</h2>
 				<section class="tsd-panel tsd-index-panel">
 					<div class="tsd-index-content">
-						<section class="tsd-index-section ">
+						<section class="tsd-index-section tsd-is-inherited">
 							<h3>Accessors</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-get-signature tsd-parent-kind-class tsd-is-overwrite"><a href="targetbehavior.html#behaviortype" class="tsd-kind-icon">behavior<wbr>Type</a></li>
+								<li class="tsd-kind-get-signature tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited"><a href="toolbehavior.html#behaviortype" class="tsd-kind-icon">behavior<wbr>Type</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="targetbehavior.html#_supportsaction" class="tsd-kind-icon">_supports<wbr>Action</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="targetbehavior.html#istargeted" class="tsd-kind-icon">is<wbr>Targeted</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="targetbehavior.html#ontarget" class="tsd-kind-icon">on<wbr>Target</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="toolbehavior.html#_supportsaction" class="tsd-kind-icon">_supports<wbr>Action</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="toolbehavior.html#istargeted" class="tsd-kind-icon">is<wbr>Targeted</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="toolbehavior.html#onholding" class="tsd-kind-icon">on<wbr>Holding</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="toolbehavior.html#ontarget" class="tsd-kind-icon">on<wbr>Target</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="toolbehavior.html#onusing" class="tsd-kind-icon">on<wbr>Using</a></li>
 							</ul>
 						</section>
 					</div>
 				</section>
 			</section>
-			<section class="tsd-panel-group tsd-member-group ">
+			<section class="tsd-panel-group tsd-member-group tsd-is-inherited">
 				<h2>Accessors</h2>
-				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class tsd-is-overwrite">
+				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited">
 					<a name="behaviortype" class="tsd-anchor"></a>
 					<h3>behavior<wbr>Type</h3>
-					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class tsd-is-overwrite">
+					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited">
 						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> behaviorType<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../index.html#behaviortype" class="tsd-signature-type">BehaviorType</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
+								<p>Inherited from <a href="targetbehavior.html">TargetBehavior</a>.<a href="targetbehavior.html#behaviortype">behaviorType</a></p>
 								<p>Overrides <a href="behavior.html">Behavior</a>.<a href="behavior.html#behaviortype">behaviorType</a></p>
 								<ul>
 									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/7059f36/packages/sdk/src/actor/behaviors/targetBehavior.ts#L23">src/actor/behaviors/targetBehavior.ts:23</a></li>
@@ -169,15 +170,16 @@
 						</li>
 					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
 					<a name="istargeted" class="tsd-anchor"></a>
 					<h3>is<wbr>Targeted</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
 						<li class="tsd-signature tsd-kind-icon">is<wbr>Targeted<span class="tsd-signature-symbol">(</span>user<span class="tsd-signature-symbol">?: </span><a href="user.html" class="tsd-signature-type">User</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
+								<p>Inherited from <a href="targetbehavior.html">TargetBehavior</a>.<a href="targetbehavior.html#istargeted">isTargeted</a></p>
 								<ul>
 									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/7059f36/packages/sdk/src/actor/behaviors/targetBehavior.ts#L43">src/actor/behaviors/targetBehavior.ts:43</a></li>
 								</ul>
@@ -203,14 +205,53 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="onholding" class="tsd-anchor"></a>
+					<h3>on<wbr>Holding</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">on<wbr>Holding<span class="tsd-signature-symbol">(</span>holdingState<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">"picked-up"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"holding"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"dropped"</span>, handler<span class="tsd-signature-symbol">: </span><a href="../index.html#actionhandler" class="tsd-signature-type">ActionHandler</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">ToolDataT</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/7059f36/packages/sdk/src/actor/behaviors/toolBehavior.ts#L18">src/actor/behaviors/toolBehavior.ts:18</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Add a holding handler to be called when the given hover state is triggered.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>holdingState: <span class="tsd-signature-type">"picked-up"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"holding"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"dropped"</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The holding state to fire the handler on.</p>
+									</div>
+								</li>
+								<li>
+									<h5>handler: <a href="../index.html#actionhandler" class="tsd-signature-type">ActionHandler</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">ToolDataT</span><span class="tsd-signature-symbol">&gt;</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The handler to call when the holding state is triggered.</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
+							<p>This tool behavior.</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
 					<a name="ontarget" class="tsd-anchor"></a>
 					<h3>on<wbr>Target</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
 						<li class="tsd-signature tsd-kind-icon">on<wbr>Target<span class="tsd-signature-symbol">(</span>targetState<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">"enter"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"exit"</span>, handler<span class="tsd-signature-symbol">: </span><a href="../index.html#actionhandler" class="tsd-signature-type">ActionHandler</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
+								<p>Inherited from <a href="targetbehavior.html">TargetBehavior</a>.<a href="targetbehavior.html#ontarget">onTarget</a></p>
 								<ul>
 									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/7059f36/packages/sdk/src/actor/behaviors/targetBehavior.ts#L31">src/actor/behaviors/targetBehavior.ts:31</a></li>
 								</ul>
@@ -240,6 +281,44 @@
 						</li>
 					</ul>
 				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="onusing" class="tsd-anchor"></a>
+					<h3>on<wbr>Using</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">on<wbr>Using<span class="tsd-signature-symbol">(</span>usingState<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">"started"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"using"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"stopped"</span>, handler<span class="tsd-signature-symbol">: </span><a href="../index.html#actionhandler" class="tsd-signature-type">ActionHandler</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">ToolDataT</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/7059f36/packages/sdk/src/actor/behaviors/toolBehavior.ts#L31">src/actor/behaviors/toolBehavior.ts:31</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Add a using handler to be called when the given hover state is triggered.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>usingState: <span class="tsd-signature-type">"started"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"using"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"stopped"</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The using state to fire the handler on.</p>
+									</div>
+								</li>
+								<li>
+									<h5>handler: <a href="../index.html#actionhandler" class="tsd-signature-type">ActionHandler</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">ToolDataT</span><span class="tsd-signature-symbol">&gt;</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The handler to call when the using state is triggered.</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
+							<p>This tool behavior.</p>
+						</li>
+					</ul>
+				</section>
 			</section>
 		</div>
 		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
@@ -254,20 +333,26 @@
 				<ul class="before-current">
 				</ul>
 				<ul class="current">
-					<li class="current tsd-kind-class">
-						<a href="targetbehavior.html" class="tsd-kind-icon">Target<wbr>Behavior</a>
+					<li class="current tsd-kind-class tsd-has-type-parameter">
+						<a href="toolbehavior.html" class="tsd-kind-icon">Tool<wbr>Behavior</a>
 						<ul>
-							<li class=" tsd-kind-get-signature tsd-parent-kind-class tsd-is-overwrite">
-								<a href="targetbehavior.html#behaviortype" class="tsd-kind-icon">behavior<wbr>Type</a>
+							<li class=" tsd-kind-get-signature tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited">
+								<a href="toolbehavior.html#behaviortype" class="tsd-kind-icon">behavior<wbr>Type</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="targetbehavior.html#_supportsaction" class="tsd-kind-icon">_supports<wbr>Action</a>
+								<a href="toolbehavior.html#_supportsaction" class="tsd-kind-icon">_supports<wbr>Action</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+								<a href="toolbehavior.html#istargeted" class="tsd-kind-icon">is<wbr>Targeted</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="targetbehavior.html#istargeted" class="tsd-kind-icon">is<wbr>Targeted</a>
+								<a href="toolbehavior.html#onholding" class="tsd-kind-icon">on<wbr>Holding</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+								<a href="toolbehavior.html#ontarget" class="tsd-kind-icon">on<wbr>Target</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="targetbehavior.html#ontarget" class="tsd-kind-icon">on<wbr>Target</a>
+								<a href="toolbehavior.html#onusing" class="tsd-kind-icon">on<wbr>Using</a>
 							</li>
 						</ul>
 					</li>
