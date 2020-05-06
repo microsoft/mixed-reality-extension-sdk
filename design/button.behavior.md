@@ -43,7 +43,7 @@ public onClick(handler: ActionHandler<ButtonEventData>): this;
  * @param handler The handler to call when the click state is triggered.
  * @return This button behavior.
  */
-public onButton(buttonState: 'pressing' | 'holding' | 'released', handler: ActionHandler<ButtonEventData>: this;
+public onButton(buttonState: 'pressed' | 'holding' | 'released', handler: ActionHandler<ButtonEventData>: this;
 ```
 
 ## Network
