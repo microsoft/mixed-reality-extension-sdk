@@ -84,14 +84,17 @@ export default class ClockSyncTest extends Test {
 
 		// Build animations.
 		const yOffset = boxYPosition + lineHeight * 0.5;
-		this.buildDigitAnimation(meshHundredths, 4.25, yOffset, 1 / 100, 10, 10, lineHeight, textScale);
-		this.buildDigitAnimation(meshTenths, 3.25, yOffset, 1 / 10, 10, 10, lineHeight, textScale);
-		this.buildDigitAnimation(meshSeconds, 1.75, yOffset, 1, 10, 10, lineHeight, textScale);
-		this.buildDigitAnimation(mesh10Seconds, 0.75, yOffset, 10, 6, 6, lineHeight, textScale);
-		this.buildDigitAnimation(meshMinutes, -0.75, yOffset, 60, 10, 10, lineHeight, textScale);
-		this.buildDigitAnimation(mesh10Minutes, -1.75, yOffset, 10 * 60, 6, 6, lineHeight, textScale);
-		this.buildDigitAnimation(meshHours, -3.25, yOffset, 60 * 60, 24, 24, lineHeight, textScale);
-		this.buildDigitAnimation(mesh10Hours, -4.25, yOffset, 10 * 60 * 60, 3, 2.4, lineHeight, textScale);
+
+		await Promise.all([
+			this.buildDigitAnimation(meshHundredths, 4.25, yOffset, 1 / 100, 10, 10, lineHeight, textScale),
+			this.buildDigitAnimation(meshTenths, 3.25, yOffset, 1 / 10, 10, 10, lineHeight, textScale),
+			this.buildDigitAnimation(meshSeconds, 1.75, yOffset, 1, 10, 10, lineHeight, textScale),
+			this.buildDigitAnimation(mesh10Seconds, 0.75, yOffset, 10, 6, 6, lineHeight, textScale),
+			this.buildDigitAnimation(meshMinutes, -0.75, yOffset, 60, 10, 10, lineHeight, textScale),
+			this.buildDigitAnimation(mesh10Minutes, -1.75, yOffset, 10 * 60, 6, 6, lineHeight, textScale),
+			this.buildDigitAnimation(meshHours, -3.25, yOffset, 60 * 60, 24, 24, lineHeight, textScale),
+			this.buildDigitAnimation(mesh10Hours, -4.25, yOffset, 10 * 60 * 60, 3, 2.4, lineHeight, textScale)
+		]);
 
 		// Start the animations.
 		actors.forEach(actor => actor.targetingAnimationsByName.get(actor.name + "Anim").play());
@@ -166,7 +169,7 @@ export default class ClockSyncTest extends Test {
 			}
 		}
 
-		this.assets.createAnimationData(mesh.name + "Anim", {
+		return this.assets.createAnimationData(mesh.name + "Anim", {
 			tracks: [{
 				target: MRE.ActorPath('target').transform.local.position,
 				keyframes
