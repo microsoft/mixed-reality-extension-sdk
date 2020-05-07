@@ -11,13 +11,28 @@ Button Behavior Actions:
     - Click states: None.  This is a single atomic event.
 - `button` - The action that occurs when the button interaction state has changed from being pressed and then released.
     - Button states: `pressed`, `holding`, `released`
+    
+Button Event Data:
+- `appSpaceTargetPoints` - The collection of target points for the current state event for the action.
 
+Button Event Data Per Action:
+- Hover Action:
+	- `enter` - single app coordinate target point for where the hover is first entered.
+	- `hovering` - collection of app coordinate target points for the time while hovering is occuring, sent at a set frequency.
+	- `exit` - single app coordinate target point for where the hover was exited.
+- Click Action:
+	- There is only the click state and will contain the single app coordinate target point of the click action.
+- Button Action:
+	- `pressed` - single app coordinate target point for where the pressed event began.
+	- `holding` - collection of app coordinate target points for the time while the button is held down, sent at a set frequency.
+	- `released` - single app coordinate target point for where the button is released.
+	
 ## Architecture
 
 ### ButtonEventData
 ``` ts
 interface ButtonEventData {
-	points: TransformLike[];
+	appSpaceTargetPoints: TransformLike[];
 }
 ```
 
