@@ -35,6 +35,7 @@ import PhysicsSimTest from './physics-sim-test';
 import PhysicsCollisionTest from './physics-collision'
 import PhysichFreeFallTest from './physics-free-fall'
 import PhysicsHeadCollisionTest from './physics-head-collision'
+import PhysicsPileTest from './physics-pile-test'
 import PrimitivesTest from './primitives-test';
 import PromptTest from './prompt-test';
 import ReparentTest from './reparent-test';
@@ -87,6 +88,9 @@ export const Factories = {
 	'physics-collision-b.8': (...args) => new PhysicsCollisionTest( 0.8,...args),
 	'physics-head-collision-b.0': (...args) => new PhysicsHeadCollisionTest(0,...args),
 	'physics-head-collision-b.2': (...args) => new PhysicsHeadCollisionTest(0.2,...args),
+	'physics-pile-b.0v1': (...args) => new PhysicsPileTest(0, -1, 50, 0.0,...args),
+	'physics-pile-b.0v2': (...args) => new PhysicsPileTest(0, 10000, 70, 0.0,...args),
+	'physics-pile-b.0v3': (...args) => new PhysicsPileTest(0, -1, 50, 0.2,...args),
 	'primitives': (...args) => new PrimitivesTest(...args),
 	'prompt': (...args) => new PromptTest(...args),
 	'reparent': (...args) => new ReparentTest(...args),
