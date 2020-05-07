@@ -111,7 +111,8 @@ export class Execution extends Protocol {
 			targetId: payload.targetId,
 			behaviorType: payload.behaviorType,
 			actionName: payload.actionName,
-			actionState: payload.actionState
+			actionState: payload.actionState,
+			actionData: payload.actionData,
 		} as ActionEvent);
 	};
 
