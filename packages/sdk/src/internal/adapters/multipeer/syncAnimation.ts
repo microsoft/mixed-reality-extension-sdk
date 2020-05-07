@@ -15,8 +15,6 @@ export class SyncAnimation {
 	public targetIds: Guid[];
 	/** Used only with batch creation, as definition is updated for other */
 	public update: Message<Payloads.AnimationUpdate>;
-	/** Used only for runtime instances that need to know the duration of the asset */
-	public duration: number;
 	/** Whether this animation is active */
 	public active: boolean;
 }
