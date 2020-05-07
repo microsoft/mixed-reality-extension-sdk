@@ -59,7 +59,7 @@ module.exports = {
 		"no-shadow": "warn",
 		"no-unmodified-loop-condition": "error",
 		"no-void": "error",
-		"no-warning-comments": ["warn", {"terms": ["todo", "fixme", "tslint"]}],
+		"no-warning-comments": ["warn", {"terms": ["fixme", "tslint"]}],
 		"prefer-const": "warn",
 		"prefer-regex-literals": "warn",
 		"require-unicode-regexp": "error",

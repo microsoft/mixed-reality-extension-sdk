@@ -1,11 +1,12 @@
 {
   "extends": "../tsconfig.packages.json",
   "include": [
-    "./src/**/*.ts"
+    "./src/**/*.ts", "./types/**/*.d.ts"
   ],
   "compilerOptions": {
     "outDir": "./built", /* Redirect output structure to the directory. */
-    "rootDir": "./src" /* Specify the root directory of input files. Use to control the output directory structure with --outDir. */
+		"rootDir": "./src", /* Specify the root directory of input files. Use to control the output directory structure with --outDir. */
+		"typeRoots": ["./types"]
   },
   "references": [
 		{

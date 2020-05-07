@@ -24,10 +24,6 @@ export class ButtonBehavior extends TargetBehavior {
 	/** @inheritdoc */
 	public get behaviorType(): BehaviorType { return 'button'; }
 
-	public get hover() { return this._hover; }
-	public get click() { return this._click; }
-	public get button() { return this._button; }
-
 	/**
 	 * Add a hover handler to be called when the given hover state is triggered.
 	 * @param hoverState The hover state to fire the handler on.
