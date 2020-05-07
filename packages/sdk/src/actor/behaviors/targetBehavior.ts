@@ -22,8 +22,6 @@ export class TargetBehavior extends Behavior {
 	/** @inheritdoc */
 	public get behaviorType(): BehaviorType { return 'target'; }
 
-	public get target() { return this._target; }
-
 	/**
 	 * Add a target handler to be called when the given target state is triggered.
 	 * @param targetState The target state to fire the handler on.
