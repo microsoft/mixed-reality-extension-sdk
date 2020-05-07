@@ -6,7 +6,7 @@
 * create a consistent hotfix strategy
 
 ## Repos and Branches
-* There are 3 interconnected github repos (in this document named unity, sdk and samples). They all have matching branch names (except there is no unity/green – non-breaking features go into the red branch) 
+* There are 3 interconnected github repos (in this document named unity, sdk and samples). They all have matching branch names (except there is no unity/green – non-breaking features go into the red branch)
 * */red and */green = active development. Green=safe to go out with little-to-no warning. Red=complex/has dependencies/tied to a major release.
 * */r0.[minor].n = release branches – new branches are created when a new release is initiated (not just when we are ready to publish the DLLs+NPM packages)
 * */master = branch pointers to minimum supported DLL (typically AltspaceVR's shipped version) and recommended SDK. This is not used for MRE development, and nothing is ever committed to the master branches directly.
@@ -42,9 +42,9 @@ With this structure, I'd expect there to mostly be 1 or 2 active release version
 ### [Blue] When we decide to prepare a new MRE minor version release (criteria: usually ~1 day before Altspace code lock, or sooner if there are major changes)
 1. Merge sdk/green into sdk/red
 2. Merge samples/green into samples/red
-3. Update CurrentClientVersion to match major.minor in MREUnityRuntime\MREUnityRuntimeLib\Constants.cs and 
-4. If new features were added to SDK, increase MinimumSupportedClientVersion packages\sdk\src\utils\verifyClient.ts 
-5. If communication was changed in a non-backwards-compatible way, which is a HUGE DEAL, should never happen after exiting beta stage, and requires full team sign-off, increase the MinimumSupportedSDKVersion in MREUnityRuntimeLib\Constants.cs 
+3. Update CurrentClientVersion to match major.minor in MREUnityRuntime\MREUnityRuntimeLib\Constants.cs and
+4. If new features were added to SDK, increase MinimumSupportedClientVersion packages\sdk\src\internal\util\verifyClient.ts
+5. If communication was changed in a non-backwards-compatible way, which is a HUGE DEAL, should never happen after exiting beta stage, and requires full team sign-off, increase the MinimumSupportedSDKVersion in MREUnityRuntimeLib\Constants.cs
 6. Create new unity+sdk+sample branches named v0.[new_minor].n, matching the red (NOTE: if there was already a new SDK release created, but it wasn't "shipped", we can stomp that - i.e. if v0.[new_minor-1].n was never used in any host app, we can just reset hard, instead of creating v0.[new_minor].n)
 7. [Build Unity DLLs](#Build-Unity-DLLs) from unity/v0.[new_minor].n
 8. [Publish NPM packages](#Publish-NPM-packages) from sdk/v0.[new_minor].n
@@ -54,27 +54,27 @@ With this structure, I'd expect there to mostly be 1 or 2 active release version
 
 
 ### [Cyan] When we decide to integrate sdk/green, to patch/hotfix a minor version (The targeted minor version is usually whatever master points to. Criteria: whenever we think it's worth the effort)
-1. Merge sdk/green into v0.[target].n 
-2. Merge samples/green into v0.[target].n 
+1. Merge sdk/green into v0.[target].n
+2. Merge samples/green into v0.[target].n
 3. [Publish NPM packages](#Publish-NPM-packages) from v0.[target].n
 4. [Test pass](#Test-pass) for v0.[target].n branches
 5. If target is current master version
    1. [Update Master branches](#Update-Master-branches) for sdk+samples
 6. If branches for (target+1) exists
-   1. Merge sdk/v0.[target].n into v0.[target+1].n 
-   2. Merge samples/v0.[target].n into v0.[target+1].n 
+   1. Merge sdk/v0.[target].n into v0.[target+1].n
+   2. Merge samples/v0.[target].n into v0.[target+1].n
    3. Repeat steps 3-6 with target = target+1
 7. Merge sdk/green into red
 8. Merge samples/green into red
 9. [Test pass](#Test-pass) for red branches
 
 ### [Purple] When we need to do a unity-side hotfix in any target release
-1. [Develop feature](#Develop-feature) targeting the unity/v0.[target].n branch. 
+1. [Develop feature](#Develop-feature) targeting the unity/v0.[target].n branch.
 2. [Build Unity DLLs](#Build-Unity-DLLs) from unity/r0.[target].n
 3. If target is current master version
    1. [Update Master branches](#Update-Master-branches) for Unity
 4. If branches for (targetversion+1) exists
-   1. Cherry pick hotfix from unity/r0.[target].n to r0.[targetversion+1].n, 
+   1. Cherry pick hotfix from unity/r0.[target].n to r0.[targetversion+1].n,
    2. Repeat steps 2-3 with target=target+1
 5. Merge cherry pick hotfix to unity/red
 6. [Test pass](#Test-pass) for red branches
@@ -87,7 +87,7 @@ With this structure, I'd expect there to mostly be 1 or 2 active release version
 
 ### When Altspace creates RC
 1. Do nothing – MRE release cycle is decoupled from Altspace RC cycle.
- 
+
 ## Detailed Workflows
 
 ### Develop Feature
@@ -108,7 +108,7 @@ Main purpose of test pass is to look for regressions – not if new features wor
    1. Test localhost deploy functional tests
       1. Run functional test scene in unity test bed
       2. using the functional test menu in synchronization scene in testbed. Go in and out of each test twice. Keep an eye on the synchronized instance and make sure both work
-2. Deploy functional test temporarily to openode/Heroku/azure/ngrok and test 
+2. Deploy functional test temporarily to openode/Heroku/azure/ngrok and test
 3. Verify functional tests runs on Android.
 4. Run all samples
    1. See instructions for [how to build sample MREs against local NPM package instead of published](https://github.com/Microsoft/mixed-reality-extension-sdk-samples/blob/master/DEVELOPER.md)
@@ -117,7 +117,7 @@ Main purpose of test pass is to look for regressions – not if new features wor
 ### Publish NPM Packages
 Note that we always publish all packages with each release, with version numbers in sync. Step 1-10 by MREBuildAndDeployNPM script. Step 12 automated by MREBuildSamplesWithNewNPM script.
 
-1. Check out sdk\v0.[minor].n 
+1. Check out sdk\v0.[minor].n
 2. Git reset –hard
 3. git clean -fdx
 4. npm install
@@ -183,7 +183,7 @@ Step 2 is automated by MRETagUnityVersion script. Step 3 is partially automated 
 
 ### Update NewtonSoft.JSON DLL
 1. This change should be treated like all other unity-repo changes, just make sure to
-   1. Sync [AltspaceVR Newtonsoft Repository](https://github.com/AltspaceVR/Newtonsoft.Json) (note there is a commit added to disable dynamic code generation – 
+   1. Sync [AltspaceVR Newtonsoft Repository](https://github.com/AltspaceVR/Newtonsoft.Json) (note there is a commit added to disable dynamic code generation –
    2. Rebase this repo’s master branch on top of the base newtonsoft repo’s master branch (there are 1-2 commits there – they could be squashed)
    3. Follow build instructions in that repo’s ALTSPACE.md file (Ignore the part where ALTSPACE.md the instructions that say to copy dll+xml into altspace repository – that’s outdated and should be changed. By putting the dll+xml in MRE, it will automatically flow into Altspace with the next MRE DLL update)
    4. Copy these “portable+net40+win8+wpa81+wp8+sl5” files to \MREUnityRuntime\Libraries

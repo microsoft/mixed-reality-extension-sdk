@@ -90,10 +90,13 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="collider.html#bounciness" class="tsd-kind-icon">bounciness</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="collider.html#dynamicfriction" class="tsd-kind-icon">dynamic<wbr>Friction</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="collider.html#enabled" class="tsd-kind-icon">enabled</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="collider.html#geometry" class="tsd-kind-icon">geometry</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="collider.html#istrigger" class="tsd-kind-icon">is<wbr>Trigger</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="collider.html#layer" class="tsd-kind-icon">layer</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="collider.html#staticfriction" class="tsd-kind-icon">static<wbr>Friction</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
@@ -117,13 +120,35 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="bounciness" class="tsd-anchor"></a>
+					<h3>bounciness</h3>
+					<div class="tsd-signature tsd-kind-icon">bounciness<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 0</span></div>
+					<aside class="tsd-sources">
+						<p>Implementation of <a href="../interfaces/colliderlike.html">ColliderLike</a>.<a href="../interfaces/colliderlike.html#bounciness">bounciness</a></p>
+						<ul>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/7059f36/packages/sdk/src/actor/physics/collider.ts#L68">src/actor/physics/collider.ts:68</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="dynamicfriction" class="tsd-anchor"></a>
+					<h3>dynamic<wbr>Friction</h3>
+					<div class="tsd-signature tsd-kind-icon">dynamic<wbr>Friction<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 0</span></div>
+					<aside class="tsd-sources">
+						<p>Implementation of <a href="../interfaces/colliderlike.html">ColliderLike</a>.<a href="../interfaces/colliderlike.html#dynamicfriction">dynamicFriction</a></p>
+						<ul>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/7059f36/packages/sdk/src/actor/physics/collider.ts#L70">src/actor/physics/collider.ts:70</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 					<a name="enabled" class="tsd-anchor"></a>
 					<h3>enabled</h3>
 					<div class="tsd-signature tsd-kind-icon">enabled<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> = true</span></div>
 					<aside class="tsd-sources">
 						<p>Implementation of <a href="../interfaces/colliderlike.html">ColliderLike</a>.<a href="../interfaces/colliderlike.html#enabled">enabled</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/26e0348/packages/sdk/src/actor/physics/collider.ts#L63">src/actor/physics/collider.ts:63</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/7059f36/packages/sdk/src/actor/physics/collider.ts#L66">src/actor/physics/collider.ts:66</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -134,7 +159,7 @@
 					<aside class="tsd-sources">
 						<p>Implementation of <a href="../interfaces/colliderlike.html">ColliderLike</a>.<a href="../interfaces/colliderlike.html#geometry">geometry</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/26e0348/packages/sdk/src/actor/physics/collider.ts#L66">src/actor/physics/collider.ts:66</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/7059f36/packages/sdk/src/actor/physics/collider.ts#L72">src/actor/physics/collider.ts:72</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -145,7 +170,7 @@
 					<aside class="tsd-sources">
 						<p>Implementation of <a href="../interfaces/colliderlike.html">ColliderLike</a>.<a href="../interfaces/colliderlike.html#istrigger">isTrigger</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/26e0348/packages/sdk/src/actor/physics/collider.ts#L64">src/actor/physics/collider.ts:64</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/7059f36/packages/sdk/src/actor/physics/collider.ts#L67">src/actor/physics/collider.ts:67</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -156,7 +181,18 @@
 					<aside class="tsd-sources">
 						<p>Implementation of <a href="../interfaces/colliderlike.html">ColliderLike</a>.<a href="../interfaces/colliderlike.html#layer">layer</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/26e0348/packages/sdk/src/actor/physics/collider.ts#L65">src/actor/physics/collider.ts:65</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/7059f36/packages/sdk/src/actor/physics/collider.ts#L71">src/actor/physics/collider.ts:71</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="staticfriction" class="tsd-anchor"></a>
+					<h3>static<wbr>Friction</h3>
+					<div class="tsd-signature tsd-kind-icon">static<wbr>Friction<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 0</span></div>
+					<aside class="tsd-sources">
+						<p>Implementation of <a href="../interfaces/colliderlike.html">ColliderLike</a>.<a href="../interfaces/colliderlike.html#staticfriction">staticFriction</a></p>
+						<ul>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/7059f36/packages/sdk/src/actor/physics/collider.ts#L69">src/actor/physics/collider.ts:69</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -173,7 +209,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/26e0348/packages/sdk/src/actor/physics/collider.ts#L74">src/actor/physics/collider.ts:74</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/7059f36/packages/sdk/src/actor/physics/collider.ts#L80">src/actor/physics/collider.ts:80</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -198,7 +234,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/26e0348/packages/sdk/src/actor/physics/collider.ts#L116">src/actor/physics/collider.ts:116</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/7059f36/packages/sdk/src/actor/physics/collider.ts#L126">src/actor/physics/collider.ts:126</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -235,7 +271,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/26e0348/packages/sdk/src/actor/physics/collider.ts#L135">src/actor/physics/collider.ts:135</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/7059f36/packages/sdk/src/actor/physics/collider.ts#L145">src/actor/physics/collider.ts:145</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -272,7 +308,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/26e0348/packages/sdk/src/actor/physics/collider.ts#L107">src/actor/physics/collider.ts:107</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/7059f36/packages/sdk/src/actor/physics/collider.ts#L117">src/actor/physics/collider.ts:117</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -310,7 +346,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/26e0348/packages/sdk/src/actor/physics/collider.ts#L126">src/actor/physics/collider.ts:126</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/7059f36/packages/sdk/src/actor/physics/collider.ts#L136">src/actor/physics/collider.ts:136</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -356,6 +392,12 @@
 						<a href="collider.html" class="tsd-kind-icon">Collider</a>
 						<ul>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="collider.html#bounciness" class="tsd-kind-icon">bounciness</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="collider.html#dynamicfriction" class="tsd-kind-icon">dynamic<wbr>Friction</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
 								<a href="collider.html#enabled" class="tsd-kind-icon">enabled</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
@@ -366,6 +408,9 @@
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
 								<a href="collider.html#layer" class="tsd-kind-icon">layer</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="collider.html#staticfriction" class="tsd-kind-icon">static<wbr>Friction</a>
 							</li>
 							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
 								<a href="collider.html#eventsubscriptions" class="tsd-kind-icon">event<wbr>Subscriptions</a>
