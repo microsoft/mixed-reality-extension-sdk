@@ -64,13 +64,14 @@ AssetManager
 ---------------
 
 This class is responsible for maintaining references to active instances of assets used by a particular MRE instance.
-Every instance has its own IAssetManager.
+Every instance has its own AssetManager.
 
 ### AssetMetadata
 
 ```cs
 public struct AssetMetadata {
 	Guid Id;
+	Guid ContainerId;
 	UnityEngine.Object Asset;
 	ColliderGeometry ColliderGeometry;
 	AssetSource Source;
@@ -82,19 +83,56 @@ a shared asset, i.e. is a one-off creation of an MRE, or is a modified copy of s
 
 ### CacheRootGO
 
+The game object in the scene hierarchy that should be used as parent for any assets that require one, i.e. Prefabs.
+
 ### EmptyTemplate
 
-### Get
+The game object that should be duplicated for new actors.
+
+### GetById
 
 ```cs
-AssetMetadata Get(Guid? id);
+AssetMetadata GetById(Guid? id, bool writeSafe = false);
 ```
 
-### LookupByObject
+Retrieve an asset by ID. If a write-safe asset is requested, and the stored asset with that ID is shared,
+a copy of the asset will be made, and stored back into the manager. Any other shared assets that reference this asset
+will also be recursively copied and stored back. Each copied asset will have the original returned to the cache,
+decrementing the original's reference count.
+
+### GetByObject
 
 ```cs
-AssetMetadata LookupByObject(UnityEngine.Object asset);
+AssetMetadata GetByObject(UnityEngine.Object asset);
 ```
+
+Retrieve an asset's metadata from the asset reference itself.
+
+### Set
+
+```cs
+void Set(AssetMetadata metadata);
+```
+
+Track a new asset reference. Will be called during asset creation, after the asset content is downloaded or retrieved
+from cache.
+
+### OnSet
+
+```cs
+void OnSet(Guid id, Action<AssetMetadata> callback);
+```
+
+Be notified when an asset is finished loading and available for use.
+
+### Unload
+
+```cs
+void Unload(Guid containerId);
+```
+
+Break references to all shared assets and destroy all unshared assets with this container ID.
+
 
 Expected flow: glTF
 =====================
@@ -109,9 +147,11 @@ Let's say I want to load a glTF file. In this new two-tier design, the steps are
 4. Call `IAssetCache.LeaseAssets(uri)` to retrieve either the newly loaded objects or the old cached ones, and
 	increment the internal reference counter so this resource doesn't go cold in the cache.
 5. Convert the `UnityEngine.Object`s into assets by assigning an ID and filling out the rest of the asset metadata.
-6. Call `IAssetManager.CacheAsset` on each of the new assets, marking each as "shared".
+	Mark them as shared by filling the `Source` property.
+6. Call `IAssetManager.CacheAsset` on each of the new assets.
 7. Return the new asset descriptions to the server.
 
 If I want to then modify a loaded asset from this batch:
 
-1. Call `IAssetManager.GetAsset
+1. Call `IAssetManager.GetById(id, writeSafe: true)` to retrieve a write-safe copy of this asset.
+2. Make your changes.
