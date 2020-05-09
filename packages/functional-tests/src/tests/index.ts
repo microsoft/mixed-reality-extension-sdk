@@ -30,7 +30,7 @@ import LibraryFailTest from './library-fail-test';
 import LightTest from './light-test';
 import LookAtTest from './look-at-test';
 import PhysicsBounceTest from './physics-bounce-test';
-import PhysicsLocalVsRemoteTest from './physics-local-vs-remote';
+import PhysicsLocalVsRemoteTest from './physics-stack-test';
 import PhysicsFrictionTest from './physics-friction-test';
 import PhysicsSimTest from './physics-sim-test';
 import PhysicsCollisionTest from './physics-collision'
