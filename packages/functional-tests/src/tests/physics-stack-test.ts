@@ -20,8 +20,9 @@ export default class PhysicsStackTest extends Test {
 
 	private numBoxes: number;
 	private numOwners: number;
+	private boxSize: number;
 
-	constructor(numBoxes: number, isMixedOwnership: boolean,
+	constructor(numBoxes: number, boxSize: number, isMixedOwnership: boolean,
 		protected app: App, protected baseUrl: string, protected user: MRE.User) {
 		super(app, baseUrl, user);
 
@@ -34,6 +35,7 @@ export default class PhysicsStackTest extends Test {
 		];
 
 		this.numBoxes = numBoxes;
+		this.boxSize = boxSize;
 		this.numOwners = isMixedOwnership ? 2 : 1;
 	}
 
@@ -44,15 +46,16 @@ export default class PhysicsStackTest extends Test {
 			this.createLabel(root, this.materials[index], this.app.context.users[i].id);
 
 			if (i === 0) {
-				this.createCube(root, 0.5, new Vector3(1, 0.25, -1), this.app.context.users[i].id, this.materials[i]);
-			} 
-			else if (i === 1) {
-				this.createCube(root, 0.5, new Vector3(-1, 0.25, -1), this.app.context.users[i].id, this.materials[i]);
+				this.createCube(root, this.boxSize, new Vector3(1.2, this.boxSize * 0.5, -1),
+					this.app.context.users[i].id, this.materials[i]);
+			} else if (i === 1) {
+				this.createCube(root, this.boxSize, new Vector3(-1.2, this.boxSize * 0.5, -1),
+					this.app.context.users[i].id, this.materials[i]);
 			}
 		}
 
 		const numUsers = Math.min(this.numOwners, this.app.context.users.length);
-		this.createStack(root, 0.5, this.numBoxes, numUsers, this.app.context.users, this.materials);
+		this.createStack(root, this.boxSize, this.numBoxes, numUsers, this.app.context.users, this.materials);
 
 		await this.stoppedAsync();
 		return true;
@@ -81,7 +84,7 @@ export default class PhysicsStackTest extends Test {
 	}
 
 	private createStack(root: MRE.Actor, size: number, count: int,
-						numUsers: int, users: MRE.User[], materials: MRE.Material[]) {
+		numUsers: int, users: MRE.User[], materials: MRE.Material[]) {
 
 		const position = new Vector3(0, size * 0.5, -1);
 
