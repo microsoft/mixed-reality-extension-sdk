@@ -30,6 +30,7 @@ import LibraryFailTest from './library-fail-test';
 import LightTest from './light-test';
 import LookAtTest from './look-at-test';
 import PhysicsBounceTest from './physics-bounce-test';
+import PhysicsStackTest from './physics-stack-test';
 import PhysicsFrictionTest from './physics-friction-test';
 import PhysicsSimTest from './physics-sim-test';
 import PhysicsCollisionTest from './physics-collision'
@@ -81,6 +82,12 @@ export const Factories = {
 	'light': (...args) => new LightTest(...args),
 	'look-at': (...args) => new LookAtTest(...args),
 	'physics-bounce': (...args) => new PhysicsBounceTest(...args),
+	'physics-stack-2 boxes': (...args) => new PhysicsStackTest(2, 0.5, false, ...args),
+	'physics-stack-2 boxes mix': (...args) => new PhysicsStackTest(2, 0.5, true, ...args),
+	'physics-stack-2 large boxes mix': (...args) => new PhysicsStackTest(2, 1.0, true, ...args),
+	'physics-stack-4 boxes': (...args) => new PhysicsStackTest(4, 0.5, false, ...args),
+	'physics-stack-4 boxes mix': (...args) => new PhysicsStackTest(4, 0.5, true, ...args),
+	'physics-stack-4 large boxes mix': (...args) => new PhysicsStackTest(4, 1.0, true, ...args),
 	'physics-firction': (...args) => new PhysicsFrictionTest(...args),
 	'physics-sim': (...args) => new PhysicsSimTest(...args),
 	'physics-free-fall': (...args) => new PhysichFreeFallTest(...args),
