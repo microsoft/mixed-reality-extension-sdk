@@ -5,49 +5,54 @@
 
 import * as MRE from '@microsoft/mixed-reality-extension-sdk';
 
+import { App } from '../app';
 import { Test } from '../test';
+import { Vector3 } from '@microsoft/mixed-reality-extension-sdk';
+import { int } from '../../../common/src/math/types';
 
 export default class PhysicsLocalVsRemoteTest extends Test {
-	public expectedResultDescription = "Balls and boxes hit the ground and bounce.";
+
+	public expectedResultDescription = "Stack of rigid body boxes.";
 	private assets: MRE.AssetContainer;
 	private interval: NodeJS.Timeout;
 
-	private redMat: MRE.Material;
-	private blueMat: MRE.Material;
+	private materials: MRE.Material[];
+
+	private numBoxes: number;
+	private numOwners: number;
+
+	constructor(numBoxes: number, isMixedOwnership: boolean,
+		protected app: App, protected baseUrl: string, protected user: MRE.User) {
+		super(app, baseUrl, user);
+
+		this.assets = new MRE.AssetContainer(this.app.context);
+
+		this.materials = [
+			this.assets.createMaterial('red', { color: MRE.Color3.Red()}),
+			this.assets.createMaterial('blue', { color: MRE.Color3.Blue()}),
+			this.assets.createMaterial('green', { color: MRE.Color3.Green()}),
+		];
+
+		this.numBoxes = numBoxes;
+		this.numOwners = isMixedOwnership ? 2 : 1;
+	}
 
 	public async run(root: MRE.Actor): Promise<boolean> {
-		this.assets = new MRE.AssetContainer(this.app.context);
 
-		this.assets = new MRE.AssetContainer(this.app.context);
+		for(let i = 0; i<this.app.context.users.length; i++) {
+			const index = Math.min(i, this.materials.length-1);
+			this.createLabel(root, this.materials[index], this.app.context.users[i].id);
 
-		this.redMat = this.assets.createMaterial('redBall', {
-			color: MRE.Color3.Red()
-		});
-		this.blueMat = this.assets.createMaterial('blueBall', {
-			color: MRE.Color3.Blue()
-		});
-
-		if (this.app.context.users.length > 0) {
-			const userId = this.app.context.users[0].id;
-			this.createLabel(root, "RED", MRE.Color3.Red(), userId);
-
-			this.spawnBall(root, -1.0, 0.1, this.redMat, userId);
-
-			this.spawnBall(root, 0.0, 0.1, this.redMat, userId);
-			this.spawnBall(root, 0.0, 0.5, this.redMat, userId);
+			if (i === 0) {
+				this.createCube(root, 0.5, new Vector3(1, 0.25, -1), this.app.context.users[i].id, this.materials[i]);
+			} 
+			else if (i === 1) {
+				this.createCube(root, 0.5, new Vector3(-1, 0.25, -1), this.app.context.users[i].id, this.materials[i]);
+			}
 		}
 
-		if (this.app.context.users.length > 1) {
-			const userId = this.app.context.users[1].id;
-			this.createLabel(root, "BLUE", MRE.Color3.Blue(), userId);
-
-			this.spawnBall(root, +1.0, 0.1, this.blueMat, userId);
-
-			this.spawnBall(root, 0.0, 0.3, this.blueMat, userId);
-			this.spawnBall(root, 0.0, 0.7, this.blueMat, userId);
-		}
-
-
+		const numUsers = Math.min(this.numOwners, this.app.context.users.length);
+		this.createStack(root, 0.5, this.numBoxes, numUsers, this.app.context.users, this.materials);
 
 		await this.stoppedAsync();
 		return true;
@@ -58,41 +63,52 @@ export default class PhysicsLocalVsRemoteTest extends Test {
 		this.assets.unload();
 	}
 
-	private createLabel(root: MRE.Actor, text: string, col: MRE.Color3, userId: MRE.Guid) {
-
+	private createLabel(root: MRE.Actor, material: MRE.Material, userId: MRE.Guid) {
 		MRE.Actor.Create(this.app.context, {
 			actor: {
 				name: 'label',
 				parentId: root.id,
 				exclusiveToUser: userId,
-				transform: { local: { position: { y: 1.5 } } },
+				transform: { local: { position: { y: 3.5 } } },
 				text: {
-					contents: text,
-					height: 0.1,
+					contents: material.name,
+					height: 0.5,
 					anchor: MRE.TextAnchorLocation.TopCenter,
-					color: col
+					color: material.color
 				}
 			}
 		});
 	}
 
-	private spawnBall(root: MRE.Actor, width: number, height: number, mat: MRE.Material, userId: MRE.Guid,
-		ballRadius = 0.07, killTimeout = 5000) {
-		const ball = MRE.Actor.Create(this.app.context, {
+	private createStack(root: MRE.Actor, size: number, count: int,
+						numUsers: int, users: MRE.User[], materials: MRE.Material[]) {
+
+		const position = new Vector3(0, size * 0.5, -1);
+
+		for(let i = 0; i<count;i++) {
+			const userIndex = i % numUsers;
+			this.createCube(root, size, position, users[userIndex].id, materials[userIndex]);
+
+			position.y += size;
+		}
+	}
+
+	private createCube(root: MRE.Actor, size: number, position: Vector3, userId: MRE.Guid, material: MRE.Material) {
+		MRE.Actor.Create(this.app.context, {
 			actor: {
 				owner: userId,
 				parentId: root.id,
 				name: "box",
 				grabbable: true,
 				appearance: {
-					meshId: this.assets.createBoxMesh('box', 0.2, 0.2, 0.2).id,
-					materialId: mat.id
+					meshId: this.assets.createBoxMesh('box', size, size, size).id,
+					materialId: material.id
 				},
 				transform: {
-					local: { position: { x: -width / 2 + width, y: height, z: -0.1 } }
+					local: { position: position }
 				},
 				rigidBody: {
-					mass: 3,
+					mass: 1,
 				},
 				collider: {
 					geometry: { shape: MRE.ColliderType.Auto },
