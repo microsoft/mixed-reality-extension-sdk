@@ -10,7 +10,7 @@ import { Test } from '../test';
 import { Vector3 } from '@microsoft/mixed-reality-extension-sdk';
 import { int } from '../../../common/src/math/types';
 
-export default class PhysicsLocalVsRemoteTest extends Test {
+export default class PhysicsStackTest extends Test {
 
 	public expectedResultDescription = "Stack of rigid body boxes.";
 	private assets: MRE.AssetContainer;
