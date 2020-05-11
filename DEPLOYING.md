@@ -69,7 +69,7 @@ contains step-by-step deployment instructions using opeNode's command line inter
 This same process is outlined in the next section.
 
 #### Deploy your app to your new instance
-Note: A video walkthrough can be found here to supplment the instructions below: https://www.youtube.com/watch?v=SRzQOEwR4dM&list=PLmFHH6TuGBX1GjMAfzwz1wYz274RHq4ml&index=7&t=0s 
+Note: A [video walkthrough](https://www.youtube.com/watch?v=SRzQOEwR4dM&list=PLmFHH6TuGBX1GjMAfzwz1wYz274RHq4ml&index=7&t=0s) is available to supplement the instructions below.
 
 1. On your local machine, open a command prompt.
  
@@ -80,48 +80,45 @@ npm install -g openode
 ```
  
 3. Change directory to your project:
-```
-cd YOUR_PROJECT_DIRECTORY
-```
+    ```
+    cd YOUR_PROJECT_DIRECTORY
+    ```
 4. Use the Dockerfile that comes with any of the sample MRE projects. A second option is you can create a Dockerfile using the openode CLI (only needs to be done once per project):
-```
-openode template
-```
-This creates a file on disk named `Dockerfile`. Make sure you change where it says  WORKDIR /opt/app to WORKDIR /opt/mre or it will not be able to find /opt/app as a module. 
+    ```
+    openode template
+    ```
+    This creates a file on disk named `Dockerfile`. Make sure you change where it says `WORKDIR /opt/app` to `WORKDIR /opt/mre` or it will not be able to find /opt/app as a module. 
  
-5. Edit the Dockerfile
-The Node version specified in the Dockerfile is newer than the MRE SDK's Node depencency. To eliminate
-potential incompatibility, edit the first line of the Dockerfile so that it specifies Node v8.12:
-```
-FROM node:8.12.0-alpine
-```
-You must add the ENV BASE_URL= http://YOUR_SITE_NAME.openode.io/ line before you deploy or it won't be able to build. You can find your site name on the openode website. You also must add the the ENV PORT=80 as it is not included in the samples Dockerfile though it is included in the one that is generated when you type openode template. 
- 
-So add lines: 
-ENV PORT=80 
-ENV BASE_URL=http://YOUR_SITE_NAME.openode.io/
-after the WORKDIR /opt/mre line to your Dockerfile before you deploy. 
-```
- 
-Save and close the Dockerfile.
+5. Edit the Dockerfile. You must add the line `ENV BASE_URL=http://YOUR_SITE_NAME.openode.io/` before you deploy or it won't be able to build. You can find your site name on the openode website. You also must add `ENV PORT=80` as it is not included in the samples Dockerfile though it is included in the one that is generated when you type openode template. 
+
+    So add lines:
+
+    ```
+    ENV PORT=80
+    ENV BASE_URL=http://YOUR_SITE_NAME.openode.io/
+    ```
+
+    after the `WORKDIR /opt/mre` line to your Dockerfile before you deploy.
+
+    Save and close the Dockerfile.
  
 6. Deploy your app
  
-To start a deployment, run this command:
-```
-openode deploy
-```
-This step copies your project to your opeNode instance, installs npm dependencies, and then starts it running.
-The first time you deploy your MRE SDK app, you may see an error message that starts with this:
-```
-dtrace-provider@0.8.7 install /opt/app/node_modules/dtrace-provider
-> node-gyp rebuild || node suppress-error.js
+    To start a deployment, run this command:
+    ```
+    openode deploy
+    ```
+    This step copies your project to your opeNode instance, installs npm dependencies, and then starts it running.
+    The first time you deploy your MRE SDK app, you may see an error message that starts with this:
+    ```
+    dtrace-provider@0.8.7 install /opt/app/node_modules/dtrace-provider
+    > node-gyp rebuild || node suppress-error.js
  
-gyp ERR! configure error
-gyp ERR! stack Error: Can't find Python executable "python", you can set the PYTHON env variable.
-```
-If you see this error, run `openode deploy` one more time and it should clear up. If you see this
-error again, please [open a GitHub issue here](https://github.com/Microsoft/mixed-reality-extension-sdk/issues/new).
+    gyp ERR! configure error
+    gyp ERR! stack Error: Can't find Python executable "python", you can set the PYTHON env variable.
+    ```
+    If you see this error, run `openode deploy` one more time and it should clear up. If you see this
+    error again, please [open a GitHub issue here](https://github.com/Microsoft/mixed-reality-extension-sdk/issues/new).
  
 Once your deployment succeeds, you're ready to connect from AltspaceVR! 
  
