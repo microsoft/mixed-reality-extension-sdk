@@ -214,8 +214,13 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	}
 
 	/**
-	 * Creates a new actor from a library resource.
-	 * Host-specific list of library resources. For AltspaceVR, see: https://account.altvr.com/kits
+	 * Creates a new actor from a library resource, which is host-dependent.
+	 * For AltspaceVR, the available resource ID formats are:
+	 * * `teleporter:event/<event_id>[?label=true]`, with an Altspace event ID, which you can get from the URL of an
+	 *     event's page on https://account.altvr.com.
+	 * * `teleporter:space/<space_id>[?label=true]`
+	 * * `teleporter:<event_or_space_id>[?label=true]`
+	 * * `artifact:<artifact_id>`, with an Altspace artifact ID from https://account.altvr.com/kits.
 	 * @param context The SDK context object.
 	 * @param options.resourceId The id of the library resource to instantiate.
 	 * @param options.actor The initial state of the root actor.
