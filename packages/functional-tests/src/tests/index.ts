@@ -32,6 +32,7 @@ import LookAtTest from './look-at-test';
 import PhysicsBounceTest from './physics-bounce-test';
 import PhysicsLocalVsRemoteTest from './physics-local-vs-remote';
 import PhysicsLocalVsRemoteTest2 from './physics-local-vs-remote-2';
+import PhysicsStackTest from './physics-stack-test';
 import PhysicsFrictionTest from './physics-friction-test';
 import PhysicsSimTest from './physics-sim-test';
 import PhysicsCollisionTest from './physics-collision'
@@ -85,6 +86,12 @@ export const Factories = {
 	'physics-bounce': (...args) => new PhysicsBounceTest(...args),
 	'physics-local-vs-remote': (...args) => new PhysicsLocalVsRemoteTest(...args),
 	'physics-local-vs-remote-2': (...args) => new PhysicsLocalVsRemoteTest2(...args),
+	'physics-stack-2 boxes': (...args) => new PhysicsStackTest(2, 0.5, false, ...args),
+	'physics-stack-2 boxes mix': (...args) => new PhysicsStackTest(2, 0.5, true, ...args),
+	'physics-stack-2 large boxes mix': (...args) => new PhysicsStackTest(2, 1.0, true, ...args),
+	'physics-stack-4 boxes': (...args) => new PhysicsStackTest(4, 0.5, false, ...args),
+	'physics-stack-4 boxes mix': (...args) => new PhysicsStackTest(4, 0.5, true, ...args),
+	'physics-stack-4 large boxes mix': (...args) => new PhysicsStackTest(4, 1.0, true, ...args),
 	'physics-firction': (...args) => new PhysicsFrictionTest(...args),
 	'physics-sim': (...args) => new PhysicsSimTest(...args),
 	'physics-free-fall': (...args) => new PhysichFreeFallTest(...args),
