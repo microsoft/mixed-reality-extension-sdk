@@ -95,7 +95,7 @@ export default class PhysicsLocalVsRemoteTest2 extends Test {
 				},
 				collider: {
 					geometry: { shape: MRE.ColliderType.Auto },
-					bounciness: 0.0, dynamicFriction: 0.5, staticFriction: 0.5
+					bounciness: 0.0, dynamicFriction: 0.8, staticFriction: 0.8
 				}
 			}
 		});

@@ -31,7 +31,7 @@ export default class PhysicsLocalVsRemoteTest extends Test {
 			const userId = this.app.context.users[0].id;
 			this.createLabel(root, "RED", MRE.Color3.Red(), userId);
 
-			this.spawnBall(root, -1.0, 0.1, this.redMat, userId);
+			//this.spawnBall(root, -1.0, 0.1, this.redMat, userId);
 
 			this.spawnBall(root, 0.0, 0.1, this.redMat, userId);
 			this.spawnBall(root, 0.0, 0.5, this.redMat, userId);
@@ -41,7 +41,7 @@ export default class PhysicsLocalVsRemoteTest extends Test {
 			const userId = this.app.context.users[1].id;
 			this.createLabel(root, "BLUE", MRE.Color3.Blue(), userId);
 
-			this.spawnBall(root, +1.0, 0.1, this.blueMat, userId);
+			//this.spawnBall(root, +1.0, 0.1, this.blueMat, userId);
 
 			this.spawnBall(root, 0.0, 0.3, this.blueMat, userId);
 			this.spawnBall(root, 0.0, 0.7, this.blueMat, userId);
@@ -96,7 +96,7 @@ export default class PhysicsLocalVsRemoteTest extends Test {
 				},
 				collider: {
 					geometry: { shape: MRE.ColliderType.Auto },
-					bounciness: 0.0, dynamicFriction: 0.5, staticFriction: 0.5
+					bounciness: 0.0, dynamicFriction: 0.8, staticFriction: 0.8
 				}
 			}
 		});
