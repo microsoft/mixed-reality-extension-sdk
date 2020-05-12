@@ -235,7 +235,8 @@ export class ClientSync extends Protocol {
 	public 'stage:sync-animations' = () => {
 		// sync new-style animations
 		for (const anim of this.client.session.animations) {
-			const createMessage = this.client.session.animationCreatorSet.get(anim.id);
+			const createMessage = this.client.session.animationCreatorSet.get(anim.creatorMessageId);
+
 			// direct animation updates are merged into the create call, skip here
 			if (anim.update && createMessage.payload.type !== 'create-animation-2') {
 				super.sendMessage(anim.update);

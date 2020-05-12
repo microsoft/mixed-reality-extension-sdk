@@ -58,7 +58,7 @@ export class Session extends EventEmitter {
 	public get assetCreators() { return [...this._assetCreatorSet.values()]; }
 	public get animationSet() { return this._animationSet; }
 	public get animations() { return this._animationSet.values(); }
-	public get animationCreators() { return this._animationCreatorSet.values(); }
+	public get animationCreators() { return [...this._animationCreatorSet.values()]; }
 	public get animationCreatorSet() { return this._animationCreatorSet; }
 	public get actorSet() { return this._actorSet; }
 	public get assetSet() { return this._assetSet; }
@@ -403,28 +403,37 @@ export class Session extends EventEmitter {
 		}
 	}
 
-	public cacheAnimationCreationRequest(payload: AnimationCreationMessage) {
-		this._animationCreatorSet.set(payload.id, payload);
+	public cacheAnimationCreationRequest(message: AnimationCreationMessage) {
+		this._animationCreatorSet.set(message.id, message);
+		if (message.payload.type === 'create-animation-2') {
+			const createAnim = message.payload as Payloads.CreateAnimation2;
+			this._animationSet.set(createAnim.animation.id, {
+				id: createAnim.animation.id,
+				creatorMessageId: message.id,
+				targetIds: Object.values(createAnim.targets)
+			});
+		}
 	}
 
 	public cacheAnimationCreation(creatorId: Guid, def: Partial<AnimationLike>) {
-		this._animationSet.set(def.id, {
+		const animCreationResult: Partial<SyncAnimation> = {
 			id: def.id,
 			creatorMessageId: creatorId,
 			targetIds: [...def.targetIds],
-			update: undefined,
-			duration: def.duration,
 			active: def.weight > 0 && def.speed !== 0
-		});
+		};
+		const oldAnim = this._animationSet.get(def.id);
+
+		if (!oldAnim) {
+			this._animationSet.set(def.id, animCreationResult);
+		} else {
+			// the only field we didn't already know at creation
+			oldAnim.active = def.weight > 0 && def.speed !== 0;
+		}
 	}
 
 	public cacheAnimationUpdate(update: Message<Payloads.AnimationUpdate>) {
-		let syncAnim = this._animationSet.get(update.payload.animation.id);
-		if (!syncAnim) {
-			syncAnim = { id: update.payload.animation.id };
-			this._animationSet.set(syncAnim.id, syncAnim);
-		}
-
+		const syncAnim = this._animationSet.get(update.payload.animation.id);
 		if (syncAnim.update) {
 			// merge with previous update message
 			syncAnim.update.payload.animation = deepmerge(
