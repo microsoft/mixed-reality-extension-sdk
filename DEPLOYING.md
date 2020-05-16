@@ -70,6 +70,7 @@ This same process is outlined in the next section.
 
 #### Deploy your app to your new instance
 Note: A [video walkthrough](https://www.youtube.com/watch?v=SRzQOEwR4dM&list=PLmFHH6TuGBX1GjMAfzwz1wYz274RHq4ml&index=7&t=0s) is available to supplement the instructions below.
+There is also a general MRE tutorial found [here](https://www.youtube.com/playlist?list=PLmFHH6TuGBX1GjMAfzwz1wYz274RHq4ml)
 
 1. On your local machine, open a command prompt.
  
@@ -127,8 +128,6 @@ Note you must use wss:// or it will not connect.
  
 For instructions on instantiating your app within AltspaceVR, checkout the [sample repo's README.md](
 https://github.com/Microsoft/mixed-reality-extension-sdk-samples/blob/master/README.md)
-
-When you run your MRE in Altspace make sure you have the openode website opened on your browser or it will not deploy at times.
  
 If you want to re-deploy, you should use `openode stop` before calling `openode deploy`, otherwise the deploy will 
 fail. If a deploy fails, you can just call `openode deploy` again.
