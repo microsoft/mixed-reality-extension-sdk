@@ -7,7 +7,6 @@ import { readFileSync, statSync } from 'fs';
 import { lookup as MimeLookup } from 'mime-types';
 import GLTF from './gen/gltf';
 import { Serializable } from './serializable';
-import { roundUpToNextMultipleOf4 } from './util';
 
 export interface ImageLike {
 	name?: string;
@@ -20,16 +19,21 @@ export class Image extends Serializable implements ImageLike {
 	public name: string;
 
 	/**
-	 * A URI to a texture, resolved by the model consumer. Don't set alongside [[embeddedFilePath]].
+	 * A URI to a texture, resolved by the model consumer. Don't set alongside [[embeddedFilePath]] or [[embeddedData]].
 	 */
 	public uri: string;
 
 	/**
 	 * A path to a local texture file, resolved during serialization and packed into the model.
-	 * Don't set alongside [[uri]].
+	 * Don't set alongside [[uri]] or [[embeddedData]].
 	 */
 	public embeddedFilePath: string;
 	private embeddedFileSize: number;
+
+	/**
+	 * The image's binary data. Don't set alongside [[uri]] or [[embeddedFilePath]].
+	 */
+	public embeddedData: Buffer;
 
 	private manualMime: string;
 
@@ -89,19 +93,16 @@ export class Image extends Serializable implements ImageLike {
 		const bufferView: GLTF.BufferView = {
 			buffer: 0,
 			byteOffset: lastBV ? Math.ceil((lastBV.byteOffset + lastBV.byteLength) / 4) * 4 : 0,
-			byteLength: this.embeddedFileSize
+			byteLength: this.embeddedData ? this.embeddedData.length : this.embeddedFileSize
 		};
 
 		const bufferViewData = data.slice(bufferView.byteOffset, bufferView.byteOffset + bufferView.byteLength);
 
-		// fill padding with zeros
-		for (let i = roundUpToNextMultipleOf4(bufferView.byteOffset + bufferView.byteLength) - 1;
-			i >= bufferView.byteOffset + bufferView.byteLength;
-			i--) {
-			data.writeUInt8(0, i);
+		if (this.embeddedData) {
+			this.embeddedData.copy(bufferViewData);
+		} else {
+			readFileSync(this.embeddedFilePath).copy(bufferViewData);
 		}
-
-		readFileSync(this.embeddedFilePath).copy(bufferViewData);
 
 		if (!document.bufferViews) {
 			document.bufferViews = [];
@@ -121,6 +122,10 @@ export class Image extends Serializable implements ImageLike {
 		if (this.embeddedFilePath) {
 			const stat = statSync(this.embeddedFilePath);
 			return this.embeddedFileSize = stat.size;
-		} else { return 0; }
+		} else if (this.embeddedData) {
+			return this.embeddedData.length;
+		} else {
+			return 0;
+		}
 	}
 }

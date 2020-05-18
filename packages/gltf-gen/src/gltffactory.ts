@@ -2,6 +2,10 @@
  * Copyright (c) Microsoft Corporation. All rights reserved.
  * Licensed under the MIT License.
  */
+import { resolve } from 'path';
+import { readFile as fsReadFile } from 'fs';
+import { promisify } from 'util';
+const readFile = promisify(fsReadFile);
 
 import { Material, Mesh, MeshPrimitive, Node, Scene, Texture } from '.';
 import GLTF from './gen/gltf';
@@ -28,6 +32,7 @@ export class GltfFactory {
 	}
 
 	/**
+	 * Convert the factory's scenes and other resources into a GLB buffer.
 	 * @returns A buffer containing a glTF document in GLB format
 	 */
 	public generateGLTF(): Buffer {
@@ -80,6 +85,65 @@ export class GltfFactory {
 		return gltfData;
 	}
 
+	/**
+	 * Populate this [[GltfFactory]] with the resources from a GLB file.
+	 * @param path The file path to a GLB file.
+	 */
+	public async importFromGlb(path: string) {
+		const glbData = await readFile(path);
+
+		// read header
+		const magic = glbData.readUInt32LE(0);
+		const version = glbData.readUInt32LE(4);
+		const totalLength = glbData.readUInt32LE(8);
+		const jsonLength = glbData.readUInt32LE(12);
+		const jsonMagic = glbData.readUInt32LE(16);
+		const binLength = glbData.length > (20 + jsonLength) ? glbData.readUInt32LE(20 + jsonLength) : 0;
+		const binMagic = glbData.length > (24 + jsonLength) ? glbData.readUInt32LE(24 + jsonLength) : 0;
+
+		// validate header
+		if (magic !== 0x46546c67 || version !== 2 || totalLength !== glbData.length
+			|| jsonMagic !== 0x4e4f534a || binMagic !== 0 && binMagic !== 0x004e4942) {
+			throw new Error(`${path}: Bad GLB header`);
+		}
+
+		// read JSON
+		const jsonBin = glbData.toString('utf8', 20, 20 + jsonLength);
+		const json: GLTF.GlTf = JSON.parse(jsonBin);
+
+		// load buffers
+		const buffers = await Promise.all(json.buffers.map(async (bufferDef, i) => {
+			if (i === 0 && !bufferDef.uri) {
+				if (binMagic !== 0) {
+					return glbData.slice(28 + jsonLength, 28 + jsonLength + binLength);
+				} else {
+					throw new Error(`${path}: Expected embedded binary data`);
+				}
+			} else {
+				return await readFile(resolve(path, bufferDef.uri));
+			}
+		}));
+
+		// process data
+		this.importFromGltfData(json, buffers);
+	}
+
+	/**
+	 * Populate this [[GltfFactory]] with the resources from a glTF file.
+	 * @param path
+	 */
+	public importFromGltf(path: string) {
+
+	}
+
+	private importFromGltfData(json: GLTF.GlTf, buffers: Buffer[]) {
+
+	}
+
+	/**
+	 * Generate a [[GltfFactory]] from a single [[MeshPrimitive]].
+	 * @param prim The sole prim in the glTF
+	 */
 	public static FromSinglePrimitive(prim: MeshPrimitive): GltfFactory {
 		return new GltfFactory(
 			[new Scene({
