@@ -13,7 +13,7 @@ Button Behavior Actions:
     - Button states: `pressed`, `holding`, `released`
     
 Button Event Data:
-- `appSpaceTargetPoints` - The collection of target points for the current state event for the action.
+- `targetedPoints` - The collection of target points for the current state event of the action.  This collection is of `PointData` that contains both app space and local space versions of the points.
 
 Button Event Data Per Action:
 - Hover Action:
@@ -29,10 +29,34 @@ Button Event Data Per Action:
 	
 ## Architecture
 
+### PointData
+``` ts
+/**
+ * Interfaace that represents a point in space as a local space point and an app space point.
+ */
+export interface PointData {
+	/**
+	 * The app coordinate space target points collected for the event
+	 */
+	appSpacePoint: Vector3Like;
+
+	/**
+	 * The local coordinate space target points collected for the event.
+	 */
+	localSpacePoint: Vector3Like;
+}
+```
+
 ### ButtonEventData
 ``` ts
-interface ButtonEventData {
-	appSpaceTargetPoints: TransformLike[];
+/**
+ * Interface that represents the button event data passed along though event handler functions.
+ */
+export interface ButtonEventData {
+	/**
+	 * The collection of target point data.
+	 */
+	targetedPoints: PointData[];
 }
 ```
 
