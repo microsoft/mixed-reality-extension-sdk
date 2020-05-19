@@ -12,7 +12,8 @@ import {
 	filterEmpty,
 	Message,
 	Payloads,
-	Protocols
+	Protocols,
+	validateJsonFieldName
 } from '../../internal';
 
 /**
@@ -110,21 +111,21 @@ export class Protocol extends EventEmitter {
 			});
 		}
 
-		log.verbose('network', `${this.name} send id:${message.id.substr(0, 8)}, type:${message.payload.type}`);
-		log.verbose('network-content', JSON.stringify(message, (key, value) => filterEmpty(value)));
+		// log.verbose('network', `${this.name} send id:${message.id.substr(0, 8)}, type:${message.payload.type}`);
+		// log.verbose('network-content', JSON.stringify(message, (key, value) => filterEmpty(value)));
 
 		this.conn.send(message);
 	}
 
 	public recvMessage(message: Message) {
-		if (message.replyToId) {
+		/*if (message.replyToId) {
 			log.verbose('network', `${this.name} recv id:${message.id.substr(0, 8)}, ` +
 				`replyTo:${message.replyToId.substr(0, 8)}, type:${message.payload.type}`);
 		} else {
 			log.verbose('network', `${this.name} recv id:${message.id.substr(0, 8)}, ` +
 				`type:${message.payload.type}`);
 		}
-		log.verbose('network-content', JSON.stringify(message, (key, value) => filterEmpty(value)));
+		log.verbose('network-content', JSON.stringify(message, (key, value) => filterEmpty(value)));*/
 
 		// Run message through all the middlewares
 		const middlewares = this.middlewares.slice();

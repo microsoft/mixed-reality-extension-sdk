@@ -281,7 +281,7 @@ export class ContextInternal {
 
 	public start() {
 		if (!this.interval) {
-			this.interval = setInterval(() => this.update(), 0);
+			this.interval = setInterval(() => this.update(), 20);
 			this.context.emitter.emit('started');
 		}
 	}
@@ -321,13 +321,24 @@ export class ContextInternal {
 			...this.animationSet.values()
 		] as Array<Patchable<any>>;
 
+		const maxUpdatesPerTick = 300;
+		let updates = 0;
 		for (const patchable of syncObjects) {
 			const patch = patchable.internal.getPatchAndReset();
 			if (!patch) {
 				continue;
 			}
 
-			if (patchable instanceof Actor) {
+			if (++updates > maxUpdatesPerTick) {
+				break;
+			}
+
+			if (patchable instanceof User) {
+				this.protocol.sendPayload({
+					type: 'user-update',
+					user: patch as UserLike
+				} as Payloads.UserUpdate);
+			} else if (patchable instanceof Actor) {
 				this.protocol.sendPayload({
 					type: 'actor-update',
 					actor: patch as ActorLike
@@ -342,11 +353,6 @@ export class ContextInternal {
 					type: 'asset-update',
 					asset: patch as AssetLike
 				} as Payloads.AssetUpdate);
-			} else if (patchable instanceof User) {
-				this.protocol.sendPayload({
-					type: 'user-update',
-					user: patch as UserLike
-				} as Payloads.UserUpdate);
 			}
 		}
 
