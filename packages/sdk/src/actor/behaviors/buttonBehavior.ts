@@ -11,11 +11,17 @@ import {
 	User
 } from '../..';
 // break import cycle
-import { TargetBehavior } from './targetBehavior';
-import { TransformLike } from '../transform';
+import { TargetBehavior, PointData } from './targetBehavior';
+import { TransformLike, ScaledTransformLike } from '../transform';
 
-interface ButtonEventData {
-	points: TransformLike[];
+/**
+ * Interface that represents the button event data passed along though event handler functions.
+ */
+export interface ButtonEventData {
+	/**
+	 * The collection of target point data.
+	 */
+	targetedPoints: PointData[];
 }
 
 /**

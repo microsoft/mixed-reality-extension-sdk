@@ -9,6 +9,7 @@ import { TestFactory } from './test';
 import { Factories } from './tests';
 import destroyActors from './utils/destroyActors';
 import { paginate } from './utils/paginate';
+import { ButtonEventData } from '@microsoft/mixed-reality-extension-sdk';
 
 type SelectionHandler = (name: string, factory: TestFactory, user: MRE.User) => void;
 
@@ -66,7 +67,7 @@ export class Menu {
 			this.breadcrumbs.reduce((submenu, choice) => submenu[choice].action as MenuItem[], MenuItems);
 
 		this.behaviors.forEach((behavior, i) => {
-			let handler: MRE.ActionHandler;
+			let handler: MRE.ActionHandler<ButtonEventData>;
 			let label: string;
 			let buttonMat: MRE.Material;
 
