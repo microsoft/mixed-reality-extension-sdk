@@ -13,7 +13,7 @@ Button Behavior Actions:
     - Button states: `pressed`, `holding`, `released`
     
 Button Event Data:
-- `targetedPoints` - The collection of target points for the current state event of the action.  This collection is of `PointData` that contains both app space and local space versions of the points.
+- `targetedPoints` - The collection of target points for the current state event of the action.  This collection is of `PointData` that contains both app space and local target object space versions of the points.
 
 Button Event Data Per Action:
 - Hover Action:
