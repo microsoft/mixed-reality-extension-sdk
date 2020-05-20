@@ -12,7 +12,6 @@ import {
 } from '../..';
 // break import cycle
 import { TargetBehavior, PointData } from './targetBehavior';
-import { TransformLike, ScaledTransformLike } from '../transform';
 
 /**
  * Interface that represents the button event data passed along though event handler functions.
@@ -42,7 +41,8 @@ export class ButtonBehavior extends TargetBehavior {
 	 * @return This button behavior.
 	 */
 	public onHover(hoverState: 'enter' | 'hovering' | 'exit', handler: ActionHandler<ButtonEventData>): this {
-		const actionState: ActionState = (hoverState === 'enter') ? 'started' : (hoverState === 'hovering') ? 'performing' : 'stopped';
+		const actionState: ActionState = (hoverState === 'enter') ? 'started' 
+			: (hoverState === 'hovering') ? 'performing' : 'stopped';
 		this._hover.on(actionState, handler);
 		return this;
 	}
@@ -64,7 +64,8 @@ export class ButtonBehavior extends TargetBehavior {
 	 * @return This button behavior.
 	 */
 	public onButton(buttonState: 'pressed' | 'holding' | 'released', handler: ActionHandler<ButtonEventData>): this {
-		const actionState: ActionState = (buttonState === 'pressed') ? 'started' : (buttonState === 'holding') ? 'performing' : 'stopped';
+		const actionState: ActionState = (buttonState === 'pressed') ? 'started' 
+			: (buttonState === 'holding') ? 'performing' : 'stopped';
 		this._button.on(actionState, handler);
 		return this;
 	}
