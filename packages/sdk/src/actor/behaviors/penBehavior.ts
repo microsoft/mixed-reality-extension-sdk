@@ -18,7 +18,7 @@ import { TransformLike } from '../..';
 }
 
 /**
- * Pen behavior class containing the target behavior actions.
+ * @hidden Pen behavior class containing the target behavior actions.
  */
 export abstract class PenBehavior extends ToolBehavior<PenEventData> {
 	// private drawOriginActorId: Guid;
