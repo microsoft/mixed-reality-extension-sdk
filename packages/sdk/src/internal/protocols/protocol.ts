@@ -9,11 +9,9 @@ import { Guid, log, newGuid } from '../..';
 import {
 	Connection,
 	ExportedPromise,
-	filterEmpty,
 	Message,
 	Payloads,
-	Protocols,
-	validateJsonFieldName
+	Protocols
 } from '../../internal';
 
 /**
@@ -74,7 +72,12 @@ export class Protocol extends EventEmitter {
 		this.sendMessage({ payload }, promise);
 	}
 
-	public sendMessage(message: Message, promise?: ExportedPromise, timeoutSeconds?: number) {
+	public sendMessage(
+		message: Message,
+		promise?: ExportedPromise,
+		timeoutSeconds?: number,
+		serializedMessage?: Buffer
+	) {
 		message.id = message.id ?? newGuid();
 
 		// Run message through all the middlewares
@@ -114,7 +117,7 @@ export class Protocol extends EventEmitter {
 		// log.verbose('network', `${this.name} send id:${message.id.substr(0, 8)}, type:${message.payload.type}`);
 		// log.verbose('network-content', JSON.stringify(message, (key, value) => filterEmpty(value)));
 
-		this.conn.send(message);
+		this.conn.send(message, serializedMessage);
 	}
 
 	public recvMessage(message: Message) {
