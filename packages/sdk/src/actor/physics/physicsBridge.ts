@@ -8,6 +8,7 @@ import { TransformLike } from "../transform";
 
 export interface PhysicsBridgeTransformInfo {
     id: Guid;
+    motionType: number;
     transform: Partial<TransformLike>;
 }
 
