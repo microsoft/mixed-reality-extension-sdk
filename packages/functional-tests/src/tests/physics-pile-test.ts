@@ -123,7 +123,8 @@ export default class PhysicsPileTest extends Test {
 				actor: {
 					owner: userId,
 					parentId: root.id,
-					name: "ball",
+					name: "box",
+					grabbable: true,
 					appearance: {
 						meshId: this.assets.createBoxMesh('box', 1.3 * radius, 1.5 * radius, 1.8 * radius).id,
 						materialId: mat.id
