@@ -406,8 +406,7 @@ export class ContextInternal {
 	}
 
 	public updatePhysicsBridgeTransforms(transforms: Partial<PhysicsBridgeTransformUpdate>) {
-		if (!transforms)
-			return;
+		if (!transforms) { return; }
 		this.context.emitter.emit('physicsbridge-transforms-update', transforms);
 	}
 

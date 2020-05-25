@@ -796,7 +796,7 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 				
 				return message;
 			},
-			shouldSendToUser: (message: Message<Payloads.ActorUpdate>, userId, session, client) => {
+			shouldSendToUser: (message: Message<Payloads.PhysicsBridgeUpdate>, userId, session, client) => {
 				
 				return true;
 			}
@@ -805,7 +805,7 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 			...DefaultRule.session,
 			beforeReceiveFromApp: (
 				session: Session,
-				message: Message<Payloads.ActorUpdate>
+				message: Message<Payloads.PhysicsBridgeUpdate>
 			) => {
 				
 				return message;
@@ -813,7 +813,7 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 			beforeReceiveFromClient: (
 				session: Session,
 				client: Client,
-				message: Message<Payloads.ActorUpdate>
+				message: Message<Payloads.PhysicsBridgeUpdate>
 			) => {
 				
 				session.sendPayloadToClients(message.payload, (value) => value.id !== client.id);
