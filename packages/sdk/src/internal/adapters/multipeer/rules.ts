@@ -729,7 +729,7 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 						session.cacheInitializeActorMessage({
 							payload: {
 								type: 'actor-update',
-								actor: { id: spawned.id }
+								actor: { id: spawned.id, parentId: spawned.parentId }
 							}
 						});
 					}
