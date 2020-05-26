@@ -79,6 +79,7 @@ export default class PhysicsHeadCollisionTest extends Test {
 				owner: userId,
 				parentId: root.id,
 				name: "ball",
+				grabbable: true,
 				appearance: {
 					meshId: this.assets.createSphereMesh('ball', ballRadius).id,
 					materialId: mat.id
@@ -103,7 +104,7 @@ export default class PhysicsHeadCollisionTest extends Test {
 			// we can destroy it after another second to process the move on the client.
 			ball.appearance.enabled = false;
 			ball.transform.app.position = new MRE.Vector3(0, -10, 0);
-			setTimeout(() => ball.destroy(), 1000);
+			setTimeout(() => ball.destroy(), 9000);
 		}, killTimeout);
 	}
 }

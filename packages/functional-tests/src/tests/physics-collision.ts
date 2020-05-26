@@ -72,12 +72,13 @@ export default class PhysicsCollisionTest extends Test {
 	}
 
 	private spawnBall(root: MRE.Actor, width: number, height: number, mat: MRE.Material, userId: MRE.Guid,
-		force: Partial<MRE.Vector3Like>, ballRadius = 0.2, killTimeout = 5000) {
+		force: Partial<MRE.Vector3Like>, ballRadius = 0.2, killTimeout = 9000) {
 		const ball = MRE.Actor.Create(this.app.context, {
 			actor: {
 				owner: userId,
 				parentId: root.id,
 				name: "ball",
+				grabbable: true,
 				appearance: {
 					meshId: this.assets.createSphereMesh('ball', ballRadius).id,
 					materialId: mat.id
