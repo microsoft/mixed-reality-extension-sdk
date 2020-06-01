@@ -132,8 +132,16 @@ export class GltfFactory {
 	 * Populate this [[GltfFactory]] with the resources from a glTF file.
 	 * @param path
 	 */
-	public importFromGltf(path: string) {
+	public async importFromGltf(path: string) {
+		const gltfData = await readFile(path, { encoding: 'utf8' });
+		const json = JSON.parse(gltfData) as GLTF.GlTf;
+		const buffers: Buffer[] = [];
+		for (const bufferDef of json.buffers) {
+			const b = await readFile(resolve(path, bufferDef.uri));
+			buffers.push(b);
+		}
 
+		this.importFromGltfData(json, buffers);
 	}
 
 	private importFromGltfData(json: GLTF.GlTf, buffers: Buffer[]) {
