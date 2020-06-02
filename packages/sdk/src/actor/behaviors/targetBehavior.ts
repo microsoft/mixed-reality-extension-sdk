@@ -15,7 +15,7 @@ import { Behavior } from './behavior';
 import { Vector3Like } from '@microsoft/mixed-reality-extension-common/src';
 
 /**
- * Interfaace that represents a point in space as a local space point and an app space point.
+ * Interface that represents a point in space as a local space point and an app space point.
  */
 export interface PointData {
 	/**

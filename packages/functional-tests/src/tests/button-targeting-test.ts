@@ -6,7 +6,6 @@
 import * as MRE from '@microsoft/mixed-reality-extension-sdk';
 
 import { Test } from '../test';
-import { Vector3Like } from '@microsoft/mixed-reality-extension-sdk';
 
 export default class ButtonTargetingTest extends Test {
     public expectedResultDescription = "Draw on the surface to place red ink";
@@ -61,7 +60,7 @@ export default class ButtonTargetingTest extends Test {
 		return true;
 	}
 
-	private spawnTargetObjects(targetingState: 'hover' | 'draw', drawPoints: Vector3Like[]) {
+	private spawnTargetObjects(targetingState: 'hover' | 'draw', drawPoints: MRE.Vector3Like[]) {
         const materialId = (targetingState === 'hover') ? this.hoverMaterial.id : this.drawMaterial.id;
 
         const drawActors = drawPoints.map(drawPoint => {

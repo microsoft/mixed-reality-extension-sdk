@@ -1,7 +1,7 @@
 # Button Behavior
 
 Button behavior is the high level representation of how an MRE actor should behave as a button.  This behavior consists of two actions
-that occur on the object when it is targeted and when it is activated or clicked.  As part of these interactions, the point of targeting
+that occur on the object when it is targeted and when button is pressed or clicked.  As part of these interactions, the point of targeting
 of the button will be passed along as additional data to the app for consumption.
 
 Button Behavior Actions:
@@ -13,7 +13,7 @@ Button Behavior Actions:
     - Button states: `pressed`, `holding`, `released`
     
 Button Event Data:
-- `targetedPoints` - The collection of target points for the current state event of the action.  This collection is of `PointData` that contains both app space and local target object space versions of the points.
+- `targetedPoints` - The collection of target points for the current state event of the action.  This collection is of `PointData` that contains both app space and local target object space versions of the points.  This collection will always contain one or more points depending on the specific event that this data is being tied to.
 
 Button Event Data Per Action:
 - Hover Action:
@@ -32,7 +32,7 @@ Button Event Data Per Action:
 ### PointData
 ``` ts
 /**
- * Interfaace that represents a point in space as a local space point and an app space point.
+ * Interface that represents a point in space as a local space point and an app space point.
  */
 export interface PointData {
 	/**
