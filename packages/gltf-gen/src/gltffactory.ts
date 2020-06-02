@@ -7,7 +7,8 @@ import { readFile as fsReadFile } from 'fs';
 import { promisify } from 'util';
 const readFile = promisify(fsReadFile);
 
-import { Material, Mesh, MeshPrimitive, Node, Scene, Texture } from '.';
+import * as MRE from '@microsoft/mixed-reality-extension-common';
+import { AlphaMode, Image, Material, Mesh, MeshPrimitive, Node, Scene, Texture, TextureWrapMode } from '.';
 import GLTF from './gen/gltf';
 import { roundUpToNextMultipleOf4 } from './util';
 
@@ -145,7 +146,90 @@ export class GltfFactory {
 	}
 
 	private importFromGltfData(json: GLTF.GlTf, buffers: Buffer[]) {
+		// textures
+		for (const texDef of json.textures || []) {
+			const tex = new Texture({
+				name: texDef.name,
+				wrapS: TextureWrapMode.Repeat,
+				wrapT: TextureWrapMode.Repeat
+			});
+			if (texDef.sampler !== undefined) {
+				const sampler = json.samplers[texDef.sampler];
+				tex.wrapS = sampler.wrapS ?? TextureWrapMode.Repeat;
+				tex.wrapT = sampler.wrapT ?? TextureWrapMode.Repeat;
+				tex.minFilter = sampler.minFilter;
+				tex.magFilter = sampler.magFilter;
+			}
 
+			const imgDef = json.images[texDef.source];
+			const img = tex.source = new Image({
+				name: imgDef.name,
+				mimeType: imgDef.mimeType
+			});
+
+			if (imgDef.bufferView !== undefined) {
+				const bvDef = json.bufferViews[imgDef.bufferView];
+				const buf = buffers[bvDef.buffer];
+				img.embeddedData = buf.slice(bvDef.byteOffset, bvDef.byteOffset + bvDef.byteLength);
+			} else {
+				img.uri = imgDef.uri;
+			}
+
+			this.textures.push(tex);
+		}
+
+		// materials
+		for (const matDef of json.materials || []) {
+			const mat = new Material({
+				name: matDef.name,
+				baseColorTexCoord: matDef.pbrMetallicRoughness?.baseColorTexture?.texCoord,
+				metallicRoughnessTexCoord: matDef.pbrMetallicRoughness?.metallicRoughnessTexture?.texCoord,
+				metallicFactor: matDef.pbrMetallicRoughness?.metallicFactor,
+				roughnessFactor: matDef.pbrMetallicRoughness?.roughnessFactor,
+				normalTexCoord: matDef.normalTexture?.texCoord,
+				normalTexScale: matDef.normalTexture?.scale,
+				occlusionTexCoord: matDef.occlusionTexture?.texCoord,
+				occlusionTexStrength: matDef.occlusionTexture?.strength,
+				emissiveTexCoord: matDef.emissiveTexture?.texCoord,
+				alphaMode: matDef.alphaMode === "BLEND" ? AlphaMode.Blend :
+					matDef.alphaMode === "MASK" ? AlphaMode.Mask :
+						AlphaMode.Opaque,
+				alphaCutoff: matDef.alphaCutoff,
+				doubleSided: matDef.doubleSided
+			});
+
+			if (matDef.pbrMetallicRoughness) {
+				const pbr = matDef.pbrMetallicRoughness;
+				if (pbr.baseColorTexture) {
+					mat.baseColorTexture = this.textures[pbr.baseColorTexture.index];
+				}
+				if (pbr.baseColorFactor) {
+					mat.baseColorFactor = MRE.Color4.FromArray(pbr.baseColorFactor);
+				}
+				if (pbr.metallicRoughnessTexture) {
+					mat.metallicRoughnessTexture = this.textures[pbr.metallicRoughnessTexture.index];
+				}
+			}
+
+			if (matDef.normalTexture) {
+				mat.normalTexture = this.textures[matDef.normalTexture.index];
+			}
+			if (matDef.occlusionTexture) {
+				mat.occlusionTexture = this.textures[matDef.occlusionTexture.index];
+			}
+			if (matDef.emissiveTexture) {
+				mat.emissiveTexture = this.textures[matDef.emissiveTexture.index];
+			}
+			if (matDef.emissiveFactor) {
+				mat.emissiveFactor = MRE.Color3.FromArray(matDef.emissiveFactor);
+			}
+
+			this.materials.push(mat);
+		}
+
+		// meshes
+
+		// scenes
 	}
 
 	/**

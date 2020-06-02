@@ -12,6 +12,8 @@ export interface ImageLike {
 	name?: string;
 	uri?: string;
 	embeddedFilePath?: string;
+	embeddedData?: Buffer;
+	mimeType?: string;
 }
 
 export class Image extends Serializable implements ImageLike {
@@ -59,6 +61,8 @@ export class Image extends Serializable implements ImageLike {
 		this.name = init.name;
 		this.uri = init.uri;
 		this.embeddedFilePath = init.embeddedFilePath;
+		this.embeddedData = init.embeddedData;
+		this.mimeType = init.mimeType;
 	}
 
 	public serialize(document: GLTF.GlTf, data: Buffer): GLTF.GlTfId {
@@ -72,7 +76,7 @@ export class Image extends Serializable implements ImageLike {
 			mimeType: this.mimeType
 		};
 
-		if (this.embeddedFilePath) {
+		if (this.embeddedFilePath || this.embeddedData) {
 			image.bufferView = this._embedImage(document, data);
 		}
 
