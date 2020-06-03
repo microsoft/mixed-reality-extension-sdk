@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>MeshLike | Mixed Reality Extension SDK</title>
+	<title>TargetEventData | Mixed Reality Extension SDK</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -52,10 +52,10 @@
 					<a href="../index.html">Globals</a>
 				</li>
 				<li>
-					<a href="meshlike.html">MeshLike</a>
+					<a href="targeteventdata.html">TargetEventData</a>
 				</li>
 			</ul>
-			<h1>Interface MeshLike</h1>
+			<h1>Interface TargetEventData</h1>
 		</div>
 	</div>
 </header>
@@ -65,7 +65,7 @@
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>Describes the properties of a mesh</p>
+						<p>Interface that represents the target event data passed along though event handler functions.</p>
 					</div>
 				</div>
 			</section>
@@ -73,14 +73,8 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">MeshLike</span>
+						<span class="target">TargetEventData</span>
 					</li>
-				</ul>
-			</section>
-			<section class="tsd-panel">
-				<h3>Implemented by</h3>
-				<ul class="tsd-hierarchy">
-					<li><a href="../classes/mesh.html" class="tsd-signature-type">Mesh</a></li>
 				</ul>
 			</section>
 			<section class="tsd-panel-group tsd-index-group">
@@ -90,11 +84,7 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="meshlike.html#boundingboxcenter" class="tsd-kind-icon">bounding<wbr>Box<wbr>Center</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="meshlike.html#boundingboxdimensions" class="tsd-kind-icon">bounding<wbr>Box<wbr>Dimensions</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="meshlike.html#primitivedefinition" class="tsd-kind-icon">primitive<wbr>Definition</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="meshlike.html#trianglecount" class="tsd-kind-icon">triangle<wbr>Count</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="meshlike.html#vertexcount" class="tsd-kind-icon">vertex<wbr>Count</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="targeteventdata.html#targetedpoints" class="tsd-kind-icon">targeted<wbr>Points</a></li>
 							</ul>
 						</section>
 					</div>
@@ -103,77 +93,17 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="boundingboxcenter" class="tsd-anchor"></a>
-					<h3>bounding<wbr>Box<wbr>Center</h3>
-					<div class="tsd-signature tsd-kind-icon">bounding<wbr>Box<wbr>Center<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Vector3Like</span></div>
+					<a name="targetedpoints" class="tsd-anchor"></a>
+					<h3>targeted<wbr>Points</h3>
+					<div class="tsd-signature tsd-kind-icon">targeted<wbr>Points<span class="tsd-signature-symbol">:</span> <a href="pointdata.html" class="tsd-signature-type">PointData</a><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/mixed-reality-extension-sdk/blob/b121886/packages/sdk/src/asset/mesh.ts#L29">src/asset/mesh.ts:29</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/mixed-reality-extension-sdk/blob/b121886/packages/sdk/src/actor/behaviors/targetBehavior.ts#L39">src/actor/behaviors/targetBehavior.ts:39</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>The center of the axis-aligned box that exactly contains the mesh</p>
-						</div>
-					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="boundingboxdimensions" class="tsd-anchor"></a>
-					<h3>bounding<wbr>Box<wbr>Dimensions</h3>
-					<div class="tsd-signature tsd-kind-icon">bounding<wbr>Box<wbr>Dimensions<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Vector3Like</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/mixed-reality-extension-sdk/blob/b121886/packages/sdk/src/asset/mesh.ts#L27">src/asset/mesh.ts:27</a></li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>The size of the axis-aligned box that exactly contains the mesh</p>
-						</div>
-					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="primitivedefinition" class="tsd-anchor"></a>
-					<h3>primitive<wbr>Definition</h3>
-					<div class="tsd-signature tsd-kind-icon">primitive<wbr>Definition<span class="tsd-signature-symbol">:</span> <a href="../index.html#primitivedefinition" class="tsd-signature-type">PrimitiveDefinition</a></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/mixed-reality-extension-sdk/blob/b121886/packages/sdk/src/asset/mesh.ts#L32">src/asset/mesh.ts:32</a></li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>If this mesh is a primitive, the primitive&#39;s description</p>
-						</div>
-					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="trianglecount" class="tsd-anchor"></a>
-					<h3>triangle<wbr>Count</h3>
-					<div class="tsd-signature tsd-kind-icon">triangle<wbr>Count<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/mixed-reality-extension-sdk/blob/b121886/packages/sdk/src/asset/mesh.ts#L25">src/asset/mesh.ts:25</a></li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>The number of triangles in this mesh.</p>
-						</div>
-					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="vertexcount" class="tsd-anchor"></a>
-					<h3>vertex<wbr>Count</h3>
-					<div class="tsd-signature tsd-kind-icon">vertex<wbr>Count<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/mixed-reality-extension-sdk/blob/b121886/packages/sdk/src/asset/mesh.ts#L23">src/asset/mesh.ts:23</a></li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>The number of vertices in this mesh.</p>
+							<p>The collection of target point data.</p>
 						</div>
 					</div>
 				</section>
@@ -192,22 +122,10 @@
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-interface">
-						<a href="meshlike.html" class="tsd-kind-icon">Mesh<wbr>Like</a>
+						<a href="targeteventdata.html" class="tsd-kind-icon">Target<wbr>Event<wbr>Data</a>
 						<ul>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="meshlike.html#boundingboxcenter" class="tsd-kind-icon">bounding<wbr>Box<wbr>Center</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="meshlike.html#boundingboxdimensions" class="tsd-kind-icon">bounding<wbr>Box<wbr>Dimensions</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="meshlike.html#primitivedefinition" class="tsd-kind-icon">primitive<wbr>Definition</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="meshlike.html#trianglecount" class="tsd-kind-icon">triangle<wbr>Count</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="meshlike.html#vertexcount" class="tsd-kind-icon">vertex<wbr>Count</a>
+								<a href="targeteventdata.html#targetedpoints" class="tsd-kind-icon">targeted<wbr>Points</a>
 							</li>
 						</ul>
 					</li>
