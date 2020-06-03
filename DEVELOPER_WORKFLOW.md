@@ -47,12 +47,12 @@ With this structure, I'd expect there to mostly be 1 or 2 active release version
 5. If new features were added to SDK, increase MinimumSupportedClientVersion packages\sdk\src\internal\util\verifyClient.ts
 6. If communication was changed in a non-backwards-compatible way, which is a HUGE DEAL, should never happen after exiting beta stage, and requires full team sign-off, increase the MinimumSupportedSDKVersion in MREUnityRuntimeLib\Constants.cs.
 7. Commit and push supported version changes to the new branches.
-8. [Build Unity DLLs](#Build-Unity-DLLs) from unity/v0.[new_minor].n
-9. [Publish NPM packages](#Publish-NPM-packages) from sdk/v0.[new_minor].n
-10. Create new samples branch named v0.[new_minor].n, matching red. Same rules as step 3.
-11. [Update samples](#Update-samples)
-12. [Test pass](#Test-pass) for v0.[new_minor].n
-13. Merge sdk/v0.[new_minor].n into sdk/red
+8. Merge sdk/v0.[new_minor].n into sdk/red
+9. [Build Unity DLLs](#Build-Unity-DLLs) from unity/v0.[new_minor].n
+10. [Publish NPM packages](#Publish-NPM-packages) from sdk/v0.[new_minor].n
+11. Create new samples branch named v0.[new_minor].n, matching red. Same rules as step 3.
+12. [Update samples](#Update-samples) to new version
+13. [Test pass](#Test-pass) for v0.[new_minor].n
 14. Merge samples/v0.[new_minor].n into samples/red
 
 
