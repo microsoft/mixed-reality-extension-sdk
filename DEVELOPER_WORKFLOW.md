@@ -42,15 +42,18 @@ With this structure, I'd expect there to mostly be 1 or 2 active release version
 ### [Blue] When we decide to prepare a new MRE minor version release (criteria: usually ~1 day before Altspace code lock, or sooner if there are major changes)
 1. Merge sdk/green into sdk/red
 2. Merge samples/green into samples/red
-3. Update CurrentClientVersion to match major.minor in MREUnityRuntime\MREUnityRuntimeLib\Constants.cs and
-4. If new features were added to SDK, increase MinimumSupportedClientVersion packages\sdk\src\internal\util\verifyClient.ts
-5. If communication was changed in a non-backwards-compatible way, which is a HUGE DEAL, should never happen after exiting beta stage, and requires full team sign-off, increase the MinimumSupportedSDKVersion in MREUnityRuntimeLib\Constants.cs
-6. Create new unity+sdk+sample branches named v0.[new_minor].n, matching the red (NOTE: if there was already a new SDK release created, but it wasn't "shipped", we can stomp that - i.e. if v0.[new_minor-1].n was never used in any host app, we can just reset hard, instead of creating v0.[new_minor].n)
-7. [Build Unity DLLs](#Build-Unity-DLLs) from unity/v0.[new_minor].n
-8. [Publish NPM packages](#Publish-NPM-packages) from sdk/v0.[new_minor].n
-9. [Test pass](#Test-pass) for v0.[new_minor].n
-10. Merge sdk/v0.[new_minor].n into sdk/red
-11. Merge samples/v0.[new_minor].n into samples/red
+3. Create new unity+sdk branches named v0.[new_minor].n, matching the red (NOTE: if there was already a new SDK release created, but it wasn't "shipped", we can stomp that - i.e. if v0.[new_minor-1].n was never used in any host app, we can just reset hard, instead of creating v0.[new_minor].n)
+4. Update CurrentClientVersion to match major.minor in MREUnityRuntime\MREUnityRuntimeLib\Constants.cs and
+5. If new features were added to SDK, increase MinimumSupportedClientVersion packages\sdk\src\internal\util\verifyClient.ts
+6. If communication was changed in a non-backwards-compatible way, which is a HUGE DEAL, should never happen after exiting beta stage, and requires full team sign-off, increase the MinimumSupportedSDKVersion in MREUnityRuntimeLib\Constants.cs.
+7. Commit and push supported version changes to the new branches.
+8. [Build Unity DLLs](#Build-Unity-DLLs) from unity/v0.[new_minor].n
+9. [Publish NPM packages](#Publish-NPM-packages) from sdk/v0.[new_minor].n
+10. Create new samples branch named v0.[new_minor].n, matching red. Same rules as step 3.
+11. [Update samples](#Update-samples)
+12. [Test pass](#Test-pass) for v0.[new_minor].n
+13. Merge sdk/v0.[new_minor].n into sdk/red
+14. Merge samples/v0.[new_minor].n into samples/red
 
 
 ### [Cyan] When we decide to integrate sdk/green, to patch/hotfix a minor version (The targeted minor version is usually whatever master points to. Criteria: whenever we think it's worth the effort)
@@ -69,14 +72,14 @@ With this structure, I'd expect there to mostly be 1 or 2 active release version
 9. [Test pass](#Test-pass) for red branches
 
 ### [Purple] When we need to do a unity-side hotfix in any target release
-1. [Develop feature](#Develop-feature) targeting the unity/v0.[target].n branch.
-2. [Build Unity DLLs](#Build-Unity-DLLs) from unity/r0.[target].n
-3. If target is current master version
+1. [Develop feature](#Develop-feature) targeting the unity/red branch.
+2. Cherry-pick feature into unity/v0.[target].n
+3. [Build Unity DLLs](#Build-Unity-DLLs) from unity/v0.[target].n
+4. If target is current master version
    1. [Update Master branches](#Update-Master-branches) for Unity
-4. If branches for (targetversion+1) exists
-   1. Cherry pick hotfix from unity/r0.[target].n to r0.[targetversion+1].n,
+5. If branches for (targetversion+1) exists
+   1. Cherry pick hotfix from unity/v0.[target].n to v0.[targetversion+1].n,
    2. Repeat steps 2-3 with target=target+1
-5. Merge cherry pick hotfix to unity/red
 6. [Test pass](#Test-pass) for red branches
 
 ### [Black] When we update the minimum supported version (i.e. just after Altspace releases)
@@ -115,7 +118,7 @@ Main purpose of test pass is to look for regressions – not if new features wor
 5. If problems are found, fix and restart test pass
 
 ### Publish NPM Packages
-Note that we always publish all packages with each release, with version numbers in sync. Step 1-10 by MREBuildAndDeployNPM script. Step 12 automated by MREBuildSamplesWithNewNPM script.
+Note that we always publish all packages with each release, with version numbers in sync. Step 1-10 automated by MREBuildAndDeployNPM script.
 
 1. Check out sdk\v0.[minor].n
 2. Git reset –hard
@@ -128,30 +131,33 @@ Note that we always publish all packages with each release, with version numbers
 8. Git commit all package-lock.json files to sdk\v0.[minor].n
 9. npm run build-docs (to regenerate documentation)
 10. commit documentation changes to sdk\v0.[minor].n
-11. deploy functional tests to awaiting server
-12. in samples\v0.[minor].n, for each of the samples update the patch version:
-    1. npm update @microsoft/mixed-reality-extension-sdk@0.[minor].[patch]
-    2. npm install
-    3. npm run build
-    3. npm run lint
-    4. verify it works
-    5. git commit package.json and package-lock.json changes to samples\v0.[minor].n
+11. Deploy functional tests to Azure (ask Steven how)
+12. Gather the differences from SDK repo (useful for announcmenets): git log --no-merges --pretty=format:"%s" origin/master..origin/v0.[minor].n
+13. In [the github releases page](https://github.com/Microsoft/mixed-reality-extension-sdk/releases), click the new tag, edit tag, add patch notes. Follow the format from previous releases.
+14. Announce new features on MRE Discord, #news channel.
+
+### Update Samples
+This is automated by MREBuildSamplesWithNewNPM script, except for step 3. If there are necessary API changes, the automation will fail.
+
+In samples\v0.[minor].n, for each of the samples update the patch version:
+
+1. npm update @microsoft/mixed-reality-extension-sdk@0.[minor].[patch]
+2. npm install
+3. If this version has API changes, update the sample source code.
+4. npm run build
+5. npm run lint
+6. verify it works
+7. git commit package.json and package-lock.json changes to samples\v0.[minor].n
 
 ### Update Master Branches
-Step 2 is automated by MREOpenodeDeploy Script. Step 3-6 automated by MREUpdateMasterBranches script
-1. Gather the differences from each repo (useful for announcmenets): git log --no-merges --pretty=format:"%s" origin/master..origin/unity/v0.[minor].n
-2. redeploy samples and functional test MREs
-3. Re-tag the latest NPM package from sdk/v0.[new_minor].n with @latest instead of @next
+Step 1-4 automated by MREUpdateMasterBranches script
+1. Re-tag the latest NPM package from sdk/v0.[new_minor].n with @latest instead of @next
    1. npm dist-tag add <pkg> @latest
    2. npm dist-tag rm <pkg> @next
-4. git reset hard sdk/master to v0.[minor].n
-5. git reset hard samples/master to v0.[minor].n
-6. git reset hard unity/master to v0.[minor].n
-7. In [the github releases page](https://github.com/Microsoft/mixed-reality-extension-sdk/releases), click the latest tag, edit tag, add patch notes.
-8. Slack: Make announcement to #announcements channel, share announcement on #general channel.
-9. Twitter: Announce new features
-10. Teams: announce on Altspace Community Support->SDK or General
-11. go to [the MRE Github Roadmap page](https://github.com/Microsoft/mixed-reality-extension-sdk/projects/1) and move released issues from Fixed to Released
+2. git reset hard sdk/master to v0.[minor].n
+3. git reset hard samples/master to v0.[minor].n
+4. git reset hard unity/master to v0.[minor].n
+5. go to [the MRE Github Roadmap page](https://github.com/Microsoft/mixed-reality-extension-sdk/projects/1) and move released issues from Fixed to Released
 
 ### Build Unity DLLs
 Step 2 is automated by MRETagUnityVersion script. Step 3 is partially automated by MRECreateMREDevPRBranchForAltspaceVR script.
