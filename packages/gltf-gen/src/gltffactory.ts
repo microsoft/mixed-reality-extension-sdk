@@ -8,7 +8,19 @@ import { promisify } from 'util';
 const readFile = promisify(fsReadFile);
 
 import * as MRE from '@microsoft/mixed-reality-extension-common';
-import { AlphaMode, Image, Material, Mesh, MeshPrimitive, Node, Scene, Texture, TextureWrapMode } from '.';
+import {
+	AccessorComponentType,
+	AlphaMode,
+	Image,
+	Material,
+	Mesh,
+	MeshPrimitive,
+	Node,
+	Scene,
+	Texture,
+	TextureWrapMode,
+	Vertex
+} from '.';
 import GLTF from './gen/gltf';
 import { roundUpToNextMultipleOf4 } from './util';
 
@@ -228,6 +240,136 @@ export class GltfFactory {
 		}
 
 		// meshes
+		const instancingHash: { [sig: string]: MeshPrimitive } = {};
+		for (const meshDef of json.meshes) {
+			const mesh = new Mesh({
+				name: meshDef.name
+			});
+
+			for (const primDef of meshDef.primitives) {
+				if (primDef.mode !== 4) {
+					throw new Error(`Import failed: can only import meshes in triangle format`);
+				}
+
+				const sig = `${primDef.attributes[Vertex.positionAttribute.attributeName]}-${primDef.indices}`;
+				const prim = new MeshPrimitive({ material: this.materials[primDef.material] }, instancingHash[sig]);
+				if (!instancingHash[sig]) {
+					instancingHash[sig] = prim;
+				}
+
+				const posAcc = json.accessors[primDef.attributes[Vertex.positionAttribute.attributeName]];
+				const nrmAcc = json.accessors[primDef.attributes[Vertex.normalAttribute.attributeName]];
+				const tngAcc = json.accessors[primDef.attributes[Vertex.tangentAttribute.attributeName]];
+				const uv0Acc = json.accessors[primDef.attributes[Vertex.texCoordAttribute[0].attributeName]];
+				const uv1Acc = json.accessors[primDef.attributes[Vertex.texCoordAttribute[1].attributeName]];
+				const clrAcc = json.accessors[primDef.attributes[Vertex.colorAttribute.attributeName]];
+				const posBV = json.bufferViews[posAcc?.bufferView];
+				const nrmBV = json.bufferViews[nrmAcc?.bufferView];
+				const tngBV = json.bufferViews[tngAcc?.bufferView];
+				const uv0BV = json.bufferViews[uv0Acc?.bufferView];
+				const uv1BV = json.bufferViews[uv1Acc?.bufferView];
+				const clrBV = json.bufferViews[clrAcc?.bufferView];
+
+				for (let i = 0; i < posAcc.count; i++) {
+					const vert = new Vertex();
+					if (posAcc) {
+						const attr = Vertex.positionAttribute;
+						const offset = posBV.byteOffset + posAcc.byteOffset +
+							i * (posBV.byteStride ?? 0 + attr.byteSize);
+						vert.position = new MRE.Vector3(
+							buffers[posBV.buffer].readFloatLE(offset + 0 * attr.elementByteSize),
+							buffers[posBV.buffer].readFloatLE(offset + 1 * attr.elementByteSize),
+							buffers[posBV.buffer].readFloatLE(offset + 2 * attr.elementByteSize));
+					}
+					if (nrmAcc) {
+						const attr = Vertex.normalAttribute;
+						const offset = nrmBV.byteOffset + nrmAcc.byteOffset +
+							i * (nrmBV.byteStride ?? 0 + attr.byteSize);
+						vert.normal = new MRE.Vector3(
+							buffers[nrmBV.buffer].readFloatLE(offset + 0 * attr.elementByteSize),
+							buffers[nrmBV.buffer].readFloatLE(offset + 1 * attr.elementByteSize),
+							buffers[nrmBV.buffer].readFloatLE(offset + 2 * attr.elementByteSize));
+					}
+					if (tngAcc) {
+						const attr = Vertex.tangentAttribute;
+						const offset = tngBV.byteOffset + tngAcc.byteOffset +
+							i * (tngBV.byteStride ?? 0 + attr.byteSize);
+						vert.tangent = new MRE.Vector4(
+							buffers[tngBV.buffer].readFloatLE(offset + 0 * attr.elementByteSize),
+							buffers[tngBV.buffer].readFloatLE(offset + 1 * attr.elementByteSize),
+							buffers[tngBV.buffer].readFloatLE(offset + 2 * attr.elementByteSize),
+							buffers[tngBV.buffer].readFloatLE(offset + 3 * attr.elementByteSize));
+					}
+					if (uv0Acc) {
+						const attr = Vertex.texCoordAttribute[0];
+						const offset = uv0BV.byteOffset + uv0Acc.byteOffset +
+							i * (uv0BV.byteStride ?? 0 + attr.byteSize);
+						if (uv0Acc.componentType === AccessorComponentType.Float) {
+							vert.texCoord0 = new MRE.Vector2(
+								buffers[uv0BV.buffer].readFloatLE(offset + 0 * attr.elementByteSize),
+								buffers[uv0BV.buffer].readFloatLE(offset + 1 * attr.elementByteSize));
+						} else if (uv0Acc.componentType === AccessorComponentType.UByte) {
+							vert.texCoord0 = new MRE.Vector2(
+								buffers[uv0BV.buffer].readUInt8(offset + 0 * attr.elementByteSize),
+								buffers[uv0BV.buffer].readUInt8(offset + 1 * attr.elementByteSize))
+								.multiplyByFloats(1 / 0xff, 1 / 0xff);
+						} else if (uv0Acc.componentType === AccessorComponentType.UShort) {
+							vert.texCoord0 = new MRE.Vector2(
+								buffers[uv0BV.buffer].readUInt16LE(offset + 0 * attr.elementByteSize),
+								buffers[uv0BV.buffer].readUInt16LE(offset + 1 * attr.elementByteSize))
+								.multiplyByFloats(1 / 0xffff, 1 / 0xffff);
+						}
+					}
+					if (uv1Acc) {
+						const attr = Vertex.texCoordAttribute[1];
+						const offset = uv1BV.byteOffset + uv1Acc.byteOffset +
+							i * (uv1BV.byteStride ?? 0 + attr.byteSize);
+						if (uv1Acc.componentType === AccessorComponentType.Float) {
+							vert.texCoord1 = new MRE.Vector2(
+								buffers[uv1BV.buffer].readFloatLE(offset + 0 * attr.elementByteSize),
+								buffers[uv1BV.buffer].readFloatLE(offset + 1 * attr.elementByteSize));
+						} else if (uv1Acc.componentType === AccessorComponentType.UByte) {
+							vert.texCoord1 = new MRE.Vector2(
+								buffers[uv1BV.buffer].readUInt8(offset + 0 * attr.elementByteSize),
+								buffers[uv1BV.buffer].readUInt8(offset + 1 * attr.elementByteSize))
+								.multiplyByFloats(1 / 0xff, 1 / 0xff);
+						} else if (uv1Acc.componentType === AccessorComponentType.UShort) {
+							vert.texCoord1 = new MRE.Vector2(
+								buffers[uv1BV.buffer].readUInt16LE(offset + 0 * attr.elementByteSize),
+								buffers[uv1BV.buffer].readUInt16LE(offset + 1 * attr.elementByteSize))
+								.multiplyByFloats(1 / 0xffff, 1 / 0xffff);
+						}
+					}
+					if (clrAcc) {
+						// TODO: fix accessor size
+						const attr = Vertex.colorAttribute;
+						const offset = clrBV.byteOffset + clrAcc.byteOffset +
+							i * (clrBV.byteStride ?? 0 + attr.byteSize);
+						if (clrAcc.componentType === AccessorComponentType.Float) {
+							vert.texCoord1 = new MRE.Vector2(
+								buffers[uv1BV.buffer].readFloatLE(offset + 0 * attr.elementByteSize),
+								buffers[uv1BV.buffer].readFloatLE(offset + 1 * attr.elementByteSize));
+						} else if (clrAcc.componentType === AccessorComponentType.UByte) {
+							vert.texCoord1 = new MRE.Vector2(
+								buffers[uv1BV.buffer].readUInt8(offset + 0 * attr.elementByteSize),
+								buffers[uv1BV.buffer].readUInt8(offset + 1 * attr.elementByteSize))
+								.multiplyByFloats(1 / 0xff, 1 / 0xff);
+						} else if (clrAcc.componentType === AccessorComponentType.UShort) {
+							vert.texCoord1 = new MRE.Vector2(
+								buffers[uv1BV.buffer].readUInt16LE(offset + 0 * attr.elementByteSize),
+								buffers[uv1BV.buffer].readUInt16LE(offset + 1 * attr.elementByteSize))
+								.multiplyByFloats(1 / 0xffff, 1 / 0xffff);
+						}
+					}
+
+					prim.vertices.push(vert);
+				}
+
+				mesh.primitives.push(prim);
+			}
+
+			this.meshes.push(mesh);
+		}
 
 		// scenes
 	}
