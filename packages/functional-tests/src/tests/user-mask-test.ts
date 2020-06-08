@@ -28,6 +28,11 @@ export default class UserMaskTest extends Test {
 		const red = this.assets.createMaterial('redMat', {
 			color: { r: .854, g: 0.132, b: 0.132 }
 		});
+		const not = this.assets.createMaterial('notMat', {
+			color: MRE.Color3.Gray()
+		});
+		const box = this.assets.createBoxMesh('box', 0.5, 0.5, 0.5);
+		const sphere = this.assets.createSphereMesh('sphere', 0.3);
 
 		// create team labels
 		const textDef = {
@@ -63,12 +68,30 @@ export default class UserMaskTest extends Test {
 				parentId: root.id,
 				appearance: {
 					enabled: new MRE.GroupMask(this.app.context, ['red', 'default']),
-					meshId: this.assets.createBoxMesh('box', 0.5, 0.5, 0.5).id,
+					meshId: box.id,
 					materialId: red.id
 				},
 				collider: { geometry: { shape: MRE.ColliderType.Auto } },
 				transform: {
 					app: { position: { y: 1 } }
+				}
+			}
+		});
+
+		const notRedIcon = MRE.Actor.Create(this.app.context, {
+			actor: {
+				name: 'notRedIcon',
+				parentId: root.id,
+				appearance: {
+					enabled: new MRE.InvertedGroupMask(this.app.context, ['red', 'default']),
+					meshId: box.id,
+					materialId: not.id
+				},
+				transform: {
+					local: {
+						position: { y: 0.35 },
+						scale: { x: 0.5, y: 0.5, z: 0.5 }
+					}
 				}
 			}
 		});
@@ -79,12 +102,30 @@ export default class UserMaskTest extends Test {
 				parentId: root.id,
 				appearance: {
 					enabled: new MRE.GroupMask(this.app.context, ['blue', 'default']),
-					meshId: this.assets.createSphereMesh('sphere', 0.3).id,
+					meshId: sphere.id,
 					materialId: blue.id
 				},
 				collider: { geometry: { shape: MRE.ColliderType.Auto } },
 				transform: {
 					app: { position: { y: 1 } }
+				}
+			}
+		});
+
+		const notBlueIcon = MRE.Actor.Create(this.app.context, {
+			actor: {
+				name: 'notBlueIcon',
+				parentId: root.id,
+				appearance: {
+					enabled: new MRE.InvertedGroupMask(this.app.context, ['blue', 'default']),
+					meshId: sphere.id,
+					materialId: not.id
+				},
+				transform: {
+					local: {
+						position: { y: 0.35 },
+						scale: { x: 0.5, y: 0.5, z: 0.5 }
+					}
 				}
 			}
 		});
