@@ -78,7 +78,7 @@ export default class UserMaskTest extends Test {
 			}
 		});
 
-		const notRedIcon = MRE.Actor.Create(this.app.context, {
+		MRE.Actor.Create(this.app.context, {
 			actor: {
 				name: 'notRedIcon',
 				parentId: root.id,
@@ -112,7 +112,7 @@ export default class UserMaskTest extends Test {
 			}
 		});
 
-		const notBlueIcon = MRE.Actor.Create(this.app.context, {
+		MRE.Actor.Create(this.app.context, {
 			actor: {
 				name: 'notBlueIcon',
 				parentId: root.id,
