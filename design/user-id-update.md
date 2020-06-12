@@ -1,4 +1,4 @@
-## Make User IDs persistent across session ID, but unique per AppID
+## Make User IDs persistent for both registered and unregistered apps, and move make hashing logic into the runtime instead of letting host apps implement it
 
 This is related to github issue #129.
 
@@ -20,21 +20,20 @@ Currently in testbed we use: UserID=Random generated every connection
 1. For all host apps have user runtime hash a persistent userID with an AppID or (if AppID isn't available) URL. 
 2. Have the hashing logic be part of the unity runtime instead of be the host app's responsibility
 3. Provide a workaround that allows multi-instance testing as a single user, by adding an optional postfix to the session ID, which gets hash with the User ID by the client
-4. By having the hashing logic be in the unity runtime, this is also the natural home for the "me" permission to randomly generate the session ID instead.
+4. By having the hashing logic be in the unity runtime, this is also the natural home for the "me" permission to randomly generate the user ID instead.
 
 (Note about AppID: Currently AppIDs are app specific (Altspace has its' own app registry), but issue #617 is tracking a request for a shared (host app-agnostic) MRE registry. 
 
 ### Benefits
-1. users can reliably join same session ID in different spaces. Imagine a high score table or other save game data per user, if altspace space component is destroyed, this data is lost.
-2. by not hashing with session ID, it's possible for people to have multiple different sessions, and have them share data on the backend.
-3. by allowing users to disable "me" permission (and connect with a randomized userID in that case), we still meet GDPR requirement.
-4. user ID functionality is consistent across altspace and testbed
-5. no behavior difference between registered and unregistered apps
-6. right to be forgotten = that's on host app. For altspace, "delete your account" is an option. Host apps can also choose the rolling key.
-7. easier to test "reconnect" in testbed
+1. users can reliably join same unregistered app in different spaces, and are recognized as the same user. Imagine a high score table or other save game data per user, if altspace space component is destroyed, this data is lost.
+2. by allowing users to disable "me" permission (and connect with a randomized userID in that case), we still meet GDPR requirement.
+3. user ID functionality is consistent across altspace and testbed
+4. no behavior difference between registered and unregistered apps
+5. right to be forgotten = that's on host app. For altspace, "delete your account" is an option. Host apps can also choose the rolling key.
+6. easier to test "reconnect" in testbed
 
-### Dealing with multiple instances with same session ID
-Just to explain the reasoning by step 3 of the desing: There's one edge case in the current design, as we don't support multiple points of presence: connecting twice with the same user ID to the same sessionID at the same time is not supported. This is super useful for testing, but not really a core case for regular use. A small workaround to sessionIDs could solve the cases that matter - adding a postfix onto the session ID, which is used only to hash the userID, but not used to connect to the server
+### Dealing with multiple instances joining the same session
+Just to explain the reasoning by step 3 of the desing: There's one edge case in the current design, as we don't support multiple points of presence: connecting twice with the same user ID to the same session at the same time is not supported. This is super useful for testing, but not really a core case for regular use. A small workaround to sessionIDs could solve the cases that matter - adding a postfix onto the session ID, which is used only to hash the userID, but not used to connect to the server
 Example: UserA has 2 instances of app ws://mreserver.com with sessionID 1234 and 1234#2. It would connect to the mre twice - once with SessionID 1234 and userID=(UserA hashed with ws://mreserver.com), and once with once with SessionID 1234 and userID=(UserA hashed with ws://mreserver.com#2)
 
 ### Required Changes
