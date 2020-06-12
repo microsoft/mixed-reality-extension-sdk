@@ -7,8 +7,10 @@ of the button will be passed along as additional data to the app for consumption
 Button Behavior Actions:
 - `hover` - The action that occurs when the button is targeted by the host app input system. 
     - Hover states: `enter`, `hovering`, `exit`
-- `click` - The action that occurs when a complete click has happened on the button consisting of both a button pressed and button released event. 
+- `click` - The action that occurs when a complete button click has happened on the button consisting of both a button pressed and button released event, and no long press has begun.. 
     - Click states: None.  This is a single atomic event.
+- `longPress` - The action that starts after the button `pressed` event has occured, and a set amount of time that is the long press threshold has passed before a button `released` has occured.
+	- Long press states: `started`, `holding`, `ended`
 - `button` - The action that occurs when the button interaction state has changed from being pressed and then released.
     - Button states: `pressed`, `holding`, `released`
     
@@ -17,15 +19,19 @@ Button Event Data:
 
 Button Event Data Per Action:
 - Hover Action:
-	- `enter` - single app coordinate target point for where the hover is first entered.
-	- `hovering` - collection of app coordinate target points for the time while hovering is occuring, sent at a set frequency.
-	- `exit` - single app coordinate target point for where the hover was exited.
+	- `enter` - single target point data for where the hover is first entered.
+	- `hovering` - collection of target point data for the time while hovering is occuring, sent at a set frequency.
+	- `exit` - single target point data for where the hover was exited.
 - Click Action:
 	- There is only the click state and will contain the single app coordinate target point of the click action.
+- Long Press Action:
+	- `started` - single target point data for where the long press event started.
+	- `holding` - collection of target point data for the time while the long press is active, sent at a set frequency.
+	- `ended` - single target point data for where the long press ended.
 - Button Action:
-	- `pressed` - single app coordinate target point for where the pressed event began.
-	- `holding` - collection of app coordinate target points for the time while the button is held down, sent at a set frequency.
-	- `released` - single app coordinate target point for where the button is released.
+	- `pressed` - single target point data for where the pressed event began.
+	- `holding` - collection of target point data for the time while the button is held down, sent at a set frequency.
+	- `released` - single target point data for where the button is released.
 	
 ## Architecture
 
@@ -62,7 +68,7 @@ export interface ButtonEventData {
 
 ### Button Behavior Handler API
 ``` ts
-* Add a hover handler to be called when the given hover state is triggered.
+/** Add a hover handler to be called when the given hover state is triggered.
  * @param hoverState The hover state to fire the handler on.
  * @param handler The handler to call when the hover state is triggered.
  * @return This button behavior.
@@ -70,14 +76,22 @@ export interface ButtonEventData {
 public onHover(hoverState: 'enter' | 'hovering' | 'exit', handler: ActionHandler<ButtonEventData>): this;
     
 /**
- * Add a click handler to be called when the given click state is triggered.
+ * Add a click handler to be called when complete button click has occured.
  * @param handler The handler to call when the click state is triggered.
  * @return This button behavior.
  */
 public onClick(handler: ActionHandler<ButtonEventData>): this;
 
 /**
- * Add a button handler to be called when a complete button click has occured.
+ * Add a long press handler to be called when a long press event state change has occured.
+ * @param longPressState The long press state to fire the handler on.
+ * @param handler The handler to call when the click state is triggered.
+ * @return This button behavior.
+ */
+public onLongPress(longPressState: 'started' | 'holding' | 'ended', handler: ActionHandler<ButtonEventData>: this;
+
+/**
+ * Add a button handler to be called when a button event state change has occured.
  * @param buttonState The button state to fire the handler on.
  * @param handler The handler to call when the click state is triggered.
  * @return This button behavior.
