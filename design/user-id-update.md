@@ -38,6 +38,7 @@ Example: UserA has 2 instances of app ws://mreserver.com with sessionID 1234 and
 
 ### Required Changes
 1. move userID, AppID, URL and SessionID hashing logic into the unity runtime, instead of in the host app
+2. Verify that the primary case (registered apps in Altspace) will match old code's userIDs after the logic has been moved into unity runtime.
 2. Remove session postfix from sessionID before connecting to the MRE.
 3. Change hashing code to use altspaceUserID, AppID/URL, and SessionPostFix
 4. (Later, in issue #617) if AppID is passed in without a URL, perform appid to url lookup from hostapp-agnostic MRE registry inside this code
