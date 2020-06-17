@@ -142,6 +142,21 @@ The default implementation of the permissions manager will also include the foll
 * `void WriteToStorage()` - Write the "remembered" portions of the in-memory permission database to offline storage.
 
 
+UI Mockups
+============
+
+This is what an MRE management interface could look like in AltspaceVR. When any MRE is in a space, a UI icon appears
+in your radial menu. During startup, you might get a prompt for permissions:
+
+![Popup](images/permission.prompt.png)
+
+Clicking the prompt or the icon brings up the Requests window:
+
+![Requests](images/permission.requests.png)
+
+This window is paginated, one page per MRE that requires permissions.
+
+
 Old stuff
 ===========
 

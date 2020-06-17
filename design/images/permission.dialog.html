@@ -1,0 +1,147 @@
+<html>
+    <head>
+        <style>
+            body {
+                width: 800px;
+                height: 450px;
+                border: solid white 3px;
+                border-radius: 20px;
+                background-color: #3a3a3a;
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                font-size: 20px;
+                color: white;
+                padding: 15px;
+
+            }
+            nav ul {
+                display: flex;
+                justify-content: space-around;
+                list-style: none;
+                font-size: 24px;
+                font-weight: bold;
+                padding: 0;
+            }
+
+            #requests_body {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+
+            #requests_body #floating_content {
+                height: 345px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+            }
+
+            #requests_body #prompt {
+                width: 80%;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+            }
+            #requests_body #prompt p {
+                margin: .5em 0;
+            }
+            #requests_body #prompt ul {
+                margin: .5em 0;
+                position: relative;
+                list-style: none;
+            }
+            #requests_body #prompt li {
+                margin: .3em 0;
+            }
+            #requests_body #prompt li input[type=checkbox] {
+                position: absolute;
+                left: 10px;
+            }
+
+            #requests_body #controls {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                margin: 1em 0;
+            }
+
+            .button_row {
+                margin: 5px 0;
+                display: flex;
+                justify-content: center;
+            }
+            .button_row input[type=button] {
+                margin: 3px 10px;
+                padding: 5px 10px;
+                font-size: 20px;
+                background-color: #5d5d5d;
+                color: white;
+                border: solid white 3px;
+                border-radius: 15px;
+            }
+
+            .page_buttons {
+                font-weight: bold;
+            }
+            .page_buttons .icon {
+                width: 22px;
+                height: 22px;
+                border: solid white 2px;
+                border-radius: 50%;
+                margin: 0 10px;
+                background-color: #5d5d5d;
+
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .page_buttons .icon span {
+                position: relative;
+                top: -2px;
+            }
+        </style>
+    </head>
+    <body>
+        <nav>
+            <ul>
+                <li>Settings</li>
+                <li><u>Requests</u></li>
+                <li>Here</li>
+                <li>All</li>
+            </ul>
+        </nav>
+        <hr/>
+
+        <div id="requests_body">
+            <div id="floating_content">
+                <div id="prompt">
+                    <p>"Wear A Hat" (&#128275; mres.altvr.com) requests the following permissions:</p>
+                    <ul>
+                        <li><label>
+                            <input type="checkbox" checked disabled/><strong>User interaction</strong>
+                            - You may pick things up, click buttons, have things attached to your avatar, or otherwise interact with this app.
+                        </label></li>
+                        <li><label>
+                            <input type="checkbox"/><strong>User identity</strong>
+                            - This app wants to know who you are.
+                        </label></li>
+                    </ul>
+                </div>
+    
+                <div id="controls">
+                    <label><input type="checkbox" checked/> Remember my choices for this server</label>
+                    <div class="button_row">
+                        <input type="button" value="Allow"/>
+                        <input type="button" value="Allow All"/>
+                        <input type="button" value="Deny All"/>
+                    </div>
+                </div>
+            </div>
+            <div class="page_buttons">
+                <div class="icon"><span>&lt;</span></div>
+                &bull; &bull; &bull;
+                <div class="icon"><span>&gt;</span></div>
+            </div>
+        </div>
+    </body>
+</html>
