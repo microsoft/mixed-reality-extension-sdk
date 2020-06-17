@@ -34,6 +34,7 @@ If a permission is not requested, it is considered denied.
 		for this user will fail. Actors attached to this user will be considered unattached. Calls to `user.prompt`
 		will be rejected. If the `user-tracking` permission is also denied, this client will not join a user to the
 		session at all.
+* Play sounds and video
 * Large assets (hypothetical) - If an MRE wants to load more than some large amount of assets into memory
 	(30MB worth of memory? TBD), the client must first approve. This permission might automatically be approved/denied
 	by clients on behalf of users based on device capabilities.
