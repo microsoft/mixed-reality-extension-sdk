@@ -145,18 +145,36 @@ The default implementation of the permissions manager will also include the foll
 UI Mockups
 ============
 
-This is what an MRE management interface could look like in AltspaceVR. When any MRE is in a space, a UI icon appears
-in your radial menu. During startup, you might get a prompt for permissions:
+This is what an MRE permissions management interface could look like. When an MRE is available to run in the current
+host app context, a button to bring up the management UI should be readily available (within two clicks of steady-state
+usage). Attention should be drawn to this button when a new MRE permission request comes in.
 
-![Popup](images/permission.prompt.png)
-
-Clicking the prompt or the icon brings up the Requests window:
+Clicking the prompt or the button brings up your MRE permission requests:
 
 ![Requests](images/permission.requests.png)
 
-This window is paginated, one page per MRE that requires permissions. Each permission has a checkbox next to it:
-required permissions are checked and disabled, and optional permissions are checked or not based on app origin decision
-history and settings.
+This window is paginated, one page per MRE that requires permissions. The name of the app requesting permission, the
+server name it's hosted on, and a secure protocol indicator are all featured prominently. Each permission has a
+checkbox next to it: required permissions are checked and disabled, and optional permissions are checked or not based
+on app origin decision history and settings.
+
+A global MRE settings menu could also be available:
+
+![Settings](images/permission.settings.png)
+
+From this UI, the user could choose to grant a certain permission to all MREs globally.
+
+There could also be UI to retroactively change your permission decisions:
+
+![Overview](images/permission.overview.png)
+
+This panel displays an overview of each MRE available in the current host app context, what permissions the user has
+granted, and some controls. One button lets the user modify their permission decisions by re-opening the Requests view
+for that app, and if that app is currently running, reconnect. The other button deletes the saved decisions for that
+app origin.
+
+The "Here" and "All" tabs in this mockup are laid out the same, except "Here" is only the MREs in the current context,
+whereas "All" is the list of all MRE origins for which there are stored decisions.
 
 
 Old stuff

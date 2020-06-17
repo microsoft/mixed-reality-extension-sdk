@@ -1,5 +1,17 @@
 <html>
     <head>
+        <script>
+            function onHeaderClick(header, contentId) {
+                for (const tab of document.querySelectorAll("nav li")) {
+                    tab.classList.remove("active");
+                }
+                for (const tabContent of document.querySelectorAll('.tab_content')) {
+                    tabContent.classList.remove("active");
+                }
+                header.classList.add("active");
+                document.getElementById(contentId).classList.add("active");
+            }
+        </script>
         <style>
             body {
                 width: 800px;
@@ -21,19 +33,22 @@
                 font-weight: bold;
                 padding: 0;
             }
-
-            #requests_body {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
+            nav ul li.active {
+                text-decoration: underline;
             }
 
-            #requests_body #floating_content {
-                height: 345px;
+            .tab_content {
+                display: none;
+            }
+            .tab_content.active {
+                display: block;
+            }
+
+            .tab_layout {
                 display: flex;
                 flex-direction: column;
                 align-items: center;
-                justify-content: center;
+                justify-content: space-between;
             }
 
             #requests_body #prompt {
@@ -45,24 +60,28 @@
             #requests_body #prompt p {
                 margin: .5em 0;
             }
-            #requests_body #prompt ul {
-                margin: .5em 0;
-                position: relative;
-                list-style: none;
-            }
-            #requests_body #prompt li {
-                margin: .3em 0;
-            }
-            #requests_body #prompt li input[type=checkbox] {
-                position: absolute;
-                left: 10px;
-            }
-
             #requests_body #controls {
                 display: flex;
                 flex-direction: column;
                 align-items: center;
                 margin: 1em 0;
+            }
+
+            #here_body table td:nth-child(1) {
+                width: 45%;
+            }
+            #here_body table td:nth-child(2) {
+                width: 45%;
+            }
+            #here_body table td:nth-child(3) {
+                width: 10%;
+            }
+            #here_body .server {
+                font-size: 1.2em;
+            }
+            #here_body .names {
+                font-size: 0.8em;
+                color: lightgrey;
             }
 
             .button_row {
@@ -84,46 +103,67 @@
                 font-weight: bold;
             }
             .page_buttons .icon {
+                margin: 0 10px;
+            }
+
+            .icon {
                 width: 22px;
                 height: 22px;
                 border: solid white 2px;
                 border-radius: 50%;
-                margin: 0 10px;
                 background-color: #5d5d5d;
 
                 display: inline-flex;
                 align-items: center;
                 justify-content: center;
             }
-            .page_buttons .icon span {
+            .icon span {
                 position: relative;
                 top: -2px;
+            }
+
+            ul.checkbox_list {
+                margin: .5em 0;
+                position: relative;
+                list-style: none;
+            }
+            ul.checkbox_list li {
+                margin: .3em 0;
+            }
+            ul.checkbox_list li input[type=checkbox] {
+                position: absolute;
+                left: 10px;
             }
         </style>
     </head>
     <body>
+
         <nav>
             <ul>
-                <li>Settings</li>
-                <li><u>Requests</u></li>
-                <li>Here</li>
+                <li onclick="onHeaderClick(this, 'settings_body')">Settings</li>
+                <li onclick="onHeaderClick(this, 'requests_body')" class="active">Requests</li>
+                <li onclick="onHeaderClick(this, 'here_body')">Here</li>
                 <li>All</li>
             </ul>
         </nav>
         <hr/>
 
-        <div id="requests_body">
-            <div id="floating_content">
+        <div class="tab_content active" id="requests_body">
+            <div class="tab_layout">
                 <div id="prompt">
                     <p>"Wear A Hat" (&#128275; mres.altvr.com) requests the following permissions:</p>
-                    <ul>
+                    <ul class="checkbox_list">
+                        <li><label>
+                            <input type="checkbox" checked disabled/><strong>Execution</strong>
+                            - Allow this app to run. Denying this will disable the app altogether.
+                        </label></li>
                         <li><label>
                             <input type="checkbox" checked disabled/><strong>User interaction</strong>
                             - You may pick things up, click buttons, have things attached to your avatar, or otherwise interact with this app.
                         </label></li>
                         <li><label>
-                            <input type="checkbox"/><strong>User identity</strong>
-                            - This app wants to know who you are.
+                            <input type="checkbox"/><strong>User tracking</strong>
+                            - This app will recognize you if you return.
                         </label></li>
                     </ul>
                 </div>
@@ -136,12 +176,73 @@
                         <input type="button" value="Deny All"/>
                     </div>
                 </div>
-            </div>
-            <div class="page_buttons">
-                <div class="icon"><span>&lt;</span></div>
-                &bull; &bull; &bull;
-                <div class="icon"><span>&gt;</span></div>
+    
+                <div class="page_buttons">
+                    <div class="icon"><span>&lt;</span></div>
+                    &bull; &bull; &bull;
+                    <div class="icon"><span>&gt;</span></div>
+                </div>
             </div>
         </div>
+
+        <div class="tab_content" id="settings_body">
+            <div class="tab_layout">
+                <ul class="checkbox_list">
+                    <li><label>
+                        <input type="checkbox" checked/>
+                        Grant permission for all apps to run, unless explicitly revoked.
+                    </label></li>
+                    <li><label>
+                        <input type="checkbox"/>
+                        Grant permission for all apps to track me, unless explicitly revoked.
+                    </label></li>
+                    <li><label>
+                        <input type="checkbox"/>
+                        Grant permission for all apps to interact with me, unless explicitly revoked.
+                    </label></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="tab_content" id="here_body">
+            <div class="tab_layout">
+                <table style="width: 100%;">
+                    <tr class="app_overview">
+                        <td>
+                            <span class="server">&#128275; mres.altvr.com</span><br/>
+                            <span class="names">Wear A Hat, Functional Tests</span>
+                        </td>
+                        <td>Execution, User Interaction, User Tracking</td>
+                        <td>
+                            <div class="icon" title="Edit">&#128393;</div>
+                            <div class="icon" title="Forget">&#x1F5D9;</div>
+                        </td>
+                    </tr>
+                    <tr class="app_overview">
+                        <td>
+                            <span class="server">&#128275; secure-mre.azurewebsites.net</span><br/>
+                            <span class="names">Where In The World</span>
+                        </td>
+                        <td>Execution, User Interaction</td>
+                        <td>
+                            <div class="icon" title="Edit">&#128393;</div>
+                            <div class="icon" title="Forget">&#x1F5D9;</div>
+                        </td>
+                    </tr>
+                    <tr class="app_overview">
+                        <td>
+                            <span class="server">&#128275; helmets-mre.azurewebsites.net</span><br/>
+                            <span class="names">Helmets</span>
+                        </td>
+                        <td>Execution, User Interaction</td>
+                        <td>
+                            <div class="icon" title="Edit">&#128393;</div>
+                            <div class="icon" title="Forget">&#x1F5D9;</div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
     </body>
 </html>
