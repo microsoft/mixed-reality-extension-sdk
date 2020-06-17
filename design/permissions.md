@@ -154,7 +154,9 @@ Clicking the prompt or the icon brings up the Requests window:
 
 ![Requests](images/permission.requests.png)
 
-This window is paginated, one page per MRE that requires permissions.
+This window is paginated, one page per MRE that requires permissions. Each permission has a checkbox next to it:
+required permissions are checked and disabled, and optional permissions are checked or not based on app origin decision
+history and settings.
 
 
 Old stuff
