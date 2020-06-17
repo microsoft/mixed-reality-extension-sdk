@@ -6,28 +6,52 @@ the power of this SDK. As such, I propose the addition of a permissions API, so 
 without compromising user safety and agency.
 
 
+Permission scope
+------------------
+
+When a user approves or denies permission to an MRE, that approval/denial is scoped to the unique combination of
+protocol, hostname, and port of the MRE URL, known collectively as the "origin". So when `ws://mres.altvr.com/wearahat`
+requests `user-interaction`, that permission is associated with `ws://mres.altvr.com`, and all user decisions apply
+equally to new connections to the same server. These user decisions may or may not be persisted indefinitely by the host app.
+
+
 Features requiring user permission
 ------------------------------------
 
+If a permission is not requested, it is considered denied.
+
 * `execution` (client only) - Required to connect to an MRE server. Typically granted by default, but can be revoked.
-* User data - If neither permission is required or granted, no `user-join` message will be sent.
-	* `user-tracking` - Grants access to a persistent user identity across sessions.
-	* `user-interaction` - Behavior interaction, attachments, dialogs.
-* Large assets - If an MRE wants to load more than some large amount of assets into memory (30MB worth of memory? TBD),
-	the client must first approve. This permission might automatically be approved/denied by clients on behalf of users
-	based on device capabilities.
+	* Allow: MRE connection can be established
+	* Deny: MRE connection will not be established
+* `user-tracking` - Grants access to a persistent user identity across sessions. Needed for things like high scores lists.
+	* Allow: This user will be uniquely identified to this MRE origin across sessions and instances.
+	* Deny: This user will be assigned a new ID every time they connect to MREs from this origin. If the `user-interaction`
+		permission is also denied, this client will not join a user to the session at all.
+* `user-interaction` - Behaviors, exclusive actors, attachments, and dialogs.
+	* Allow: This user can interact with behaviors, exclusively own actors, be a target for attached actors, and can be
+		sent dialogs.
+	* Deny: Interactions with behaviors will not be sent back to the app server. Attempts to create exclusive actors
+		for this user will fail. Actors attached to this user will be considered unattached. Calls to `user.prompt`
+		will be rejected. If the `user-tracking` permission is also denied, this client will not join a user to the
+		session at all.
+* Large assets (hypothetical) - If an MRE wants to load more than some large amount of assets into memory
+	(30MB worth of memory? TBD), the client must first approve. This permission might automatically be approved/denied
+	by clients on behalf of users based on device capabilities.
 * Movement (hypothetical) - The ability to forcibly move a user's avatar and point of view, either smoothly
 	or teleported.
 * Microphone input (hypothetical) - The ability for users to stream their microphone input into an MRE, for voice
 	commands, synthesizers, chat bots, or anything else.
 
+
 Permission declaration
 ------------------------
 
 Apps must declare which APIs they will use in advance of any users connecting. This is done via a JSON-formatted
-manifest loaded from the app's HTTP endpoint. The runtime should look for this manifest at
-`http://<mre_url>/manifest.json`. Note that this file can be served from the filesystem or constructed on request.
-The manifest must conform to the following JSON Schema:
+manifest loaded from the app's HTTP root. For example, the manifest for the URL `ws://mres.altvr.com/tests/red` should
+be found at `http://mres.altvr.com/tests/red/manifest.json`. Note that this file can be served from the filesystem or
+constructed on request.
+
+The manifest must conform to the following JSON schema:
 
 ```json
 {
@@ -67,10 +91,54 @@ Legend:
 Startup:
 
 1. [App] During development, the app developer authors a static manifest file, or uses the WebHost API to generate one.
-2. [Host] Initializes the MRE API with a permissions manager instance that will receive new permissions requests.
-2. [Host] The host wishes to run an MRE, so creates an IMixedRealityExtensionApp instance and calls Startup().
-3. [Runtime] Downloads the manifest from the provided MRE server. If missing, assumes no permissions required.
-4. []
+2. [Runtime|Host] Initializes the MRE API with a permissions manager instance that will receive new permission requests.
+	If permission decisions are persistent, load them into memory now. Default provided implementation does not persist.
+3. [Host] The host wishes to run an MRE, so creates an IMixedRealityExtensionApp instance and calls Startup().
+4. [Runtime] Downloads the manifest from the provided MRE server. If missing, assumes no permissions required.
+5. [Runtime] Calls into the permission manager requesting the manifest-listed permissions.
+6. [Runtime|Host] Permission manager evaluates the required and optional MRE permissions against the current set of
+	grants/denials for the MRE's origin, and determines if any new permission decisions need to be made by the user.
+	If so:
+	1. [Host] Present the choices to the user by whatever means the host sees fit, persist the decision if desired,
+		and report the result to the Runtime. Optional permissions should be presented in such a way as they can be
+		granted or denied individually, but required permissions should be decided as a group.
+7. [Runtime] Determine if the MRE has sufficient permission to run, i.e. `execution` and all the required permissions
+	are granted. If not, abort connecting to the MRE.
+8. [Runtime] Startup proceeds like normal, but if a `user-joined` message is sent, the user payload must include
+	the IDs of any permissions that were granted to this MRE by this user (other than `execution`, which is implied).
+
+
+Permissions Manager
+---------------------
+
+Host apps must provide hooks for the MRE subsystem to obtain permission from users. This is provided to `MREAPI.InitializeAPI`
+as an implementation of `IPermissionManager`, which has the following methods:
+
+* `Task<Permissions> PromptForPermission(...)` - Request permissions from the user, and return a Task that resolves
+	with those permissions the user has granted. Takes the following arguments:
+	* `string appOrigin` - The origin of the MRE requesting permission, as described above.
+	* `string appDisplayName` - A human-readable identifier for the MRE server provided from the manifest.
+	* `Permissions permissionsNeeded` - A bitfield of the permissions required to run the app.
+	* `Permissions permissionsWanted` - A bitfield of permissions that the app can use, but are not needed to run.
+* `Permissions CurrentPermissions(...)` - Returns a bitfield of the currently granted permissions. Takes the following
+	arguments:
+	* `string appOrigin` - The origin of the MRE for which we want the permission set.
+
+```cs
+[Flags]
+enum Permissions {
+	None = 0,
+	Execution = 1,
+	UserTracking = 2,
+	UserInteraction = 4,
+	...
+}
+```
+
+The default implementation of the permissions manager will also include the following virtual methods:
+
+* `void ReadFromStorage()` - Populate the in-memory permission database from offline storage.
+* `void WriteToStorage()` - Write the "remembered" portions of the in-memory permission database to offline storage.
 
 
 Old stuff
