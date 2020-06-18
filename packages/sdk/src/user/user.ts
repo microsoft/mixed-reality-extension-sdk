@@ -3,7 +3,7 @@
  * Licensed under the MIT License.
  */
 
-import { Context, GroupMask, Guid } from '..';
+import { Context, GroupMask, Guid, Permissions } from '..';
 import { Patchable, readPath, } from '../internal';
 import { UserInternal } from './userInternal';
 
@@ -11,6 +11,11 @@ export interface UserLike {
 	id: Guid;
 	name: string;
 	groups: number | GroupMask;
+	/**
+	 * A bitmask of values from the [[Permissions]] enum. These indicate permissions that this user has granted,
+	 * either implicitly or explicitly.
+	 */
+	grantedPermissions: number;
 	properties: { [name: string]: string };
 }
 
@@ -32,6 +37,7 @@ export class User implements UserLike, Patchable<UserLike> {
 	private _name: string;
 	private _properties: { [name: string]: string };
 	private _groups: GroupMask;
+	private _grantedPermissions: number;
 
 	public get context() { return this._context; }
 	public get id() { return this._id; }
@@ -68,6 +74,15 @@ export class User implements UserLike, Patchable<UserLike> {
 	 */
 	public get properties() { return Object.freeze({ ...this._properties }); }
 
+	/** @inheritdoc */
+	public get grantedPermissions() { return this._grantedPermissions; }
+
+	/** @returns An unpacked copy of the permissions in [[grantedPermissions]]. */
+	public get grantedPermissionsList() {
+		return Object.values(Permissions)
+			.filter(p => typeof(p) === "number" && (p & this.grantedPermissions)) as Array<Permissions>;
+	}
+
 	/**
 	 * PUBLIC METHODS
 	 */
@@ -85,6 +100,7 @@ export class User implements UserLike, Patchable<UserLike> {
 		return this.internal.prompt(text, acceptInput);
 	}
 
+	/** @hidden */
 	public copy(from: Partial<UserLike>): this {
 		// Pause change detection while we copy the values into the actor.
 		const wasObserving = this.internal.observing;
@@ -101,17 +117,20 @@ export class User implements UserLike, Patchable<UserLike> {
 				this.groups = from.groups;
 			}
 		}
+		if (from.grantedPermissions !== undefined) { this._grantedPermissions = from.grantedPermissions; }
 
 		this.internal.observing = wasObserving;
 		return this;
 	}
 
+	/** @hidden */
 	public toJSON() {
 		return {
 			id: this.id,
 			name: this.name,
 			groups: this.groups.packed(),
 			properties: this.properties,
+			grantedPermissions: this.grantedPermissions
 		} as UserLike;
 	}
 

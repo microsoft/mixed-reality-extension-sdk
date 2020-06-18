@@ -22,6 +22,7 @@ import {
 	MediaInstance,
 	newGuid,
 	PerformanceStats,
+	Permissions,
 	SetMediaStateOptions,
 	TriggerEvent,
 	User,
@@ -110,6 +111,27 @@ export class ContextInternal {
 		this.updateActors(payload.actor);
 		// Get a reference to the new actor.
 		const actor = this.context.actor(payload.actor.id);
+
+		// check permission for exclusive actors
+		let user: User;
+		if (actor.exclusiveToUser &&
+			(user = this.userSet.get(actor.exclusiveToUser)) &&
+			!(user.grantedPermissions & Permissions.UserInteraction)) {
+			actor.internal.notifyCreated(false,
+				`Permission denied on user ${user.id} (${user.name}). Either this MRE did not ` +
+				"request the UserInteraction permission, or it was denied by the user."
+			);
+		}
+
+		// check permission for attachments
+		if (actor.attachment?.userId &&
+			(user = this.userSet.get(actor.attachment?.userId)) &&
+			!(user.grantedPermissions & Permissions.UserInteraction)) {
+			actor.internal.notifyCreated(false,
+				`Permission denied on user ${user.id} (${user.name}). Either this MRE did not ` +
+				"request the UserInteraction permission, or it was denied by the user."
+			);
+		}
 
 		this.protocol.sendPayload( payload, {
 			resolve: (replyPayload: Payloads.ObjectSpawned | Payloads.OperationResult) => {
