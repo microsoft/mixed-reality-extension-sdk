@@ -68,6 +68,7 @@ export default class PhysicsBounceTest extends Test {
 		const ballOrBox = MRE.Actor.Create(this.app.context, {
 			actor: {
 				parentId: root.id,
+				grabbable: true,
 				appearance: {
 					meshId: ballOrBoxID,
 					materialId: this.materials[Math.floor(Math.random() * this.materials.length)].id

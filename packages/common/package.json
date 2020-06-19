@@ -1,6 +1,6 @@
 {
   "name": "@microsoft/mixed-reality-extension-common",
-  "version": "0.18.1",
+  "version": "0.19.0",
   "description": "Common components of the Mixed Reality Extension SDK.",
   "main": "built/index.js",
   "types": "built/index.d.ts",
