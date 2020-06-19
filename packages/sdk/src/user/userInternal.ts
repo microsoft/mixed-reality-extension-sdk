@@ -36,7 +36,7 @@ export class UserInternal implements InternalPatchable<UserLike> {
 		} as Payloads.ShowDialog;
 
 		return new Promise<Payloads.DialogResponse>((resolve, reject) => {
-			if (this.user.grantedPermissions & Permissions.UserInteraction) {
+			if (this.user.grantedPermissions.includes(Permissions.UserInteraction)) {
 				this.context.sendPayload(payload, { resolve, reject });
 			} else {
 				reject(`Permission denied on user ${this.user.id} (${this.user.name}). Either this MRE did not ` +

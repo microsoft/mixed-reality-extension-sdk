@@ -7,8 +7,12 @@ import { resolve as urlResolve } from 'url';
 import * as Restify from 'restify';
 import { NotFoundError } from 'restify-errors';
 import etag from 'etag';
+import { resolve } from 'path';
+import { exists as _exists } from 'fs';
+import { promisify } from 'util';
+const fileExists = promisify(_exists);
 
-import { log, MultipeerAdapter } from '..';
+import { log, MultipeerAdapter, Permissions } from '..';
 import { Adapter } from '../internal';
 
 type StaticBufferInfo = {
@@ -35,6 +39,8 @@ export class WebHost {
 		baseDir?: string;
 		baseUrl?: string;
 		port?: string | number;
+		permissions?: Permissions[];
+		optionalPermissions?: Permissions[];
 	} = {}) {
 		const pjson = require('../../package.json'); /* eslint-disable-line @typescript-eslint/no-var-requires */
 		log.info('app', `Node: ${process.version}`);
@@ -61,19 +67,22 @@ export class WebHost {
 				log.info('app', `${server.name} listening on ${JSON.stringify(server.address())}`);
 				log.info('app', `baseUrl: ${this.baseUrl}`);
 				log.info('app', `baseDir: ${this.baseDir}`);
+
+				// check if a procedural manifest is needed, and serve if so
+				this.serveManifestIfNeeded(server, options.permissions, options.optionalPermissions);
+
+				// serve static buffers
+				server.get(`/buffers/:name`,
+					this.checkStaticBuffers,
+					Restify.plugins.conditionalRequest(),
+					this.serveStaticBuffers);
+
+				// serve static files
 				if (this.baseDir) {
-					this.serveStaticFiles(server);
+					server.get('/*', Restify.plugins.serveStaticFiles(this._baseDir));
 				}
 			})
 			.catch(reason => log.error('app', `Failed to start HTTP server: ${reason}`));
-	}
-
-	private serveStaticFiles(server: Restify.Server) {
-		server.get(`/buffers/:name`,
-			this.checkStaticBuffers,
-			Restify.plugins.conditionalRequest(),
-			this.serveStaticBuffers);
-		server.get('/*', Restify.plugins.serveStaticFiles(this._baseDir));
 	}
 
 	private checkStaticBuffers = (req: Restify.Request, res: Restify.Response, next: Restify.Next) => {
@@ -96,6 +105,21 @@ export class WebHost {
 			next(new NotFoundError(`No buffer registered under name ${req.params.name}`));
 		}
 	};
+
+	private serveManifestIfNeeded(
+		server: Restify.Server, permissions?: Permissions[], optionalPermissions?: Permissions[]) {
+		fileExists(resolve(this.baseDir, './manifest.json')).then(exists => {
+			if (!exists && (permissions || optionalPermissions)) {
+				server.get('/manifest.json', (req, res, next) => {
+					res.json(200, { permissions, optionalPermissions });
+					next();
+				});
+			} else if (!exists) {
+				log.warning('app', "No MRE manifest found! Either define a static file named \"manifest.json\", or " +
+					"pass a permission set to the WebHost constructor.");
+			}
+		});
+	}
 
 	/**
 	 * Serve arbitrary binary blobs from a URL

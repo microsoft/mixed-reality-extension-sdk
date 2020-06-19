@@ -12,10 +12,10 @@ export interface UserLike {
 	name: string;
 	groups: number | GroupMask;
 	/**
-	 * A bitmask of values from the [[Permissions]] enum. These indicate permissions that this user has granted,
+	 * An array of values from the [[Permissions]] enum. These indicate permissions that this user has granted,
 	 * either implicitly or explicitly.
 	 */
-	grantedPermissions: number;
+	grantedPermissions: Permissions[];
 	properties: { [name: string]: string };
 }
 
@@ -37,7 +37,7 @@ export class User implements UserLike, Patchable<UserLike> {
 	private _name: string;
 	private _properties: { [name: string]: string };
 	private _groups: GroupMask;
-	private _grantedPermissions: number;
+	private _grantedPermissions: Permissions[];
 
 	public get context() { return this._context; }
 	public get id() { return this._id; }
@@ -75,13 +75,7 @@ export class User implements UserLike, Patchable<UserLike> {
 	public get properties() { return Object.freeze({ ...this._properties }); }
 
 	/** @inheritdoc */
-	public get grantedPermissions() { return this._grantedPermissions; }
-
-	/** @returns An unpacked copy of the permissions in [[grantedPermissions]]. */
-	public get grantedPermissionsList() {
-		return Object.values(Permissions)
-			.filter(p => typeof(p) === "number" && (p & this.grantedPermissions)) as Array<Permissions>;
-	}
+	public get grantedPermissions() { return [...this._grantedPermissions]; }
 
 	/**
 	 * PUBLIC METHODS

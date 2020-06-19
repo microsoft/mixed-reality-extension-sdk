@@ -116,7 +116,7 @@ export class ContextInternal {
 		let user: User;
 		if (actor.exclusiveToUser &&
 			(user = this.userSet.get(actor.exclusiveToUser)) &&
-			!(user.grantedPermissions & Permissions.UserInteraction)) {
+			!(user.grantedPermissions.includes(Permissions.UserInteraction))) {
 			actor.internal.notifyCreated(false,
 				`Permission denied on user ${user.id} (${user.name}). Either this MRE did not ` +
 				"request the UserInteraction permission, or it was denied by the user."
@@ -126,7 +126,7 @@ export class ContextInternal {
 		// check permission for attachments
 		if (actor.attachment?.userId &&
 			(user = this.userSet.get(actor.attachment?.userId)) &&
-			!(user.grantedPermissions & Permissions.UserInteraction)) {
+			!(user.grantedPermissions.includes(Permissions.UserInteraction))) {
 			actor.internal.notifyCreated(false,
 				`Permission denied on user ${user.id} (${user.name}). Either this MRE did not ` +
 				"request the UserInteraction permission, or it was denied by the user."

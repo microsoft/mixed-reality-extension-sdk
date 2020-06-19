@@ -21,6 +21,7 @@ process.on('unhandledRejection', (reason) => console.log('unhandledRejection', r
 const server = new MRE.WebHost({
 	// baseUrl: 'http://<ngrok-id>.ngrok.io',
 	baseDir: resolvePath(__dirname, '../public'),
+	optionalPermissions: [MRE.Permissions.UserInteraction]
 });
 
 // Handle new application sessions
