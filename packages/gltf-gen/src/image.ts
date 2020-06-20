@@ -89,6 +89,10 @@ export class Image extends Serializable implements ImageLike {
 	}
 
 	private _embedImage(document: GLTF.GlTf, data: Buffer): GLTF.GlTfId {
+		if (!document.bufferViews) {
+			document.bufferViews = [];
+		}
+
 		let lastBV: GLTF.BufferView;
 		if (document.bufferViews.length > 0) {
 			lastBV = document.bufferViews[document.bufferViews.length - 1];
@@ -103,14 +107,13 @@ export class Image extends Serializable implements ImageLike {
 		const bufferViewData = data.slice(bufferView.byteOffset, bufferView.byteOffset + bufferView.byteLength);
 
 		if (this.embeddedData) {
+			// write 4-byte padding
+			bufferViewData.writeInt32LE(0, bufferView.byteOffset + bufferView.byteLength - 4);
 			this.embeddedData.copy(bufferViewData);
 		} else {
 			readFileSync(this.embeddedFilePath).copy(bufferViewData);
 		}
 
-		if (!document.bufferViews) {
-			document.bufferViews = [];
-		}
 		document.bufferViews.push(bufferView);
 
 		return document.bufferViews.length - 1;

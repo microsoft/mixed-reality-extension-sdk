@@ -23,6 +23,7 @@ import {
 } from '.';
 import GLTF from './gen/gltf';
 import { roundUpToNextMultipleOf4 } from './util';
+import { AccessorType } from './enums';
 
 /**
  * Generates a glTF document from mesh data
@@ -111,12 +112,12 @@ export class GltfFactory {
 		const totalLength = glbData.readUInt32LE(8);
 		const jsonLength = glbData.readUInt32LE(12);
 		const jsonMagic = glbData.readUInt32LE(16);
-		const binLength = glbData.length > (20 + jsonLength) ? glbData.readUInt32LE(20 + jsonLength) : 0;
-		const binMagic = glbData.length > (24 + jsonLength) ? glbData.readUInt32LE(24 + jsonLength) : 0;
+		const binLength = glbData.length > (20 + jsonLength) ? glbData.readUInt32LE(20 + jsonLength) : -1;
+		const binMagic = glbData.length > (24 + jsonLength) ? glbData.readUInt32LE(24 + jsonLength) : -1;
 
 		// validate header
 		if (magic !== 0x46546c67 || version !== 2 || totalLength !== glbData.length
-			|| jsonMagic !== 0x4e4f534a || binMagic !== 0 && binMagic !== 0x004e4942) {
+			|| jsonMagic !== 0x4e4f534a || binMagic !== -1 && binMagic !== 0x004e4942) {
 			throw new Error(`${path}: Bad GLB header`);
 		}
 
@@ -125,9 +126,9 @@ export class GltfFactory {
 		const json: GLTF.GlTf = JSON.parse(jsonBin);
 
 		// load buffers
-		const buffers = await Promise.all(json.buffers.map(async (bufferDef, i) => {
+		const buffers = await Promise.all(json.buffers?.map(async (bufferDef, i) => {
 			if (i === 0 && !bufferDef.uri) {
-				if (binMagic !== 0) {
+				if (binMagic !== -1) {
 					return glbData.slice(28 + jsonLength, 28 + jsonLength + binLength);
 				} else {
 					throw new Error(`${path}: Expected embedded binary data`);
@@ -135,7 +136,7 @@ export class GltfFactory {
 			} else {
 				return await readFile(resolve(path, bufferDef.uri));
 			}
-		}));
+		}) ?? []);
 
 		// process data
 		this.importFromGltfData(json, buffers);
@@ -241,21 +242,24 @@ export class GltfFactory {
 
 		// meshes
 		const instancingHash: { [sig: string]: MeshPrimitive } = {};
-		for (const meshDef of json.meshes) {
+		for (const meshDef of json.meshes || []) {
 			const mesh = new Mesh({
 				name: meshDef.name
 			});
 
 			for (const primDef of meshDef.primitives) {
-				if (primDef.mode !== 4) {
+				if (primDef.mode !== undefined && primDef.mode !== 4) {
 					throw new Error(`Import failed: can only import meshes in triangle format`);
 				}
 
-				const sig = `${primDef.attributes[Vertex.positionAttribute.attributeName]}-${primDef.indices}`;
+				// if all the attribute accessors are the same, don't re-parse, just instance
+				const sig = GltfFactory.GetMeshInstanceHash(primDef);
 				const prim = new MeshPrimitive({ material: this.materials[primDef.material] }, instancingHash[sig]);
-				if (!instancingHash[sig]) {
-					instancingHash[sig] = prim;
+				if (instancingHash[sig]) {
+					mesh.primitives.push(prim);
+					continue;
 				}
+				instancingHash[sig] = prim;
 
 				const posAcc = json.accessors[primDef.attributes[Vertex.positionAttribute.attributeName]];
 				const nrmAcc = json.accessors[primDef.attributes[Vertex.normalAttribute.attributeName]];
@@ -274,8 +278,8 @@ export class GltfFactory {
 					const vert = new Vertex();
 					if (posAcc) {
 						const attr = Vertex.positionAttribute;
-						const offset = posBV.byteOffset + posAcc.byteOffset +
-							i * (posBV.byteStride ?? 0 + attr.byteSize);
+						const offset = (posBV.byteOffset ?? 0) + (posAcc.byteOffset ?? 0) +
+							i * ((posBV.byteStride ?? 0) + attr.byteSize);
 						vert.position = new MRE.Vector3(
 							buffers[posBV.buffer].readFloatLE(offset + 0 * attr.elementByteSize),
 							buffers[posBV.buffer].readFloatLE(offset + 1 * attr.elementByteSize),
@@ -283,8 +287,8 @@ export class GltfFactory {
 					}
 					if (nrmAcc) {
 						const attr = Vertex.normalAttribute;
-						const offset = nrmBV.byteOffset + nrmAcc.byteOffset +
-							i * (nrmBV.byteStride ?? 0 + attr.byteSize);
+						const offset = (nrmBV.byteOffset ?? 0) + (nrmAcc.byteOffset ?? 0) +
+							i * ((nrmBV.byteStride ?? 0) + attr.byteSize);
 						vert.normal = new MRE.Vector3(
 							buffers[nrmBV.buffer].readFloatLE(offset + 0 * attr.elementByteSize),
 							buffers[nrmBV.buffer].readFloatLE(offset + 1 * attr.elementByteSize),
@@ -292,8 +296,8 @@ export class GltfFactory {
 					}
 					if (tngAcc) {
 						const attr = Vertex.tangentAttribute;
-						const offset = tngBV.byteOffset + tngAcc.byteOffset +
-							i * (tngBV.byteStride ?? 0 + attr.byteSize);
+						const offset = (tngBV.byteOffset ?? 0) + (tngAcc.byteOffset ?? 0) +
+							i * ((tngBV.byteStride ?? 0) + attr.byteSize);
 						vert.tangent = new MRE.Vector4(
 							buffers[tngBV.buffer].readFloatLE(offset + 0 * attr.elementByteSize),
 							buffers[tngBV.buffer].readFloatLE(offset + 1 * attr.elementByteSize),
@@ -302,8 +306,8 @@ export class GltfFactory {
 					}
 					if (uv0Acc) {
 						const attr = Vertex.texCoordAttribute[0];
-						const offset = uv0BV.byteOffset + uv0Acc.byteOffset +
-							i * (uv0BV.byteStride ?? 0 + attr.byteSize);
+						const offset = (uv0BV.byteOffset ?? 0) + (uv0Acc.byteOffset ?? 0) +
+							i * ((uv0BV.byteStride ?? 0) + attr.byteSize);
 						if (uv0Acc.componentType === AccessorComponentType.Float) {
 							vert.texCoord0 = new MRE.Vector2(
 								buffers[uv0BV.buffer].readFloatLE(offset + 0 * attr.elementByteSize),
@@ -322,8 +326,8 @@ export class GltfFactory {
 					}
 					if (uv1Acc) {
 						const attr = Vertex.texCoordAttribute[1];
-						const offset = uv1BV.byteOffset + uv1Acc.byteOffset +
-							i * (uv1BV.byteStride ?? 0 + attr.byteSize);
+						const offset = (uv1BV.byteOffset ?? 0) + (uv1Acc.byteOffset ?? 0) +
+							i * ((uv1BV.byteStride ?? 0) + attr.byteSize);
 						if (uv1Acc.componentType === AccessorComponentType.Float) {
 							vert.texCoord1 = new MRE.Vector2(
 								buffers[uv1BV.buffer].readFloatLE(offset + 0 * attr.elementByteSize),
@@ -343,22 +347,35 @@ export class GltfFactory {
 					if (clrAcc) {
 						// TODO: fix accessor size
 						const attr = Vertex.colorAttribute;
-						const offset = clrBV.byteOffset + clrAcc.byteOffset +
-							i * (clrBV.byteStride ?? 0 + attr.byteSize);
+						const offset = (clrBV.byteOffset ?? 0) + (clrAcc.byteOffset ?? 0) +
+							i * ((clrBV.byteStride ?? 0) + attr.byteSize);
 						if (clrAcc.componentType === AccessorComponentType.Float) {
-							vert.texCoord1 = new MRE.Vector2(
-								buffers[uv1BV.buffer].readFloatLE(offset + 0 * attr.elementByteSize),
-								buffers[uv1BV.buffer].readFloatLE(offset + 1 * attr.elementByteSize));
+							vert.color0 = new MRE.Color4(
+								buffers[clrBV.buffer].readFloatLE(offset + 0 * attr.elementByteSize),
+								buffers[clrBV.buffer].readFloatLE(offset + 1 * attr.elementByteSize),
+								buffers[clrBV.buffer].readFloatLE(offset + 2 * attr.elementByteSize));
+							if (clrAcc.type === AccessorType.Vec4) {
+								vert.color0.a = buffers[clrBV.buffer]
+									.readFloatLE(offset + 3 * attr.elementByteSize);
+							}
 						} else if (clrAcc.componentType === AccessorComponentType.UByte) {
-							vert.texCoord1 = new MRE.Vector2(
-								buffers[uv1BV.buffer].readUInt8(offset + 0 * attr.elementByteSize),
-								buffers[uv1BV.buffer].readUInt8(offset + 1 * attr.elementByteSize))
-								.multiplyByFloats(1 / 0xff, 1 / 0xff);
+							vert.color0 = new MRE.Color4(
+								buffers[clrBV.buffer].readFloatLE(offset + 0 * attr.elementByteSize) * 1 / 0xff,
+								buffers[clrBV.buffer].readFloatLE(offset + 1 * attr.elementByteSize) * 1 / 0xff,
+								buffers[clrBV.buffer].readFloatLE(offset + 2 * attr.elementByteSize) * 1 / 0xff);
+							if (clrAcc.type === AccessorType.Vec4) {
+								vert.color0.a = buffers[clrBV.buffer]
+									.readFloatLE(offset + 3 * attr.elementByteSize) * 1 / 0xff;
+							}
 						} else if (clrAcc.componentType === AccessorComponentType.UShort) {
-							vert.texCoord1 = new MRE.Vector2(
-								buffers[uv1BV.buffer].readUInt16LE(offset + 0 * attr.elementByteSize),
-								buffers[uv1BV.buffer].readUInt16LE(offset + 1 * attr.elementByteSize))
-								.multiplyByFloats(1 / 0xffff, 1 / 0xffff);
+							vert.color0 = new MRE.Color4(
+								buffers[clrBV.buffer].readFloatLE(offset + 0 * attr.elementByteSize) * 1 / 0xffff,
+								buffers[clrBV.buffer].readFloatLE(offset + 1 * attr.elementByteSize) * 1 / 0xffff,
+								buffers[clrBV.buffer].readFloatLE(offset + 2 * attr.elementByteSize) * 1 / 0xffff);
+							if (clrAcc.type === AccessorType.Vec4) {
+								vert.color0.a = buffers[clrBV.buffer]
+									.readFloatLE(offset + 3 * attr.elementByteSize) * 1 / 0xffff;
+							}
 						}
 					}
 
@@ -372,6 +389,49 @@ export class GltfFactory {
 		}
 
 		// scenes
+		for (const sceneDef of json.scenes || []) {
+			const scene = new Scene({
+				name: sceneDef.name,
+				nodes: (sceneDef.nodes ?? []).map(nodeId => this.importNode(json, nodeId))
+			});
+			this.scenes.push(scene);
+		}
+	}
+
+	private importNode(json: GLTF.GlTf, nodeId: number) {
+		const nodeDef = json.nodes[nodeId];
+		const node = new Node({
+			name: nodeDef.name,
+			mesh: this.meshes[nodeDef.mesh]
+		});
+
+		if (nodeDef.matrix) {
+			node.matrix = MRE.Matrix.FromArray(nodeDef.matrix);
+		} else {
+			node.translation = nodeDef.translation ? MRE.Vector3.FromArray(nodeDef.translation) : MRE.Vector3.Zero();
+			node.rotation = nodeDef.rotation ? MRE.Quaternion.FromArray(nodeDef.rotation) : MRE.Quaternion.Identity();
+			node.scale = nodeDef.scale ? MRE.Vector3.FromArray(nodeDef.scale) : MRE.Vector3.One();
+		}
+
+		node.children = (nodeDef.children ?? []).map(childId => this.importNode(json, childId));
+
+		return node;
+	}
+
+	private static GetMeshInstanceHash(primDef: GLTF.MeshPrimitive) {
+		const attributeNames = [
+			Vertex.positionAttribute.attributeName,
+			Vertex.normalAttribute.attributeName,
+			Vertex.tangentAttribute.attributeName,
+			Vertex.texCoordAttribute[0].attributeName,
+			Vertex.texCoordAttribute[1].attributeName,
+			Vertex.colorAttribute.attributeName
+		]
+
+		return attributeNames
+			.map(attr => primDef.attributes[attr])
+			.join('-')
+			+ '-' + primDef.indices;
 	}
 
 	/**
