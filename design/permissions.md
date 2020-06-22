@@ -112,18 +112,21 @@ Startup:
 Permissions Manager
 ---------------------
 
-Host apps must provide hooks for the MRE subsystem to obtain permission from users. This is provided to `MREAPI.InitializeAPI`
-as an implementation of `IPermissionManager`, which has the following methods:
+Host apps must provide hooks for the MRE subsystem to obtain permission from users. This is provided to
+`MREAPI.InitializeAPI` as an implementation of `IPermissionManager`, which has the following methods:
 
-* `Task<Permissions> PromptForPermission(...)` - Request permissions from the user, and return a Task that resolves
-	with those permissions the user has granted. Takes the following arguments:
+* `Task<IEnumerable<Permissions>> PromptForPermission(...)` - Request permissions from the user, and return a Task that
+	resolves with those permissions the user has granted. Takes the following arguments:
 	* `string appOrigin` - The origin of the MRE requesting permission, as described above.
 	* `string appDisplayName` - A human-readable identifier for the MRE server provided from the manifest.
-	* `Permissions permissionsNeeded` - A bitfield of the permissions required to run the app.
-	* `Permissions permissionsWanted` - A bitfield of permissions that the app can use, but are not needed to run.
-* `Permissions CurrentPermissions(...)` - Returns a bitfield of the currently granted permissions. Takes the following
-	arguments:
+	* `IEnumerable<Permissions> permissionsNeeded` - A list of the permissions required to run the app.
+	* `IEnumerable<Permissions> permissionsWanted` - A list of permissions that the app can use, but are not
+		needed to run.
+* `IEnumerable<Permissions> CurrentPermissions(...)` - Returns a list of the currently granted permissions. Takes
+	the following arguments:
 	* `string appOrigin` - The origin of the MRE for which we want the permission set.
+
+The `Permissions` enum has the `Flags` attribute and is on powers of 2 in case testing combinations is desired.
 
 ```cs
 [Flags]
