@@ -529,7 +529,7 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 				message: Message<Payloads.AssetsLoaded>
 			) => {
 				if (client.authoritative) {
-					for (const asset of message.payload.assets) {
+					for (const asset of message.payload.assets ?? []) {
 						session.cacheAssetCreation(asset.id, message.replyToId,
 							(asset.sound && asset.sound.duration) ||
 							(asset.videoStream && asset.videoStream.duration));
@@ -696,6 +696,10 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 			during: 'queue',
 			after: 'allow'
 		},
+		client: {
+			...DefaultRule.client,
+			timeoutSeconds: 30
+		},
 		session: {
 			...DefaultRule.session,
 			beforeReceiveFromApp: (session, message) => {
@@ -793,11 +797,11 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 				message: Message<Payloads.PhysicsBridgeUpdate>,
 				promise: ExportedPromise
 			) => {
-				
+
 				return message;
 			},
 			shouldSendToUser: (message: Message<Payloads.PhysicsBridgeUpdate>, userId, session, client) => {
-				
+
 				return true;
 			}
 		},
@@ -807,7 +811,7 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 				session: Session,
 				message: Message<Payloads.PhysicsBridgeUpdate>
 			) => {
-				
+
 				return message;
 			},
 			beforeReceiveFromClient: (
@@ -815,7 +819,7 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 				client: Client,
 				message: Message<Payloads.PhysicsBridgeUpdate>
 			) => {
-				
+
 				session.sendPayloadToClients(message.payload, (value) => value.id !== client.id);
 
 				return message;
