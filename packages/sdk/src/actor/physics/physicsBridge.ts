@@ -9,5 +9,6 @@ export type PhysicsBridgeTransformUpdate = {
     id: Guid;
     time: number;
     transformCount: number;
+    flags: number;
     transformsBlob: string;
 }
