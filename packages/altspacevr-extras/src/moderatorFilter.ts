@@ -8,21 +8,25 @@ import { UserEntryExitPoint, UserFilter, UserInteractionType } from './userFilte
 
 /**
  * A class that filters users by whether they are moderators in the AltspaceVR room.
+ *
  * @example Filter user joins and leaves by listening to this class's events instead of the main MRE context:
- * ```ts
+ *
+ * ```js
  * const userFilter = new ModeratorFilter(context);
  * userFilter.onUserJoined(user => calledOnlyForModerators(user));
  * userFilter.onUserLeft(user => calledOnlyForModerators(user));
  * ```
  *
- * Can also be used to filter out input actions by moderator status:
- * ```ts
+ * @example Can be used to filter out input actions by moderator status:
+ *
+ * ```js
  * modControl.setBehavior(MRE.ButtonBehavior)
- * 	.onClick(userFilter.filterInput((user, evtData) => calledOnlyForModerators(user, evtData)));
+ * .onClick(userFilter.filterInput((user, evtData) => calledOnlyForModerators(user, evtData)));
  * ```
  *
- * Can be daisy-chained with other user filters:
- * ```ts
+ * @example Can be daisy-chained with other user filters:
+ *
+ * ```js
  * const filter = new ModeratorFilter(new SingleEventFilter(context));
  * ```
  */
@@ -30,7 +34,7 @@ export class ModeratorFilter extends UserFilter {
 	private singleModeratorId: MRE.Guid;
 
 	/**
-	 *
+	 * Set up the moderator filter
 	 * @param context An MRE.Context object, or another user filter instance
 	 * @param allowOnlyOneModerator If true, only the first moderator to join the session passes the filter. Useful
 	 * to prevent multi-room session attacks.
