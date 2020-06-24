@@ -137,7 +137,7 @@ export default class ActorAttachmentTest extends Test {
 					contents: this.attachments[this.attachmentIndex].toString(),
 					height: 0.1,
 					anchor: MRE.TextAnchorLocation.TopCenter,
-					color: Color3.White()
+					color: MRE.Color3.White()
 				}
 			}
 		});
