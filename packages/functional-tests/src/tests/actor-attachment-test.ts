@@ -44,12 +44,19 @@ export default class ActorAttachmentTest extends Test {
 		if(this.attachedCube) {
 			this.attachedCube.destroy();
 		}
+
+		const boxIndex = this.assets.assets.findIndex((asset)=>{
+			return asset.name === 'smallBox';
+		});
+
 		this.attachedCube = MRE.Actor.Create(this.app.context, {
 			actor: {
 				name: 'cube1',
 				parentId: this.rootActor.id,
 				appearance: {
-					meshId: this.assets.createBoxMesh('smallBox', 1, 1, 1).id
+					meshId: boxIndex === -1 ?
+						this.assets.createBoxMesh('smallBox', 1, 1, 1).id :
+						this.assets.assets[boxIndex].id
 				},
 				transform: {
 					local: {
@@ -77,12 +84,20 @@ export default class ActorAttachmentTest extends Test {
 			color: MRE.Color3.Blue()
 		});
 
+		const boxIndex = this.assets.assets.findIndex((asset) => {
+			return asset.name === 'smallBox';
+		});
+
+		const boxID = boxIndex === -1 ?
+			this.assets.createBoxMesh('smallBox', 1, 1, 1).id : 
+			this.assets.assets[boxIndex].id;
+
 		const buttonCube = MRE.Actor.Create(this.app.context, {
 			actor: {
 				name: 'cube1',
 				parentId: this.rootActor.id,
 				appearance: {
-					meshId: this.assets.createBoxMesh('smallBox', 1, 1, 1).id
+					meshId: boxID
 				},
 				collider: { geometry: { shape: MRE.ColliderType.Box } },
 				transform: {
@@ -100,7 +115,7 @@ export default class ActorAttachmentTest extends Test {
 				name: 'cube1',
 				parentId: this.rootActor.id,
 				appearance: {
-					meshId: this.assets.createBoxMesh('smallBox', 1, 1, 1).id,
+					meshId: boxID,
 					materialId: this.redMat.id
 				},
 				collider: { geometry: { shape: MRE.ColliderType.Box } },
@@ -169,6 +184,7 @@ export default class ActorAttachmentTest extends Test {
 
 		await this.stoppedAsync();
 		this.attachedCube.attach(MRE.ZeroGuid, 'none');
+		this.assets.unload();
 		return true;
 	}
 }
