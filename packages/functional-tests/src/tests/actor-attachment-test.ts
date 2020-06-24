@@ -5,35 +5,29 @@
  */
 import * as MRE from '@microsoft/mixed-reality-extension-sdk';
 import { Test } from '../test';
-import { Attachment, AttachPoint, Color3 } from '@microsoft/mixed-reality-extension-sdk';
-import { Box } from '@microsoft/gltf-gen';
-import { create } from 'domain';
-
-
-
 
 export default class ActorAttachmentTest extends Test {
 	public expectedResultDescription = "Actors attaching to avatar points";
 	private assets: MRE.AssetContainer;
 
 	//Limited subset of AttachmentPoints for testing
-	private attachments: AttachPoint[] =[ 
-	 'head'
-	, 'neck'
-	, 'hips'
-	, 'left-eye'
-	, 'left-foot'
-	, 'left-hand'
-	, 'right-eye'
-	, 'right-foot'
-	, 'right-hand'
+	private attachments: MRE.AttachPoint[] =[ 
+		'head',
+		'neck',
+		'hips',
+		'left-eye',
+		'left-foot',
+		'left-hand',
+		'right-eye', 
+		'right-foot', 
+		'right-hand'
 	];
 
 	//Incremented by clicking grey cube
 	private attachmentIndex = 0;
 
 	//Oblong box that gets attached to the avatar of the user running this test
-	private attachedCube : MRE.Actor;
+	private attachedCube: MRE.Actor;
 
 	//Reference to user that started this test, this user will receive attachments
 	private rootActor: MRE.Actor;
@@ -47,8 +41,9 @@ export default class ActorAttachmentTest extends Test {
 
 	//Destroy if necessary and create oblong attachment cube
 	private createCubeAttachment() {
-		if(this.attachedCube)
+		if(this.attachedCube) {
 			this.attachedCube.destroy();
+		}
 		this.attachedCube = MRE.Actor.Create(this.app.context, {
 			actor: {
 				name: 'cube1',
@@ -73,7 +68,6 @@ export default class ActorAttachmentTest extends Test {
 	public async run(root: MRE.Actor): Promise<boolean> {
 		this.rootActor = root;
 		this.assets = new MRE.AssetContainer(this.app.context);
-		const deg45 = MRE.Quaternion.FromEulerAngles(0, 0, -Math.PI / 4);
 
 		//Create Materials and actors
 		this.redMat = this.assets.createMaterial('redBall', {
@@ -123,39 +117,23 @@ export default class ActorAttachmentTest extends Test {
 
 		//Set Behaviors:
 		//createButtonBehavior switches the method of cycling attach points between re-attaching and re-creating
-		//buttonBehavior cycles the attachment point of the attachedCube and optionally destroys and re-creates the actor
+		//buttonBehavior cycles attachment point of the attachedCube and optionally destroys and re-creates the actor
 		
 		const buttonBehavior = buttonCube.setBehavior(MRE.ButtonBehavior);
 
 		const createButtonBehavior = CreateCube.setBehavior(MRE.ButtonBehavior);
 
-		buttonBehavior.onClick( () => {
-			this.attachmentIndex = (this.attachmentIndex + 1) % this.attachments.length;
-			this.attachedCube.detach();
-			
-
-			if(this.reCreateCubeTest){
-				
-				this.createCubeAttachment();
-			}
-			this.attachedCube.attach(this.user, this.attachments[this.attachmentIndex]);
-			label.text.contents = this.attachments[this.attachmentIndex].toString();
-		});
-
-		createButtonBehavior.onClick(() => {
-			this.reCreateCubeTest = !this.reCreateCubeTest;
-			if(this.reCreateCubeTest)
-				CreateCube.appearance.materialId = this.redMat.id;
-			else
-				CreateCube.appearance.materialId = this.blueMat.id;
-		});
-
 		const label = MRE.Actor.Create(this.app.context, {
 			actor: {
 				name: 'label',
 				parentId: root.id,
-				transform: { local: { position: { y: 1.5 } } },
-				text: {
+				transform: {
+					local: {
+						position: {
+							y: 1.5 
+						} 
+					}
+				}, text: {
 					contents: this.attachments[this.attachmentIndex].toString(),
 					height: 0.1,
 					anchor: MRE.TextAnchorLocation.TopCenter,
@@ -164,9 +142,30 @@ export default class ActorAttachmentTest extends Test {
 			}
 		});
 
+		buttonBehavior.onClick( () => {
+			this.attachmentIndex = (this.attachmentIndex + 1) % this.attachments.length;
+			this.attachedCube.detach();
+			
+
+			if(this.reCreateCubeTest){
+				this.createCubeAttachment();
+			}
+			this.attachedCube.attach(this.user, this.attachments[this.attachmentIndex]);
+			label.text.contents = this.attachments[this.attachmentIndex].toString();
+		});
+
+		createButtonBehavior.onClick(() => {
+			this.reCreateCubeTest = !this.reCreateCubeTest;
+			if(this.reCreateCubeTest) {
+				CreateCube.appearance.materialId = this.redMat.id;
+			} else {
+				CreateCube.appearance.materialId = this.blueMat.id;
+			}
+		});
+
 		//Starting state
 		this.createCubeAttachment();
-        this.attachedCube.attach( this.user.id, this.attachments[this.attachmentIndex] );
+		this.attachedCube.attach( this.user.id, this.attachments[this.attachmentIndex] );
 
 		await this.stoppedAsync();
 		this.attachedCube.attach(MRE.ZeroGuid, 'none');
