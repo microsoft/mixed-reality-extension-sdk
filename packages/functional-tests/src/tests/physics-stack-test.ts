@@ -97,7 +97,7 @@ export default class PhysicsStackTest extends Test {
 	}
 
 	private createCube(root: MRE.Actor, size: number, position: Vector3, userId: MRE.Guid, material: MRE.Material) {
-		MRE.Actor.Create(this.app.context, {
+		const actor = MRE.Actor.Create(this.app.context, {
 			actor: {
 				owner: userId,
 				parentId: root.id,
@@ -118,6 +118,17 @@ export default class PhysicsStackTest extends Test {
 					bounciness: 0.0, dynamicFriction: 0.5, staticFriction: 0.5
 				}
 			}
+		});
+
+		actor.onGrab('begin', (user: MRE.User) => {
+			let u = 0;
+			for(; u<this.app.context.users.length; u++) {
+				if (user.id === this.app.context.users[u].id) {
+					break;
+				}
+			}
+
+			actor.appearance.materialId = this.materials[u].id;
 		});
 	}
 }
