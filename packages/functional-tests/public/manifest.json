@@ -1,0 +1,8 @@
+{
+	"name": "MRE Functional Tests",
+	"description": "A set of samples that exercise various features of the Mixed Reality Extensions SDK",
+	"author": "Microsoft",
+	"license": "MIT",
+	"repository": "https://github.com/microsoft/mixed-reality-extension-sdk",
+	"optionalPermissions": ["user-interaction"]
+}

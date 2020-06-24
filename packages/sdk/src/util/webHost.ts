@@ -7,10 +7,13 @@ import { resolve as urlResolve } from 'url';
 import * as Restify from 'restify';
 import { NotFoundError } from 'restify-errors';
 import etag from 'etag';
+
+import { validate } from 'jsonschema';
+import manifestSchema from './manifestSchema.json';
 import { resolve } from 'path';
-import { exists as _exists } from 'fs';
+import { readFile as _readFile } from 'fs';
 import { promisify } from 'util';
-const fileExists = promisify(_exists);
+const readFile = promisify(_readFile);
 
 import { log, MultipeerAdapter, Permissions } from '..';
 import { Adapter } from '../internal';
@@ -28,6 +31,7 @@ export class WebHost {
 	private _adapter: Adapter;
 	private _baseDir: string;
 	private _baseUrl: string;
+	private manifest: Buffer = null;
 
 	public get adapter() { return this._adapter; }
 	public get baseDir() { return this._baseDir; }
@@ -61,28 +65,29 @@ export class WebHost {
 		this._adapter = new MultipeerAdapter({ port });
 
 		// Start listening for new app connections from a multi-peer client.
-		this._adapter.listen()
-			.then(server => {
-				this._baseUrl = this._baseUrl || server.url.replace(/\[::\]/u, '127.0.0.1');
-				log.info('app', `${server.name} listening on ${JSON.stringify(server.address())}`);
-				log.info('app', `baseUrl: ${this.baseUrl}`);
-				log.info('app', `baseDir: ${this.baseDir}`);
+		this.validateManifest()
+		.then(() => this._adapter.listen())
+		.then(server => {
+			this._baseUrl = this._baseUrl || server.url.replace(/\[::\]/u, '127.0.0.1');
+			log.info('app', `${server.name} listening on ${JSON.stringify(server.address())}`);
+			log.info('app', `baseUrl: ${this.baseUrl}`);
+			log.info('app', `baseDir: ${this.baseDir}`);
 
-				// check if a procedural manifest is needed, and serve if so
-				this.serveManifestIfNeeded(server, options.permissions, options.optionalPermissions);
+			// check if a procedural manifest is needed, and serve if so
+			this.serveManifestIfNeeded(server, options.permissions, options.optionalPermissions);
 
-				// serve static buffers
-				server.get(`/buffers/:name`,
-					this.checkStaticBuffers,
-					Restify.plugins.conditionalRequest(),
-					this.serveStaticBuffers);
+			// serve static buffers
+			server.get(`/buffers/:name`,
+				this.checkStaticBuffers,
+				Restify.plugins.conditionalRequest(),
+				this.serveStaticBuffers);
 
-				// serve static files
-				if (this.baseDir) {
-					server.get('/*', Restify.plugins.serveStaticFiles(this._baseDir));
-				}
-			})
-			.catch(reason => log.error('app', `Failed to start HTTP server: ${reason}`));
+			// serve static files
+			if (this.baseDir) {
+				server.get('/*', Restify.plugins.serveStaticFiles(this._baseDir));
+			}
+		})
+		.catch(reason => log.error('app', `Failed to start HTTP server: ${reason}`));
 	}
 
 	private checkStaticBuffers = (req: Restify.Request, res: Restify.Response, next: Restify.Next) => {
@@ -106,18 +111,52 @@ export class WebHost {
 		}
 	};
 
+	private async validateManifest() {
+		const manifestPath = resolve(this.baseDir, './manifest.json');
+
+		try {
+			this.manifest = await readFile(manifestPath);
+		} catch {
+			return;
+		}
+
+		let manifestJson: any;
+		try {
+			manifestJson = JSON.parse(this.manifest.toString('utf8'));
+		} catch {
+			log.error('app', `App manifest "${manifestPath}" is not JSON`);
+			this.manifest = null;
+			return;
+		}
+
+		const result = validate(manifestJson, manifestSchema);
+		if (!result.valid) {
+			log.error('app', `App manifest "${manifestPath}" is not valid:\n${result.errors.join('\n')}`);
+			this.manifest = null;
+			return;
+		}
+	}
+
 	private serveManifestIfNeeded(
-		server: Restify.Server, permissions?: Permissions[], optionalPermissions?: Permissions[]) {
-		fileExists(resolve(this.baseDir, './manifest.json')).then(exists => {
-			if (!exists && (permissions || optionalPermissions)) {
-				server.get('/manifest.json', (req, res, next) => {
-					res.json(200, { permissions, optionalPermissions });
-					next();
-				});
-			} else if (!exists) {
-				log.warning('app', "No MRE manifest found! Either define a static file named \"manifest.json\", or " +
-					"pass a permission set to the WebHost constructor.");
+		server: Restify.Server, permissions?: Permissions[], optionalPermissions?: Permissions[]
+	) {
+		// print warning if no manifest supplied
+		if (!this.manifest && !permissions && !optionalPermissions) {
+			log.warning('app',
+				"No MRE manifest provided, and no permissions requested! For this MRE to use protected features, " +
+				`provide an MRE manifest at "${resolve(this.baseDir, './manifest.json')}", or pass a permissions ` +
+				"list into the WebHost constructor.");
+		}
+
+		server.get('/manifest.json', (_, res, next) => {
+			if (this.manifest) {
+				res.send(200, this.manifest, { "Content-Type": "application/json" });
+			} else if (permissions || optionalPermissions) {
+				res.json(200, { permissions, optionalPermissions });
+			} else {
+				res.send(404);
 			}
+			next();
 		});
 	}
 
