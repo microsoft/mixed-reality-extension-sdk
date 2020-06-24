@@ -4,7 +4,6 @@
  */
 
 import * as MRE from '@microsoft/mixed-reality-extension-sdk';
-import { UserEntryExitPoint, UserFilter, UserInteractionType } from './userFilter';
 
 /**
  * A class that filters users by whether they are moderators in the AltspaceVR room.
@@ -30,7 +29,7 @@ import { UserEntryExitPoint, UserFilter, UserInteractionType } from './userFilte
  * const filter = new ModeratorFilter(new SingleEventFilter(context));
  * ```
  */
-export class ModeratorFilter extends UserFilter {
+export class ModeratorFilter extends MRE.UserFilter {
 	private singleModeratorId: MRE.Guid;
 
 	/**
@@ -39,11 +38,11 @@ export class ModeratorFilter extends UserFilter {
 	 * @param allowOnlyOneModerator If true, only the first moderator to join the session passes the filter. Useful
 	 * to prevent multi-room session attacks.
 	 */
-	constructor(context: UserEntryExitPoint, private allowOnlyOneModerator = false) {
+	constructor(context: MRE.UserEntryExitPoint, private allowOnlyOneModerator = false) {
 		super(context);
 	}
 
-	protected shouldForwardUserEvent(user: MRE.User, eventType: UserInteractionType) {
+	protected shouldForwardUserEvent(user: MRE.User, eventType: MRE.UserInteractionType) {
 		const userRoles = new Set(user.properties['altspacevr-roles'].split(','));
 		if (this.allowOnlyOneModerator && !this.singleModeratorId && eventType === 'joined') {
 			this.singleModeratorId = user.id;

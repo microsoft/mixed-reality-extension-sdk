@@ -3,15 +3,15 @@
  * Licensed under the MIT License.
  */
 
-import * as MRE from '@microsoft/mixed-reality-extension-sdk';
+import { ActionHandler, Guid, User } from '..';
 
 /** A callback that handles when a user joins or leaves the MRE session */
-export type UserEntryExitCallback = (user: MRE.User) => void;
+export type UserEntryExitCallback = (user: User) => void;
 
 /** An event type for [[UserFilter.shouldForwardUserEvent]] */
 export type UserInteractionType = 'joined' | 'input';
 
-/** A class that has user joined/left callback hooks. Applies to MRE.Context, and also [[UserFilter]]s. */
+/** A class that has user joined/left callback hooks. Applies to [[Context]], and also [[UserFilter]]s. */
 export interface UserEntryExitPoint {
 	onUserJoined(callback: UserEntryExitCallback): void;
 	onUserLeft(callback: UserEntryExitCallback): void;
@@ -25,7 +25,7 @@ export abstract class UserFilter implements UserEntryExitPoint {
 	private leftCallbacks = new Set<UserEntryExitCallback>();
 
 	/** The set of IDs of joined users */
-	protected joinedUsers = new Set<MRE.Guid>();
+	protected joinedUsers = new Set<Guid>();
 
 	/**
 	 * Set up the user filter
@@ -57,8 +57,8 @@ export abstract class UserFilter implements UserEntryExitPoint {
 	}
 
 	/** Process an input event only from users that pass the filter */
-	public filterInput(eventHandler: MRE.ActionHandler<any>): MRE.ActionHandler<any> {
-		return (user: MRE.User, data: any) => {
+	public filterInput(eventHandler: ActionHandler<any>): ActionHandler<any> {
+		return (user: User, data: any) => {
 			if (this.shouldForwardUserEvent(user, 'input')) {
 				eventHandler(user, data);
 			}
@@ -66,9 +66,9 @@ export abstract class UserFilter implements UserEntryExitPoint {
 	}
 
 	/** Evaluates whether a user should be accepted by the filter for the given event type */
-	protected abstract shouldForwardUserEvent(user: MRE.User, type: UserInteractionType): boolean;
+	protected abstract shouldForwardUserEvent(user: User, type: UserInteractionType): boolean;
 
-	private onUpstreamUserJoined(user: MRE.User) {
+	private onUpstreamUserJoined(user: User) {
 		if (this.shouldForwardUserEvent(user, 'joined')) {
 			this.joinedUsers.add(user.id);
 			for (const cb of this.joinedCallbacks) {
@@ -77,7 +77,7 @@ export abstract class UserFilter implements UserEntryExitPoint {
 		}
 	}
 
-	private onUpstreamUserLeft(user: MRE.User) {
+	private onUpstreamUserLeft(user: User) {
 		if (this.joinedUsers.has(user.id)) {
 			this.joinedUsers.delete(user.id);
 			for (const cb of this.leftCallbacks) {

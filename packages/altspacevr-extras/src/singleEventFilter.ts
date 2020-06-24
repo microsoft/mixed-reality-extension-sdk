@@ -4,7 +4,6 @@
  */
 
 import * as MRE from '@microsoft/mixed-reality-extension-sdk';
-import { UserEntryExitPoint, UserFilter } from './userFilter';
 
 /**
  * A [[UserFilter]] that validates that all users in the session are joined to the same AltspaceVR event or space.
@@ -31,11 +30,11 @@ import { UserEntryExitPoint, UserFilter } from './userFilter';
  * const filter = new ModeratorFilter(new SingleEventFilter(context));
  * ```
  */
-export class SingleEventFilter extends UserFilter {
+export class SingleEventFilter extends MRE.UserFilter {
 	private eventOrSpaceId: string;
 
 	/** @inheritdoc */
-	constructor(context: UserEntryExitPoint) {
+	constructor(context: MRE.UserEntryExitPoint) {
 		super(context);
 	}
 

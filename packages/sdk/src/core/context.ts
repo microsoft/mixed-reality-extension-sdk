@@ -4,7 +4,7 @@
  */
 
 import events from 'events';
-import { Actor, Guid, newGuid, RPC, RPCChannels, User, } from '..';
+import { Actor, Guid, newGuid, RPC, RPCChannels, User, UserEntryExitPoint } from '..';
 import { Connection, NullConnection, Payloads } from '../internal';
 import { ContextInternal } from './contextInternal';
 
@@ -20,7 +20,7 @@ export interface ContextSettings {
  * Container for an application session. The Context contains all application state for a session of your application.
  * This includes Actors, Users, Assets, and other state.
  */
-export class Context {
+export class Context implements UserEntryExitPoint {
 	private _internal: ContextInternal;
 	/** @hidden */
 	public get internal() { return this._internal; }
