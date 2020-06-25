@@ -4,6 +4,7 @@
  */
 import { TestFactory } from '../test';
 
+import ActorAttachmentTest from './actor-attachment-test';
 import ActorSpamTest from './actor-spam-test';
 import AltspaceVRLibraryTest from './altspacevr-library-test';
 import AltspaceVRVideoTest from './altspacevr-video-test';
@@ -57,6 +58,7 @@ export type FactoryMap = { [key: string]: TestFactory };
  * *** KEEP LIST SORTED ***
  */
 export const Factories = {
+	'actor-attachment': (...args) => new ActorAttachmentTest(...args),
 	'actor-spam': (...args) => new ActorSpamTest(...args),
 	'altspacevr-library': (...args) => new AltspaceVRLibraryTest(...args),
 	'altspacevr-video': (...args) => new AltspaceVRVideoTest(...args),
