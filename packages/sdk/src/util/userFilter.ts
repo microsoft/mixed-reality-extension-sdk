@@ -68,7 +68,7 @@ export abstract class UserFilter implements UserEntryExitPoint {
 	}
 
 	/** Process an input event only from users that pass the filter */
-	public filterInput<T = null>(eventHandler: ActionHandler<T>): ActionHandler<T> {
+	public filterInput<T = void>(eventHandler: ActionHandler<T>): ActionHandler<T> {
 		return (user: User, data: T) => {
 			if (this.shouldForwardUserEvent(user, 'input')) {
 				eventHandler(user, data);
