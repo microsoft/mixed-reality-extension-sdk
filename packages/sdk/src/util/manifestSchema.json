@@ -9,7 +9,7 @@
 			"description": "An SPDX short license ID",
 			"type": "string"
 		},
-		"repositoryUrl": {
+		"repositoryUri": {
 			"description": "The public repository for this MRE's source code",
 			"type": "string"
 		},
