@@ -13,6 +13,7 @@ export type UserInteractionType = 'joined' | 'input';
 
 /** A class that has user joined/left callback hooks. Applies to [[Context]], and also [[UserFilter]]s. */
 export interface UserEntryExitPoint {
+	users: User[];
 	onUserJoined(callback: UserEntryExitCallback): void;
 	onUserLeft(callback: UserEntryExitCallback): void;
 	offUserJoined(callback: UserEntryExitCallback): void;
@@ -24,14 +25,24 @@ export abstract class UserFilter implements UserEntryExitPoint {
 	private joinedCallbacks = new Set<UserEntryExitCallback>();
 	private leftCallbacks = new Set<UserEntryExitCallback>();
 
-	/** The set of IDs of joined users */
-	protected joinedUsers = new Set<Guid>();
+	/** The set of joined users, indexed by ID */
+	protected joinedUsers = new Map<Guid, User>();
+
+	/** The set of joined users */
+	public get users() {
+		return [...this.joinedUsers.values()];
+	}
 
 	/**
 	 * Set up the user filter
 	 * @param context An MRE.Context object, or another user filter instance
 	 */
 	constructor(protected context: UserEntryExitPoint) {
+		for (const u of context.users) {
+			if (this.shouldForwardUserEvent(u, 'joined')) {
+				this.joinedUsers.set(u.id, u);
+			}
+		}
 		this.context.onUserJoined(u => this.onUpstreamUserJoined(u));
 		this.context.onUserLeft(u => this.onUpstreamUserLeft(u));
 	}
@@ -57,8 +68,8 @@ export abstract class UserFilter implements UserEntryExitPoint {
 	}
 
 	/** Process an input event only from users that pass the filter */
-	public filterInput(eventHandler: ActionHandler<any>): ActionHandler<any> {
-		return (user: User, data: any) => {
+	public filterInput<T = null>(eventHandler: ActionHandler<T>): ActionHandler<T> {
+		return (user: User, data: T) => {
 			if (this.shouldForwardUserEvent(user, 'input')) {
 				eventHandler(user, data);
 			}
@@ -70,7 +81,7 @@ export abstract class UserFilter implements UserEntryExitPoint {
 
 	private onUpstreamUserJoined(user: User) {
 		if (this.shouldForwardUserEvent(user, 'joined')) {
-			this.joinedUsers.add(user.id);
+			this.joinedUsers.set(user.id, user);
 			for (const cb of this.joinedCallbacks) {
 				cb(user);
 			}

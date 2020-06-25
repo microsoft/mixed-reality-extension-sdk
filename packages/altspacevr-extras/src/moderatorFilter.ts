@@ -43,8 +43,12 @@ export class ModeratorFilter extends MRE.UserFilter {
 	}
 
 	protected shouldForwardUserEvent(user: MRE.User, eventType: MRE.UserInteractionType) {
-		const userRoles = new Set(user.properties['altspacevr-roles'].split(','));
-		if (this.allowOnlyOneModerator && !this.singleModeratorId && eventType === 'joined') {
+		const userRoles = new Set(user.properties['altspacevr-roles']?.split(','));
+		if (this.allowOnlyOneModerator &&
+			!this.singleModeratorId &&
+			eventType === 'joined' &&
+			userRoles.has('moderator')
+		) {
 			this.singleModeratorId = user.id;
 		}
 

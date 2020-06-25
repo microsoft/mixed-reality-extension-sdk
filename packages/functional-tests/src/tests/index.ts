@@ -6,6 +6,7 @@ import { TestFactory } from '../test';
 
 import ActorSpamTest from './actor-spam-test';
 import AltspaceVRLibraryTest from './altspacevr-library-test';
+import AltspaceVRUserFilterTest from './altspacevr-user-filter-test';
 import AltspaceVRVideoTest from './altspacevr-video-test';
 import AnimationBlendTest from './animation-blend-test';
 import AnimationDynamicTest from './animation-dynamic-test';
@@ -59,6 +60,7 @@ export type FactoryMap = { [key: string]: TestFactory };
 export const Factories = {
 	'actor-spam': (...args) => new ActorSpamTest(...args),
 	'altspacevr-library': (...args) => new AltspaceVRLibraryTest(...args),
+	'altspacevr-user-filter': (...args) => new AltspaceVRUserFilterTest(...args),
 	'altspacevr-video': (...args) => new AltspaceVRVideoTest(...args),
 	'animation-blend': (...args) => new AnimationBlendTest(...args),
 	'animation-dynamic': (...args) => new AnimationDynamicTest(...args),
