@@ -824,6 +824,53 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 	},
 
 	// ========================================================================
+	'physicsbridge-server-upstream': {
+		...DefaultRule,
+		synchronization: {
+			stage: 'always',
+			before: 'ignore',
+			during: 'queue',
+			after: 'allow'
+		},
+		client: {
+			...DefaultRule.client,
+			beforeQueueMessageForClient: (
+				session: Session,
+				client: Client,
+				message: Message<Payloads.PhysicsBridgeUpdate>,
+				promise: ExportedPromise
+			) => {
+				
+				return message;
+			},
+			shouldSendToUser: (message: Message<Payloads.PhysicsBridgeUpdate>, userId, session, client) => {
+				// this is just upstream do not sending anything to clients
+				return false;
+			}
+		},
+		session: {
+			...DefaultRule.session,
+			beforeReceiveFromApp: (
+				session: Session,
+				message: Message<Payloads.PhysicsBridgeUpdate>
+			) => {
+				
+				return message;
+			},
+			beforeReceiveFromClient: (
+				session: Session,
+				client: Client,
+				message: Message<Payloads.PhysicsBridgeUpdate>
+			) => {
+				
+			
+
+				return message;
+			}
+		}
+	},
+
+	// ========================================================================
 	'rigidbody-add-force': {
 		...DefaultRule,
 		synchronization: {

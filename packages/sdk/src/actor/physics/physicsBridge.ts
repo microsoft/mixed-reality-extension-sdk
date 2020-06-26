@@ -12,3 +12,9 @@ export type PhysicsBridgeTransformUpdate = {
     flags: number;
     transformsBlob: string;
 }
+
+export type PhysicsServerTransformsUpdate = {
+    id: Guid;
+    transformCount: number;
+    transformsBlob: string;
+}
