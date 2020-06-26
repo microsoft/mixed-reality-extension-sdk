@@ -793,12 +793,12 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 				message: Message<Payloads.PhysicsBridgeUpdate>,
 				promise: ExportedPromise
 			) => {
-				
-				return message;
+				// do not send to clients
+				return undefined;
 			},
 			shouldSendToUser: (message: Message<Payloads.PhysicsBridgeUpdate>, userId, session, client) => {
-				
-				return true;
+				// do not send to users
+				return false;
 			}
 		},
 		session: {
@@ -816,9 +816,10 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 				message: Message<Payloads.PhysicsBridgeUpdate>
 			) => {
 				
-				session.sendPayloadToClients(message.payload, (value) => value.id !== client.id);
+				//session.sendPayloadToClients(message.payload, (value) => value.id !== client.id);
 
-				return message;
+				// do not send to other clients 
+				return undefined;
 			}
 		}
 	},
@@ -840,7 +841,7 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 				message: Message<Payloads.PhysicsBridgeUpdate>,
 				promise: ExportedPromise
 			) => {
-				
+				// todo: get the streams here 
 				return message;
 			},
 			shouldSendToUser: (message: Message<Payloads.PhysicsBridgeUpdate>, userId, session, client) => {
@@ -854,7 +855,7 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 				session: Session,
 				message: Message<Payloads.PhysicsBridgeUpdate>
 			) => {
-				
+				// todo: get the streams here 
 				return message;
 			},
 			beforeReceiveFromClient: (
@@ -862,9 +863,7 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 				client: Client,
 				message: Message<Payloads.PhysicsBridgeUpdate>
 			) => {
-				
-			
-
+				// todo: get the streams here 
 				return message;
 			}
 		}
