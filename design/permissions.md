@@ -9,10 +9,11 @@ without compromising user safety and agency.
 Permission scope
 ------------------
 
-When a user approves or denies permission to an MRE, that approval/denial is scoped to the unique combination of
-protocol, hostname, and port of the MRE URL, known collectively as the "origin". So when `ws://mres.altvr.com/wearahat`
-requests `user-interaction`, that permission is associated with `ws://mres.altvr.com`, and all user decisions apply
-equally to new connections to the same server. These user decisions may or may not be persisted indefinitely by the host app.
+When a user approves or denies permission to an MRE, the scope of that decision is determined by the host app,
+and is based on the MRE URL. To mimic how Chromium manages permissions, hosts could associate decisions with
+unique combinations of URL scheme, host, and port, known collectively as the app "origin". For a more narrow
+permissioning system, the URL path could also be included, but it is not recommended that the other parts of a URL
+be considered: username, password, anchor, or query arguments.
 
 
 Features requiring user permission
@@ -48,36 +49,14 @@ Permission declaration
 ------------------------
 
 Apps must declare which APIs they will use in advance of any users connecting. This is done via a JSON-formatted
-manifest loaded from the app's HTTP root. For example, the manifest for the URL `ws://mres.altvr.com/tests/red` should
+manifest loaded from the app's HTTP root. If the MRE is served over a secure websocket (`wss://`), the manifest should
+be loaded using HTTPS instead. For example, the manifest for the URL `ws://mres.altvr.com/tests/red` should
 be found at `http://mres.altvr.com/tests/red/manifest.json`. Note that this file can be served from the filesystem or
 constructed on request.
 
-The manifest must conform to the following JSON schema:
+The manifest can contain lots of different fields in addition to permissions, but must conform to the included
+[JSON schema](../packages/sdk/src/util/manifestSchema.json).
 
-```json
-{
-	"$schema": "http://json-schema.org/schema#",
-	"type": "object",
-	"properties": {
-		"name": { "type": "string" },
-		"author": { "type": "string" },
-		"permissions": {
-			"type": "array",
-			"items": {
-				"type": "string",
-				"enum": ["user-tracking", "user-interaction"]
-			}
-		},
-		"optionalPermissions": {
-			"type": "array",
-			"items": {
-				"type": "string",
-				"enum": ["user-tracking", "user-interaction"]
-			}
-		}
-	}
-}
-```
 
 Permissioning flow
 --------------------
@@ -93,13 +72,13 @@ Startup:
 
 1. [App] During development, the app developer authors a static manifest file, or uses the WebHost API to generate one.
 2. [Runtime|Host] Initializes the MRE API with a permissions manager instance that will receive new permission requests.
-	If permission decisions are persistent, load them into memory now. Default provided implementation does not persist.
+	If permission decisions are persistent, load old decisions into memory now.
 3. [Host] The host wishes to run an MRE, so creates an IMixedRealityExtensionApp instance and calls Startup().
-4. [Runtime] Downloads the manifest from the provided MRE server. If missing, assumes no permissions required.
+4. [Runtime] Downloads the manifest from the provided MRE server. If missing, assumes no permissions but `execution`
+	are required.
 5. [Runtime] Calls into the permission manager requesting the manifest-listed permissions.
-6. [Runtime|Host] Permission manager evaluates the required and optional MRE permissions against the current set of
-	grants/denials for the MRE's origin, and determines if any new permission decisions need to be made by the user.
-	If so:
+6. [Host] Permission manager evaluates the required and optional MRE permissions against the current set of decisions
+	for the MRE's URL, and determines if any new permission decisions need to be made by the user. If so:
 	1. [Host] Present the choices to the user by whatever means the host sees fit, persist the decision if desired,
 		and report the result to the Runtime. Optional permissions should be presented in such a way as they can be
 		granted or denied individually, but required permissions should be decided as a group.
@@ -115,16 +94,18 @@ Permissions Manager
 Host apps must provide hooks for the MRE subsystem to obtain permission from users. This is provided to
 `MREAPI.InitializeAPI` as an implementation of `IPermissionManager`, which has the following methods:
 
-* `Task<IEnumerable<Permissions>> PromptForPermission(...)` - Request permissions from the user, and return a Task that
+* `Task<Permissions> PromptForPermission(...)` - Request permissions from the user, and return a Task that
 	resolves with those permissions the user has granted. Takes the following arguments:
-	* `string appOrigin` - The origin of the MRE requesting permission, as described above.
-	* `string appDisplayName` - A human-readable identifier for the MRE server provided from the manifest.
+	* `Uri appLocation` - The URI of the MRE requesting permission, as described above.
 	* `IEnumerable<Permissions> permissionsNeeded` - A list of the permissions required to run the app.
 	* `IEnumerable<Permissions> permissionsWanted` - A list of permissions that the app can use, but are not
 		needed to run.
-* `IEnumerable<Permissions> CurrentPermissions(...)` - Returns a list of the currently granted permissions. Takes
+	* `Permissions permissionFlagsNeeded` - Same as `permissionsNeeded`, but in a bitfield.
+	* `Permissions permissionFlagsWanted` - Same as `permissionsWanted`, but in a bitfield.
+* `Permissions CurrentPermissions(...)` - Returns a bitfield of the currently granted permissions. Takes
 	the following arguments:
-	* `string appOrigin` - The origin of the MRE for which we want the permission set.
+	* `Uri appLocation` - The URI of the MRE for which we want the permission set.
+* `event Action<Uri, Permissions, Permissions> OnPermissionDecisionsChanged`
 
 The `Permissions` enum has the `Flags` attribute and is on powers of 2 in case testing combinations is desired.
 
@@ -138,11 +119,6 @@ enum Permissions {
 	...
 }
 ```
-
-The default implementation of the permissions manager will also include the following virtual methods:
-
-* `void ReadFromStorage()` - Populate the in-memory permission database from offline storage.
-* `void WriteToStorage()` - Write the "remembered" portions of the in-memory permission database to offline storage.
 
 
 UI Mockups
