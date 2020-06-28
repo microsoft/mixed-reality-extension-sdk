@@ -13,7 +13,8 @@ import {
 	Vector3Like
 } from '../..';
 import {
-	PhysicsBridgeTransformUpdate
+	PhysicsBridgeTransformUpdate,
+	PhysicsUploadServerTransformsUpdate
 } from '../../actor/physics/physicsBridge';
 
 /**
@@ -106,4 +107,9 @@ export type TriggerEventRaised = Payloads.Payload & {
 export type PhysicsBridgeUpdate = Payloads.Payload & {
 	type: 'physicsbridge-transforms-update';
 	transforms: Partial<PhysicsBridgeTransformUpdate>;
-}
+};
+
+export type PhysicsUploadServerUpdate = Payloads.Payload & {
+	type: 'physicsbridge-server-upload';
+	transforms: Partial<PhysicsUploadServerTransformsUpdate>;
+};

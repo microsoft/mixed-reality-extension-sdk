@@ -793,12 +793,12 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 				message: Message<Payloads.PhysicsBridgeUpdate>,
 				promise: ExportedPromise
 			) => {
-				// do not send to clients
-				return undefined;
+				
+				return message;
 			},
 			shouldSendToUser: (message: Message<Payloads.PhysicsBridgeUpdate>, userId, session, client) => {
-				// do not send to users
-				return false;
+				
+				return true;
 			}
 		},
 		session: {
@@ -816,16 +816,15 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 				message: Message<Payloads.PhysicsBridgeUpdate>
 			) => {
 				
-				//session.sendPayloadToClients(message.payload, (value) => value.id !== client.id);
+				session.sendPayloadToClients(message.payload, (value) => value.id !== client.id);
 
-				// do not send to other clients 
-				return undefined;
+				return message;
 			}
 		}
 	},
 
 	// ========================================================================
-	'physicsbridge-server-upstream': {
+	'physicsbridge-server-upload': {
 		...DefaultRule,
 		synchronization: {
 			stage: 'always',
@@ -838,14 +837,14 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 			beforeQueueMessageForClient: (
 				session: Session,
 				client: Client,
-				message: Message<Payloads.PhysicsBridgeUpdate>,
+				message: Message<Payloads.PhysicsUploadServerUpdate>,
 				promise: ExportedPromise
 			) => {
 				// todo: get the streams here 
 				return message;
 			},
-			shouldSendToUser: (message: Message<Payloads.PhysicsBridgeUpdate>, userId, session, client) => {
-				// this is just upstream do not sending anything to clients
+			shouldSendToUser: (message: Message<Payloads.PhysicsUploadServerUpdate>, userId, session, client) => {
+				// this is just upload do not sending anything to clients
 				return false;
 			}
 		},
@@ -853,15 +852,24 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 			...DefaultRule.session,
 			beforeReceiveFromApp: (
 				session: Session,
-				message: Message<Payloads.PhysicsBridgeUpdate>
+				message: Message<Payloads.PhysicsUploadServerUpdate>
 			) => {
-				// todo: get the streams here 
+				// 
+				for (const entry of message.payload.transforms.transformsArray) {
+					const syncActor = session.actorSet.get(entry.id);
+					if (syncActor) {
+						syncActor.initialization.message.payload.actor.transform.app = entry.app;
+						syncActor.initialization.message.payload.actor.transform.local.position = entry.local.position;
+						syncActor.initialization.message.payload.actor.transform.local.rotation = entry.local.rotation;
+					}
+				}
+
 				return message;
 			},
 			beforeReceiveFromClient: (
 				session: Session,
 				client: Client,
-				message: Message<Payloads.PhysicsBridgeUpdate>
+				message: Message<Payloads.PhysicsUploadServerUpdate>
 			) => {
 				// todo: get the streams here 
 				return message;

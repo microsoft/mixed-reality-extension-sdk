@@ -35,13 +35,13 @@ export class WebSocket extends EventedConnection {
 			if (message) {
 				// Uncomment to introduce latency on incoming messages.
 				// NOTE: This will sometimes change message ordering.
-				// setTimeout(() => {
+				//setTimeout(() => {
 				try {
 					super.recv(message);
 				} catch (e) {
 					log.error('network', e);
 				}
-				// }, 250 * Math.random());
+				//}, 200 + 50 * Math.random());
 			}
 		});
 
