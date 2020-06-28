@@ -80,7 +80,7 @@ export default class AVSyncTest extends Test {
 		const videoStream2 = this.assets.createVideoStream(
 			'stream2',
 			{
-				uri: `youtube://yj4TXMqv02w`
+				uri: `youtube://ZXOtzZM72OY`
 			}
 		);
 
