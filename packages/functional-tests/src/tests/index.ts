@@ -18,6 +18,7 @@ import AssetEarlyAssignmentTest from './asset-early-assignment-test';
 import AssetMutabilityTest from './asset-mutability-test';
 import AssetPreloadTest from './asset-preload-test';
 import AssetUnloadTest from './asset-unload-test';
+import AVSyncTest from './av-sync-test';
 import ButtonTargetingTest from './button-targeting-test';
 import ClockSyncTest from './clock-sync-test';
 import CollisionLayerTest from './collision-layer-test';
@@ -72,6 +73,7 @@ export const Factories = {
 	'asset-mutability': (...args) => new AssetMutabilityTest(...args),
 	'asset-preload': (...args) => new AssetPreloadTest(...args),
 	'asset-unload': (...args) => new AssetUnloadTest(...args),
+	'av-sync': (...args) => new AVSyncTest(...args),
 	'button-targeting': (...args) => new ButtonTargetingTest(...args),
 	'clock-sync': (...args) => new ClockSyncTest(...args),
 	'collision-layer': (...args) => new CollisionLayerTest(...args),
