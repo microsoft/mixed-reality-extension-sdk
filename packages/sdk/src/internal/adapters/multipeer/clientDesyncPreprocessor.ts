@@ -43,7 +43,12 @@ export class ClientDesyncPreprocessor implements Protocols.Middleware {
 			this.client.userId = userJoin.user.id;
 			while (this.client.userExclusiveMessages.length > 0) {
 				const queuedMsg = this.client.userExclusiveMessages.splice(0, 1)[0];
-				this.client.send(queuedMsg.message, queuedMsg.promise);
+				const rule = Rules[queuedMsg.message.payload.type] || MissingRule;
+				const forUser = rule.client.shouldSendToUser(
+					queuedMsg.message, this.client.userId, this.client.session, this.client);
+				if (forUser) {
+					this.client.send(queuedMsg.message, queuedMsg.promise);
+				}
 			}
 		}
 		return message;

@@ -111,8 +111,14 @@ export class Execution extends Protocol {
 			targetId: payload.targetId,
 			behaviorType: payload.behaviorType,
 			actionName: payload.actionName,
-			actionState: payload.actionState
+			actionState: payload.actionState,
+			actionData: payload.actionData,
 		} as ActionEvent);
+	};
+
+	/** @private */
+	public 'recv-physicsbridge-transforms-update' = (payload: Payloads.PhysicsBridgeUpdate) => {
+		this.emit('protocol.physicsbridge-update-transforms', [payload.transforms]);
 	};
 
 	/** @private */
@@ -134,10 +140,7 @@ export class Execution extends Protocol {
 	};
 
 	/** @private */
-	public 'recv-set-animation-state' = (payload: Payloads.SetAnimationState) => {
-		this.emit('protocol.set-animation-state',
-			payload.actorId,
-			payload.animationName,
-			payload.state);
+	public 'recv-animation-update' = (payload: Payloads.AnimationUpdate) => {
+		this.emit('protocol.update-animations', [payload.animation]);
 	};
 }

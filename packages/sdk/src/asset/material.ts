@@ -5,8 +5,10 @@
 
 import {
 	Actor,
+	Animation,
 	AssetContainer,
 	AssetLike,
+	AssetUserType,
 	Color3,
 	Color3Like,
 	Color4,
@@ -182,6 +184,32 @@ export class Material extends Asset implements MaterialLike, Patchable<AssetLike
 	/** @inheritdoc */
 	public get material(): Material { return this; }
 
+	/** The list of animations that target this actor, by ID. */
+	/* public get targetingAnimations() {
+		return this.container.context.animations
+			.filter(anim => anim.targetIds.includes(this.id))
+			.reduce(
+				(map, anim) => {
+					map.set(anim.id, anim);
+					return map;
+				},
+				new Map<Guid, Animation>()
+			) as ReadonlyMap<Guid, Animation>;
+	}*/
+
+	/** The list of animations that target this actor, by name. */
+	/* public get targetingAnimationsByName() {
+		return this.container.context.animations
+			.filter(anim => anim.targetIds.includes(this.id) && anim.name)
+			.reduce(
+				(map, anim) => {
+					map.set(anim.name, anim);
+					return map;
+				},
+				new Map<string, Animation>()
+			) as ReadonlyMap<string, Animation>;
+	}*/
+
 	/** INTERNAL USE ONLY. To create a new material from scratch, use [[AssetManager.createMaterial]]. */
 	public constructor(container: AssetContainer, def: AssetLike) {
 		super(container, def);
@@ -301,10 +329,11 @@ export class Material extends Asset implements MaterialLike, Patchable<AssetLike
 	}
 
 	/** @hidden */
-	public breakReference(ref: Actor | Asset) {
-		if (!(ref instanceof Actor)) { return; }
-		if (ref.appearance.material === this) {
+	public breakReference(ref: AssetUserType) {
+		if (ref instanceof Actor && ref.appearance.material === this) {
 			ref.appearance.material = null;
+		} else if (ref instanceof Animation && ref.isOrphan()) {
+			ref.delete();
 		}
 	}
 }

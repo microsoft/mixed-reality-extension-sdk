@@ -95,7 +95,6 @@
 							<h3>Accessors</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-get-signature tsd-parent-kind-class tsd-is-overwrite"><a href="targetbehavior.html#behaviortype" class="tsd-kind-icon">behavior<wbr>Type</a></li>
-								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="targetbehavior.html#target" class="tsd-kind-icon">target</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
@@ -122,7 +121,7 @@
 							<aside class="tsd-sources">
 								<p>Overrides <a href="behavior.html">Behavior</a>.<a href="behavior.html#behaviortype">behaviorType</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/eb0ccbd/packages/sdk/src/actor/behaviors/targetBehavior.ts#L23">src/actor/behaviors/targetBehavior.ts:23</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/8e0977b/packages/sdk/src/actor/behaviors/targetBehavior.ts#L49">src/actor/behaviors/targetBehavior.ts:49</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -132,23 +131,6 @@
 								</dl>
 							</div>
 							<h4 class="tsd-returns-title">Returns <a href="../index.html#behaviortype" class="tsd-signature-type">BehaviorType</a></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
-					<a name="target" class="tsd-anchor"></a>
-					<h3>target</h3>
-					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> target<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="discreteaction.html" class="tsd-signature-type">DiscreteAction</a></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/eb0ccbd/packages/sdk/src/actor/behaviors/targetBehavior.ts#L25">src/actor/behaviors/targetBehavior.ts:25</a></li>
-								</ul>
-							</aside>
-							<h4 class="tsd-returns-title">Returns <a href="discreteaction.html" class="tsd-signature-type">DiscreteAction</a></h4>
 						</li>
 					</ul>
 				</section>
@@ -166,7 +148,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="behavior.html">Behavior</a>.<a href="behavior.html#_supportsaction">_supportsAction</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/eb0ccbd/packages/sdk/src/actor/behaviors/behavior.ts#L21">src/actor/behaviors/behavior.ts:21</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/8e0977b/packages/sdk/src/actor/behaviors/behavior.ts#L22">src/actor/behaviors/behavior.ts:22</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -194,7 +176,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/eb0ccbd/packages/sdk/src/actor/behaviors/targetBehavior.ts#L45">src/actor/behaviors/targetBehavior.ts:45</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/8e0977b/packages/sdk/src/actor/behaviors/targetBehavior.ts#L69">src/actor/behaviors/targetBehavior.ts:69</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -221,13 +203,13 @@
 					<a name="ontarget" class="tsd-anchor"></a>
 					<h3>on<wbr>Target</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">on<wbr>Target<span class="tsd-signature-symbol">(</span>targetState<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">"enter"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"exit"</span>, handler<span class="tsd-signature-symbol">: </span><a href="../index.html#actionhandler" class="tsd-signature-type">ActionHandler</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
+						<li class="tsd-signature tsd-kind-icon">on<wbr>Target<span class="tsd-signature-symbol">(</span>targetState<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">"enter"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"exit"</span>, handler<span class="tsd-signature-symbol">: </span><a href="../index.html#actionhandler" class="tsd-signature-type">ActionHandler</a><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/targeteventdata.html" class="tsd-signature-type">TargetEventData</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/eb0ccbd/packages/sdk/src/actor/behaviors/targetBehavior.ts#L33">src/actor/behaviors/targetBehavior.ts:33</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/8e0977b/packages/sdk/src/actor/behaviors/targetBehavior.ts#L57">src/actor/behaviors/targetBehavior.ts:57</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -244,7 +226,7 @@
 									</div>
 								</li>
 								<li>
-									<h5>handler: <a href="../index.html#actionhandler" class="tsd-signature-type">ActionHandler</a></h5>
+									<h5>handler: <a href="../index.html#actionhandler" class="tsd-signature-type">ActionHandler</a><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/targeteventdata.html" class="tsd-signature-type">TargetEventData</a><span class="tsd-signature-symbol">&gt;</span></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>The handler to call when the target state is triggered.</p>
 									</div>
@@ -274,9 +256,6 @@
 						<ul>
 							<li class=" tsd-kind-get-signature tsd-parent-kind-class tsd-is-overwrite">
 								<a href="targetbehavior.html#behaviortype" class="tsd-kind-icon">behavior<wbr>Type</a>
-							</li>
-							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
-								<a href="targetbehavior.html#target" class="tsd-kind-icon">target</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
 								<a href="targetbehavior.html#_supportsaction" class="tsd-kind-icon">_supports<wbr>Action</a>

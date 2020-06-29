@@ -1,6 +1,6 @@
 {
   "name": "@microsoft/mixed-reality-extension-sdk",
-  "version": "0.16.1",
+  "version": "0.19.1",
   "description": "The Mixed Reality Extension SDK enables developers to build 3D world extensions for AltspaceVR, using Node.JS.",
   "main": "built/index.js",
   "types": "built/index.d.ts",
@@ -28,14 +28,16 @@
   "scripts": {
     "clean": "tsc --build --clean",
     "build": "tsc --build && eslint --ext .ts src",
-    "build-docs": "typedoc --externalPattern \"**/node_modules/**\" --excludeExternals --excludeNotExported --excludeProtected --excludePrivate --hideGenerator --mode file --name \"Mixed Reality Extension SDK\" --readme none --out ../../docs ./src",
+    "build-docs": "typedoc --includeDeclarations --excludeExternals --excludeNotExported --excludeProtected --excludePrivate --hideGenerator --ignoreCompilerErrors --disableOutputCheck --mode file --name \"Mixed Reality Extension SDK\" --readme none --out \"../../docs\" \"./node_modules/@microsoft/mixed-reality-extension-common/built\" ./src",
     "prepublishOnly": "npm run build"
   },
   "devDependencies": {
     "@types/debug": "^0.0.31",
     "@types/deepmerge": "^2.1.0",
+    "@types/etag": "^1.8.0",
     "@types/query-string": "^6.1.1",
-    "@types/restify": "^7.2.0",
+    "@types/restify": "^8.4.2",
+    "@types/restify-errors": "^4.3.3",
     "@types/semver": "^5.5.0",
     "@types/uuid": "^3.4.3",
     "@types/ws": "^6.0.1",
@@ -46,12 +48,15 @@
     "typescript": "^3.7.2"
   },
   "dependencies": {
+    "@microsoft/mixed-reality-extension-common": "^0.19.1",
     "@types/node": "^10.3.1",
     "debug": "^4.1.0",
     "deepmerge": "^2.1.1",
+    "etag": "^1.8.1",
     "forwarded-for": "^1.1.0",
     "query-string": "^6.2.0",
     "restify": "^8.5.1",
+    "restify-errors": "^8.0.2",
     "semver": "^5.6.0",
     "uuid": "^3.2.1",
     "ws": "^6.1.2"

@@ -19,14 +19,6 @@ export type InitializeActor = {
 /**
  * @hidden
  */
-export type CreateAnimation = {
-	message: Message<Payloads.CreateAnimation>;
-	enabled: boolean;
-};
-
-/**
- * @hidden
- */
 export type ActiveMediaInstance = {
 	message: Message<Payloads.SetMediaState>;
 	basisTime: number;
@@ -39,9 +31,7 @@ export type ActiveMediaInstance = {
 export type SyncActor = {
 	actorId: Guid;
 	initialization: InitializeActor;
-	createdAnimations: CreateAnimation[];
 	activeMediaInstances: ActiveMediaInstance[];
-	activeInterpolations: Payloads.InterpolateActor[];
 	behavior: BehaviorType;
 	grabbedBy: Guid;
 	exclusiveToUser: Guid;

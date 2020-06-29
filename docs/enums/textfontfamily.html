@@ -62,6 +62,13 @@
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Available text font types. If a type is unsupported by the MRE client, <a href="textfontfamily.html#default">Default</a> will be used.</p>
+					</div>
+				</div>
+			</section>
 			<section class="tsd-panel-group tsd-index-group">
 				<h2>Index</h2>
 				<section class="tsd-panel tsd-index-panel">
@@ -69,6 +76,9 @@
 						<section class="tsd-index-section ">
 							<h3>Enumeration members</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="textfontfamily.html#cursive" class="tsd-kind-icon">Cursive</a></li>
+								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="textfontfamily.html#default" class="tsd-kind-icon">Default</a></li>
+								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="textfontfamily.html#monospace" class="tsd-kind-icon">Monospace</a></li>
 								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="textfontfamily.html#sansserif" class="tsd-kind-icon">Sans<wbr>Serif</a></li>
 								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="textfontfamily.html#serif" class="tsd-kind-icon">Serif</a></li>
 							</ul>
@@ -79,14 +89,64 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Enumeration members</h2>
 				<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum">
+					<a name="cursive" class="tsd-anchor"></a>
+					<h3>Cursive</h3>
+					<div class="tsd-signature tsd-kind-icon">Cursive<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> = &quot;cursive&quot;</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/8e0977b/packages/sdk/src/actor/text.ts#L37">src/actor/text.ts:37</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>A handwritten font</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum">
+					<a name="default" class="tsd-anchor"></a>
+					<h3>Default</h3>
+					<div class="tsd-signature tsd-kind-icon">Default<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> = &quot;default&quot;</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/8e0977b/packages/sdk/src/actor/text.ts#L29">src/actor/text.ts:29</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The default engine font</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum">
+					<a name="monospace" class="tsd-anchor"></a>
+					<h3>Monospace</h3>
+					<div class="tsd-signature tsd-kind-icon">Monospace<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> = &quot;monospace&quot;</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/8e0977b/packages/sdk/src/actor/text.ts#L35">src/actor/text.ts:35</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>A font where all characters are the same width</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum">
 					<a name="sansserif" class="tsd-anchor"></a>
 					<h3>Sans<wbr>Serif</h3>
 					<div class="tsd-signature tsd-kind-icon">Sans<wbr>Serif<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> = &quot;sans-serif&quot;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/eb0ccbd/packages/sdk/src/actor/text.ts#L28">src/actor/text.ts:28</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/8e0977b/packages/sdk/src/actor/text.ts#L33">src/actor/text.ts:33</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>A font without serif strokes</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum">
 					<a name="serif" class="tsd-anchor"></a>
@@ -94,9 +154,14 @@
 					<div class="tsd-signature tsd-kind-icon">Serif<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> = &quot;serif&quot;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/eb0ccbd/packages/sdk/src/actor/text.ts#L27">src/actor/text.ts:27</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/8e0977b/packages/sdk/src/actor/text.ts#L31">src/actor/text.ts:31</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>A font with serif strokes</p>
+						</div>
+					</div>
 				</section>
 			</section>
 		</div>
@@ -115,6 +180,15 @@
 					<li class="current tsd-kind-enum">
 						<a href="textfontfamily.html" class="tsd-kind-icon">Text<wbr>Font<wbr>Family</a>
 						<ul>
+							<li class=" tsd-kind-enum-member tsd-parent-kind-enum">
+								<a href="textfontfamily.html#cursive" class="tsd-kind-icon">Cursive</a>
+							</li>
+							<li class=" tsd-kind-enum-member tsd-parent-kind-enum">
+								<a href="textfontfamily.html#default" class="tsd-kind-icon">Default</a>
+							</li>
+							<li class=" tsd-kind-enum-member tsd-parent-kind-enum">
+								<a href="textfontfamily.html#monospace" class="tsd-kind-icon">Monospace</a>
+							</li>
 							<li class=" tsd-kind-enum-member tsd-parent-kind-enum">
 								<a href="textfontfamily.html#sansserif" class="tsd-kind-icon">Sans<wbr>Serif</a>
 							</li>

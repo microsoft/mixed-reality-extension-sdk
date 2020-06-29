@@ -8,10 +8,8 @@ import {
 	ActorLike,
 	AnimationLike,
 	BehaviorType,
-	CreateAnimationOptions,
 	Guid,
 	MediaCommand,
-	SetAnimationStateOptions,
 	SetMediaStateOptions,
 	TransformLike,
 	UserLike,
@@ -35,10 +33,11 @@ export type PayloadType
 	| 'animation-update'
 	| 'app2engine-rpc'
 	| 'collision-event-raised'
-	| 'create-animation'
+	| 'create-animation-2'
 	| 'create-empty'
 	| 'create-from-library'
 	| 'destroy-actors'
+	| 'destroy-animations'
 	| 'dialog-response'
 	| 'engine2app-rpc'
 	| 'handshake'
@@ -46,11 +45,11 @@ export type PayloadType
 	| 'handshake-reply'
 	| 'heartbeat'
 	| 'heartbeat-reply'
-	| 'interpolate-actor'
 	| 'multi-operation-result'
 	| 'object-spawned'
 	| 'operation-result'
 	| 'perform-action'
+	| 'physicsbridge-transforms-update'
 	| 'rigidbody-add-force'
 	| 'rigidbody-add-force-at-position'
 	| 'rigidbody-add-relative-torque'
@@ -58,12 +57,10 @@ export type PayloadType
 	| 'rigidbody-commands'
 	| 'rigidbody-move-position'
 	| 'rigidbody-move-rotation'
-	| 'set-animation-state'
 	| 'set-authoritative'
 	| 'set-behavior'
 	| 'set-media-state'
 	| 'show-dialog'
-	| 'sync-animations'
 	| 'sync-complete'
 	| 'sync-request'
 	| 'traces'
@@ -311,6 +308,7 @@ export type PerformAction = Payload & {
 	behaviorType: BehaviorType;
 	actionName: string;
 	actionState: ActionState;
+	actionData?: any;
 };
 
 /**
@@ -326,35 +324,12 @@ export type SetBehavior = Payload & {
 
 /**
  * @hidden
- * App to engine. Create an animation and associate it with an actor.
+ * App to engine. Bind anim keyframe data to a set of objects. Returns an object-spawned message.
  */
-export type CreateAnimation = Payload & CreateAnimationOptions & {
-	type: 'create-animation';
-	actorId: Guid;
-	animationId?: string;
-	animationName: string;
-};
-
-/**
- * @hidden
- * @deprecated
- * App to engine. Sets animation state.
- */
-export type SetAnimationState = Payload & {
-	type: 'set-animation-state';
-	actorId: Guid;
-	animationName: string;
-	state: SetAnimationStateOptions;
-};
-
-/**
- * @hidden
- * @deprecated
- * Bidirectional. Sync animation state.
- */
-export type SyncAnimations = Payload & {
-	type: 'sync-animations';
-	animationStates: SetAnimationState[];
+export type CreateAnimation2 = Payload & {
+	type: 'create-animation-2';
+	animation: AnimationLike;
+	targets: { [placeholder: string]: Guid };
 };
 
 /**
@@ -368,20 +343,6 @@ export type SetMediaState = Payload & {
 	mediaAssetId: Guid;
 	mediaCommand: MediaCommand;
 	options: SetMediaStateOptions;
-};
-
-/**
- * @hidden
- * App to engine. Interpolate the actor's transform.
- */
-export type InterpolateActor = Payload & {
-	type: 'interpolate-actor';
-	actorId: Guid;
-	animationName: string;
-	value: Partial<ActorLike>;
-	duration: number;
-	curve: number[];
-	enabled: boolean;
 };
 
 /**
@@ -405,3 +366,12 @@ export type DialogResponse = Payload & {
 	submitted: boolean;
 	text?: string;
 };
+
+/**
+ * @hidden
+ * App to engine.
+ */
+export type DestroyAnimations = Payload & {
+	type: 'destroy-animations';
+	animationIds: Guid[];
+}

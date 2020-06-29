@@ -1,6 +1,6 @@
 {
   "name": "@microsoft/mixed-reality-extension-altspacevr-extras",
-  "version": "0.16.1",
+  "version": "0.19.1",
   "description": "The Mixed Reality Extension AltspaceVR Extras package enables MRE developers to access custom AltspaceVR features.",
   "main": "built/index.js",
   "types": "built/index.d.ts",
@@ -28,7 +28,7 @@
   "scripts": {
     "clean": "tsc --build --clean",
     "build": "tsc --build && eslint --ext .ts src",
-    "build-docs": "typedoc --ignoreCompilerErrors --externalPattern \"**/node_modules/**\" --excludeExternals --excludeNotExported --excludeProtected --excludePrivate --hideGenerator --mode file --name \"Mixed Reality Extension AltspaceVR Extras\" --readme none --out ../../docs/altspacevr-extras ./src",
+    "build-docs": "typedoc --includeDeclarations --excludeExternals --excludeNotExported --excludeProtected --excludePrivate --hideGenerator --ignoreCompilerErrors --disableOutputCheck --mode file --name \"Mixed Reality Extension AltspaceVR Extras\" --readme none --out \"../../docs/altspacevr-extras\" ./src",
     "prepublishOnly": "npm run build"
   },
   "devDependencies": {
@@ -41,6 +41,6 @@
     "typescript": "^3.7.2"
   },
   "dependencies": {
-    "@microsoft/mixed-reality-extension-sdk": "^0.16.1"
+    "@microsoft/mixed-reality-extension-sdk": "^0.19.1"
   }
 }

@@ -55,7 +55,7 @@
 					<a href="discreteaction.html">DiscreteAction</a>
 				</li>
 			</ul>
-			<h1>Class DiscreteAction</h1>
+			<h1>Class DiscreteAction&lt;ActionDataT&gt;</h1>
 		</div>
 	</div>
 </header>
@@ -70,12 +70,26 @@
 					</div>
 				</div>
 			</section>
+			<section class="tsd-panel tsd-type-parameters">
+				<h3>Type parameters</h3>
+				<ul class="tsd-type-parameters">
+					<li>
+						<h4>ActionDataT</h4>
+					</li>
+				</ul>
+			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
 						<span class="target">DiscreteAction</span>
 					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel">
+				<h3>Implements</h3>
+				<ul class="tsd-hierarchy">
+					<li><span class="tsd-signature-type">Actionable</span></li>
 				</ul>
 			</section>
 			<section class="tsd-panel-group tsd-index-group">
@@ -105,7 +119,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/eb0ccbd/packages/sdk/src/actor/behaviors/action.ts#L41">src/actor/behaviors/action.ts:41</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/8e0977b/packages/sdk/src/actor/behaviors/action.ts#L49">src/actor/behaviors/action.ts:49</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -137,7 +151,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/eb0ccbd/packages/sdk/src/actor/behaviors/action.ts#L54">src/actor/behaviors/action.ts:54</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/8e0977b/packages/sdk/src/actor/behaviors/action.ts#L62">src/actor/behaviors/action.ts:62</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -168,13 +182,13 @@
 					<a name="on" class="tsd-anchor"></a>
 					<h3>on</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">on<span class="tsd-signature-symbol">(</span>actionState<span class="tsd-signature-symbol">: </span><a href="../index.html#actionstate" class="tsd-signature-type">ActionState</a>, handler<span class="tsd-signature-symbol">: </span><a href="../index.html#actionhandler" class="tsd-signature-type">ActionHandler</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
+						<li class="tsd-signature tsd-kind-icon">on<span class="tsd-signature-symbol">(</span>actionState<span class="tsd-signature-symbol">: </span><a href="../index.html#actionstate" class="tsd-signature-type">ActionState</a>, handler<span class="tsd-signature-symbol">: </span><a href="../index.html#actionhandler" class="tsd-signature-type">ActionHandler</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">ActionDataT</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/eb0ccbd/packages/sdk/src/actor/behaviors/action.ts#L31">src/actor/behaviors/action.ts:31</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/8e0977b/packages/sdk/src/actor/behaviors/action.ts#L39">src/actor/behaviors/action.ts:39</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -191,7 +205,7 @@
 									</div>
 								</li>
 								<li>
-									<h5>handler: <a href="../index.html#actionhandler" class="tsd-signature-type">ActionHandler</a></h5>
+									<h5>handler: <a href="../index.html#actionhandler" class="tsd-signature-type">ActionHandler</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">ActionDataT</span><span class="tsd-signature-symbol">&gt;</span></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>The handler to call when the action state is triggered.</p>
 									</div>
@@ -215,7 +229,7 @@
 				<ul class="before-current">
 				</ul>
 				<ul class="current">
-					<li class="current tsd-kind-class">
+					<li class="current tsd-kind-class tsd-has-type-parameter">
 						<a href="discreteaction.html" class="tsd-kind-icon">Discrete<wbr>Action</a>
 						<ul>
 							<li class=" tsd-kind-method tsd-parent-kind-class">

@@ -62,10 +62,8 @@ export default class GrabTest extends Test {
 		});
 
 		// Create some animations on the cube.
-		this.model.createAnimation(
-			'OnClick', {
-				keyframes: this.clickAnimationData
-			});
+		this.assets.createAnimationData('OnClick', this.clickAnimationData)
+			.bind({ target: this.model });
 
 		// Set up cursor interaction. We add the input behavior ButtonBehavior to the cube.
 		// Button behaviors have two pairs of events: hover start/stop, and click start/stop.
@@ -126,11 +124,12 @@ export default class GrabTest extends Test {
 				break;
 			case 3:
 				if (this.clickCount % 2 === 0) {
-					this.model.enableAnimation('OnClick');
+
+					this.model.targetingAnimationsByName.get('OnClick').play();
 					this.model.grabbable = false;
 					this.app.setOverrideText("Click to make monkey grabbable again.");
 				} else {
-					this.model.enableAnimation('OnClick');
+					this.model.targetingAnimationsByName.get('OnClick').play();
 					this.model.grabbable = true;
 					this.state = 0;
 					this.cycleState();
@@ -142,15 +141,19 @@ export default class GrabTest extends Test {
 		}
 	}
 
-	private clickAnimationData: MRE.AnimationKeyframe[] = [{
-		time: 0,
-		value: { transform: { local: { scale: { x: this.SCALE, y: this.SCALE, z: this.SCALE } } } }
-	}, {
-		time: 0.1,
-		value: { transform: { local: { scale: { x: this.SCALE + 0.1, y: this.SCALE + 0.1, z: this.SCALE + 0.1 } } } }
-	}, {
-		time: 0.2,
-		value: { transform: { local: { scale: { x: this.SCALE, y: this.SCALE, z: this.SCALE } } } }
-	}];
-
+	private clickAnimationData: MRE.AnimationDataLike = {
+		tracks: [{
+			target: MRE.ActorPath("target").transform.local.scale,
+			keyframes: [{
+				time: 0,
+				value: { x: this.SCALE, y: this.SCALE, z: this.SCALE }
+			}, {
+				time: 0.1,
+				value: { x: this.SCALE + 0.1, y: this.SCALE + 0.1, z: this.SCALE + 0.1 }
+			}, {
+				time: 0.2,
+				value: { x: this.SCALE, y: this.SCALE, z: this.SCALE }
+			}]
+		} as MRE.Track<MRE.Vector3>]
+	};
 }

@@ -6,7 +6,7 @@
 import deepmerge from 'deepmerge';
 import { EventEmitter } from 'events';
 
-import { Guid, log, UserLike } from '../../..';
+import { AnimationLike, Guid, log, UserLike } from '../../..';
 import {
 	Client,
 	Connection,
@@ -26,7 +26,7 @@ import {
 } from '../../../internal';
 
 type AssetCreationMessage = Message<Payloads.LoadAssets | Payloads.CreateAsset>;
-type AnimationCreationMessage = Message<Payloads.CreateAnimation | Payloads.CreateActorCommon>;
+type AnimationCreationMessage = Message<Payloads.CreateAnimation2 | Payloads.CreateActorCommon>;
 
 /**
  * @hidden
@@ -44,6 +44,7 @@ export class Session extends EventEmitter {
 	private _userSet = new Map<Guid, Partial<UserLike>>();
 	private _protocol: Protocols.Protocol;
 	private _disconnect: () => void;
+	private actorLastUpdate = new Map<Guid, number>();
 
 	public get conn() { return this._conn; }
 	public get sessionId() { return this._sessionId; }
@@ -57,7 +58,8 @@ export class Session extends EventEmitter {
 	public get assetCreators() { return [...this._assetCreatorSet.values()]; }
 	public get animationSet() { return this._animationSet; }
 	public get animations() { return this._animationSet.values(); }
-	public get animationCreators() { return this._animationCreatorSet.values(); }
+	public get animationCreators() { return [...this._animationCreatorSet.values()]; }
+	public get animationCreatorSet() { return this._animationCreatorSet; }
 	public get actorSet() { return this._actorSet; }
 	public get assetSet() { return this._assetSet; }
 	public get assetCreatorSet() { return this._assetCreatorSet; }
@@ -260,25 +262,17 @@ export class Session extends EventEmitter {
 		this.sendToClients({ payload }, filterFn);
 	}
 
-	/** @deprecated */
-	public findAnimation(syncActor: Partial<SyncActor>, animationName: string) {
-		return (syncActor.createdAnimations || []).find(item => item.message.payload.animationName === animationName);
-	}
-
-	/** @deprecated */
 	public isAnimating(syncActor: Partial<SyncActor>): boolean {
-		if ((syncActor.createdAnimations || []).some(item => item.enabled)) {
+		const actorAnims = [...this.animationSet.values()]
+			.filter(syncAnim => syncAnim.targetIds.includes(syncActor.actorId) && syncAnim.active);
+		if (actorAnims.length > 0) {
 			return true;
 		}
-		if (syncActor.initialization &&
-			syncActor.initialization.message &&
-			syncActor.initialization.message.payload &&
-			syncActor.initialization.message.payload.actor) {
-			const parent = this._actorSet.get(syncActor.initialization.message.payload.actor.parentId);
-			if (parent) {
-				return this.isAnimating(parent);
-			}
+		const parent = this._actorSet.get(syncActor.initialization?.message?.payload?.actor?.parentId);
+		if (parent) {
+			return this.isAnimating(parent);
 		}
+
 		return false;
 	}
 
@@ -409,26 +403,37 @@ export class Session extends EventEmitter {
 		}
 	}
 
-	public cacheAnimationCreationRequest(payload: AnimationCreationMessage) {
-		this._animationCreatorSet.set(payload.id, payload);
+	public cacheAnimationCreationRequest(message: AnimationCreationMessage) {
+		this._animationCreatorSet.set(message.id, message);
+		if (message.payload.type === 'create-animation-2') {
+			const createAnim = message.payload as Payloads.CreateAnimation2;
+			this._animationSet.set(createAnim.animation.id, {
+				id: createAnim.animation.id,
+				creatorMessageId: message.id,
+				targetIds: Object.values(createAnim.targets)
+			});
+		}
 	}
 
-	public cacheAnimationCreation(animId: Guid, creatorId: Guid, duration?: number) {
-		this._animationSet.set(animId, {
-			id: animId,
+	public cacheAnimationCreation(creatorId: Guid, def: Partial<AnimationLike>) {
+		const animCreationResult: Partial<SyncAnimation> = {
+			id: def.id,
 			creatorMessageId: creatorId,
-			update: undefined,
-			duration
-		});
+			targetIds: [...def.targetIds],
+			active: def.weight > 0 && def.speed !== 0
+		};
+		const oldAnim = this._animationSet.get(def.id);
+
+		if (!oldAnim) {
+			this._animationSet.set(def.id, animCreationResult);
+		} else {
+			// the only field we didn't already know at creation
+			oldAnim.active = def.weight > 0 && def.speed !== 0;
+		}
 	}
 
 	public cacheAnimationUpdate(update: Message<Payloads.AnimationUpdate>) {
-		let syncAnim = this._animationSet.get(update.payload.animation.id);
-		if (!syncAnim) {
-			syncAnim = { id: update.payload.animation.id };
-			this._animationSet.set(syncAnim.id, syncAnim);
-		}
-
+		const syncAnim = this._animationSet.get(update.payload.animation.id);
 		if (syncAnim.update) {
 			// merge with previous update message
 			syncAnim.update.payload.animation = deepmerge(
@@ -437,6 +442,17 @@ export class Session extends EventEmitter {
 		} else {
 			// just save it
 			syncAnim.update = update;
+		}
+
+		syncAnim.active = syncAnim.update.payload.animation.weight > 0 &&
+			syncAnim.update.payload.animation.speed !== 0;
+	}
+
+	public cacheAnimationUnload(message: Message<Payloads.DestroyAnimations>) {
+		for (const id of message.payload.animationIds) {
+			const syncAnim = this._animationSet.get(id);
+			this._animationCreatorSet.delete(syncAnim.creatorMessageId);
+			this._animationSet.delete(id);
 		}
 	}
 }

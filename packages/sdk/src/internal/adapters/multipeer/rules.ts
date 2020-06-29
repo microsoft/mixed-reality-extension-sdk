@@ -305,7 +305,8 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 				message: Message<Payloads.ActorCorrection>
 			) => {
 				const syncActor = session.actorSet.get(message.payload.actorId);
-				if (syncActor && (client.authoritative || syncActor.grabbedBy === client.id)) {
+				if (syncActor && ((client.authoritative && !syncActor.grabbedBy)
+					|| (syncActor.grabbedBy === client.id))) {
 					const correctionPayload = message.payload;
 
 					// Synthesize an actor update message and add in the transform from the correction payload.
@@ -399,7 +400,8 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 				message: Message<Payloads.ActorUpdate>
 			) => {
 				const syncActor = session.actorSet.get(message.payload.actor.id);
-				if (syncActor && (client.authoritative || syncActor.grabbedBy === client.id)) {
+				if (syncActor && ((client.authoritative && !syncActor.grabbedBy) ||
+					(syncActor.grabbedBy === client.id))) {
 					// Merge the update into the existing actor.
 					session.cacheActorUpdateMessage(message);
 
@@ -462,6 +464,16 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 			) => {
 				session.cacheAnimationUpdate(message);
 				return message;
+			},
+			beforeReceiveFromClient: (
+				session: Session,
+				client: Client,
+				message: Message<Payloads.AnimationUpdate>
+			) => {
+				if (client.authoritative) {
+					session.cacheAnimationUpdate(message);
+					return message;
+				}
 			}
 		}
 	},
@@ -517,7 +529,7 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 				message: Message<Payloads.AssetsLoaded>
 			) => {
 				if (client.authoritative) {
-					for (const asset of message.payload.assets) {
+					for (const asset of message.payload.assets ?? []) {
 						session.cacheAssetCreation(asset.id, message.replyToId,
 							(asset.sound && asset.sound.duration) ||
 							(asset.videoStream && asset.videoStream.duration));
@@ -537,7 +549,7 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 	},
 
 	// ========================================================================
-	'create-animation': {
+	'create-animation-2': {
 		...DefaultRule,
 		synchronization: {
 			stage: 'create-animations',
@@ -545,29 +557,13 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 			during: 'allow',
 			after: 'allow'
 		},
-		client: {
-			...DefaultRule.client,
-			shouldSendToUser: (message: Message<Payloads.CreateAnimation>, userId, session, client) => {
-				const exclusiveUser = session.actorSet.get(message.payload.actorId).exclusiveToUser;
-				return exclusiveUser ? exclusiveUser === userId : null;
-			}
-		},
 		session: {
 			...DefaultRule.session,
 			beforeReceiveFromApp: (
 				session: Session,
-				message: Message<Payloads.CreateAnimation>
+				message: Message<Payloads.CreateAnimation2>
 			) => {
-				if (message.payload.animationId) {
-					session.cacheAnimationCreationRequest(message);
-				} else {
-					const syncActor = session.actorSet.get(message.payload.actorId);
-					if (syncActor) {
-						const enabled = message.payload.initialState && !!message.payload.initialState.enabled;
-						syncActor.createdAnimations = syncActor.createdAnimations || [];
-						syncActor.createdAnimations.push({ message, enabled });
-					}
-				}
+				session.cacheAnimationCreationRequest(message);
 				return message;
 			}
 		}
@@ -627,6 +623,24 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 	},
 
 	// ========================================================================
+	'destroy-animations': {
+		...DefaultRule,
+		synchronization: {
+			stage: 'create-animations',
+			before: 'ignore',
+			during: 'queue',
+			after: 'allow'
+		},
+		session: {
+			...DefaultRule.session,
+			beforeReceiveFromApp: (session: Session, message: Message<Payloads.DestroyAnimations>) => {
+				session.cacheAnimationUnload(message);
+				return message;
+			}
+		}
+	},
+
+	// ========================================================================
 	'dialog-response': ClientOnlyRule,
 
 	// ========================================================================
@@ -674,38 +688,6 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 	'heartbeat-reply': ClientOnlyRule,
 
 	// ========================================================================
-	'interpolate-actor': {
-		...DefaultRule,
-		synchronization: {
-			stage: 'create-animations',
-			before: 'queue',
-			during: 'allow',
-			after: 'allow'
-		},
-		client: {
-			...DefaultRule.client,
-			shouldSendToUser: (message: Message<Payloads.InterpolateActor>, userId, session, client) => {
-				const exclusiveUser = session.actorSet.get(message.payload.actorId).exclusiveToUser;
-				return exclusiveUser ? exclusiveUser === userId : null;
-			}
-		},
-		session: {
-			...DefaultRule.session,
-			beforeReceiveFromApp: (
-				session: Session,
-				message: Message<Payloads.InterpolateActor>
-			) => {
-				const syncActor = session.actorSet.get(message.payload.actorId);
-				if (syncActor) {
-					syncActor.activeInterpolations = syncActor.activeInterpolations || [];
-					syncActor.activeInterpolations.push(deepmerge({}, message.payload));
-				}
-				return message;
-			}
-		}
-	},
-
-	// ========================================================================
 	'load-assets': {
 		...DefaultRule,
 		synchronization: {
@@ -713,6 +695,10 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 			before: 'ignore',
 			during: 'queue',
 			after: 'allow'
+		},
+		client: {
+			...DefaultRule.client,
+			timeoutSeconds: 30
 		},
 		session: {
 			...DefaultRule.session,
@@ -747,13 +733,13 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 						session.cacheInitializeActorMessage({
 							payload: {
 								type: 'actor-update',
-								actor: { id: spawned.id }
+								actor: { id: spawned.id, parentId: spawned.parentId }
 							}
 						});
 					}
 					// create somewhere to store anim updates
 					for (const newAnim of message.payload.animations || []) {
-						session.cacheAnimationCreation(newAnim.id, message.replyToId, newAnim.duration);
+						session.cacheAnimationCreation(message.replyToId, newAnim);
 					}
 					// Allow the message to propagate to the app.
 					return message;
@@ -788,6 +774,53 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 				) {
 					syncActor.grabbedBy = payload.actionState === 'started' ? client.id : undefined;
 				}
+
+				return message;
+			}
+		}
+	},
+
+	// ========================================================================
+	'physicsbridge-transforms-update': {
+		...DefaultRule,
+		synchronization: {
+			stage: 'always',
+			before: 'ignore',
+			during: 'queue',
+			after: 'allow'
+		},
+		client: {
+			...DefaultRule.client,
+			beforeQueueMessageForClient: (
+				session: Session,
+				client: Client,
+				message: Message<Payloads.PhysicsBridgeUpdate>,
+				promise: ExportedPromise
+			) => {
+
+				return message;
+			},
+			shouldSendToUser: (message: Message<Payloads.PhysicsBridgeUpdate>, userId, session, client) => {
+
+				return true;
+			}
+		},
+		session: {
+			...DefaultRule.session,
+			beforeReceiveFromApp: (
+				session: Session,
+				message: Message<Payloads.PhysicsBridgeUpdate>
+			) => {
+
+				return message;
+			},
+			beforeReceiveFromClient: (
+				session: Session,
+				client: Client,
+				message: Message<Payloads.PhysicsBridgeUpdate>
+			) => {
+
+				session.sendPayloadToClients(message.payload, (value) => value.id !== client.id);
 
 				return message;
 			}
@@ -875,74 +908,6 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 			before: 'queue',
 			during: 'queue',
 			after: 'allow'
-		}
-	},
-
-	// ========================================================================
-	'set-animation-state': {
-		...DefaultRule,
-		synchronization: {
-			stage: 'create-animations',
-			before: 'ignore',
-			during: 'queue',
-			after: 'allow'
-		},
-		client: {
-			...DefaultRule.client,
-			shouldSendToUser: (message: Message<Payloads.SetAnimationState>, userId, session, client) => {
-				const exclusiveUser = session.actorSet.get(message.payload.actorId).exclusiveToUser;
-				return exclusiveUser ? exclusiveUser === userId : null;
-			}
-		},
-		session: {
-			...DefaultRule.session,
-			beforeReceiveFromApp: (
-				session: Session,
-				message: Message<Payloads.SetAnimationState>
-			) => {
-				// If the app enabled or disabled the animation, update our local sync state to match.
-				if (message.payload.state.enabled !== undefined) {
-					const syncActor = session.actorSet.get(message.payload.actorId);
-					if (syncActor) {
-						const animation = session.findAnimation(syncActor, message.payload.animationName);
-						if (animation) {
-							animation.enabled = message.payload.state.enabled;
-						}
-					}
-				}
-				return message;
-			},
-			beforeReceiveFromClient: (
-				session: Session,
-				client: Client,
-				message: Message<Payloads.SetAnimationState>
-			) => {
-				// Check that this is the authoritative client
-				const exclusiveUser = session.actorSet.get(message.payload.actorId).exclusiveToUser;
-				if (client.authoritative || client.userId && client.userId === exclusiveUser) {
-					// Check that the actor exists.
-					const syncActor = session.actorSet.get(message.payload.actorId);
-					if (syncActor) {
-						// If the animation was disabled on the client, notify other clients and also
-						// update our local sync state.
-						if (message.payload.state.enabled !== undefined && !message.payload.state.enabled) {
-							const createdAnimation = (syncActor.createdAnimations || []).filter(
-								item => item.message.payload.animationName === message.payload.animationName).shift();
-							if (createdAnimation) {
-								createdAnimation.enabled = message.payload.state.enabled;
-								// Propagate to other clients.
-								session.sendToClients(message, (value) => value.id !== client.id);
-							}
-							// Remove the completed interpolation.
-							syncActor.activeInterpolations =
-								(syncActor.activeInterpolations || []).filter(
-									item => item.animationName !== message.payload.animationName);
-						}
-					}
-					// Allow the message to propagate to the app.
-					return message;
-				}
-			}
 		}
 	},
 
@@ -1088,7 +1053,7 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 
 					if (activeMediaInstance.message.payload.options.looping === true ||
 						activeMediaInstance.message.payload.options.paused === true ||
-						(asset === undefined || asset.duration === undefined)) {
+						(asset === undefined || asset.duration === undefined || asset.duration === 0)) {
 						// media instance current will last forever
 						activeMediaInstance.expirationTime = undefined;
 					} else {
@@ -1126,21 +1091,6 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 			shouldSendToUser: (message: Message<Payloads.ShowDialog>, userId) => {
 				return message.payload.userId === userId;
 			}
-		}
-	},
-
-	// ========================================================================
-	'sync-animations': {
-		...DefaultRule,
-		synchronization: {
-			stage: 'sync-animations',
-			before: 'error',
-			during: 'allow',
-			after: 'error'
-		},
-		client: {
-			...DefaultRule.client,
-			timeoutSeconds: 30
 		}
 	},
 

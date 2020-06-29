@@ -4,14 +4,13 @@
  */
 
 import {
+	Actionable,
 	ActionEvent,
 	Actor,
 	ActorLike,
 	Behavior,
 	CollisionData,
 	CollisionEventType,
-	DiscreteAction,
-	SetAnimationStateOptions,
 	TriggerEventType
 } from '..';
 import {
@@ -41,11 +40,15 @@ export class ActorInternal implements InternalPatchable<ActorLike> {
 		const behavior = (this.behavior && this.behavior.behaviorType === actionEvent.behaviorType)
 			? this.behavior : undefined;
 		if (behavior && behavior._supportsAction(actionEvent.actionName)) {
-			behavior._performAction(actionEvent.actionName, actionEvent.actionState, actionEvent.user);
+			behavior._performAction(
+				actionEvent.actionName, 
+				actionEvent.actionState, 
+				actionEvent.user, 
+				actionEvent.actionData);
 		} else {
-			const action = (this.actor as any)[actionEvent.actionName.toLowerCase()] as DiscreteAction;
+			const action = (this.actor as any)[`_${actionEvent.actionName.toLowerCase()}`] as Actionable;
 			if (action) {
-				action._setState(actionEvent.user, actionEvent.actionState);
+				action._performAction(actionEvent.user, actionEvent.actionState, actionEvent.actionData);
 			}
 		}
 	}
@@ -59,18 +62,6 @@ export class ActorInternal implements InternalPatchable<ActorLike> {
 	public triggerEventRaised(triggerEventType: TriggerEventType, otherActor: Actor) {
 		if (this.collider) {
 			this.collider.eventReceived(triggerEventType, otherActor);
-		}
-	}
-
-	public setAnimationStateEventRaised(animationName: string, state: SetAnimationStateOptions) {
-		if (this.actor) {
-			if (state.enabled !== undefined) {
-				if (state.enabled) {
-					this.actor.emitter.emit('animation-enabled', animationName);
-				} else {
-					this.actor.emitter.emit('animation-disabled', animationName);
-				}
-			}
 		}
 	}
 

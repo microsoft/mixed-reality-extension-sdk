@@ -12,6 +12,9 @@ import {
 	QuaternionLike,
 	Vector3Like
 } from '../..';
+import {
+	PhysicsBridgeTransformUpdate
+} from '../../actor/physics/physicsBridge';
 
 /**
  * @hidden
@@ -99,3 +102,8 @@ export type TriggerEventRaised = Payloads.Payload & {
 	eventType: TriggerEventType;
 	otherActorId: Guid;
 };
+
+export type PhysicsBridgeUpdate = Payloads.Payload & {
+	type: 'physicsbridge-transforms-update';
+	transforms: Partial<PhysicsBridgeTransformUpdate>;
+}
