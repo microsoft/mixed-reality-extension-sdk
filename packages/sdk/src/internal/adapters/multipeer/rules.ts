@@ -840,12 +840,12 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 				message: Message<Payloads.PhysicsUploadServerUpdate>,
 				promise: ExportedPromise
 			) => {
-				// todo: get the streams here 
+				
 				return message;
 			},
 			shouldSendToUser: (message: Message<Payloads.PhysicsUploadServerUpdate>, userId, session, client) => {
 				// this is just upload do not sending anything to clients
-				return true;
+				return false;
 			}
 		},
 		session: {
@@ -854,16 +854,6 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 				session: Session,
 				message: Message<Payloads.PhysicsUploadServerUpdate>
 			) => {
-				// 
-				for (const entry of message.payload.transforms.transformsArray) {
-					const syncActor = session.actorSet.get(entry.id);
-					if (syncActor) {
-						//console.log(`getting transform: '${entry.app}' + '${entry.local}'`);
-						syncActor.initialization.message.payload.actor.transform.app = entry.app;
-						syncActor.initialization.message.payload.actor.transform.local.position = entry.local.position;
-						syncActor.initialization.message.payload.actor.transform.local.rotation = entry.local.rotation;
-					}
-				}
 
 				return message;
 			},
@@ -872,7 +862,19 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 				client: Client,
 				message: Message<Payloads.PhysicsUploadServerUpdate>
 			) => {
-				// todo: get the streams here 
+				// update directly the transforms
+				for (const entry of message.payload.physicsTranformServer.updates) {
+					const syncActor = session.actorSet.get(entry.actorGuid);
+					if (syncActor) {
+						//console.log(`getting transform: '${entry.app}' + '${entry.local}'`);
+						syncActor.initialization.message.payload.actor.transform.app = entry.appTransform;
+						syncActor.initialization.message.payload.actor.transform.local.position = 
+							entry.localTransform.position;
+						syncActor.initialization.message.payload.actor.transform.local.rotation = 
+							entry.localTransform.rotation;
+					}
+				}
+
 				return message;
 			}
 		}

@@ -111,5 +111,5 @@ export type PhysicsBridgeUpdate = Payloads.Payload & {
 
 export type PhysicsUploadServerUpdate = Payloads.Payload & {
 	type: 'physicsbridge-server-transforms-upload';
-	transforms: Partial<PhysicsUploadServerTransformsUpdate>;
+	physicsTranformServer: Partial<PhysicsUploadServerTransformsUpdate>;
 };

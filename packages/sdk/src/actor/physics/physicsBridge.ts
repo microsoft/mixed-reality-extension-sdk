@@ -15,13 +15,13 @@ export type PhysicsBridgeTransformUpdate = {
 }
 
 export type PhysicsServerOneTransformsUpdate = {
-	local: TransformLike;
-    app: TransformLike;
-    id: Guid;
+	localTransform: TransformLike;
+    appTransform: TransformLike;
+    actorGuid: Guid;
 }
 
 export type PhysicsUploadServerTransformsUpdate = {
     id: Guid;
     transformCount: number;
-    transformsArray: PhysicsServerOneTransformsUpdate[];
+    updates: PhysicsServerOneTransformsUpdate[];
 }

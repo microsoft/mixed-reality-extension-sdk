@@ -123,7 +123,7 @@ export class Execution extends Protocol {
 
 	/** @private */
 	public 'recv-physicsbridge-server-transforms-upload' = (payload: Payloads.PhysicsUploadServerUpdate) => {
-		this.emit('protocol.physicsbridge-server-transforms-upload', [payload.transforms]);
+		this.emit('protocol.physicsbridge-server-transforms-upload', [payload.physicsTranformServer]);
 	};
 
 	/** @private */

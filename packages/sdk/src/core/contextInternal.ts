@@ -269,7 +269,8 @@ export class ContextInternal {
 			execution.on('protocol.update-user', this.updateUser.bind(this));
 			execution.on('protocol.perform-action', this.performAction.bind(this));
 			execution.on('protocol.physicsbridge-update-transforms', this.updatePhysicsBridgeTransforms.bind(this));
-			execution.on('protocol.physicsbridge-server-transforms-upload', this.updatePhysicsServerTransformsUpload.bind(this));
+			execution.on('protocol.physicsbridge-server-transforms-upload', 
+				this.updatePhysicsServerTransformsUpload.bind(this));
 			execution.on('protocol.receive-rpc', this.receiveRPC.bind(this));
 			execution.on('protocol.collision-event-raised', this.collisionEventRaised.bind(this));
 			execution.on('protocol.trigger-event-raised', this.triggerEventRaised.bind(this));
@@ -411,8 +412,7 @@ export class ContextInternal {
 		this.context.emitter.emit('physicsbridge-transforms-update', transforms);
 	}
 
-	public updatePhysicsServerTransformsUpload(transforms: Partial<PhysicsUploadServerTransformsUpdate>)
-	{
+	public updatePhysicsServerTransformsUpload(transforms: Partial<PhysicsUploadServerTransformsUpdate>){
 		if (!transforms) { return; }
 		this.context.emitter.emit('physicsbridge-server-transforms-upload', transforms);
 	}
