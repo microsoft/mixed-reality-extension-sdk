@@ -50,7 +50,7 @@ export type PayloadType
 	| 'operation-result'
 	| 'perform-action'
 	| 'physicsbridge-transforms-update'
-	| 'physicsbridge-server-upload'
+	| 'physicsbridge-server-transforms-upload'
 	| 'rigidbody-add-force'
 	| 'rigidbody-add-force-at-position'
 	| 'rigidbody-add-relative-torque'

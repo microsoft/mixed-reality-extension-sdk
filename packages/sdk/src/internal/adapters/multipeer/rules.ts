@@ -824,7 +824,7 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 	},
 
 	// ========================================================================
-	'physicsbridge-server-upload': {
+	'physicsbridge-server-transforms-upload': {
 		...DefaultRule,
 		synchronization: {
 			stage: 'always',
@@ -845,7 +845,7 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 			},
 			shouldSendToUser: (message: Message<Payloads.PhysicsUploadServerUpdate>, userId, session, client) => {
 				// this is just upload do not sending anything to clients
-				return false;
+				return true;
 			}
 		},
 		session: {
@@ -858,6 +858,7 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 				for (const entry of message.payload.transforms.transformsArray) {
 					const syncActor = session.actorSet.get(entry.id);
 					if (syncActor) {
+						//console.log(`getting transform: '${entry.app}' + '${entry.local}'`);
 						syncActor.initialization.message.payload.actor.transform.app = entry.app;
 						syncActor.initialization.message.payload.actor.transform.local.position = entry.local.position;
 						syncActor.initialization.message.payload.actor.transform.local.rotation = entry.local.rotation;
