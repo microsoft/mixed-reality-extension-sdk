@@ -866,7 +866,6 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 				for (const entry of message.payload.physicsTranformServer.updates) {
 					const syncActor = session.actorSet.get(entry.actorGuid);
 					if (syncActor) {
-						//console.log(`getting transform: '${entry.app}' + '${entry.local}'`);
 						syncActor.initialization.message.payload.actor.transform.app = entry.appTransform;
 						syncActor.initialization.message.payload.actor.transform.local.position = 
 							entry.localTransform.position;
