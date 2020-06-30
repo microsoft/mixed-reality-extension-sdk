@@ -75,6 +75,7 @@ export default class PhysicsFrictionTest extends Test {
 					meshId: boxId,
 					materialId: this.materials[Math.floor(Math.random() * this.materials.length)].id
 				},
+				grabbable: true,
 				transform: {
 					local: {
 						position: {

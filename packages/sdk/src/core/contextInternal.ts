@@ -22,6 +22,7 @@ import {
 	MediaInstance,
 	newGuid,
 	PerformanceStats,
+	Permissions,
 	SetMediaStateOptions,
 	TriggerEvent,
 	User,
@@ -35,6 +36,7 @@ import {
 	Payloads,
 	Protocols,
 } from '../internal';
+import { PhysicsBridgeTransformUpdate } from '../actor/physics/physicsBridge';
 
 /**
  * @hidden
@@ -109,6 +111,27 @@ export class ContextInternal {
 		this.updateActors(payload.actor);
 		// Get a reference to the new actor.
 		const actor = this.context.actor(payload.actor.id);
+
+		// check permission for exclusive actors
+		let user: User;
+		if (actor.exclusiveToUser &&
+			(user = this.userSet.get(actor.exclusiveToUser)) &&
+			!(user.grantedPermissions.includes(Permissions.UserInteraction))) {
+			actor.internal.notifyCreated(false,
+				`Permission denied on user ${user.id} (${user.name}). Either this MRE did not ` +
+				"request the UserInteraction permission, or it was denied by the user."
+			);
+		}
+
+		// check permission for attachments
+		if (actor.attachment?.userId &&
+			(user = this.userSet.get(actor.attachment?.userId)) &&
+			!(user.grantedPermissions.includes(Permissions.UserInteraction))) {
+			actor.internal.notifyCreated(false,
+				`Permission denied on user ${user.id} (${user.name}). Either this MRE did not ` +
+				"request the UserInteraction permission, or it was denied by the user."
+			);
+		}
 
 		this.protocol.sendPayload( payload, {
 			resolve: (replyPayload: Payloads.ObjectSpawned | Payloads.OperationResult) => {
@@ -267,6 +290,7 @@ export class ContextInternal {
 			execution.on('protocol.user-left', this.userLeft.bind(this));
 			execution.on('protocol.update-user', this.updateUser.bind(this));
 			execution.on('protocol.perform-action', this.performAction.bind(this));
+			execution.on('protocol.physicsbridge-update-transforms', this.updatePhysicsBridgeTransforms.bind(this));
 			execution.on('protocol.receive-rpc', this.receiveRPC.bind(this));
 			execution.on('protocol.collision-event-raised', this.collisionEventRaised.bind(this));
 			execution.on('protocol.trigger-event-raised', this.triggerEventRaised.bind(this));
@@ -407,6 +431,11 @@ export class ContextInternal {
 			const actor = this.actorSet.get(actorId);
 			this.context.emitter.emit('actor-created', actor);
 		});
+	}
+
+	public updatePhysicsBridgeTransforms(transforms: Partial<PhysicsBridgeTransformUpdate>) {
+		if (!transforms) { return; }
+		this.context.emitter.emit('physicsbridge-transforms-update', transforms);
 	}
 
 	public updateAnimations(animPatches: Array<Partial<AnimationLike>>) {

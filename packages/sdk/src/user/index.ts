@@ -4,4 +4,6 @@
  */
 
 export * from './groupMask';
+export * from './invertedGroupMask';
 export * from './user';
+export * from './permissions';

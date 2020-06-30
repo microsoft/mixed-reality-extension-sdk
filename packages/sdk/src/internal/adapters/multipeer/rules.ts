@@ -529,7 +529,7 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 				message: Message<Payloads.AssetsLoaded>
 			) => {
 				if (client.authoritative) {
-					for (const asset of message.payload.assets) {
+					for (const asset of message.payload.assets ?? []) {
 						session.cacheAssetCreation(asset.id, message.replyToId,
 							(asset.sound && asset.sound.duration) ||
 							(asset.videoStream && asset.videoStream.duration));
@@ -696,6 +696,10 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 			during: 'queue',
 			after: 'allow'
 		},
+		client: {
+			...DefaultRule.client,
+			timeoutSeconds: 30
+		},
 		session: {
 			...DefaultRule.session,
 			beforeReceiveFromApp: (session, message) => {
@@ -729,7 +733,7 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 						session.cacheInitializeActorMessage({
 							payload: {
 								type: 'actor-update',
-								actor: { id: spawned.id }
+								actor: { id: spawned.id, parentId: spawned.parentId }
 							}
 						});
 					}
@@ -770,6 +774,53 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 				) {
 					syncActor.grabbedBy = payload.actionState === 'started' ? client.id : undefined;
 				}
+
+				return message;
+			}
+		}
+	},
+
+	// ========================================================================
+	'physicsbridge-transforms-update': {
+		...DefaultRule,
+		synchronization: {
+			stage: 'always',
+			before: 'ignore',
+			during: 'queue',
+			after: 'allow'
+		},
+		client: {
+			...DefaultRule.client,
+			beforeQueueMessageForClient: (
+				session: Session,
+				client: Client,
+				message: Message<Payloads.PhysicsBridgeUpdate>,
+				promise: ExportedPromise
+			) => {
+
+				return message;
+			},
+			shouldSendToUser: (message: Message<Payloads.PhysicsBridgeUpdate>, userId, session, client) => {
+
+				return true;
+			}
+		},
+		session: {
+			...DefaultRule.session,
+			beforeReceiveFromApp: (
+				session: Session,
+				message: Message<Payloads.PhysicsBridgeUpdate>
+			) => {
+
+				return message;
+			},
+			beforeReceiveFromClient: (
+				session: Session,
+				client: Client,
+				message: Message<Payloads.PhysicsBridgeUpdate>
+			) => {
+
+				session.sendPayloadToClients(message.payload, (value) => value.id !== client.id);
 
 				return message;
 			}
