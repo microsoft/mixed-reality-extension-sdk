@@ -54,6 +54,7 @@
     "deepmerge": "^2.1.1",
     "etag": "^1.8.1",
     "forwarded-for": "^1.1.0",
+    "jsonschema": "^1.2.6",
     "query-string": "^6.2.0",
     "restify": "^8.5.1",
     "restify-errors": "^8.0.2",
