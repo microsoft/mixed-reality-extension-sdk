@@ -105,7 +105,12 @@ Host apps must provide hooks for the MRE subsystem to obtain permission from use
 * `Permissions CurrentPermissions(...)` - Returns a bitfield of the currently granted permissions. Takes
 	the following arguments:
 	* `Uri appLocation` - The URI of the MRE for which we want the permission set.
-* `event Action<Uri, Permissions, Permissions> OnPermissionDecisionsChanged`
+* `event Action<Uri, Permissions, Permissions> OnPermissionDecisionsChanged` - Fired when a user changes permissions
+	for any URI. The runtime will listen for this event, and if it applies to a particular instance, that instance
+	will be disconnected, cleaned up, and restarted/resynchronized. It includes the following arguments:
+	* `Uri appLocation` - The URL of the permission set that changed
+	* `Permissions oldPermissions` - The former permission set for the URL
+	* `Permissions newPermissions` - The new permission set for the URL
 
 The `Permissions` enum has the `Flags` attribute and is on powers of 2 in case testing combinations is desired.
 
