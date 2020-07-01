@@ -824,6 +824,62 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 	},
 
 	// ========================================================================
+	'physicsbridge-server-transforms-upload': {
+		...DefaultRule,
+		synchronization: {
+			stage: 'always',
+			before: 'ignore',
+			during: 'queue',
+			after: 'allow'
+		},
+		client: {
+			...DefaultRule.client,
+			beforeQueueMessageForClient: (
+				session: Session,
+				client: Client,
+				message: Message<Payloads.PhysicsUploadServerUpdate>,
+				promise: ExportedPromise
+			) => {
+				
+				return message;
+			},
+			shouldSendToUser: (message: Message<Payloads.PhysicsUploadServerUpdate>, userId, session, client) => {
+				// this is just upload do not sending anything to clients
+				return false;
+			}
+		},
+		session: {
+			...DefaultRule.session,
+			beforeReceiveFromApp: (
+				session: Session,
+				message: Message<Payloads.PhysicsUploadServerUpdate>
+			) => {
+
+				return message;
+			},
+			beforeReceiveFromClient: (
+				session: Session,
+				client: Client,
+				message: Message<Payloads.PhysicsUploadServerUpdate>
+			) => {
+				// update directly the transforms
+				for (const entry of message.payload.physicsTranformServer.updates) {
+					const syncActor = session.actorSet.get(entry.actorGuid);
+					if (syncActor) {
+						syncActor.initialization.message.payload.actor.transform.app = entry.appTransform;
+						syncActor.initialization.message.payload.actor.transform.local.position = 
+							entry.localTransform.position;
+						syncActor.initialization.message.payload.actor.transform.local.rotation = 
+							entry.localTransform.rotation;
+					}
+				}
+
+				return message;
+			}
+		}
+	},
+
+	// ========================================================================
 	'rigidbody-add-force': {
 		...DefaultRule,
 		synchronization: {
