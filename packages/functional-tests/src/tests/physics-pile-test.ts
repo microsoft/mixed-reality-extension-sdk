@@ -13,6 +13,8 @@ import { User } from '@microsoft/mixed-reality-extension-sdk';
 
 export default class PhysicsPileTest extends Test {
 
+	public expectedResultDescription = "Piles should apear similar for each client";
+
 	private testBounciness: number;
 	private deleteBodiesTimout: number;
 	private boxLimit: number;

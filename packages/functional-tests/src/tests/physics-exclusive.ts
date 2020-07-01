@@ -11,7 +11,7 @@ import { Vector3 } from '@microsoft/mixed-reality-extension-sdk';
 
 export default class PhysicsExclusiveRigidBodyTest extends Test {
 
-	public expectedResultDescription = "Shared and exclusive rigid bodies";
+	public expectedResultDescription = "Exclusive should not impact shared rigid bodies";
 	private assets: MRE.AssetContainer;
 	private interval: NodeJS.Timeout;
 
@@ -35,7 +35,7 @@ export default class PhysicsExclusiveRigidBodyTest extends Test {
 
 		this.createLabels(root);
 
-		const userId = this.app.context.users[0].id;
+		const userId = this.app.context.users[1].id;
 
 		const ownerId0 = this.app.context.users[0].id;
 		const ownerId1 =this.app.context.users.length > 1 ?

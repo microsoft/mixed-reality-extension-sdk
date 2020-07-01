@@ -131,6 +131,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	/** @inheritdoc */
 	public get exclusiveToUser() { return this._exclusiveToUser; }
 	public get owner() { return this._owner; }
+	public set owner(value) { this._owner = value; this.actorChanged('owner'); }
 	public get subscriptions() { return this._subscriptions; }
 	public get transform() { return this._transform; }
 	public set transform(value) { this._transform.copy(value); }
