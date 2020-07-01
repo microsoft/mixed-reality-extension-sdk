@@ -52,11 +52,32 @@ export class ContextInternal {
 	public prevGeneration = 0;
 	public __rpc: any;
 
+	public _rigidBodyOwnerMap = new Map<Guid, Guid>();
+	public _rigidBodyOrphanSet = new Set<Guid>();
+	private _rigidBodyDefaultOwner: Guid;
+
 	constructor(public context: Context) {
 		// Handle connection close events.
 		this.onClose = this.onClose.bind(this);
 		this.context.conn.on('close', this.onClose);
+
+		// keep track of authoritative simulation user id
+		this.onSetAuthoritative = this.onSetAuthoritative.bind(this);
 	}
+
+	public onSetAuthoritative = (userId: Guid) => {
+		this._rigidBodyOrphanSet.forEach( 
+			(value) => {
+				if (value === this._rigidBodyDefaultOwner) {
+					const actor = this.actorSet.get(value);
+					actor.owner = userId;
+
+					this._rigidBodyOwnerMap.set(value, userId);
+				}
+			})
+		this._rigidBodyOrphanSet.clear();
+		this._rigidBodyDefaultOwner = userId;
+	};
 
 	public Create(options?: {
 		actor?: Partial<ActorLike>;
@@ -399,6 +420,12 @@ export class ContextInternal {
 			actor.copy(sactor);
 			if (isNewActor) {
 				newActorIds.push(actor.id);
+				if (actor.rigidBody) {	
+					if (!actor.owner) {
+						actor.owner = this._rigidBodyDefaultOwner;
+					}
+					this._rigidBodyOwnerMap.set(actor.id, actor.owner);
+				}
 			}
 		});
 		newActorIds.forEach(actorId => {
@@ -469,6 +496,25 @@ export class ContextInternal {
 		if (user) {
 			this.userSet.delete(userId);
 			this.context.emitter.emit('user-left', user);
+
+			if (userId !== this._rigidBodyDefaultOwner) {
+				this._rigidBodyOwnerMap.forEach( (value, key) => {
+					if (value === userId) {
+						const actor = this.actorSet.get(key);
+						actor.owner = this._rigidBodyDefaultOwner;
+						this._rigidBodyOwnerMap.set(key, this._rigidBodyDefaultOwner);
+					}
+				})
+			} else {
+				this._rigidBodyOwnerMap.forEach( 
+					(value, key) => {
+						if (value === userId) {
+							const actor = this.actorSet.get(key);
+							actor.owner = this._rigidBodyDefaultOwner;
+							this._rigidBodyOrphanSet.add(key);
+						}
+					})
+			}
 		}
 	}
 
@@ -489,6 +535,13 @@ export class ContextInternal {
 		if (actionEvent.user) {
 			const targetActor = this.actorSet.get(actionEvent.targetId);
 			if (targetActor) {
+				if (actionEvent.actionName === 'grab' && targetActor.rigidBody) {
+					if (targetActor.owner !== actionEvent.user.id) {
+						targetActor.owner = actionEvent.user.id;
+						this._rigidBodyOwnerMap.set(targetActor.id, targetActor.owner);
+					}
+				}
+
 				targetActor.internal.performAction(actionEvent);
 			}
 		}
@@ -525,6 +578,10 @@ export class ContextInternal {
 			if (this.actorSet.has(actorId)) {
 				this.localDestroyActor(this.actorSet.get(actorId));
 			}
+
+			if (this._rigidBodyOwnerMap.has(actorId)) {
+				this._rigidBodyOwnerMap.delete(actorId);
+			}
 		}
 	}
 
@@ -536,6 +593,10 @@ export class ContextInternal {
 
 		// Remove actor from _actors
 		this.actorSet.delete(actor.id);
+
+		if (this._rigidBodyOwnerMap.has(actor.id)) {
+			this._rigidBodyOwnerMap.delete(actor.id);
+		}
 
 		// Check targeting animations for orphans
 		for (const anim of actor.targetingAnimations.values()) {

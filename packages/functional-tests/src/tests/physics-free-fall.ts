@@ -8,6 +8,8 @@ import * as MRE from '@microsoft/mixed-reality-extension-sdk';
 import { Test } from '../test';
 export default class PhysicsFreeFallTest extends Test {
 
+	public expectedResultDescription = "Local and remote rigid bodies fall smoothly.";
+
 	private assets: MRE.AssetContainer;
 	private redMat: MRE.Material;
 	private blueMat: MRE.Material;
