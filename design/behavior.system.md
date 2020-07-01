@@ -1,6 +1,6 @@
 # Behavior System
 
-The behavior system is responsible for provinding the abstracted user interaction model for MRE Apps and how the user can interact with
+The behavior system is responsible for providing the abstracted user interaction model for MRE Apps and how the user can interact with
 the various components of an MRE App.  It is based on the concept of high level behaviors that are applied to actors to make the actor
 "behave" like that particular interaction behavior.
 
@@ -34,8 +34,8 @@ We sync behaviors from all clients in the server.  All filtering is handled in t
 
 ## Client implementation
 
-Client runtime is resposible for getting the concrete host app implementation of the behaviors through the host app implementation
-of the `IBehaviorFactory`, and supplying the necesssary context for the host app to raise input events on.  The permission system is
+Client runtime is responsible for getting the concrete host app implementation of the behaviors through the host app implementation
+of the `IBehaviorFactory`, and supplying the necessary context for the host app to raise input events on.  The permission system is
 responsible for enabling or disabling the behavior system per user, or globally on the client if there is no user interacting with the
 app at all for that client.
 
@@ -62,7 +62,7 @@ to handle any targetability and cursor interactions with this actor by way of th
 
 Client will add behaviors to all actors as thay are set from the app, and will do no filtering of any of the events.
 
-5. Multipl Users Where None Have Given User Interaction Permission
+5. Multiple Users Where None Have Given User Interaction Permission
 
 Client will not add any behaviors to actors when they are set from the app, as there are no users interacting with the app on this client.
 
@@ -87,9 +87,9 @@ this.buttonModel = MRE.Actor.CreateFromGltf(this.assets, {
     }
 });
 
-const buttonBehavior = Actor.SetBehavior<ButtonBehavior>();
+const buttonBehavior = buttonModel.SetBehavior(MRE.ButtonBehavior);
 
-penBehavior.onClick((buttonEventData) => {
+penBehavior.onClick((user, buttonEventData) => {
 	// Submit some user action.
 });
 ```
