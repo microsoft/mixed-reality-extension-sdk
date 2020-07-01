@@ -305,7 +305,7 @@ export class ContextInternal {
 
 	public start() {
 		if (!this.interval) {
-			this.interval = setInterval(() => this.update(), 20);
+			this.interval = setInterval(() => this.update(), 0);
 			this.context.emitter.emit('started');
 		}
 	}
@@ -345,16 +345,18 @@ export class ContextInternal {
 			...this.animationSet.values()
 		] as Array<Patchable<any>>;
 
-		const maxUpdatesPerTick = 300;
+		const maxUpdatesPerTick = parseInt(process.env.MRE_MAX_UPDATES_PER_TICK) || 300;
 		let updates = 0;
 		for (const patchable of syncObjects) {
+			if (updates >= maxUpdatesPerTick) {
+				break;
+			}
+
 			const patch = patchable.internal.getPatchAndReset();
 			if (!patch) {
 				continue;
-			}
-
-			if (++updates > maxUpdatesPerTick) {
-				break;
+			} else {
+				updates++;
 			}
 
 			if (patchable instanceof User) {
@@ -380,7 +382,8 @@ export class ContextInternal {
 			}
 		}
 
-		if (this.nextUpdatePromise) {
+		// only run if we finished sending all pending updates
+		if (updates < maxUpdatesPerTick && this.nextUpdatePromise) {
 			this.resolveNextUpdatePromise();
 			this.nextUpdatePromise = null;
 			this.resolveNextUpdatePromise = null;
