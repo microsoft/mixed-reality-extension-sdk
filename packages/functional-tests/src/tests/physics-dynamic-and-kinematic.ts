@@ -7,8 +7,6 @@ import * as MRE from '@microsoft/mixed-reality-extension-sdk';
 
 import { App } from '../app';
 import { Test } from '../test';
-import { Vector3, Actor } from '@microsoft/mixed-reality-extension-sdk';
-import { int } from '../../../common/src/math/types';
 
 export default class PhysicsDynamicVsKinematicTest extends Test {
 

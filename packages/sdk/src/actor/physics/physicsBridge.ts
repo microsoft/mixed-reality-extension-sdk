@@ -4,6 +4,7 @@
  */
 
 import { Guid } from "../../util";
+import { TransformLike } from "..";
 
 export type PhysicsBridgeTransformUpdate = {
     id: Guid;
@@ -11,4 +12,16 @@ export type PhysicsBridgeTransformUpdate = {
     transformCount: number;
     flags: number;
     transformsBlob: string;
+}
+
+export type PhysicsServerOneTransformsUpdate = {
+	localTransform: TransformLike;
+    appTransform: TransformLike;
+    actorGuid: Guid;
+}
+
+export type PhysicsUploadServerTransformsUpdate = {
+    id: Guid;
+    transformCount: number;
+    updates: PhysicsServerOneTransformsUpdate[];
 }
