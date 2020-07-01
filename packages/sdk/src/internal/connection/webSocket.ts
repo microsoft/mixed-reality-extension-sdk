@@ -41,7 +41,7 @@ export class WebSocket extends EventedConnection {
 				} catch (e) {
 					log.error('network', e);
 				}
-				//}, 200 + 50 * Math.random());
+				// }, 250 * Math.random());
 			}
 		});
 
