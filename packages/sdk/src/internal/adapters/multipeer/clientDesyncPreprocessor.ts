@@ -41,6 +41,12 @@ export class ClientDesyncPreprocessor implements Protocols.Middleware {
 		if (message.payload.type === 'user-joined') {
 			const userJoin = message.payload as Payloads.UserJoined;
 			this.client.userId = userJoin.user.id;
+
+			// emit signal now since authoritative client user was unknown when client was declared autritative
+			if (this.client.authoritative) {
+				this.client.session.emit('set-authoritative', this.client.userId);
+			}
+
 			while (this.client.userExclusiveMessages.length > 0) {
 				const queuedMsg = this.client.userExclusiveMessages.splice(0, 1)[0];
 				const rule = Rules[queuedMsg.message.payload.type] || MissingRule;
