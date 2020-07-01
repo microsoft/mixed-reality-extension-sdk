@@ -150,7 +150,7 @@ export class WebHost {
 
 		server.get('/manifest.json', (_, res, next) => {
 			if (this.manifest) {
-				res.send(200, this.manifest, { "Content-Type": "application/json" });
+				res.sendRaw(200, this.manifest, { "Content-Type": "application/json" });
 			} else if (permissions || optionalPermissions) {
 				res.json(200, { permissions, optionalPermissions });
 			} else {
