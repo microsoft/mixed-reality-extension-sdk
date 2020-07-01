@@ -60,7 +60,7 @@ to handle any targetability and cursor interactions with this actor by way of th
 
 4. Multiple Users Where All Users Have Given User Interaction Permission
 
-Client will add behaviors to all actors as thay are set from the app, and will do no filtering of any of the events.
+Client will add behaviors to all actors as they are set from the app, and will do no filtering of any of the events.
 
 5. Multiple Users Where None Have Given User Interaction Permission
 
