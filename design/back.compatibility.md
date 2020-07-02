@@ -1,5 +1,6 @@
 ## Back Compatibility Plan
-For MRE, back compatibility is an important promise to all stakeholders of the MRE ecosystem. This proposed change will allow MRE client plugins to support multiple "generations" of the MRE SDK. Each generation may have functionality additions or changes in both API surface and protocol, and once a generation goes from preview to finalized release, it's locked for good, and a new generation enters preview phase.
+For MRE, back compatibility is an important promise to all stakeholders of the MRE ecosystem. This proposed change will allow MRE client plugins to support multiple "generations" of the MRE SDK. Each generation may have functionality additions or changes in both API surface and protocol, and once a generation goes from preview to finalized release, it's locked for good, and a new generation enters preview phase. 
+When a generation is locked, it will generally only receive minor hotfixes that are sure to not change functionality of shipped MREs.
 
 ## Stakeholders
 Each stakeholder have a number of different expectations:
@@ -19,7 +20,7 @@ I considered two basic approaches to implementing multi-generation support
 1. conditional checks sprinkled in whenever changes are applied("if (generation==2) then do A else do B". Pro: it's easy to understand the concept, and easy to start. Con: extremely error prone and hard to test.
 2. complete copy of the generation-specific code (i.e. almost all of the code in the dll). Pro: Minimizes risk of errors. Con: May bloat the plugin size, source tree size, and compile time. Still have to watch out for changes in the wrong version.
 
-The obvious choice here is 2. Approach 1 would causes things to break often for no reason, no matter how careful developers are.
+The obvious choice here is 2. Approach 1 would causes things to break often for no reason, no matter how careful developers are. 
 
 ### Source Code Management
 Here are 2 options to managing the source code
@@ -37,24 +38,30 @@ I recommend version 1. The pain of the git submodule workflow, and loss of produ
 Here are two options for building the the binaries
 1. Build a single DLL that includes all generations, with a small bit of generation-shared code for connecting to a server, finding the server version, and choosing the generation-specific mre. 
 2. Build one DLLs per generation, plus a management DLL. 
-Pros for 1: it's easier to have a single output DLL than multiple, as build scripts don't need to be updated when a generation is added. Total binary size is smaller than 2, as compiler will probably optimize out many functions that are unchanged across generations. Con: Higher build time for the DLL.
-I recommend option 1. 
+* Pros for 1: it's easier to have a single output DLL than multiple, as build scripts don't need to be updated when a generation is added. Total binary size is smaller than 2, as compiler will probably optimize out many functions that are unchanged across generations. 
+* Pros for 2: Lower build time for the DLLs, you can develop on just the generation you need, and host apps get the freedom to choose which generations to support (though we recommend host apps support all previous generations.
+
+After discussing this, we're choosing to go with #2. If combined file size of all DLLs ends up being a concern, we can attempt merging to see if there really is a size boost by merging them, but that would be an unnecessary optimization at this point. 
 
 
 ### Summary of Recommended Design
-We'll duplicate the files into a different subfolder per generation, add a generation-specific prefix to each file, and leave only the absolutely minimal set of files outside this folder. All of the code will be built into a single DLL.
+We'll duplicate the files into a different subfolder per generation, add a generation-specific prefix to each file, and leave only the absolutely minimal set of files outside this folder. 
+There would be a shared DLL, and a DLL per generation. We'd probably create a couple of separate solution files - one sln that references all the csprojs for all generation dlls+the shared dll cspro, and one sln per generation that includes just a single generation+shared dll, for development use.
 
 ### Example
-For example, imagine the MRE SDK is at version 2.17.0. It would then support 3 generations of MREs: 1.0 (gen 1), 2.0 (gen 2), and 2.17.0 (pre-release for gen 3). 
-Any host app that includes this plugin will get permanent support for gen 1 and 2, and un-guaranteed prototype of gen3. If the host app later updates to SDK version 2.25.0, then gen 1 and gen 2 MREs run unchanged, but MREs built with gen3 version 2.17 to 2.24 may need to be updated 
+For example, imagine the MRE SDK is at version 2.17.0-prerelease (exact formatting TBD). The major version (2) indicates the highest generation, so 2.17.0 would indicate that gen 0 and gen 1 are completed, and gen 2 is in active development. if the version number didn't include -prerelease then it would be gen 2 would also be considered final.
+ 
+Any host app that includes the 2.17.0-prerelease plugin will get permanent support for gen 0 and 1, and a temporary prototype of gen 2, which will be deprecated once gen 2 is finalized. Because gen 2 is in development, back compatibility is not guaranteed between prereleases, and therefore the SDK may be backwards compatible with some (but not all) previous prereleases for gen 2. The runtime and MRE will simply refuse connecting if they are incompatible. As a consequence, if the host app were to update to SDK version 2.25.0-prerelease, then gen 0 and gen 1 MREs would run unchanged, but gen 2 MREs that ran on the 2.17.0-prerelease runtime may not run anymore. 
 
 ### Code to be shared across generations
-The more code is duplicated, the less chance of changes having side effects that spill into finalized generations, so the goal is to move as much as possible to be generational. There is *some* code that must be shared, though, in particular anything that interfaces with the main engine.
+The more code is duplicated, the less chance of changes having side effects that spill into finalized generations, so the goal is to move as much as possible to be generational. There is *some* code that must be shared, though, in particular anything that interfaces with the main host app.
+
+This sharing will generally be accomplished by having "shared" functions whose main job it is to route calls/data between the host app and the right generation. While the generation-specific code shouldn't change as more generations are added, this shared routing layer will change (and mostly grow) as new functionality is added
 
 #### Shared
 * Initial Connection code. Reason: until host connect to the MRE, it doesn't know the MRE's generation.
-* Code that the host app uses to initialize the MRE system and initialize a single MRE. Reason: host app doesn't need to care about which version each MRE is (MREAppsAPI)
-* Host app hooks related to input/user/attachments/createfromlibrary/video player. Reason: the host app generally doesn't care about which version an MRE is, and therefore should call into generation-agnostic hooks. Each generation-agnostic hook should then call into the generation-specific code with the appropriate parameters.
+* Code that the host app uses to initialize the MRE system and initialize a single MRE. Reason: host app doesn't need to care about which version each MRE is (MREAppsAPI). The actual Apps API will change as generations are added, but it lives in the shared code there's just one API for the host app to call.
+* Host app hooks related to input/user/attachments/createfromlibrary/video player. Reason: Again, the host app generally doesn't care about which version an MRE is, and therefore should call into generation-agnostic hooks. Each shared hook should then call into the generation-specific code with the appropriate parameters (and generation-specific code that needs to call back to the host app should call into shared code that then routes to the host app)
 * Logging/Debugging interface. While the logging functions are generational, the final formatted output should route back to the main engine through a generation-agnostic hook. Reason: the engine shouldn't worry ab
 * Network protocol/packet parsing (like newtonsoft.json). Reason: it's used to generate initial connection. Additional optimized protocols may be added later, which could probably be generational. 
 * RPC interface. Reason: This is used for MREs to talk directly to the main engine without going through the SDK, so it's host-app specific.
