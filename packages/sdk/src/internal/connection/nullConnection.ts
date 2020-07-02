@@ -48,10 +48,10 @@ export class NullConnection extends EventEmitter implements Connection {
 	}
 
 	/** @inheritdoc */
-	public send(message: Message): void {
+	public send(message: Message, serializedMessage?: Buffer): void {
 	}
 
 	/** @inheritdoc */
-	public recv(message: Message): void {
+	public recv(message: Message, serializedMessage?: Buffer): void {
 	}
 }

@@ -119,9 +119,9 @@ export class Client extends EventEmitter {
 		return this.protocol && this.protocol.constructor.name === "ClientExecution";
 	}
 
-	public send(message: Message, promise?: ExportedPromise) {
+	public send(message: Message, promise?: ExportedPromise, serializedMessage?: Buffer) {
 		if (this.protocol) {
-			this.protocol.sendMessage(message, promise);
+			this.protocol.sendMessage(message, promise, 0, serializedMessage);
 		} else {
 			log.error('network', `[ERROR] No protocol for message send: ${message.payload.type}`);
 		}

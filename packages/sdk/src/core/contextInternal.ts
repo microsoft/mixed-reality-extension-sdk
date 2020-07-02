@@ -345,13 +345,26 @@ export class ContextInternal {
 			...this.animationSet.values()
 		] as Array<Patchable<any>>;
 
+		const maxUpdatesPerTick = parseInt(process.env.MRE_MAX_UPDATES_PER_TICK) || 300;
+		let updates = 0;
 		for (const patchable of syncObjects) {
+			if (updates >= maxUpdatesPerTick) {
+				break;
+			}
+
 			const patch = patchable.internal.getPatchAndReset();
 			if (!patch) {
 				continue;
+			} else {
+				updates++;
 			}
 
-			if (patchable instanceof Actor) {
+			if (patchable instanceof User) {
+				this.protocol.sendPayload({
+					type: 'user-update',
+					user: patch as UserLike
+				} as Payloads.UserUpdate);
+			} else if (patchable instanceof Actor) {
 				this.protocol.sendPayload({
 					type: 'actor-update',
 					actor: patch as ActorLike
@@ -366,15 +379,11 @@ export class ContextInternal {
 					type: 'asset-update',
 					asset: patch as AssetLike
 				} as Payloads.AssetUpdate);
-			} else if (patchable instanceof User) {
-				this.protocol.sendPayload({
-					type: 'user-update',
-					user: patch as UserLike
-				} as Payloads.UserUpdate);
 			}
 		}
 
-		if (this.nextUpdatePromise) {
+		// only run if we finished sending all pending updates
+		if (updates < maxUpdatesPerTick && this.nextUpdatePromise) {
 			this.resolveNextUpdatePromise();
 			this.nextUpdatePromise = null;
 			this.resolveNextUpdatePromise = null;
