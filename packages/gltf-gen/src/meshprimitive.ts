@@ -59,7 +59,7 @@ export class MeshPrimitive implements MeshPrimitiveLike {
 
 	public getByteSize(scanId: number): number {
 		this._updateAttributeUsage();
-		const indexSize = this.triangles.length <= 65535 ? 2 : 4;
+		const indexSize = this.vertices.length <= 65535 ? 2 : 4;
 		const posBufSize = roundUpToNextMultipleOf4(this.vertices.length * Vertex.positionAttribute.byteSize);
 		const indexBufSize = roundUpToNextMultipleOf4(this.triangles.length * indexSize);
 		let count: number = posBufSize + indexBufSize;
@@ -196,19 +196,19 @@ export class MeshPrimitive implements MeshPrimitiveLike {
 		const bufferView: GLTF.BufferView = {
 			buffer: 0,
 			byteOffset: lastBV ? roundUpToNextMultipleOf4(lastBV.byteOffset + lastBV.byteLength) : 0,
-			byteLength: (this.triangles.length <= 65535 ? 2 : 4) * this.triangles.length
+			byteLength: (this.vertices.length <= 65535 ? 2 : 4) * this.triangles.length
 		};
 
 		const bufferViewData = data.slice(bufferView.byteOffset, bufferView.byteOffset + bufferView.byteLength);
 
 		const accessor: GLTF.Accessor = {
 			bufferView: document.bufferViews.length,
-			componentType: this.triangles.length <= 65535 ? AccessorComponentType.UShort : AccessorComponentType.UInt,
+			componentType: this.vertices.length <= 65535 ? AccessorComponentType.UShort : AccessorComponentType.UInt,
 			type: AccessorType.Scalar,
 			count: this.triangles.length
 		};
 
-		if (this.triangles.length <= 65535) {
+		if (this.vertices.length <= 65535) {
 			for (let ti = 0; ti < this.triangles.length; ti++) {
 				bufferViewData.writeUInt16LE(this.triangles[ti], 2 * ti);
 			}

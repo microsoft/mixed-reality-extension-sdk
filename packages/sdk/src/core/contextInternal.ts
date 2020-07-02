@@ -22,6 +22,7 @@ import {
 	MediaInstance,
 	newGuid,
 	PerformanceStats,
+	Permissions,
 	SetMediaStateOptions,
 	TriggerEvent,
 	User,
@@ -131,6 +132,27 @@ export class ContextInternal {
 		this.updateActors(payload.actor);
 		// Get a reference to the new actor.
 		const actor = this.context.actor(payload.actor.id);
+
+		// check permission for exclusive actors
+		let user: User;
+		if (actor.exclusiveToUser &&
+			(user = this.userSet.get(actor.exclusiveToUser)) &&
+			!(user.grantedPermissions.includes(Permissions.UserInteraction))) {
+			actor.internal.notifyCreated(false,
+				`Permission denied on user ${user.id} (${user.name}). Either this MRE did not ` +
+				"request the UserInteraction permission, or it was denied by the user."
+			);
+		}
+
+		// check permission for attachments
+		if (actor.attachment?.userId &&
+			(user = this.userSet.get(actor.attachment?.userId)) &&
+			!(user.grantedPermissions.includes(Permissions.UserInteraction))) {
+			actor.internal.notifyCreated(false,
+				`Permission denied on user ${user.id} (${user.name}). Either this MRE did not ` +
+				"request the UserInteraction permission, or it was denied by the user."
+			);
+		}
 
 		this.protocol.sendPayload( payload, {
 			resolve: (replyPayload: Payloads.ObjectSpawned | Payloads.OperationResult) => {
@@ -346,13 +368,26 @@ export class ContextInternal {
 			...this.animationSet.values()
 		] as Array<Patchable<any>>;
 
+		const maxUpdatesPerTick = parseInt(process.env.MRE_MAX_UPDATES_PER_TICK) || 300;
+		let updates = 0;
 		for (const patchable of syncObjects) {
+			if (updates >= maxUpdatesPerTick) {
+				break;
+			}
+
 			const patch = patchable.internal.getPatchAndReset();
 			if (!patch) {
 				continue;
+			} else {
+				updates++;
 			}
 
-			if (patchable instanceof Actor) {
+			if (patchable instanceof User) {
+				this.protocol.sendPayload({
+					type: 'user-update',
+					user: patch as UserLike
+				} as Payloads.UserUpdate);
+			} else if (patchable instanceof Actor) {
 				this.protocol.sendPayload({
 					type: 'actor-update',
 					actor: patch as ActorLike
@@ -367,15 +402,11 @@ export class ContextInternal {
 					type: 'asset-update',
 					asset: patch as AssetLike
 				} as Payloads.AssetUpdate);
-			} else if (patchable instanceof User) {
-				this.protocol.sendPayload({
-					type: 'user-update',
-					user: patch as UserLike
-				} as Payloads.UserUpdate);
 			}
 		}
 
-		if (this.nextUpdatePromise) {
+		// only run if we finished sending all pending updates
+		if (updates < maxUpdatesPerTick && this.nextUpdatePromise) {
 			this.resolveNextUpdatePromise();
 			this.nextUpdatePromise = null;
 			this.resolveNextUpdatePromise = null;
