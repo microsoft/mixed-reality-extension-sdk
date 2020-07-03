@@ -135,23 +135,24 @@ export class ContextInternal {
 
 		// check permission for exclusive actors
 		let user: User;
-		if (actor.exclusiveToUser &&
-			(user = this.userSet.get(actor.exclusiveToUser)) &&
-			!(user.grantedPermissions.includes(Permissions.UserInteraction))) {
-			actor.internal.notifyCreated(false,
-				`Permission denied on user ${user.id} (${user.name}). Either this MRE did not ` +
-				"request the UserInteraction permission, or it was denied by the user."
-			);
+		if (actor.exclusiveToUser) {
+			user = this.userSet.get(actor.exclusiveToUser);
+			//if (user && user.grantedPermissions &&
+			//	!(user.grantedPermissions.includes(Permissions.UserInteraction))) {
+			//	actor.internal.notifyCreated(false,
+			//		`Permission denied on user ${user.id} (${user.name}). Either this MRE did not ` +
+			//		"request the UserInteraction permission, or it was denied by the user.");
+			//}
 		}
 
 		// check permission for attachments
-		if (actor.attachment?.userId &&
-			(user = this.userSet.get(actor.attachment?.userId)) &&
-			!(user.grantedPermissions.includes(Permissions.UserInteraction))) {
-			actor.internal.notifyCreated(false,
-				`Permission denied on user ${user.id} (${user.name}). Either this MRE did not ` +
-				"request the UserInteraction permission, or it was denied by the user."
-			);
+		if (actor.attachment?.userId) {
+			user = this.userSet.get(actor.attachment?.userId);
+			//if (!(user.grantedPermissions.includes(Permissions.UserInteraction))) {
+			//	actor.internal.notifyCreated(false,
+			//		`Permission denied on user ${user.id} (${user.name}). Either this MRE did not ` +
+			//		"request the UserInteraction permission, or it was denied by the user.");
+			//}
 		}
 
 		this.protocol.sendPayload( payload, {
