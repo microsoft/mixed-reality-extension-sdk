@@ -19,8 +19,8 @@ interface ControlDefinition {
 	labelActor?: MRE.Actor;
 }
 
-export default class AVSyncTest extends Test {
-	public expectedResultDescription = "Test A/V Sync";
+export default class VideoSyncTest extends Test {
+	public expectedResultDescription = "Tests Video Sync";
 
 	private assets: MRE.AssetContainer;
 

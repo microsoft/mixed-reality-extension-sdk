@@ -51,6 +51,7 @@ import UserMaskTest from './user-mask-test';
 import UserTest from './user-test';
 import VideoTest from './video-test';
 import VisibilityTest from './visibility-test';
+import VideoSyncTest from './video-sync-test';
 
 export type FactoryMap = { [key: string]: TestFactory };
 
@@ -73,7 +74,6 @@ export const Factories = {
 	'asset-mutability': (...args) => new AssetMutabilityTest(...args),
 	'asset-preload': (...args) => new AssetPreloadTest(...args),
 	'asset-unload': (...args) => new AssetUnloadTest(...args),
-	'av-sync': (...args) => new AVSyncTest(...args),
 	'button-targeting': (...args) => new ButtonTargetingTest(...args),
 	'clock-sync': (...args) => new ClockSyncTest(...args),
 	'collision-layer': (...args) => new CollisionLayerTest(...args),
@@ -114,5 +114,6 @@ export const Factories = {
 	'user-mask': (...args) => new UserMaskTest(...args),
 	'user': (...args) => new UserTest(...args),
 	'video': (...args) => new VideoTest(...args),
+	'vidso-sync': (...args) => new VideoSyncTest(...args),
 	'visibility': (...args) => new VisibilityTest(...args),
 } as FactoryMap;
