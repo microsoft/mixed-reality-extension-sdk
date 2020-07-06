@@ -20,7 +20,7 @@ interface ControlDefinition {
 }
 
 export default class VideoSyncTest extends Test {
-	public expectedResultDescription = "Tests Video Sync";
+	public expectedResultDescription = "Tests Prerecorded video sync from an internet source";
 
 	private assets: MRE.AssetContainer;
 
@@ -73,18 +73,14 @@ export default class VideoSyncTest extends Test {
 		const videoStream1 = this.assets.createVideoStream(
 			'stream1',
 			{
-				uri: `youtube://1roy4o4tqQM`
-				//uri: `youtube://sYtjbVNao0A`
-			}
-		);
-		const videoStream2 = this.assets.createVideoStream(
-			'stream2',
-			{
-				uri: `youtube://ZXOtzZM72OY`
+				uri: `youtube://U03lLvhBzOw`
 			}
 		);
 
-		this.videoStreams = [videoStream1, videoStream2];
+		//Todo: More video sources and types for when support is patched in.
+		// Non youtube?
+
+		this.videoStreams = [videoStream1];
 
 		await Promise.all([this.parentActor.created()]);
 
@@ -152,23 +148,24 @@ export default class VideoSyncTest extends Test {
 				return this.rolloffStartDistance.toString();
 				}
 			},
-			{
-			label: "Video Index", action: incr => {
-					if (incr > 0) {
-						this.currentStream += 1;
-						if(this.currentStream > 2) {
-							this.currentStream = 0;
-						}
-					} else if (incr < 0) {
-						this.currentStream -= 1;
-						if(this.currentStream < 0) {
-							this.currentStream = 1;
-						}
-					}
-					this.CreateStreamInstance();
-					return this.currentStream.toString();
-				}
-			}
+			//Todo: Multiple videos
+			//{
+			// label: "Video Index", action: incr => {
+			// 		if (incr > 0) {
+			// 			this.currentStream += 1;
+			// 			if(this.currentStream > 2) {
+			// 				this.currentStream = 0;
+			// 			}
+			// 		} else if (incr < 0) {
+			// 			this.currentStream -= 1;
+			// 			if(this.currentStream < 0) {
+			// 				this.currentStream = 1;
+			// 			}
+			// 		}
+			// 		this.CreateStreamInstance();
+			// 		return this.currentStream.toString();
+			// 	}
+			// }
 
 		];
 		this.createControls(controls, MRE.Actor.Create(this.app.context, {

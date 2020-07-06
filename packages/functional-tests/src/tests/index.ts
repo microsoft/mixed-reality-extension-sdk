@@ -18,7 +18,6 @@ import AssetEarlyAssignmentTest from './asset-early-assignment-test';
 import AssetMutabilityTest from './asset-mutability-test';
 import AssetPreloadTest from './asset-preload-test';
 import AssetUnloadTest from './asset-unload-test';
-import AVSyncTest from './av-sync-test';
 import ButtonTargetingTest from './button-targeting-test';
 import ClockSyncTest from './clock-sync-test';
 import CollisionLayerTest from './collision-layer-test';
@@ -50,8 +49,8 @@ import TransformTest from './transform-test';
 import UserMaskTest from './user-mask-test';
 import UserTest from './user-test';
 import VideoTest from './video-test';
-import VisibilityTest from './visibility-test';
 import VideoSyncTest from './video-sync-test';
+import VisibilityTest from './visibility-test';
 
 export type FactoryMap = { [key: string]: TestFactory };
 
