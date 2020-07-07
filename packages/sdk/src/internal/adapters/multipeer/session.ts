@@ -192,6 +192,11 @@ export class Session extends EventEmitter {
 			client.setAuthoritative(false);
 		}
 
+		// if client user id is known emit signal about authoritative simulation owner
+		if (newAuthority.userId) {
+			newAuthority.session.emit('set-authoritative', newAuthority.userId);
+		}
+
 		// forward connection quality metrics
 		if (this.conn instanceof EventedConnection) {
 			this.conn.linkConnectionQuality(newAuthority.conn.quality);
