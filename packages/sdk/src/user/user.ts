@@ -74,6 +74,13 @@ export class User implements UserLike, Patchable<UserLike> {
 	 */
 	public get properties() { return Object.freeze({ ...this._properties }); }
 
+	/**
+	 * returnes true if has any stored permissions
+	 */
+	public get hasGrantedPermissions() { 
+		return (this._grantedPermissions !== undefined) && (this._grantedPermissions.length > 0); 
+	}
+
 	/** @inheritdoc */
 	public get grantedPermissions() { return [...this._grantedPermissions]; }
 
