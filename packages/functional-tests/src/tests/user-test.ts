@@ -10,11 +10,11 @@ import { Test } from '../test';
 export default class UserTest extends Test {
 	public expectedResultDescription = "Lists user info";
 	public async run(root: MRE.Actor): Promise<boolean> {
-		const connectedUserCount = Object.keys(this.app.connectedUsers).length;
 		const labelText = 'Launched by User Named: ' + this.user.name +
 			'\nUser ID: ' + this.user.id +
+			"\nPermissions: " + this.user.grantedPermissions.join(", ") +
 			"\nProperties: " + this.formatProperties(this.user.properties) +
-			"\nTotal Connected Users:" + connectedUserCount;
+			"\nTotal Connected Users:" + this.app.context.users.length;
 
 		MRE.Actor.Create(this.app.context, {
 			actor: {
