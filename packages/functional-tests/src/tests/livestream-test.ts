@@ -19,8 +19,8 @@ interface ControlDefinition {
 	labelActor?: MRE.Actor;
 }
 
-export default class VideoSyncTest extends Test {
-	public expectedResultDescription = "Tests Prerecorded video sync from an internet source";
+export default class LivestreamTest extends Test {
+	public expectedResultDescription = "Tests livestream video";
 
 	private assets: MRE.AssetContainer;
 
@@ -73,7 +73,7 @@ export default class VideoSyncTest extends Test {
 		const videoStream1 = this.assets.createVideoStream(
 			'stream1',
 			{
-				uri: `youtube://U03lLvhBzOw`
+				uri: `youtube://5yx6BWlEVcY`
 			}
 		);
 
@@ -99,20 +99,6 @@ export default class VideoSyncTest extends Test {
 						}
 					}
 					return this.isPlaying.toString();
-				}
-			},
-			{
-				label: "Time", realtime: true, action: incr => {
-					if (incr !== 0) {
-						this.currentInstance.setState({ time: 10 });
-					}
-					return "Seek to 10 Seconds";
-				}
-			},
-			{
-				label: "Loop", action: incr => {
-					this.looping = !this.looping;
-					return this.looping.toString();
 				}
 			},
 			{

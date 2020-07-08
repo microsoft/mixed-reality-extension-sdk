@@ -31,6 +31,7 @@ import InputTest from './input-test';
 import LibraryFailTest from './library-fail-test';
 import LightTest from './light-test';
 import LookAtTest from './look-at-test';
+import LivestreamTest from './livestream-test'
 import PhysicsBounceTest from './physics-bounce-test';
 import PhysicsStackTest from './physics-stack-test';
 import PhysicsFrictionTest from './physics-friction-test';
@@ -43,6 +44,7 @@ import PrimitivesTest from './primitives-test';
 import PromptTest from './prompt-test';
 import ReparentTest from './reparent-test';
 import SoundTest from './sound-test';
+import SoundSyncTest from './sound-sync-test';
 import StatsTest from './stats-test';
 import TextTest from './text-test';
 import TransformTest from './transform-test';
@@ -85,6 +87,7 @@ export const Factories = {
 	'input': (...args) => new InputTest(...args),
 	'library-fail': (...args) => new LibraryFailTest(...args),
 	'light': (...args) => new LightTest(...args),
+	'livestream': (...args) => new LivestreamTest(...args),
 	'look-at': (...args) => new LookAtTest(...args),
 	'physics-bounce': (...args) => new PhysicsBounceTest(...args),
 	'physics-friction': (...args) => new PhysicsFrictionTest(...args),
@@ -107,12 +110,13 @@ export const Factories = {
 	'prompt': (...args) => new PromptTest(...args),
 	'reparent': (...args) => new ReparentTest(...args),
 	'sound': (...args) => new SoundTest(...args),
+	'sound-sync': (...args) => new SoundSyncTest(...args),
 	'stats': (...args) => new StatsTest(...args),
 	'text': (...args) => new TextTest(...args),
 	'transform': (...args) => new TransformTest(...args),
 	'user-mask': (...args) => new UserMaskTest(...args),
 	'user': (...args) => new UserTest(...args),
 	'video': (...args) => new VideoTest(...args),
-	'vidso-sync': (...args) => new VideoSyncTest(...args),
+	'video-sync': (...args) => new VideoSyncTest(...args),
 	'visibility': (...args) => new VisibilityTest(...args),
 } as FactoryMap;

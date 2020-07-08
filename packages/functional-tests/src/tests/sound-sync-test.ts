@@ -19,8 +19,8 @@ interface ControlDefinition {
 	labelActor?: MRE.Actor;
 }
 
-export default class VideoSyncTest extends Test {
-	public expectedResultDescription = "Tests Prerecorded video sync from an internet source";
+export default class SoundSyncTest extends Test {
+	public expectedResultDescription = "Tests Prerecorded sound playback synchronization";
 
 	private assets: MRE.AssetContainer;
 
@@ -28,31 +28,30 @@ export default class VideoSyncTest extends Test {
 		this.assets.unload();
 	}
 
-	private CreateStreamInstance() {
+	private CreateSoundInstance() {
 		if (this.currentInstance) {
 			this.currentInstance.stop();
 		}
-		this.currentInstance = this.parentActor.startVideoStream(this.videoStreams[this.currentStream].id,
+		this.currentInstance = this.parentActor.startSound(this.soundAssets[this.currentInstanceIndex].id,
 			{
 				volume: this.volume,
 				looping: this.looping,
-				spread: this.spread,
-				rolloffStartDistance: this.rolloffStartDistance
+				pitch: this.pitch,
 			});
 	}
 
 
 	parentActor: MRE.Actor;
-	videoStreams: MRE.VideoStream[];
+	soundAssets: MRE.Sound[];
 	currentInstance: MRE.MediaInstance;
-	currentStream = 0;
+	currentInstanceIndex = 0;
 	isPlaying = true;
 	
 
 	volume = .2;
 	looping = true;
-	spread = 0.8;
-	rolloffStartDistance = 2.5;
+	pitch = 0;
+	time = 0;
 
 	public async run(root: MRE.Actor): Promise<boolean> {
 		this.assets = new MRE.AssetContainer(this.app.context);
@@ -70,21 +69,19 @@ export default class VideoSyncTest extends Test {
 			}
 		});
 
-		const videoStream1 = this.assets.createVideoStream(
-			'stream1',
-			{
-				uri: `youtube://U03lLvhBzOw`
-			}
+		const soundAsset1 = this.assets.createSound(
+			'music',
+			{ uri: `${this.baseUrl}/Counting.wav` }
 		);
 
 		//Todo: More video sources and types for when support is patched in.
 		// Non youtube?
 
-		this.videoStreams = [videoStream1];
+		this.soundAssets = [soundAsset1];
 
 		await Promise.all([this.parentActor.created()]);
 
-		this.CreateStreamInstance();
+		this.CreateSoundInstance();
 
 		const controls: ControlDefinition[] = [
 			{
@@ -102,16 +99,9 @@ export default class VideoSyncTest extends Test {
 				}
 			},
 			{
-				label: "Time", realtime: true, action: incr => {
-					if (incr !== 0) {
-						this.currentInstance.setState({ time: 10 });
-					}
-					return "Seek to 10 Seconds";
-				}
-			},
-			{
 				label: "Loop", action: incr => {
 					this.looping = !this.looping;
+					this.currentInstance.setState({looping: this.looping});
 					return this.looping.toString();
 				}
 			},
@@ -125,47 +115,9 @@ export default class VideoSyncTest extends Test {
 					this.currentInstance.setState({ volume: this.volume });
 					return Math.floor(this.volume * 100) + "%";
 				}
-			},
-			{
-				label: "Spread", action: incr => {
-					if (incr > 0) {
-						this.spread = this.spread >= 1.0 ? 1.0 : this.spread + .1;
-					} else if (incr < 0) {
-						this.spread = this.spread <= 0.0 ? 0.0 : this.spread - .1;
-					}
-					this.currentInstance.setState({ spread: this.spread });
-					return Math.floor(this.spread * 100) + "%";
-				}
-			},
-			{
-				label: "Rolloff Start Distance", action: incr => {
-					if (incr > 0) {
-						this.rolloffStartDistance += .1;
-					} else if (incr < 0) {
-						this.rolloffStartDistance -= .1;
-					}
-					this.currentInstance.setState({ rolloffStartDistance: this.rolloffStartDistance });
-					return this.rolloffStartDistance.toString();
-				}
-			},
-			//Todo: Multiple videos
-			//{
-			// label: "Video Index", action: incr => {
-			// 		if (incr > 0) {
-			// 			this.currentStream += 1;
-			// 			if(this.currentStream > 2) {
-			// 				this.currentStream = 0;
-			// 			}
-			// 		} else if (incr < 0) {
-			// 			this.currentStream -= 1;
-			// 			if(this.currentStream < 0) {
-			// 				this.currentStream = 1;
-			// 			}
-			// 		}
-			// 		this.CreateStreamInstance();
-			// 		return this.currentStream.toString();
-			// 	}
-			// }
+			}
+			//Todo: Multiple sounds
+
 
 		];
 		this.createControls(controls, MRE.Actor.Create(this.app.context, {
