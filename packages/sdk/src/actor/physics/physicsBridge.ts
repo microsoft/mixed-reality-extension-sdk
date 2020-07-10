@@ -14,7 +14,7 @@ export type PhysicsBridgeTransformUpdate = {
     transformsBlob: string;
 }
 
-export type PhysicsServerOneTransformsUpdate = {
+export type PhysicsServerOneTransformUpdate = {
 	localTransform: TransformLike;
     appTransform: TransformLike;
     actorGuid: Guid;
@@ -23,5 +23,5 @@ export type PhysicsServerOneTransformsUpdate = {
 export type PhysicsUploadServerTransformsUpdate = {
     id: Guid;
     transformCount: number;
-    updates: PhysicsServerOneTransformsUpdate[];
+    updates: PhysicsServerOneTransformUpdate[];
 }

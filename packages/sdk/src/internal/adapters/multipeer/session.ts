@@ -6,11 +6,12 @@
 import deepmerge from 'deepmerge';
 import { EventEmitter } from 'events';
 
-import { AnimationLike, Guid, log, UserLike } from '../../..';
+import { AnimationLike, Guid, newGuid, log, UserLike } from '../../..';
 import {
 	Client,
 	Connection,
 	EventedConnection,
+	filterEmpty,
 	InitializeActorMessage,
 	Message,
 	MissingRule,
@@ -22,7 +23,8 @@ import {
 	SessionSync,
 	SyncActor,
 	SyncAnimation,
-	SyncAsset
+	SyncAsset,
+	validateJsonFieldName
 } from '../../../internal';
 
 type AssetCreationMessage = Message<Payloads.LoadAssets | Payloads.CreateAsset>;
@@ -258,8 +260,16 @@ export class Session extends EventEmitter {
 
 	public sendToClients(message: Message, filterFn?: (value: Client, index: number) => any) {
 		const clients = this.clients.filter(filterFn || (() => true));
+		if (!message.id) {
+			message.id = newGuid();
+		}
+		const msgBuffer = Buffer.from(
+			JSON.stringify(message, (key, value) => {
+				validateJsonFieldName(key);
+				return filterEmpty(value);
+			}), 'utf8');
 		for (const client of clients) {
-			client.send({ ...message });
+			client.send(message, null, msgBuffer);
 		}
 	}
 

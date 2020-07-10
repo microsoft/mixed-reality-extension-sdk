@@ -23,7 +23,7 @@ export class EventedConnection extends EventEmitter implements Connection {
 	private _promises = new Map<Guid, QueuedPromise>();
 	public statsTracker = new NetworkStatsTracker();
 
-	private queuedMessages: Message[] = [];
+	private queuedMessages: Array<[Message, Buffer]> = [];
 	private timeout: NodeJS.Timer;
 
 	/** @inheritdoc */
@@ -58,12 +58,12 @@ export class EventedConnection extends EventEmitter implements Connection {
 	}
 
 	/** @inheritdoc */
-	public send(message: Message): void {
-		this.emit('send', message);
+	public send(message: Message, serializedMessage?: Buffer): void {
+		this.emit('send', message, serializedMessage);
 	}
 
 	/** @inheritdoc */
-	public recv(message: Message): void {
+	public recv(message: Message, serializedMessage?: Buffer): void {
 		/* eslint-disable @typescript-eslint/no-use-before-define */
 		const hasListeners = () => !!this.listeners('recv').length;
 		const checkAndLoop = () => {
@@ -76,15 +76,15 @@ export class EventedConnection extends EventEmitter implements Connection {
 		};
 		const dispatchQueuedMessages = () => {
 			for (const queuedMessage of this.queuedMessages.splice(0)) {
-				this.emit('recv', queuedMessage);
+				this.emit('recv', ...queuedMessage);
 			}
 		};
 		const setRetryLoop = () => this.timeout = this.timeout || setTimeout(checkAndLoop, 100);
 
 		if (hasListeners()) {
-			this.emit('recv', message);
+			this.emit('recv', message, serializedMessage);
 		} else {
-			this.queuedMessages.push(message);
+			this.queuedMessages.push([message, serializedMessage]);
 			setRetryLoop();
 		}
 		/* eslint-enable @typescript-eslint/no-use-before-define */

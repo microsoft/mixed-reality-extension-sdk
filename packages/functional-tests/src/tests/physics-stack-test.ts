@@ -7,7 +7,6 @@ import * as MRE from '@microsoft/mixed-reality-extension-sdk';
 
 import { App } from '../app';
 import { Test } from '../test';
-import { Vector3, Actor } from '@microsoft/mixed-reality-extension-sdk';
 import { int } from '../../../common/src/math/types';
 
 export default class PhysicsStackTest extends Test {
@@ -22,7 +21,7 @@ export default class PhysicsStackTest extends Test {
 	private numOwners: number;
 	private boxSize: number;
 
-	private rigidBodyActors = new Set<Actor>();
+	private rigidBodyActors = new Set<MRE.Actor>();
 	private completeOwnershipOnGrab: boolean;
 
 	constructor(numBoxes: number, boxSize: number, isMixedOwnership: boolean, completeOwnershipOnGrab: boolean,
@@ -50,10 +49,10 @@ export default class PhysicsStackTest extends Test {
 			this.createLabel(root, this.materials[index], this.app.context.users[i].id);
 
 			if (i === 0) {
-				this.createCube(root, this.boxSize, new Vector3(1.2, this.boxSize * 0.5, -1),
+				this.createCube(root, this.boxSize, new MRE.Vector3(1.2, this.boxSize * 0.5, -1),
 					this.app.context.users[i].id, this.materials[i]);
 			} else if (i === 1) {
-				this.createCube(root, this.boxSize, new Vector3(-1.2, this.boxSize * 0.5, -1),
+				this.createCube(root, this.boxSize, new MRE.Vector3(-1.2, this.boxSize * 0.5, -1),
 					this.app.context.users[i].id, this.materials[i]);
 			}
 		}
@@ -90,7 +89,7 @@ export default class PhysicsStackTest extends Test {
 	private createStack(root: MRE.Actor, size: number, count: int,
 		numUsers: int, users: MRE.User[], materials: MRE.Material[]) {
 
-		const position = new Vector3(0, size * 0.5, -1);
+		const position = new MRE.Vector3(0, size * 0.5, -1);
 
 		for(let i = 0; i<count;i++) {
 			const userIndex = i % numUsers;
@@ -100,7 +99,7 @@ export default class PhysicsStackTest extends Test {
 		}
 	}
 
-	private createCube(root: MRE.Actor, size: number, position: Vector3, userId: MRE.Guid, material: MRE.Material) {
+	private createCube(root: MRE.Actor, size: number, position: MRE.Vector3, userId: MRE.Guid, material: MRE.Material) {
 		const actor = MRE.Actor.Create(this.app.context, {
 			actor: {
 				owner: userId,
