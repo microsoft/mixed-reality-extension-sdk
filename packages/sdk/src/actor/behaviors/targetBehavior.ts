@@ -8,11 +8,11 @@ import {
 	ActionState,
 	BehaviorType,
 	DiscreteAction,
-	User
+	User,
+	Vector3Like
 } from '../..';
 // break import cycle
 import { Behavior } from './behavior';
-import { Vector3Like } from '@microsoft/mixed-reality-extension-common/src';
 
 /**
  * Interface that represents a point in space as a local space point and an app space point.
