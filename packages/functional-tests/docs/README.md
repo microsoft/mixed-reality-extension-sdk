@@ -2,7 +2,7 @@
 
 ## Actor Attachment
 
-
+![Actor Attachment Test](/images/actor-atachment.png)
 
 Description:
 *  "Actors attaching to avatar points"
