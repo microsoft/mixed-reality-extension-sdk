@@ -24,11 +24,17 @@ export class WebSocket extends EventedConnection {
 		});
 
 		this._ws.on('message', (json: WS.Data) => {
-			this.statsTracker.recordIncoming(Buffer.byteLength(json as string));
+			if (json instanceof Buffer) {
+				this.statsTracker.recordIncoming(json.byteLength);
+				json = json.toString('utf8')
+			} else {
+				json = json as string;
+				this.statsTracker.recordIncoming(Buffer.byteLength(json));
+			}
 
 			let message: Message = null;
 			try {
-				message = JSON.parse(json as string);
+				message = JSON.parse(json);
 			} catch (e) {
 				log.error('network', e);
 			}
@@ -45,19 +51,21 @@ export class WebSocket extends EventedConnection {
 			}
 		});
 
-		super.on('send', (message: Message) => {
-			const json = JSON.stringify(
-				message, (key, value) => {
-					validateJsonFieldName(key);
-					return filterEmpty(value);
-				});
-			this.statsTracker.recordOutgoing(Buffer.byteLength(json));
+		super.on('send', (message: Message, serializedMessage?: Buffer) => {
+			if (!serializedMessage) {
+				serializedMessage = Buffer.from(
+					JSON.stringify(message, (key, value) => {
+						validateJsonFieldName(key);
+						return filterEmpty(value);
+					}), 'utf8');
+			}
+			this.statsTracker.recordOutgoing(serializedMessage.byteLength);
 
 			// Uncomment to introduce latency on outgoing messages.
 			// NOTE: This will sometimes change message ordering.
 			// setTimeout(() => {
 			try {
-				this._ws.send(json);
+				this._ws.send(serializedMessage, { binary: false, compress: false });
 			} catch (e) {
 				log.error('network', e);
 			}

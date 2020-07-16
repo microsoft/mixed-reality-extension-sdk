@@ -118,6 +118,8 @@ export class MultipeerAdapter extends Adapter {
 			this.emitter.emit('connection', context, params);
 			// Start context's update loop.
 			context.internal.start();
+			// Subscribe for default authoritative simulation owner changes
+			session.on('set-authoritative', context.internal.onSetAuthoritative);
 		}
 		return session;
 	}

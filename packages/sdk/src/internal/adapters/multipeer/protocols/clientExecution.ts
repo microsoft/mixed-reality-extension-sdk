@@ -38,10 +38,15 @@ export class ClientExecution extends Protocol implements Middleware {
 	}
 
 	/** @override */
-	public sendMessage(message: Message, promise?: ExportedPromise, timeoutSeconds?: number) {
+	public sendMessage(
+		message: Message,
+		promise?: ExportedPromise,
+		timeoutSeconds?: number,
+		serializedMessage?: Buffer
+	) {
 		// Apply timeout to messages going to the client.
 		const rule = Rules[message.payload.type] || MissingRule;
-		super.sendMessage(message, promise, rule.client.timeoutSeconds);
+		super.sendMessage(message, promise, rule.client.timeoutSeconds, serializedMessage);
 	}
 
 	public startListening() {
