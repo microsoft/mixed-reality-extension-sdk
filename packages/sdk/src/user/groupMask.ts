@@ -2,7 +2,7 @@
  * Copyright (c) Microsoft Corporation. All rights reserved.
  * Licensed under the MIT License.
  */
-import { Context } from '..';
+import { Context, InvertedGroupMask } from '..';
 
 /**
  * A set of user group IDs. User groups are used to selectively enable several different
@@ -26,7 +26,7 @@ export class GroupMask extends Set<string> implements Iterable<string> {
 	 * @param context An active MRE app context
 	 * @param initialContents A list of group names to be added to this GroupMask
 	 */
-	constructor(private context: Context, initialContents: Iterable<string> = null) {
+	constructor(protected context: Context, initialContents: Iterable<string> = null) {
 		super();
 		if (initialContents) {
 			for (const group of initialContents) {
@@ -48,9 +48,16 @@ export class GroupMask extends Set<string> implements Iterable<string> {
 
 	/** @hidden */
 	public static FromPacked(context: Context, value: number): GroupMask {
-		const group = new GroupMask(context);
-		group.setPacked(value);
-		return group;
+		const largerThanBiggestGroup = Object.keys(context.internal.userGroupMapping).length;
+		if (value >= (1 << largerThanBiggestGroup)) {
+			const igroup = new InvertedGroupMask(context);
+			igroup.setPacked(value);
+			return igroup;
+		} else {
+			const group = new GroupMask(context);
+			group.setPacked(value);
+			return group;
+		}
 	}
 
 	/** @hidden */
@@ -70,7 +77,8 @@ export class GroupMask extends Set<string> implements Iterable<string> {
 		return this.packed();
 	}
 
-	private getOrAddMapping(name: string): number {
+	/** @hidden */
+	protected getOrAddMapping(name: string): number {
 		const mapping = this.context.internal.userGroupMapping;
 		if (!mapping[name]) {
 			const lastIndex = Object.keys(mapping).length;
@@ -89,7 +97,7 @@ export class GroupMask extends Set<string> implements Iterable<string> {
 	 * Observable considerations
 	 */
 
-	private changedCallback: (gm: GroupMask) => void;
+	protected changedCallback: (gm: GroupMask) => void;
 
 	/** @hidden */
 	public onChanged(callback: (gm: GroupMask) => void) {
@@ -188,5 +196,10 @@ export class GroupMask extends Set<string> implements Iterable<string> {
 	 */
 	public has(item: string) {
 		return super.has(item);
+	}
+
+	/** Convert this from a mask containing only these groups to a mask containing everything but these groups. */
+	public invert() {
+		return new InvertedGroupMask(this.context, this);
 	}
 }

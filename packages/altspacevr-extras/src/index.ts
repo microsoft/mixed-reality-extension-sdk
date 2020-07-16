@@ -4,3 +4,5 @@
  */
 
 export * from './videoPlayerManager';
+export * from './moderatorFilter';
+export * from './singleEventFilter';

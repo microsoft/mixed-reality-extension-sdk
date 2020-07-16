@@ -3,7 +3,7 @@
  * Licensed under the MIT License.
  */
 
-import { DialogResponse, User, UserLike } from '..';
+import { DialogResponse, Permissions, User, UserLike } from '..';
 import { InternalPatchable, Payloads } from '../internal';
 import { ContextInternal } from '../core/contextInternal';
 
@@ -36,7 +36,12 @@ export class UserInternal implements InternalPatchable<UserLike> {
 		} as Payloads.ShowDialog;
 
 		return new Promise<Payloads.DialogResponse>((resolve, reject) => {
-			this.context.sendPayload(payload, { resolve, reject });
+			if (this.user.grantedPermissions.includes(Permissions.UserInteraction)) {
+				this.context.sendPayload(payload, { resolve, reject });
+			} else {
+				reject(`Permission denied on user ${this.user.id} (${this.user.name}). Either this MRE did not ` +
+					"request the UserInteraction permission, or it was denied by the user.");
+			}
 		})
 		.then(response => {
 			if (response.failureMessage) {
