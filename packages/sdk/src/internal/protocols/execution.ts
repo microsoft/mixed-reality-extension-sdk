@@ -122,6 +122,11 @@ export class Execution extends Protocol {
 	};
 
 	/** @private */
+	public 'recv-physicsbridge-server-transforms-upload' = (payload: Payloads.PhysicsUploadServerUpdate) => {
+		this.emit('protocol.physicsbridge-server-transforms-upload', [payload.physicsTranformServer]);
+	};
+
+	/** @private */
 	public 'recv-collision-event-raised' = (payload: Payloads.CollisionEventRaised) => {
 		this.emit('protocol.collision-event-raised', {
 			colliderOwnerId: payload.actorId,

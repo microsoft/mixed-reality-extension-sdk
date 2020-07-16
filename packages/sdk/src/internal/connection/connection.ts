@@ -45,7 +45,7 @@ export interface Connection {
 	/**
 	 * Registers a handler for the 'send' or 'recv' events. Called when a new message is to be sent.
 	 */
-	on(event: 'send' | 'recv', listener: (message: Message) => void): void;
+	on(event: 'send' | 'recv', listener: (message: Message, serializedMessage?: Buffer) => void): void;
 
 	/**
 	 * Registers a handler for the 'close' event. Called when the connection was closed.
@@ -60,7 +60,7 @@ export interface Connection {
 	/**
 	 * Unregisters the handler for these events.
 	 */
-	off(event: 'send' | 'recv', listener: (message: Message) => void): void;
+	off(event: 'send' | 'recv', listener: (message: Message, serializedMessage?: Buffer) => void): void;
 	off(event: 'close', listener: () => void): void;
 	off(event: 'error', listener: (err: any) => void): void;
 
@@ -72,10 +72,10 @@ export interface Connection {
 	/**
 	 * Sends a message.
 	 */
-	send(message: Message): void;
+	send(message: Message, serializedMessage?: Buffer): void;
 
 	/**
 	 * Receives a message.
 	 */
-	recv(message: Message): void;
+	recv(message: Message, serializedMessage?: Buffer): void;
 }
