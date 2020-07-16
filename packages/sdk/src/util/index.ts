@@ -9,4 +9,5 @@ export * from './guid';
 export * from './log';
 export * from './planarGridLayout';
 export * from './readonlyMap';
+export * from './userFilter';
 export * from './webHost';
