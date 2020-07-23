@@ -22,6 +22,7 @@ export default class TextTest extends Test {
 	public interval: NodeJS.Timeout;
 	private assets: MRE.AssetContainer;
 
+
 	private texts: MRE.Actor[];
 
 	private characterLists: string[];
@@ -38,22 +39,38 @@ export default class TextTest extends Test {
 
 		//Create Character lists
 		let LatinBasic = 
-		[' ','!','\"','#','$','%','&','\'','(',')','*','+',',' ,'-','.','/',
-		 '0','1','2' ,'3','4','5','6','7' ,'8','9',':',';','<' ,'=','>','?',
-		 '@','A','B' ,'C','D','E','F','G' ,'H','I','J','K','L' ,'M','N','O',
-		 'P','Q','R' ,'S','T','U','V','W' ,'X','Y','Z','[','\\',']','^','_',
-		 '`','a','b' ,'c','d','e','f','g' ,'h','i','j','k','l' ,'m','n','o',
-		 'p','q','r' ,'s','t','u','v','w' ,'x','y','z','{','|' ,'}','~','\t'];
+		[" !\"#$%&\'()*+,-./,0123456789:;<=>?@ABCDEFGHIJKLMNO", 
+		 "PQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~"];
 
-		this.characterLists.push(LatinBasic.toString());
+		let LatinBasic2 : string[] = ["",""];
+		let i = " ".charCodeAt(0);
+		for(; i < 'O'.charCodeAt(0); ++i){
+			LatinBasic2[0] = LatinBasic2[0].concat(String.fromCharCode(i));
+		}
+		LatinBasic2[0] = LatinBasic2[0].concat("\n");
+		for(; i < '~'.charCodeAt(0); ++i){
+			LatinBasic2[1] = LatinBasic2[1].concat(String.fromCharCode(i));
+		}
 
-		let position : Vector3;
-		position.set(-2,3,0);
+		this.characterLists = [];
+		this.texts = [];
+
+		for(let characters of LatinBasic)
+		{
+			this.characterLists.push(characters);
+		}
+
+		for(let characters of LatinBasic2)
+		{
+			this.characterLists.push(characters);
+		}
+
+		let position = new Vector3(-2,1.5,0);
 		for(let font of options.font) {
-			const newActor = this.createTemplate(root, this.characterLists[0]);5
+			const newActor = this.createTemplate(root, this.characterLists[0]);
 			newActor.transform.local.position.copy(position);
 			this.texts.push( newActor );
-			position.add(MRE.Vector3.Down())
+			position.addInPlace(MRE.Vector3.Down().scale(.3))
 		}
 
 
