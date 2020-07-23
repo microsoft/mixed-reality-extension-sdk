@@ -13,13 +13,19 @@
   "scripts": {
     "clean": "tsc --build --clean",
     "build": "tsc --build && eslint --ext .ts src",
+    "build-only": "tsc --build",
+    "build-watch": "tsc --build --watch --preserveWatchOutput",
     "start": "node .",
-    "debug": "node --nolazy --inspect=9229 ."
+    "start-watch": "nodemon --nolazy --inspect .",
+    "debug": "node --nolazy --inspect=9229 .",
+    "debug-watch": "npm run build-only && concurrently \"npm run build-watch\" \"nodemon --nolazy --inspect=9229 .\""
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^2.6.1",
     "@typescript-eslint/parser": "^2.6.1",
+    "concurrently": "^5.2.0",
     "eslint": "^6.6.0",
+    "nodemon": "^2.0.4",
     "typescript": "^3.7.2"
   },
   "dependencies": {
