@@ -6,7 +6,7 @@
 import * as MRE from '@microsoft/mixed-reality-extension-sdk';
 
 import { Test } from '../test';
-import { Vector3, Color3 } from '@microsoft/mixed-reality-extension-sdk';
+import { Vector3 } from '@microsoft/mixed-reality-extension-sdk';
 
 const options = {
 	font: Object.keys(MRE.TextFontFamily) as MRE.TextFontFamily[],
