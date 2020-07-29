@@ -18,7 +18,7 @@ const CurrentSDKVersion = semver.coerce(require('../../../package.json').version
  * have been added that don't work on older clients (i.e. pretty much every release). Since host apps are required to
  * update client libraries regularly, this one is not a big deal to update.
  */
-const MinimumSupportedClientVersion = semver.coerce('0.19');
+const MinimumSupportedClientVersion = semver.coerce('0.20');
 
 /**
  * @hidden
