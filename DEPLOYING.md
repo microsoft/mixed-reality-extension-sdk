@@ -149,14 +149,24 @@ Go to the [Azure website](https://azure.microsoft.com/en-us/free/)
 2. Install VSCode extension 'Azure App Service'  [ms-azuretools.vscode-azureappservice](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-azureappservice)
 3. Open MRE folder in VSCode
 4. Build your MRE application and verify locally
-5. When you are ready to deploy, open Azure tab in VSCode and sign in with your Azure account and click Deploy to WebApp..
-6. Pick an existing app from the dropdown; or if deploying for the first time, create a new WebApp either in [Azure portal](https://portal.azure.com) or continue in VSCode:
-* choose a unique name for your new web app (NOTE! This step creates resources on Azure)
-* pick Node.js 12 LTS runtime for your new Linux app (NOTE: Linux applications with WebSockets are not supported on Azure Free tier at this time)
-* choose Code instead of Docker container, if prompted
-7. Configure the new web app in [Azure portal](https://portal.azure.com) to enable WebSockets:
+5. When you are ready to deploy, open Azure tab in VSCode and sign in with your Azure account
+6. If you have an existing app, click Deploy to WebApp.. and pick the app name from the dropdown. Skip the next step
+7. If deploying for the first time, create a new WebApp either in [Azure portal](https://portal.azure.com) or continue in VSCode (recommended):
+
+* Right-click on your subscription and select Create New Web App.. (Advanced) and follow the steps
+* choose a unique name for your new web app 
+* Create a New Resource group or select an existing one (NOTE! This step creates resources on Azure)
+* Linux or Windows: Linux
+* Create a New Service plan, for example B1, or select an existing one
+NOTE! Linux applications with WebSockets are not supported on Azure Free tier at this time. If your application is using F1 plan, you have to re-create all resources.
+* pick Node.js 12 LTS runtime for your new Linux app
+* choose Code instead of Docker container, if creating through Azure portal
+* Wait until deployment completes (see Output window)
+![AzureDeploySteps](https://user-images.githubusercontent.com/31327535/90576051-e5bacc80-e171-11ea-9bc0-e008387b375b.gif)
+
+8. Configure the new web app in [Azure portal](https://portal.azure.com) to enable WebSockets:
 * Go to App Services, find the app, go to Settings | Configuration | General settings and check WebSockets setting on.
-8. Use wss://uniquewebappname.azurewebsites.net in MRETestBed or AltspaceVR to connect.
+9. Use wss://uniquewebappname.azurewebsites.net in MRETestBed or AltspaceVR to connect.
 
 #### Advanced settings 
 To customize resource creation or choose an existing resource, go to Azure App Service extension settings and select 'Advanced creation'
