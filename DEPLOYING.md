@@ -147,22 +147,16 @@ Go to the [Azure website](https://azure.microsoft.com/en-us/free/)
 #### Create a new application and deploy with VSCode 
 1. Install and run [Visual Studio Code](https://code.visualstudio.com/)
 2. Install VSCode extension 'Azure App Service'  [ms-azuretools.vscode-azureappservice](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-azureappservice)
-3. Open MRE folder in VSCode 
-4. Pick a globally unique name for your web app and update baseUrl in server.ts with: 
-```js
-const server = new WebHost({
-    baseUrl: 'https://uniquewebappname.azurewebsites.net',
-    port: process.env.PORT, 
-});
-```
-5. Build your MRE application
-6. Open Azure tab in VSCode and sign in with your Azure account
-7. Click Deploy to WebApp..
-8. Create new WebApp if deploying for the first time or pick an existing app from the dropdown
-* enter your web app name (NOTE! This step creates resources on Azure)
-* pick Node.js 10.14 runtime for your new Linux app
-9. Use ws://uniquewebappname.azurewebsites.net in MRETestBed or AltspaceVR.
-10. You can manage the web app on [Azure portal](https://portal.azure.com)
+3. Open MRE folder in VSCode
+4. Build your MRE application and verify locally
+5. When you are ready to deploy, open Azure tab in VSCode and sign in with your Azure account and click Deploy to WebApp..
+6. Pick an existing app from the dropdown; or if deploying for the first time, create a new WebApp either in [Azure portal](https://portal.azure.com) or continue in VSCode:
+* choose a unique name for your new web app (NOTE! This step creates resources on Azure)
+* pick Node.js 12 LTS runtime for your new Linux app (NOTE: Linux applications with WebSockets are not supported on Azure Free tier at this time)
+* choose Code instead of Docker container, if prompted
+7. Configure the new web app in [Azure portal](https://portal.azure.com) to enable WebSockets:
+* Go to App Services, find the app, go to Settings | Configuration | General settings and check WebSockets setting on.
+8. Use wss://uniquewebappname.azurewebsites.net in MRETestBed or AltspaceVR to connect.
 
 #### Advanced settings 
 To customize resource creation or choose an existing resource, go to Azure App Service extension settings and select 'Advanced creation'
