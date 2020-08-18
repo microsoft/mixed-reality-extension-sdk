@@ -158,6 +158,7 @@ Go to the [Azure website](https://azure.microsoft.com/en-us/free/)
 * Create a New Resource group or select an existing one (NOTE! This step creates resources on Azure)
 * Linux or Windows: Linux
 * Create a New Service plan, for example B1, or select an existing one
+
 NOTE! Linux applications with WebSockets are not supported on Azure Free tier at this time. If your application is using F1 plan, you have to re-create all resources.
 * pick Node.js 12 LTS runtime for your new Linux app
 * choose Code instead of Docker container, if creating through Azure portal
@@ -167,9 +168,6 @@ NOTE! Linux applications with WebSockets are not supported on Azure Free tier at
 8. Configure the new web app in [Azure portal](https://portal.azure.com) to enable WebSockets:
 * Go to App Services, find the app, go to Settings | Configuration | General settings and check WebSockets setting on.
 9. Use wss://uniquewebappname.azurewebsites.net in MRETestBed or AltspaceVR to connect.
-
-#### Advanced settings 
-To customize resource creation or choose an existing resource, go to Azure App Service extension settings and select 'Advanced creation'
 
 
 ---
