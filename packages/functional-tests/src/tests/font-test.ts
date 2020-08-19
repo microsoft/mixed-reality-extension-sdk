@@ -4,9 +4,7 @@
  */
 
 import * as MRE from '@microsoft/mixed-reality-extension-sdk';
-
 import { Test } from '../test';
-import { Vector3 } from '@microsoft/mixed-reality-extension-sdk';
 
 const options = {
 	font: Object.keys(MRE.TextFontFamily) as MRE.TextFontFamily[],
@@ -75,7 +73,7 @@ export default class TextTest extends Test {
 		this.textBlocks.forEach((v,i,a) =>{ this.createDisplayString(v); });
 
 
-		const position = new Vector3(0,2.5,-.3);
+		const position = new MRE.Vector3(0,2.5,-.3);
 		for(const font of options.font) {
 			const newActor = this.createTemplate(root, this.textBlocks[0].displayString);
 			newActor.transform.local.position.copy(position);
