@@ -23,6 +23,7 @@ import ButtonTargetingTest from './button-targeting-test';
 import ClockSyncTest from './clock-sync-test';
 import CollisionLayerTest from './collision-layer-test';
 import FailureTest from './failure-test';
+import FontTest from './font-test';
 import GltfActorSyncTest from './gltf-actor-sync-test';
 import GltfConcurrencyTest from './gltf-concurrency-test';
 import GltfGenTest from './gltf-gen-test';
@@ -83,6 +84,7 @@ export const Factories = {
 	'clock-sync': (...args) => new ClockSyncTest(...args),
 	'collision-layer': (...args) => new CollisionLayerTest(...args),
 	'failure': (...args) => new FailureTest(...args),
+	'font': (...args) => new FontTest(...args),
 	'gltf-actor-sync': (...args) => new GltfActorSyncTest(...args),
 	'gltf-concurrency': (...args) => new GltfConcurrencyTest(...args),
 	'gltf-gen': (...args) => new GltfGenTest(...args),
