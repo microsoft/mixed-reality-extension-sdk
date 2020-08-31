@@ -67,7 +67,7 @@ public onSharingMessage(sessionId: string, userId: Guid, callbacks: SharingCallb
  * Returns true if the callback was successfully unregistered.
  * @event
  */
-public offUserLeft(sessionId: string, userId: Guid): bool {
+public offSharingMessage(sessionId: string, userId: Guid): bool {
     // [... Deregister listener ...]
     return true; // If successful
 }
