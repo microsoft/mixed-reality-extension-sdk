@@ -47,7 +47,7 @@ class SharingCallbacks {
 
 Callbacks are registered (and deregistered) via new functions on the context described below. Optionally, callbacks may be scoped to a particular session id or user id. When no session or user id is provided, sharing data will be accepted from any session and user.
 
-For the sake of simplicity, only one callback may be registered for a given ```<MessageType,UserId>``` on a particular session context at a time. This restriction may allow for a more simple bookeeping implementation for registered callbacks within the the sharing implementation on both the app side and the client runtime See [Implementation Suggestions](#Implementation\ Suggestions)
+For the sake of simplicity, only one callback may be registered for a given ```<MessageType,UserId>``` on a particular session context at a time. This restriction may allow for a more simple bookeeping implementation for registered callbacks within the the sharing implementation on both the app side and the client runtime See [Implementation Suggestions](#Implementation-Suggestions)
 
 ```ts
 // Modifications to
