@@ -24,9 +24,11 @@ class PhotoSharingMessage extends SharingMessage {
 `SharingCallbacks` are a relatively straightforward callback registration mechanism, with an optional mechanism to allow the callback registrant to stop processing of messages and construction of payloads in cases where a particular message would not be acted on.
 
 ```ts
-// Allows the application to short circuit processing of certain 
-// performance intensive messages if the application does not 
-// intend to act on the messages.
+
+// Fires before the MessageReceivedCallback. When the implementation
+// returns false, may short-circuit additional processing on the message.
+// Note that this callback is optional but may be useful if the
+// application is unable or uninterested in acting on all messages.
 interface IsMessageDesiredCallback { 
     (sessionId: string, userId: Guid) : bool
 }
