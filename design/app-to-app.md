@@ -41,7 +41,7 @@ class SharingCallbacks {
 
 Callbacks are registered (and deregistered) via new functions on the context described below. Optionally, callbacks may be scoped to a particular session id or user id. When no session or user id is provided, sharing data will be accepted from any session and user.
 
-For the sake of simplicity, only one callback may be registered for a given ```<MessageType,SessionId,UserId>``` tuple at a time.
+For the sake of simplicity, only one callback may be registered for a given ```<MessageType,UserId>``` on a particular session a time.
 
 ```ts
 // Modifications to
@@ -50,24 +50,25 @@ For the sake of simplicity, only one callback may be registered for a given ```<
 /**
  * Registers a set of callbacks invoked at various points in the processing
  * of a sharing message. Only one callback may be registered at a time for a 
- * given session and user.
-
+ * given context and user.
+ * 
+ * Use ZeroGuid to register for all users.
+ * 
  * Returns true if the callback was successfully registered.
  * @event
  */
-public onSharingMessage(sessionId: string, userId: Guid, callbacks: SharingCallbacks): bool {
+public onSharingMessage(userId: Guid, callbacks: SharingCallbacks): bool {
     // [... Register listener ...]
     return true; // If successful
 }
 
 /**
- * Removes the onSharingMessage callback, if any, associated with the given sessio
- * and user from the context.
+ * Removes the onSharingMessage callback, if any, associated with the given user from the context.
  * 
  * Returns true if the callback was successfully unregistered.
  * @event
  */
-public offSharingMessage(sessionId: string, userId: Guid): bool {
+public offSharingMessage(userId: Guid): bool {
     // [... Deregister listener ...]
     return true; // If successful
 }
@@ -76,5 +77,5 @@ public offSharingMessage(sessionId: string, userId: Guid): bool {
 Implementation Suggestions
 ------------------
 1. Modify `context` to expose callback registration mechanism
-2. Adjust `contextInternal` and perhaps `multiPeerAdapter` to message the desire for each `<MessageType,SessionId,UserId>` callback to each client (and corresponding remove messages). For callbacks registered for all sessions or all users, this my be sent on connect
+2. Adjust `contextInternal` and perhaps `multiPeerAdapter` to message the desire for each `<MessageType,UserId>` callback to each client (and corresponding remove messages). For callbacks registered for all sessions or all users, this my be sent on connect
 3. Implement the "Photo" message type. Send and receive encoded photos via the existing websocket used by multiPeerAdapter. Future message types (e.g., streaming video) may need to establish related side-channels.
