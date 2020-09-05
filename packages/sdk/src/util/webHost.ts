@@ -32,10 +32,17 @@ export class WebHost {
 	private _baseDir: string;
 	private _baseUrl: string;
 	private manifest: Buffer = null;
+	private _ready: Promise<void>;
 
 	public get adapter() { return this._adapter; }
 	public get baseDir() { return this._baseDir; }
 	public get baseUrl() { return this._baseUrl; }
+
+	/**
+	 * A promise that resolves when the HTTP server is listening.
+	 * Get the server reference from `webHost.adapter.server`.
+	 */
+	public get ready() { return this._ready; }
 
 	private bufferMap: { [path: string]: StaticBufferInfo } = {};
 
@@ -65,9 +72,9 @@ export class WebHost {
 		this._adapter = new MultipeerAdapter({ port });
 
 		// Start listening for new app connections from a multi-peer client.
-		this.validateManifest()
-		.then(() => this._adapter.listen())
-		.then(server => {
+		const serverP = this.validateManifest().then(() => this._adapter.listen());
+		this._ready = serverP.then<void>();
+		serverP.then(server => {
 			this._baseUrl = this._baseUrl || server.url.replace(/\[::\]/u, '127.0.0.1');
 			log.info('app', `${server.name} listening on ${JSON.stringify(server.address())}`);
 			log.info('app', `baseUrl: ${this.baseUrl}`);
