@@ -83,6 +83,7 @@ export interface ActorLike {
 	attachment: Partial<AttachmentLike>;
 	lookAt: Partial<LookAtLike>;
 	grabbable: boolean;
+	updateFrequency: number;
 }
 
 /**
@@ -115,6 +116,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	private _lookAt: LookAt;
 	private _grabbable = false;
 	private _grab: DiscreteAction;
+	private _updateFrequency = 5;
 
 	private get grab() { this._grab = this._grab || new DiscreteAction(); return this._grab; }
 
@@ -167,6 +169,14 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 		if (value !== this._grabbable) {
 			this._grabbable = value;
 			this.actorChanged('grabbable');
+		}
+	}
+
+	public get updateFrequency() { return this._updateFrequency; }
+	public set updateFrequency(value) {
+		if (value !== this._updateFrequency) {
+			this._updateFrequency = value;
+			this.actorChanged('updateFrequency');
 		}
 	}
 
@@ -738,6 +748,7 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 		if (from.text) { this.enableText(from.text); }
 		if (from.lookAt) { this.enableLookAt(from.lookAt.actorId, from.lookAt.mode); }
 		if (from.grabbable !== undefined) { this._grabbable = from.grabbable; }
+		if (from.updateFrequency !== undefined) { this._updateFrequency = from.updateFrequency; }
 
 		this.internal.observing = wasObserving;
 		return this;
