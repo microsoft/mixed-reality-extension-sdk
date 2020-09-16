@@ -30,7 +30,7 @@ class PhotoSharingMessage extends SharingMessage {
 
 // Fires before the MessageReceivedCallback. When the implementation
 // returns false, may short-circuit additional data transfer or processing
-// relate to the message. The contents of the message may not be complete,
+// related to the message. The contents of the message may not be complete,
 // for example, a PhotoSharingMessage will not have any photo data.
 // Note that this callback is optional but may be useful if the
 // application is unable or uninterested in acting on all messages.
@@ -52,7 +52,7 @@ class SharingCallbacks {
 
 Callbacks are registered (and deregistered) via new functions on the context described below.
 
-For the sake of simplicity, only one callback may be registered on a particular session context at a time for a given callback type. We can relax this restriction in the future, as it's future proof, if application need require. In the meantime, this restriction simplifies the work required to determine if messages are desired and may allow for a more simple implementation within the the sharing implementation on both the app side and the client runtime See [Implementation Suggestions](#Implementation-Suggestions)
+For the sake of simplicity, only one callback may be registered on a particular session context at a time for a given callback type. We can relax this restriction in the future, as it's future proof, if application needs require. In the meantime, this restriction simplifies the work required to determine if messages are desired and may allow for a more simple implementation within the the sharing implementation on both the app side and the client runtime See [Implementation Suggestions](#Implementation-Suggestions)
 
 ```ts
 // Modifications to
@@ -62,10 +62,10 @@ For the sake of simplicity, only one callback may be registered on a particular 
  * Registers a set of callbacks invoked at various points in the processing
  * of a sharing message. Only one callback may be registered at a time
  * for a given callback type.
- * 
+ *
  * The messageReceived callback must be defined, but the isMessageDesired
  * callback is optional.
- * 
+ *
  * Returns true if the callback was successfully registered.
  * @event
  */
@@ -76,7 +76,7 @@ public onSharingMessage(messageType: string, callbacks: SharingCallbacks): bool 
 
 /**
  * Removes the onSharingMessage callback, if it is registered.
- * 
+ *
  * Returns true if the callback was successfully unregistered.
  * @event
  */
@@ -96,16 +96,28 @@ public offSharingMessage(messageType: string, callbacks: SharingCallbacks): bool
 1. On connect (or on subsequent sharing message registration), MRE app sends a `SharingRegistration` json payload consisting of
     * `messageType` - `string` (as Described in [API Design](#API-Design))
 2. MRE Client sends a `SharingMessage` json payload, consiting of the following fields (as Described in [API Design](#API-Design))
+    * `messageId` - `string` (randomly generated guid)
     * `messageType` - `string` 
     * `photoType` - `string`
     * `dataSize` - `number`
-    * `transmissionMethod` - `string`, presently set to the value "websocketbinary", but may be extended, for example, to support side channel for future message types, or alternative trasnport for existing message types.
+    * `transmissionMethod` - `string`, presently set to the value "websocketbinary", but may be extended, for example, to support alternative trasnport for existing message types such as json messages on the primary channel (for smaller payloads)
 3. MRE app invokes `SharingCallbacks.isMessageDesired` callback if present to determine whether the message is desired. If a `SharingCallback` is registered for the given `messageType` but no `isMessageDesired` is present, proceed as if the message IS desired. If no `SharingCallback` is registered for the given `messageType`, proceed as if the message is NOT desired.
 4. MRE app sends a `SharingMessageResponse` json payload, consiting of the following fields:
     * `result` - `boolean` true if the message is desired, false otherwise.
-5. If the message was desired, the MRE host should transmit the bytes of the image immediately following the `SharingMessageResponse` in binary format as per https://developer.mozilla.org/en-US/docs/Web/API/WebSocket/send
-    * TODO: `send(ArrayBuffer)` or `send(Blob)` ?
+5. If the message was desired, the MRE host should establish a [Binary Side Channel](#Binary-Side-Channel) and transmit the bytes of the image immediately following the `SharingMessageResponse` in binary format as per https://developer.mozilla.org/en-US/docs/Web/API/WebSocket/send
 6. MRE app invokes `SharingCallbacks.messageReceived` with a payload similar to that of step 2, with the additional binary data of the image on the payload.
 7. MRE app sends a `SharingMessageResponse` similar to step 4, indicating whether the message was successfully received by an appropriate handler
 
 Note that future sharing message types for content smaller than images may forgo steps 4 and 5 and elect to send their entire payload with the initial json sent in step 2.
+
+
+### Binary Side Channel
+Certain message types, such as images, are not suitable for transmission on the primary websocket. In these cases a websocket bound to an additional port (TODO: Pick port number) will accept connections to handle expected payloads.
+
+There is little back and forth on the binary side channel. After connecting:
+
+1. the client should send (as a string), the same json payload of the `SharingMessage` (in string format) followed by the corresponding binary payload (`send(ArrayBuffer)` or `send(Blob)`) totaling `dataSize` bytes. 
+2. The app should then close the connection:
+    * if the `messageId` is unexpected (i.e., not previously accepted on the main websocket via the `isMessageDesired` mechansim described above) or undesired
+    * after receiving `dataSize` bytes.
+3. the MRE app should invoke the `SharingCallbacks.messageReceived` and send the `SharingMessageResponse` as described above, based on whether or not the message was successfully received.
