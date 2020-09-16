@@ -104,7 +104,7 @@ public offSharingMessage(messageType: string, callbacks: SharingCallbacks): bool
 3. MRE app invokes `SharingCallbacks.isMessageDesired` callback if present to determine whether the message is desired. If a `SharingCallback` is registered for the given `messageType` but no `isMessageDesired` is present, proceed as if the message IS desired. If no `SharingCallback` is registered for the given `messageType`, proceed as if the message is NOT desired.
 4. MRE app sends a `SharingMessageResponse` json payload, consiting of the following fields:
     * `result` - `boolean` true if the message is desired, false otherwise.
-5. If the message was desired, the MRE host should establish a [Binary Side Channel](#Binary-Side-Channel) and transmit the bytes of the image immediately following the `SharingMessageResponse` in binary format as per https://developer.mozilla.org/en-US/docs/Web/API/WebSocket/send
+5. If the message was desired, the MRE host should establish a [Binary Side Channel](#Binary-Side-Channel) and transmit the bytes of the image immediately following the `SharingMessageResponse` in binary format.
 6. MRE app invokes `SharingCallbacks.messageReceived` with a payload similar to that of step 2, with the additional binary data of the image on the payload.
 7. MRE app sends a `SharingMessageResponse` similar to step 4, indicating whether the message was successfully received by an appropriate handler
 
@@ -116,7 +116,9 @@ Certain message types, such as images, are not suitable for transmission on the 
 
 There is little back and forth on the binary side channel. After connecting:
 
-1. the client should send (as a string), the same json payload of the `SharingMessage` (in string format) followed by the corresponding binary payload (`send(ArrayBuffer)` or `send(Blob)`) totaling `dataSize` bytes. 
+1. the client should send, per https://developer.mozilla.org/en-US/docs/Web/API/WebSocket/send
+    * First, as a string, the same json payload of the `SharingMessage` (in string format).
+    * the corresponding binary payload (`send(ArrayBuffer)` or `send(Blob)`) totaling `dataSize` bytes. 
 2. The app should then close the connection:
     * if the `messageId` is unexpected (i.e., not previously accepted on the main websocket via the `isMessageDesired` mechansim described above) or undesired
     * after receiving `dataSize` bytes.
