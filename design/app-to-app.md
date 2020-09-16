@@ -104,22 +104,17 @@ public offSharingMessage(messageType: string, callbacks: SharingCallbacks): bool
 3. MRE app invokes `SharingCallbacks.isMessageDesired` callback if present to determine whether the message is desired. If a `SharingCallback` is registered for the given `messageType` but no `isMessageDesired` is present, proceed as if the message IS desired. If no `SharingCallback` is registered for the given `messageType`, proceed as if the message is NOT desired.
 4. MRE app sends a `SharingMessageResponse` json payload, consiting of the following fields:
     * `result` - `boolean` true if the message is desired, false otherwise.
-5. If the message was desired, the MRE host should establish a [Binary Side Channel](#Binary-Side-Channel) and transmit the bytes of the image immediately following the `SharingMessageResponse` in binary format.
+5. If the message was desired, the MRE host should transmit the bytes of the image via a restful call, to an endpoint such as `/api/share/image/:sessionId/:messageId` as described in [Binary Side Channel](#Binary-Side-Channel) 
 6. MRE app invokes `SharingCallbacks.messageReceived` with a payload similar to that of step 2, with the additional binary data of the image on the payload.
-7. MRE app sends a `SharingMessageResponse` similar to step 4, indicating whether the message was successfully received by an appropriate handler
+7. MRE app sends a `SharingMessageResponse` similar to step 4, indicating whether the message was successfully received by an appropriate handler.
 
 Note that future sharing message types for content smaller than images may forgo steps 4 and 5 and elect to send their entire payload with the initial json sent in step 2.
 
-
 ### Binary Side Channel
-Certain message types, such as images, are not suitable for transmission on the primary websocket. In these cases a websocket bound to an additional port (TODO: Pick port number) will accept connections to handle expected payloads.
+Certain message types, such as images, are not suitable for transmission on the primary websocket. We considered adding a new websocket side channel, but due to http server port restrictions, decided on a new rest endpoint (`/api/share/image/:sessionId/:messageId`) which should accept the binary portion of the message and route it to the appropriate session within the `multipeeradapter`.
 
-There is little back and forth on the binary side channel. After connecting:
+The restify web server configuration for this binding should reject the message if it was not expected as per the negotiation which previously occured on the websocket.
 
-1. the client should send, per https://developer.mozilla.org/en-US/docs/Web/API/WebSocket/send
-    * First, as a string, the same json payload of the `SharingMessage` (in string format).
-    * the corresponding binary payload (`send(ArrayBuffer)` or `send(Blob)`) totaling `dataSize` bytes. 
-2. The app should then close the connection:
-    * if the `messageId` is unexpected (i.e., not previously accepted on the main websocket via the `isMessageDesired` mechansim described above) or undesired
-    * after receiving `dataSize` bytes.
-3. the MRE app should invoke the `SharingCallbacks.messageReceived` and send the `SharingMessageResponse` as described above, based on whether or not the message was successfully received.
+Return a success or error code from the REST endpoint based on whether or not the post payload was received in full. This does not necessarily indicate that the message was accepted by the APP, but may help a host retry transmission in the event of a network error.
+
+The MRE app should invoke the `SharingCallbacks.messageReceived` and send the `SharingMessageResponse` as described above, based on whether or not the message was successfully routed and accepted by the app (see final steps of the sample data flow for photo sharing above)
