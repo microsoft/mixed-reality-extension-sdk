@@ -100,7 +100,7 @@ public offSharingMessage(messageType: string, callbacks: SharingCallbacks): bool
     * `messageType` - `string` 
     * `photoType` - `string`
     * `dataSize` - `number`
-    * `transmissionMethod` - `string`, presently set to the value "websocketbinary", but may be extended, for example, to support alternative trasnport for existing message types such as json messages on the primary channel (for smaller payloads)
+    * `transmissionMethod` - `string`, presently set to the value "restbinary", but may be extended, for example, to support alternative trasnport for existing message types such as json messages on the primary channel (for smaller payloads)
 3. MRE app invokes `SharingCallbacks.isMessageDesired` callback if present to determine whether the message is desired. If a `SharingCallback` is registered for the given `messageType` but no `isMessageDesired` is present, proceed as if the message IS desired. If no `SharingCallback` is registered for the given `messageType`, proceed as if the message is NOT desired.
 4. MRE app sends a `SharingMessageResponse` json payload, consiting of the following fields:
     * `result` - `boolean` true if the message is desired, false otherwise.
