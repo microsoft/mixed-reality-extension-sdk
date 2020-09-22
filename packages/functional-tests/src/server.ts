@@ -24,6 +24,6 @@ const server = new MRE.WebHost({
 });
 
 // Handle new application sessions
-server.adapter.onConnection((context, params) => new App(context, params, server.baseUrl));
+server.adapter.onConnection((context, params) => new App(context, params));
 
 export default server;

@@ -46,7 +46,7 @@ export default class GrabTest extends Test {
 		// Create an actor
 		this.model = MRE.Actor.CreateFromGltf(this.assets, {
 			// from the glTF at the given URL, with box colliders on each mesh
-			uri: `${this.baseUrl}/monkey.glb`,
+			uri: 'monkey.glb',
 			colliderType: 'box',
 			// Also apply the following generic actor properties.
 			actor: {

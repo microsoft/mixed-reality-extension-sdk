@@ -37,8 +37,8 @@ export default class PhysicsPileTest extends Test {
 	private interval1: NodeJS.Timeout;
 
 	constructor(bounciness: number, deleteBodiesTimout: number, boxLimit: number, addForceLikelyhood: number,
-		protected app: App, protected baseUrl: string, protected user: User) {
-		super(app, baseUrl, user);
+		protected app: App, protected user: User) {
+		super(app, user);
 		this.testBounciness = bounciness;
 		this.deleteBodiesTimout = deleteBodiesTimout;
 		this.boxLimit = boxLimit;

@@ -62,7 +62,7 @@ export default class TransformTest extends Test {
 		}
 
 		const cube3 = MRE.Actor.CreateFromGltf(this.assets, {
-			uri: `${this.baseUrl}/cube_4m.glb`,
+			uri: 'cube_4m.glb',
 			actor: {
 				name: 'cube3',
 				parentId: cube2.id,

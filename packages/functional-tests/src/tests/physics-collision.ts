@@ -22,8 +22,8 @@ export default class PhysicsCollisionTest extends Test {
 	private redMat: MRE.Material;
 	private blueMat: MRE.Material;
 
-	constructor(bounciness: number, protected app: App, protected baseUrl: string, protected user: User) {
-		super(app, baseUrl, user);
+	constructor(bounciness: number, protected app: App, protected user: User) {
+		super(app, user);
 		this.testBounciness = bounciness;
 	}
 

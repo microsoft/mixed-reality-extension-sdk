@@ -46,7 +46,7 @@ export default class SoundSyncTest extends Test {
 	currentInstance: MRE.MediaInstance;
 	currentInstanceIndex = 0;
 	isPlaying = true;
-	
+
 
 	volume = .2;
 	looping = true;
@@ -71,7 +71,7 @@ export default class SoundSyncTest extends Test {
 
 		const soundAsset1 = this.assets.createSound(
 			'music',
-			{ uri: `${this.baseUrl}/Counting.wav` }
+			{ uri: 'Counting.wav' }
 		);
 
 		//Todo: More video sources and types for when support is patched in.

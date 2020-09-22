@@ -3,7 +3,6 @@
  * Licensed under the MIT License.
  */
 
-import { resolve as urlResolve } from 'url';
 import * as Restify from 'restify';
 import { NotFoundError } from 'restify-errors';
 import etag from 'etag';
@@ -30,13 +29,11 @@ type StaticBufferInfo = {
 export class WebHost {
 	private _adapter: Adapter;
 	private _baseDir: string;
-	private _baseUrl: string;
 	private manifest: Buffer = null;
 	private _ready: Promise<void>;
 
 	public get adapter() { return this._adapter; }
 	public get baseDir() { return this._baseDir; }
-	public get baseUrl() { return this._baseUrl; }
 
 	/**
 	 * A promise that resolves when the HTTP server is listening.
@@ -58,12 +55,6 @@ export class WebHost {
 		log.info('app', `${pjson.name}: v${pjson.version}`);
 
 		this._baseDir = options.baseDir || process.env.BASE_DIR;
-		this._baseUrl = options.baseUrl || process.env.BASE_URL;
-
-		// Azure defines WEBSITE_HOSTNAME.
-		if (!this._baseUrl && process.env.WEBSITE_HOSTNAME) {
-			this._baseUrl = `https://${process.env.WEBSITE_HOSTNAME}`;
-		}
 
 		// Resolve the port number. Heroku defines a PORT environment var (remapped from 80).
 		const port = options.port || process.env.PORT || 3901;
@@ -75,9 +66,7 @@ export class WebHost {
 		const serverP = this.validateManifest().then(() => this._adapter.listen());
 		this._ready = serverP.then<void>();
 		serverP.then(server => {
-			this._baseUrl = this._baseUrl || server.url.replace(/\[::\]/u, '127.0.0.1');
 			log.info('app', `${server.name} listening on ${JSON.stringify(server.address())}`);
-			log.info('app', `baseUrl: ${this.baseUrl}`);
 			log.info('app', `baseDir: ${this.baseDir}`);
 
 			// check if a procedural manifest is needed, and serve if so
@@ -180,6 +169,6 @@ export class WebHost {
 			etag: etag(blob),
 			contentType
 		};
-		return urlResolve(this._baseUrl, `buffers/${filename}`);
+		return `buffers/${filename}`;
 	}
 }
