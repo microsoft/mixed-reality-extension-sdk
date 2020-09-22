@@ -20,8 +20,8 @@ export default class PhysicsExclusiveRigidBodyTest extends Test {
 
 	private fixUpMass: boolean;
 
-	constructor(fixUpMass: boolean, protected app: App, protected baseUrl: string, protected user: MRE.User) {
-		super(app, baseUrl, user);
+	constructor(fixUpMass: boolean, protected app: App, protected user: MRE.User) {
+		super(app, user);
 
 		this.assets = new MRE.AssetContainer(this.app.context);
 

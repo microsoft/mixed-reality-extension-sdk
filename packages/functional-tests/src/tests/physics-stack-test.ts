@@ -25,8 +25,8 @@ export default class PhysicsStackTest extends Test {
 	private completeOwnershipOnGrab: boolean;
 
 	constructor(numBoxes: number, boxSize: number, isMixedOwnership: boolean, completeOwnershipOnGrab: boolean,
-		protected app: App, protected baseUrl: string, protected user: MRE.User) {
-		super(app, baseUrl, user);
+		protected app: App, protected user: MRE.User) {
+		super(app, user);
 
 		this.completeOwnershipOnGrab = completeOwnershipOnGrab;
 		this.assets = new MRE.AssetContainer(this.app.context);
@@ -133,7 +133,7 @@ export default class PhysicsStackTest extends Test {
 						break;
 					}
 				}
-	
+
 				actor.appearance.materialId = this.materials[u].id;
 			});
 		} else {
@@ -144,7 +144,7 @@ export default class PhysicsStackTest extends Test {
 						break;
 					}
 				}
-	
+
 				this.rigidBodyActors.forEach( (value) => {
 					value.owner = user.id;
 					value.appearance.materialId = this.materials[u].id;

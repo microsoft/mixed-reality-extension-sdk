@@ -34,7 +34,7 @@ export default class AssetPreloadTest extends Test {
 		this.assets = new MRE.AssetContainer(this.app.context);
 		this.app.setOverrideText("Preloading assets");
 		const [monkey, uvgrid] = await Promise.all([
-			this.assets.loadGltf(this.baseUrl + '/monkey.glb', 'box'),
+			this.assets.loadGltf('monkey.glb', 'box'),
 			this.assets.loadGltf(this.generateMaterial())
 		]);
 		this.app.setOverrideText("Assets preloaded:" +
@@ -134,7 +134,7 @@ export default class AssetPreloadTest extends Test {
 		const material = new GltfGen.Material({
 			baseColorTexture: new GltfGen.Texture({
 				source: new GltfGen.Image({
-					uri: `${this.baseUrl}/uv-grid.png` // alternate form (don't embed)
+					uri: 'uv-grid.png' // alternate form (don't embed)
 				})
 			})
 		});

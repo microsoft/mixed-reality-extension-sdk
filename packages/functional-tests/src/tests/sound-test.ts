@@ -73,7 +73,7 @@ export default class SoundTest extends Test {
 
 		const musicAsset = this.assets.createSound(
 			'music',
-			{ uri: `${this.baseUrl}/FTUI_Music.ogg` }
+			{ uri: 'FTUI_Music.ogg' }
 		);
 		const musicSoundInstance = musicButton.startSound(musicAsset.id,
 			{
@@ -112,7 +112,7 @@ export default class SoundTest extends Test {
 
 		const notesAsset = this.assets.createSound(
 			'piano',
-			{ uri: `${this.baseUrl}/Piano_C4.wav` }
+			{ uri: 'Piano_C4.wav' }
 		);
 
 		const notesButtonBehavior = notesButton.setBehavior(MRE.ButtonBehavior);
@@ -162,7 +162,7 @@ export default class SoundTest extends Test {
 
 		const dopplerAsset = this.assets.createSound(
 			'truck',
-			{ uri: `${this.baseUrl}/Car_Engine_Loop.wav` }
+			{ uri: 'Car_Engine_Loop.wav' }
 		);
 		const dopplerSoundInstance = dopplerMover.startSound(dopplerAsset.id,
 			{

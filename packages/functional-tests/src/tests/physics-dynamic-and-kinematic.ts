@@ -4,8 +4,6 @@
  */
 
 import * as MRE from '@microsoft/mixed-reality-extension-sdk';
-
-import { App } from '../app';
 import { Test } from '../test';
 
 export default class PhysicsDynamicVsKinematicTest extends Test {
@@ -22,16 +20,10 @@ export default class PhysicsDynamicVsKinematicTest extends Test {
 
 	private numBoxes: number;
 
-	constructor(protected app: App, protected baseUrl: string, protected user: MRE.User) {
-		super(app, baseUrl, user);
-
+	public async run(root: MRE.Actor): Promise<boolean> {
 		this.assets = new MRE.AssetContainer(this.app.context);
-
 		this.dynamic = this.assets.createMaterial('dynamic', { color: MRE.Color3.Yellow()});
 		this.kinematic = this.assets.createMaterial('kinematic', { color: MRE.Color3.Purple()});
-	}
-
-	public async run(root: MRE.Actor): Promise<boolean> {
 
 		this.numBoxes = 0;
 

@@ -49,7 +49,7 @@ export class App {
 	public get context() { return this._context; }
 	public get connectedUsers() { return this._connectedUsers; }
 
-	constructor(private _context: MRE.Context, private params: MRE.ParameterSet, private baseUrl: string) {
+	constructor(private _context: MRE.Context, private params: MRE.ParameterSet) {
 		this.assets = new MRE.AssetContainer(_context);
 
 		this.context.onStarted(() => {
@@ -120,7 +120,7 @@ export class App {
 		this.context.rpc.send({ procName: 'functional-test:test-starting' }, this.activeTestName);
 		console.log(`Test starting: '${this.activeTestName}'`);
 
-		const test = this.activeTest = this.activeTestFactory(this, this.baseUrl, user);
+		const test = this.activeTest = this.activeTestFactory(this, user);
 		this.setOverrideText(test.expectedResultDescription);
 
 		this.testRoot = MRE.Actor.Create(this.context, {

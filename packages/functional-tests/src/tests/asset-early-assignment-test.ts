@@ -14,7 +14,7 @@ export default class AssetEarlyAssignmentTest extends Test {
 		this.assets = new MRE.AssetContainer(this.app.context);
 
 		const tex = this.assets.createTexture('uvgrid', {
-			uri: `${this.baseUrl}/uv-grid.png`
+			uri: 'uv-grid.png'
 		});
 
 		const mat = this.assets.createMaterial('blue', {
