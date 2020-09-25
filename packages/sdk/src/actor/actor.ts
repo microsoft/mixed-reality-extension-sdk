@@ -55,6 +55,7 @@ import {
 	SubscriptionType,
 	unobserve
 } from '../internal';
+import { MreArgumentError } from '../util';
 import { ActorInternal } from './actorInternal';
 
 /**
@@ -315,7 +316,12 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 		colliderType?: 'box' | 'mesh';
 		actor?: Partial<ActorLike>;
 	}): Actor {
-		return container.context.internal.CreateFromGltf(container, options);
+		let prefab: Prefab;
+		if (prefab = container.prefabs.find(p => p.source.uri === options.uri)) {
+			return Actor.CreateFromPrefab(container.context, { prefab, actor: options.actor });
+		} else {
+			return container.context.internal.CreateFromGltf(container, options);
+		}
 	}
 
 	/**
