@@ -55,7 +55,6 @@ import {
 	SubscriptionType,
 	unobserve
 } from '../internal';
-import { MreArgumentError } from '../util';
 import { ActorInternal } from './actorInternal';
 
 /**
