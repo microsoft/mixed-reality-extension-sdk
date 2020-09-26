@@ -20,7 +20,7 @@ class SharingMessage {
 class PhotoSharingMessage extends SharingMessage {
     mimeType: Readonly<string>; // Supported values: "image/jpeg" and "image/png"
     data: Readonly<Buffer>; // Raw bytes of an image file in the mimeType format above. Not populated for the IsMessageDesiredCallback
-    dataSize: Readonly<Number>; // size in bytes of the data array. This IS popuplated in the IsMessageDesiredCallback 
+    dataSize: Readonly<number>; // size in bytes of the data array. This IS popuplated in the IsMessageDesiredCallback 
 }
 ```
 
@@ -35,7 +35,7 @@ class PhotoSharingMessage extends SharingMessage {
 // Note that this callback is optional but may be useful if the
 // application is unable or uninterested in acting on all messages.
 interface IsMessageDesiredCallback { 
-    (sharingMessage: SharingMessage) : bool
+    (sharingMessage: SharingMessage) : boolean
 }
 
 interface MessageReceivedCallback {
@@ -69,7 +69,7 @@ For the sake of simplicity, only one callback may be registered on a particular 
  * Returns true if the callback was successfully registered.
  * @event
  */
-public onSharingMessage(messageType: string, callbacks: SharingCallbacks): bool {
+public onSharingMessage(messageType: string, callbacks: SharingCallbacks): boolean {
     // [... Register listener ...]
     return true; // If successful
 }
@@ -80,7 +80,7 @@ public onSharingMessage(messageType: string, callbacks: SharingCallbacks): bool 
  * Returns true if the callback was successfully unregistered.
  * @event
  */
-public offSharingMessage(messageType: string, callbacks: SharingCallbacks): bool {
+public offSharingMessage(messageType: string, callbacks: SharingCallbacks): boolean {
     // [... Deregister listener ...]
     return true; // If successful
 }
