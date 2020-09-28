@@ -11,13 +11,13 @@ This design introduces the concept of a `SharingMessage`, a base class of conten
 `SharingMessage` is itself relatively straightforward, but contains enough information to allow the recipient (callback listener) to cast it to the appropriate type (e.g., `PhotoSharingMessage`). We envision multiple message types and don't want to add a registration api for each.
 
 ```ts
-class SharingMessage {
+export class SharingMessage {
     messageType: Readonly<string>;
     sessionId: Readonly<string>;
     userId: Readonly<Guid>;
 }
 
-class PhotoSharingMessage extends SharingMessage {
+export class PhotoSharingMessage extends SharingMessage {
     mimeType: Readonly<string>; // Supported values: "image/jpeg" and "image/png"
     data: Readonly<Buffer>; // Raw bytes of an image file in the mimeType format above. Not populated for the IsMessageDesiredCallback
     dataSize: Readonly<number>; // size in bytes of the data array. This IS popuplated in the IsMessageDesiredCallback 
@@ -34,15 +34,15 @@ class PhotoSharingMessage extends SharingMessage {
 // for example, a PhotoSharingMessage will not have any photo data.
 // Note that this callback is optional but may be useful if the
 // application is unable or uninterested in acting on all messages.
-interface IsMessageDesiredCallback { 
+export interface IsMessageDesiredCallback { 
     (sharingMessage: SharingMessage) : boolean
 }
 
-interface MessageReceivedCallback {
+export interface MessageReceivedCallback {
     (sharingMessage: SharingMessage) : void
 }
 
-class SharingCallbacks {
+export class SharingCallbacks {
     // Note that this callback is optional (See IsMessageDesiredCallback).
     // Leave null to process all messages 
     public isMessageDesired : IsMessageDesiredCallback;
