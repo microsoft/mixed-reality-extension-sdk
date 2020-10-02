@@ -16,18 +16,14 @@ export default class AssetMutabilityTest extends Test {
 
 	public async run(root: MRE.Actor): Promise<boolean> {
 		this.assets = new MRE.AssetContainer(this.app.context);
-		await this.assets.loadGltf(this.generateMaterial());
+		await this.assets.loadGltf(AssetMutabilityTest.GenerateCube());
 		const mat = this.assets.materials[0];
-		mat.alphaMode = MRE.AlphaMode.Blend;
 
-		MRE.Actor.Create(this.app.context, {
+		MRE.Actor.CreateFromPrefab(this.app.context, {
+			prefab: this.assets.prefabs[0],
 			actor: {
 				name: 'box',
 				parentId: root.id,
-				appearance: {
-					meshId: this.assets.createBoxMesh('box', 1, 1, 1).id,
-					materialId: mat.id
-				},
 				transform: {
 					local: {
 						position: { y: 1, z: -1 }
@@ -39,7 +35,7 @@ export default class AssetMutabilityTest extends Test {
 		let direction = 1;
 		let i = 0;
 		while (!this.stopped) {
-			mat.color.copyFrom(this.fromHSV(i / 32, 1, 1, i / 32));
+			mat.color = AssetMutabilityTest.FromHSV(i / 32, 1, 1, (64 - i) / 32);
 			mat.mainTextureOffset.set(i / 32, i / 32);
 			mat.mainTextureScale.set(1 - i / 32, 1 - i / 32);
 
@@ -53,22 +49,22 @@ export default class AssetMutabilityTest extends Test {
 		return true;
 	}
 
-	private generateMaterial(): string {
+	private static GenerateCube(): string {
 		const material = new GltfGen.Material({
 			metallicFactor: 0,
 			baseColorTexture: new GltfGen.Texture({
 				source: new GltfGen.Image({
-					uri: 'uv-grid.png' // alternate form (don't embed)
+					uri: '../uv-grid.png' // alternate form (don't embed)
 				})
 			}),
 			alphaMode: GltfGen.AlphaMode.Blend
 		});
-		const gltfFactory = new GltfGen.GltfFactory(null, null, [material]);
+		const gltfFactory = GltfGen.GltfFactory.FromSinglePrimitive(new GltfGen.Box(1, 1, 1, material));
 
 		return Server.registerStaticBuffer('assets.glb', gltfFactory.generateGLTF());
 	}
 
-	private fromHSV(h: number, s: number, v: number, a: number): MRE.Color4 {
+	private static FromHSV(h: number, s: number, v: number, a: number): MRE.Color4 {
 		// from wikipedia: https://en.wikipedia.org/wiki/HSL_and_HSV#From_HSV
 		function f(n: number, k = (n + h * 6) % 6) {
 			return v - v * s * Math.max(Math.min(k, 4 - k, 1), 0);
