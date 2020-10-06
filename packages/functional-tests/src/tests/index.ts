@@ -18,6 +18,7 @@ import AssetEarlyAssignmentTest from './asset-early-assignment-test';
 import AssetMutabilityTest from './asset-mutability-test';
 import AssetPreloadTest from './asset-preload-test';
 import AssetUnloadTest from './asset-unload-test';
+import ButtonBehaviorTest from './button-behavior-test';
 import ButtonTargetingTest from './button-targeting-test';
 import ClockSyncTest from './clock-sync-test';
 import CollisionLayerTest from './collision-layer-test';
@@ -59,7 +60,7 @@ import VisibilityTest from './visibility-test';
 
 /**
  * Format for the map passed to the populatePages function.
- * Keys are name strings, displayed in the test app 
+ * Keys are name strings, displayed in the test app
  * Values are either a TestFactory for a test, or another FactoryMap for test folders
  */
 export type FactoryMap = { [key: string]: TestFactory | FactoryMap };
@@ -103,7 +104,7 @@ export const Factories = {
 	'GLTF Tests': {
 		'gltf-actor-sync': (...args) => new GltfActorSyncTest(...args),
 		'gltf-concurrency': (...args) => new GltfConcurrencyTest(...args),
-		'gltf-gen': (...args) => new GltfGenTest(...args),	
+		'gltf-gen': (...args) => new GltfGenTest(...args),
 	},
 	'Graphics/Rendering Tests': {
 		'light': (...args) => new LightTest(...args),
@@ -111,7 +112,8 @@ export const Factories = {
 		'font': (...args) => new FontTest(...args),
 	},
 	'Input Tests': {
-		'button-targeting': (...args) => new ButtonTargetingTest(...args),	
+		'button-targeting': (...args) => new ButtonTargetingTest(...args),
+		'button-behavior': (...args) => new ButtonBehaviorTest(...args),
 		'grab': (...args) => new GrabTest(...args),
 		'input': (...args) => new InputTest(...args),
 		'prompt': (...args) => new PromptTest(...args),
