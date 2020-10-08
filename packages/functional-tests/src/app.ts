@@ -58,7 +58,7 @@ export class App {
 				this.menu.show();
 			} else {
 				this.activeTestName = this.params.test as string;
-				this.activeTestFactory = Factories[this.activeTestName];
+				this.activeTestFactory = Factories[this.activeTestName] as TestFactory;
 				this.setupRunner();
 			}
 		});
