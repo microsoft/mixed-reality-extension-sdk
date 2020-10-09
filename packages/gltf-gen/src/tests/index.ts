@@ -22,7 +22,7 @@ export interface Test {
 
 (async () => {
 	const tests: Test[] = [
-		new Empty(), new Triangle(), new PrimDupe(), new Material(), new MeshPrimitive(), new ImportExport()];
+		/*new Empty(), new Triangle(), new PrimDupe(), new Material(), new MeshPrimitive(),*/ new ImportExport()];
 
 	for (const test of tests) {
 		console.log(
@@ -55,7 +55,7 @@ export interface Test {
 
 		if (test.shouldPrintBuffer) {
 			console.log('Output Data:');
-			prettyPrintBuffer(result, jsonStart + jsonLength + 8);
+			prettyPrintBuffer(result, jsonStart + jsonLength + 8, true);
 		}
 
 		const validationResult = await validator.validateBytes(new Uint8Array(result));

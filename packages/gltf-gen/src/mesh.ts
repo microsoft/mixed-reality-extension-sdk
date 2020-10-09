@@ -37,7 +37,7 @@ export class Mesh extends Serializable implements MeshLike {
 		}
 		document.meshes.push(mesh);
 
-		return this.cachedSerialId = document.meshes.length - 1;
+		return this.cachedSerialId = (document.meshes.length - 1);
 	}
 
 	public getByteSize(scanId: number): number {

@@ -315,8 +315,8 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 		colliderType?: 'box' | 'mesh';
 		actor?: Partial<ActorLike>;
 	}): Actor {
-		let prefab: Prefab;
-		if (prefab = container.prefabs.find(p => p.source.uri === options.uri)) {
+		const prefab = container.prefabs.find(p => p.source.uri === options.uri);
+		if (prefab) {
 			return Actor.CreateFromPrefab(container.context, { prefab, actor: options.actor });
 		} else {
 			return container.context.internal.CreateFromGltf(container, options);
