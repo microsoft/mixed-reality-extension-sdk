@@ -66,7 +66,7 @@ export default class AnimationSyncTest extends Test {
 
 	public async run(root: MRE.Actor): Promise<boolean> {
 		this.assets = new MRE.AssetContainer(this.app.context);
-		const clockAssets = await this.assets.loadGltf(`${this.baseUrl}/clock.gltf`, 'box');
+		const clockAssets = await this.assets.loadGltf('clock.gltf', 'box');
 
 		const nativeClock = MRE.Actor.CreateFromPrefab(this.app.context, {
 			firstPrefabFrom: clockAssets,

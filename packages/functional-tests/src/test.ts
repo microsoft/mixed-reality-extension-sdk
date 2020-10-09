@@ -7,7 +7,7 @@ import { Actor, User } from '@microsoft/mixed-reality-extension-sdk';
 
 import { App } from './app';
 
-export type TestFactory = (app: App, baseUrl: string, user: User) => Test;
+export type TestFactory = (app: App, user: User) => Test;
 
 /**
  * The super-class of all functional tests
@@ -26,7 +26,7 @@ export abstract class Test {
 	private stoppedPromise: Promise<void> = null;
 	private stoppedContinue: () => void = null;
 
-	constructor(protected app: App, protected baseUrl: string, protected user: User) { }
+	constructor(protected app: App, protected user: User) { }
 
 	/**
 	 * Main test entry point. This should run indefinitely until [[stop]] is called.

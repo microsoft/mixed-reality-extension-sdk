@@ -86,7 +86,7 @@ export default class LightTest extends Test {
 	private createProps(root: MRE.Actor): {[id: string]: MRE.Actor} {
 		const props: { [id: string]: MRE.Actor } = {};
 		props['monkey'] = MRE.Actor.CreateFromGltf(this.assets, {
-			uri: `${this.baseUrl}/monkey.glb`,
+			uri: 'monkey.glb',
 			actor: {
 				parentId: root.id,
 				transform: {

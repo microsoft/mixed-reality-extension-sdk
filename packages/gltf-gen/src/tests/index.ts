@@ -9,6 +9,7 @@ import Material from './material';
 import PrimDupe from './prim-dupe';
 import Triangle from './triangle';
 import ImportExport from './import-export';
+import MeshPrimitive from './meshprimitive';
 import { prettyPrintBuffer } from './util';
 
 /** @hidden */
@@ -20,8 +21,8 @@ export interface Test {
 }
 
 (async () => {
-
-	const tests: Test[] = [new Empty(), new Triangle(), new PrimDupe(), new Material(), new ImportExport()];
+	const tests: Test[] = [
+		new Empty(), new Triangle(), new PrimDupe(), new Material(), new MeshPrimitive(), new ImportExport()];
 
 	for (const test of tests) {
 		console.log(

@@ -58,7 +58,7 @@ export default class AssetMutabilityTest extends Test {
 			metallicFactor: 0,
 			baseColorTexture: new GltfGen.Texture({
 				source: new GltfGen.Image({
-					uri: `${this.baseUrl}/uv-grid.png` // alternate form (don't embed)
+					uri: 'uv-grid.png' // alternate form (don't embed)
 				})
 			}),
 			alphaMode: GltfGen.AlphaMode.Blend

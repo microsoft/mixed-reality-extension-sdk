@@ -110,25 +110,31 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Web<wbr>Host<span class="tsd-signature-symbol">(</span>options<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-symbol">{ </span>baseDir<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>baseUrl<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>port<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="webhost.html" class="tsd-signature-type">WebHost</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Web<wbr>Host<span class="tsd-signature-symbol">(</span>options<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-symbol">{ </span>baseDir<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>baseUrl<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>optionalPermissions<span class="tsd-signature-symbol">?: </span><a href="../enums/permissions.html" class="tsd-signature-type">Permissions</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">; </span>permissions<span class="tsd-signature-symbol">?: </span><a href="../enums/permissions.html" class="tsd-signature-type">Permissions</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">; </span>port<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="webhost.html" class="tsd-signature-type">WebHost</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/mixed-reality-extension-sdk/blob/b121886/packages/sdk/src/util/webHost.ts#L32">src/util/webHost.ts:32</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/8ab221d/packages/sdk/src/util/webHost.ts#L40">src/util/webHost.ts:40</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> options: <span class="tsd-signature-symbol">{ </span>baseDir<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>baseUrl<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>port<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol"> = {}</span></h5>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> options: <span class="tsd-signature-symbol">{ </span>baseDir<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>baseUrl<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>optionalPermissions<span class="tsd-signature-symbol">?: </span><a href="../enums/permissions.html" class="tsd-signature-type">Permissions</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">; </span>permissions<span class="tsd-signature-symbol">?: </span><a href="../enums/permissions.html" class="tsd-signature-type">Permissions</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">; </span>port<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol"> = {}</span></h5>
 									<ul class="tsd-parameters">
 										<li class="tsd-parameter">
 											<h5><span class="tsd-flag ts-flagOptional">Optional</span> base<wbr>Dir<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span></h5>
 										</li>
 										<li class="tsd-parameter">
 											<h5><span class="tsd-flag ts-flagOptional">Optional</span> base<wbr>Url<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span></h5>
+										</li>
+										<li class="tsd-parameter">
+											<h5><span class="tsd-flag ts-flagOptional">Optional</span> optional<wbr>Permissions<span class="tsd-signature-symbol">?: </span><a href="../enums/permissions.html" class="tsd-signature-type">Permissions</a><span class="tsd-signature-symbol">[]</span></h5>
+										</li>
+										<li class="tsd-parameter">
+											<h5><span class="tsd-flag ts-flagOptional">Optional</span> permissions<span class="tsd-signature-symbol">?: </span><a href="../enums/permissions.html" class="tsd-signature-type">Permissions</a><span class="tsd-signature-symbol">[]</span></h5>
 										</li>
 										<li class="tsd-parameter">
 											<h5><span class="tsd-flag ts-flagOptional">Optional</span> port<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span></h5>
@@ -153,7 +159,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/mixed-reality-extension-sdk/blob/b121886/packages/sdk/src/util/webHost.ts#L28">src/util/webHost.ts:28</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/8ab221d/packages/sdk/src/util/webHost.ts#L36">src/util/webHost.ts:36</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="adapter.html" class="tsd-signature-type">Adapter</a></h4>
@@ -170,7 +176,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/mixed-reality-extension-sdk/blob/b121886/packages/sdk/src/util/webHost.ts#L29">src/util/webHost.ts:29</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/8ab221d/packages/sdk/src/util/webHost.ts#L37">src/util/webHost.ts:37</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
@@ -187,7 +193,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/mixed-reality-extension-sdk/blob/b121886/packages/sdk/src/util/webHost.ts#L30">src/util/webHost.ts:30</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/8ab221d/packages/sdk/src/util/webHost.ts#L38">src/util/webHost.ts:38</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
@@ -207,7 +213,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/mixed-reality-extension-sdk/blob/b121886/packages/sdk/src/util/webHost.ts#L107">src/util/webHost.ts:107</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/8ab221d/packages/sdk/src/util/webHost.ts#L170">src/util/webHost.ts:170</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">

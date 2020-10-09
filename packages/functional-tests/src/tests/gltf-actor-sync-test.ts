@@ -18,7 +18,7 @@ export default class GltfActorSyncTest extends Test {
 	public async run(root: MRE.Actor): Promise<boolean> {
 		this.assets = new MRE.AssetContainer(this.app.context);
 		const actorRoot = MRE.Actor.CreateFromGltf(this.assets, {
-			uri: `${this.baseUrl}/monkey.glb`,
+			uri: 'monkey.glb',
 			colliderType: 'box',
 			actor: {
 				name: 'glTF',

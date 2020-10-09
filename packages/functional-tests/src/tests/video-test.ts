@@ -34,7 +34,7 @@ export default class VideoTest extends Test {
 		const videoStream1 = this.assets.createVideoStream(
 			'stream1',
 			{
-				uri: `youtube://1roy4o4tqQM`
+				uri: `youtube://4WcHVkDXdpU`
 				// `youtube://z1YNh9BQVRg`
 			}
 		);
@@ -54,7 +54,7 @@ export default class VideoTest extends Test {
 							volume: 0.2,
 							looping: true,
 							spread: 0.7,
-							rolloffStartDistance: 2.5
+							rolloffStartDistance: 2.5 
 						});
 					break;
 				case 1:

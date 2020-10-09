@@ -25,12 +25,12 @@ export class Pipe {
 		this._onRemoteClose = this.onRemoteClose.bind(this);
 		this._local.on('send', (message: Message) => {
 			process.nextTick(() => {
-				this._remote.recv({ ...message });
+				this._remote.recv(message);
 			});
 		});
 		this._remote.on('send', (message: Message) => {
 			process.nextTick(() => {
-				this._local.recv({ ...message });
+				this._local.recv(message);
 			});
 		});
 		this._local.on('close', this._onLocalClose);

@@ -54,7 +54,7 @@ export default class AssetUnloadTest extends Test {
 		this.app.setOverrideText("Colored & textured sphere");
 
 		const tex = this.assetContainer1.createTexture('uvgrid', {
-			uri: `${this.baseUrl}/uv-grid.png`
+			uri: 'uv-grid.png'
 		});
 
 		const mat = this.assetContainer2.createMaterial('blue', {
