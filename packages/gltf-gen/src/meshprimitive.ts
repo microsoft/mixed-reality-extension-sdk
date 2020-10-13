@@ -90,7 +90,6 @@ export class MeshPrimitive implements MeshPrimitiveLike {
 	private cachedSerialVal: GLTF.MeshPrimitive;
 
 	public serialize(document: GLTF.GlTf, data: Buffer): GLTF.MeshPrimitive {
-
 		if (this.cachedSerialVal !== undefined) {
 			return this.cachedSerialVal;
 		}

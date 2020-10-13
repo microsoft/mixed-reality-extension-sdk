@@ -247,6 +247,7 @@ export class GltfFactory {
 				name: meshDef.name
 			});
 
+			// mesh primitives
 			for (const primDef of meshDef.primitives) {
 				if (primDef.mode !== undefined && primDef.mode !== 4) {
 					throw new Error(`Import failed: can only import meshes in triangle format`);
@@ -274,6 +275,7 @@ export class GltfFactory {
 				const uv1BV = json.bufferViews[uv1Acc?.bufferView];
 				const clrBV = json.bufferViews[clrAcc?.bufferView];
 
+				// prim attributes
 				for (let i = 0; i < posAcc.count; i++) {
 					const vert = new Vertex();
 					if (posAcc) {
@@ -380,6 +382,28 @@ export class GltfFactory {
 					}
 
 					prim.vertices.push(vert);
+				}
+
+				// prim indices
+				const indAcc = json.accessors[primDef.indices];
+				const indBV = json.bufferViews[indAcc?.bufferView];
+				const indexSize = indAcc?.componentType === AccessorComponentType.UShort ? 2 : 4;
+				if (indAcc) {
+					for (let i = 0; i < indAcc.count; i++) {
+						const offset = (indBV.byteOffset ?? 0) + (indAcc.byteOffset ?? 0) +
+							i * ((indBV.byteStride ?? 0) + indexSize);
+
+						let index: number;
+						switch (indAcc.componentType) {
+							case AccessorComponentType.UShort:
+								index = buffers[indBV.buffer].readUInt16LE(offset);
+								break;
+							case AccessorComponentType.UInt:
+								index = buffers[indBV.buffer].readUInt32LE(offset);
+								break;
+						}
+						prim.triangles.push(index);
+					}
 				}
 
 				mesh.primitives.push(prim);

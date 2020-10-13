@@ -12,7 +12,6 @@ const writeFile = promisify(_wf);
 import * as GltfGen from '..';
 import * as MRE from '@microsoft/mixed-reality-extension-common';
 import { Test } from './index';
-import { prettyPrintBuffer } from './util';
 
 /** @hidden */
 export default class ImportExport implements Test {
@@ -111,23 +110,19 @@ export default class ImportExport implements Test {
 			]
 		})];
 
-		const sourceFactory = new GltfGen.GltfFactory(scenes);
+		const sourceFactory = new GltfGen.GltfFactory(scenes, meshes, mats, texs);
 
 		// generate glb
 		const sourceBuffer = sourceFactory.generateGLTF();
 		const tempGlbPath = resolve(tmpdir(), './temp.glb');
 		await writeFile(tempGlbPath, sourceBuffer);
-		const hash1 = crypto.createHash('sha256').update(sourceBuffer.slice(0x6b0)).digest('hex');
-		prettyPrintBuffer(sourceBuffer);
-		console.log('Source hashes to', hash1);
+		const hash1 = crypto.createHash('sha256').update(sourceBuffer).digest('hex');
 
 		// import and re-export glb
 		const destFactory = new GltfGen.GltfFactory();
 		await destFactory.importFromGlb(tempGlbPath);
 		const destBuffer = destFactory.generateGLTF();
-		const hash2 = crypto.createHash('sha256').update(destBuffer.slice(0x6b0)).digest('hex');
-		prettyPrintBuffer(destBuffer);
-		console.log('Dest hashes to', hash2);
+		const hash2 = crypto.createHash('sha256').update(destBuffer).digest('hex');
 
 		// compare source and dest buffers
 		if (hash1 !== hash2) {
