@@ -262,24 +262,26 @@ export class GltfFactory {
 				}
 				instancingHash[sig] = prim;
 
-				const posAcc = json.accessors[primDef.attributes[Vertex.positionAttribute.attributeName]];
-				const nrmAcc = json.accessors[primDef.attributes[Vertex.normalAttribute.attributeName]];
-				const tngAcc = json.accessors[primDef.attributes[Vertex.tangentAttribute.attributeName]];
-				const uv0Acc = json.accessors[primDef.attributes[Vertex.texCoordAttribute[0].attributeName]];
-				const uv1Acc = json.accessors[primDef.attributes[Vertex.texCoordAttribute[1].attributeName]];
-				const clrAcc = json.accessors[primDef.attributes[Vertex.colorAttribute.attributeName]];
+				const posAcc = json.accessors[primDef.attributes[Vertex.PositionAttribute.attributeName]];
+				const nrmAcc = json.accessors[primDef.attributes[Vertex.NormalAttribute.attributeName]];
+				const tngAcc = json.accessors[primDef.attributes[Vertex.TangentAttribute.attributeName]];
+				const uv0Acc = json.accessors[primDef.attributes[Vertex.TexCoordAttribute[0].attributeName]];
+				const uv1Acc = json.accessors[primDef.attributes[Vertex.TexCoordAttribute[1].attributeName]];
+				const clrAcc = json.accessors[primDef.attributes[Vertex.ColorAttribute.attributeName]];
+				const indAcc = json.accessors[primDef.indices];
 				const posBV = json.bufferViews[posAcc?.bufferView];
 				const nrmBV = json.bufferViews[nrmAcc?.bufferView];
 				const tngBV = json.bufferViews[tngAcc?.bufferView];
 				const uv0BV = json.bufferViews[uv0Acc?.bufferView];
 				const uv1BV = json.bufferViews[uv1Acc?.bufferView];
 				const clrBV = json.bufferViews[clrAcc?.bufferView];
+				const indBV = json.bufferViews[indAcc?.bufferView];
 
-				// prim attributes
+				// vertices (assume all attributes have the same count)
 				for (let i = 0; i < posAcc.count; i++) {
 					const vert = new Vertex();
 					if (posAcc) {
-						const attr = Vertex.positionAttribute;
+						const attr = Vertex.PositionAttribute;
 						const offset = (posBV.byteOffset ?? 0) + (posAcc.byteOffset ?? 0) +
 							i * ((posBV.byteStride ?? 0) + attr.byteSize);
 						vert.position = new MRE.Vector3(
@@ -288,7 +290,7 @@ export class GltfFactory {
 							buffers[posBV.buffer].readFloatLE(offset + 2 * attr.elementByteSize));
 					}
 					if (nrmAcc) {
-						const attr = Vertex.normalAttribute;
+						const attr = Vertex.NormalAttribute;
 						const offset = (nrmBV.byteOffset ?? 0) + (nrmAcc.byteOffset ?? 0) +
 							i * ((nrmBV.byteStride ?? 0) + attr.byteSize);
 						vert.normal = new MRE.Vector3(
@@ -297,7 +299,7 @@ export class GltfFactory {
 							buffers[nrmBV.buffer].readFloatLE(offset + 2 * attr.elementByteSize));
 					}
 					if (tngAcc) {
-						const attr = Vertex.tangentAttribute;
+						const attr = Vertex.TangentAttribute;
 						const offset = (tngBV.byteOffset ?? 0) + (tngAcc.byteOffset ?? 0) +
 							i * ((tngBV.byteStride ?? 0) + attr.byteSize);
 						vert.tangent = new MRE.Vector4(
@@ -307,7 +309,7 @@ export class GltfFactory {
 							buffers[tngBV.buffer].readFloatLE(offset + 3 * attr.elementByteSize));
 					}
 					if (uv0Acc) {
-						const attr = Vertex.texCoordAttribute[0];
+						const attr = Vertex.TexCoordAttribute[0];
 						const offset = (uv0BV.byteOffset ?? 0) + (uv0Acc.byteOffset ?? 0) +
 							i * ((uv0BV.byteStride ?? 0) + attr.byteSize);
 						if (uv0Acc.componentType === AccessorComponentType.Float) {
@@ -327,7 +329,7 @@ export class GltfFactory {
 						}
 					}
 					if (uv1Acc) {
-						const attr = Vertex.texCoordAttribute[1];
+						const attr = Vertex.TexCoordAttribute[1];
 						const offset = (uv1BV.byteOffset ?? 0) + (uv1Acc.byteOffset ?? 0) +
 							i * ((uv1BV.byteStride ?? 0) + attr.byteSize);
 						if (uv1Acc.componentType === AccessorComponentType.Float) {
@@ -348,7 +350,7 @@ export class GltfFactory {
 					}
 					if (clrAcc) {
 						// TODO: fix accessor size
-						const attr = Vertex.colorAttribute;
+						const attr = Vertex.ColorAttribute;
 						const offset = (clrBV.byteOffset ?? 0) + (clrAcc.byteOffset ?? 0) +
 							i * ((clrBV.byteStride ?? 0) + attr.byteSize);
 						if (clrAcc.componentType === AccessorComponentType.Float) {
@@ -384,9 +386,7 @@ export class GltfFactory {
 					prim.vertices.push(vert);
 				}
 
-				// prim indices
-				const indAcc = json.accessors[primDef.indices];
-				const indBV = json.bufferViews[indAcc?.bufferView];
+				// indices
 				const indexSize = indAcc?.componentType === AccessorComponentType.UShort ? 2 : 4;
 				if (indAcc) {
 					for (let i = 0; i < indAcc.count; i++) {
@@ -444,12 +444,12 @@ export class GltfFactory {
 
 	private static GetMeshInstanceHash(primDef: GLTF.MeshPrimitive) {
 		const attributeNames = [
-			Vertex.positionAttribute.attributeName,
-			Vertex.normalAttribute.attributeName,
-			Vertex.tangentAttribute.attributeName,
-			Vertex.texCoordAttribute[0].attributeName,
-			Vertex.texCoordAttribute[1].attributeName,
-			Vertex.colorAttribute.attributeName
+			Vertex.PositionAttribute.attributeName,
+			Vertex.NormalAttribute.attributeName,
+			Vertex.TangentAttribute.attributeName,
+			Vertex.TexCoordAttribute[0].attributeName,
+			Vertex.TexCoordAttribute[1].attributeName,
+			Vertex.ColorAttribute.attributeName
 		]
 
 		return attributeNames

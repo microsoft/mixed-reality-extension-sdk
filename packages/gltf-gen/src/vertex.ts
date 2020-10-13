@@ -68,12 +68,12 @@ export class Vertex implements VertexLike {
 		}
 	}
 
-	public static positionAttribute: VertexAttribute = new PositionAttribute();
-	public static normalAttribute: VertexAttribute = new NormalAttribute();
-	public static tangentAttribute: VertexAttribute = new TangentAttribute();
-	public static texCoordAttribute: VertexAttribute[] = [
+	public static PositionAttribute: VertexAttribute = new PositionAttribute();
+	public static NormalAttribute: VertexAttribute = new NormalAttribute();
+	public static TangentAttribute: VertexAttribute = new TangentAttribute();
+	public static TexCoordAttribute: VertexAttribute[] = [
 		new TexCoordAttribute(0),
 		new TexCoordAttribute(1)
 	];
-	public static colorAttribute: VertexAttribute = new ColorAttribute(0);
+	public static ColorAttribute: VertexAttribute = new ColorAttribute(0);
 }

@@ -22,7 +22,7 @@ export interface Test {
 
 (async () => {
 	const tests: Test[] = [
-		/*new Empty(), new Triangle(), new PrimDupe(), new Material(), new MeshPrimitive(),*/ new ImportExport()];
+		new Empty(), new Triangle(), new PrimDupe(), new Material(), new MeshPrimitive(), new ImportExport()];
 
 	for (const test of tests) {
 		console.log(
