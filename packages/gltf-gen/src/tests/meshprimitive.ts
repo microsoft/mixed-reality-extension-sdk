@@ -10,11 +10,11 @@ import { Test } from "./index";
 export default class MeshPrimitive implements Test {
 	public name = "MeshPrimitive";
 	public shouldPrintJson = true;
-	public shouldPrintBuffer = true;
+	public shouldPrintBuffer = false;
 
 	public run() {
 		const vertices = [];
-		const MAX_SHORT = 65535;
+		const MAX_SHORT = 0xffff;
 		// Add enough vertices so the triangles field needs integer sized
 		// numbers to reference all of them
 		for (let i = 0; i < MAX_SHORT + 2; i++) {

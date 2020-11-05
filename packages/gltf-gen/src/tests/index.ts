@@ -8,6 +8,7 @@ import Empty from './empty';
 import Material from './material';
 import PrimDupe from './prim-dupe';
 import Triangle from './triangle';
+import ImportExport from './import-export';
 import MeshPrimitive from './meshprimitive';
 import { prettyPrintBuffer } from './util';
 
@@ -16,12 +17,12 @@ export interface Test {
 	name: string;
 	shouldPrintJson: boolean;
 	shouldPrintBuffer: boolean;
-	run(): Buffer;
+	run(): Buffer | Promise<Buffer>;
 }
 
 (async () => {
-
-	const tests: Test[] = [new Empty(), new Triangle(), new PrimDupe(), new Material(), new MeshPrimitive()];
+	const tests: Test[] = [
+		new Empty(), new Triangle(), new PrimDupe(), new Material(), new MeshPrimitive(), new ImportExport()];
 
 	for (const test of tests) {
 		console.log(
@@ -32,13 +33,18 @@ export interface Test {
 		let time = process.hrtime();
 		let result: Buffer;
 		try {
-			result = test.run();
+			const output = test.run();
+			if (output instanceof Buffer) {
+				result = output;
+			} else {
+				result = await output;
+			}
 		} catch (ex) {
 			console.log('Test failed', ex);
 			continue;
 		}
 		time = process.hrtime(time);
-		console.log(`Test completed in ${time[0] * 1000 + time[1] / 1000} ms\n`);
+		console.log(`Test completed in ${(time[0] * 1e3 + time[1] * 1e-6).toFixed(3)} ms\n`);
 
 		const jsonStart = 20;
 		const jsonLength = result.readInt32LE(12);
@@ -49,7 +55,7 @@ export interface Test {
 
 		if (test.shouldPrintBuffer) {
 			console.log('Output Data:');
-			prettyPrintBuffer(result, jsonStart + jsonLength + 8);
+			prettyPrintBuffer(result, jsonStart + jsonLength + 8, true);
 		}
 
 		const validationResult = await validator.validateBytes(new Uint8Array(result));

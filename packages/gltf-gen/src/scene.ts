@@ -23,7 +23,7 @@ export class Scene extends Serializable implements SceneLike {
 	}
 
 	public serialize(document: GLTF.GlTf, data: Buffer): GLTF.GlTfId {
-		if (this.cachedSerialId) {
+		if (this.cachedSerialId !== undefined) {
 			return this.cachedSerialId;
 		}
 

@@ -43,7 +43,7 @@ export class Node extends Serializable implements NodeLike {
 	}
 
 	public serialize(document: GLTF.GlTf, data: Buffer): GLTF.GlTfId {
-		if (this.cachedSerialId) {
+		if (this.cachedSerialId !== undefined) {
 			return this.cachedSerialId;
 		}
 
