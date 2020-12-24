@@ -57,6 +57,11 @@ import VideoTest from './video-test';
 import VideoSyncTest from './video-sync-test';
 import VisibilityTest from './visibility-test';
 
+/**
+ * Format for the map passed to the populatePages function.
+ * Keys are name strings, displayed in the test app 
+ * Values are either a TestFactory for a test, or another FactoryMap for test folders
+ */
 export type FactoryMap = { [key: string]: TestFactory | FactoryMap };
 
 /**

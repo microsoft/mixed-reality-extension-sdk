@@ -135,7 +135,7 @@ export class Menu {
 		}
 
 		// hide next button if no more pages
-		if((this.currentNode.currentPage+1) * pageSize > this.currentNode.menuItems.length) {
+		if((this.currentNode.currentPage + 1) * pageSize > this.currentNode.menuItems.length) {
 			this.nextPage.appearance.enabled = false;
 		} else {
 			this.nextPage.appearance.enabled = true;
@@ -313,7 +313,7 @@ export class Menu {
 		this.backActors = [backButton, backLabel];
 	
 		this.nextPage.setBehavior(MRE.ButtonBehavior).onButton('released', () => {
-			if(this.currentNode.menuItems.length > ((this.currentNode.currentPage+1) * pageSize)) {
+			if(this.currentNode.menuItems.length > ((this.currentNode.currentPage + 1) * pageSize)) {
 				++this.currentNode.currentPage;
 				this.show();
 			}
