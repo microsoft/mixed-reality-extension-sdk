@@ -327,7 +327,9 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 					session.cacheActorUpdateMessage(updateMessage);
 
 					// Sync the change to the other clients.
-					session.sendPayloadToClients(correctionPayload, (value) => value.id !== client.id);
+					if (!syncActor.exclusiveToUser) {
+						session.sendPayloadToClients(correctionPayload, (value) => value.id !== client.id);
+					}
 
 					// Determine whether to forward the message to the app based on subscriptions.
 					let shouldSendToApp = false;
