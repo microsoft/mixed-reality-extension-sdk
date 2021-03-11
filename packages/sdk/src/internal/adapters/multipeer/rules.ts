@@ -400,8 +400,10 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 				message: Message<Payloads.ActorUpdate>
 			) => {
 				const syncActor = session.actorSet.get(message.payload.actor.id);
-				if (syncActor && ((client.authoritative && !syncActor.grabbedBy) ||
-					(syncActor.grabbedBy === client.id))) {
+                const attachment = syncActor.initialization.message.payload.actor.attachment;
+                if (syncActor && ((client.authoritative && !syncActor.grabbedBy) ||
+                    (syncActor.grabbedBy === client.id) || 
+                    (attachment && attachment.userId === client.userId))) {
 					// Merge the update into the existing actor.
 					session.cacheActorUpdateMessage(message);
 
