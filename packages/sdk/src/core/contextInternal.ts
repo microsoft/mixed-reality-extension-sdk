@@ -453,11 +453,15 @@ export class ContextInternal {
 			actor.copy(sactor);
 			if (isNewActor) {
 				newActorIds.push(actor.id);
-				if (actor.rigidBody) {	
+				if (actor.rigidBody) {
 					if (!actor.owner) {
-						actor.owner = this._rigidBodyDefaultOwner;
+						if (!this._rigidBodyDefaultOwner) {
+							this._rigidBodyOrphanSet.add(actor.id);
+						} else {
+							actor.owner = this._rigidBodyDefaultOwner;
+							this._rigidBodyOwnerMap.set(actor.id, actor.owner);
+						}
 					}
-					this._rigidBodyOwnerMap.set(actor.id, actor.owner);
 				}
 			}
 		});
