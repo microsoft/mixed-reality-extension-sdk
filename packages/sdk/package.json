@@ -1,6 +1,6 @@
 {
   "name": "@microsoft/mixed-reality-extension-sdk",
-  "version": "0.20.0",
+  "version": "0.21.0",
   "description": "The Mixed Reality Extension SDK enables developers to build 3D world extensions for AltspaceVR, using Node.JS.",
   "main": "built/index.js",
   "types": "built/index.d.ts",
@@ -48,7 +48,7 @@
     "typescript": "^3.7.2"
   },
   "dependencies": {
-    "@microsoft/mixed-reality-extension-common": "^0.20.0",
+    "@microsoft/mixed-reality-extension-common": "^0.21.0",
     "@types/node": "^10.3.1",
     "debug": "^4.1.0",
     "deepmerge": "^2.1.1",
