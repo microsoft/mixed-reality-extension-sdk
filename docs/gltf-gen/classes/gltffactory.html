@@ -100,6 +100,8 @@
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="gltffactory.html#generategltf" class="tsd-kind-icon">generateGLTF</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="gltffactory.html#importfromglb" class="tsd-kind-icon">import<wbr>From<wbr>Glb</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="gltffactory.html#importfromgltf" class="tsd-kind-icon">import<wbr>From<wbr>Gltf</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="gltffactory.html#fromsingleprimitive" class="tsd-kind-icon">From<wbr>Single<wbr>Primitive</a></li>
 							</ul>
 						</section>
@@ -118,7 +120,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/8ab221d/packages/gltf-gen/src/gltffactory.ts#L17">gltffactory.ts:17</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/e771bea/packages/gltf-gen/src/gltffactory.ts#L35">gltffactory.ts:35</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -149,7 +151,7 @@
 					<div class="tsd-signature tsd-kind-icon">materials<span class="tsd-signature-symbol">:</span> <a href="material.html" class="tsd-signature-type">Material</a><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/8ab221d/packages/gltf-gen/src/gltffactory.ts#L15">gltffactory.ts:15</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/e771bea/packages/gltf-gen/src/gltffactory.ts#L33">gltffactory.ts:33</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -159,7 +161,7 @@
 					<div class="tsd-signature tsd-kind-icon">meshes<span class="tsd-signature-symbol">:</span> <a href="mesh.html" class="tsd-signature-type">Mesh</a><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/8ab221d/packages/gltf-gen/src/gltffactory.ts#L16">gltffactory.ts:16</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/e771bea/packages/gltf-gen/src/gltffactory.ts#L34">gltffactory.ts:34</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -169,7 +171,7 @@
 					<div class="tsd-signature tsd-kind-icon">scenes<span class="tsd-signature-symbol">:</span> <a href="scene.html" class="tsd-signature-type">Scene</a><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/8ab221d/packages/gltf-gen/src/gltffactory.ts#L17">gltffactory.ts:17</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/e771bea/packages/gltf-gen/src/gltffactory.ts#L35">gltffactory.ts:35</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -179,7 +181,7 @@
 					<div class="tsd-signature tsd-kind-icon">textures<span class="tsd-signature-symbol">:</span> <a href="texture.html" class="tsd-signature-type">Texture</a><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/8ab221d/packages/gltf-gen/src/gltffactory.ts#L14">gltffactory.ts:14</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/e771bea/packages/gltf-gen/src/gltffactory.ts#L32">gltffactory.ts:32</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -196,13 +198,77 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/8ab221d/packages/gltf-gen/src/gltffactory.ts#L33">gltffactory.ts:33</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/e771bea/packages/gltf-gen/src/gltffactory.ts#L52">gltffactory.ts:52</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Convert the factory&#39;s scenes and other resources into a GLB buffer.</p>
+								</div>
 							</div>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Buffer</span></h4>
 							<p>A buffer containing a glTF document in GLB format</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="importfromglb" class="tsd-anchor"></a>
+					<h3>import<wbr>From<wbr>Glb</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">import<wbr>From<wbr>Glb<span class="tsd-signature-symbol">(</span>path<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/e771bea/packages/gltf-gen/src/gltffactory.ts#L106">gltffactory.ts:106</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Populate this <a href="gltffactory.html">GltfFactory</a> with the resources from a GLB file.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>path: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The file path to a GLB file.</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="importfromgltf" class="tsd-anchor"></a>
+					<h3>import<wbr>From<wbr>Gltf</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">import<wbr>From<wbr>Gltf<span class="tsd-signature-symbol">(</span>path<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/e771bea/packages/gltf-gen/src/gltffactory.ts#L149">gltffactory.ts:149</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Populate this <a href="gltffactory.html">GltfFactory</a> with the resources from a glTF file.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>path: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -216,13 +282,21 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/8ab221d/packages/gltf-gen/src/gltffactory.ts#L83">gltffactory.ts:83</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/e771bea/packages/gltf-gen/src/gltffactory.ts#L465">gltffactory.ts:465</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Generate a <a href="gltffactory.html">GltfFactory</a> from a single <a href="../interfaces/gltf.meshprimitive.html">MeshPrimitive</a>.</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5>prim: <span class="tsd-signature-type">MeshPrimitive</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The sole prim in the glTF</p>
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="gltffactory.html" class="tsd-signature-type">GltfFactory</a></h4>
@@ -287,6 +361,12 @@
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="gltffactory.html#generategltf" class="tsd-kind-icon">generateGLTF</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="gltffactory.html#importfromglb" class="tsd-kind-icon">import<wbr>From<wbr>Glb</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="gltffactory.html#importfromgltf" class="tsd-kind-icon">import<wbr>From<wbr>Gltf</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-static">
 								<a href="gltffactory.html#fromsingleprimitive" class="tsd-kind-icon">From<wbr>Single<wbr>Primitive</a>
@@ -362,7 +442,13 @@
 						<a href="../index.html#attributecolor4" class="tsd-kind-icon">Attribute<wbr>Color4</a>
 					</li>
 					<li class=" tsd-kind-variable">
+						<a href="../index.html#readfile" class="tsd-kind-icon">read<wbr>File</a>
+					</li>
+					<li class=" tsd-kind-variable">
 						<a href="../index.html#validator" class="tsd-kind-icon">validator</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="../index.html#writefile" class="tsd-kind-icon">write<wbr>File</a>
 					</li>
 				</ul>
 			</nav>

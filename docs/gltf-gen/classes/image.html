@@ -94,6 +94,7 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="image.html#embeddeddata" class="tsd-kind-icon">embedded<wbr>Data</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="image.html#embeddedfilepath" class="tsd-kind-icon">embedded<wbr>File<wbr>Path</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="image.html#name" class="tsd-kind-icon">name</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="image.html#uri" class="tsd-kind-icon">uri</a></li>
@@ -127,7 +128,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/8ab221d/packages/gltf-gen/src/image.ts#L51">image.ts:51</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/e771bea/packages/gltf-gen/src/image.ts#L58">image.ts:58</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -144,19 +145,35 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="embeddeddata" class="tsd-anchor"></a>
+					<h3>embedded<wbr>Data</h3>
+					<div class="tsd-signature tsd-kind-icon">embedded<wbr>Data<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Buffer</span></div>
+					<aside class="tsd-sources">
+						<p>Implementation of <a href="../interfaces/imagelike.html">ImageLike</a>.<a href="../interfaces/imagelike.html#embeddeddata">embeddedData</a></p>
+						<ul>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/e771bea/packages/gltf-gen/src/image.ts#L39">image.ts:39</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The image&#39;s binary data. Don&#39;t set alongside <a href="image.html#uri">uri</a> or <a href="image.html#embeddedfilepath">embeddedFilePath</a>.</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 					<a name="embeddedfilepath" class="tsd-anchor"></a>
 					<h3>embedded<wbr>File<wbr>Path</h3>
 					<div class="tsd-signature tsd-kind-icon">embedded<wbr>File<wbr>Path<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<p>Implementation of <a href="../interfaces/imagelike.html">ImageLike</a>.<a href="../interfaces/imagelike.html#embeddedfilepath">embeddedFilePath</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/8ab221d/packages/gltf-gen/src/image.ts#L31">image.ts:31</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/e771bea/packages/gltf-gen/src/image.ts#L33">image.ts:33</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
 							<p>A path to a local texture file, resolved during serialization and packed into the model.
-							Don&#39;t set alongside <a href="image.html#uri">uri</a>.</p>
+							Don&#39;t set alongside <a href="image.html#uri">uri</a> or <a href="image.html#embeddeddata">embeddedData</a>.</p>
 						</div>
 					</div>
 				</section>
@@ -167,7 +184,7 @@
 					<aside class="tsd-sources">
 						<p>Implementation of <a href="../interfaces/imagelike.html">ImageLike</a>.<a href="../interfaces/imagelike.html#name">name</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/8ab221d/packages/gltf-gen/src/image.ts#L20">image.ts:20</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/e771bea/packages/gltf-gen/src/image.ts#L22">image.ts:22</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -178,12 +195,12 @@
 					<aside class="tsd-sources">
 						<p>Implementation of <a href="../interfaces/imagelike.html">ImageLike</a>.<a href="../interfaces/imagelike.html#uri">uri</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/8ab221d/packages/gltf-gen/src/image.ts#L25">image.ts:25</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/e771bea/packages/gltf-gen/src/image.ts#L27">image.ts:27</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>A URI to a texture, resolved by the model consumer. Don&#39;t set alongside <a href="image.html#embeddedfilepath">embeddedFilePath</a>.</p>
+							<p>A URI to a texture, resolved by the model consumer. Don&#39;t set alongside <a href="image.html#embeddedfilepath">embeddedFilePath</a> or <a href="image.html#embeddeddata">embeddedData</a>.</p>
 						</div>
 					</div>
 				</section>
@@ -201,7 +218,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/8ab221d/packages/gltf-gen/src/image.ts#L39">image.ts:39</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/e771bea/packages/gltf-gen/src/image.ts#L46">image.ts:46</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -214,7 +231,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/8ab221d/packages/gltf-gen/src/image.ts#L49">image.ts:49</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/e771bea/packages/gltf-gen/src/image.ts#L56">image.ts:56</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -246,7 +263,7 @@
 							<aside class="tsd-sources">
 								<p>Overrides Serializable.getByteSize</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/8ab221d/packages/gltf-gen/src/image.ts#L114">image.ts:114</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/e771bea/packages/gltf-gen/src/image.ts#L124">image.ts:124</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -270,7 +287,7 @@
 							<aside class="tsd-sources">
 								<p>Overrides Serializable.serialize</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/8ab221d/packages/gltf-gen/src/image.ts#L60">image.ts:60</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/mixed-reality-extension-sdk/blob/e771bea/packages/gltf-gen/src/image.ts#L69">image.ts:69</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -332,6 +349,9 @@
 						<ul>
 							<li class=" tsd-kind-constructor tsd-parent-kind-class">
 								<a href="image.html#constructor" class="tsd-kind-icon">constructor</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="image.html#embeddeddata" class="tsd-kind-icon">embedded<wbr>Data</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
 								<a href="image.html#embeddedfilepath" class="tsd-kind-icon">embedded<wbr>File<wbr>Path</a>
@@ -419,7 +439,13 @@
 						<a href="../index.html#attributecolor4" class="tsd-kind-icon">Attribute<wbr>Color4</a>
 					</li>
 					<li class=" tsd-kind-variable">
+						<a href="../index.html#readfile" class="tsd-kind-icon">read<wbr>File</a>
+					</li>
+					<li class=" tsd-kind-variable">
 						<a href="../index.html#validator" class="tsd-kind-icon">validator</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="../index.html#writefile" class="tsd-kind-icon">write<wbr>File</a>
 					</li>
 				</ul>
 			</nav>
