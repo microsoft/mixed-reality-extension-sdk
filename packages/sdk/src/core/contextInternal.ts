@@ -37,6 +37,7 @@ import {
 	Protocols,
 } from '../internal';
 import { PhysicsBridgeTransformUpdate, PhysicsUploadServerTransformsUpdate } from '../actor/physics/physicsBridge';
+import { BrowserCommand, BrowserInstance, SetBrowserStateOptions } from '../actor';
 
 /**
  * @hidden
@@ -295,6 +296,19 @@ export class ContextInternal {
 			mediaCommand: command,
 			options
 		} as Payloads.SetMediaState);
+	}
+
+	public setBrowserState(
+		browserInstance: BrowserInstance,
+		command: BrowserCommand,
+		options?: SetBrowserStateOptions,
+	) {
+		this.protocol.sendPayload({
+			type: 'set-browser-state',
+			actorId: browserInstance.actor.id,
+			browserCommand: command,
+			options
+		} as Payloads.SetBrowserState)
 	}
 
 	public async startListening() {

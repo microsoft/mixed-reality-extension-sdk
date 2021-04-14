@@ -5,6 +5,7 @@
 
 export * from './behaviors';
 export * from './media';
+export * from './browser';
 export * from './physics';
 
 export * from './actor';

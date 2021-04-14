@@ -1010,7 +1010,10 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 			}
 		}
 	},
-
+	// ========================================================================
+	'set-browser-state': {
+		...DefaultRule
+	},
 	// ========================================================================
 	'set-media-state': {
 		...DefaultRule,

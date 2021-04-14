@@ -13,7 +13,9 @@ import {
 	SetMediaStateOptions,
 	TransformLike,
 	UserLike,
+	SetBrowserStateOptions,
 } from '../..';
+import { BrowserCommand } from '../../actor';
 import {
 	OperatingModel,
 	OperationResultCode,
@@ -61,6 +63,7 @@ export type PayloadType
 	| 'set-authoritative'
 	| 'set-behavior'
 	| 'set-media-state'
+	| 'set-browser-state'
 	| 'show-dialog'
 	| 'sync-complete'
 	| 'sync-request'
@@ -345,6 +348,17 @@ export type SetMediaState = Payload & {
 	mediaCommand: MediaCommand;
 	options: SetMediaStateOptions;
 };
+
+/**
+ * @hidden
+ * App to engine. Sets the browser url 
+ */
+export type SetBrowserState = Payload & {
+	type: 'set-browser-state';
+	actorId: Guid;
+	browserCommand: BrowserCommand;
+	options: SetBrowserStateOptions;
+}
 
 /**
  * @hidden
