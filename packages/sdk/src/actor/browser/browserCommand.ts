@@ -8,4 +8,5 @@
  */
 export enum BrowserCommand {
     Update = 'update',
+    Delete = 'delete',
 }

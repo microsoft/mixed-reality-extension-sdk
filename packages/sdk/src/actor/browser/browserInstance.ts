@@ -14,6 +14,13 @@ export class BrowserInstance {
     constructor(actor: Actor) {
         this.actor = actor;
     }
+
+    public start(options: SetBrowserStateOptions): BrowserInstance {
+        this.setState(options);
+        return this;
+
+    }
+
     public setState(options: SetBrowserStateOptions) {
         this.actor.context.internal.setBrowserState(this, BrowserCommand.Update, options);
     }

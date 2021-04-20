@@ -34,6 +34,7 @@ import {
 	LookAtLike,
 	LookAtMode,
 	MediaInstance,
+	BrowserInstance,
 	Prefab,
 	PrimitiveDefinition,
 	ReadonlyMap,
@@ -56,6 +57,7 @@ import {
 	unobserve
 } from '../internal';
 import { ActorInternal } from './actorInternal';
+import { SetBrowserStateOptions } from './browser';
 
 /**
  * Describes the properties of an Actor.
@@ -639,6 +641,10 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 		options: SetVideoStateOptions,
 	): MediaInstance {
 		return new MediaInstance(this, videoStreamAssetId).start(options);
+	}
+
+	public openBrowser(options: SetBrowserStateOptions): BrowserInstance {
+		return new BrowserInstance(this).start(options);
 	}
 
 	/**
