@@ -542,6 +542,9 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 			}
 		}
 	},
+	
+	// ========================================================================
+	'browser-state-changed': ClientOnlyRule,
 
 	// ========================================================================
 	'collision-event-raised': {

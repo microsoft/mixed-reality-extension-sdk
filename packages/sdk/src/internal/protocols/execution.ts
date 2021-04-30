@@ -148,4 +148,9 @@ export class Execution extends Protocol {
 	public 'recv-animation-update' = (payload: Payloads.AnimationUpdate) => {
 		this.emit('protocol.update-animations', [payload.animation]);
 	};
+
+		/** @private */
+		public 'recv-browser-state-changed' = (payload: Payloads.BrowserStateChange) => {
+			this.emit('protocol.browser-state-changed', payload);
+		};
 }

@@ -34,6 +34,7 @@ export type PayloadType
 	| 'actor-update'
 	| 'animation-update'
 	| 'app2engine-rpc'
+	| 'browser-state-changed'
 	| 'collision-event-raised'
 	| 'create-animation-2'
 	| 'create-empty'
@@ -357,6 +358,16 @@ export type SetBrowserState = Payload & {
 	type: 'set-browser-state';
 	actorId: Guid;
 	browserCommand: BrowserCommand;
+	options: SetBrowserStateOptions;
+}
+
+/**
+ * @hidden
+ * Engine to App. Updates the browser state
+ */
+ export type BrowserStateChange = Payload & {
+	type: 'browser-state-changed';
+	actorId: Guid;
 	options: SetBrowserStateOptions;
 }
 

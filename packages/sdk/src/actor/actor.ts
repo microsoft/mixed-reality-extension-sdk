@@ -56,6 +56,7 @@ import {
 	SubscriptionType,
 	unobserve
 } from '../internal';
+import { BrowserStateChange } from '../internal/payloads';
 import { ActorInternal } from './actorInternal';
 import { SetBrowserStateOptions } from './browser';
 
@@ -86,6 +87,8 @@ export interface ActorLike {
 	lookAt: Partial<LookAtLike>;
 	grabbable: boolean;
 }
+
+export type BrowserStateChangeHandler = (state: SetBrowserStateOptions) => void;
 
 /**
  * An actor represents an object instantiated on the host.
@@ -645,6 +648,10 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 
 	public openBrowser(options: SetBrowserStateOptions): BrowserInstance {
 		return new BrowserInstance(this).start(options);
+	}
+
+	public onBrowserStateChanged(handler: BrowserStateChangeHandler) {
+		this.emitter.on('browser-state-changed', handler);
 	}
 
 	/**

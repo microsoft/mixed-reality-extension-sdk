@@ -334,6 +334,7 @@ export class ContextInternal {
 			execution.on('protocol.collision-event-raised', this.collisionEventRaised.bind(this));
 			execution.on('protocol.trigger-event-raised', this.triggerEventRaised.bind(this));
 			execution.on('protocol.update-animations', this.updateAnimations.bind(this));
+			execution.on('protocol.browser-state-changed', this.browserStateChanged.bind(this));
 
 			// Startup the execution protocol
 			execution.startListening();
@@ -761,4 +762,11 @@ export class ContextInternal {
 
 		return stats;
 	}
+
+	public browserStateChanged(payload: Payloads.BrowserStateChange) {
+		const targetActor = this.actorSet.get(payload.actorId);
+		if(targetActor) {
+			targetActor.emitter.emit('browser-state-changed', payload.options);
+		}
+	}	
 }
