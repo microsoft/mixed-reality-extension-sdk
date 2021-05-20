@@ -7,6 +7,7 @@
  * The browser commands used to control the browser instance.
  */
 export enum BrowserCommand {
+    Open = 'open',
     Update = 'update',
     Delete = 'delete',
 }

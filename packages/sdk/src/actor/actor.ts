@@ -650,6 +650,10 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 		return new BrowserInstance(this).start(options);
 	}
 
+	public updateBrowser(options: SetBrowserStateOptions): BrowserInstance {
+		return new BrowserInstance(this).setState(options);
+	}
+
 	public onBrowserStateChanged(handler: BrowserStateChangeHandler) {
 		this.emitter.on('browser-state-changed', handler);
 	}

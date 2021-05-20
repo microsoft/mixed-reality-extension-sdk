@@ -16,6 +16,20 @@ import {
 	WebSocket
 } from '../../../internal';
 import { Guid, log, MediaCommand } from '../../..';
+import { parseGuid, ZeroGuid } from '../../../util';
+
+const _edtiumTrackedMessages = new Map<Guid, Guid>();
+const getLastEDTiumClientMessageId = (userId: Guid) => {
+	if (_edtiumTrackedMessages.has(userId)) {
+		return _edtiumTrackedMessages.get(userId);
+	}
+
+	return ZeroGuid;
+};
+
+const setLastEDTiumClientMessageId = (userId: Guid, messageId: Guid) => {
+	_edtiumTrackedMessages.set(userId, messageId);
+};
 
 /**
  * @hidden
@@ -544,7 +558,23 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 	},
 	
 	// ========================================================================
-	'browser-state-changed': ClientOnlyRule,
+	'browser-state-changed': {
+		...ClientOnlyRule,
+		session: {
+			...ClientOnlyRule.session,
+			beforeReceiveFromClient: (
+				session: Session,
+				client: Client,
+				message: Message<Payloads.BrowserStateChange>
+			) => {
+				if(message.payload.options.messageId) {
+					setLastEDTiumClientMessageId(client.userId, message.payload.options.messageId);
+				}
+
+				return message;
+			}
+		},
+	},
 
 	// ========================================================================
 	'collision-event-raised': {
@@ -1015,7 +1045,26 @@ export const Rules: { [id in Payloads.PayloadType]: Rule } = {
 	},
 	// ========================================================================
 	'set-browser-state': {
-		...DefaultRule
+		...DefaultRule,
+		client: {
+			...DefaultRule.client,
+			shouldSendToUser: (message: Message<Payloads.SetBrowserState>, userId, session, client) => {
+				let lastGuid: Guid = getLastEDTiumClientMessageId(client.userId);
+
+				// Have sent a browser message prior
+				if(client.isJoined() && lastGuid !== ZeroGuid) {
+					const currentId =  message.payload.options.messageId;
+					if(lastGuid !== currentId) {
+						setLastEDTiumClientMessageId(client.userId, currentId);
+						return true;
+					} else {
+						return false;
+					}
+				}
+
+				return null;
+			}
+		},
 	},
 	// ========================================================================
 	'set-media-state': {

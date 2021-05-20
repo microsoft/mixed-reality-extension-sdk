@@ -8,6 +8,7 @@ import {
     BrowserCommand,
     SetBrowserStateOptions
 } from '../..';
+import { newGuid } from '../../util';
 
 export class BrowserInstance {
     public actor: Actor;
@@ -16,17 +17,26 @@ export class BrowserInstance {
     }
 
     public start(options: SetBrowserStateOptions): BrowserInstance {
-        this.setState(options);
+        this.setStateInternal(BrowserCommand.Open, options);
         return this;
 
     }
 
-    public setState(options: SetBrowserStateOptions) {
-        this.actor.context.internal.setBrowserState(this, BrowserCommand.Update, options);
+    public setState(options: SetBrowserStateOptions): BrowserInstance {
+        this.setStateInternal(BrowserCommand.Update, options);
+        return this;
     }
 
     public navigate(url: string) {
         this.setState({url});
+    }
+
+    private setStateInternal(command: BrowserCommand, options: SetBrowserStateOptions) {
+        if (!options.messageId) {
+            options.messageId = newGuid();
+        }
+
+        this.actor.context.internal.setBrowserState(this, command, options);
     }
 }
 
