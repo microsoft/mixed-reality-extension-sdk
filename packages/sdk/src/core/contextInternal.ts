@@ -67,7 +67,7 @@ export class ContextInternal {
 	}
 
 	public onSetAuthoritative = (userId: Guid) => {
-		this._rigidBodyOrphanSet.forEach( 
+		this._rigidBodyOrphanSet.forEach(
 			(value) => {
 				if (value === this._rigidBodyDefaultOwner) {
 					const actor = this.actorSet.get(value);
@@ -314,7 +314,7 @@ export class ContextInternal {
 			execution.on('protocol.update-user', this.updateUser.bind(this));
 			execution.on('protocol.perform-action', this.performAction.bind(this));
 			execution.on('protocol.physicsbridge-update-transforms', this.updatePhysicsBridgeTransforms.bind(this));
-			execution.on('protocol.physicsbridge-server-transforms-upload', 
+			execution.on('protocol.physicsbridge-server-transforms-upload',
 				this.updatePhysicsServerTransformsUpload.bind(this));
 			execution.on('protocol.receive-rpc', this.receiveRPC.bind(this));
 			execution.on('protocol.collision-event-raised', this.collisionEventRaised.bind(this));
@@ -453,7 +453,7 @@ export class ContextInternal {
 			actor.copy(sactor);
 			if (isNewActor) {
 				newActorIds.push(actor.id);
-				if (actor.rigidBody) {	
+				if (actor.rigidBody) {
 					if (!actor.owner) {
 						actor.owner = this._rigidBodyDefaultOwner;
 					}
@@ -539,7 +539,7 @@ export class ContextInternal {
 					}
 				})
 			} else {
-				this._rigidBodyOwnerMap.forEach( 
+				this._rigidBodyOwnerMap.forEach(
 					(value, key) => {
 						if (value === userId) {
 							const actor = this.actorSet.get(key);
@@ -643,6 +643,7 @@ export class ContextInternal {
 	}
 
 	public destroyActor(actorId: Guid) {
+		console.log('destroying', actorId)
 		const actor = this.actorSet.get(actorId);
 		if (actor) {
 			// Tell engine to destroy the actor (will destroy all children too)
