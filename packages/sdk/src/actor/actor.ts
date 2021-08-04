@@ -202,8 +202,10 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	 * Destroys the collider.
 	 */
 	public clearCollider(): void {
-		unobserve(this._collider)
-		this._collider = null;
+		if (this._collider) {
+			unobserve(this._collider)
+			this._collider = null;
+		}
 	}
 
 	/**
