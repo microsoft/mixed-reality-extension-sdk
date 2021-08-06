@@ -502,15 +502,12 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 		center = { x: 0, y: 0, z: 0 } as Vector3Like,
 		layer = CollisionLayer.Default,
 	): void {
-		const colliderGeometry = this.generateColliderGeometry(colliderType, size, center);
-		if (colliderGeometry) {
-			this._setCollider({
-				enabled: true,
-				isTrigger,
-				layer,
-				geometry: colliderGeometry
-			} as ColliderLike);
-		}
+		this._setCollider({
+			enabled: true,
+			isTrigger,
+			layer,
+			geometry: { shape: colliderType, size, center}
+		} as ColliderLike);
 	}
 
 	/**
@@ -857,24 +854,44 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	}
 
 	private _setCollider(collider: Partial<ColliderLike>) {
-		const oldCollider = this._collider;
-		if (this._collider) {
-			unobserve(this._collider);
-			this._collider = undefined;
+		let size = null;
+		let center = null;
+
+		if (collider.geometry.shape === ColliderType.Box) {
+			size = collider.geometry.size;
+			center = collider.geometry.center;
+		} else if (collider.geometry.shape === ColliderType.Sphere) {
+			size = collider.geometry.radius;
+			center = collider.geometry.center;
+		} else if (collider.geometry.shape === ColliderType.Capsule) {
+			size = collider.geometry.size;
+			center = collider.geometry.center;
 		}
 
-		this._collider = new Collider(this, collider);
-		if (oldCollider) {
-			this._collider.internal.copyHandlers(oldCollider.internal);
-		}
+		const geometry = this.generateColliderGeometry(collider.geometry.shape, size, center)
 
-		// Actor patching: Observe the collider component for changed values.
-		observe({
-			target: this._collider,
-			targetName: 'collider',
-			notifyChanged: (...path: string[]) => this.actorChanged(...path),
-			// Trigger notifications for every observed leaf node to ensure we get all values in the initial patch.
-			triggerNotificationsNow: true
-		});
+		if (geometry) {
+			collider = {...collider, geometry}
+
+			const oldCollider = this._collider;
+			if (this._collider) {
+				unobserve(this._collider);
+				this._collider = undefined;
+			}
+
+			this._collider = new Collider(this, collider);
+			if (oldCollider) {
+				this._collider.internal.copyHandlers(oldCollider.internal);
+			}
+
+			// Actor patching: Observe the collider component for changed values.
+			observe({
+				target: this._collider,
+				targetName: 'collider',
+				notifyChanged: (...path: string[]) => this.actorChanged(...path),
+				// Trigger notifications for every observed leaf node to ensure we get all values in the initial patch.
+				triggerNotificationsNow: true
+			});
+		}
 	}
 }
