@@ -451,8 +451,6 @@ export class ContextInternal {
 			const actor = isNewActor ? Actor.alloc(this.context, sactor.id) : this.actorSet.get(sactor.id);
 			this.actorSet.set(sactor.id, actor);
 
-			//TODO - Fix memory leak that occurs when instantiating an actor with a collider. Use setCollider instead.
-			//Collider is attached to actor via actor.copy(sactor), but it creates a memory leak.
 			actor.copy(sactor);
 			if (isNewActor) {
 				newActorIds.push(actor.id);
