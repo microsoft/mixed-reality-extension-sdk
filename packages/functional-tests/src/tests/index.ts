@@ -17,6 +17,7 @@ import AnimationToTest from './animation-to-test';
 import AssetEarlyAssignmentTest from './asset-early-assignment-test';
 import AssetMutabilityTest from './asset-mutability-test';
 import AssetPreloadTest from './asset-preload-test';
+import AssetTimeoutTest from './asset-timeout-test';
 import AssetUnloadTest from './asset-unload-test';
 import ButtonBehaviorTest from './button-behavior-test';
 import ButtonTargetingTest from './button-targeting-test';
@@ -27,6 +28,7 @@ import FontTest from './font-test';
 import GltfActorSyncTest from './gltf-actor-sync-test';
 import GltfConcurrencyTest from './gltf-concurrency-test';
 import GltfGenTest from './gltf-gen-test';
+import GltfTimeoutTest from './gltf-timeout-test';
 import GrabTest from './grab-test';
 import GridTest from './grid-test';
 import InputTest from './input-test';
@@ -99,12 +101,14 @@ export const Factories = {
 		'asset-early-assignment': (...args) => new AssetEarlyAssignmentTest(...args),
 		'asset-mutability': (...args) => new AssetMutabilityTest(...args),
 		'asset-preload': (...args) => new AssetPreloadTest(...args),
+		'asset-timeout': (...args) => new AssetTimeoutTest(...args),
 		'asset-unload': (...args) => new AssetUnloadTest(...args),
 	},
 	'GLTF Tests': {
 		'gltf-actor-sync': (...args) => new GltfActorSyncTest(...args),
 		'gltf-concurrency': (...args) => new GltfConcurrencyTest(...args),
 		'gltf-gen': (...args) => new GltfGenTest(...args),
+		'gltf-timeout': (...args) => new GltfTimeoutTest(...args),
 	},
 	'Graphics/Rendering Tests': {
 		'light': (...args) => new LightTest(...args),
