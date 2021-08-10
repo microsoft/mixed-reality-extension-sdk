@@ -625,6 +625,12 @@ export class ContextInternal {
 			this.localDestroyActor(child);
 		});
 
+		//Remove animations
+		for (const anim of actor.targetingAnimations.values()) {
+			anim.data.clearReference(anim)
+			anim.data.breakReference(anim);
+		}
+
 		//Remove the collider
 		if (actor.collider) {
 			actor.clearCollider();
@@ -633,11 +639,13 @@ export class ContextInternal {
 		//Remove mesh reference
 		if (actor.appearance.mesh) {
 			actor.appearance.mesh.clearReference(actor)
+			actor.appearance.mesh.breakReference(actor);
 		}
 
 		//Remove material reference
 		if (actor.appearance.material) {
 			actor.appearance.material.clearReference(actor)
+			actor.appearance.material.breakReference(actor);
 		}
 
 		// Remove actor from _actors
