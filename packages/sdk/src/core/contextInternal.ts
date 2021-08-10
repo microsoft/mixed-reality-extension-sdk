@@ -67,7 +67,7 @@ export class ContextInternal {
 	}
 
 	public onSetAuthoritative = (userId: Guid) => {
-		this._rigidBodyOrphanSet.forEach( 
+		this._rigidBodyOrphanSet.forEach(
 			(actorId) => {
 				const actor = this.actorSet.get(actorId);
 				actor.owner = userId;
@@ -312,7 +312,7 @@ export class ContextInternal {
 			execution.on('protocol.update-user', this.updateUser.bind(this));
 			execution.on('protocol.perform-action', this.performAction.bind(this));
 			execution.on('protocol.physicsbridge-update-transforms', this.updatePhysicsBridgeTransforms.bind(this));
-			execution.on('protocol.physicsbridge-server-transforms-upload', 
+			execution.on('protocol.physicsbridge-server-transforms-upload',
 				this.updatePhysicsServerTransformsUpload.bind(this));
 			execution.on('protocol.receive-rpc', this.receiveRPC.bind(this));
 			execution.on('protocol.collision-event-raised', this.collisionEventRaised.bind(this));
@@ -533,7 +533,7 @@ export class ContextInternal {
 			this.context.emitter.emit('user-left', user);
 
 			if (userId !== this._rigidBodyDefaultOwner) {
-				this._rigidBodyOwnerMap.forEach( 
+				this._rigidBodyOwnerMap.forEach(
 					(ownerId, actorId) => {
 						if (ownerId === userId) {
 							const actor = this.actorSet.get(actorId);
@@ -543,7 +543,7 @@ export class ContextInternal {
 					}
 				)
 			} else {
-				this._rigidBodyOwnerMap.forEach( 
+				this._rigidBodyOwnerMap.forEach(
 					(ownerId, actorId) => {
 						if (ownerId === userId) {
 							this._rigidBodyOrphanSet.add(actorId);
@@ -626,6 +626,29 @@ export class ContextInternal {
 		(actor.children || []).forEach(child => {
 			this.localDestroyActor(child);
 		});
+
+		//Remove animations
+		for (const anim of actor.targetingAnimations.values()) {
+			anim.data.clearReference(anim)
+			anim.data.breakReference(anim);
+		}
+
+		//Remove the collider
+		if (actor.collider) {
+			actor.clearCollider();
+		}
+
+		//Remove mesh reference
+		if (actor.appearance.mesh) {
+			actor.appearance.mesh.clearReference(actor)
+			actor.appearance.mesh.breakReference(actor);
+		}
+
+		//Remove material reference
+		if (actor.appearance.material) {
+			actor.appearance.material.clearReference(actor)
+			actor.appearance.material.breakReference(actor);
+		}
 
 		// Remove actor from _actors
 		this.actorSet.delete(actor.id);
