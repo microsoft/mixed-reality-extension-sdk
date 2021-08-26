@@ -432,7 +432,6 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	 * based on the size of the currently assigned mesh (loading meshes are not considered).
 	 * If no mesh is assigned, defaults to 0.5.
 	 * @param center The center of the collider, or default of the object if none is provided.
-	 * @param layer Controls what the assigned actors will collide with.
 	 */
 	// * @param collisionLayer The layer that the collider operates in.
 	public setCollider(
@@ -441,7 +440,6 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 		isTrigger: boolean,
 		radius?: number,
 		center?: Vector3Like,
-		layer?: CollisionLayer
 	): void;
 
 	/**
@@ -452,14 +450,12 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	 * based on the currently assigned mesh (loading meshes are not considered).
 	 * If no mesh is assigned, defaults to (1,1,1).
 	 * @param center The center of the collider, or default of the object if none is provided.
-	 * @param layer Controls what the assigned actors will collide with.
 	 */
 	public setCollider(
 		colliderType: ColliderType.Box,
 		isTrigger: boolean,
 		size?: Vector3Like,
 		center?: Vector3Like,
-		layer?: CollisionLayer
 	): void;
 
 	/**
@@ -471,30 +467,22 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 	 * If omitted, a best-guess size is chosen based on the currently assigned mesh
 	 * (loading meshes are not considered). If no mesh is assigned, defaults to (1, 1, 1).
 	 * @param center The center of the collider, or default of the object if none is provided.
-	 * @param layer Controls what the assigned actors will collide with.
 	 */
 	public setCollider(
 		colliderType: ColliderType.Capsule,
 		isTrigger: boolean,
 		size?: Vector3Like,
 		center?: Vector3Like,
-		layer?: CollisionLayer,
 	): void;
 
 	/**
 	 * Adds a collider whose shape is determined by the current mesh.
 	 * @param colliderType Type of the collider to enable.
 	 * @param isTrigger Whether the collider is a trigger volume or not.
-	 * @param size Ignored for ColliderType Auto.
-	 * @param center Ignored for ColliderType Auto.
-	 * @param layer Controls what the assigned actors will collide with.
 	 */
 	public setCollider(
 		colliderType: ColliderType.Auto,
 		isTrigger: boolean,
-		size?: Vector3Like,
-		center?: Vector3Like,
-		layer?: CollisionLayer
 	): void;
 
 	public setCollider(

@@ -629,8 +629,7 @@ export class ContextInternal {
 
 		//Remove animations
 		for (const anim of actor.targetingAnimations.values()) {
-			anim.data.clearReference(anim)
-			anim.data.breakReference(anim);
+			anim.removeTargetId(actor.id)
 		}
 
 		//Remove the collider
