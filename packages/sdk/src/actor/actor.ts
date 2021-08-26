@@ -490,12 +490,10 @@ export class Actor implements ActorLike, Patchable<ActorLike> {
 		isTrigger: boolean,
 		size?: number | Vector3Like,
 		center = { x: 0, y: 0, z: 0 } as Vector3Like,
-		layer = CollisionLayer.Default,
 	): void {
 		this._setCollider({
 			enabled: true,
 			isTrigger,
-			layer,
 			geometry: {shape: colliderType, size, center}
 		} as ColliderLike);
 	}
