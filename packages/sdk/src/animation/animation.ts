@@ -187,6 +187,7 @@ export class Animation implements AnimationLike, Patchable<AnimationLike> {
 	public get targetActors() {
 		return this.targetIds.map(id => this.context.actor(id)).filter(a => !!a);
 	}
+
 	/** The list of animations targeted by this animation. */
 	/* public get targetAnimations() {
 		return this.targetIds.map(id => this.context.animation(id)).filter(a => !!a);
@@ -313,6 +314,11 @@ export class Animation implements AnimationLike, Patchable<AnimationLike> {
 	/** Destroy this animation. */
 	public delete() {
 		this.context.internal.destroyAnimation(this.id);
+	}
+
+	/** Remove target id */
+	public removeTargetId(id: Guid) {
+		this._targetIds = this._targetIds.filter(_id => _id !== id);
 	}
 
 	/** @hidden */
